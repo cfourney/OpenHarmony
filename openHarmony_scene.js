@@ -73,9 +73,14 @@
  * @function   {oDrawing}      addGroup( name, includeNodes, group, nodePosition, addComposite, addPeg )
  */
  
- 
- 
+
 //TODO: Metadata, settings, aspect, camera peg, view.
+
+/**
+ * $.scene [CONSTRUCTOR]
+ *
+ * Summary: The constructor for the scene object, new oScene($) to create a scene with DOM access.
+ */
 function oScene( dom ){
     // oScene.nodes property is a class property shared by all instances, so it can be passed by reference and always contain all nodes in the scene
  

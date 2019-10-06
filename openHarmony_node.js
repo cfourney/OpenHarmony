@@ -52,109 +52,103 @@
 /**
  * oNode Class
  * @class
- * @property   nodes          {[oNode]}                        All nodes in the scene.
- * @property   columns        {[oColumn]}                      All columns in the scene.
- * @property   palettes       {[oPalette]}                     All palettes in the scene.
- * @property   elements       {[oElement]}                     All elements in the scene.
- * @property   drawings       {[oDrawing]}                     All drawings in the scene.
- * @property   groups         {[oGroup]}                       All groups in the scene.
- * 
- * @function   {[oNode]}       node( string search_str )       node search
- * @function   {[oColumn]}     column( string search_str )     column search
- * @function   {[oPalette]}    palette( string search_str )    palette search 
- * @function   {[oElement]}    element( string search_str )    element search 
- * @function   {[oDrawing]}    drawing( string search_str )    drawing search 
- * @function   {[oGroup]}      group( string search_str )      group search 
- * 
- * @function   {oNode}         addNode( string type, string name, oPoint nodePosition, string group )      
- * @function   {oColumn}       addColumn( string type, string name, element )     
- * @function   {oPalette}      addPalette( string name )
- * @function   {oElement}      addElement( name, imageFormat, fieldGuide, scanType )
- * @function   {oDrawing}      addDrawingNode( name, group, nodePosition, element, drawingColumn )
- * @function   {oDrawing}      addGroup( name, includeNodes, group, nodePosition, addComposite, addPeg )
- */
+
+ * @property   name           {string}                       The name of the node.
+ * @property   path           {string}                       The parent path of the node, the group in which it is contained.
+ * @property   fullpath       {string}                       The path of the node in the network.
+ * @property   type           {string}                       The type of the node.
+
+ * @property   enabled        {bool}                         The enabled state of the node.
+ * @property   locked         {bool}                         The locked state of the node.
+ * @property   exists         {bool}                         Whether the node exists.
+ * @property   selected       {bool}                         Whether the node is selected. 
+ * @property   isGroup        {bool}                         Whether the node is a group.
  
+ * @property   children       {[oNode]}                      The children the group contains.
+ * @property   parent         {oNode}                        The parent group of this node.
+
+ * @property   inNodes        {[oNode]}                      The modules connected to the inports.
+ * @property   ins            {[oNode]}                      The modules connected to the inports.
+ * @property   outNodes       {[[oNode]]}                    The modules connected to the outports.
+ * @property   outs           {[[oNode]]}                    The modules connected to the outports.
  
+ * @property   position       {oPoint}                       The position of the node in the node view.
+ * @property   x              {float}                        The horizontal position of the node in the node view.
+ * @property   y              {float}                        The vertical position of the node in the node view.
+ * @property   z              {float}                        The depth position of the node in the node view.
+ * @property   width          {float}                        The width of the node in the node view.
+ * @property   height         {float}                        The height of the node in the node view.
+ * @property   bounds         {oBox}                         The bounds of the node in the node view.
  
+ * @property   attributes         {{key:oAttribute, ... }}   All attributes as object
  
+ * @function   {oAttribute}       attribute( {string} atribute_str )                                           Get the specific attribute
+ * @function   {bool}             linkInNode( {oNode} oNodeObject, {int} inPort, {int} outPort)                Link's this node's in-port to the given module, at the inport and outport indices.
+ * @function   {bool}             linkOutNode( {oNode} oNodeObject, {int} outPort, {int} inPort)               Link's this node's out-port to the given module, at the inport and outport indices.
+ * @function   {[oNode]}          subNodes( {bool} recurse )                                                   Obtains the nodes contained in the group, allows recursive search.
+ * @function   {oNode}            clone()                                                                      Clone the node via copy and paste. WIP, should return the new cloned node.
+ * @function   {void}             centerAbove( {[oNode]} oNodeArray, {float} xOffset, {float} yOffset) )       Center this node above the nodes in the array provided.
+ * @function   {void}             duplicate( string search_str )                                               WIP
+*/
  
- 
-// Constructor
-//
-// oNode(string path)
-//
-// Properties
-//
-// string fullPath
-// string name
-// string path
-// bool enabled
-// bool locked
-// array attributes
-// point nodePosition
-// int x
-// int y
-// int z
-// int width
-// int height
-// array inNodes
-// array outNodes
-//
-// Methods
-//
-// void linkInNode(oNode oNodeObject, int inPort, int outPort)
-// void linkOutNode(oNode oNodeObject, int outPort, int inPort)
-// array subNodes(bool recurse)
-// oBox getBounds()
-// void centerAbove(array oNodeArray, int offset)
- 
- 
-// oNode constructor
- 
- 
- 
- 
- 
+//TODO: Smart pathing, network movement, better duplication handling 
 //TODO: Metadata, settings, aspect, camera peg, view.
- 
- 
+//TODO: group's multi-in-ports, multi-out-port modules
+
+// oNode constructor
 //In the event it doesnt exist, maybe we can create it with a .create function.
+
+/**
+ * oNode [CONSTRUCTOR]
+ *
+ * Summary: The constructor for the oNode object, new oScene( $, node_path ) to create a oNode.
+ */
 function oNode( dom, path ){
   this._type = "node";
   this.$     = dom;
 
-  this.fullPath = path;  
   this.root = path == "Top" ? true:false;
+  this._fullPath = path;  //The internal naming of the full path, only to be accessed through internal functions.
   
-  // generate properties from node attributes to allow for dot notation access
-  this.attributes      = {};
+  this._cache_attributes      = {};
   
   this.$.debug( "INSTANTIATING: " + path, this.$.DEBUG_LEVEL.LOG );
   
   try{
-    var _attributesList = node.getAttrList(this.fullPath, 1);
-    var _attributes = [];
-
-    for (var i in _attributesList){
-        var _attribute = new oAttribute( this, _attributesList[i] );
-        var _keyword = _attribute.keyword.toLowerCase();
-
-        this.attributes[_keyword] = _attribute;
-
-        //The sub properties should be accessed directly via dot.notation from the parent.
-        //ie: position.x, ect.
-        
-        // _attributes.push(_attribute);
-        // if (_attribute.subAttributes.length > 0){
-            // _attributes = _attributes.concat(_attribute.subAttributes)
-        // }
+    var attributesList = node.getAttrList(this._fullPath, 1);
+    
+    for (var i in attributesList){
+        var attribute = new oAttribute( this, attributesList[i] );
+        var keyword = attribute.keyword.toLowerCase();
+        this._cache_attributes[keyword] = attribute;
     }
   }catch( err ){
     this.$.debug( err.message + "\n" + "File: " + err.fileName + "\n" + "Line Number: " + err.lineNumber , this.$.DEBUG_LEVEL.ERROR );
   }
 }
 
-// oNode Object Properties
+
+/**
+ * .fullPath
+ * @return: {string}   The derived path to the node.
+ */
+Object.defineProperty(oNode.prototype, 'fullPath', {
+    get : function( ){
+      return this._fullPath;
+    },
+ 
+    set : function( str_fullpath ){
+      //A move and rename might be in order. . .  Manage this here.
+      
+      this.$.debug( "ERROR - changing the path is not supported yet: " + this._fullPath, this.$.DEBUG_LEVEL.WARNING );
+      throw "ERROR - changing the path is not supported yet."
+    }
+});
+
+/**
+ * .type
+ * @return: {string}   The type of the node.
+ */
 Object.defineProperty(oNode.prototype, 'type', {
     get : function( ){
       if( this.root ){
@@ -168,6 +162,10 @@ Object.defineProperty(oNode.prototype, 'type', {
     }
 });
 
+/**
+ * .isGroup
+ * @return: {bool}   Is the node a group?
+ */
 Object.defineProperty(oNode.prototype, 'isGroup', {
     get : function( ){
       if( this.root ){
@@ -182,6 +180,10 @@ Object.defineProperty(oNode.prototype, 'isGroup', {
     }
 });
 
+/**
+ * .children
+ * @return: [{oNode}]   The oNode objects contained in this group.
+ */
 Object.defineProperty(oNode.prototype, 'children', {
     get : function( ){
       if( !this.isGroup ){ return []; }
@@ -201,6 +203,11 @@ Object.defineProperty(oNode.prototype, 'children', {
     }
 });
 
+
+/**
+ * .exists
+ * @return: {bool}   Does the node exist?
+ */
 Object.defineProperty(oNode.prototype, 'exists', {
     get : function( ){
       if( this.root ){
@@ -220,6 +227,10 @@ Object.defineProperty(oNode.prototype, 'exists', {
  
 });
 
+/**
+ * .selected
+ * @return: {bool}   Is the node selected?
+ */
 Object.defineProperty(oNode.prototype, 'selected', {
     get : function( ){
       for( var n=0;n<selection.numberOfNodesSelected;n++ ){
@@ -242,7 +253,10 @@ Object.defineProperty(oNode.prototype, 'selected', {
  
 });
 
-
+/**
+ * .name
+ * @return: {string}   The node's name.
+ */
 Object.defineProperty(oNode.prototype, 'name', {
     get : function(){
       if( this.root ){ return "Top"; }
@@ -264,10 +278,11 @@ Object.defineProperty(oNode.prototype, 'name', {
     }
  
 });
- 
- 
-// String path
 
+/**
+* .path
+* @return: {string}   The path to the node, the parent path specifically.
+*/
 Object.defineProperty(oNode.prototype, 'path', {
     get : function(){
       if( this.root ){ return false; }
@@ -279,11 +294,15 @@ Object.defineProperty(oNode.prototype, 'path', {
         // TODO: make moveNode() method?
         var _name = this.name
         node.moveToGroup(this.fullPath, newPath)
-        this.fullPath = newPath + '/' + _name;
+        this._fullPath = newPath + '/' + _name;
     }
  
 });
  
+/**
+* .path
+* @return: {oNode}   The oNode object for the parent in which this node exists.
+*/
 Object.defineProperty(oNode.prototype, 'parent', {
     get : function(){
       if( this.root ){ return false; }
@@ -298,7 +317,10 @@ Object.defineProperty(oNode.prototype, 'parent', {
 });
  
  
-// bool enabled
+/**
+* .enabled
+* @return: {bool}   Is the node enabled?
+*/
 Object.defineProperty(oNode.prototype, 'enabled', {
     get : function(){
       if( this.root ){ return true; }
@@ -312,8 +334,10 @@ Object.defineProperty(oNode.prototype, 'enabled', {
 });
  
  
-// bool locked
- 
+/**
+* .locked
+* @return: {bool}   Is the node locked?
+*/
 Object.defineProperty(oNode.prototype, 'locked', {
     get : function(){
       if( this.root ){ return false; }
@@ -327,8 +351,11 @@ Object.defineProperty(oNode.prototype, 'locked', {
 });
  
 
-// point nodePosition
-Object.defineProperty(oNode.prototype, 'nodePosition', {
+/**
+* .position
+* @return: {oPoint}   The position of the node.
+*/
+Object.defineProperty(oNode.prototype, 'position', {
     get : function(){
       if( this.root ){ return new oPoint( 0.0, 0.0, 0.0 ); }
       
@@ -343,8 +370,10 @@ Object.defineProperty(oNode.prototype, 'nodePosition', {
 })
  
  
-// int x
- 
+/**
+* .x
+* @return: {float}   The horizontal position of the node in the node view.
+*/
 Object.defineProperty(oNode.prototype, 'x', {
     get : function(){
       if( this.root ){ return 0.0; }
@@ -359,8 +388,10 @@ Object.defineProperty(oNode.prototype, 'x', {
 });
  
  
-// int y
- 
+/**
+* .y
+* @return: {float}   The vertical position of the node in the node view.
+*/
 Object.defineProperty(oNode.prototype, 'y', {
     get : function(){
       if( this.root ){ return 0.0; }
@@ -375,8 +406,10 @@ Object.defineProperty(oNode.prototype, 'y', {
 });
  
  
-// int z
- 
+/**
+* .z
+* @return: {float}   The depth position of the node in the node view.
+*/
 Object.defineProperty(oNode.prototype, 'z', {
     get : function(){
       if( this.root ){ return 0.0; }
@@ -391,8 +424,10 @@ Object.defineProperty(oNode.prototype, 'z', {
 });
  
  
-// int width
- 
+/**
+* .width
+* @return: {float}   The width of the node in the node view.
+*/ 
 Object.defineProperty(oNode.prototype, 'width', {
     get : function(){
       if( this.root ){ return 0.0; }
@@ -402,8 +437,10 @@ Object.defineProperty(oNode.prototype, 'width', {
 });
  
  
-// int height
- 
+/**
+* .height
+* @return: {float}   The heigh of the node in the node view.
+*/ 
 Object.defineProperty(oNode.prototype, 'height', {
     get : function(){
       if( this.root ){ return 0.0; }
@@ -413,8 +450,10 @@ Object.defineProperty(oNode.prototype, 'height', {
 });
  
  
-// Array inNodes
- 
+/**
+* .inNodes
+* @return: [{oNode}]   The list of nodes connected to the inport of this node, in order of inport.
+*/ 
 Object.defineProperty(oNode.prototype, 'inNodes', {
     get : function(){
       if( this.root ){ return []; }
@@ -429,8 +468,10 @@ Object.defineProperty(oNode.prototype, 'inNodes', {
 });
  
  
-// Array outNodes
- 
+/**
+* .outNodes
+* @return: [[{oNode}]]   The list of nodes connected to the outport of this node, in order of outport and links.
+*/
 Object.defineProperty(oNode.prototype, 'outNodes', {
     get : function(){
       if( this.root ){ return []; }
@@ -449,14 +490,20 @@ Object.defineProperty(oNode.prototype, 'outNodes', {
     }
 });
 
-
+/**
+* .ins
+* @return: [{oNode}]   The list of nodes connected to the inport of this node, in order of inport.
+*/ 
 Object.defineProperty(oNode.prototype, 'ins', {
     get : function(){
       return this.outNodes;
     }
 });
 
- 
+/**
+* .outs
+* @return: [[{oNode}]]   The list of nodes connected to the outport of this node, in order of outport and links.
+*/
 Object.defineProperty(oNode.prototype, 'outs', {
     get : function(){
       return this.outNodes;
@@ -464,25 +511,86 @@ Object.defineProperty(oNode.prototype, 'outs', {
 });
 
 
+/**
+* .attributes
+* @return: [{oAttribute}]   The list of attributes that this node contains.
+*/
+Object.defineProperty(oNode.prototype, 'attributes', {
+    get : function(){
+      //Always keeps attributes up-to-date.
+      
+      var attributesList = node.getAttrList(this._fullPath, 1);
+      for (var i in attributesList){
+          var keyword = attributesList[i].keyword();
+          
+          if( !this._cache_attributes[keyword] ){
+            var attribute = new oAttribute( this, attributesList[i] );
+            this._cache_attributes[keyword] = attribute;
+          }
+          
+      }
+  
+      return this._cache_attributes;
+    }
+}); 
  
-// oNode Class methods
-// bool linkInNode(oNode oNodeObject, int inPort, int outPort)
+/**
+* .bounds
+* @return: {oBox}   The bounds of the node.
+*/
+Object.defineProperty(oNode.prototype, 'bounds', {
+    get : function(){
+      return new oBox(this.x, this.y, this.x+this.width, this.y+this.heigth);
+    }
+}); 
  
-oNode.prototype.linkInNode = function(oNodeObject, inPort, outPort){
+ 
+ 
+ 
+ 
+ // * @function   {oAttribute}       attribute( {string} atribute_str )                                           Get the specific attribute
+ // * @function   {bool}             linkInNode( {oNode} oNodeObject, {int} inPort, {int} outPort)                Link's this node's in-port to the given module, at the inport and outport indices.
+ // * @function   {bool}             linkOutNode( {oNode} oNodeObject, {int} outPort, {int} inPort)               Link's this node's out-port to the given module, at the inport and outport indices.
+ // * @function   {[oNode]}          subNodes( {bool} recurse )                                                   Obtains the nodes contained in the group, allows recursive search.
+ // * @function   {oBox}             getBounds( )                                                                 Get the bounds of the node in the node view.
+ // * @function   {oNode}            clone()                                                                      Clone the node via copy and paste. WIP, should return the new cloned node.
+ // * @function   {void}             centerAbove( {[oNode]} oNodeArray, {float} xOffset, {float} yOffset) )       Center this node above the nodes in the array provided.
+ // * @function   {void}             duplicate( string search_str )                                               WIP
+ 
+ 
+/**
+ * linkInNode
+ *
+ * Summary: Link's this node's in-port to the given module, at the inport and outport indices.
+ * @param   {oNode}   oNodeObject            The node to link this one's inport to.
+ * @param   {int}     inPort                 This node's inport to connect.
+ * @param   {int}     outPort                The target node's outport to connect. 
+ *  
+ * @return: {bool}    The result of the link, if successful.
+ */
+oNode.prototype.linkInNode = function( oNodeObject, inPort, outPort ){
     var _node = oNodeObject.fullPath;
  
     // Default values for optional parameters
     if (typeof inPort === 'undefined') inPort = 0;
     if (typeof outPort === 'undefined') outPort = 0//node.numberOfOutputPorts(_node);
  
-    return node.link(_node, outPort, this.fullPath, inPort, true, true);
- 
+    //Forcing ( . . . true, true ) is likely not a good idea in most context, we'll need to provide solution to add links to composites purposefully.
+    return node.link(_node, outPort, this.fullPath, inPort, true, true);    
 };
  
  
  
-// bool linkOutNode(oNode oNodeObject, int outPort, int inPort)
- 
+/**
+ * linkOutNode
+ *
+ * Summary: Link's this node's out-port to the given module, at the inport and outport indices.
+ * @param   {oNode}   oNodeObject            The node to link this one's outport to.
+ * @param   {int}     inPort                 The target node's inport to connect.
+ * @param   {int}     outPort                This node's outport to connect. 
+ *  
+ * @return: {bool}    The result of the link, if successful.
+ */
 oNode.prototype.linkOutNode = function(oNodeObject, outPort, inPort){
     var _node = oNodeObject.fullPath;
  
@@ -490,14 +598,19 @@ oNode.prototype.linkOutNode = function(oNodeObject, outPort, inPort){
     if (typeof inPort === 'undefined') inPort = 0;
     if (typeof outPort === 'undefined') outPort = 0//node.numberOfOutputPorts(this.fullPath);
  
+    //Forcing ( . . . true, true ) is likely not a good idea in most context, we'll need to provide solution to add links to composites purposefully.
     return node.link(this.fullPath, outPort, _node, inPort, true, true);
- 
 };
  
- 
-// Array subNodes(boolean recurse)
-// obtains the nodes contained in the group, allows recursive search
- 
+
+ /**
+ * subNodes
+ *
+ * Summary: obtains the nodes contained in the group, allows recursive search.
+ * @param   {bool}   recurse           Whether to recurse internally for nodes within children groups.
+ *  
+ * @return: [{oNode}]    The subbnodes contained in the group.
+ */
 oNode.prototype.subNodes = function(recurse){
     if (typeof recurse === 'undefined') recurse = false;
     var _nodes = node.subNodes(this.fullPath);
@@ -512,17 +625,16 @@ oNode.prototype.subNodes = function(recurse){
 };
  
  
-// oBox getBounds()
-// Returns an oBox object with the dimensions of the node
- 
-oNode.prototype.getBounds = function(){
-    return new oBox(this.x, this.y, this.x+this.width, this.y+this.heigth);
-};
- 
- 
-// void centerAbove(array oNodeArray, int offset)
-// Place a node above one or more nodes with an offset
- 
+ /**
+ * centerAbove
+ *
+ * Summary: Place a node above one or more nodes with an offset.
+ * @param   [{oNode}]   oNodeArray           The array of nodes to center this above.
+ * @param   {float}     xOffset              The horizontal offset to apply after centering.
+ * @param   {float}     yOffset              The vertical offset to apply after centering.
+ *  
+ * @return: {void}
+ */
 oNode.prototype.centerAbove = function(oNodeArray, xOffset, yOffset){
     // Defaults for optional parameters
     if (typeof xOffset === 'undefined') var xOffset = 0;
@@ -535,7 +647,7 @@ oNode.prototype.centerAbove = function(oNodeArray, xOffset, yOffset){
  
     for (var i in oNodeArray){
          var _node = oNodeArray[i];
-         var _nodeBox = _node.getBounds();
+         var _nodeBox = _node.bounds;
          _box.include(_nodeBox);
     }
  
@@ -543,27 +655,40 @@ oNode.prototype.centerAbove = function(oNodeArray, xOffset, yOffset){
     this.y = _box.top - this.height + yOffset;
 };
  
- 
-// clone(oNodeObject(, newName(, newPosition, newGroup))){
- 
-oNode.prototype.clone = function(oNodeObject, newName, newPosition, newGroup){
-    // Defaults for optional parameters
-    if (typeof newGroup === 'undefined') var newGroup = oNodeObject.path
 
+ /**
+ * clone
+ *
+ * Summary: Place a node above one or more nodes with an offset.
+ * @param   {string}    newName              The new name for the cloned module.
+ * @param   {oPoint}    newPosition          The new position for the cloned module.
+ * @param   {string}    newGroup             The group in which to place the cloned module.
+ *  
+ * @return: {void}
+ */
+oNode.prototype.clone = function( newName, newPosition, newGroup ){
+    // Defaults for optional parameters
+    if (typeof newGroup === 'undefined') var newGroup = this.path
 
     // TODO implement cloning through column linking as opposed to copy paste logic
  
-    var _node = oNodeObject.fullPath;
+    var _node = this.fullPath;
     var _copyOptions = copyPaste.getCurrentCreateOptions();
     var _copy = copyPaste.copy([_node], 1, frame.numberOf(), _copyOptions);
     var _pasteOptions = copyPaste.getCurrentPasteOptions();
     copyPaste.pasteNewNodes(_copy, newGroup, _pasteOptions)
- 
 };
  
  
-// duplicate(oNodeObject(, newName(, newPosition)))
- 
+ /**
+ * duplicate
+ *
+ * Summary: WIP.
+ * @param   {string}    newName              The new name for the cloned module.
+ * @param   {oPoint}    newPosition          The new position for the cloned module.
+ *  
+ * @return: {void}
+ */
 oNode.prototype.duplicate= function(oNodeObject, newName, newPosition){
     // TODO
 };
@@ -579,7 +704,6 @@ oNode.prototype.duplicate= function(oNodeObject, newName, newPosition){
  
     // return (_index == -1)?null:_attributes[index];
 // };
-
 
 
 //////////////////////////////////////
