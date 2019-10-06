@@ -48,6 +48,37 @@
 //////////////////////////////////////
 //////////////////////////////////////
  
+
+/**
+ * oNode Class
+ * @class
+ * @property   nodes          {[oNode]}                        All nodes in the scene.
+ * @property   columns        {[oColumn]}                      All columns in the scene.
+ * @property   palettes       {[oPalette]}                     All palettes in the scene.
+ * @property   elements       {[oElement]}                     All elements in the scene.
+ * @property   drawings       {[oDrawing]}                     All drawings in the scene.
+ * @property   groups         {[oGroup]}                       All groups in the scene.
+ * 
+ * @function   {[oNode]}       node( string search_str )       node search
+ * @function   {[oColumn]}     column( string search_str )     column search
+ * @function   {[oPalette]}    palette( string search_str )    palette search 
+ * @function   {[oElement]}    element( string search_str )    element search 
+ * @function   {[oDrawing]}    drawing( string search_str )    drawing search 
+ * @function   {[oGroup]}      group( string search_str )      group search 
+ * 
+ * @function   {oNode}         addNode( string type, string name, oPoint nodePosition, string group )      
+ * @function   {oColumn}       addColumn( string type, string name, element )     
+ * @function   {oPalette}      addPalette( string name )
+ * @function   {oElement}      addElement( name, imageFormat, fieldGuide, scanType )
+ * @function   {oDrawing}      addDrawingNode( name, group, nodePosition, element, drawingColumn )
+ * @function   {oDrawing}      addGroup( name, includeNodes, group, nodePosition, addComposite, addPeg )
+ */
+ 
+ 
+ 
+ 
+ 
+ 
 // Constructor
 //
 // oNode(string path)
@@ -80,69 +111,107 @@
  
 // oNode constructor
  
+ 
+ 
+ 
+ 
+//TODO: Metadata, settings, aspect, camera peg, view.
+ 
+ 
 //In the event it doesnt exist, maybe we can create it with a .create function.
 function oNode( dom, path ){
-    this._type = "node";
-    this.$     = dom;
-    
-    this.fullPath = path;
-    this.attributes = [];
-    // generate properties from node attributes to allow for dot notation access
- 
-    // TODO: attributes as getter setters and add an attribute lookup function
- 
-    // also generate an array to give access to a list of all attributes
- 
+  this._type = "node";
+  this.$     = dom;
+
+  this.fullPath = path;  
+  this.root = path == "Top" ? true:false;
+  
+  // generate properties from node attributes to allow for dot notation access
+  this.attributes      = {};
+  
+  this.$.debug( "INSTANTIATING: " + path, this.$.DEBUG_LEVEL.LOG );
+  
+  try{
     var _attributesList = node.getAttrList(this.fullPath, 1);
     var _attributes = [];
- 
+
     for (var i in _attributesList){
         var _attribute = new oAttribute( this, _attributesList[i] );
         var _keyword = _attribute.keyword.toLowerCase();
- 
-         this[_keyword] = _attribute;
- 
-        // Dynamically create properties corresponding to node attributes ?
-        /*Object.defineProperty(oNode.prototype, _keyword, {
-            get : function(){
-                var _attribute = this.$attribute(_keyword)
-                return _attribute.keyword
-            },
- 
-            set : function(value){
-                var _attribute = this.$attribute(_keyword)
-                _attribute[1].value =
- 
-            }
-        })*/
- 
-        _attributes.push(_attribute);
- 
-        if (_attribute.subAttributes.length > 0){
-            _attributes = _attributes.concat(_attribute.subAttributes)
-        }
+
+        this.attributes[_keyword] = _attribute;
+
+        //The sub properties should be accessed directly via dot.notation from the parent.
+        //ie: position.x, ect.
+        
+        // _attributes.push(_attribute);
+        // if (_attribute.subAttributes.length > 0){
+            // _attributes = _attributes.concat(_attribute.subAttributes)
+        // }
     }
- 
-    this.attributes = _attributes;
- 
+  }catch( err ){
+    this.$.debug( err.message + "\n" + "File: " + err.fileName + "\n" + "Line Number: " + err.lineNumber , this.$.DEBUG_LEVEL.ERROR );
+  }
 }
 
+// oNode Object Properties
 Object.defineProperty(oNode.prototype, 'type', {
     get : function( ){
-      return node.type(this.fullPath);
+      if( this.root ){
+        return 'root';
+      }
+    
+      return node.type( this.fullPath );
     },
  
     set : function( bool_exist ){
     }
- 
 });
+
+Object.defineProperty(oNode.prototype, 'isGroup', {
+    get : function( ){
+      if( this.root ){
+        //in a sense, its a group.
+        return true;
+      }
+    
+      return node.isGroup( this.fullPath );
+    },
  
+    set : function( bool_exist ){
+    }
+});
+
+Object.defineProperty(oNode.prototype, 'children', {
+    get : function( ){
+      if( !this.isGroup ){ return []; }
+      
+      var _children = [];
+      var _subnodes = node.subNodes( this.fullPath );
+      for( var n=0; n<_subnodes.length; n++ ){
+        _children.push( new oNode( this.$, _subnodes[n] ) );
+      }
+      
+      return _children;
+    },
+ 
+    set : function( arr_children ){
+      //Consider a way to have this group adopt the children, move content here?
+      //this may be a bit tough to extend.
+    }
+});
+
 Object.defineProperty(oNode.prototype, 'exists', {
     get : function( ){
-      if( node.type(this.fullPath) ){
+      if( this.root ){
         return true;
+        
+      }else if( node.type(this.fullPath) ){
+        return true;
+        
       }else{
         return false;
+        
       }
     },
  
@@ -173,29 +242,37 @@ Object.defineProperty(oNode.prototype, 'selected', {
  
 });
 
-// oNode Object Properties
- 
-// String name
- 
+
 Object.defineProperty(oNode.prototype, 'name', {
     get : function(){
-         return node.getName(this.fullPath)
+      if( this.root ){ return "Top"; }
+    
+      return node.getName(this.fullPath)
     },
  
     set : function(newName){
-        var _parent = node.parentNode(this.fullPath)
+        //Check to see if it exists first.
+        
+        //Consider auto-incrementing? Maybe with options.
+        if( node.getName( _parent+'/'+newName ) ){
+          throw "Node already exists by that name.";
+        }
+        
+        var _parent = node.parentNode( this.fullPath )
         var _node = node.rename(this.fullPath, newName)
         this.fullPath = _parent+'/'+newName;
     }
  
-})
+});
  
  
 // String path
- 
+
 Object.defineProperty(oNode.prototype, 'path', {
     get : function(){
-         return node.parentNode(this.fullPath)
+      if( this.root ){ return false; }
+      
+      return node.parentNode(this.fullPath)
     },
  
     set : function(newPath){
@@ -205,46 +282,63 @@ Object.defineProperty(oNode.prototype, 'path', {
         this.fullPath = newPath + '/' + _name;
     }
  
-})
+});
+ 
+Object.defineProperty(oNode.prototype, 'parent', {
+    get : function(){
+      if( this.root ){ return false; }
+    
+      return new oNode( this.$, node.parentNode( this.fullPath ) )
+    },
+ 
+    set : function(newPath){
+        // TODO: make moveNode() method?
+    }
+ 
+});
  
  
 // bool enabled
- 
 Object.defineProperty(oNode.prototype, 'enabled', {
     get : function(){
-         return node.getEnable(this.fullPath)
+      if( this.root ){ return true; }
+    
+      return node.getEnable(this.fullPath)
     },
  
     set : function(enabled){
          node.setEnable(this.fullPath, enabled)
     }
-})
+});
  
  
 // bool locked
  
 Object.defineProperty(oNode.prototype, 'locked', {
     get : function(){
-         return node.getLocked(this.fullPath)
+      if( this.root ){ return false; }
+      
+      return node.getLocked(this.fullPath)
     },
  
     set : function(locked){
          node.setLocked(this.fullPath, locked)
     }
-})
+});
  
- 
+
 // point nodePosition
- 
 Object.defineProperty(oNode.prototype, 'nodePosition', {
     get : function(){
-         return new oPoint(node.coordX(this.fullPath), node.coordY(this.fullPath), node.coordZ(this.fullPath))
+      if( this.root ){ return new oPoint( 0.0, 0.0, 0.0 ); }
+      
+      return new oPoint(node.coordX(this.fullPath), node.coordY(this.fullPath), node.coordZ(this.fullPath))
     },
  
     set : function(newPosition){
-        node.coordX(this.fullPath) = newPosition.x
-        node.coordY(this.fullPath) = newPosition.y
-        node.coordZ(this.fullPath) = newPosition.z
+        node.coordX(this.fullPath) = newPosition.x;
+        node.coordY(this.fullPath) = newPosition.y;
+        node.coordZ(this.fullPath) = newPosition.z;
     }
 })
  
@@ -253,94 +347,125 @@ Object.defineProperty(oNode.prototype, 'nodePosition', {
  
 Object.defineProperty(oNode.prototype, 'x', {
     get : function(){
-         return node.coordX(this.fullPath)
+      if( this.root ){ return 0.0; }
+      
+      return node.coordX(this.fullPath)
     },
  
     set : function(newPosition){
-        node.coordX(this.fullPath) = newPosition.x
+      if( this.root ){ return; }
+      node.coordX(this.fullPath) = newPosition.x
     }
-})
+});
  
  
 // int y
  
 Object.defineProperty(oNode.prototype, 'y', {
     get : function(){
-         return node.coordY(this.fullPath)
+      if( this.root ){ return 0.0; }
+      
+      return node.coordY(this.fullPath)
     },
  
     set : function(newPosition){
-        node.coordY(this.fullPath) = newPosition.y
+      if( this.root ){ return; }
+      node.coordY(this.fullPath) = newPosition.y
     }
-})
+});
  
  
 // int z
  
 Object.defineProperty(oNode.prototype, 'z', {
     get : function(){
-         return node.coordZ(this.fullPath)
+      if( this.root ){ return 0.0; }
+      
+      return node.coordZ(this.fullPath)
     },
  
     set : function(newPosition){
-        node.coordZ(this.fullPath) = newPosition.z
+      if( this.root ){ return; }
+      node.coordZ(this.fullPath) = newPosition.z
     }
-})
+});
  
  
 // int width
  
 Object.defineProperty(oNode.prototype, 'width', {
     get : function(){
-         return node.width(this.fullPath)
+      if( this.root ){ return 0.0; }
+
+      return node.width(this.fullPath)
     }
-})
+});
  
  
 // int height
  
 Object.defineProperty(oNode.prototype, 'height', {
     get : function(){
-         return node.height(this.fullPath)
+      if( this.root ){ return 0.0; }
+
+      return node.height(this.fullPath)
     }
-})
+});
  
  
 // Array inNodes
  
 Object.defineProperty(oNode.prototype, 'inNodes', {
     get : function(){
-        var _inNodes = [];
-        for (var i = 0; i < node.numberOfInputPorts(this.fullPath); i++){
-            var _node = node.flatSrcNode(this.fullPath, i)
-            _inNodes.push( new oNode( this.$, _node ) );
-        }
-        return _inNodes;
+      if( this.root ){ return []; }
+
+      var _inNodes = [];
+      for (var i = 0; i < node.numberOfInputPorts(this.fullPath); i++){
+          var _node = node.flatSrcNode(this.fullPath, i)
+          _inNodes.push( new oNode( this.$, _node ) );
+      }
+      return _inNodes;
     }
-})
+});
  
  
 // Array outNodes
  
 Object.defineProperty(oNode.prototype, 'outNodes', {
     get : function(){
-        var _outNodes = [];
-        for (var i = 0; i < node.numberOfOutputPorts(this.fullPath); i++){
-            var _outLinks = [];
-            for (var j = 0; j < node.numberOfOutputLinks(this.fullPath, i); j++){
-                // TODO: ignore/traverse groups
-                var _node = node.dstNode(this.fullPath, i, j);
-                _outLinks.push( new oNode( this.$, _node ) );
-            }
-            _outNodes.push(_outLinks);
-        }
-        return _outNodes;
+      if( this.root ){ return []; }
+      
+      var _outNodes = [];
+      for (var i = 0; i < node.numberOfOutputPorts(this.fullPath); i++){
+          var _outLinks = [];
+          for (var j = 0; j < node.numberOfOutputLinks(this.fullPath, i); j++){
+              // TODO: ignore/traverse groups
+              var _node = node.dstNode(this.fullPath, i, j);
+              _outLinks.push( new oNode( this.$, _node ) );
+          }
+          _outNodes.push(_outLinks);
+      }
+      return _outNodes;
     }
-})
+});
+
+
+Object.defineProperty(oNode.prototype, 'ins', {
+    get : function(){
+      return this.outNodes;
+    }
+});
+
  
+Object.defineProperty(oNode.prototype, 'outs', {
+    get : function(){
+      return this.outNodes;
+    }
+});
+
+
  
 // oNode Class methods
- 
 // bool linkInNode(oNode oNodeObject, int inPort, int outPort)
  
 oNode.prototype.linkInNode = function(oNodeObject, inPort, outPort){
@@ -352,7 +477,9 @@ oNode.prototype.linkInNode = function(oNodeObject, inPort, outPort){
  
     return node.link(_node, outPort, this.fullPath, inPort, true, true);
  
-}
+};
+ 
+ 
  
 // bool linkOutNode(oNode oNodeObject, int outPort, int inPort)
  
@@ -365,7 +492,7 @@ oNode.prototype.linkOutNode = function(oNodeObject, outPort, inPort){
  
     return node.link(this.fullPath, outPort, _node, inPort, true, true);
  
-}
+};
  
  
 // Array subNodes(boolean recurse)
@@ -382,7 +509,7 @@ oNode.prototype.subNodes = function(recurse){
     }
  
     return _subNodes;
-}
+};
  
  
 // oBox getBounds()
@@ -390,7 +517,7 @@ oNode.prototype.subNodes = function(recurse){
  
 oNode.prototype.getBounds = function(){
     return new oBox(this.x, this.y, this.x+this.width, this.y+this.heigth);
-}
+};
  
  
 // void centerAbove(array oNodeArray, int offset)
@@ -414,7 +541,7 @@ oNode.prototype.centerAbove = function(oNodeArray, xOffset, yOffset){
  
     this.x = _box.center.x - this.width/2 + xOffset;
     this.y = _box.top - this.height + yOffset;
-}
+};
  
  
 // clone(oNodeObject(, newName(, newPosition, newGroup))){
@@ -432,26 +559,26 @@ oNode.prototype.clone = function(oNodeObject, newName, newPosition, newGroup){
     var _pasteOptions = copyPaste.getCurrentPasteOptions();
     copyPaste.pasteNewNodes(_copy, newGroup, _pasteOptions)
  
-}
+};
  
  
 // duplicate(oNodeObject(, newName(, newPosition)))
  
 oNode.prototype.duplicate= function(oNodeObject, newName, newPosition){
     // TODO
-}
+};
  
  
-// oAttribute $attributes(keyword){
+// Would rather keep the object in oNodes, as just a direct object for dot lookup oNode.attributes. 
+// // oAttribute $attributes(keyword){
+// oNode.prototype.$attributes = function(keyword){
+    // var _attributes = this.attributes;
+    // var _keywords = _attributes.map(function(x){return x.keyword});
  
-oNode.prototype.$attributes = function(keyword){
-    var _attributes = this.attributes;
-    var _keywords = _attributes.map(function(x){return x.keyword});
+    // var _index = _keywords.indexOf(keyword);
  
-    var _index = _keywords.indexOf(keyword);
- 
-    return (_index == -1)?null:_attributes[index];
-}
+    // return (_index == -1)?null:_attributes[index];
+// };
 
 
 

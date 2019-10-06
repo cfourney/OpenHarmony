@@ -38,7 +38,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
-
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -48,7 +47,6 @@
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
- 
  
 /**
  * oScene Class
@@ -75,8 +73,9 @@
  * @function   {oDrawing}      addGroup( name, includeNodes, group, nodePosition, addComposite, addPeg )
  */
  
+ 
+ 
 //TODO: Metadata, settings, aspect, camera peg, view.
-
 function oScene( dom ){
     // oScene.nodes property is a class property shared by all instances, so it can be passed by reference and always contain all nodes in the scene
  
@@ -86,7 +85,6 @@ function oScene( dom ){
   this.$     = dom;
   this._type = "scene";
 }
-
 
 
 //-------------------------------------------------------------------------------------
@@ -339,14 +337,20 @@ oScene.prototype.node = function( query ){
   }else{
     nodes_returned = this.nodes;
   }
-
+  
+  this.$.debug( "FILTER CODE", this.$.DEBUG_LEVEL.LOG );
+  
   //-----------------------------------------------------
   //IT HAS SOME SORT OF FILTER ASSOCIATED WITH THE QUERY.
   if( query_match.length > 2 ){
     var filtered_nodes = nodes_returned;
     for( var n=2;n<query_match.length;n++ ){
       //RUN THE FITERS.
-      this.$.debug( "FILTER INIT: " + query_match[n], this.$.DEBUG_LEVEL.LOG );
+      
+      if( !query_match[n] ){
+        continue;
+      }
+      
       if( query_match[n].slice(0, 1) == "#" ){         //TYPE
         this.$.debug( "TYPE FILTER INIT: " + query_match[n], this.$.DEBUG_LEVEL.LOG );
         
@@ -521,9 +525,9 @@ oScene.prototype.addColumn = function( type, name, element ){
     
     if (typeof name === 'undefined') var name = column.generateAnonymousName();
  
-    var _columnName = column.add(name, type)
+    var _columnName = column.add(name, type);
  
-    var _column = new oColumn(_columnName)
+    var _column = new oColumn( this.$, _columnName);
  
     if (type == "DRAWING" && typeof element !== 'undefined'){
         column.setElementIdOfDrawing(_column.uniqueName, element.id);
@@ -557,7 +561,7 @@ oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
  
     var _id = element.add(name, scanType, fieldGuide, _fileFormat, _vectorFormat);
  
-    var _element = new oElement(_id)
+    var _element = new oElement( this.$, _id );
  
     //this.elements.push(_element)
  

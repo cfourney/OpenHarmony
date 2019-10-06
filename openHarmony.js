@@ -45,17 +45,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
-include("openHarmony_misc.js")
-include("openHarmony_attribute.js")
-include("openHarmony_frame.js")
-include("openHarmony_element.js")
-include("openHarmony_palette.js")
-include("openHarmony_node.js")
-include("openHarmony_column.js")
-
-
-include("openHarmony_scene.js")
-
 
 /*
 // Class template
@@ -141,9 +130,39 @@ $ = {
                            'ERROR'   : 0,
                            'WARNING' : 1,
                            'LOG'     : 2
-                       }
+                       },
+      
+      file           : __file__
     };
 
+
+    
+/**
+ * $.directoryGet
+ *
+ * Summary: Helper function to split the filename, and get the directory name containing the file argument.
+ * @param   {string}   file_path            The path for the file to derive a directory from.
+ * @return: {string}                        The directory of the file.
+ */
+$.directoryGet = function( file_path ){
+  return file_path.split( "/" ).slice(0, -1).join('/');
+}
+
+$.directory = $.directoryGet( __file__ );
+
+
+// The included files should be relative to the path of THIS file!
+include( $.directory + "/openHarmony_misc.js")
+include( $.directory + "/openHarmony_attribute.js")
+include( $.directory + "/openHarmony_frame.js")
+include( $.directory + "/openHarmony_element.js")
+include( $.directory + "/openHarmony_palette.js")
+include( $.directory + "/openHarmony_node.js")
+include( $.directory + "/openHarmony_column.js")
+
+include( $.directory + "/openHarmony_scene.js" )
+
+System.println( "OSCENE: " + oScene );
 
 
 /**
@@ -168,8 +187,6 @@ $.debug = function( obj, level ){
   }
 }
     
-    
-    
 /**
  * $.log
  *
@@ -181,8 +198,6 @@ $.log = function( str ){
   MessageLog.trace( str );
   System.println( str );
 }
-
-
 
 /**
  * $.logObj
@@ -208,23 +223,6 @@ $.logObj = function( object ){
     }
 }
 
-
-
-//SCENE, SCN, S -> All points to the scene object.
-/**
- * $.getScene
- *
- * Summary: Get the SCENE DOM object of the currently active scene.
- * @return: {oScene} Open Harmony oScene object given for currently open scene and its settings.
- */
- 
-$.getScene = function( ){
-  this.debug( "GETTING SCENE DOM.", this.DEBUG_LEVEL.LOG );
-  
-  return new oScene( this ); 
-}
-
-$.s     = $.getScene();
+$.s     = new oScene( $ );
 $.scn   = $.s;
 $.scene = $.s;
-
