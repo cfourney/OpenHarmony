@@ -3,7 +3,7 @@
 //
 //
 //
-//                            openHarmony Library v0.02
+//                            openHarmony Library v0.04
 //
 //
 //         Developped by Mathieu Chaptel, ...
@@ -45,7 +45,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
  
- 
+
 /*
 // Class template
  
@@ -103,6 +103,10 @@ oTemplate.prototype.getSum = function (num){
 }
  
 */
+
+// include node view sorting library
+include(specialFolders.resource+"/scripts/TB_orderNetworkUp.js")
+
  
 //////////////////////////////////////
 //////////////////////////////////////
@@ -145,20 +149,27 @@ oSearch.prototype.$ = function(search){
  
 // Properties
 //
-// array nodes
-// array columns
-// array palettes
+// {[oNodes]}   nodes
+// {[oColumns]} columns
+// {[oPalettes]}palettes
+// {int}        length
 //
 // Methods
 //
-// oNode getNodeByName(string fullPath)
-// array getSelectedNodes(bool recurse)
-// oNode addNode(string type, string name, oPoint nodePosition, string group)
-// oNode addColumn(string type, string name, element)
-// oNode addElement(name, imageFormat, fieldGuide, scanType)
-// oNode addDrawingNode(name, group, nodePosition, element, drawingColumn)
-// oNode addGroup(name, includeNodes, group, nodePosition, addComposite, addPeg)
- 
+// {oNode}      getNodeByName(string fullPath)
+// {[oNode]}    getSelectedNodes(bool recurse)
+// {oNode}      addNode(string type, string name, oPoint nodePosition, string group)
+// {oColumn}    addColumn(string type, string name, element)
+// {oElement}   addElement(string name, string imageFormat, string fieldGuide, string scanType)
+// {oDrawingNode} addDrawingNode(name, group, nodePosition, element, drawingColumn)
+// {oGroupNode} addGroup(string name, [oNode] includeNodes, string group, oPoint nodePosition, bool addComposite, bool addPeg)
+// {oPalette}   importPalette(string filename, string name, string destination)
+// {oTimeline}  getTimeline(string display)
+// {[oNodes]}   importPSD(string filename, string group, oPoint nodePosition, bool separateLayers, bool addPeg, bool addComposite, string alignment)
+// {oNode}      importQT (string filename, string group, oPoint nodePosition, bool extendScene, string alignment)
+// {oNode}      mergeNodes ([oNode] nodes, string resultName, bool deleteMerged)
+// {oNode}      $node(string fullPath)
+
  
 function oScene(){
     // oScene.nodes property is a class property shared by all instances, so it can be passed by reference and always contain all nodes in the scene
@@ -213,20 +224,41 @@ Object.defineProperty(oScene.prototype, 'palettes', {
     }
 })
  
+// NEW
+// int length
+// returns the length of the scene
+ 
+Object.defineProperty(oScene.prototype, 'length', {
+    get : function(){
+        return frame.numberOf()
+    },
+    
+    set : function (newLength){
+        var _length = frame.numberOf();
+        var _toAdd = newLength-_length;
+        if (_toAdd>0){
+            frame.insert(_length-1, _toAdd)
+        }else{
+            frame.remove(_length-1, _toAdd)
+        }
+    }
+})
  
 // oScene class methods
  
+//NEW
 // getNodeByName(string fullPath)
  
 oScene.prototype.getNodeByName = function(fullPath){
-	if (node.type(fullPath) == "") return null
+	if (node.type(fullPath) == "") return null // TODO: remove this if we implement a .exists property for oNode
 	if (node.type(fullPath) == "READ") return new oDrawingNode(fullPath, this)
+    if (node.type(fullPath) == "PEG") return new oPegNode(fullPath, this)
+    if (node.type(fullPath) == "GROUP") return new oGroupNode(fullPath, this)
     return new oNode(fullPath, this);
 }
  
  
 // NEW
- 
 // getSelectedNodes(bool recurse)
  
 oScene.prototype.getSelectedNodes = function(recurse){
@@ -253,7 +285,7 @@ oScene.prototype.getSelectedNodes = function(recurse){
 }
  
  
-// oNode addNode(string type, string name, oPoint nodePosition, string group)
+// oNode addNode(string type, string name, string group, oPoint nodePosition)
  
 oScene.prototype.addNode = function(type, name, group, nodePosition){
     // Defaults for optional parameters
@@ -269,28 +301,35 @@ oScene.prototype.addNode = function(type, name, group, nodePosition){
  
  
 // NEW
- 
 // oColumn addColumn(string type, string name, element)
  
-oScene.prototype.addColumn = function(type, name, element){
+oScene.prototype.addColumn = function(type, name, oElementObject){
     // Defaults for optional parameters
     if (typeof name === 'undefined') var name = column.generateAnonymousName();
-   
-    column.add(name, type);
-    var _columnName = column.getName(column.numberOf()-1)
- 
+    
+    var _increment = 1;
+    var _columnName = name;
+    
+    // increment name if a column with that name already exists
+    while (column.type(_columnName) != ""){
+        _columnName = name+"_"+_increment;
+        _increment++;
+    }
+    
+    column.add(_columnName, type);
+                
     var _column = new oColumn(_columnName)
  
-    if (type == "DRAWING" && typeof element !== 'undefined'){
-        element.column = this;
-        column.setElementIdOfDrawing(_column.uniqueName, element.id);
+    if (type == "DRAWING" && typeof oElementObject !== 'undefined'){
+        oElementObject.column = this;// TODO: fix: this doesn't seem to actually work for some reason?
+        MessageLog.trace("set element "+oElementObject.id+" to column "+_column.uniqueName)
+        column.setElementIdOfDrawing(_column.uniqueName, oElementObject.id);
     }
  
     return _column;
 }
  
 // NEW
- 
 // oElement addElement(name, imageFormat, fieldGuide, scanType)
  
 oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
@@ -310,10 +349,13 @@ oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
  
  
 // NEW
- 
 // oNode addDrawingNode(name, group, nodePosition, element, drawingColumn)
  
-oScene.prototype.addDrawingNode = function(name, group, nodePosition, element, drawingColumn){
+oScene.prototype.addDrawingNode = function(name, group, nodePosition, oElementObject, drawingColumn){
+    // add drawing column and element if not passed as parameters
+    if (typeof oElementObject === 'undefined') var oElementObject = this.addElement(name)
+    if (typeof drawingColumn === 'undefined') var drawingColumn = this.addColumn("DRAWING", name, oElementObject)
+        
     // Defaults for optional parameters
     if (typeof group === 'undefined') var group = "Top"
     if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
@@ -322,33 +364,33 @@ oScene.prototype.addDrawingNode = function(name, group, nodePosition, element, d
     var _node = this.addNode("READ", name, group, nodePosition)
    
     // setup the node
-    // setup animate mode/separate based on preferences?
+    // setup animate mode/separate based on preferences?   
    
-   
-    // add drawing column and element if not passed as parameters
-   
-    if (typeof element === 'undefined') var element = this.addElement(name)
-    if (typeof drawingColumn === 'undefined') var drawingColumn = this.addColumn("DRAWING", name, element)
-   
-    _node.drawing.element.column = drawingColumn;
+    _node.attributes.drawing.element.column = drawingColumn;
    
     return _node;
 }
  
  
 //NEW
- 
-// oNode addGroup(name, includeNodes, group, nodePosition, addComposite, addPeg)
+// oNode addGroup(name, includeNodes, group, nodePosition, addComposite, addPeg, group, nodePosition))
  
 oScene.prototype.addGroup = function(name, includeNodes, addComposite, addPeg, group, nodePosition){
     // Defaults for optional parameters
-   
+    if (typeof addPeg === 'undefined') var addPeg = false;
+    if (typeof addComposite === 'undefined') var addComposite = false; 
+    if (typeof group === 'undefined') var group = "Top"; 
+    if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0); 
+    if (typeof includeNodes === 'undefined') var includeNodes = [];
+    
     var _group = this.addNode("GROUP", name, group, nodePosition)
-    var _MPI = this.$node(node.getGroupInputModule(_group.fullPath, "Multiport-In", 0,-100,0), this)
-    var _MPO = this.$node(node.getGroupOutputModule(_group.fullPath, "Multiport-Out", 0,100,0), this)
+    
+    var _MPI = _group.multiportIn
+    var _MPO = _group.multiportOut
  
     if (addComposite){
         var _composite = this.addNode("COMPOSITE", name+"_Composite", _group.fullPath)
+        _composite.composite_mode = "Pass Through" //
         _composite.linkOutNode(_MPO);
     }
     if (addPeg){
@@ -358,64 +400,220 @@ oScene.prototype.addGroup = function(name, includeNodes, addComposite, addPeg, g
    
     if (includeNodes.length > 0){
         var _timeline = this.getTimeline()
-        //MessageLog.trace(timeline.layers.map(function(x){return x.name}))
         includeNodes.sort(function(a, b){return a.timelineIndex(_timeline)-b.timelineIndex(_timeline)})
        
         for (var i in includeNodes){
             var _node = includeNodes[i];
             var _nodeName = _node.name;
-            //MessageLog.trace(_nodeName)
             node.moveToGroup(_node.fullPath, _group.fullPath)
-            // updating the fullPath of the oNode objects passed by reference
-            _node.fullPath = _group.fullPath+'/'+_nodeName;
+           
+           // updating the fullPath of the oNode objects passed by reference
+            _node.fullPath = _group.fullPath+'/'+_nodeName;           
            
             if (addPeg){
                 _node.unlinkInNode(_MPI)
                 _node.linkInNode(_peg)
             }
         }
+        
+        // TODO: restore links that existed outside of the group
     }
    
     return _group;
 }
- 
+
 // NEW
 // oTimeline getTimeline(display)
  
 oScene.prototype.getTimeline = function(display){
     if (typeof display === 'undefined') var display = '';
-    return new oTimeline(display)
+    return new oTimeline(display, this)
 }
  
- 
+
 // NEW
-// bool importPSD()
+// oPalette importPalette(filename, name, paletteStorage)
+oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement){
+    if (typeof paletteStorage === 'undefined') var destination = "scene";
+    if (typeof index === 'undefined') var index = 0;
+    
+    var _paletteFile = new oFile(filename)
+    if (typeof name === 'undefined') var name = _paletteFile.name;
+    if (typeof storeInElement === 'undefined'){
+        if (paletteStorage == "element") throw "Element parameter cannot be omitted if palette destination is Element"
+        var _element = 1;
+    }
+    
+    var _list = PaletteObjectManager.getScenePaletteList();
+    var _destination = ""
+    
+    switch (paletteStorage) {
+        case "environnement" :
+            _destination = PaletteObjectManager.Constants.Location.ENVIRONMENT;
+            break;
+        case "job" :
+            _destination = PaletteObjectManager.Constants.Location.JOB;
+            break;
+        case "scene" :
+            _destination = PaletteObjectManager.Constants.Location.SCENE;
+            break;
+        case "element" :
+            _destination = PaletteObjectManager.Constants.Location.ELEMENT;
+            var _element = storeInElement.id;
+            break;
+        case "external" :
+            _destination = PaletteObjectManager.Constants.Location.EXTERNAL;
+            break;
+        default :
+            break;
+    }
+    
+    var _newPalette = list.insertPaletteAtLocation(_destination, _element, name, index)
+    
+    return _newPalette;
+}
+
+
+// NEW
+// {[oNodes]} importPSD(filename, group, nodePosition, separateLayers, addPeg, addComposite, alignment)
  
-oScene.prototype.importPSD = function(filename, group, nodePosition, separateLayers){
-    if (typeof separateLayers === 'undefined') var separateLayers = false;
+oScene.prototype.importPSD = function(filename, group, nodePosition, separateLayers, addPeg, addComposite, alignment){
+    if (typeof alignment === 'undefined') var alignment = "ASIS" // create an enum for alignments?
+    if (typeof addComposite === 'undefined') var addComposite = true;
+    if (typeof addPeg === 'undefined') var addPeg = true;
+    if (typeof separateLayers === 'undefined') var separateLayers = true;
     if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0)
     if (typeof group === 'undefined') var group = "Top"
-   
-    var psdFile = new oFile(filename)
-    var _elementName = psdFile.name
-          
-    var _layers = CELIO.getLayerInformation(filename);
-  
+
+    var _psdFile = new oFile(filename)
+    var _elementName = _psdFile.name
+
+    var _xSpacing = 45
+    var _ySpacing = 30   
+    
     var _element = this.addElement(_elementName, "PSD")
     var _column = this.addColumn(_elementName, "DRAWING", _element)
-
-    CELIO.pasteImageFile({ src : filename, dst : { elementId : _element.id, exposure : "1"}})
-
+    
+    // save scene otherwise PSD is copied correctly into the element 
+    // but the TGA for each layer are not generated
+    // TODO: how to go around this to avoid saving?
+    scene.saveAll(); 
+    var _drawing = _element.addDrawing(1);
+    
+    var _nodes = []
+    
+    if (addPeg) var _peg = this.addNode("PEG", _elementName+"-P", group, nodePosition)
+    if (addComposite) var _comp = this.addNode("COMPOSITE", _elementName+"-Composite", group, nodePosition)
+    
+    // Import the PSD in the element
+    CELIO.pasteImageFile({ src : filename, dst : { elementId : _element.id, exposure : _drawing.name}})
+    var _layers = CELIO.getLayerInformation(filename);
+    
+    // create the nodes for each layer
     if (separateLayers){
+        
+        var _x = nodePosition.x - _layers.length/2*_xSpacing
+        var _y = nodePosition.y - _layers.length/2*_ySpacing
+        
+        // TODO: discover and generate the groups present in the PSD
+        
         for (var i in _layers){
             // generate nodes and set them to show the element for each layer
+            var _layer = _layers[i].layer
+            var _layerName = _layers[i].layerName.split(" ").join("_")
+            var _nodePosition = new oPoint(_x+=_xSpacing, _y +=_ySpacing, 0)
+            
+            //TODO: set into right group according to PSD organisation 
+            
+            var _group = group //"Top/"+_layers[i].layerPathComponents.join("/");
+
+            var _node = this.addDrawingNode(_layerName, _group, _nodePosition, _element)
+
+            _node.enabled = _layers[i].visible
+            _node.can_animate = false // use general pref?
+            _node.apply_matte_to_color = "Straight"
+            _node.alignment_rule = alignment
+            
+            _node.attributes.drawing.element.set(_layer != ""?"1:"+_layer:1, 1)
+            _node.attributes.drawing.element.column.extendExposures();
+
+            if (addPeg) _node.linkInNode(_peg)
+            if (addComposite) _node.linkOutNode(_comp)
+
+            _nodes.push(_node)
         }
+        
     }
+    
+    if (addPeg){
+        _peg.centerAbove(_nodes, 0, -_ySpacing )
+        _nodes.push(_peg)
+    }
+     
+    if (addComposite){
+        _comp.centerBelow(_nodes, 0, _ySpacing )
+        _nodes.push(_comp)
+    }
+    // TODO how to display only one node with the whole file
+    
+    return _nodes
+}
+
+// NEW
+// {oNode} importQT (filename, group, nodePosition, extendScene, alignment)
+
+oScene.prototype.importQT = function(filename, group, nodePosition, extendScene, alignment){
+    if (typeof alignment === 'undefined') var alignment = "ASIS";
+    if (typeof extendScene === 'undefined') var extendScene = true;
+    if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
+    if (typeof group === 'undefined') var group = "Top";
+    // MessageLog.trace("importing QT file :"+filename)
+
+    var _QTFile = new oFile(filename);
+    var _elementName = _QTFile.name;
    
+    var _element = this.addElement(_elementName, "PNG");
+    var _qtNode = this.addDrawingNode(_elementName, group, nodePosition, _element);
+    var _column = _qtNode.attributes.drawing.element.column;
+    _element.column = _column;
+    
+    // setup the node
+    _qtNode.can_animate = false;
+    _qtNode.alignment_rule = alignment;
+    
+    //MessageLog.trace("node: "+_qtNode.name+" element: "+_element.name+" column: "+_column.uniqueName)
+    
+    var _tempFolder = scene.tempProjectPathRemapped () + "/movImport/" + _elementName
+    var _audioPath = _tempFolder + "/" + _elementName + ".wav"
+
+    // setup import
+    MovieImport.setMovieFilename(_QTFile.path);
+    MovieImport.setImageFolder(_tempFolder);
+    MovieImport.setImagePrefix(_elementName);
+    MovieImport.setAudioFile(_audioPath);
+    MovieImport.doImport();
+    
+    if (extendScene && this.length < MovieImport.numberOfImages()) this.length = MovieImport.numberOfImages();
+    
+    // create expositions on the node
+    for (var i = 1; i <= MovieImport.numberOfImages(); i++ ) {
+        // move the frame into the drawing
+        var _framePath = _tempFolder + '/'+_elementName+'-' + i + '.png';
+        var _drawing = _element.addDrawing(i, i, _framePath)
+    }
+    
+    // creating an audio column for the sound
+    if ( MovieImport.isAudioFileCreated() ){
+        var _soundName = _elementName + "_sound";
+        var _soundColumn = this.addColumn("SOUND", _soundName);
+        column.importSound( _soundColumn.name, 1, _audioPath);
+    }
+  
+    return _qtNode;
 }
  
 // NEW
-// oNode mergeNodes
+// oNode mergeNodes (nodes, resultName, deleteMerged)
  
 oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
     // TODO: is there a way to do this without Action.perform?
@@ -447,7 +645,7 @@ oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
         var _timings = nodes[i].timings;
         var _frameNumbers = _keys.map(function (x){return x.frameNumber})
         for (var j in _timings){
-            if (_frameNumbers.indexOf(_timings[j]. frameNumber) == -1) _keys.push(_timings[j])
+            if (_frameNumbers.indexOf(_timings[j].frameNumber) == -1) _keys.push(_timings[j])
         }
     }
    
@@ -465,7 +663,7 @@ oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
  
         Action.perform("onActionChooseSelectTool()", "cameraView");
         for (var j=nodes.length-1; j>=0; j--){
-            if (nodes[j].drawing.element.frames[_frame].isBlank) continue;
+            if (nodes[j].attributes.drawing.element.frames[_frame].isBlank) continue;
            
             DrawingTools.setCurrentDrawingFromNodeName( nodes[j].fullPath, _frame );
             Action.perform("selectAll()", "cameraView");
@@ -479,7 +677,7 @@ oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
         }
     }
    
-    _mergedNode.drawing.element.column.extendExposures();
+    _mergedNode.attributes.drawing.element.column.extendExposures();
  
     // place merged node at the center of preexisting nodes
     var _box = new oBox();
@@ -489,7 +687,7 @@ oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
          _box.include(_nodeBox);
     }
    
-    MessageLog.trace("center: "+_box.center.x+" "+_box.center.y)
+    //MessageLog.trace("center: "+_box.center.x+" "+_box.center.y)
     _mergedNode.x = _box.center.x-_mergedNode.width/2
     _mergedNode.y = _box.center.y-_mergedNode.height/2
 	
@@ -511,7 +709,6 @@ oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
 oScene.prototype.$node = function(fullPath){
     return this.getNodeByName(fullPath)
 }
- 
  
  
 //////////////////////////////////////
@@ -557,9 +754,10 @@ function oTimeline(display, oSceneObject){
  
 Object.defineProperty(oTimeline.prototype, 'layers', {
     get : function(){
-        var _timeline = this.layers;
-       
-        _timeline = _timeline.map(function(x){return this.scene.$node(x)})
+        var _timeline = this.layersList;
+        var _scene = this.scene;
+        
+        _timeline = _timeline.map(function(x){return _scene.$node(x)})
        
         return _timeline;
     }
@@ -629,15 +827,11 @@ Object.defineProperty(oTimeline.prototype, 'layersList', {
 function oNode(path, oSceneObject){
     this.fullPath = path;
     this.type = node.type(this.fullPath)
-    this.attributes = [];
 	this.scene = oSceneObject;
-    // generate properties from node attributes to allow for dot notation access
+    // generate properties from node attributes to allow for dot notation access 
  
-    // TODO: attributes as getter setters and add an attribute lookup function
- 
-    // also generate an array to give access to a list of all attributes
- 
-    var _attributesList = node.getAttrList(this.fullPath, 1);
+    // old implementation with array
+    /*var _attributesList = node.getAttrList(this.fullPath, 1);
     var _attributes = [];
  
     for (var i in _attributesList){
@@ -654,10 +848,44 @@ function oNode(path, oSceneObject){
         }
     }
  
-    this.attributes = _attributes;
+    this.attributes = _attributes;*/
  
+    // for each attribute, create a getter setter as a property of the node object that handles the animated/not animated duality
+    var _attributes = this.attributes
+    // replace each attribute that has subbattributes by its subattrs for the getter/setters
+    for (var i in _attributes){
+        var _attr = _attributes[i]
+        this.setAttrGetterSetter(_attr)
+    }
+    
 }
  
+//NEW 
+// setAttrGetterSetter      private function to create attributes setters and getters as properties of the node
+oNode.prototype.setAttrGetterSetter = function (attr){
+    //MessageLog.trace("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name)
+    Object.defineProperty(this, attr.keyword.toLowerCase(), {
+        get : function(){
+            //MessageLog.trace("getting attribute "+attr.keyword+". animated: "+(attr.column != null))
+            // if attribute has animation, return the frames
+            if (attr.column != null) return attr.frames
+            // otherwise return the value
+            return attr.get()
+        },
+        
+        set : function(newValue){
+            //MessageLog.trace("setting attribute "+attr.keyword+" to value: ")
+            // if attribute has animation, passed value must be a frame object
+            if (attr.column != null) {
+                if (!newValue instanceof oFrame) throw "must pass an oFrame object to set an animated attribute"
+                attr.set(newValue.value, newValue.frameNumber)
+            }else{           
+                return attr.set(newValue)
+            }
+        }
+    })
+}
+
  
 // oNode Object Properties
  
@@ -718,7 +946,16 @@ Object.defineProperty(oNode.prototype, 'locked', {
          node.setLocked(this.fullPath, locked)
     }
 })
- 
+
+
+// NEW
+// bool root
+
+Object.defineProperty(oNode.prototype, 'isRoot', {
+    get : function(){
+         return this.fullPath == "Top"
+    }
+})
  
 // NEW
 // point nodePosition
@@ -768,7 +1005,7 @@ Object.defineProperty(oNode.prototype, 'y', {
  
 Object.defineProperty(oNode.prototype, 'z', {
     get : function(){
-         return node.coordZ(this.fullPath, z)
+         return node.coordZ(this.fullPath)
     },
  
     set : function(z){
@@ -816,8 +1053,7 @@ Object.defineProperty(oNode.prototype, 'inNodes', {
 Object.defineProperty(oNode.prototype, 'outNodes', {
     get : function(){
         var _outNodes = [];
-		MessageLog.trace("finding outnodes of node "+this.scene)
-        for (var i = 0; i < node.numberOfOutputPorts(this.fullPath); i++){
+		for (var i = 0; i < node.numberOfOutputPorts(this.fullPath); i++){
             var _outLinks = [];
             for (var j = 0; j < node.numberOfOutputLinks(this.fullPath, i); j++){
                 // TODO: ignore/traverse groups
@@ -835,6 +1071,29 @@ Object.defineProperty(oNode.prototype, 'outNodes', {
 })
  
  
+//NEW
+// {attributes} attributes 
+
+Object.defineProperty(oNode.prototype, 'attributes', {
+    get : function(){
+        var _attributesList = node.getAttrList(this.fullPath, 1);
+        var _attributes = {};
+     
+        for (var i in _attributesList){
+     
+            var _attribute = new oAttribute(this, _attributesList[i]);
+            var _keyword = _attribute.keyword.toLowerCase();
+     
+            _attributes[_keyword] = _attribute;
+     
+
+        }
+     
+        return _attributes;
+    }
+
+})
+ 
  
 // oNode Class methods
 // bool linkInNode(oNode oNodeObject, int inPort, int outPort)
@@ -844,8 +1103,7 @@ oNode.prototype.linkInNode = function(oNodeObject, inPort, outPort){
  
     // Default values for optional parameters
     if (typeof inPort === 'undefined') inPort = 0;
-    if (typeof outPort === 'undefined') outPort = 0;
-    //node.numberOfOutputPorts(_node);
+    if (typeof outPort === 'undefined') outPort = 0//node.numberOfOutputPorts(_node);
  
     return node.link(_node, outPort, this.fullPath, inPort, true, true);
  
@@ -859,7 +1117,9 @@ oNode.prototype.linkInNode = function(oNodeObject, inPort, outPort){
 oNode.prototype.unlinkInNode = function(oNodeObject){
     var _node = oNodeObject.fullPath;
    
+   MessageLog.trace("unlinking "+this.name+" from "+oNodeObject.name)
     var _inNodes = this.inNodes;
+    MessageLog.trace(_inNodes.length)
    
     for (var i in _inNodes){
        
@@ -897,29 +1157,13 @@ oNode.prototype.linkOutNode = function(oNodeObject, outPort, inPort){
     var _node = oNodeObject.fullPath;
  
     // Default values for optional parameters
-    if (typeof inPort === 'undefined') inPort = 0;
+    if (typeof inPort === 'undefined') inPort = node.numberOfInputPorts(_node);;
     if (typeof outPort === 'undefined') outPort = 0//node.numberOfOutputPorts(this.fullPath);
  
     return node.link(this.fullPath, outPort, _node, inPort, true, true);
 }
  
- 
-// Array subNodes(boolean recurse)
-// obtains the nodes contained in the group, allows recursive search
- 
-oNode.prototype.subNodes = function(recurse){
-    if (typeof recurse === 'undefined') recurse = false;
-    var _nodes = node.subNodes(this.fullPath);
-    var _subNodes = [];
-    for (var _node in _nodes){
-        var _oNodeObject = this.scene.$node(_nodes[_node]);
-        _subNodes.push(_oNodeObject);
-        if (recurse && node.isGroup(_nodes[_node])) _subNodes = _subNodes.concat(_oNodeObject.subNodes(recurse));
-    }
- 
-    return _subNodes;
-}
- 
+
 // NEW
 // int timelineIndex
  
@@ -936,8 +1180,8 @@ oNode.prototype.getBounds = function(){
     return new oBox(this.x, this.y, this.x+this.width, this.y+this.height);
 }
  
- 
-// void centerAbove(array oNodeArray, int offset)
+// NEW
+// nodePosition centerAbove(array oNodeArray, int offset)
 // Place a node above one or more nodes with an offset
  
 oNode.prototype.centerAbove = function(oNodeArray, xOffset, yOffset){
@@ -958,7 +1202,36 @@ oNode.prototype.centerAbove = function(oNodeArray, xOffset, yOffset){
  
     this.x = _box.center.x - this.width/2 + xOffset;
     this.y = _box.top - this.height + yOffset;
+    
+    return new oPoint(this.x, this.y, this.z)
 }
+
+// NEW
+// void centerAbove(array oNodeArray, int offset)
+// Place a node above one or more nodes with an offset
+ 
+oNode.prototype.centerBelow = function(oNodeArray, xOffset, yOffset){
+    // Defaults for optional parameters
+    if (typeof xOffset === 'undefined') var xOffset = 0;
+    if (typeof yOffset === 'undefined') var yOffset = 0;
+ 
+    // Works with nodes and nodes array
+    if (typeof oNodeArray === 'oNode') oNodeArray = [oNodeArray];
+ 
+    var _box = new oBox();
+ 
+    for (var i in oNodeArray){
+         var _node = oNodeArray[i];
+         var _nodeBox = _node.getBounds();
+         _box.include(_nodeBox);
+    }
+ 
+    this.x = _box.center.x - this.width/2 + xOffset;
+    this.y = _box.bottom + yOffset;
+    
+    return new oPoint(this.x, this.y, this.z)
+}
+ 
  
  
 // clone(oNodeObject(, newName(, newPosition, newGroup))){
@@ -982,6 +1255,7 @@ oNode.prototype.clone = function(oNodeObject, newName, newPosition, newGroup){
  
 oNode.prototype.duplicate = function(oNodeObject, newName, newPosition){
     // TODO
+    
 } 
  
  
@@ -1009,15 +1283,15 @@ oNode.prototype.remove = function(deleteColumns, deleteElements){
  
  
 // oAttribute $attributes(keyword){
- 
-oNode.prototype.$attributes = function(keyword){
+// no longer needed 
+/*oNode.prototype.$attributes = function(keyword){
     var _attributes = this.attributes;
     var _keywords = _attributes.map(function(x){return x.keyword});
  
     var _index = _keywords.indexOf(keyword);
  
     return (_index == -1)?null:_attributes[index];
-}
+}*/
  
  
 //////////////////////////////////////
@@ -1036,7 +1310,27 @@ oNode.prototype.$attributes = function(keyword){
 //
 // Properties
 //
- 
+
+function oPegNode(path, oSceneObject) {
+    // oDrawingNode can only represent a node of type 'READ'
+    if (node.type(path) != 'PEG') throw "'path' parameter must point to a 'PEG' type node";
+    oNode.call(this, path, oSceneObject); 
+}
+
+// extends oNode and can use its methods
+oPegNode.prototype = Object.create(oNode.prototype);
+
+// NEW
+Object.defineProperty(oPegNode.prototype, "useSeparate", {
+    get : function(){
+        
+    },
+   
+    set : function( _value ){
+        // TODO: when swapping from one to the other, copy key values and link new columns if missing
+    }
+})
+
  
 //////////////////////////////////////
 //////////////////////////////////////
@@ -1076,13 +1370,13 @@ oDrawingNode.prototype = Object.create(oNode.prototype);
  
 Object.defineProperty(oDrawingNode.prototype, "element", {
     get : function(){
-        var _column = this.drawing.element.column;
+        var _column = this.attributes.drawing.element.column;
         return (new oElement(node.getElementId(this.fullPath), _column))
     },
    
     set : function( oElementObject ){
-        var _column = this.drawing.element.column;
-        column.setElementIdOfDrawing(_column.uniquename, oElementObject.id)
+        var _column = this.attributes.drawing.element.column;
+        column.setElementIdOfDrawing(_column.uniqueName, oElementObject.id)
     }
 })
 
@@ -1092,11 +1386,109 @@ Object.defineProperty(oDrawingNode.prototype, "element", {
 
 Object.defineProperty(oDrawingNode.prototype, "timings", {
     get : function(){
-        return this.drawing.element.getKeyFrames()
+        return this.attributes.drawing.element.getKeyFrames()
    }
 })
- 
 
+
+// NEW
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//         oGroupNode class         //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+ 
+// Constructor
+//
+// oGroupNode(path)
+//
+// Properties
+//
+// oNode MultiportIn    fetches the groups MultiPort-In node
+// oNode MultiportOut    fetches the groups MultiPort-Out node
+
+// NEW 
+// Inherits from oNode class
+
+function oGroupNode(path, oSceneObject) {
+    // oDrawingNode can only represent a node of type 'READ'
+    if (node.type(path) != 'GROUP') throw "'path' parameter must point to a 'GROUP' type node";
+    oNode.call(this, path, oSceneObject); 
+}
+
+// extends oNode and can use its methods
+oGroupNode.prototype = Object.create(oNode.prototype);
+
+
+// NEW
+// oNode MultiportIn    fetches the groups MultiPort-In node
+ 
+Object.defineProperty(oGroupNode.prototype, "multiportIn", {
+    get : function(){
+        if (this.isRoot) return null
+        var _MPI = this.scene.$node(node.getGroupInputModule(this.fullPath, "Multiport-In", 0,-100,0),this.scene)
+        return (_MPI)
+    }
+})
+
+
+// NEW
+// oNode MultiportOut    fetches the groups MultiPort-Out node
+
+Object.defineProperty(oGroupNode.prototype, "multiportOut", {
+    get : function(){
+        if (this.isRoot) return null
+        var _MPO = this.scene.$node(node.getGroupOutputModule(this.fullPath, "Multiport-Out", 0, 100,0),this.scene)
+        return (_MPO)
+    }
+})
+
+// NEW
+// Array subNodes(boolean recurse)
+// obtains the nodes contained in the group, allows recursive search
+ 
+oGroupNode.prototype.subNodes = function(recurse){
+    if (typeof recurse === 'undefined') recurse = false;
+    
+    var _nodes = node.subNodes(this.fullPath);
+    var _subNodes = [];
+    
+    for (var i in _nodes){
+        var _oNodeObject = this.scene.$node(_nodes[i]);
+        _subNodes.push(_oNodeObject);
+        if (recurse && node.isGroup(_nodes[i])) _subNodes = _subNodes.concat(_oNodeObject.subNodes(recurse));
+    }
+ 
+    return _subNodes;
+}
+ 
+// NEW
+// void orderNodeView()         sorts out the node view inside the group
+
+oGroupNode.prototype.orderNodeView = function(recurse){
+    if (typeof recurse === 'undefined') var recurse = false;
+    
+	TB_orderNetworkUpBatchFromList(node.subNodes(this.fullPath))
+    
+    if (!this.isRoot){
+        var _MPO = this.multiportOut;
+        var _MPI = this.multiportIn;
+    
+        _MPI.x = _MPO.x
+    }
+    
+    if (recurse){
+        var _subNodes = this.subNodes().filter(function(x){return x.type == "GROUP"});
+        for (var i in _subNodes){
+            _subNodes[i].orderNodeView(recurse);
+        }
+    }
+}
 
 
 //////////////////////////////////////
@@ -1210,7 +1602,7 @@ oColumn.prototype.duplicate = function() {
  
 // Constructor
 //
-// oElement (id)
+// oElement (id, columnObject)
 //
 // Properties
 //
@@ -1247,14 +1639,25 @@ Object.defineProperty(oElement.prototype, 'name', {
 Object.defineProperty(oElement.prototype, 'path', {
     get : function(){
          return fileMapper.toNativePath(element.completeFolder(this.id))
-    },
- 
-    set : function(newPath){
-        //
     }
 })
- 
- 
+
+
+// NEW 
+// {[oDrawings]} drawings
+
+Object.defineProperty(oElement.prototype, 'drawings', {
+    get : function(){
+        var _drawingsNumber = Drawings.numberOf(this.id)
+        var _drawings = [];
+        for (var i=0; i<_drawingsNumber; i++){
+            _drawings.push(new oDrawing(Drawing.name(this.id, i), this))
+        }
+        return _drawings;
+    }
+})
+
+
 // NEW
 // oElement Class methods
  
@@ -1265,13 +1668,86 @@ oElement.prototype.addDrawing = function(atFrame, name, filename){
     var fileExists = filename?true:false;
     // TODO deal with fileExists and storeInProjectFolder
     Drawing.create (this.id, name, fileExists, true);
-   
+    
+    if (filename){
+        //copy the imported file at the newly created drawing place
+        var _file = Drawing.filename(this.id, name)
+        //MessageLog.trace(_file)
+        
+        var _frameFile = new oFile(filename)
+        _frameFile.move(_file, true)
+        
+    }
+    
     // place drawing on the column at the provided frame
-    column.setEntry(this.column.uniqueName, 1, atFrame, name)
+    if (this.column != null || this.column != undefined)
+        column.setEntry(this.column.uniqueName, 1, atFrame, name)
    
-    return name;
+    return new oDrawing(name, this);
 }
+
+// NEW
+// getDrawingByName(string name)
+
+oElement.prototype.getDrawingByName = function (name){
+    return new oDrawing(name, this)
+}
+
+//NEW
+
+oElement.prototype.linkPalette = function (paletteFile){
+    // TODO
+}
+
+// NEW
  
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//          oDrawing class          //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+ 
+// Constructor
+//
+// oDrawing (name, element)
+//
+// Properties
+//
+// string id
+// string name
+// string path
+// oColumn column
+//
+// Methods
+//
+ 
+ 
+// NEW
+// oElement constructor
+ 
+function oDrawing (name, oElementObject){
+    this.name = name;
+    this.element = oElementObject;
+}
+
+// oElement Object Properties
+
+//NEW
+// string path
+Object.defineProperty(oDrawing.prototype, 'path', {
+    get : function(){
+         return fileMapper.toNativePath(Drawing.filename(this.element.id, this.name))
+    }
+})
+  
+// oElement Class methods
+
+
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -1341,7 +1817,8 @@ Object.defineProperty(oAttribute.prototype, 'type', {
 Object.defineProperty(oAttribute.prototype, 'column', {
     get : function(){
         var _column = node.linkedColumn (this.oNodeObject.fullPath, this.keyword)
-        return new oColumn(_column, this)
+        //MessageLog.trace("column for attribute: "+this.keyword+" of node: "+this.oNodeObject.fullPath+" = "+_column)
+        return (_column!="")?new oColumn(_column, this):null
     },
  
     set : function(columnObject){
@@ -1349,6 +1826,7 @@ Object.defineProperty(oAttribute.prototype, 'column', {
         if (columnObject == "" || columnObject == null){
             node.unLinkAttr(this.oNodeObject.fullPath, this.keyword)
         }else{
+            //MessageLog.trace("linking column "+ columnObject.uniqueName+" to attribute "+this.keyword+" of node "+this.oNodeObject.name)
             node.linkAttr(this.oNodeObject.fullPath, this.keyword, columnObject.uniqueName)
         }
     }
@@ -1383,7 +1861,7 @@ oAttribute.prototype.getKeyFrames = function(){
  
 oAttribute.prototype.set = function (value, frame) {
     if (typeof frame === 'undefined') var frame = 1;
-    MessageLog.trace('setting frame :'+frame+' to value: '+value+' of attribute: '+this.keyword)
+    //MessageLog.trace('setting frame :'+frame+' to value: '+value+' of attribute: '+this.keyword)
  
     if (frame != 1){
         // generate a new column to be able to animate
@@ -1422,41 +1900,41 @@ oAttribute.prototype.get = function (frame) {
         var _attr = this.attributeObject;
         var _type = this.type;
         var _value;
-       
+               
         switch (_type){
-            case 'bool':
-                _value = _attr.boolValueAt(1)
+            case 'BOOL':
+                _value = _attr.boolValueAt(frame)
                 break;
                
-            case 'int':
-                _value = _attr.inValueAt(1)
+            case 'INT':
+                _value = _attr.inValueAt(frame)
                 break;
                
-            case 'double':
-                _value = _attr.doubleValueAt(1)
+            case 'DOUBLE':
+                _value = _attr.doubleValueAt(frame)
                 break;
                
-            case 'text':
-                _value = _attr.textValueAt(1)
+            case 'TEXT':
+                _value = _attr.textValueAt(frame)
                 break;
                
-            case 'color':
-                _value = _attr.colorValueAt(1)
+            case 'COLOR':
+                _value = _attr.colorValueAt(frame)
                 break;
  
-            case 'pos2d':
-                _value = _attr.pos2dValueAt(1)
+            case 'POS2D':
+                _value = _attr.pos2dValueAt(frame)
                 break;
                
-            case 'pos3d':
-                _value = _attr.pos3dValueAt(1)
+            case 'POS3D':
+                _value = _attr.pos3dValueAt(frame)
                 break;
                
             default:
         }
        
         // TODO deal with subattributes
-        return this.attributeObject.getValue();
+        return _value;
     }
 }
  
@@ -1690,7 +2168,6 @@ Object.defineProperty(oPalette.prototype, 'path', {
  
     set : function(newPath){
         // TODO: move palette file then unlink and relink the palette ? Or provide a move() method
- 
     }
 })
  
@@ -1947,6 +2424,27 @@ Object.defineProperty(oFile.prototype, 'extension', {
         return _extension;
     }
 })
+
+
+//NEW
+// oFolder folder
+ 
+Object.defineProperty(oFile.prototype, 'folder', {
+    get: function(){
+        var _folder = this.path.slice(0,this.path.lastIndexOf("/")-1)
+        return new oFolder(_folder);
+    }
+})
+
+
+//NEW
+// bool exists
+Object.defineProperty(oFile.prototype, 'exists', {
+    get: function(){
+        var _file = new File (this.path)
+        return _file.exists;
+    }
+})
  
  
 oFile.prototype.readFile = function() {
@@ -1965,6 +2463,9 @@ oFile.prototype.readFile = function() {
 }
  
  
+// NEW
+// writeFile(string content, bool append)
+ 
 oFile.prototype.writeFile = function(content, append){
     if (typeof append === 'undefined') var append = false
    
@@ -1980,7 +2481,40 @@ oFile.prototype.writeFile = function(content, append){
         return true
     } catch (err) {return false;}
 }
- 
+
+
+// NEW
+// move(string destPath, bool overwrite)
+
+oFile.prototype.move = function(destPath, overwrite){
+    if (typeof overwrite === 'undefined') var overwrite = false;
+    
+    var _file = new PermanentFile(this.path)
+    var _dest = new PermanentFile(destPath)
+    
+    if (_dest.exists){
+        if (!overwrite) throw "destination file "+destPath+" exists and will not be overwritten. Can't move file."
+    }
+
+    return _file.move(_dest);
+}
+
+
+// NEW
+// copy(string destPath, bool overwrite)
+
+oFile.prototype.copy = function(destPath, overwrite){
+    if (typeof overwrite === 'undefined') var overwrite = false;
+    
+    var _file = new PermanentFile(this.path)
+    var _dest = new PermanentFile(destPath)
+    
+    if (_dest.exists){
+        if (!overwrite) throw "destination file "+destPath+" exists and will not be overwritten. Can't copy file."
+    }
+
+    return _file.copy(_dest);
+} 
  
 //////////////////////////////////////
 //////////////////////////////////////
