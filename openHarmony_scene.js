@@ -121,7 +121,7 @@ Object.defineProperty(oScene.prototype, 'columns', {
     get : function(){
         var _columns = [];
         for (var i=0; i<columns.numberOf(); i++){
-            _columns.push(new oColumn(column.getName(i)));
+            _columns.push(new oColumn( this.$, column.getName(i)));
         }
         return _columns;
     }

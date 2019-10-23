@@ -545,19 +545,6 @@ Object.defineProperty(oNode.prototype, 'bounds', {
 }); 
  
  
- 
- 
- 
- // * @function   {oAttribute}       attribute( {string} atribute_str )                                           Get the specific attribute
- // * @function   {bool}             linkInNode( {oNode} oNodeObject, {int} inPort, {int} outPort)                Link's this node's in-port to the given module, at the inport and outport indices.
- // * @function   {bool}             linkOutNode( {oNode} oNodeObject, {int} outPort, {int} inPort)               Link's this node's out-port to the given module, at the inport and outport indices.
- // * @function   {[oNode]}          subNodes( {bool} recurse )                                                   Obtains the nodes contained in the group, allows recursive search.
- // * @function   {oBox}             getBounds( )                                                                 Get the bounds of the node in the node view.
- // * @function   {oNode}            clone()                                                                      Clone the node via copy and paste. WIP, should return the new cloned node.
- // * @function   {void}             centerAbove( {[oNode]} oNodeArray, {float} xOffset, {float} yOffset) )       Center this node above the nodes in the array provided.
- // * @function   {void}             duplicate( string search_str )                                               WIP
- 
- 
 /**
  * linkInNode
  *

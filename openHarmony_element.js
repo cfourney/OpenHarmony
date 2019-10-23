@@ -50,25 +50,58 @@
  
 // Constructor
 //
-// oElement (id)
+// oElement (id, columnObject)
 //
 // Properties
 //
+// string id
+// oColumn column
 // string name
 // string path
+// {[oDrawings]} drawings
 //
 // Methods
 //
-// double getSum(double num)
- 
- 
+// oDrawing addDrawing(int atFrame, string name, string filename)
+// oDrawing getDrawingByName(string name)
+// linkPalette (oPalette paletteFile)
+
+
+// NEW
 // oElement constructor
  
-function oElement (id){
-    this.id = id;
-}
+/**
+ * oElement Class
+ * @class
+
+ * @property   name           {string}                       The name of the node.
+ * @property   path           {string}                       The parent path of the node, the group in which it is contained.
+ * @property   fullpath       {string}                       The path of the node in the network.
+ * @property   type           {string}                       The type of the node.
+
+ * @function   {oAttribute}       attribute( {string} atribute_str )                                           Get the specific attribute
+ * @function   {bool}             linkInNode( {oNode} oNodeObject, {int} inPort, {int} outPort)                Link's this node's in-port to the given module, at the inport and outport indices.
+ * @function   {bool}             linkOutNode( {oNode} oNodeObject, {int} outPort, {int} inPort)               Link's this node's out-port to the given module, at the inport and outport indices.
+ * @function   {[oNode]}          subNodes( {bool} recurse )                                                   Obtains the nodes contained in the group, allows recursive search.
+ * @function   {oNode}            clone()                                                                      Clone the node via copy and paste. WIP, should return the new cloned node.
+ * @function   {void}             centerAbove( {[oNode]} oNodeArray, {float} xOffset, {float} yOffset) )       Center this node above the nodes in the array provided.
+ * @function   {void}             duplicate( string search_str )                                               WIP
+*/
  
+ 
+ 
+function oElement (id, oColumnObject){
+    this.id = id;
+    this.column = oColumnObject;
+    
+    
+};
+
+
 // oElement Object Properties
+
+// NEW
+// string name
  
 Object.defineProperty(oElement.prototype, 'name', {
     get : function(){
@@ -78,15 +111,74 @@ Object.defineProperty(oElement.prototype, 'name', {
     set : function(newName){
          element.renameById(this.id, newName);
     }
-})
- 
+});
+
+
+//NEW
+// string path
  
 Object.defineProperty(oElement.prototype, 'path', {
     get : function(){
          return fileMapper.toNativePath(element.completeFolder(this.id))
-    },
- 
-    set : function(newPath){
-        //
     }
-})
+});
+ 
+ 
+// NEW
+// {[oDrawings]} drawings
+ 
+Object.defineProperty(oElement.prototype, 'drawings', {
+    get : function(){
+        var _drawingsNumber = Drawings.numberOf(this.id)
+        var _drawings = [];
+        for (var i=0; i<_drawingsNumber; i++){
+            _drawings.push(new oDrawing(Drawing.name(this.id, i), this))
+        }
+        return _drawings;
+    }
+});
+ 
+ 
+// NEW
+// oElement Class methods
+ 
+oElement.prototype.addDrawing = function(atFrame, name, filename){
+    if (typeof filename === 'undefined') var filename = false;
+    if (typeof name === 'undefined') var name = atFrame+''
+   
+    var fileExists = filename?true:false;
+    // TODO deal with fileExists and storeInProjectFolder
+    Drawing.create (this.id, name, fileExists, true);
+   
+    if (filename){
+        //copy the imported file at the newly created drawing place
+        var _file = Drawing.filename(this.id, name)
+        //MessageLog.trace(_file)
+       
+        var _frameFile = new oFile(filename)
+        _frameFile.move(_file, true)
+       
+    }
+   
+    // place drawing on the column at the provided frame
+    if (this.column != null || this.column != undefined)
+        column.setEntry(this.column.uniqueName, 1, atFrame, name)
+   
+    return new oDrawing(name, this);
+}
+ 
+
+// NEW
+// getDrawingByName(string name)
+ 
+oElement.prototype.getDrawingByName = function (name){
+    return new oDrawing(name, this)
+}
+ 
+
+// NEW
+// linkPalette
+ 
+oElement.prototype.linkPalette = function (paletteFile){
+    // TODO
+}
