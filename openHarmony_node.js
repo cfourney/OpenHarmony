@@ -118,7 +118,7 @@ function oNode( dom, path ){
     var attributesList = node.getAttrList(this._fullPath, 1);
     
     for (var i in attributesList){
-        var attribute = new oAttribute( this, attributesList[i] );
+        var attribute = new oAttribute( this.$, this, attributesList[i] );
         var keyword = attribute.keyword.toLowerCase();
         this._cache_attributes[keyword] = attribute;
     }
@@ -524,7 +524,7 @@ Object.defineProperty(oNode.prototype, 'attributes', {
           var keyword = attributesList[i].keyword();
           
           if( !this._cache_attributes[keyword] ){
-            var attribute = new oAttribute( this, attributesList[i] );
+            var attribute = new oAttribute( this.$, this, attributesList[i] );
             this._cache_attributes[keyword] = attribute;
           }
           

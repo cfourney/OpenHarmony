@@ -67,7 +67,6 @@
 // linkPalette (oPalette paletteFile)
 
 
-// NEW
 // oElement constructor
  
 /**
@@ -75,34 +74,28 @@
  * @class
 
  * @property   name           {string}                       The name of the node.
- * @property   path           {string}                       The parent path of the node, the group in which it is contained.
- * @property   fullpath       {string}                       The path of the node in the network.
- * @property   type           {string}                       The type of the node.
-
- * @function   {oAttribute}       attribute( {string} atribute_str )                                           Get the specific attribute
- * @function   {bool}             linkInNode( {oNode} oNodeObject, {int} inPort, {int} outPort)                Link's this node's in-port to the given module, at the inport and outport indices.
- * @function   {bool}             linkOutNode( {oNode} oNodeObject, {int} outPort, {int} inPort)               Link's this node's out-port to the given module, at the inport and outport indices.
- * @function   {[oNode]}          subNodes( {bool} recurse )                                                   Obtains the nodes contained in the group, allows recursive search.
- * @function   {oNode}            clone()                                                                      Clone the node via copy and paste. WIP, should return the new cloned node.
- * @function   {void}             centerAbove( {[oNode]} oNodeArray, {float} xOffset, {float} yOffset) )       Center this node above the nodes in the array provided.
- * @function   {void}             duplicate( string search_str )                                               WIP
+ * @property   path           {string}                       The folder path of the element on the filesystem.
+ * @property   drawings       {[oDrawing]}                   The drawings available in the element.
+ 
+ * @function   {void}         addDrawing( atFrame, name, filename )                                 Adds a drawing to the element.
+ * @function   {void}         getDrawingByName( name )                                              Gets a drawing object by the name.
+ * @function   {void}         linkPalette( paletteFile )                                            Not yet implemented.
 */
- 
- 
- 
-function oElement (id, oColumnObject){
-    this.id = id;
-    this.column = oColumnObject;
-    
-    
-};
+function oElement ( dom, id, oColumnObject){
+  this._type = "element";
+  this.$     = dom;
+  
+  this.id = id;
+  this.column = oColumnObject;
+}
 
 
 // oElement Object Properties
 
-// NEW
-// string name
- 
+/**
+ * .name
+ * @return: {string}   The name of the column.
+ */
 Object.defineProperty(oElement.prototype, 'name', {
     get : function(){
          return element.getNameById(this.id)
@@ -111,22 +104,24 @@ Object.defineProperty(oElement.prototype, 'name', {
     set : function(newName){
          element.renameById(this.id, newName);
     }
-});
+})
 
 
-//NEW
-// string path
- 
+/**
+ * .path
+ * @return: {string}   The folder path of the element on the filesystem.
+ */
 Object.defineProperty(oElement.prototype, 'path', {
     get : function(){
          return fileMapper.toNativePath(element.completeFolder(this.id))
     }
-});
+})
  
  
-// NEW
-// {[oDrawings]} drawings
- 
+/**
+ * .drawings
+ * @return: { [oDrawing] }   The drawings available in the element.
+ */
 Object.defineProperty(oElement.prototype, 'drawings', {
     get : function(){
         var _drawingsNumber = Drawings.numberOf(this.id)
@@ -136,13 +131,21 @@ Object.defineProperty(oElement.prototype, 'drawings', {
         }
         return _drawings;
     }
-});
+})
  
  
-// NEW
 // oElement Class methods
- 
-oElement.prototype.addDrawing = function(atFrame, name, filename){
+/**
+ * addDrawing
+ *
+ * Summary: Adds a drawing to the element.
+ * @param   {int}        atFrame              The exposures to extend. If UNDEFINED, extends all keyframes.
+ * @param   {name}       name                 The name of the drawing to add.
+ * @param   {bool}       filename             The filename for the drawing to add.
+ *  
+ * @return: { oDrawing } The added drawing
+ */
+oElement.prototype.addDrawing = function( atFrame, name, filename ){
     if (typeof filename === 'undefined') var filename = false;
     if (typeof name === 'undefined') var name = atFrame+''
    
@@ -164,21 +167,30 @@ oElement.prototype.addDrawing = function(atFrame, name, filename){
     if (this.column != null || this.column != undefined)
         column.setEntry(this.column.uniqueName, 1, atFrame, name)
    
-    return new oDrawing(name, this);
+    return new oDrawing( this.$, name, this);
 }
  
 
-// NEW
-// getDrawingByName(string name)
- 
-oElement.prototype.getDrawingByName = function (name){
-    return new oDrawing(name, this)
+/**
+ * getDrawingByName
+ *
+ * Summary: Gets a drawing object by the name.
+ * @param   {string}        name              The name of the drawing to get.
+ *  
+ * @return: { oDrawing } The added drawing
+ */
+oElement.prototype.getDrawingByName = function ( name ){
+    return new oDrawing( this.$, name, this );
 }
  
-
-// NEW
-// linkPalette
- 
-oElement.prototype.linkPalette = function (paletteFile){
-    // TODO
+/**
+ * linkPalette
+ *
+ * Summary: Not yet implemented.
+ * @param   {string}        paletteFile              The path to the palette file to link.
+ *  
+ * @return: { void }
+ */
+oElement.prototype.linkPalette = function ( paletteFile ){
+  throw "Not yet implemented";
 }

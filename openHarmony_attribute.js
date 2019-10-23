@@ -37,6 +37,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
+
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -48,77 +50,76 @@
 //////////////////////////////////////
  
  
-// Constructor
-//
-// oAttribute(oNodeObject, attributeObject)
-//
-// Properties
-//
-// oNode oNodeObject
-// Attribute attributeObject
-// String keyword
-// string type
-// oColumn column
-// array frames
-//
-// Methods
-//
-// oColumn getLinkedColumn()
-// array getKeyFrames()
-// bool set(value, double frame)
-// various get(frame)
+/**
+ * oAttribute Class
+ * @class
+
+ * @property   type           {string}                       The attribute type.
+ * @property   column         {oColumn}                      The attached column.
+ * @property   frames         {[oFrame]}                     The frames in the attribute.
+ * @property   keyFrames      {[oFrame]}                     The keyframes in the attribute. 
+ * @property   useSeparate    {bool}                         Not yet implemented.
+ *
+ * @function   {[oFrame]}     getKeyFrames( )                Provides the keyframes of the attribute.
  
-// oAttribute constructor
+ * @function   {void}         setValue( value, frame )       Sets the value of the attribute at the given frame.
  
-function oAttribute(oNodeObject, attributeObject){
-    this.oNodeObject = oNodeObject;
-    this.attributeObject = attributeObject;
-    
-    try{
-      this.keyword = attributeObject.fullKeyword();
-    }catch( err ){
-      //Not an applicatable method for Harmony <16
-      this.keyword = attributeObject.keyword();
-    }
-    
-    var _subAttributes = [];
-    if( attributeObject.hasSubAttributes ){
-      if ( attributeObject.hasSubAttributes() ){
-          var _subAttributesList = attributeObject.getSubAttributes();
-          for (var i in _subAttributesList){
-              var _keyword = _subAttributesList[i].keyword().toLowerCase();
-              var _subAttribute = new oAttribute(this.oNodeObject, _subAttributesList[i])
-              this[_keyword] = _subAttribute
-              _subAttributes.push(_subAttribute)
-          }
-      }
-    }else{
-      // Not an applicatable method for Harmony <16
-      // Will need to derive sub-attributes depending on the attribute type for older versions.
+ * @function   {...}          getValue( frame )              Gets the value of the attribute at the given frame.
+ * @function   {...}          value( frame )                 Gets the value of the attribute at the given frame.
+*/
+function oAttribute( dom, oNodeObject, attributeObject, parentAttribute ){
+  this._type = "attribute";
+  this.$     = dom;
+
+  this.oNodeObject = oNodeObject;
+  this.attributeObject = attributeObject;
+  this.keyword = attributeObject.fullKeyword()
+  this.shortKeyword = attributeObject.keyword()
+  this.parentAttribute = parentAttribute; // only for subAttributes
+
+  var _subAttributes = [];
+  
+  if (attributeObject.hasSubAttributes()){
+      var _subAttributesList = attributeObject.getSubAttributes();
       
-    }
-    
-    this.subAttributes = _subAttributes;
+      for (var i in _subAttributesList){
+          var _keyword = _subAttributesList[i].keyword().toLowerCase();
+          // hard coding a fix for 3DPath attribute name which starts with a numberOf
+          if (_keyword == "3dpath") _keyword = "path3d"
+          
+          var _subAttribute = new oAttribute( this.$, this.oNodeObject, _subAttributesList[i], this );
+                      
+          // creating a property on the attribute object with the subattribute name to access it
+          this[_keyword] = _subAttribute
+          _subAttributes.push(_subAttribute)
+      }
+  }
+
+  // subAttributes is made available as an array for more formal access
+  this.subAttributes = _subAttributes;
 }
-
+ 
 // oAttribute Object Properties
-
-// string type
-
+ 
+/**
+ * .type
+ * @return: {string}   The type of the attribute.
+ */
 Object.defineProperty(oAttribute.prototype, 'type', {
     get : function(){
         return this.attributeObject.typeName();
     }
 })
  
-
-// oColumn column
  
+/**
+ * .column
+ * @return: {oColumn}   Provides the column attached to the attribute.
+ */
 Object.defineProperty(oAttribute.prototype, 'column', {
     get : function(){
         var _column = node.linkedColumn (this.oNodeObject.fullPath, this.keyword)
-        var _subAttributesNum = this.attributeObject.getSubAttributes().length
-        return new oColumn(_column, _subAttributesNum)
+        return (_column!="")?new oColumn( this.$, _column, this ):null
     },
  
     set : function(columnObject){
@@ -132,8 +133,10 @@ Object.defineProperty(oAttribute.prototype, 'column', {
 })
  
  
-// Array frames
- 
+/**
+ * .frames
+ * @return: {[oFrame]}   Returns the oFrame of attached to the column.
+ */
 Object.defineProperty(oAttribute.prototype, 'frames', {
     get : function(){
          var _column = this.column
@@ -142,93 +145,187 @@ Object.defineProperty(oAttribute.prototype, 'frames', {
          }else{
             return [];
          }
+    },
+    
+    set : function(){
+      throw "Not implemented."
+    }
+});
+
+
+/**
+ * .keyframes
+ * @return: {[oFrame]}   Returns the filtered keyframes of the attached to the column.
+ */
+Object.defineProperty(oAttribute.prototype, 'keyframes', {
+    get : function(){
+      var _frames = this.frames;
+      _frames = _frames.filter(function(x){return x.isKeyFrame});
+      return _frames;
+    },
+    
+    set : function(){
+      throw "Not implemented."
+    }
+});
+
+
+/**
+ * .useSeparate
+ * @return: {[oFrame]}   Returns the oFrame of attached to the column.
+ */
+//CF Note: Not sure if this should be a general attribute, or a subattribute.
+Object.defineProperty(oAttribute.prototype, "useSeparate", {
+    get : function(){
+       
+    },
+   
+    set : function( _value ){
+        // TODO: when swapping from one to the other, copy key values and link new columns if missing
     }
 })
 
  
+// oAttribute Class methods
+
+/**
+ * getKeyFrames
+ *
+ * Summary: Provides the keyframes of the attribute.
+ *  
+ * @return: { [oFrame] }   The filtered keyframes.
+ */
 oAttribute.prototype.getKeyFrames = function(){
     var _frames = this.frames;
-    _frames = _frames.filter(function(x){return x.isKeyFrame})
-    return _frames
+    _frames = _frames.filter(function(x){return x.isKeyFrame});
+    return _frames;
 }
+ 
 
-
-// bool set(value, double frame)
-
-oAttribute.prototype.set = function (value, frame) {
+/**
+ * setValue
+ *
+ * Summary: Sets the value of the attribute at the given frame.
+ * @param   {string}     value                 The value to set on the attribute.
+ * @param   {int}        frame                 The frame at which to set the value, if not set, assumes 1
+ *  
+ * @return: { void } No return
+ */
+oAttribute.prototype.setValue = function ( value, frame ){
     if (typeof frame === 'undefined') var frame = 1;
-
-    if (frame != 1){
+    //MessageLog.trace('setting frame :'+frame+' to value: '+value+' of attribute: '+this.keyword)
+ 
+    var _attr = this.attributeObject;
+    var _type = this.type;
+ 
+    if (frame != 1 && this.column == null){
         // generate a new column to be able to animate
-        if (this.column == null){
-            var _doc = new oScene();
-            var _column = _doc.addColumn()
-            this.column = _column;
-        }
-        this.column.frames[frame].value = value;
-
-    }else{
-        // TODO deal with subattributes
-        try{
-            if (this.column == null){
-                this.attributeObject.setValue(value);
-                return true;
-            }else{
-                this.column.frames[frame].value = value;
-            }
-        }
-        catch(err){return false}
+        var _doc = new oScene();
+        var _column = _doc.addColumn()
+        this.column = _column;
+    }
+    
+    // TODO deal with subattributes ? for ex pass a oPoint object to an attribute with x, y, z properties?
+    switch (_type){
+        // TODO: sanitize input
+        case "GENERIC_ENUM" :
+            node.setTextAttr(this.oNodeObject.fullPath, this.keyword, frame, value)
+            break;
+            
+        case "PATH_3D" :
+            // TODO include velocity
+            _attr.attributeObject.setValueAt(value, frame)
+            break;
+            
+        case "ELEMENT" :
+            column.setEntry(this.column.uniqueName, 1, frame, value)
+            break;
+            
+        default : 
+            _attr.setValueAt(value, frame);
     }
 }
+ 
 
-
-// various get(frame)
-
-oAttribute.prototype.get = function (frame) {
+//CFNote: Is it worth having a getValueType?
+/**
+ * getValue
+ *
+ * Summary: Gets the value of the attribute at the given frame.
+ * @param   {int}        frame                 The frame at which to set the value, if not set, assumes 1
+ *  
+ * @return: { ... }      The value of the attribute in the native format of that attribute (contextual to the attribute).
+ */
+oAttribute.prototype.getValue = function(frame){
     if (typeof frame === 'undefined') var frame = 1;
+ 
+    var _attr = this.attributeObject;
+    var _type = this.type;
+    var _value;
+           
+    //MessageLog.trace("getting "+this.keyword+" "+_type+" "+frame)
+    switch (_type){
+        case 'BOOL':
+            _value = _attr.boolValueAt(frame)
+            break;
+           
+        case 'INT':
+            _value = _attr.intValueAt(frame)
+            break;
+           
+        case 'DOUBLE':
+        case 'DOUBLEVB':
+            _value = _attr.doubleValueAt(frame)
+            break;
+           
+        case 'STRING':
+            _value = _attr.textValueAt(frame)
+            break;
+           
+        case 'COLOR':
+            _value = _attr.colorValueAt(frame)
+            break;
 
-    if (frame != 1 && this.column != null){
-        // generate a new column to be able to animate
-        return this.column.frames[frame].value;
-
-    }else{
-        var _attr = this.attributeObject;
-        var _type = this.type;
-        var _value;
+        case 'POSITION_2D':
+            _value = _attr.pos2dValueAt(frame)
+            break;
+           
+        case 'POSITION_3D':
+            _value = _attr.pos3dValueAt(frame)
+            break;
+            
+        case 'PATH_3D':
+            _attr = this.parentAttribute.attributeObject
+            _value = _attr.pos3dValueAt(frame)
+            // get the velocity in any other way than getting the subcolumn?
+            //_value = new oPoint (_value.x, _value.y, _value.z)
+            break;
+            
+        case 'ELEMENT':
+            // an element always has a column, so we'll fetch it from there
+            _value = column.getEntry(this.column.uniqueName, 1, frame)
+            //MessageLog.trace(_value)
+            break;
         
-        switch (_type){
-            case 'bool':
-                _value = _attr.boolValueAt(1)
-                break;
-                
-            case 'int':
-                _value = _attr.inValueAt(1)
-                break;
-                
-            case 'double':
-                _value = _attr.doubleValueAt(1)
-                break;
-                
-            case 'text':
-                _value = _attr.textValueAt(1)
-                break;
-                
-            case 'color':
-                _value = _attr.colorValueAt(1)
-                break;
-
-            case 'pos2d':
-                _value = _attr.pos2dValueAt(1)
-                break;
-                
-            case 'pos3d':
-                _value = _attr.pos3dValueAt(1)
-                break;
-                
-            default:
-        }
-        
-        // TODO deal with subattributes
-        return this.attributeObject.getValue();
+        // TODO: How does QUATERNION_PATH work? subcolumns I imagine
+        // TODO: How to get types SCALE_3D, ROTATION_3D, DRAWING, GENERIC_ENUM? -> maybe we don't need to, they don't have intrinsic values
+           
+        default:
+            // enums, etc
+            _value = _attr.textValueAt(frame)
     }
+       
+    return _value;
+}
+
+/**
+ * value
+ *
+ * Summary: Gets the value of the attribute at the given frame.
+ * @param   {int}        frame                 The frame at which to set the value, if not set, assumes 1
+ *  
+ * @return: { ... }      The value of the attribute in the native format of that attribute (contextual to the attribute).
+ */
+oAttribute.prototype.value = function(frame){
+  return this.getValue( frame );
 }

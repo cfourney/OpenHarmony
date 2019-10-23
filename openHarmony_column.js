@@ -67,9 +67,6 @@
 */
 
 
- 
-// Constructor
-
 //
  /**
  * oColumn [CONSTRUCTOR]
@@ -85,10 +82,8 @@ function oColumn( dom, uniqueName, oAttributeObject ){
   this.attributeObject = oAttributeObject
 }
 
- 
- 
-// oColumn Object Properties
- 
+
+// oColumn Object Properties 
 /**
  * .name
  * @return: {string}   The name of the column.

@@ -159,6 +159,7 @@ include( $.directory + "/openHarmony_element.js")
 include( $.directory + "/openHarmony_palette.js")
 include( $.directory + "/openHarmony_node.js")
 include( $.directory + "/openHarmony_column.js")
+include( $.directory + "/openHarmony_drawing.js")
 
 include( $.directory + "/openHarmony_scene.js" )
 
