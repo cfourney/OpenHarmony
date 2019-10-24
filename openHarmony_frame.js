@@ -49,59 +49,53 @@
 //////////////////////////////////////
  
  
-// Constructor
-//
-// oFrame(frameNumber, oColumnObject, subColumns)
-//
-// Properties
-//
-// int frameNumber
-// oColumn column
-// int subColumns
-// various value
-// bool isKeyFrame
-// int duration
-// int startFrame
+/**
+ * oFrame Class
+ * @class
+
+ * @property   value           {...}                       The value of the attribute at the given frame.
+ * @property   isKeyFrame      {bool}                      Bool specifying if the frame is a keyframe.
+ * @property   duration        {int}                       The duration of the keyframe exposure of the frame.
+ * @property   isBlank         {bool}                      Identifies if the frame is blank/empty.
+ * @property   startFrame      {int}                       Identifies the starting frame of the exposed drawing.
+ * @property   marker          {string}                    Returns the drawing types used in the drawing column. K = key drawings, I = inbetween, B = breakdown
  
-// oFrame constructor
- 
-function oFrame(frameNumber, oColumnObject, subColumns){
-    if (typeof subColumns === 'undefined') var subColumns = 0;
- 
-    this.frameNumber = frameNumber;
-    this.column = oColumnObject;
-    this.attributeObject = this.column.attributeObject;
-    this.subColumns = subColumns;
+ *
+ * @function   {void}         extend( duration, replace )        Extends the frames value to the specified duration, replaces in the event that replace is specified.
+*/
+function oFrame( dom, frameNumber, oColumnObject, subColumns ){
+  this._type = "frame";
+  this.$     = dom;
+  
+  if (typeof subColumns === 'undefined') var subColumns = 0;
+
+  this.frameNumber = frameNumber;
+  this.column = oColumnObject;
+  this.attributeObject = this.column.attributeObject;
+  this.subColumns = subColumns;
 }
  
  
 // oFrame Object Properties
- 
-// NEW
-// various value
- 
+/**
+ * .value
+ * @return: { ... }   The value of the frame.
+ */
 Object.defineProperty(oFrame.prototype, 'value', {
     get : function(){
-        return this.attributeObject.getValue(this.frameNumber)   
+        return this.attributeObject.getValue( this.frameNumber );
     },
  
     set : function(newValue){
-        /*var subColumns = this.column.subColumns;
-        
-        if (subColumns == null) {
-            column.setEntry (this.column.uniqueName, 1, this.frameNumber, newValue)
-        }else{
-            for (var i in subColumns){
-                column.setEntry (this.column.uniqueName, subColumns[i], this.frameNumber, _key[i])
-            }
-        }*/
-        this.attributeObject.setValue(newValue, this.frameNumber)   
+        this.attributeObject.setValue( newValue, this.frameNumber );   
     }
-})
+});
  
-// NEW
-// bool isKeyFrame
- 
+
+/**
+ * .isKeyFrame
+ * @return: {bool}   Bool specifying if the frame is a keyframe.
+ */
 Object.defineProperty(oFrame.prototype, 'isKeyFrame', {
     get : function(){
         var _column = this.column.uniqueName
@@ -115,19 +109,19 @@ Object.defineProperty(oFrame.prototype, 'isKeyFrame', {
  
     set : function(keyFrame){
         var _column = this.column.uniqueName
-            
         if (keyFrame){
             column.setKeyFrame(_column, this.frameNumber)
         }else{
             column.clearKeyFrame(_column, this.frameNumber)
         }
     }
-})
+});
  
  
-// NEW
-// int duration
- 
+/**
+ * .duration
+ * @return: {int}   The duration of the keyframe exposure of the frame.
+ */
 Object.defineProperty(oFrame.prototype, 'duration', {
     get : function(){
         var _startFrame = this.startFrame;
@@ -139,22 +133,32 @@ Object.defineProperty(oFrame.prototype, 'duration', {
             if (_frames[i].isKeyFrame) return _frames[i].frameNumber - _startFrame;
         }
         return _sceneLength - _startFrame;
+    },
+    
+    set : function( val ){
+      throw "Not implemented.";
     }
 })
  
  
-// NEW
-// bool isBlank
- 
+/**
+ * .isBlank
+ * @return: {bool}   Identifies if the frame is blank/empty.
+ */
 Object.defineProperty(oFrame.prototype, 'isBlank', {
     get : function(){
-        return column.getTimesheetEntry(this.column.uniqueName, 1, this.frameNumber).emptyCell
+        return column.getTimesheetEntry(this.column.uniqueName, 1, this.frameNumber).emptyCell;
+    },
+    
+    set : function( val ){
+      throw "Not implemented.";
     }
 })
  
-// NEW
-// int startFrame
- 
+/**
+ * .startFrame
+ * @return: {int}   Identifies the starting frame of the exposed drawing.
+ */
 Object.defineProperty(oFrame.prototype, 'startFrame', {
     get : function(){
         if (this.isKeyFrame) return this.frameNumber
@@ -165,13 +169,18 @@ Object.defineProperty(oFrame.prototype, 'startFrame', {
             if (_frames[i].isKeyFrame) return _frames[i].frameNumber;
         }
         return -1;
+    },
+    
+    set : function( val ){
+      throw "Not implemented.";
     }
 })
  
  
-// NEW
-// string marker
- 
+/**
+ * .marker
+ * @return: {string}   Returns the drawing types used in the drawing column. K = key drawings, I = inbetween, B = breakdown
+ */
 Object.defineProperty(oFrame.prototype, 'marker', {
     get : function(){
         var _column = this.column;
@@ -179,18 +188,24 @@ Object.defineProperty(oFrame.prototype, 'marker', {
         return column.getDrawingType(_column.uniqueName, this.frameNumber);
     },
    
-    set: function(marker){
+    set: function( marker ){
         var _column = this.column;
         if (_column.type != "DRAWING") throw "can't set 'marker' property on columns that are not 'DRAWING' type"
-        column.setDrawingType(_column.uniqueName, this.frameNumber, marker);
+        column.setDrawingType( _column.uniqueName, this.frameNumber, marker );
     }
 })
  
  
-// NEW
-// bool extend
- 
-oFrame.prototype.extend = function( duration, replace){
+/**
+ * extend
+ *
+ * Summary: Extends the frames value to the specified duration, replaces in the event that replace is specified.
+ * @param   {int}        duration              The duration to extend it to; if no duration specified, extends to the next available keyframe.
+ * @param   {bool}       replace               Setting this to false will insert frames as opposed to overwrite existing ones.
+ *  
+ * @return: { void } No return
+ */
+oFrame.prototype.extend = function( duration, replace ){
     if (typeof replace === 'undefined') var replace = true;
     // setting this to false will insert frames as opposed to overwrite existing ones
  

@@ -47,27 +47,7 @@
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
- 
-// Constructor
-//
-// oElement (id, columnObject)
-//
-// Properties
-//
-// string id
-// oColumn column
-// string name
-// string path
-// {[oDrawings]} drawings
-//
-// Methods
-//
-// oDrawing addDrawing(int atFrame, string name, string filename)
-// oDrawing getDrawingByName(string name)
-// linkPalette (oPalette paletteFile)
 
-
-// oElement constructor
  
 /**
  * oElement Class

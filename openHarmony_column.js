@@ -127,7 +127,7 @@ Object.defineProperty(oColumn.prototype, 'frames', {
     get : function(){
         var _frames = new Array(frame.numberOf()+1);
         for (var i=1; i<_frames.length; i++){
-            _frames[i] = new oFrame(i, this)
+            _frames[i] = new oFrame( this.$, i, this)
         }
         return _frames;
     },
@@ -142,7 +142,7 @@ Object.defineProperty(oColumn.prototype, 'frames', {
  * .keyframes
  * @return: {[oFrame]}   An array of the keyframes provided by the column.
  */
-Object.defineProperty(oColumn.prototype, 'frames', {
+Object.defineProperty(oColumn.prototype, 'keyframes', {
     get : function(){
       var _frames = this.frames;
       _frames = _frames.filter(function(x){return x.isKeyFrame});
