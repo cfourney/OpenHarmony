@@ -162,7 +162,6 @@ include( $.directory + "/openHarmony_nodeLink.js")
 include( $.directory + "/openHarmony_node.js")
 include( $.directory + "/openHarmony_column.js")
 include( $.directory + "/openHarmony_drawing.js")
-
 include( $.directory + "/openHarmony_scene.js" )
 
 System.println( "OSCENE: " + oScene );

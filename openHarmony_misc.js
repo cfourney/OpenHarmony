@@ -50,8 +50,15 @@
 //////////////////////////////////////
  
  
-// oPoint constructor
+/**
+ * oPoint Class
+ * @class
+ * @constructor      oPoint( {int}x, {int}y, {int}z )    
+ * @property         x           {int}                   Horizontal coordinate
+ * @property         y           {int}                   Vertical coordinate
+ * @property         z           {int}                   Depth Coordinate
  
+*/
 function oPoint (x, y, z){
     if (typeof z === 'undefined') var z = 0;
  
