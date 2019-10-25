@@ -975,11 +975,13 @@ Object.defineProperty(oNode.prototype, 'isRoot', {
  
 Object.defineProperty(oNode.prototype, 'nodePosition', {
     get : function(){
+        //MessageLog.trace("getting node position of node "+this.name)
          return new oPoint(node.coordX(this.fullPath), node.coordY(this.fullPath), node.coordZ(this.fullPath))
     },
  
     set : function(newPosition){
-        node.coordX(this.fullPath, newPosition.x, newPosition.y, newPosition.y)
+        //MessageLog.trace("setting node position of node "+this.name+" to "+JSON.stringify(newPosition))
+        node.setCoord(this.fullPath, newPosition.x, newPosition.y, newPosition.y)
     }
 })
  
@@ -1054,13 +1056,13 @@ Object.defineProperty(oNode.prototype, 'inNodes', {
         var _inNodes = [];
         // TODO: ignore/traverse groups
         for (var i = 0; i < node.numberOfInputPorts(this.fullPath); i++){
-            var _node = node.srcNode(this.fullPath, i)
-            _inNodes.push(this.scene.$node(_node))
+            var _node = node.srcNode(this.fullPath, i);
+            _inNodes.push(this.scene.$node(_node));
         }
         return _inNodes;
     }
 })
- 
+
  
 // Array outNodes
  
@@ -1114,19 +1116,19 @@ Object.defineProperty(oNode.prototype, 'attributes', {
  
 Object.defineProperty(oNode.prototype, 'linkedColumns', {
     get : function(){
-        var _attributes = this.attributes
+        var _attributes = this.attributes;
         var _columns = [];
         
         for (var i in _attributes){
             var _column = _attributes[i].column;
-            if (_column != null) _columns.push(_column)
+            if (_column != null) _columns.push(_column);
             
             // look also at subAttributes
-            var _subAttributes = _attributes[i].subAttributes
+            var _subAttributes = _attributes[i].subAttributes;
             if (_subAttributes.length > 0) {
                 for (var j in _subAttributes){
                     _column = _subAttributes[j].column;
-                    if (_column != null) _columns.push(_column)
+                    if (_column != null) _columns.push(_column);
                 }
             }   
         }
@@ -1145,7 +1147,7 @@ oNode.prototype.linkInNode = function(oNodeObject, inPort, outPort){
  
     // Default values for optional parameters
     if (typeof inPort === 'undefined') inPort = 0;
-    if (typeof outPort === 'undefined') outPort = 0//node.numberOfOutputPorts(_node);
+    if (typeof outPort === 'undefined') outPort = 0;//node.numberOfOutputPorts(_node);
  
     return node.link(_node, outPort, this.fullPath, inPort, true, true);
  
@@ -1167,7 +1169,7 @@ oNode.prototype.unlinkInNode = function(oNodeObject){
         // MessageLog.trace(_inNodes[i].fullPath+" "+_node)
        
         if (_inNodes[i].fullPath == _node){
-            return node.unlink(this.fullPath, i)
+            return node.unlink(this.fullPath, i);
         }
     }
     return false;
@@ -1184,7 +1186,7 @@ oNode.prototype.unlinkOutNode = function(oNodeObject){
    
     for (var i in _inNodes){
         if (_inNodes[i].fullPath == this.fullPath){
-            return node.unlink(_node, i)
+            return node.unlink(_node, i);
         }
     }
     return false;
@@ -1197,9 +1199,11 @@ oNode.prototype.linkOutNode = function(oNodeObject, outPort, inPort){
     var _node = oNodeObject.fullPath;
  
     // Default values for optional parameters
-    if (typeof inPort === 'undefined') inPort = node.numberOfInputPorts(_node);;
+    // TODO: careful since now READ nodes have two ports but one only accepts drawing link
+    if (typeof inPort === 'undefined') inPort = node.numberOfInputPorts(_node);
     if (typeof outPort === 'undefined') outPort = 0//node.numberOfOutputPorts(this.fullPath);
  
+    MessageLog.trace("linking "+this.fullPath+" to "+_node+" "+inPort+" "+outPort);
     return node.link(this.fullPath, outPort, _node, inPort, true, true);
 }
  
@@ -1209,7 +1213,7 @@ oNode.prototype.linkOutNode = function(oNodeObject, outPort, inPort){
  
 oNode.prototype.timelineIndex = function(timeline){
     var _timeline = timeline.layersList;
-    return _timeline.indexOf(this.fullPath)
+    return _timeline.indexOf(this.fullPath);
 }
  
  
@@ -1230,15 +1234,16 @@ oNode.prototype.centerAbove = function(oNodeArray, xOffset, yOffset){
     if (typeof yOffset === 'undefined') var yOffset = 0;
  
     // Works with nodes and nodes array
-    if (typeof oNodeArray === 'oNode') oNodeArray = [oNodeArray];
+    if (!Array.isArray(oNodeArray)) oNodeArray = [oNodeArray];
  
+    MessageLog.trace(oNodeArray);
     var _box = new oBox();
-    _box.includeNodes(oNodeArray)
+    _box.includeNodes(oNodeArray);
     
     this.x = _box.center.x - this.width/2 + xOffset;
     this.y = _box.top - this.height + yOffset;
    
-    return new oPoint(this.x, this.y, this.z)
+    return new oPoint(this.x, this.y, this.z);
 }
  
 // NEW
@@ -1251,15 +1256,15 @@ oNode.prototype.centerBelow = function(oNodeArray, xOffset, yOffset){
     if (typeof yOffset === 'undefined') var yOffset = 0;
  
     // Works with nodes and nodes array
-    if (typeof oNodeArray === 'oNode') oNodeArray = [oNodeArray];
+    if (!Array.isArray(oNodeArray)) oNodeArray = [oNodeArray];
     
     var _box = new oBox();
-    _box.includeNodes(oNodeArray)
+    _box.includeNodes(oNodeArray);
  
     this.x = _box.center.x - this.width/2 + xOffset;
     this.y = _box.bottom - this.height + yOffset;
    
-    return new oPoint(this.x, this.y, this.z)
+    return new oPoint(this.x, this.y, this.z);
 }
 
 
@@ -1273,15 +1278,15 @@ oNode.prototype.placeAtCenter = function(oNodeArray, xOffset, yOffset){
     if (typeof yOffset === 'undefined') var yOffset = 0;
  
     // Works with nodes and nodes array
-    if (typeof oNodeArray === 'oNode') oNodeArray = [oNodeArray];
+    if (!Array.isArray(oNodeArray)) oNodeArray = [oNodeArray];
  
     var _box = new oBox();
-    _box.includeNodes(oNodeArray)
+    _box.includeNodes(oNodeArray);
  
     this.x = _box.center.x - this.width/2 + xOffset;
     this.y = _box.center.y - this.height/2 + yOffset;
    
-    return new oPoint(this.x, this.y, this.z)
+    return new oPoint(this.x, this.y, this.z);
 }
  
  
@@ -1289,7 +1294,7 @@ oNode.prototype.placeAtCenter = function(oNodeArray, xOffset, yOffset){
  
 oNode.prototype.clone = function(oNodeObject, newName, newPosition, newGroup){
     // Defaults for optional parameters
-    if (typeof newGroup === 'undefined') var newGroup = oNodeObject.path
+    if (typeof newGroup === 'undefined') var newGroup = oNodeObject.path;
  
     // TODO implement cloning through column linking as opposed to copy paste logic
  
@@ -1297,7 +1302,7 @@ oNode.prototype.clone = function(oNodeObject, newName, newPosition, newGroup){
     var _copyOptions = copyPaste.getCurrentCreateOptions();
     var _copy = copyPaste.copy([_node], 1, frame.numberOf(), _copyOptions);
     var _pasteOptions = copyPaste.getCurrentPasteOptions();
-    copyPaste.pasteNewNodes(_copy, newGroup, _pasteOptions)
+    copyPaste.pasteNewNodes(_copy, newGroup, _pasteOptions);
  
 }
  
@@ -1323,14 +1328,37 @@ oNode.prototype.remove = function(deleteColumns, deleteElements){
         var outNodes = this.outNodes;
         for (var i in inNodes){
             for (var j in outNodes){
-                inNodes[i].linkOutNode(outNodes[j])
+                inNodes[i].linkOutNode(outNodes[j]);
             }
         }
     }
    
-    node.deleteNode(this.fullPath, deleteColumns, deleteElements)
+    node.deleteNode(this.fullPath, deleteColumns, deleteElements);
 }
  
+
+// NEW
+// getAttributeByName(keyword)
+// allows to get an attribute object by name that tolerates a dot in the name
+
+oNode.prototype.getAttributeByName = function(keyword){
+    if (keyword.indexOf(".")){
+        keyword = keyword.toLowerCase();
+        keyword = keyword.split(".");
+        var _attribute = keyword[0];
+        var _subAttribute = keyword[1];
+        
+        if (_subAttribute == "3dpath") _subAttribute = "path3d";
+        
+        if (!this.attributes.hasOwnProperty(_attribute)) return null;
+        if (!this.attributes[_attribute].hasOwnProperty(_subAttribute)) return this.attributes[_attribute];
+        
+        return this.attributes[_attribute][_subAttribute];
+    }else{
+        if (!this.hasOwnProperty(keyword)) return null;
+        return this.attributes[keyword];
+    }
+}
  
 // oAttribute $attributes(keyword){
 // Deprecated
@@ -1437,7 +1465,7 @@ Object.defineProperty(oDrawingNode.prototype, "element", {
 Object.defineProperty(oDrawingNode.prototype, "timings", {
     get : function(){
         return this.attributes.drawing.element.getKeyFrames()
-   }
+    }
 })
 
  
@@ -1446,7 +1474,38 @@ Object.defineProperty(oDrawingNode.prototype, "timings", {
 // NEW
 // oPegNode extractPeg()    creates a peg node containing the transformation
 oDrawingNode.prototype.extractPeg = function(){
-    // TODO
+    var _drawingNode = this;
+    var _peg = this.scene.addNode("PEG", this.name+"-P");
+    var _columns = _drawingNode.linkedColumns;
+    
+    _peg.position.separate = _drawingNode.offset.separate;
+    _peg.scale.separate = _drawingNode.scale.separate;
+    
+    // link each column that can be to the peg instead and reset the drawing node
+    for (var i in _columns){
+        var _attribute = _columns[i].attributeObject;
+        var _keyword = _attribute.keyword;
+
+        var _nodeAttribute = _drawingNode.getAttributeByName(_keyword);
+        
+        if (_keyword.indexOf("OFFSET") != -1) _keyword = _keyword.replace("OFFSET", "POSITION");
+        
+        var _pegAttribute = _peg.getAttributeByName(_keyword);
+        
+        if (_pegAttribute !== null){
+            _pegAttribute.column = _columns[i];
+            _nodeAttribute.column = null;
+            _drawingNode[_keyword] = _attribute.defaultValue;
+        }
+    }
+    
+    _drawingNode.offset.separate = false; // doesn't work?
+    _drawingNode.can_animate = false;
+    
+    _peg.centerAbove(_drawingNode, -1, -30)
+    _drawingNode.linkInNode(_peg)
+    
+    return _peg;
 }
  
 // NEW
@@ -1706,8 +1765,13 @@ oColumn.prototype.removeDuplicateKeys = function(){
     for (var i=_pointsToRemove.length-1; i>=0; i--){
         //MessageLog.trace("removing key "+_pointsToRemove[i]+" of column "+this.attributeObject.keyword)
         
-        // we don't remove all in case there is only one value left that isn't 0
-        if (i==0 && this.getKeyFrames().length == 1) continue
+        // we don't remove the last key remaining when it isn't the default value
+        
+        var _value = JSON.stringify(_frames[_pointsToRemove[i]].value)
+        var _default = JSON.stringify(this.attributeObject.defaultValue)
+        
+        if (i==0 && this.getKeyFrames().length == 1 && _value != _default) continue
+        
         
         _frames[_pointsToRemove[i]].isKeyFrame = false;
     }
@@ -1992,9 +2056,11 @@ Object.defineProperty(oAttribute.prototype, 'column', {
     },
  
     set : function(columnObject){
+        //MessageLog.trace((columnObject == null)?"unlinking column":"setting column")
         // unlink if provided with null value or empty string
         if (columnObject == "" || columnObject == null){
-            node.unLinkAttr(this.oNodeObject.fullPath, this.keyword)
+            //MessageLog.trace("unlinking column from attribute "+this.keyword+" of node "+this.oNodeObject.name)
+            node.unlinkAttr(this.oNodeObject.fullPath, this.keyword)
         }else{
             //MessageLog.trace("linking column "+ columnObject.uniqueName+" to attribute "+this.keyword+" of node "+this.oNodeObject.name)
             node.linkAttr(this.oNodeObject.fullPath, this.keyword, columnObject.uniqueName)
@@ -2022,7 +2088,7 @@ Object.defineProperty(oAttribute.prototype, 'frames', {
 // Used to be a oPegNode attribute but many attributes can use separate so this will be used to easily swap them.
 Object.defineProperty(oAttribute.prototype, "useSeparate", {
     get : function(){
-       
+        
     },
    
     set : function( _value ){
@@ -2030,6 +2096,58 @@ Object.defineProperty(oAttribute.prototype, "useSeparate", {
     }
 })
 
+
+// NEW
+// various defaultValue
+// used to return the default "rest state" or unmodified value of an attribute. Not available for all attributes as some don't have default values
+
+Object.defineProperty(oAttribute.prototype, "defaultValue", {
+    get : function(){
+        // TODO: we could use this to reset bones/deformers to their rest states
+        var _keyword = this.keyword;
+        
+        switch (_keyword){
+            case "OFFSET.X" :
+            case "OFFSET.Y" :
+            case "OFFSET.Z" :
+            
+            case "POSITION.X" :
+            case "POSITION.Y" :
+            case "POSITION.Z" :
+            
+            case "PIVOT.X":
+            case "PIVOT.Y":
+            case "PIVOT.Z":
+            
+            case "ROTATION.ANGLEX":
+            case "ROTATION.ANGLEY":
+            case "ROTATION.ANGLEZ":
+            
+            case "ANGLE":
+            case "SKEW":
+            
+            case "SPLINE_OFFSET.X":
+            case "SPLINE_OFFSET.Y":
+            case "SPLINE_OFFSET.Z":
+            
+                return 0;
+                
+            case "SCALE.X" :
+            case "SCALE.Y" :
+            case "SCALE.Z" :
+                return 1;
+                
+            case "OPACITY" :
+                return 100;
+                
+            case "OFFSET.3DPATH":
+                return new Point3d(0,0,0);
+                
+            default: 
+                return null; // for attributes that don't have a default value, we return null
+        }
+    }
+})
  
 // oAttribute Class methods
 
@@ -2332,7 +2450,6 @@ oFrame.prototype.extend = function( duration, replace){
         _frames[startExtending+i].value = _value;
     }  
 }
-
 
 // NEW
 
