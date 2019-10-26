@@ -689,11 +689,11 @@ oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElementO
  * @param   {string}   name                   The name of the newly created group.
  * @param   {string}   includeNodes           The nodes to add to the group.
  * @param   {oPoint}   addComposite           Whether to add a composite.
- * @param   {object}   addPeg                 Whether to add a peg.
- * @param   {object}   group                  The group in which the node is added.
- * @param   {object}   nodePosition           The position for the node to be placed in the network.
+ * @param   {bool}     addPeg                 Whether to add a peg.
+ * @param   {string}   group                  The group in which the node is added.
+ * @param   {oPoint}   nodePosition           The position for the node to be placed in the network.
  
- * @return: {[oGroup]}    The created node, or bool as false.
+ * @return: {oGroup}   The created node, or bool as false.
  */
 oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, group, nodePosition ){
     // Defaults for optional parameters
@@ -703,7 +703,7 @@ oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, 
     if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
     if (typeof includeNodes === 'undefined') var includeNodes = [];
    
-    var _group = this.addNode("GROUP", name, group, nodePosition)
+    var _group = this.addNode( "GROUP", name, group, nodePosition );
    
     var _MPI = _group.multiportIn
     var _MPO = _group.multiportOut
@@ -791,7 +791,7 @@ oScene.prototype.getSelectedPalette = function(){
  * importPalette
  *
  * Summary: Provides a palette object based on name.
- * @param   {string}       filename                      The palette file to import.
+ * @param   {string}       path                          The palette file to import.
  * @param   {string}       name                          The name for the palette.
  * @param   {string}       index                         Index at which to insert the palette.
  * @param   {string}       paletteStorage                Storage type: environment, job, scene, element, external.
@@ -799,11 +799,11 @@ oScene.prototype.getSelectedPalette = function(){
  * 
  * @return: {oPalette}   oPalette with provided name.
  */
-oScene.prototype.importPalette = function( filename, name, index, paletteStorage, storeInElement ){
+oScene.prototype.importPalette = function( path, name, index, paletteStorage, storeInElement ){
     if (typeof paletteStorage === 'undefined') var destination = "scene";
     if (typeof index === 'undefined') var index = 0;
    
-    var _paletteFile = new oFile(filename)
+    var _paletteFile = new oFile(path);
     if (typeof name === 'undefined') var name = _paletteFile.name;
     if (typeof storeInElement === 'undefined'){
         if (paletteStorage == "element") throw "Element parameter cannot be omitted if palette destination is Element"
@@ -840,15 +840,26 @@ oScene.prototype.importPalette = function( filename, name, index, paletteStorage
     var _newPalette = list.insertPaletteAtLocation( _destination, _element, name, index );
     return new oPalette(_newPalette);
 }
- 
- 
- 
-//-- Standardization WIP, left off here. 
- 
-// NEW
-// {[oNodes]} importPSD(filename, group, nodePosition, separateLayers, addPeg, addComposite, alignment)
- 
-oScene.prototype.importPSD = function(filename, group, nodePosition, separateLayers, addPeg, addComposite, alignment){
+
+
+/**
+ * importPSD
+ *
+ * Summary: Imports a PSD to the node view.
+ * @param   {string}       path                          The palette file to import.
+ * @param   {string}       group                         The group to import the PSD into.
+ * @param   {oPoint}       nodePosition                  The position for the node to be placed in the network.
+ * @param   {bool}         separateLayers                Separate the layers of the PSD.
+ * @param   {bool}         addPeg                        Whether to add a peg.
+ * @param   {bool}         addComposite                  Whether to add a composite.
+ * @param   {string}       alignment                     Alignment type.
+ * 
+ * @return: {[oNode]}     The nodes being created as part of the PSD import.
+ */
+oScene.prototype.importPSD = function(path, group, nodePosition, separateLayers, addPeg, addComposite, alignment){
+
+    // CFNOTE: We should also consider importing the TGA directly as a 'drawing' for non-Harmony bitmap types, optional.
+
     if (typeof alignment === 'undefined') var alignment = "ASIS" // create an enum for alignments?
     if (typeof addComposite === 'undefined') var addComposite = true;
     if (typeof addPeg === 'undefined') var addPeg = true;
@@ -856,7 +867,7 @@ oScene.prototype.importPSD = function(filename, group, nodePosition, separateLay
     if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0)
     if (typeof group === 'undefined') var group = "Top"
  
-    var _psdFile = new oFile(filename)
+    var _psdFile = new oFile(path)
     var _elementName = _psdFile.name
  
     var _xSpacing = 45
@@ -877,8 +888,8 @@ oScene.prototype.importPSD = function(filename, group, nodePosition, separateLay
     if (addComposite) var _comp = this.addNode("COMPOSITE", _elementName+"-Composite", group, nodePosition)
    
     // Import the PSD in the element
-    CELIO.pasteImageFile({ src : filename, dst : { elementId : _element.id, exposure : _drawing.name}})
-    var _layers = CELIO.getLayerInformation(filename);
+    CELIO.pasteImageFile({ src : path, dst : { elementId : _element.id, exposure : _drawing.name}})
+    var _layers = CELIO.getLayerInformation(path);
    
     // create the nodes for each layer
     if (separateLayers){
@@ -929,17 +940,26 @@ oScene.prototype.importPSD = function(filename, group, nodePosition, separateLay
     return _nodes
 }
  
-// NEW
-// {oNode} importQT (filename, group, nodePosition, extendScene, alignment)
- 
-oScene.prototype.importQT = function(filename, group, nodePosition, extendScene, alignment){
+/**
+ * importQT
+ *
+ * Summary: Imports a QT into the node view.
+ * @param   {string}       path                          The palette file to import.
+ * @param   {string}       group                         The group to import the PSD into.
+ * @param   {oPoint}       nodePosition                  The position for the node to be placed in the network.
+ * @param   {bool}         extendScene                   Whether to add a composite.
+ * @param   {string}       alignment                     Alignment type.
+ * 
+ * @return: {oNode}        The imported Quicktime Node.
+ */
+oScene.prototype.importQT = function( path, group, nodePosition, extendScene, alignment ){
     if (typeof alignment === 'undefined') var alignment = "ASIS";
     if (typeof extendScene === 'undefined') var extendScene = true;
     if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
     if (typeof group === 'undefined') var group = "Top";
-    // MessageLog.trace("importing QT file :"+filename)
+    // MessageLog.trace("importing QT file :"+path)
  
-    var _QTFile = new oFile(filename);
+    var _QTFile = new oFile(path);
     var _elementName = _QTFile.name;
    
     var _element = this.addElement(_elementName, "PNG");
@@ -982,9 +1002,17 @@ oScene.prototype.importQT = function(filename, group, nodePosition, extendScene,
     return _qtNode;
 }
  
-// NEW
-// oNode mergeNodes (nodes, resultName, deleteMerged)
- 
+
+/**
+ * mergeNodes
+ *
+ * Summary: Merges Drawing nodes into a single node.
+ * @param   {[oNode]}      nodes                         The Drawing nodes to merge.
+ * @param   {string}       resultName                    The Node name for the resulting node of the merged content.
+ * @param   {bool}         deleteMerged                  Whether the original nodes be deleted.
+ * 
+ * @return: {oNode}        The resulting drawing node from the merge.
+ */
 oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
     // TODO: is there a way to do this without Action.perform?
     // pass a oNode object as argument for destination node instead of name/group?
