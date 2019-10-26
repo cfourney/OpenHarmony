@@ -63,9 +63,9 @@
  *
  * @function   {void}         extend( duration, replace )        Extends the frames value to the specified duration, replaces in the event that replace is specified.
 */
-function oFrame( dom, frameNumber, oColumnObject, subColumns ){
+function oFrame( frameNumber, oColumnObject, subColumns ){
   this._type = "frame";
-  this.$     = dom;
+  this.$     = false;
   
   if (typeof subColumns === 'undefined') var subColumns = 0;
 

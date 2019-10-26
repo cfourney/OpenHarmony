@@ -54,9 +54,9 @@
 
  * @property   path           {string}                       The folder path of the element on the filesystem.
 */
-function oDrawing( dom, name, oElementObject ){
+function oDrawing( name, oElementObject ){
   this._type = "drawing";
-  this.$     = dom;
+  this.$     = false;
 
   this.name = name;
   this.element = oElementObject;

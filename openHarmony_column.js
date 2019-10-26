@@ -73,10 +73,10 @@
  *
  * Summary: The constructor for the oNode object, new oScene( $, node_path ) to create a oNode.
  */
-function oColumn( dom, uniqueName, oAttributeObject ){
+function oColumn( uniqueName, oAttributeObject ){
 
   this._type = "column";
-  this.$     = dom;
+  this.$     = false;
   
   this.uniqueName = uniqueName;
   this.attributeObject = oAttributeObject
@@ -127,7 +127,7 @@ Object.defineProperty(oColumn.prototype, 'frames', {
     get : function(){
         var _frames = new Array(frame.numberOf()+1);
         for (var i=1; i<_frames.length; i++){
-            _frames[i] = new oFrame( this.$, i, this)
+            _frames[i] = new oFrame( i, this)
         }
         return _frames;
     },

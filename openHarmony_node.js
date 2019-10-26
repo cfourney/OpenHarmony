@@ -118,8 +118,10 @@
  */
 function oNode(path, oSceneObject){
     this._fullPath = path;
-    this.type = node.type(this.fullPath)
+    this.type = node.type(this.fullPath);
     this.scene = oSceneObject;
+    
+    this._type = 'node';
     
     // generate properties from node attributes to allow for dot notation access
      var _attributes = this.attributes
@@ -495,7 +497,7 @@ Object.defineProperty(oNode.prototype, 'inNodes', {
         // TODO: ignore/traverse groups
         for (var i = 0; i < node.numberOfInputPorts(this.fullPath); i++){
             var _node = node.srcNode(this.fullPath, i)
-            _inNodes.push(this.scene.$node(_node))
+            _inNodes.push(this.scene.getNodeByPath(_node))
         }
         return _inNodes;
     }
@@ -514,7 +516,7 @@ Object.defineProperty(oNode.prototype, 'outNodes', {
             for (var j = 0; j < node.numberOfOutputLinks(this.fullPath, i); j++){
                 // TODO: ignore/traverse groups
                 var _node = node.dstNode(this.fullPath, i, j);
-                _outLinks.push(this.scene.$node(_node));
+                _outLinks.push(this.scene.getNodeByPath(_node));
             }
             if (_outLinks.length > 1){
                 _outNodes.push(_outLinks);
@@ -915,6 +917,8 @@ function oPegNode( path, oSceneObject ) {
     // oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'PEG') throw "'path' parameter must point to a 'PEG' type node";
     oNode.call( this, path, oSceneObject );
+    
+    this._type = 'pegNode';
 }
  
 // extends oNode and can use its methods
@@ -962,6 +966,8 @@ function oDrawingNode(path, oSceneObject) {
     // oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'READ') throw "'path' parameter must point to a 'READ' type node";
     oNode.call(this, path, oSceneObject);
+    
+    this._type = 'drawingNode';
 }
  
 oDrawingNode.prototype = Object.create(oNode.prototype);
@@ -1031,6 +1037,8 @@ function oGroupNode(path, oSceneObject) {
     // oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'GROUP') throw "'path' parameter must point to a 'GROUP' type node";
     oNode.call(this, path, oSceneObject);
+    
+    this._type = 'groupNode';
 }
 oGroupNode.prototype = Object.create(oNode.prototype);
 
@@ -1041,7 +1049,7 @@ oGroupNode.prototype = Object.create(oNode.prototype);
 Object.defineProperty(oGroupNode.prototype, "multiportIn", {
     get : function(){
         if (this.isRoot) return null
-        var _MPI = this.scene.$node(node.getGroupInputModule(this.fullPath, "Multiport-In", 0,-100,0),this.scene)
+        var _MPI = this.scene.getNodeByPath(node.getGroupInputModule(this.fullPath, "Multiport-In", 0,-100,0),this.scene)
         return (_MPI)
     }
 })
@@ -1053,7 +1061,7 @@ Object.defineProperty(oGroupNode.prototype, "multiportIn", {
 Object.defineProperty(oGroupNode.prototype, "multiportOut", {
     get : function(){
         if (this.isRoot) return null
-        var _MPO = this.scene.$node(node.getGroupOutputModule(this.fullPath, "Multiport-Out", 0, 100,0),this.scene)
+        var _MPO = this.scene.getNodeByPath(node.getGroupOutputModule(this.fullPath, "Multiport-Out", 0, 100,0),this.scene)
         return (_MPO)
     }
 });
@@ -1074,7 +1082,7 @@ oGroupNode.prototype.subNodes = function(recurse){
     var _subNodes = [];
    
     for (var i in _nodes){
-        var _oNodeObject = this.scene.$node(_nodes[i]);
+        var _oNodeObject = this.scene.getNodeByPath(_nodes[i]);
         _subNodes.push(_oNodeObject);
         if (recurse && node.isGroup(_nodes[i])) _subNodes = _subNodes.concat(_oNodeObject.subNodes(recurse));
     }
@@ -1110,4 +1118,73 @@ oGroupNode.prototype.orderNodeView = function(recurse){
             _subNodes[i].orderNodeView(recurse);
         }
     }
+}
+
+
+ /**
+ * getAttributeByName
+ *
+ * Summary: sorts out the node view inside the group
+ * @param   {string}    keyword                    The attribute keyword to search.
+ * @return: {oAttribute}   The matched attribute object, given the keywod.
+ */
+oNode.prototype.getAttributeByName = function( keyword ){
+    if (keyword.indexOf(".")){
+        keyword = keyword.toLowerCase();
+        keyword = keyword.split(".");
+        var _attribute = keyword[0];
+        var _subAttribute = keyword[1];
+        
+        if (_subAttribute == "3dpath") _subAttribute = "path3d";
+        
+        if (!this.attributes.hasOwnProperty(_attribute)) return null;
+        if (!this.attributes[_attribute].hasOwnProperty(_subAttribute)) return this.attributes[_attribute];
+        
+        return this.attributes[_attribute][_subAttribute];
+    }else{
+        if (!this.hasOwnProperty(keyword)) return null;
+        return this.attributes[keyword];
+    }
+}
+
+
+ /**
+ * extractPeg
+ *
+ * Summary: sorts out the node view inside the group
+ * @return: {oPegNode}   The created peg.
+ */
+oDrawingNode.prototype.extractPeg = function(){
+    var _drawingNode = this;
+    var _peg = this.scene.addNode("PEG", this.name+"-P");
+    var _columns = _drawingNode.linkedColumns;
+    
+    _peg.position.separate = _drawingNode.offset.separate;
+    _peg.scale.separate = _drawingNode.scale.separate;
+    
+    // link each column that can be to the peg instead and reset the drawing node
+    for (var i in _columns){
+        var _attribute = _columns[i].attributeObject;
+        var _keyword = _attribute.keyword;
+
+        var _nodeAttribute = _drawingNode.getAttributeByName(_keyword);
+        
+        if (_keyword.indexOf("OFFSET") != -1) _keyword = _keyword.replace("OFFSET", "POSITION");
+        
+        var _pegAttribute = _peg.getAttributeByName(_keyword);
+        
+        if (_pegAttribute !== null){
+            _pegAttribute.column = _columns[i];
+            _nodeAttribute.column = null;
+            _drawingNode[_keyword] = _attribute.defaultValue;
+        }
+    }
+    
+    _drawingNode.offset.separate = false; // doesn't work?
+    _drawingNode.can_animate = false;
+    
+    _peg.centerAbove(_drawingNode, -1, -30)
+    _drawingNode.linkInNode(_peg)
+    
+    return _peg;
 }

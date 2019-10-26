@@ -49,59 +49,56 @@
 //////////////////////////////////////
 //////////////////////////////////////
  
-// Constructor
-//
-// oTimeline(string display)
-//
-// Properties
-//
-// array layers
-//
-// Methods
-//
- 
-// oTimeline constructor
- 
-function oTimeline(display, oSceneObject){
+/**
+ * oTimeline Class
+ * @class
+ * @property   layers         {[oNode]}                        The nodes in the timeline.
+ * @property   layersList     {[string]}                       The path of the nodes in the timeline. 
+ */
+function oTimeline( display, oSceneObject ){
     this.display = display
     this.composition = ''
     this.scene = oSceneObject;
    
     if (node.type(this.display) == '') {
-        this.composition = compositionOrder.buildDefaultCompositionOrder()
+        this.composition = compositionOrder.buildDefaultCompositionOrder();
     }else{
-        this.composition = compositionOrder.buildCompositionOrderForDisplay(display)
+        this.composition = compositionOrder.buildCompositionOrderForDisplay(display);
     }
    
 }
  
 // Properties
- 
- 
-// array layers
- 
+/**
+ * layers
+ *
+ * Summary: The node layers in the scene, based on the timeline's order given a specific display.
+ * @return: { [oNode] } The nodes in the timeline.
+ */
 Object.defineProperty(oTimeline.prototype, 'layers', {
     get : function(){
         var _timeline = this.layersList;
         var _scene = this.scene;
        
-        _timeline = _timeline.map(function(x){return _scene.$node(x)})
+        _timeline = _timeline.map( function(x){return _scene.getNodeByPath(x)} );
        
         return _timeline;
     }
-})
+});
  
-//NEW
- 
-// array layersList
- 
+/**
+ * layersList
+ *
+ * Summary: Gets the paths of the layers in order, given the specific display's timeline.
+ * @return: { [string] }  The path of the nodes in the timeline. 
+ */
 Object.defineProperty(oTimeline.prototype, 'layersList', {
     get : function(){
-        var _composition = this.composition
+        var _composition = this.composition;
         var _timeline = [];
        
         for (var i in _composition){
-            _timeline.push(_composition[i].node)
+            _timeline.push( _composition[i].node )
         }
        
         return _timeline;

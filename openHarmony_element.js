@@ -61,9 +61,9 @@
  * @function   {void}         getDrawingByName( name )                                              Gets a drawing object by the name.
  * @function   {void}         linkPalette( paletteFile )                                            Not yet implemented.
 */
-function oElement ( dom, id, oColumnObject){
+function oElement ( id, oColumnObject){
   this._type = "element";
-  this.$     = dom;
+  this.$     = false;
   
   this.id = id;
   this.column = oColumnObject;
@@ -135,11 +135,11 @@ oElement.prototype.addDrawing = function( atFrame, name, filename ){
    
     if (filename){
         //copy the imported file at the newly created drawing place
-        var _file = Drawing.filename(this.id, name)
+        var _file = Drawing.filename( this.id, name );
         //MessageLog.trace(_file)
        
-        var _frameFile = new oFile(filename)
-        _frameFile.move(_file, true)
+        var _frameFile = new oFile( filename );
+        _frameFile.move( _file, true );
        
     }
    
@@ -147,7 +147,7 @@ oElement.prototype.addDrawing = function( atFrame, name, filename ){
     if (this.column != null || this.column != undefined)
         column.setEntry(this.column.uniqueName, 1, atFrame, name)
    
-    return new oDrawing( this.$, name, this);
+    return new oDrawing( name, this );
 }
  
 
@@ -160,7 +160,7 @@ oElement.prototype.addDrawing = function( atFrame, name, filename ){
  * @return: { oDrawing } The added drawing
  */
 oElement.prototype.getDrawingByName = function ( name ){
-    return new oDrawing( this.$, name, this );
+    return new oDrawing( name, this );
 }
  
 /**
