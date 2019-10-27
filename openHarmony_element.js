@@ -107,7 +107,7 @@ Object.defineProperty(oElement.prototype, 'drawings', {
         var _drawingsNumber = Drawings.numberOf(this.id)
         var _drawings = [];
         for (var i=0; i<_drawingsNumber; i++){
-            _drawings.push(new oDrawing(Drawing.name(this.id, i), this))
+            _drawings.push( new oDrawing(Drawing.name(this.id, i), this) );
         }
         return _drawings;
     }

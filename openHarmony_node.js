@@ -121,6 +121,8 @@ function oNode(path, oSceneObject){
     this.type = node.type(this.fullPath);
     this.scene = oSceneObject;
     
+    
+    
     this._type = 'node';
     
     // generate properties from node attributes to allow for dot notation access
@@ -246,7 +248,7 @@ Object.defineProperty(oNode.prototype, 'children', {
       var _children = [];
       var _subnodes = node.subNodes( this.fullPath );
       for( var n=0; n<_subnodes.length; n++ ){
-        _children.push( new oNode( this.$, _subnodes[n] ) );
+        _children.push( this.scene.getNodeByPath( _subnodes[n] ) );
       }
       
       return _children;
@@ -344,14 +346,14 @@ Object.defineProperty(oNode.prototype, 'path', {
 });
  
 /**
-* .path
+* .parent
 * @return: {oNode}   The oNode object for the parent in which this node exists.
 */
-Object.defineProperty(oNode.prototype, 'parent', {
+Object.defineProperty( oNode.prototype, 'parent', {
     get : function(){
       if( this.root ){ return false; }
     
-      return new oNode( this.$, node.parentNode( this.fullPath ) )
+      return this.scene.getNodeByPath( node.parentNode( this.fullPath ) ); 
     },
  
     set : function(newPath){
@@ -979,12 +981,12 @@ oDrawingNode.prototype = Object.create(oNode.prototype);
 Object.defineProperty(oDrawingNode.prototype, "element", {
     get : function(){
         var _column = this.attributes.drawing.element.column;
-        return (new oElement(node.getElementId(this.fullPath), _column))
+        return ( new oElement( node.getElementId(this.fullPath), _column ) );
     },
    
     set : function( oElementObject ){
         var _column = this.attributes.drawing.element.column;
-        column.setElementIdOfDrawing(_column.uniqueName, oElementObject.id)
+        column.setElementIdOfDrawing( _column.uniqueName, oElementObject.id );
     }
 })
 

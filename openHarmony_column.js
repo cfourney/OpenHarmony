@@ -127,7 +127,7 @@ Object.defineProperty(oColumn.prototype, 'frames', {
     get : function(){
         var _frames = new Array(frame.numberOf()+1);
         for (var i=1; i<_frames.length; i++){
-            _frames[i] = new oFrame( i, this)
+            _frames[i] = new oFrame( i, this );
         }
         return _frames;
     },

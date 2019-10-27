@@ -75,9 +75,10 @@
  
 
 //TODO: Metadata, settings, aspect, camera peg, view.
-
 /**
  * $.scene [CONSTRUCTOR]
+ * @constructor
+ * @param {string} dom     Access to the direct dom object.
  *
  * Summary: The constructor for the scene object, new oScene($) to create a scene with DOM access.
  */
@@ -556,7 +557,7 @@ oScene.prototype.addNode = function( type, name, group, nodePosition, options ){
     if( node.getName( group + "/" + name ) ){
       if( options && options.adoptExisting ){
         this.$.debug( "ADOPTED THE NODE: "     + group + "/" + name, this.$.DEBUG_LEVEL.LOG );
-        return new oNode( this.$, group + "/" + name );
+        return this.getNodeByPath( _nodePath );
       }else{
         this.$.debug( "NODE ALREADY EXISTED: " + group + "/" + name, this.$.DEBUG_LEVEL.WARNING );
         return false;
@@ -607,7 +608,7 @@ oScene.prototype.addColumn = function( type, name, oElementObject ){
    
     column.add(_columnName, type);
                
-    var _column = new oColumn( _columnName, this );
+    var _column = new oColumn( _columnName );
  
     if (type == "DRAWING" && typeof oElementObject !== 'undefined'){
         oElementObject.column = this;// TODO: fix: this doesn't seem to actually work for some reason?
@@ -641,7 +642,7 @@ oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
     var _vectorFormat = (imageFormat == "TVG")?imageFormat:"None";
  
     var _id = element.add(name, scanType, fieldGuide, _fileFormat, _vectorFormat);
-    var _element = new oElement( _id, this );
+    var _element = new oElement( _id )
  
     return _element;
 }
@@ -752,7 +753,7 @@ oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, 
  */
 oScene.prototype.getTimeline = function(display){
     if (typeof display === 'undefined') var display = '';
-    return new oTimeline(display, this)
+    return new oTimeline( display, this );
 }
 
 
@@ -901,28 +902,28 @@ oScene.prototype.importPSD = function(path, group, nodePosition, separateLayers,
        
         for (var i in _layers){
             // generate nodes and set them to show the element for each layer
-            var _layer = _layers[i].layer
-            var _layerName = _layers[i].layerName.split(" ").join("_")
-            var _nodePosition = new oPoint(_x+=_xSpacing, _y +=_ySpacing, 0)
+            var _layer = _layers[i].layer;
+            var _layerName = _layers[i].layerName.split(" ").join("_");
+            var _nodePosition = new oPoint(_x+=_xSpacing, _y +=_ySpacing, 0);
            
             //TODO: set into right group according to PSD organisation
            
             var _group = group //"Top/"+_layers[i].layerPathComponents.join("/");
  
-            var _node = this.addDrawingNode(_layerName, _group, _nodePosition, _element)
+            var _node = this.addDrawingNode(_layerName, _group, _nodePosition, _element);
  
-            _node.enabled = _layers[i].visible
+            _node.enabled = _layers[i].visible;
             _node.can_animate = false // use general pref?
             _node.apply_matte_to_color = "Straight"
-            _node.alignment_rule = alignment
+            _node.alignment_rule = alignment;
            
-            _node.attributes.drawing.element.setValue(_layer != ""?"1:"+_layer:1, 1)
+            _node.attributes.drawing.element.setValue(_layer != ""?"1:"+_layer:1, 1);
             _node.attributes.drawing.element.column.extendExposures();
  
-            if (addPeg) _node.linkInNode(_peg)
-            if (addComposite) _node.linkOutNode(_comp)
+            if (addPeg) _node.linkInNode(_peg);
+            if (addComposite) _node.linkOutNode(_comp);
  
-            _nodes.push(_node)
+            _nodes.push(_node);
         }
     }
    

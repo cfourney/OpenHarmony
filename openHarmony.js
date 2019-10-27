@@ -46,64 +46,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-/*
-// Class template
- 
-//////////////////////////////////////
-//////////////////////////////////////
-//                                  //
-//                                  //
-//          oTemplate class         //
-//                                  //
-//                                  //
-//////////////////////////////////////
-//////////////////////////////////////
- 
-// Constructor
-//
-// oTemplate (prop1, prop2)
-//
-// Properties
-//
-// double prop1
-// double prop2
-//
-// Methods
-//
-// double getSum(double num)
- 
- 
-// oTemplate constructor
- 
-function oTemplate (prop1, prop2){
-    this.prop1 = prop1;
-    this.prop2 = prop2;
-    var _privateVar = 'hello'
-}
- 
-// oTemplate Object Properties
- 
-Object.defineProperty(oTemplate.prototype, 'prop3', {
-    get : function(){
-         return this.prop2+this.prop1
-    },
- 
-    set : function(value){
-        this.prop1 = value-this.prop2
-    }
-})
- 
-// oTemplate Class methods
- 
-// double getSum(double num)
- 
-oTemplate.prototype.getSum = function (num){
-    debug.log(this.prop3)
-    return this.prop3+num
-}
- 
-*/
-
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -113,7 +55,6 @@ oTemplate.prototype.getSum = function (num){
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
-
 
 /**
  * $
