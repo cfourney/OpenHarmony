@@ -51,27 +51,14 @@
  
 
 /**
- * oColumn Class
- * @class
-
- * @property   name           {string}                       The name of the column.
- * @property   type           {string}                       The type of the column.
- * @property   frames         {[oFrame]}                     An array of the oFrame objects provided by the column.
- * @property   keyframes      {string}                       An array of the filtered keyframe oFrame objects provided by the column.
- * @property   subColumns     {{}}                           Provides the available subcolumns, based on the type of the column.
- 
- * @function   {void}             extendExposures( exposures, amount, replace)                                 Extends the exposure of the drawing's keyframes given the provided arguments.
- * @function   {void}             removeDuplicateKeys( )                                                       Removes concurrent/duplicate keys from drawing layers.
- * @function   {void}             duplicate( )                                                                 Not yet implemented.
- * @function   {[oFrame]}         getKeyFrames( )                                                              Filters out only the keyframes from the frames array.
-*/
-
-
-//
- /**
- * oColumn [CONSTRUCTOR]
+ * The base class for the column.
+ * @constructor
+ * @classdesc  oColumn Class
+ * @param   {string}                   uniqueName                  The unique name of the column.
+ * @param   {oAttributeObject}         oAttributeObject            The oAttribute thats connected to the column.
  *
- * Summary: The constructor for the oNode object, new oScene( $, node_path ) to create a oNode.
+ * @property {string}                  uniqueName                  The unique name of the column.
+ * @property {oAttributeObject}        attributeObject             The attribute object that the column is attached to.
  */
 function oColumn( uniqueName, oAttributeObject ){
 
@@ -85,8 +72,9 @@ function oColumn( uniqueName, oAttributeObject ){
 
 // oColumn Object Properties 
 /**
- * .name
- * @return: {string}   The name of the column.
+ * The name of the column.
+ * @name oColumn#name
+ * @type {string}
  */
 Object.defineProperty( oColumn.prototype, 'name', {
     get : function(){
@@ -102,11 +90,12 @@ Object.defineProperty( oColumn.prototype, 'name', {
         }
     }
 });
- 
- 
+
+
 /**
- * .type
- * @return: {string}   The type of the column.
+ * The type of the column.
+ * @name oColumn#type
+ * @type {string}
  */
 Object.defineProperty( oColumn.prototype, 'type', {
     get : function(){
@@ -118,10 +107,11 @@ Object.defineProperty( oColumn.prototype, 'type', {
     }
 });
  
- 
+
 /**
- * .frames
- * @return: {[oFrame]}   An array of the oFrame objects provided by the column.
+ * An array of the oFrame objects provided by the column.
+ * @name oColumn#frames
+ * @type {oFrame[]}
  */
 Object.defineProperty(oColumn.prototype, 'frames', {
     get : function(){
@@ -139,8 +129,9 @@ Object.defineProperty(oColumn.prototype, 'frames', {
  
 
 /**
- * .keyframes
- * @return: {[oFrame]}   An array of the keyframes provided by the column.
+ * An array of the keyframes provided by the column.
+ * @name oColumn#keyframes
+ * @type {oFrame[]}
  */
 Object.defineProperty(oColumn.prototype, 'keyframes', {
     get : function(){
@@ -156,8 +147,9 @@ Object.defineProperty(oColumn.prototype, 'keyframes', {
 
 
 /**
- * .subColumns
- * @return: {{}}   Provides the available subcolumns, based on the type of the column.
+ * Provides the available subcolumns, based on the type of the column.
+ * @name oColumn#subColumns
+ * @type {object}
  */
 Object.defineProperty(oColumn.prototype, 'subColumns', {
     get : function(){
@@ -180,14 +172,10 @@ Object.defineProperty(oColumn.prototype, 'subColumns', {
 // oColumn Class methods
  
 /**
- * extendExposures
- *
- * Summary: Extends the exposure of the drawing's keyframes given the provided arguments.
- * @param   {[oFrame]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
+ * Extends the exposure of the drawing's keyframes given the provided arguments.
+ * @param   {oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
  * @param   {int}       amount               The amount to extend.
  * @param   {bool}      replace              Setting this to false will insert frames as opposed to overwrite existing ones.
- *  
- * @return: {void}    No return
  */
 oColumn.prototype.extendExposures = function( exposures, amount, replace){
     if (this.type != "DRAWING") return false;
@@ -204,11 +192,7 @@ oColumn.prototype.extendExposures = function( exposures, amount, replace){
 
 
 /**
- * removeDuplicateKeys
- *
- * Summary: Removes concurrent/duplicate keys from drawing layers.
- *
- * @return: {void}    No return
+ * Removes concurrent/duplicate keys from drawing layers.
  */
 oColumn.prototype.removeDuplicateKeys = function(){
     var _keys = this.getKeyFrames();
@@ -247,11 +231,7 @@ oColumn.prototype.removeDuplicateKeys = function(){
 
 
 /**
- * duplicate
- *
- * Summary: Not yet implemented.
- *
- * @return: {void}    No return
+ * Not yet implemented.
  */
 oColumn.prototype.duplicate = function() {
     throw "Not yet implemented.";
@@ -259,11 +239,9 @@ oColumn.prototype.duplicate = function() {
 
 
 /**
- * getKeyFrames
+ * Filters out only the keyframes from the frames array.
  *
- * Summary: Filters out only the keyframes from the frames array.
- *
- * @return: {[oFrame]}    Provides the array of frames from the column.
+ * @return {oFrame[]}    Provides the array of frames from the column.
  */
 oColumn.prototype.getKeyFrames = function(){
     var _frames = this.frames;

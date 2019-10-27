@@ -51,24 +51,16 @@
  
  
 // oPalette constructor
+
 /**
- * oPalette Class
- * @class
- * @property   colorObject  {BaseColor}                         The Harmony color object.
- * @property   name         {string}                            The name of the color.
- * @property   id           {string}                            The id of the color.
- * @property   index        {string}                            The index of the color.
- * @property   type         {string}                            The type of the color.
- * @property   selected     {bool}                              Whether the color is selected.
- * @property   value        {...}                               The color value in a format contextual to the color type.
+ * The base class for the oColor.
+ * @constructor
+ * @classdesc  oColor Base Class
+ * @param   {oPaletteObject}         oPaletteObject             The palette to which the color belongs.
+ * @param   {int}                    attributeObject            The index of the color in the palette.
  *
- *
- * @function   {oColor}     moveToPalette( oPaletteObject, index )                            Moves the color to another Palette Object
- * @function   {void}       remove(  )                                                        Removes the color from the palette.
- *
- * @function   {void}       rgbaToHex(rgbaObject)                                             Static helper function to convert from {r:int, g:int, b:int, a:int} to a hex string in format #FFFFFFFF  
- * @function   {void}       hexToRgba(hexString)                                              Static helper function to convert from hex string in format #FFFFFFFF to {r:int, g:int, b:int, a:int}
-*/
+ * @property {oPaletteObject}        palette                    The palette to which the color belongs.
+ */
 function oColor( oPaletteObject, index){
   // We don't use id in the constructor as multiple colors with the same id can exist in the same palette.
   this._type = "color";
@@ -78,12 +70,12 @@ function oColor( oPaletteObject, index){
   this._index = index;
 }
  
- 
 // oColor Object Properties
 
 /**
- * .colorObject
- * @return: {BaseColor}   The Harmony color object.
+ * The Harmony color object.
+ * @name oColor#colorObject
+ * @type {BaseColor}
  */
 Object.defineProperty(oColor.prototype, 'colorObject', {
     get : function(){
@@ -96,9 +88,11 @@ Object.defineProperty(oColor.prototype, 'colorObject', {
 });
 
 
+
 /**
- * .name
- * @return: {string}   The name of the color.
+ * The name of the color.
+ * @name oColor#name
+ * @type {string}
  */
 Object.defineProperty(oColor.prototype, 'name', {
     get : function(){
@@ -113,10 +107,10 @@ Object.defineProperty(oColor.prototype, 'name', {
 });
 
 
-
 /**
- * .id
- * @return: {string}   The id of the color.
+ * The id of the color.
+ * @name oColor#id
+ * @type {string}
  */
 Object.defineProperty(oColor.prototype, 'id', {
     get : function(){
@@ -132,8 +126,9 @@ Object.defineProperty(oColor.prototype, 'id', {
 
 
 /**
- * .index
- * @return: {string}   The index of the color.
+ * The index of the color.
+ * @name oColor#index
+ * @type {int}
  */
 Object.defineProperty(oColor.prototype, 'index', {
     get : function(){
@@ -148,8 +143,9 @@ Object.defineProperty(oColor.prototype, 'index', {
 
 
 /**
- * .type
- * @return: {string}   The type of the color.
+ * The type of the color.
+ * @name oColor#type
+ * @type {int}
  */
 Object.defineProperty(oColor.prototype, 'type', {
     set : function(){
@@ -174,8 +170,9 @@ Object.defineProperty(oColor.prototype, 'type', {
 
 
 /**
- * .selected
- * @return: {bool}   Whether the color is selected.
+ * Whether the color is selected.
+ * @name oColor#selected
+ * @type {bool}
  */
 Object.defineProperty(oColor.prototype, 'selected', {
     get : function(){
@@ -196,9 +193,9 @@ Object.defineProperty(oColor.prototype, 'selected', {
 
 
 /**
- * .value
- * @return: {...}   Takes a string or array of strings for gradients and filename for textures. Instead of passing rgba objects, it accepts "#rrggbbaa" hex strings for convenience.
- *                   To set gradients, provide an array of {string color, double position} objects that define a gradient scale.
+ * Takes a string or array of strings for gradients and filename for textures. Instead of passing rgba objects, it accepts "#rrggbbaa" hex strings for convenience.<br>set gradients, provide an array of {string color, double position} objects that define a gradient scale.
+ * @name oColor#value
+ * @type {object}
  */
 Object.defineProperty(oColor.prototype, 'value', {
     get : function(){
@@ -253,9 +250,7 @@ Object.defineProperty(oColor.prototype, 'value', {
 // Methods
 
 /**
- * moveToPalette
- *
- * Summary: Moves the palette to another Palette Object (CFNote: perhaps have it push to paletteObject, instead of being done at the color level)
+ * Moves the palette to another Palette Object (CFNote: perhaps have it push to paletteObject, instead of being done at the color level)
  * @param   {oPaletteObject}     oPaletteObject              The paletteObject to move this color into.
  * @param   {int}                index                       Need clarification from mchap
  *  
@@ -277,10 +272,7 @@ oColor.prototype.moveToPalette = function ( oPaletteObject, index ){
 
 
 /**
- * remove
- *
- * Summary: Removes the color from the palette it belongs to.
- * @return: { void }      No return value.
+ * Removes the color from the palette it belongs to.
  */
 oColor.prototype.remove = function (){
     // TODO: find a way to work with index as more than one color can have the same id
@@ -289,12 +281,10 @@ oColor.prototype.remove = function (){
 
 
 /**
- * rgbaToHex
- *
- * Summary: Static helper function to convert from {r:int, g:int, b:int, a:int} to a hex string in format #FFFFFFFF  
+ * Static helper function to convert from {r:int, g:int, b:int, a:int} to a hex string in format #FFFFFFFF <br>
  *          Consider moving this to a helper function.
  * @param   { obj }       rgbaObject                       RGB object 
- *
+ * @static
  * @return: { string }    Hex color string in format #FFFFFFFF.
  */
 oColor.prototype.rgbaToHex = function (rgbaObject){
@@ -309,12 +299,10 @@ oColor.prototype.rgbaToHex = function (rgbaObject){
 
 
 /**
- * hexToRgba
- *
- * Summary: Static helper function to convert from hex string in format #FFFFFFFF to {r:int, g:int, b:int, a:int}
+ *  Static helper function to convert from hex string in format #FFFFFFFF to {r:int, g:int, b:int, a:int} <br>
  *          Consider moving this to a helper function.
  * @param   { string }    hexString                       RGB object 
- *
+ * @static
  * @return: { obj }    The hex object returned { r:int, g:int, b:int, a:int }
  */
 oColor.prototype.hexToRgba = function (hexString){

@@ -50,15 +50,19 @@
 //////////////////////////////////////
  
  
+
 /**
- * oPoint Class
- * @class
- * @constructor      oPoint( {float}x, {float}y, {float}z )    
- * @property         x           {float}                   Horizontal coordinate
- * @property         y           {float}                   Vertical coordinate
- * @property         z           {float}                   Depth Coordinate
- 
-*/
+ * The oPoint helper class - representing a 3D point.
+ * @constructor
+ * @classdesc  oPoint Base Class
+ * @param     {float}           x                              Horizontal coordinate
+ * @param     {float}           y                              Vertical coordinate
+ * @param     {float}           [z]                             Depth Coordinate
+ *
+ * @property     {float}           x                              Horizontal coordinate
+ * @property     {float}           y                              Vertical coordinate
+ * @property     {float}           z                              Depth Coordinate
+ */
 function oPoint (x, y, z){
     if (typeof z === 'undefined') var z = 0;
  
@@ -78,19 +82,22 @@ function oPoint (x, y, z){
 //////////////////////////////////////
 //////////////////////////////////////
  
+
  
 /**
- * oBox class
- * @class
- * @constructor      oBox( {float} left, {float} top, {float} right, {float} bottom )    
- * @property         left          {float}                   left horizontal bound
- * @property         top           {float}                   top vertical bound
- * @property         right         {float}                   right horizontal bound
- * @property         bottom        {float}                   bottom vertical bound
- * @property         center        {float}                   Center of the box.
+ * The oBox helper class - representing a 2D box.
+ * @constructor
+ * @classdesc  oBox Base Class
+ * @param      {float}       left                             left horizontal bound
+ * @param      {float}       top                              top vertical bound
+ * @param      {float}       right                            right horizontal bound
+ * @param      {float}       bottom                           bottom vertical bound
  *
- * @function        {float}      include( {oBox} box )       Adds the input box to the bounds of the current oBox
-*/
+ * @property      {float}       left                             left horizontal bound
+ * @property      {float}       top                              top vertical bound
+ * @property      {float}       right                            right horizontal bound
+ * @property      {float}       bottom                           bottom vertical bound
+ */
 function oBox (left, top, right, bottom){
     this.top = top;
     this.left = left;
@@ -99,7 +106,11 @@ function oBox (left, top, right, bottom){
 }
  
  
-// oBox Object Properties
+/**
+ * The width of the box.
+ * @name oBox#width
+ * @type {float}
+ */
 Object.defineProperty(oBox.prototype, 'width', {
     get : function(){
          return this.right - this.left + 1; //Inclusive size.
@@ -107,7 +118,11 @@ Object.defineProperty(oBox.prototype, 'width', {
 })
  
  
-// int height
+/**
+ * The height of the box.
+ * @name oBox#height
+ * @type {float}
+ */
 Object.defineProperty(oBox.prototype, 'height', {
     get : function(){
          return this.bottom - this.top;
@@ -115,7 +130,11 @@ Object.defineProperty(oBox.prototype, 'height', {
 })
  
  
-// oPoint center
+/**
+ * The center of the box.
+ * @name oBox#center
+ * @type {oPoint}
+ */
 Object.defineProperty(oBox.prototype, 'center', {
     get : function(){
          return new oPoint(this.left+this.width/2, this.top+this.height/2);
@@ -124,12 +143,8 @@ Object.defineProperty(oBox.prototype, 'center', {
  
  
 /**
- * include
- *
- * Summary: Adds the input box to the bounds of the current oBox.
- * @param   {oBox}   box                The oBox to include.
- *  
- * @return: {void}                     
+ * Adds the input box to the bounds of the current oBox.
+ * @param   {oBox}       box                The oBox to include.                    
  */
 oBox.prototype.include = function(box){
     if (box.left < this.left) this.left = box.left;
@@ -151,24 +166,22 @@ oBox.prototype.include = function(box){
  
  
 /**
- * oFolder class
- * @class
- * @constructor      oFolder( {string} path )    
- * @property         path          {string}                  path to the folder
- * @property         files         [{oFile}]                 files in the folder
- * @property         folders       [{oFolder}]               folder in the folder
- * @property         content       [{oFolder/oFile}]         content in the folder
+ * The oFolder helper class -- providing utilities for folder manipulation and access.
+ * @constructor
+ * @classdesc  oFolder Base Class
+ * @param      {string}              path                      The path to the folder.
  *
- * @function        {float}      include( {oBox} box )       Adds the input box to the bounds of the current oBox
-*/
+ * @property    {string}             path                      The path to the folder.
+ */
 function oFolder(path){
     this.path = fileMapper.toNativePath(path);
 }
 
+
 /**
- * name
- *
- * @return: {string} The name of the folder.
+ * The name of the folder.
+ * @name oFolder#name
+ * @type {string}
  */
 Object.defineProperty(oFolder.prototype, 'name', {
     get: function(){
@@ -177,10 +190,11 @@ Object.defineProperty(oFolder.prototype, 'name', {
     }
 });
 
+
 /**
- * files
- *
- * @return: {[oFile]} The files in the folder.
+ * The files in the folder.
+ * @name oFolder#files
+ * @type {oFile[]}
  */
 Object.defineProperty(oFolder.prototype, 'files', {
     get: function(){
@@ -192,10 +206,11 @@ Object.defineProperty(oFolder.prototype, 'files', {
     }
 });
 
+
 /**
- * folders
- *
- * @return: {[oFolder]} The folders within the folder.
+ * The folders within this folder.
+ * @name oFolder#folders
+ * @type {oFile[]}
  */
 Object.defineProperty(oFolder.prototype, 'folders', {
     get: function(){
@@ -207,10 +222,11 @@ Object.defineProperty(oFolder.prototype, 'folders', {
     }
 });
 
+
 /**
- * content
- *
- * @return: {string} The content within the folder.
+ * The content within the folder -- both folders and files.
+ * @name oFolder#content
+ * @type {oFile/oFolder[] }
  */
 Object.defineProperty(oFolder.prototype, 'content', {
     get: function(){
@@ -221,12 +237,10 @@ Object.defineProperty(oFolder.prototype, 'content', {
 });
 
 /**
- * getFiles
- *
- * Summary: Adds the input box to the bounds of the current oBox.
+ * Adds the input box to the bounds of the current oBox.
  * @param   {string}   filter                Filter wildcards for the content of the folder.
  *  
- * @return: { [oFile] }                      The file content of folder.                     
+ * @return: { oFile[] }                      The file content of folder.                     
  */
 oFolder.prototype.getFiles = function( filter ){
     // returns the list of URIs in a directory that match a filter
@@ -251,26 +265,24 @@ oFolder.prototype.getFiles = function( filter ){
 //////////////////////////////////////
 //////////////////////////////////////
  
- 
+
 /**
- * oFile class
- * @class
- * @constructor      oFile( {string} path )    
- * @property         path          {string}                                 path to the file
- * @property         name          {string}                                 name of the file
- * @property         extension     {string}                                 extension of the file
- *                                                                       
- * @function        {string}      read( )                                   Reads the contents of the file.
- * @function        {void}        write( {string} content, {bool} append )  Writes to the file path.
-*/
+ * The oFile helper class -- providing utilities for file manipulation and access.
+ * @constructor
+ * @classdesc  oFile Base Class
+ * @param      {string}              path                     The path to the file.
+ *
+ * @property    {string}             path                     The path to the file.
+ */
 function oFile(path){
     this.path = path.split('\\').join('/')
 }
 
+
 /**
- * name
- *
- * @return: {string} The name of the file.
+ * The name of the file.
+ * @name oFile#name
+ * @type {string}
  */
 Object.defineProperty(oFile.prototype, 'name', {
     get: function(){
@@ -279,10 +291,11 @@ Object.defineProperty(oFile.prototype, 'name', {
     }
 })
 
+
 /**
- * extension
- *
- * @return: {string} The extension of the file.
+ * The extension of the file.
+ * @name oFile#extension
+ * @type {string}
  */
 Object.defineProperty(oFile.prototype, 'extension', {
     get: function(){
@@ -296,9 +309,7 @@ Object.defineProperty(oFile.prototype, 'extension', {
  
  
 /**
- * read
- *
- * Summary: Reads the content of the file.
+ * Reads the content of the file.
  *  
  * @return: { string }                      The contents of the file.                     
  */
@@ -317,15 +328,10 @@ oFile.prototype.read = function() {
     }
 }
 
- 
 /**
- * write
- *
- * Summary: Writes to the file.
+ * Writes to the file.
  * @param   {string}   content               Content to write to the file.
- * @param   {bool}     append                Whether to append to the file.
- *  
- * @return: { void }                         No Return.         
+ * @param   {bool}     append                Whether to append to the file.   
  */
 oFile.prototype.write = function(content, append){
     if (typeof append === 'undefined') var append = false
@@ -342,4 +348,3 @@ oFile.prototype.write = function(content, append){
         return true
     } catch (err) {return false;}
 }
-

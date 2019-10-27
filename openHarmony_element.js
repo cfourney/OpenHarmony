@@ -48,19 +48,17 @@
 //////////////////////////////////////
 //////////////////////////////////////
 
- 
-/**
- * oElement Class
- * @class
 
- * @property   name           {string}                       The name of the node.
- * @property   path           {string}                       The folder path of the element on the filesystem.
- * @property   drawings       {[oDrawing]}                   The drawings available in the element.
- 
- * @function   {void}         addDrawing( atFrame, name, filename )                                 Adds a drawing to the element.
- * @function   {void}         getDrawingByName( name )                                              Gets a drawing object by the name.
- * @function   {void}         linkPalette( paletteFile )                                            Not yet implemented.
-*/
+/**
+ * The base class for the oElement.
+ * @constructor
+ * @classdesc  oElement Class
+ * @param   {int}                   id                          The element ID.
+ * @param   {oColumnObject}         oColumnObject               The column object associated to the element.
+ *
+ * @property {int}                  id                          The element ID.
+ * @property {oColumnObject}        oColumnObject               The column object associated to the element.
+ */
 function oElement ( id, oColumnObject){
   this._type = "element";
   this.$     = false;
@@ -69,12 +67,12 @@ function oElement ( id, oColumnObject){
   this.column = oColumnObject;
 }
 
-
 // oElement Object Properties
 
 /**
- * .name
- * @return: {string}   The name of the column.
+ * The name of the column.
+ * @name oElement#name
+ * @type {string}
  */
 Object.defineProperty(oElement.prototype, 'name', {
     get : function(){
@@ -86,10 +84,10 @@ Object.defineProperty(oElement.prototype, 'name', {
     }
 })
 
-
 /**
- * .path
- * @return: {string}   The folder path of the element on the filesystem.
+ * The folder path of the element on the filesystem.
+ * @name oElement#path
+ * @type {string}
  */
 Object.defineProperty(oElement.prototype, 'path', {
     get : function(){
@@ -97,12 +95,12 @@ Object.defineProperty(oElement.prototype, 'path', {
     }
 })
  
- 
 /**
- * .drawings
- * @return: { [oDrawing] }   The drawings available in the element.
+ * The drawings available in the element.
+ * @name oElement#drawings
+ * @type {oDrawing[]}
  */
-Object.defineProperty(oElement.prototype, 'drawings', {
+Object.defineProperty(oElement.prototype, '', {
     get : function(){
         var _drawingsNumber = Drawings.numberOf(this.id)
         var _drawings = [];
@@ -115,15 +113,14 @@ Object.defineProperty(oElement.prototype, 'drawings', {
  
  
 // oElement Class methods
+
 /**
- * addDrawing
- *
- * Summary: Adds a drawing to the element.
+ * Adds a drawing to the element.
  * @param   {int}        atFrame              The exposures to extend. If UNDEFINED, extends all keyframes.
  * @param   {name}       name                 The name of the drawing to add.
  * @param   {bool}       filename             The filename for the drawing to add.
  *  
- * @return: { oDrawing } The added drawing
+ * @return {oDrawing}      The added drawing
  */
 oElement.prototype.addDrawing = function( atFrame, name, filename ){
     if (typeof filename === 'undefined') var filename = false;
@@ -152,24 +149,18 @@ oElement.prototype.addDrawing = function( atFrame, name, filename ){
  
 
 /**
- * getDrawingByName
- *
- * Summary: Gets a drawing object by the name.
- * @param   {string}        name              The name of the drawing to get.
- *  
- * @return: { oDrawing } The added drawing
+ * Gets a drawing object by the name.
+ * @param   {string}     name              The name of the drawing to get.
+ * 
+ * @return { oDrawing }      The added drawing
  */
 oElement.prototype.getDrawingByName = function ( name ){
     return new oDrawing( name, this );
 }
  
 /**
- * linkPalette
- *
- * Summary: Not yet implemented.
+ * Not yet implemented.
  * @param   {string}        paletteFile              The path to the palette file to link.
- *  
- * @return: { void }
  */
 oElement.prototype.linkPalette = function ( paletteFile ){
   throw "Not yet implemented";

@@ -52,18 +52,16 @@
  
 // oPalette constructor
 /**
- * oPalette Class
- * @class
-
- * @property   id           {string}                         The palette ID.
- * @property   name         {string}                         The palette name. 
- * @property   path         {string}                         The palette path. 
- * @property   selected     {bool}                           Whether the palette is selected in the interface.
- * @property   colors       {[oColor]}                       The oColor objects contained in the palette.
- *
- * @function   {void}       addColor(name, type, colorData)                 Not yet implemented.
- * @function   {void}       remove( removeFile )                            Removes the palette from the Palette List in the scene. Removes it from the filesystem if removeFile is true.  
-*/
+ * The base class for the oPalette.
+ * @constructor
+ * @classdesc  oPalette Base Class
+ * @param   {palette}                 paletteObject             The Harmony palette object.
+ * @param   {oSceneObject}            oSceneObject              The DOM Scene object.
+ * @param   {paletteList}             paletteListObject         The Harmony paletteListObject object.
+ *                                                          
+ * @property   {palette}                 paletteObject          The Harmony palette object.
+ * @property   {oSceneObject}            scene                  The DOM Scene object.
+ */
 function oPalette( paletteObject, oSceneObject, paletteListObject ){
   this._type = "palette";
   this.$     = oSceneObject.$;
@@ -75,10 +73,10 @@ function oPalette( paletteObject, oSceneObject, paletteListObject ){
  
  
 // oPalette Object Properties
-
 /**
- * .id
- * @return: {string}   The palette ID.
+ * The palette ID.
+ * @name oPalette#id
+ * @type {string}
  */
 Object.defineProperty(oPalette.prototype, 'id', {
     get : function(){
@@ -94,9 +92,10 @@ Object.defineProperty(oPalette.prototype, 'id', {
 
 
 /**
- * .name
- * @return: {string}   The palette name.
- */ 
+ * The palette name.
+ * @name oPalette#name
+ * @type {string}
+ */
 Object.defineProperty(oPalette.prototype, 'name', {
     get : function(){
          return this.paletteObject.getName();
@@ -110,9 +109,10 @@ Object.defineProperty(oPalette.prototype, 'name', {
  
  
 /**
- * .path
- * @return: {string}   The palette path.
- */ 
+ * The palette path on disk.
+ * @name oPalette#path
+ * @type {string}
+ */
 Object.defineProperty(oPalette.prototype, 'path', {
     get : function(){
          var _path = this.paletteObject.getPath()
@@ -128,9 +128,10 @@ Object.defineProperty(oPalette.prototype, 'path', {
 
 
 /**
- * .path
- * @return: {bool}   Whether the palette is selected.
- */ 
+ * Whether the palette is selected.
+ * @name oPalette#selected
+ * @type {bool}
+ */
 Object.defineProperty(oPalette.prototype, 'selected', {
     get : function(){
         var _currentId = PaletteManager.getCurrentPaletteId()
@@ -148,9 +149,10 @@ Object.defineProperty(oPalette.prototype, 'selected', {
 
 
 /**
- * .path
- * @return: {[oColor]}   The oColor objects contained in the palette.
- */ 
+ * The oColor objects contained in the palette.
+ * @name oPalette#colors
+ * @type {oColor[]}
+ */
 Object.defineProperty(oPalette.prototype, 'colors', {
     get : function(){
         var _palette = this.paletteObject
@@ -165,9 +167,7 @@ Object.defineProperty(oPalette.prototype, 'colors', {
 
 // oPalette Class methods
 /**
- * addColor
- *
- * Summary: Not yet implemented.
+ * Not yet implemented.
  */
 oPalette.prototype.addColor = function (name, type, colorData){
     throw "Not yet implemented.";
@@ -175,12 +175,10 @@ oPalette.prototype.addColor = function (name, type, colorData){
 
 
 /**
- * remove
- *
- * Summary: Removes the palette file from the filesystem and palette list.
+ *  Removes the palette file from the filesystem and palette list.
  * @param   {bool}       removeFile                 Whether the palette file should be removed on the filesystem.
  *  
- * @return: { ... }      The value of the attribute in the native format of that attribute (contextual to the attribute).
+ * @return: {bool}       The success-result of the removal.
  */
 oPalette.prototype.remove = function ( removeFile ){
     if (typeof removeFile === 'undefined') var removeFile = false;

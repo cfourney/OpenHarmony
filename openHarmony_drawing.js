@@ -48,12 +48,17 @@
 //////////////////////////////////////
 //////////////////////////////////////
 
-/**
- * oDrawing Class
- * @class
 
- * @property   path           {string}                       The folder path of the element on the filesystem.
-*/
+/**
+ * The base class for the oDrawing.
+ * @constructor
+ * @classdesc  oDrawing Base Class
+ * @param   {int}                    name                       The name of the drawing.
+ * @param   {oElementObject}         oElementObject             The element object associated to the element.
+ *
+ * @property {int}                   name                       The name of the drawing.
+ * @property {oElementObject}        element                    The element object associated to the element.
+ */
 function oDrawing( name, oElementObject ){
   this._type = "drawing";
   this.$     = false;
@@ -62,10 +67,10 @@ function oDrawing( name, oElementObject ){
   this.element = oElementObject;
 }
  
-
 /**
- * .path
- * @return: {string}   The folder path of the drawing on the filesystem.
+ * The folder path of the drawing on the filesystem.
+ * @name oDrawing#path
+ * @type {string}
  */
 Object.defineProperty( oDrawing.prototype, 'path', {
     get : function(){

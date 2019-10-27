@@ -50,19 +50,18 @@
  
  
 /**
- * oFrame Class
- * @class
-
- * @property   value           {...}                       The value of the attribute at the given frame.
- * @property   isKeyFrame      {bool}                      Bool specifying if the frame is a keyframe.
- * @property   duration        {int}                       The duration of the keyframe exposure of the frame.
- * @property   isBlank         {bool}                      Identifies if the frame is blank/empty.
- * @property   startFrame      {int}                       Identifies the starting frame of the exposed drawing.
- * @property   marker          {string}                    Returns the drawing types used in the drawing column. K = key drawings, I = inbetween, B = breakdown
- 
+ * The base class for the oFrame.
+ * @constructor
+ * @classdesc  oFrame Base Class
+ * @param   {int}                    frameNumber             The frame to which this references.
+ * @param   {oColumnObject}          oColumnObject           The column to which this frame references.
+ * @param   {int}                    subColumns              The subcolumn index.
  *
- * @function   {void}         extend( duration, replace )        Extends the frames value to the specified duration, replaces in the event that replace is specified.
-*/
+ * @property {int}                     frameNumber           The frame to which this references.
+ * @property {oColumnObject}           column                The oColumnObject to which this frame references.
+ * @property {oAttributeObject}        attributeObject       The oAttributeObject to which this frame references.
+ * @property {int}                     subColumns            The subcolumn index.
+ */
 function oFrame( frameNumber, oColumnObject, subColumns ){
   this._type = "frame";
   this.$     = false;
@@ -78,8 +77,9 @@ function oFrame( frameNumber, oColumnObject, subColumns ){
  
 // oFrame Object Properties
 /**
- * .value
- * @return: { ... }   The value of the frame.
+ * The value of the frame. Contextual to the attribute type.
+ * @name oFrame#value
+ * @type {object}
  */
 Object.defineProperty(oFrame.prototype, 'value', {
     get : function(){
@@ -93,8 +93,14 @@ Object.defineProperty(oFrame.prototype, 'value', {
  
 
 /**
- * .isKeyFrame
- * @return: {bool}   Bool specifying if the frame is a keyframe.
+ * .
+ * @return: {bool}   
+ */
+ 
+/**
+ * Whether the frame is a keyframe.
+ * @name oFrame#isKeyFrame
+ * @type {bool}
  */
 Object.defineProperty(oFrame.prototype, 'isKeyFrame', {
     get : function(){
@@ -119,8 +125,9 @@ Object.defineProperty(oFrame.prototype, 'isKeyFrame', {
  
  
 /**
- * .duration
- * @return: {int}   The duration of the keyframe exposure of the frame.
+ * The duration of the keyframe exposure of the frame.
+ * @name oFrame#duration
+ * @type {int}
  */
 Object.defineProperty(oFrame.prototype, 'duration', {
     get : function(){
@@ -142,8 +149,9 @@ Object.defineProperty(oFrame.prototype, 'duration', {
  
  
 /**
- * .isBlank
- * @return: {bool}   Identifies if the frame is blank/empty.
+ * Identifies if the frame is blank/empty.
+ * @name oFrame#isBlank
+ * @type {int}
  */
 Object.defineProperty(oFrame.prototype, 'isBlank', {
     get : function(){
@@ -155,9 +163,11 @@ Object.defineProperty(oFrame.prototype, 'isBlank', {
     }
 })
  
+
 /**
- * .startFrame
- * @return: {int}   Identifies the starting frame of the exposed drawing.
+ * Identifies the starting frame of the exposed drawing.
+ * @name oFrame#startFrame
+ * @type {int}
  */
 Object.defineProperty(oFrame.prototype, 'startFrame', {
     get : function(){
@@ -178,8 +188,9 @@ Object.defineProperty(oFrame.prototype, 'startFrame', {
  
  
 /**
- * .marker
- * @return: {string}   Returns the drawing types used in the drawing column. K = key drawings, I = inbetween, B = breakdown
+ * Returns the drawing types used in the drawing column. K = key drawings, I = inbetween, B = breakdown
+ * @name oFrame#marker
+ * @type {string}
  */
 Object.defineProperty(oFrame.prototype, 'marker', {
     get : function(){
@@ -197,13 +208,9 @@ Object.defineProperty(oFrame.prototype, 'marker', {
  
  
 /**
- * extend
- *
- * Summary: Extends the frames value to the specified duration, replaces in the event that replace is specified.
+ * Extends the frames value to the specified duration, replaces in the event that replace is specified.
  * @param   {int}        duration              The duration to extend it to; if no duration specified, extends to the next available keyframe.
  * @param   {bool}       replace               Setting this to false will insert frames as opposed to overwrite existing ones.
- *  
- * @return: { void } No return
  */
 oFrame.prototype.extend = function( duration, replace ){
     if (typeof replace === 'undefined') var replace = true;

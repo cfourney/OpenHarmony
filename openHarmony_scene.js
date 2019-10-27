@@ -48,39 +48,14 @@
 //////////////////////////////////////
 //////////////////////////////////////
  
-/**
- * oScene Class
- * @class
- * @property   nodes          {[oNode]}                        All nodes in the scene.
- * @property   columns        {[oColumn]}                      All columns in the scene.
- * @property   palettes       {[oPalette]}                     All palettes in the scene.
- * @property   elements       {[oElement]}                     All elements in the scene.
- * @property   drawings       {[oDrawing]}                     All drawings in the scene.
- * @property   groups         {[oGroup]}                       All groups in the scene.
- * 
- * @function   {[oNode]}       node( string search_str )       node search
- * @function   {[oColumn]}     column( string search_str )     column search
- * @function   {[oPalette]}    palette( string search_str )    palette search 
- * @function   {[oElement]}    element( string search_str )    element search 
- * @function   {[oDrawing]}    drawing( string search_str )    drawing search 
- * @function   {[oGroup]}      group( string search_str )      group search 
- * 
- * @function   {oNode}         addNode( string type, string name, oPoint nodePosition, string group )      
- * @function   {oColumn}       addColumn( string type, string name, element )     
- * @function   {oPalette}      addPalette( string name )
- * @function   {oElement}      addElement( name, imageFormat, fieldGuide, scanType )
- * @function   {oDrawing}      addDrawingNode( name, group, nodePosition, element, drawingColumn )
- * @function   {oDrawing}      addGroup( name, includeNodes, group, nodePosition, addComposite, addPeg )
- */
- 
 
 //TODO: Metadata, settings, aspect, camera peg, view.
 /**
- * $.scene [CONSTRUCTOR]
+ * The base class for the scene.
  * @constructor
- * @param {string} dom     Access to the direct dom object.
- *
- * Summary: The constructor for the scene object, new oScene($) to create a scene with DOM access.
+ * @classdesc  Scene Class
+ * @param   {$dom}         dom                  Access to the direct dom object.
+ * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
  */
 function oScene( dom ){
     // oScene.nodes property is a class property shared by all instances, so it can be passed by reference and always contain all nodes in the scene
@@ -97,11 +72,11 @@ function oScene( dom ){
 //--- oScene Objects Properties
 //-------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
+
 /**
- * nodes
- *
- * Summary: Contains the list of nodes present in the scene.
- * @return: {[oNode]} Array oScene.nodes.
+ * Contains the list of nodes present in the scene.
+ * @name oScene#nodes
+ * @type {oNode[]}
  */
 Object.defineProperty(oScene.prototype, 'nodes', {
     get : function(){
@@ -111,12 +86,10 @@ Object.defineProperty(oScene.prototype, 'nodes', {
 });
 
 
-
 /**
- * columns
- *
- * Summary: Contains the list of columns present in the scene.
- * @return: {[oColumn]} Array oScene.columns.
+ * Contains the list of columns present in the scene.
+ * @name oScene#columns
+ * @type {oColumn[]}
  */
 Object.defineProperty(oScene.prototype, 'columns', {
     get : function(){
@@ -128,12 +101,11 @@ Object.defineProperty(oScene.prototype, 'columns', {
     }
 });
  
- 
+
 /**
- * palettes
- *
- * Summary: Contains the list of scene palettes present in the scene.
- * @return: {[oPalette]} Array oScene.palettes.
+ * Contains the list of scene palettes present in the scene.
+ * @name oScene#palettes
+ * @type {oPalette[]}
  */
 Object.defineProperty(oScene.prototype, 'palettes', {
     get : function(){
@@ -147,11 +119,11 @@ Object.defineProperty(oScene.prototype, 'palettes', {
 });
 
 
+
 /**
- * length
- *
- * Summary: The length of the scene.
- * @return: {int} The length of the scene.
+ * The length of the scene.
+ * @name oScene#length
+ * @type {int}
  */
 Object.defineProperty(oScene.prototype, 'length', {
     get : function(){
@@ -178,12 +150,10 @@ Object.defineProperty(oScene.prototype, 'length', {
 
 
 /**
- * getNodeByPath
- *
- * Summary: Gets a node by the path.
+ * Gets a node by the path.
  * @param   {string}   fullPath         The path of the node in question.
  *  
- * @return: {oNode}                     The node found given the query.
+ * @return {oNode}                     The node found given the query.
  */
 oScene.prototype.getNodeByPath = function(fullPath){
     if (node.type(fullPath) == "") return null; // TODO: remove this if we implement a .exists property for oNode
@@ -194,12 +164,10 @@ oScene.prototype.getNodeByPath = function(fullPath){
 }
 
 /**
- * $node
- *
- * Summary: Gets a node by the path.
+ * Gets a node by the path.
  * @param   {string}   fullPath         The path of the node in question.
  *  
- * @return: {oNode}                     The node found given the query.
+ * @return {oNode}                     The node found given the query.
  */
 oScene.prototype.$node = function(fullPath){
     return this.getNodeByPath(fullPath);
@@ -207,12 +175,10 @@ oScene.prototype.$node = function(fullPath){
 
 
 /**
- * getSelectedNodes
- *
- * Summary: Gets a node by the path.
+ * Gets a node by the path.
  * @param   {bool}   recurse            Whether to recurse into groups.
  *  
- * @return: {[oNode]}                   The selected nodes.
+ * @return {oNode[]}                   The selected nodes.
  */
 oScene.prototype.getSelectedNodes = function( recurse, sort_result ){
     if (typeof recurse === 'undefined') var recurse = false;
@@ -242,12 +208,10 @@ oScene.prototype.getSelectedNodes = function( recurse, sort_result ){
 
 
 /**
- * nodeSearch
- *
- * Summary: Searches for a node based on the query.
+ * Searches for a node based on the query.
  * @param   {string}   query            The query for finding the node[s].
  *  
- * @return: {[oNode]}                   The node[s] found given the query.
+ * @return {oNode[]}                   The node[s] found given the query.
  */
 oScene.prototype.nodeSearch = function( query, sort_result ){
   if (typeof sort_result    === 'undefined') var sort_result = true;     //Avoid sorting, save time, if unnecessary and used internally.
@@ -532,16 +496,14 @@ oScene.prototype.nodeSearch = function( query, sort_result ){
 
 
 /**
- * addNode
- *
- * Summary: Adds a node to the scene.
+ * Adds a node to the scene.
  * @param   {string}   type            The type-name of the node to add.
  * @param   {string}   name            The name of the newly created node.
  * @param   {string}   group           The groupname to add the node.
  * @param   {oPoint}   nodePosition    The position for the node to be placed in the network.
  * @param   {object}   options         Options -- currently only supports 'adoptExisting', which accepts the existing node in the event one already exists.
  * 
- * @return: {oNode}    The created node, or bool as false.
+ * @return {oNode}    The created node, or bool as false.
  */
 oScene.prototype.addNode = function( type, name, group, nodePosition, options ){
     // Defaults for optional parameters
@@ -581,14 +543,12 @@ oScene.prototype.addNode = function( type, name, group, nodePosition, options ){
  
  
 /**
- * addColumn
- *
- * Summary: Adds a column to the scene.
+ * Adds a column to the scene.
  * @param   {string}   type                           The type of the column.
  * @param   {string}   name                           The name of the column.
  * @param   {oElementObject}   oElementObject         The elementObject to link, if a drawing, and wanting to share an element
  *  
- * @return: {oColumn}  The created column, or bool as false.
+ * @return {oColumn}  The created column, or bool as false.
  */
  
 oScene.prototype.addColumn = function( type, name, oElementObject ){
@@ -622,15 +582,13 @@ oScene.prototype.addColumn = function( type, name, oElementObject ){
  
  
 /**
- * addElement
- *
- * Summary: Adds an element to the scene.
+ * Adds an element to the scene.
  * @param   {string}   name            The name of the 
  * @param   {string}   imageFormat            The object to log.
  * @param   {string}   fieldGuide         The debug level.
  * @param   {string}   scanType         The debug level. 
  *  
- * @return: {oColumn}  The created column, or bool as false.
+ * @return {oColumn}  The created column, or bool as false.
  */
 oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
     // Defaults for optional parameters
@@ -649,9 +607,7 @@ oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
  
  
 /**
- * addDrawingNode
- *
- * Summary: Adds a drawing element to the scene.
+ * Adds a drawing element to the scene.
  * @param   {string}   name            The name of the newly created node.
  * @param   {string}   group           The group in which the node is added.
  * @param   {oPoint}   nodePosition    The position for the node to be placed in the network.
@@ -659,7 +615,7 @@ oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
  * @param   {object}   drawingColumn   The column to attach to the drawing module.
  * @param   {object}   options         The creation options, nothing available at this point.
  
- * @return: {oNode}    The created node, or bool as false.
+ * @return {oNode}    The created node, or bool as false.
  */
  
 oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElementObject, drawingColumn, options ){
@@ -684,9 +640,7 @@ oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElementO
 
  
 /**
- * addGroup
- *
- * Summary: Adds a drawing element to the scene.
+ * Adds a drawing element to the scene.
  * @param   {string}   name                   The name of the newly created group.
  * @param   {string}   includeNodes           The nodes to add to the group.
  * @param   {oPoint}   addComposite           Whether to add a composite.
@@ -694,7 +648,7 @@ oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElementO
  * @param   {string}   group                  The group in which the node is added.
  * @param   {oPoint}   nodePosition           The position for the node to be placed in the network.
  
- * @return: {oGroup}   The created node, or bool as false.
+ * @return {oGroup}   The created node, or bool as false.
  */
 oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, group, nodePosition ){
     // Defaults for optional parameters
@@ -745,11 +699,9 @@ oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, 
 
 
 /**
- * getTimeline
- *
- * Summary: Adds a drawing element to the scene.
+ * Adds a drawing element to the scene.
  * @param   {string}    display                The display node to build the timeline for.
- * @return: {oTimeline}    The timelne object given the display.
+ * @return {oTimeline}    The timelne object given the display.
  */
 oScene.prototype.getTimeline = function(display){
     if (typeof display === 'undefined') var display = '';
@@ -758,11 +710,9 @@ oScene.prototype.getTimeline = function(display){
 
 
 /**
- * getPaletteByName
- *
- * Summary: Provides a palette object based on name.
+ * Provides a palette object based on name.
  * @param   {string}     name                The name of the palette to return, if available.
- * @return: {oPalette}   oPalette with provided name.
+ * @return {oPalette}   oPalette with provided name.
  */
 oScene.prototype.getPaletteByName = function( name ){
     var _paletteList = PaletteObjectManager.getScenePaletteList();
@@ -775,10 +725,8 @@ oScene.prototype.getPaletteByName = function( name ){
  
  
 /**
- * getSelectedPalette
- *
- * Summary: Provides the selected palette.
- * @return: {oPalette}   oPalette with provided name.
+ * Provides the selected palette.
+ * @return {oPalette}   oPalette with provided name.
  */
 oScene.prototype.getSelectedPalette = function(){
     var _paletteList = PaletteManager.getScenePaletteList();
@@ -789,16 +737,14 @@ oScene.prototype.getSelectedPalette = function(){
 
  
 /**
- * importPalette
- *
- * Summary: Provides a palette object based on name.
+ * Provides a palette object based on name.
  * @param   {string}       path                          The palette file to import.
  * @param   {string}       name                          The name for the palette.
  * @param   {string}       index                         Index at which to insert the palette.
  * @param   {string}       paletteStorage                Storage type: environment, job, scene, element, external.
  * @param   {oElement}     storeInElement                The name of the palette to return, if available.
  * 
- * @return: {oPalette}   oPalette with provided name.
+ * @return {oPalette}   oPalette with provided name.
  */
 oScene.prototype.importPalette = function( path, name, index, paletteStorage, storeInElement ){
     if (typeof paletteStorage === 'undefined') var destination = "scene";
@@ -844,9 +790,7 @@ oScene.prototype.importPalette = function( path, name, index, paletteStorage, st
 
 
 /**
- * importPSD
- *
- * Summary: Imports a PSD to the node view.
+ * Imports a PSD to the node view.
  * @param   {string}       path                          The palette file to import.
  * @param   {string}       group                         The group to import the PSD into.
  * @param   {oPoint}       nodePosition                  The position for the node to be placed in the network.
@@ -855,7 +799,7 @@ oScene.prototype.importPalette = function( path, name, index, paletteStorage, st
  * @param   {bool}         addComposite                  Whether to add a composite.
  * @param   {string}       alignment                     Alignment type.
  * 
- * @return: {[oNode]}     The nodes being created as part of the PSD import.
+ * @return {oNode[]}     The nodes being created as part of the PSD import.
  */
 oScene.prototype.importPSD = function(path, group, nodePosition, separateLayers, addPeg, addComposite, alignment){
 
@@ -942,16 +886,14 @@ oScene.prototype.importPSD = function(path, group, nodePosition, separateLayers,
 }
  
 /**
- * importQT
- *
- * Summary: Imports a QT into the node view.
+ * Imports a QT into the node view.
  * @param   {string}       path                          The palette file to import.
  * @param   {string}       group                         The group to import the PSD into.
  * @param   {oPoint}       nodePosition                  The position for the node to be placed in the network.
  * @param   {bool}         extendScene                   Whether to add a composite.
  * @param   {string}       alignment                     Alignment type.
  * 
- * @return: {oNode}        The imported Quicktime Node.
+ * @return {oNode}        The imported Quicktime Node.
  */
 oScene.prototype.importQT = function( path, group, nodePosition, extendScene, alignment ){
     if (typeof alignment === 'undefined') var alignment = "ASIS";
@@ -1005,14 +947,12 @@ oScene.prototype.importQT = function( path, group, nodePosition, extendScene, al
  
 
 /**
- * mergeNodes
- *
- * Summary: Merges Drawing nodes into a single node.
- * @param   {[oNode]}      nodes                         The Drawing nodes to merge.
+ * Merges Drawing nodes into a single node.
+ * @param   {oNode[]}      nodes                         The Drawing nodes to merge.
  * @param   {string}       resultName                    The Node name for the resulting node of the merged content.
  * @param   {bool}         deleteMerged                  Whether the original nodes be deleted.
  * 
- * @return: {oNode}        The resulting drawing node from the merge.
+ * @return {oNode}        The resulting drawing node from the merge.
  */
 oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
     // TODO: is there a way to do this without Action.perform?

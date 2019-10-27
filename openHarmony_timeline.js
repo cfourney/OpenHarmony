@@ -49,11 +49,17 @@
 //////////////////////////////////////
 //////////////////////////////////////
  
+
 /**
- * oTimeline Class
- * @class
- * @property   layers         {[oNode]}                        The nodes in the timeline.
- * @property   layersList     {[string]}                       The path of the nodes in the timeline. 
+ * The base class for the oTimeline.
+ * @constructor
+ * @classdesc  oTimeline Base Class
+ * @param   {string}                   display               The display node's path.
+ * @param   {oScene}                   oSceneObject          The scene object of the DOM.
+ *
+ * @property {int}                     display               The display node's path.
+ * @property {oColumnObject}           composition           The composition order of the scene.
+ * @property {oScene}                  scene                 The scene object of the DOM.
  */
 function oTimeline( display, oSceneObject ){
     this.display = display
@@ -69,11 +75,11 @@ function oTimeline( display, oSceneObject ){
 }
  
 // Properties
+
 /**
- * layers
- *
- * Summary: The node layers in the scene, based on the timeline's order given a specific display.
- * @return: { [oNode] } The nodes in the timeline.
+ * The node layers in the scene, based on the timeline's order given a specific display.
+ * @name oTimeline#layers
+ * @type {oNode[]}
  */
 Object.defineProperty(oTimeline.prototype, 'layers', {
     get : function(){
@@ -87,10 +93,9 @@ Object.defineProperty(oTimeline.prototype, 'layers', {
 });
  
 /**
- * layersList
- *
- * Summary: Gets the paths of the layers in order, given the specific display's timeline.
- * @return: { [string] }  The path of the nodes in the timeline. 
+ * Gets the paths of the layers in order, given the specific display's timeline.
+ * @name oTimeline#layersList
+ * @type {string[]}
  */
 Object.defineProperty(oTimeline.prototype, 'layersList', {
     get : function(){

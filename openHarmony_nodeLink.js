@@ -48,29 +48,36 @@
 //////////////////////////////////////
 //////////////////////////////////////
  
-/**
- * oNodeLink Class
- * @class
 
- * @property   inPort            {int}                       The inport of this link.
- * @property   outPort           {int}                       The outport of this link.
- * @property   outLink           {int}                       The outlink of this link.
- * @property   srcNode           {oNode}                     The srcNode of the link.
- * @property   dstNode           {oNode}                     The dstNode of the link.
- *
-*/
-function oNodeLink ( srcNode, dstNode, outPort, outLink, inPort ){
-    this.srcNode = srcNode;
-    this.dstNode = dstNode;
+/**
+ * The base class for the oTimeline.
+ * @constructor
+ * @classdesc  oTimeline Base Class
+ * @param   {oNode}                   outNode                   The source oNode of the link.
+ * @param   {oNode}                   inNode                    The destination oNode of the link.
+ * @param   {int}                     outPort                   The outport of the outNode that is connecting this link.
+ * @param   {int}                     outLink                   The outlink of the outport on the outNode that is connecting this link.
+ * @param   {int}                     inPort                    The inport of the inNode that is connecting the link.
+ *                                                          
+ * @property   {oNode}                   outNode                The source oNode of the link.
+ * @property   {oNode}                   inNode                 The destination oNode of the link.
+ * @property   {int}                     _cacheOutPort          The outport of the outNode that is connecting this link.
+ * @property   {int}                     _cacheOutLink          The outlink of the outport on the outNode that is connecting this link.
+ * @property   {int}                     _cacheInPort           The inport of the inNode that is connecting the link.
+ */
+function oNodeLink ( outNode, inNode, outPort, outLink, inPort ){
+    this.outNode = outNode;
+    this.inNode = inNode;
     this._cacheOutPort = outPort;
     this._cacheOutLink = outLink;
     this._cacheInPort = inPort;
 }
 
+
 /**
- * .outPort
- *
- * @return: {int} The outport of this oNodeLink.
+ * The outport of this oNodeLink.
+ * @name oNodeLink#outPort
+ * @type {oNode[]}
  */
 Object.defineProperty(oNodeLink.prototype, 'outPort', {
     get : function(){
@@ -78,13 +85,13 @@ Object.defineProperty(oNodeLink.prototype, 'outPort', {
         var _port = this._cacheOutPort;
         var _link = this._cacheOutLink;
 
-        if (node.dstNode(this.srcNode.fullPath, _port, _link) != this.dstNode.fullPath){
-            // First look amongst direct dstNodes
-            var _outNodes = this.srcNode.outNodes;
+        if (node.inNode(this.outNode.fullPath, _port, _link) != this.inNode.fullPath){
+            // First look amongst direct inNodes
+            var _outNodes = this.outNode.outNodes;
 
             for (var i in _outNodes){
                 for (var j in _outNodes[i]){
-                    if(_outNodes[i][j].fullPath == this.dstNode.fullPath) {
+                    if(_outNodes[i][j].fullPath == this.inNode.fullPath) {
                         _port = this._cacheOutPort = i;
                         _link = this._cacheOutLink = j;
                         return {port: _port, link: _link}
@@ -102,11 +109,15 @@ Object.defineProperty(oNodeLink.prototype, 'outPort', {
     set : function( val ){
       throw "Not yet implemented.";
     }
-})
+});
 
-// NEW
-// string inPort
 
+
+/**
+ * Not yet implemented.
+ * @name oNodeLink#inPort
+ * @type {oNode[]}
+ */
 Object.defineProperty(oNodeLink.prototype, 'inPort', {
     get : function(){
       throw "Not yet implemented.";
@@ -114,7 +125,7 @@ Object.defineProperty(oNodeLink.prototype, 'inPort', {
     set : function( val ){
       throw "Not yet implemented.";
     }
-})
+});
 
  
 // oNodeLink Class methods

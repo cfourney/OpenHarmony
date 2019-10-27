@@ -48,28 +48,25 @@
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
- 
- 
-/**
- * oAttribute Class
- * @class
 
- * @property   type           {string}                       The attribute type.
- * @property   column         {oColumn}                      The attached column.
- * @property   frames         {[oFrame]}                     The frames in the attribute.
- * @property   keyFrames      {[oFrame]}                     The keyframes in the attribute. 
- * @property   useSeparate    {bool}                         Not yet implemented.
+/**
+ * The base class for the oAttribute.
+ * @constructor
+ * @classdesc  oAttribute Base Class
+ * @param   {oNode}                  oNodeObject                The oNodeObject that the attribute is associated to.
+ * @param   {attr}                   attributeObject            The internal harmony Attribute Object.
+ * @param   {oAttribute}             parentAttribute            The parent attribute of the subattribute.
  *
- * @function   {[oFrame]}     getKeyFrames( )                Provides the keyframes of the attribute.
- 
- * @function   {void}         setValue( value, frame )       Sets the value of the attribute at the given frame.
- 
- * @function   {...}          getValue( frame )              Gets the value of the attribute at the given frame.
- * @function   {...}          value( frame )                 Gets the value of the attribute at the given frame.
-*/
-function oAttribute( dom, oNodeObject, attributeObject, parentAttribute ){
+ * @property {int}                   oNodeObject                The name of the drawing.
+ * @property {attr}                  attributeObject            The element object associated to the element.
+ * @property {string}                keyword                    The name of the drawing.
+ * @property {string}                shortKeyword               The element object associated to the element.
+ * @property {oAttribute}            parentAttribute            The element object associated to the element.
+ * @property {oAttribute[]}          subAttributes              The subattributes, if any exist, of this attribute.
+ */
+function oAttribute( oNodeObject, attributeObject, parentAttribute ){
   this._type = "attribute";
-  this.$     = dom;
+  this.$     = false;
 
   this.oNodeObject = oNodeObject;
   this.attributeObject = attributeObject;
@@ -102,8 +99,9 @@ function oAttribute( dom, oNodeObject, attributeObject, parentAttribute ){
 // oAttribute Object Properties
  
 /**
- * .type
- * @return: {string}   The type of the attribute.
+ * The type of the attribute.
+ * @name oAttribute#type
+ * @type {string}
  */
 Object.defineProperty(oAttribute.prototype, 'type', {
     get : function(){
@@ -113,8 +111,9 @@ Object.defineProperty(oAttribute.prototype, 'type', {
  
  
 /**
- * .column
- * @return: {oColumn}   Provides the column attached to the attribute.
+ * The column attached to the attribute.
+ * @name oAttribute#column
+ * @type {oColumn}
  */
 Object.defineProperty(oAttribute.prototype, 'column', {
     get : function(){
@@ -133,9 +132,10 @@ Object.defineProperty(oAttribute.prototype, 'column', {
 })
  
  
-/**
- * .frames
- * @return: {[oFrame]}   Returns the oFrame of attached to the column.
+ /**
+ * The oFrames of attached to the column..
+ * @name oAttribute#frames
+ * @type {oFrame[]}
  */
 Object.defineProperty(oAttribute.prototype, 'frames', {
     get : function(){
@@ -154,8 +154,9 @@ Object.defineProperty(oAttribute.prototype, 'frames', {
 
 
 /**
- * .keyframes
- * @return: {[oFrame]}   Returns the filtered keyframes of the attached to the column.
+ * Returns the filtered keyframes of the attached to the column.
+ * @name oAttribute#keyframes
+ * @type {oFrame[]}
  */
 Object.defineProperty(oAttribute.prototype, 'keyframes', {
     get : function(){
@@ -169,10 +170,10 @@ Object.defineProperty(oAttribute.prototype, 'keyframes', {
     }
 });
 
-
 /**
- * .useSeparate
- * @return: {[oFrame]}   Returns the oFrame of attached to the column.
+ * WIP.
+ * @name oAttribute#useSeparate
+ * @type {oFrame[]}
  */
 //CF Note: Not sure if this should be a general attribute, or a subattribute.
 Object.defineProperty(oAttribute.prototype, "useSeparate", {
@@ -188,12 +189,10 @@ Object.defineProperty(oAttribute.prototype, "useSeparate", {
  
 // oAttribute Class methods
 
+
 /**
- * getKeyFrames
- *
- * Summary: Provides the keyframes of the attribute.
- *  
- * @return: { [oFrame] }   The filtered keyframes.
+ * Provides the keyframes of the attribute.
+ * @return {oFrame[]}   The filtered keyframes.
  */
 oAttribute.prototype.getKeyFrames = function(){
     var _frames = this.frames;
@@ -203,13 +202,9 @@ oAttribute.prototype.getKeyFrames = function(){
  
 
 /**
- * setValue
- *
- * Summary: Sets the value of the attribute at the given frame.
+ * Sets the value of the attribute at the given frame.
  * @param   {string}     value                 The value to set on the attribute.
- * @param   {int}        frame                 The frame at which to set the value, if not set, assumes 1
- *  
- * @return: { void } No return
+ * @param   {int}        [frame]               The frame at which to set the value, if not set, assumes 1
  */
 oAttribute.prototype.setValue = function ( value, frame ){
     if (typeof frame === 'undefined') var frame = 1;
@@ -249,12 +244,10 @@ oAttribute.prototype.setValue = function ( value, frame ){
 
 //CFNote: Is it worth having a getValueType?
 /**
- * getValue
- *
- * Summary: Gets the value of the attribute at the given frame.
+ * Gets the value of the attribute at the given frame.
  * @param   {int}        frame                 The frame at which to set the value, if not set, assumes 1
  *  
- * @return: { ... }      The value of the attribute in the native format of that attribute (contextual to the attribute).
+ * @return {object}      The value of the attribute in the native format of that attribute (contextual to the attribute).
  */
 oAttribute.prototype.getValue = function(frame){
     if (typeof frame === 'undefined') var frame = 1;
@@ -319,12 +312,10 @@ oAttribute.prototype.getValue = function(frame){
 }
 
 /**
- * value
- *
- * Summary: Gets the value of the attribute at the given frame.
+ * Gets the value of the attribute at the given frame.
  * @param   {int}        frame                 The frame at which to set the value, if not set, assumes 1
  *  
- * @return: { ... }      The value of the attribute in the native format of that attribute (contextual to the attribute).
+ * @return {object}      The value of the attribute in the native format of that attribute (contextual to the attribute).
  */
 oAttribute.prototype.value = function(frame){
   return this.getValue( frame );

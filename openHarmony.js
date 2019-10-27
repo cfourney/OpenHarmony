@@ -45,7 +45,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
-
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -57,40 +56,42 @@
 //////////////////////////////////////
 
 /**
- * $
+ * Base access to openHarmony
+ * @namespace
+ * @classdesc  The base class for the DOM. <br> Access the Scene through $.scene.
+ * @version    1.0
+ * @property {int}     debug_level               - The debug level of the DOM.
+ * @property {string}  file                      - The openHarmony base file - THIS!
  *
- * Summary: The base class for the DOM.
- * TODO:  Implement verbosity setting. Scene, Logging, preferences, ect
- *
- * @return: {$DOM} Access to the DOM and its details.
+ * @property {oScene}  scene                     - The harmony scene.
+ * @property {oScene}  scn                       - The harmony scene.
+ * @property {oScene}  s                         - The harmony scene.
  */
 $ = {
+
+     
       debug_level    : 3,
-      
       DEBUG_LEVEL    : {
                            'ERROR'   : 0,
                            'WARNING' : 1,
                            'LOG'     : 2
-                       },
-      
-      file           : __file__
+                       },            
+      file           : __file__,
+  
+
+      directory : false
     };
 
-
-    
 /**
- * $.directoryGet
- *
- * Summary: Helper function to split the filename, and get the directory name containing the file argument.
+ * Helper function to split the filename, and get the directory name containing the file argument.
  * @param   {string}   file_path            The path for the file to derive a directory from.
- * @return: {string}                        The directory of the file.
+ * @return  {string}                        The directory of the file.
  */
 $.directoryGet = function( file_path ){
   return file_path.split( "/" ).slice(0, -1).join('/');
-}
+};
 
 $.directory = $.directoryGet( __file__ );
-
 
 // The included files should be relative to the path of THIS file!
 include( $.directory + "/openHarmony_misc.js")
@@ -106,16 +107,11 @@ include( $.directory + "/openHarmony_column.js")
 include( $.directory + "/openHarmony_drawing.js")
 include( $.directory + "/openHarmony_scene.js" )
 
-System.println( "OSCENE: " + oScene );
-
 
 /**
- * $.debug
- *
- * Summary: The standard debug that uses logic and level to write to the messagelog. Everything should just call this to write internally to a log in OpenHarmony.
+ * The standard debug that uses logic and level to write to the messagelog. Everything should just call this to write internally to a log in OpenHarmony.
  * @param   {obj}   obj            Description.
  * @param   {int}   level          The debug level of the incoming message to log.
- * @return: {NULL}
  */
 $.debug = function( obj, level ){
   if( level <= this.debug_level ){
@@ -130,13 +126,10 @@ $.debug = function( obj, level ){
     
   }
 }
-    
+
 /**
- * $.log
- *
- * Summary: Log the string to the MessageLog.
+ * Log the string to the MessageLog.
  * @param {string}  str            Text to log.
- * @return: {NULL}
  */
 $.log = function( str ){
   MessageLog.trace( str );
@@ -144,12 +137,9 @@ $.log = function( str ){
 }
 
 /**
- * $.logObj
- *
- * Summary: Log the object and its contents.
+ * Log the object and its contents.
  * @param   {object}   object            The object to log.
  * @param   {int}      debugLevel        The debug level.
- * @return: {NULL}
  */
 $.logObj = function( object ){
     {
@@ -166,6 +156,7 @@ $.logObj = function( object ){
         }
     }
 }
+
 
 $.s     = new oScene( $ );
 $.scn   = $.s;
