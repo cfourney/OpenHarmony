@@ -60,7 +60,7 @@
  * @property {string}                  uniqueName                  The unique name of the column.
  * @property {oAttributeObject}        attributeObject             The attribute object that the column is attached to.
  */
-function oColumn( uniqueName, oAttributeObject ){
+oColumn = function( uniqueName, oAttributeObject ){
 
   this._type = "column";
   this.$     = false;

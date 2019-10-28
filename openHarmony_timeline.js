@@ -61,7 +61,7 @@
  * @property {oColumnObject}           composition           The composition order of the scene.
  * @property {oScene}                  scene                 The scene object of the DOM.
  */
-function oTimeline( display, oSceneObject ){
+oTimeline = function( display, oSceneObject ){
     this.display = display
     this.composition = ''
     this.scene = oSceneObject;

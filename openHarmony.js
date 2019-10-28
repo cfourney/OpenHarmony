@@ -55,6 +55,7 @@
 //////////////////////////////////////
 //////////////////////////////////////
 
+
 /**
  * Base access to openHarmony
  * @namespace
@@ -69,8 +70,7 @@
  */
 $ = {
 
-     
-      debug_level    : 3,
+      debug_level    : 0,
       DEBUG_LEVEL    : {
                            'ERROR'   : 0,
                            'WARNING' : 1,
@@ -94,18 +94,18 @@ $.directoryGet = function( file_path ){
 $.directory = $.directoryGet( __file__ );
 
 // The included files should be relative to the path of THIS file!
-include( $.directory + "/openHarmony_misc.js")
-include( $.directory + "/openHarmony_timeline.js")
-include( $.directory + "/openHarmony_attribute.js")
-include( $.directory + "/openHarmony_frame.js")
-include( $.directory + "/openHarmony_element.js")
-include( $.directory + "/openHarmony_color.js")
-include( $.directory + "/openHarmony_palette.js")
-include( $.directory + "/openHarmony_nodeLink.js")
-include( $.directory + "/openHarmony_node.js")
-include( $.directory + "/openHarmony_column.js")
-include( $.directory + "/openHarmony_drawing.js")
-include( $.directory + "/openHarmony_scene.js" )
+include( $.directory + "/openHarmony_misc.js");        
+include( $.directory + "/openHarmony_timeline.js");    
+include( $.directory + "/openHarmony_attribute.js");   
+include( $.directory + "/openHarmony_frame.js");       
+include( $.directory + "/openHarmony_element.js");     
+include( $.directory + "/openHarmony_color.js");       
+include( $.directory + "/openHarmony_palette.js");     
+include( $.directory + "/openHarmony_nodeLink.js");    
+include( $.directory + "/openHarmony_node.js");        
+include( $.directory + "/openHarmony_column.js");      
+include( $.directory + "/openHarmony_drawing.js");     
+include( $.directory + "/openHarmony_scene.js" );      
 
 
 /**

@@ -64,32 +64,63 @@
  * @property {oAttribute}            parentAttribute            The element object associated to the element.
  * @property {oAttribute[]}          subAttributes              The subattributes, if any exist, of this attribute.
  */
-function oAttribute( oNodeObject, attributeObject, parentAttribute ){
+oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
   this._type = "attribute";
   this.$     = false;
 
   this.oNodeObject = oNodeObject;
   this.attributeObject = attributeObject;
-  this.keyword = attributeObject.fullKeyword()
-  this.shortKeyword = attributeObject.keyword()
+  
+  if(attributeObject.fullKeyword){
+    this.keyword = attributeObject.fullKeyword();
+  }else{
+    this.keyword = attributeObject.keyword();
+  }
+  
+  this.shortKeyword = attributeObject.keyword();
   this.parentAttribute = parentAttribute; // only for subAttributes
 
   var _subAttributes = [];
   
-  if (attributeObject.hasSubAttributes()){
+  if ( attributeObject.hasSubAttributes && attributeObject.hasSubAttributes() ){
       var _subAttributesList = attributeObject.getSubAttributes();
       
       for (var i in _subAttributesList){
           var _keyword = _subAttributesList[i].keyword().toLowerCase();
           // hard coding a fix for 3DPath attribute name which starts with a numberOf
-          if (_keyword == "3dpath") _keyword = "path3d"
+          if (_keyword == "3dpath") _keyword = "path3d";
           
-          var _subAttribute = new oAttribute( this.$, this.oNodeObject, _subAttributesList[i], this );
+          var _subAttribute = new oAttribute( this.oNodeObject, _subAttributesList[i], this );
                       
           // creating a property on the attribute object with the subattribute name to access it
-          this[_keyword] = _subAttribute
-          _subAttributes.push(_subAttribute)
+          this[_keyword] = _subAttribute;
+          _subAttributes.push(_subAttribute);
       }
+  }else if( !attributeObject.hasSubAttributes ){
+    //Older versions of Harmony don't have hasSubAttributes, or getSubAttributes
+    switch( this.type ){
+        case "POSITION_3D" :
+          //hard coded subAttr handler for POSITION_3D in older versions of Harmony.
+          var x_attr = node.getAttr( this.oNodeObject.fullPath, 1, this.keyword+".x" );
+          var y_attr = node.getAttr( this.oNodeObject.fullPath, 1, this.keyword+".y" );
+          var z_attr = node.getAttr( this.oNodeObject.fullPath, 1, this.keyword+".z" );
+          
+          var _subAttributeX = new oAttribute( this.oNodeObject, x_attr, this );
+          var _subAttributeY = new oAttribute( this.oNodeObject, y_attr, this );
+          var _subAttributeZ = new oAttribute( this.oNodeObject, z_attr, this );
+          
+          this["x"] = _subAttributeX;
+          this["y"] = _subAttributeY;
+          this["z"] = _subAttributeZ;
+          
+          _subAttributes.push(_subAttributeX);
+          _subAttributes.push(_subAttributeY);
+          _subAttributes.push(_subAttributeZ);
+          
+          break
+        default:
+          break
+    }
   }
 
   // subAttributes is made available as an array for more formal access
@@ -143,7 +174,8 @@ Object.defineProperty(oAttribute.prototype, 'frames', {
          if (_column != null){
             return _column.frames;
          }else{
-            return [];
+          //Need a method to get frames of non-column values. Local Values.
+            return [ new oFrame( 1, this, false ) ];
          }
     },
     
@@ -206,7 +238,7 @@ oAttribute.prototype.getKeyFrames = function(){
  * @param   {string}     value                 The value to set on the attribute.
  * @param   {int}        [frame]               The frame at which to set the value, if not set, assumes 1
  */
-oAttribute.prototype.setValue = function ( value, frame ){
+oAttribute.prototype.setValue = function( value, frame ){
     if (typeof frame === 'undefined') var frame = 1;
     //MessageLog.trace('setting frame :'+frame+' to value: '+value+' of attribute: '+this.keyword)
  
@@ -232,12 +264,32 @@ oAttribute.prototype.setValue = function ( value, frame ){
             _attr.attributeObject.setValueAt(value, frame)
             break;
             
-        case "ELEMENT" :
-            column.setEntry(this.column.uniqueName, 1, frame, value)
-            break;
+        case "POSITION_3D" :
+            // BREAK APART THE SUBATTRS
+            try{
+              if( value._type && value._type == "point" ){
+                //Fetch the XYZ, set them directly.
+                this["x"].setValue( value.x, frame );
+                this["y"].setValue( value.y, frame );            
+                this["z"].setValue( value.z, frame );
+                
+                break;
+              }
+            }catch( err ){
+              throw "Unable to set position3d : " + err.message + "(Line "+ err.lineNumber +") in " + err.fileName;
+            }
+            break; 
             
+        case "ELEMENT" :
+            column.setEntry( this.column.uniqueName, 1, frame, value );
+            break;
+          
         default : 
-            _attr.setValueAt(value, frame);
+            try{
+              _attr.setValueAt(value, frame);
+            }catch(err){
+              _attr.setValue( value, frame );
+            }
     }
 }
  

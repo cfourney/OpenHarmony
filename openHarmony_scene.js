@@ -57,7 +57,7 @@
  * @param   {$dom}         dom                  Access to the direct dom object.
  * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
  */
-function oScene( dom ){
+oScene = function( dom ){
     // oScene.nodes property is a class property shared by all instances, so it can be passed by reference and always contain all nodes in the scene
  
     //var _topNode = new oNode("Top");
@@ -141,8 +141,23 @@ Object.defineProperty(oScene.prototype, 'length', {
     }
 });
 
+
+/**
+ * The current frame of the scene.
+ * @name oScene#currentFrame
+ * @type {int}
+ */
+Object.defineProperty(oScene.prototype, 'currentFrame', {
+    get : function(){
+        return frame.current();
+    },
+    
+    set : function( frm ){
+        return frame.setCurrent( frm );
+    }
+});
  
- 
+
 //-------------------------------------------------------------------------------------
 //--- oScene Objects Methods
 //-------------------------------------------------------------------------------------
@@ -232,6 +247,7 @@ oScene.prototype.nodeSearch = function( query, sort_result ){
   //-- EASY RETURNS FOR FAST OVERLOADS.
   
   //* -- OVERRIDE FOR ALL NODES
+  
   if( query == "*" ){
     return this.nodes;
     
@@ -511,15 +527,34 @@ oScene.prototype.addNode = function( type, name, group, nodePosition, options ){
     if (typeof group === 'undefined') var group = "Top"
     if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
     if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
- 
- 
+    
+    try{
+      if( group._type == "groupNode" ){ //Also allow oGroupNode types for group as input. Convert to string. 
+        group = group.fullPath;
+      }else if( group._type == "node" ){ //If a node is given, assume we want to place it in same context as this node.
+        group = group.parent.fullPath;
+      }
+    }catch( err ){}
+    
     this.$.debug( "CREATING THE NODE: " + group + "/" + name, this.$.DEBUG_LEVEL.LOG );
     
     //Error Handling ahead of time.
     if( node.getName( group + "/" + name ) ){
-      if( options && options.adoptExisting ){
-        this.$.debug( "ADOPTED THE NODE: "     + group + "/" + name, this.$.DEBUG_LEVEL.LOG );
-        return this.getNodeByPath( _nodePath );
+      if( options && options.exists ){
+        if( options.exists == "adopt" ){
+          this.$.debug( "ADOPTED THE NODE: "     + group + "/" + name, this.$.DEBUG_LEVEL.LOG );
+          return this.getNodeByPath( _nodePath );
+          
+        }else if( options.exists == "increment" ){
+          var name_idx = 1;
+          var name_inc = name + "_" + name_idx;
+          while( node.getName( group + "/" + name_inc ) ){
+            name_idx++;
+            name_inc = name + "_" + name_idx;
+          }
+          
+          name = name_inc;
+        }
       }else{
         this.$.debug( "NODE ALREADY EXISTED: " + group + "/" + name, this.$.DEBUG_LEVEL.WARNING );
         return false;
@@ -1030,4 +1065,3 @@ oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
     }
     return _mergedNode
 }
-

@@ -38,6 +38,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -61,7 +62,7 @@
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
  * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
  */
-function oNode(path, oSceneObject){
+oNode = function(path, oSceneObject){
     this._fullPath = path;
     this.type = node.type(this.fullPath);
     this.scene = oSceneObject;
@@ -373,11 +374,13 @@ Object.defineProperty(oNode.prototype, 'isRoot', {
  */
 Object.defineProperty(oNode.prototype, 'nodePosition', {
     get : function(){
-         return new oPoint(node.coordX(this.fullPath), node.coordY(this.fullPath), node.coordZ(this.fullPath));
+      var _z = 0.0;
+      try{ _z = node.coordZ(this.fullPath); } catch( err ){} //coordZ not implemented in earlier Harmony versions. 
+         return new oPoint(node.coordX(this.fullPath), node.coordY(this.fullPath), _z );
     },
  
     set : function(newPosition){
-        node.coordX(this.fullPath, newPosition.x, newPosition.y, newPosition.y);
+        node.setCoord(this.fullPath, newPosition.x, newPosition.y, newPosition.y);
     }
 });
  
@@ -424,12 +427,15 @@ Object.defineProperty(oNode.prototype, 'y', {
  */ 
 Object.defineProperty(oNode.prototype, 'z', {
     get : function(){
-         return node.coordZ(this.fullPath)
+        var _z = 0.0;
+        try{ _z = node.coordZ(this.fullPath); } catch( err ){} //coordZ not implemented in earlier Harmony versions. 
+    
+        return _z;
     },
  
     set : function(z){
         var _pos = this.nodePosition;
-        node.setCoord(this.fullPath, _pos.x, _pos.y, z)
+        node.setCoord( this.fullPath, _pos.x, _pos.y, z );
     }
 });
  
@@ -553,24 +559,12 @@ Object.defineProperty(oNode.prototype, 'attributes', {
  * @name oNode#bounds
  * @type {oBox}
 */
-Object.defineProperty(oNode.prototype, 'bounds', {
+Object.defineProperty( oNode.prototype, 'bounds', {
     get : function(){
-      return new oBox(this.x, this.y, this.x+this.width, this.y+this.heigth);
+      return new oBox(this.x, this.y, this.x+this.width, this.y+this.height);
     }
 }); 
 
-
-/**
- * The index of the node in the timeline.
- * @name oNode#timelineIndex
- * @type {int}
-*/
-Object.defineProperty(oNode.prototype, 'timelineIndex', {
-    get : function(){
-      var _timeline = timeline.layersList;
-      return _timeline.indexOf(this.fullPath);
-    }
-}); 
 
 
 
@@ -601,6 +595,16 @@ Object.defineProperty(oNode.prototype, 'linkedColumns', {
     }
 })
 
+/**
+ * Retrieves the nodes index in the timeline provided.
+ * @param   {oTimeline}   timeline            The timeline object to search the nodes index.
+ *  
+ * @return  {int}    The index within that timeline.
+ */
+ oNode.prototype.timelineIndex = function(timeline){
+    var _timeline = timeline.layersList;
+    return _timeline.indexOf(this.fullPath);
+}
  
 /**
  * Link's this node's in-port to the given module, at the inport and outport indices.
@@ -628,6 +632,8 @@ oNode.prototype.linkInNode = function( oNodeObject, inPort, outPort ){
  * @return  {bool}    The result of the unlink.
  */
 oNode.prototype.unlinkInNode = function( oNodeObject ){
+    //CF Note: Should be able to define the port.
+  
     var _node = oNodeObject.fullPath;
    
     // MessageLog.trace("unlinking "+this.name+" from "+oNodeObject.name)
@@ -672,6 +678,8 @@ oNode.prototype.linkOutNode = function(oNodeObject, outPort, inPort){
  * @return  {bool}    The result of the link, if successful.
  */
 oNode.prototype.unlinkOutNode = function(oNodeObject){
+    //CF Note: Should be able to define the port.
+  
     var _node = oNodeObject.fullPath;
    
     var _inNodes = oNodeObject.inNodes;
@@ -683,6 +691,36 @@ oNode.prototype.unlinkOutNode = function(oNodeObject){
     }
     return false;
 };
+
+
+
+
+/**
+ * Inserts the oNodeObject provided as an innode to this node, placing it between any existing nodes if the link already exists.
+ * @param   {int}     inPort                 This node's inport to connect.
+ * @param   {oNode}   oNodeObject            The node to link this one's outport to.
+ * @param   {int}     inPortTarget           The target node's inPort to connect.
+ * @param   {int}     outPortTarget          The target node's outPort to connect.
+ *  
+ * @return  {bool}    The result of the link, if successful.
+ */
+oNode.prototype.insertInNode = function( inPort, oNodeObject, inPortTarget, outPortTarget ){
+    var _node = oNodeObject.fullPath;
+ 
+    //QScriptValue 	
+    if( this.ins[inPort] ){
+      //INSERT BETWEEN.
+      var node_linkinfo = node.srcNodeInfo( this.fullPath, inPort );
+      node.link( node_linkinfo.node, node_linkinfo.port, _node, inPortTarget, true, true ); 
+      node.unlink( this.fullPath, inPort );
+      return node.link( oNodeObject.fullPath, outPortTarget, this.fullPath, inPort, true, true ); 
+    }
+
+    return this.linkInNode( oNodeObject, inPort, outPortTarget );
+};
+
+
+
 
 
  /**
@@ -720,10 +758,10 @@ oNode.prototype.centerAbove = function( oNodeArray, xOffset, yOffset ){
     if (typeof yOffset === 'undefined') var yOffset = 0;
  
     // Works with nodes and nodes array
-    if (typeof oNodeArray === 'oNode') oNodeArray = [oNodeArray];
+    if (typeof oNodeArray === 'oNode') oNodeArray = [ oNodeArray ];
  
     var _box = new oBox();
-    _box.includeNodes(oNodeArray)
+    _box.includeNodes( oNodeArray )
     
     this.x = _box.center.x - this.width/2 + xOffset;
     this.y = _box.top - this.height + yOffset;
@@ -766,7 +804,7 @@ oNode.prototype.centerBelow = function(oNodeArray, xOffset, yOffset){
  *  
  * @return  {oPoint}   The resulting position of the node.
  */
-oNode.prototype.placeAtCenter = function(oNodeArray, xOffset, yOffset){
+oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
     // Defaults for optional parameters
     if (typeof xOffset === 'undefined') var xOffset = 0;
     if (typeof yOffset === 'undefined') var yOffset = 0;
@@ -859,7 +897,7 @@ oNode.prototype.remove = function( deleteColumns, deleteElements ){
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
  * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
  */
-function oPegNode( path, oSceneObject ) {
+oPegNode = function( path, oSceneObject ) {
     // oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'PEG') throw "'path' parameter must point to a 'PEG' type node";
     oNode.call( this, path, oSceneObject );
@@ -910,7 +948,7 @@ Object.defineProperty(oPegNode.prototype, "useSeparate", {
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
  * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
  */
-function oDrawingNode(path, oSceneObject) {
+oDrawingNode = function(path, oSceneObject) {
     // oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'READ') throw "'path' parameter must point to a 'READ' type node";
     oNode.call(this, path, oSceneObject);
@@ -990,7 +1028,43 @@ oDrawingNode.prototype.extractPeg = function(){
     return _peg;
 }
 
+ /**
+ * Gets the contour curves of the drawing, as a concave hull.
+ * @param   {int}          [count]                          The number of points on the contour curve to derive.
+ * @param   {int}          [frame]                          The frame to derive the contours.
+ *
+ * @return  {oPoint[][]}   The contour curves.
+ */
+oDrawingNode.prototype.getCountourCurves = function( count, frame ){
+  
+  if (typeof frame === 'undefined') var frame = this.scene.currentFrame;
+  if (typeof count === 'undefined') var count = 3;
 
+  var res = EnvelopeCreator().getDrawingBezierPath( this.fullPath, 
+                           frame,      //FRAME
+                           2.5,        //DISCRETIZER
+                           0,          //K
+                           count,      //DESIRED POINT COUNT  
+                           0,          //BLUR
+                           0,          //EXPAND
+                           false,      //SINGLELINE
+                           true,       //USE MIN POINTS,
+                           0,          //ADDITIONAL BISSECTING
+                           
+                           false
+                        );
+  if( res.success ){
+    var _curves = res.results.map( function (x){ return [ 
+                                                          new oPoint( x[0][0], x[0][1], 0.0 ),
+                                                          new oPoint( x[1][0], x[1][1], 0.0 ),
+                                                          new oPoint( x[2][0], x[2][1], 0.0 ),
+                                                          new oPoint( x[3][0], x[3][1], 0.0 )
+                                                        ]; } );
+    return _curves;
+  }
+  
+  return [];
+}
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -1011,7 +1085,7 @@ oDrawingNode.prototype.extractPeg = function(){
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
  * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
  */
-function oGroupNode(path, oSceneObject) {
+oGroupNode = function(path, oSceneObject) {
     // oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'GROUP') throw "'path' parameter must point to a 'GROUP' type node";
     oNode.call(this, path, oSceneObject);
@@ -1120,4 +1194,3 @@ oNode.prototype.getAttributeByName = function( keyword ){
         return this.attributes[keyword];
     }
 }
-

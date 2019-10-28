@@ -59,7 +59,7 @@
  * @property {int}                   name                       The name of the drawing.
  * @property {oElementObject}        element                    The element object associated to the element.
  */
-function oDrawing( name, oElementObject ){
+oDrawing = function( name, oElementObject ){
   this._type = "drawing";
   this.$     = false;
 

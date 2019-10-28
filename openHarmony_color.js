@@ -61,7 +61,7 @@
  *
  * @property {oPaletteObject}        palette                    The palette to which the color belongs.
  */
-function oColor( oPaletteObject, index){
+oColor = function( oPaletteObject, index){
   // We don't use id in the constructor as multiple colors with the same id can exist in the same palette.
   this._type = "color";
   this.$     = oPaletteObject.$;

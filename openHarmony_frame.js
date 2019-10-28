@@ -62,15 +62,22 @@
  * @property {oAttributeObject}        attributeObject       The oAttributeObject to which this frame references.
  * @property {int}                     subColumns            The subcolumn index.
  */
-function oFrame( frameNumber, oColumnObject, subColumns ){
+oFrame = function( frameNumber, oColumnObject, subColumns ){
   this._type = "frame";
   this.$     = false;
   
   if (typeof subColumns === 'undefined') var subColumns = 0;
 
   this.frameNumber = frameNumber;
-  this.column = oColumnObject;
-  this.attributeObject = this.column.attributeObject;
+  
+  if( oColumnObject._type == "attribute" ){  //Direct access to an attribute, when not keyable. We still provide a frame access for consistency.
+    this.column = false;
+    this.attributeObject = oColumnObject;
+  }else{
+    this.column = oColumnObject;
+    this.attributeObject = this.column.attributeObject;
+  }
+  
   this.subColumns = subColumns;
 }
  
@@ -104,22 +111,30 @@ Object.defineProperty(oFrame.prototype, 'value', {
  */
 Object.defineProperty(oFrame.prototype, 'isKeyFrame', {
     get : function(){
-        var _column = this.column.uniqueName
-        if (this.column.type == 'DRAWING' || this.column.type == 'TIMING'){
-            return !column.getTimesheetEntry(_column, 1, this.frameNumber).heldFrame
-        }else if (['BEZIER', '3DPATH', 'EASE', 'QUATERNION'].indexOf(this.column.type) != -1){
-            return column.isKeyFrame(_column, 1, this.frameNumber)
-        }
-        return false
+      if( !this.column ){
+        return true;
+      }
+    
+      var _column = this.column.uniqueName
+      if (this.column.type == 'DRAWING' || this.column.type == 'TIMING'){
+          return !column.getTimesheetEntry(_column, 1, this.frameNumber).heldFrame
+      }else if (['BEZIER', '3DPATH', 'EASE', 'QUATERNION'].indexOf(this.column.type) != -1){
+          return column.isKeyFrame(_column, 1, this.frameNumber)
+      }
+      return false
     },
  
     set : function(keyFrame){
-        var _column = this.column.uniqueName
-        if (keyFrame){
-            column.setKeyFrame(_column, this.frameNumber)
-        }else{
-            column.clearKeyFrame(_column, this.frameNumber)
-        }
+      if( !this.column ){
+        return;
+      }
+      
+      var _column = this.column.uniqueName
+      if (keyFrame){
+          column.setKeyFrame(_column, this.frameNumber)
+      }else{
+          column.clearKeyFrame(_column, this.frameNumber)
+      }
     }
 });
  
@@ -133,7 +148,11 @@ Object.defineProperty(oFrame.prototype, 'duration', {
     get : function(){
         var _startFrame = this.startFrame;
         var _sceneLength = frame.numberOf()
-       
+        
+        if( !this.column ){
+          return _sceneLength;
+        }
+
         // walk up the frames of the scene to the next keyFrame to determin duration
         var _frames = this.column.frames
         for (var i=this.frameNumber+1; i<_sceneLength; i++){
@@ -155,7 +174,11 @@ Object.defineProperty(oFrame.prototype, 'duration', {
  */
 Object.defineProperty(oFrame.prototype, 'isBlank', {
     get : function(){
-        return column.getTimesheetEntry(this.column.uniqueName, 1, this.frameNumber).emptyCell;
+      if( !this.column ){
+        return false;
+      }
+      
+      return column.getTimesheetEntry(this.column.uniqueName, 1, this.frameNumber).emptyCell;
     },
     
     set : function( val ){
@@ -171,14 +194,18 @@ Object.defineProperty(oFrame.prototype, 'isBlank', {
  */
 Object.defineProperty(oFrame.prototype, 'startFrame', {
     get : function(){
-        if (this.isKeyFrame) return this.frameNumber
-        if (this.isBlank) return -1;
-       
-        var _frames = this.column.frames
-        for (var i=this.frameNumber-1; i>=1; i--){
-            if (_frames[i].isKeyFrame) return _frames[i].frameNumber;
-        }
-        return -1;
+      if( !this.column ){
+        return 1;
+      }
+    
+      if (this.isKeyFrame) return this.frameNumber
+      if (this.isBlank) return -1;
+     
+      var _frames = this.column.frames
+      for (var i=this.frameNumber-1; i>=1; i--){
+          if (_frames[i].isKeyFrame) return _frames[i].frameNumber;
+      }
+      return -1;
     },
     
     set : function( val ){
@@ -194,12 +221,20 @@ Object.defineProperty(oFrame.prototype, 'startFrame', {
  */
 Object.defineProperty(oFrame.prototype, 'marker', {
     get : function(){
+        if( !this.column ){
+          return "";
+        }
+      
         var _column = this.column;
         if (_column.type != "DRAWING") return "";
         return column.getDrawingType(_column.uniqueName, this.frameNumber);
     },
    
     set: function( marker ){
+        if( !this.column ){
+          return;
+        }
+        
         var _column = this.column;
         if (_column.type != "DRAWING") throw "can't set 'marker' property on columns that are not 'DRAWING' type"
         column.setDrawingType( _column.uniqueName, this.frameNumber, marker );
@@ -215,6 +250,10 @@ Object.defineProperty(oFrame.prototype, 'marker', {
 oFrame.prototype.extend = function( duration, replace ){
     if (typeof replace === 'undefined') var replace = true;
     // setting this to false will insert frames as opposed to overwrite existing ones
+ 
+    if( !this.column ){
+      return;
+    }
  
     var _frames = this.column.frames;
  

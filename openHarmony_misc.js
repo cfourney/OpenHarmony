@@ -55,23 +55,98 @@
  * The oPoint helper class - representing a 3D point.
  * @constructor
  * @classdesc  oPoint Base Class
- * @param     {float}           x                              Horizontal coordinate
- * @param     {float}           y                              Vertical coordinate
- * @param     {float}           [z]                             Depth Coordinate
+ * @param     {float}              x                              Horizontal coordinate
+ * @param     {float}              y                              Vertical coordinate
+ * @param     {float}             [z]                             Depth Coordinate
  *
  * @property     {float}           x                              Horizontal coordinate
  * @property     {float}           y                              Vertical coordinate
  * @property     {float}           z                              Depth Coordinate
  */
-function oPoint (x, y, z){
+oPoint = function(x, y, z){
     if (typeof z === 'undefined') var z = 0;
- 
+    
+    this._type = "point";
+    
     this.x = x;
     this.y = y;
     this.z = z;
 }
  
+/**
+ * Adds the input box to the bounds of the current oBox.
+ * @param   {oPoint}       add_pt                The point to add to this point. 
+ *
+ * @return: { oPoint }                           Returns self (for inline addition).
+ */
+oPoint.prototype.pointAdd = function( add_pt ){
+    this.x += add_pt.x;
+    this.y += add_pt.y;
+    this.z += add_pt.z;
+    
+  return this;
+}
+
+/**
+ * Subtracts the input box to the bounds of the current oBox.
+ * @param   {oPoint}       sub_pt                The point to subtract to this point. 
+ *
+ * @return: { oPoint }                           Returns self (for inline addition).
+ */
+oPoint.prototype.pointSubtract = function( sub_pt ){
+    this.x -= sub_pt.x;
+    this.y -= sub_pt.y;
+    this.z -= sub_pt.z;
+    
+  return this;
+}
+
+/**
+ * Multiply all coordinates by this value.
+ * @param   {float}       float_val                Multiply all coordinates by this value. 
+ *
+ * @return: { oPoint }                           Returns self (for inline addition).
+ */
+oPoint.prototype.multiply = function( float_val ){
+    this.x *= float_val;
+    this.y *= float_val;
+    this.z *= float_val;
+    
+  return this;
+}
+
+/**
+ * Divides all coordinates by this value.
+ * @param   {float}       float_val                Divide all coordinates by this value. 
+ *
+ * @return: { oPoint }                           Returns self (for inline addition).
+ */
+oPoint.prototype.divide = function( float_val ){
+    this.x /= float_val;
+    this.y /= float_val;
+    this.z /= float_val;
+    
+  return this;
+}
+
+
+/**
+ * Linearily Interpolate between this (0.0) and the provided point (1.0)
+ * @param   {oPoint}       point                The target point at 100%
+ * @param   {double}       perc                 0-1.0 value to linearily interp
+ *
+ * @return: { oPoint }                          The interpolated value.
+ */
+oPoint.prototype.lerp = function( point, perc ){
+  var delta = new oPoint( point.x, point.y, point.z );
  
+  delta = delta.pointSubtract( this );
+  delta.multiply( perc );
+  delta.pointAdd( this );
+  
+  return delta;
+}
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -98,7 +173,14 @@ function oPoint (x, y, z){
  * @property      {float}       right                            right horizontal bound
  * @property      {float}       bottom                           bottom vertical bound
  */
-function oBox (left, top, right, bottom){
+oBox = function( left, top, right, bottom ){
+    this._type = "box";
+
+    if (typeof top === 'undefined') var top = Infinity
+    if (typeof left === 'undefined') var left = Infinity
+    if (typeof right === 'undefined') var right = -Infinity
+    if (typeof bottom === 'undefined') var bottom = -Infinity
+    
     this.top = top;
     this.left = left;
     this.right = right;
@@ -153,7 +235,18 @@ oBox.prototype.include = function(box){
     if (box.bottom > this.bottom) this.bottom = box.bottom;
 }
 
-
+/**
+ * Adds the bounds of the nodes to the current oBox.
+ * @param   {oNode[]}       oNodeArray                An array of nodes to include in the box.                 
+ */
+oBox.prototype.includeNodes = function(oNodeArray){
+    for (var i in oNodeArray){
+         var _node = oNodeArray[i];
+         var _nodeBox = _node.bounds;
+          
+         this.include(_nodeBox);
+    } 
+}
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -173,7 +266,9 @@ oBox.prototype.include = function(box){
  *
  * @property    {string}             path                      The path to the folder.
  */
-function oFolder(path){
+oFolder = function(path){
+    this._type = "folder";
+
     this.path = fileMapper.toNativePath(path);
 }
 
@@ -274,7 +369,9 @@ oFolder.prototype.getFiles = function( filter ){
  *
  * @property    {string}             path                     The path to the file.
  */
-function oFile(path){
+oFile = function(path){
+    this._type = "file";
+
     this.path = path.split('\\').join('/')
 }
 

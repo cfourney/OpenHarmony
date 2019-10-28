@@ -62,7 +62,7 @@
  * @property   {palette}                 paletteObject          The Harmony palette object.
  * @property   {oSceneObject}            scene                  The DOM Scene object.
  */
-function oPalette( paletteObject, oSceneObject, paletteListObject ){
+oPalette = function( paletteObject, oSceneObject, paletteListObject ){
   this._type = "palette";
   this.$     = oSceneObject.$;
 

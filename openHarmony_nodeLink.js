@@ -65,7 +65,7 @@
  * @property   {int}                     _cacheOutLink          The outlink of the outport on the outNode that is connecting this link.
  * @property   {int}                     _cacheInPort           The inport of the inNode that is connecting the link.
  */
-function oNodeLink ( outNode, inNode, outPort, outLink, inPort ){
+oNodeLink = function( outNode, inNode, outPort, outLink, inPort ){
     this.outNode = outNode;
     this.inNode = inNode;
     this._cacheOutPort = outPort;

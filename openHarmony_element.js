@@ -59,7 +59,7 @@
  * @property {int}                  id                          The element ID.
  * @property {oColumnObject}        oColumnObject               The column object associated to the element.
  */
-function oElement ( id, oColumnObject){
+oElement = function( id, oColumnObject){
   this._type = "element";
   this.$     = false;
   
