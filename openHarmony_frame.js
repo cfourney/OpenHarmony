@@ -54,12 +54,12 @@
  * @constructor
  * @classdesc  oFrame Base Class
  * @param   {int}                    frameNumber             The frame to which this references.
- * @param   {oColumnObject}          oColumnObject           The column to which this frame references.
+ * @param   {oColumn}                oColumnObject           The column to which this frame references.
  * @param   {int}                    subColumns              The subcolumn index.
  *
  * @property {int}                     frameNumber           The frame to which this references.
- * @property {oColumnObject}           column                The oColumnObject to which this frame references.
- * @property {oAttributeObject}        attributeObject       The oAttributeObject to which this frame references.
+ * @property {oColumn}                 column                The oColumnObject to which this frame references.
+ * @property {oAttribute}              oAttributeObject       The oAttributeObject to which this frame references.
  * @property {int}                     subColumns            The subcolumn index.
  */
 oFrame = function( frameNumber, oColumnObject, subColumns ){

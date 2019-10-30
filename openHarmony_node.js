@@ -67,8 +67,6 @@ oNode = function(path, oSceneObject){
     this.type = node.type(this.fullPath);
     this.scene = oSceneObject;
     
-    
-    
     this._type = 'node';
     
     // generate properties from node attributes to allow for dot notation access
@@ -82,13 +80,12 @@ oNode = function(path, oSceneObject){
         
          // create getter setters only for attributes without subattributes, 
          // otherwise create an object to host the subattributes getter setters
-        if (_attr.subAttributes.length ==  0){
-            this.setAttrGetterSetter(_attr)
-        }else{
-            var _keyword = _attr.keyword.toLowerCase()
-            var _dest = this[_keyword] = {};
+         
+        this.setAttrGetterSetter( _attr );
+        if ( _attr.subAttributes.length >0 ){
+            var _keyword = _attr.keyword.toLowerCase();
             for (var j in _attr.subAttributes){
-                this.setAttrGetterSetter(_attr.subAttributes[j], _dest)
+                this.setAttrGetterSetter(_attr.subAttributes[j], _keyword );
             }
         }
     }
@@ -99,34 +96,55 @@ oNode = function(path, oSceneObject){
  * @private 
  * @return  {void}   Nothing returned.
  */
-oNode.prototype.setAttrGetterSetter = function (attr, context){
-    if (typeof context === 'undefined') context = this; 
-    //MessageLog.trace("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name)
-
+oNode.prototype.setAttrGetterSetter = function ( attr, parent_attr ){
     var _keyword = attr.shortKeyword.toLowerCase();
     // hard coding a fix for 3DPath attribute name which starts with a number
-    if (_keyword == "3dpath") _keyword = "path3d"
-
-    Object.defineProperty(context, _keyword, {
-        get : function(){
-            //MessageLog.trace("getting attribute "+attr.keyword+". animated: "+(attr.column != null))
-            // if attribute has animation, return the frames
-            if (attr.column != null) return attr.frames
-            // otherwise return the value
-            return attr.getValue()
-        },
-       
-        set : function(newValue){
-            //MessageLog.trace("setting attribute "+attr.keyword+" to value: ")
-            // if attribute has animation, passed value must be a frame object
-            if (attr.column != null) {
-                if (!newValue instanceof oFrame) throw "must pass an oFrame object to set an animated attribute"
-                attr.setValue(newValue.value, newValue.frameNumber)
-            }else{          
-                return attr.setValue(newValue)
+    if (_keyword == "3dpath") _keyword = "path3d";
+    //System.println( "Setting getter setters for attribute: "+_keyword+" of node: "+this.name );
+    
+    var has_parent_attr = true;
+    if (typeof context === 'undefined') has_parent_attr = false; 
+    
+    //Only set the getter/setter if this base class doesn't already have it. 
+    //There were issued with X,Y,Z,POSITION, ECT. So, we prevent the overlap.
+    if( typeof( has_parent_attr ? this[parent_attr][_keyword] : this[_keyword] ) === 'undefined' ){
+      try{
+      
+        var getSet_obj = {
+            get : function(){
+                // System.println( "getting attribute "+attr.keyword+". animated: "+(attr.column != null) );
+                //MessageLog.trace("getting attribute "+attr.keyword+". animated: "+(attr.column != null))
+                // if attribute has animation, return the frames
+                if (attr.column != null) return attr.frames
+                // otherwise return the value
+                return attr.getValue()
+            },
+           
+            set : function(newValue){
+                //MessageLog.trace("setting attribute "+attr.keyword+" to value: ")
+                // if attribute has animation, passed value must be a frame object
+                if (attr.column != null) {
+                    if (!newValue instanceof oFrame) throw "must pass an oFrame object to set an animated attribute"
+                    attr.setValue(newValue.value, newValue.frameNumber)
+                }else{          
+                    return attr.setValue(newValue);
+                }
             }
         }
-    })
+        
+        //The exact object has to be used, using a variable to provide the object to extends results in extending that temporary variable, not this as the source.
+        if( has_parent_attr ){
+          Object.defineProperty( this[parent_attr], _keyword, getSet_obj );
+        }else{
+          Object.defineProperty( this, _keyword, getSet_obj );
+        }
+      
+      }catch( err ){
+        System.println( err + " (" + err.lineNumber + ")" );
+      }
+    }else{
+      // System.println( "Failed in setting getter setters for attribute: "+_keyword+" of node: "+this.name );
+    }
 };
 
 /**

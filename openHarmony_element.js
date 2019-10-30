@@ -54,10 +54,10 @@
  * @constructor
  * @classdesc  oElement Class
  * @param   {int}                   id                          The element ID.
- * @param   {oColumnObject}         oColumnObject               The column object associated to the element.
+ * @param   {oColumn}               oColumnObject               The column object associated to the element.
  *
  * @property {int}                  id                          The element ID.
- * @property {oColumnObject}        oColumnObject               The column object associated to the element.
+ * @property {oColumn}              oColumnObject               The column object associated to the element.
  */
 oElement = function( id, oColumnObject){
   this._type = "element";

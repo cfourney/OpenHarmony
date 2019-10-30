@@ -129,6 +129,22 @@ oPoint.prototype.divide = function( float_val ){
   return this;
 }
 
+/**
+ * Find average of provided points.
+ * @param   {oPoint[]}       point_array         The array of points to get the average. 
+ *
+ * @return: { oPoint }                           Returns the oPoint average of provided points.
+ */
+oPoint.prototype.pointAverage = function( point_array ){
+  var _avg = new oPoint( 0.0, 0.0, 0.0 );
+  for( var x=0;x<point_array.length;x++ ){
+    _avg.pointAdd( point_array[x] );
+  }
+  _avg.divide( point_array.length );
+  
+  return _avg;
+}
+
 
 /**
  * Linearily Interpolate between this (0.0) and the provided point (1.0)

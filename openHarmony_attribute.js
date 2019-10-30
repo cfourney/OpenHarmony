@@ -239,6 +239,7 @@ oAttribute.prototype.getKeyFrames = function(){
  * @param   {int}        [frame]               The frame at which to set the value, if not set, assumes 1
  */
 oAttribute.prototype.setValue = function( value, frame ){
+
     if (typeof frame === 'undefined') var frame = 1;
     //MessageLog.trace('setting frame :'+frame+' to value: '+value+' of attribute: '+this.keyword)
  
@@ -253,7 +254,10 @@ oAttribute.prototype.setValue = function( value, frame ){
     }
     
     // TODO deal with subattributes ? for ex pass a oPoint object to an attribute with x, y, z properties?
-    switch (_type){
+    
+    
+    
+    switch(_type){
         // TODO: sanitize input
         case "GENERIC_ENUM" :
             node.setTextAttr(this.oNodeObject.fullPath, this.keyword, frame, value)
@@ -266,6 +270,9 @@ oAttribute.prototype.setValue = function( value, frame ){
             
         case "POSITION_3D" :
             // BREAK APART THE SUBATTRS
+            
+            
+            
             try{
               if( value._type && value._type == "point" ){
                 //Fetch the XYZ, set them directly.

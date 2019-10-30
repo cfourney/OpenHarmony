@@ -517,16 +517,17 @@ oScene.prototype.nodeSearch = function( query, sort_result ){
  * @param   {string}   name            The name of the newly created node.
  * @param   {string}   group           The groupname to add the node.
  * @param   {oPoint}   nodePosition    The position for the node to be placed in the network.
- * @param   {object}   options         Options -- currently only supports 'adoptExisting', which accepts the existing node in the event one already exists.
+ * @param   {bool}     increment       If the name already exists in the group, increment an integer on the name.
  * 
  * @return {oNode}    The created node, or bool as false.
  */
-oScene.prototype.addNode = function( type, name, group, nodePosition, options ){
+oScene.prototype.addNode = function( type, name, group, nodePosition, increment ){
     // Defaults for optional parameters
     
     if (typeof group === 'undefined') var group = "Top"
     if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
     if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
+    if (typeof increment === 'undefined') var increment = false;
     
     try{
       if( group._type == "groupNode" ){ //Also allow oGroupNode types for group as input. Convert to string. 
@@ -538,6 +539,20 @@ oScene.prototype.addNode = function( type, name, group, nodePosition, options ){
     
     this.$.debug( "CREATING THE NODE: " + group + "/" + name, this.$.DEBUG_LEVEL.LOG );
     
+    var options = false; /* WIP */
+    
+    if( node.getName( group + "/" + name ) ){
+      if( increment ){
+          var name_idx = 1;
+          var name_inc = name + "_" + name_idx;
+          while( node.getName( group + "/" + name_inc ) ){
+            name_idx++;
+            name_inc = name + "_" + name_idx;
+          }
+          name = name_inc;
+      }
+    }
+    
     //Error Handling ahead of time.
     if( node.getName( group + "/" + name ) ){
       if( options && options.exists ){
@@ -545,19 +560,10 @@ oScene.prototype.addNode = function( type, name, group, nodePosition, options ){
           this.$.debug( "ADOPTED THE NODE: "     + group + "/" + name, this.$.DEBUG_LEVEL.LOG );
           return this.getNodeByPath( _nodePath );
           
-        }else if( options.exists == "increment" ){
-          var name_idx = 1;
-          var name_inc = name + "_" + name_idx;
-          while( node.getName( group + "/" + name_inc ) ){
-            name_idx++;
-            name_inc = name + "_" + name_idx;
-          }
-          
-          name = name_inc;
         }
       }else{
         this.$.debug( "NODE ALREADY EXISTED: " + group + "/" + name, this.$.DEBUG_LEVEL.WARNING );
-        return false;
+        throw "Node already exists at path: " + group + "/" + name;
       }
     }
  

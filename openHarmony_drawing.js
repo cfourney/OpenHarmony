@@ -54,10 +54,10 @@
  * @constructor
  * @classdesc  oDrawing Base Class
  * @param   {int}                    name                       The name of the drawing.
- * @param   {oElementObject}         oElementObject             The element object associated to the element.
+ * @param   {oElement}               oElementObject             The element object associated to the element.
  *
  * @property {int}                   name                       The name of the drawing.
- * @property {oElementObject}        element                    The element object associated to the element.
+ * @property {oElement}              element                    The element object associated to the element.
  */
 oDrawing = function( name, oElementObject ){
   this._type = "drawing";

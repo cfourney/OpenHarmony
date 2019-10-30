@@ -46,8 +46,8 @@ function oh_rigging_addCenterWeightedPeg(){
     var innode  = nodes[n].ins[0];
     
     //Create the node, increment if the name already exists.
-    var res = $.scene.addNode( "PEG", nodes[n].name+"-P", nodes[n].parent, new oPoint(0.0, 0.0, 0.0), { exists:"increment" } );
-    res.attributes.pivot.frames[0].value = avg;
+    var res = $.scene.addNode( "PEG", nodes[n].name+"-P", nodes[n].parent, new oPoint(0.0, 0.0, 0.0), true );
+    res.pivot = avg;
     
     res.centerAbove( [nodes[n]], 0.0, -50.0 );
     if( innode ){ 
