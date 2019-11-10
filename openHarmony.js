@@ -3,7 +3,7 @@
 //
 //
 //
-//                           openHarmony Library v0.12
+//                           openHarmony Library v0.13
 //
 //
 //         Developped by Mathieu Chaptel, ...
@@ -293,12 +293,37 @@ oScene.prototype.addNode = function(type, name, group, nodePosition){
     if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
     if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
     
-     // sanitize input for node name creation
-    name = name.split(" ").join("_")
-   
-    var _nodePath = node.add(group, name, type, nodePosition.x, nodePosition.y, nodePosition.z)
-    var _node = this.$node(_nodePath)
- 
+    // sanitize input for node name creation
+    name = name.split(" ").join("_");
+    
+    // increment name if a node with the same name already exists
+    var _name = name.split("_");
+    var _count = parseInt(_name.pop(), 10);
+    
+    // get name without suffix
+    if ( _count !== _count) { // check for NaN value -> no number already added
+        _name = name;
+        _count = 0;
+    }else{
+        _name = _name.join("_");
+    }
+    
+    // loop to increment until we get a node name that is free
+    var _nodePath = group+"/"+_name;
+    var _node = new oNode(_nodePath)
+    
+    while (_node.exists){
+        _count++;
+        name = _name+"_"+_count;
+        _nodePath = group+"/"+name; 
+        _node = new oNode (_nodePath);
+    }
+    
+    // create node and return result
+    var _path = node.add(group, name, type, nodePosition.x, nodePosition.y, nodePosition.z)
+    _node = this.$node(_path)
+    MessageLog.trace(_path+' '+_nodePath+" "+_node)
+
     return _node;
 }
  
@@ -634,6 +659,8 @@ oScene.prototype.updatePSD = function(filename, separateLayers){
     var _layers = CELIO.getLayerInformation(_psdFile.path);
     var _scale = _info.height/scene.defaultResolutionY()
     
+    MessageLog.trace(_layers.map(function(x){return x.position+" "+x.layerName}))
+    
     // use layer information to find nodes from precedent export
     if (separateLayers){
         var _nodes = this.$node("Top").subNodes(true).filter(function(x){return x.type == "READ"})
@@ -643,11 +670,12 @@ oScene.prototype.updatePSD = function(filename, separateLayers){
         var _missingLayers = [];
         var _PSDelement = "";
         var _positions = new Array(_layers.length)
+        var _scale = _info.height/scene.defaultResolutionY()
        
         // for each layer find the node by looking at the column name
         for (var i in _layers){
             var _layer = _layers[i];
-            MessageLog.trace(_layer.position)
+            // MessageLog.trace(_layer.position)
             var _layerName = _layers[i].layerName.split(" ").join("_");
             var _found = false;
  
@@ -662,9 +690,12 @@ oScene.prototype.updatePSD = function(filename, separateLayers){
                     _psdNodes.push(_nodes[j]);
                     _found = true;
 
+                    // MessageLog.trace("scale: "+_scale)
                     // update scale in case PSDfile size changed
                     _nodes[j].scale.x = _scale;
                     _nodes[j].scale.y = _scale;
+                    
+                    // MessageLog.trace("scale: "+_scale)
                     
                     _positions[_layer.position] = _nodes[j];
                 
@@ -681,8 +712,7 @@ oScene.prototype.updatePSD = function(filename, separateLayers){
         }
        
         MessageLog.trace("psdnodes: "+_psdNodes.map(function(x){return x.name}));
-        MessageLog.trace("missingLayers: "+_missingLayers.map(function(x){return x.name}));
-        MessageLog.trace(_positions);
+        MessageLog.trace("missingLayers: "+_missingLayers.map(function(x){return x.layerName}));
        
         if (_psdNodes.length == 0){
             // PSD was never imported, use import instead?
@@ -703,29 +733,27 @@ oScene.prototype.updatePSD = function(filename, separateLayers){
             var _group = _psdNodes[0].path;
             var _alignment = _psdNodes[0].alignment_rule;
             var _scale = _psdNodes[0].scale.x;
+            // MessageLog.trace("scale: "+_scale)
             var _peg = _psdNodes[0].inNodes[0];
             var _comp = _psdNodes[0].outNodes[0];
             var _scale = _info.height/scene.defaultResolutionY()
             var _port;
             
-            MessageLog.trace(_layerIndex+" "+_layerName)
-            
             //TODO: set into right group according to PSD organisation
             // looking for the existing node below and get the comp port from it
             for (var j = _layerIndex-1; j>=0; j--){
-                MessageLog.trace(_positions[j])
                 if (_positions[j] != undefined) break;
             }
             var _nodeBelow = _positions[j];
-            
-            MessageLog.trace(_nodeBelow.name)
             
             var _compNodes = _comp.inNodes;
             
             for (var j=0; j<_compNodes.length; j++){
                 if (_nodeBelow.fullPath == _compNodes[j].fullPath){
                     _port = j+1;
-                    MessageLog.trace(_port);
+                    _nodePosition = _compNodes[j].nodePosition;
+                    _nodePosition.x -= 35;
+                    _nodePosition.y -= 25;
                 }
             }
             
@@ -1041,18 +1069,7 @@ function oNode(path, oSceneObject){
    
     for (var i in _attributes){
         var _attr = _attributes[i]
-       
-         // create getter setters only for attributes without subattributes,
-         // otherwise create an object to host the subattributes getter setters
-        if (_attr.subAttributes.length ==  0){
-            this.setAttrGetterSetter(_attr)
-        }else{
-            var _keyword = _attr.keyword.toLowerCase()
-            var _dest = this[_keyword] = {};
-            for (var j in _attr.subAttributes){
-                this.setAttrGetterSetter(_attr.subAttributes[j], _dest)
-            }
-        }
+        this.setAttrGetterSetter(_attr)
     }
    
 }
@@ -1062,29 +1079,70 @@ function oNode(path, oSceneObject){
  
 oNode.prototype.setAttrGetterSetter = function (attr, context){
     if (typeof context === 'undefined') context = this;
-    //MessageLog.trace("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name)
+    // MessageLog.trace("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name)
  
-    var _keyword = attr.shortKeyword.toLowerCase();
-    // hard coding a fix for 3DPath attribute name which starts with a number
-    if (_keyword == "3dpath") _keyword = "path3d"
+    var _keyword = attr.shortKeyword;
  
     Object.defineProperty(context, _keyword, {
+        enumerable : false,
+        configurable : true,
         get : function(){
-            //MessageLog.trace("getting attribute "+attr.keyword+". animated: "+(attr.column != null))
-            // if attribute has animation, return the frames
-            if (attr.column != null) return attr.frames
-            // otherwise return the value
-            return attr.getValue()
+            // MessageLog.trace("getting attribute "+attr.keyword+". animated: "+(attr.column != null))
+            var _subAttrs = attr.subAttributes;
+            if (_subAttrs.length == 0){
+                // if attribute has animation, return the frames
+                if (attr.column != null) return attr.frames;
+                // otherwise return the value
+                var _value =  attr.getValue();
+            }else{
+                // if there are subattributes, create getter setters for each on the returned object
+                var _value = (attr.column != null)?new oList(attr.frames, 1):attr.getValue();
+                for (var i in _subAttrs){
+                    this.setAttrGetterSetter(_subAttrs[i], _value);
+                }
+            }
+            return _value;
         },
        
         set : function(newValue){
-            //MessageLog.trace("setting attribute "+attr.keyword+" to value: ")
-            // if attribute has animation, passed value must be a frame object
-            if (attr.column != null) {
-                if (!newValue instanceof oFrame) throw new Error("must pass an oFrame object to set an animated attribute")
-                attr.setValue(newValue.value, newValue.frameNumber)
-            }else{          
-                return attr.setValue(newValue)
+            // MessageLog.trace("setting attribute "+attr.keyword+" to value: "+newValue)
+            // if attribute has animation, passed value must be a frame object            
+            var _subAttrs = attr.subAttributes;
+            // MessageLog.trace("is animated? "+(attr.column != null)+" has subattributes? "+(_subAttrs.length != 0))
+            
+            if (_subAttrs.length == 0){
+                if (attr.column != null) {
+                    // MessageLog.trace("value is oFrame? "+(newValue instanceof oFrame))
+                    if (!(newValue instanceof oFrame)) {
+                        // throw new Error("must pass an oFrame object to set an animated attribute")
+                        // fallback to set frame 1
+                        newValue = {value:newValue, frameNumber:1};
+                    }
+                    attr.setValue(newValue.value, newValue.frameNumber)
+                }else{          
+                    return attr.setValue(newValue)
+                }
+            }else{
+                var _frame = 1;
+                var _value = newValue;
+                
+                // dealing with value being an object with frameNumber for animated values
+                if (attr.column != null) {
+                    if (!(newValue instanceof oFrame)) {
+                        // throw new Error("must pass an oFrame object to set an animated attribute")
+                        // fallback to set frame 1
+                        newValue = {value:newValue, frameNumber:1};
+                    }
+
+                    _frame = newValue.frameNumber;
+                    _value = newValue.value;
+                }
+                
+                for (var i in _subAttrs){
+                    // ignore the getter setters by setting each subAttr individually, and only set the ones that exist in the provided object
+                    var _keyword = _subAttrs[i].shortKeyword;
+                    if (_value.hasOwnProperty(_keyword)) _subAttrs[i].setValue(_value[_keyword], _frame);
+                }
             }
         }
     })
@@ -1151,6 +1209,15 @@ Object.defineProperty(oNode.prototype, 'locked', {
     }
 })
  
+ 
+  
+// bool exists
+ 
+Object.defineProperty(oNode.prototype, 'exists', {
+    get : function(){
+         return this.type != "";
+    }
+})
  
  
 // bool isRoot
@@ -1291,7 +1358,7 @@ Object.defineProperty(oNode.prototype, 'attributes', {
         for (var i in _attributesList){
      
             var _attribute = new oAttribute(this, _attributesList[i]);
-            var _keyword = _attribute.keyword.toLowerCase();
+            var _keyword = _attribute.keyword;
      
             _attributes[_keyword] = _attribute;
      
@@ -1551,11 +1618,20 @@ oNode.prototype.getAttributeByName = function(keyword){
         return this.attributes[keyword];
     }
 }
+
  
 // oAttribute $attributes(keyword){
 
 oNode.prototype.$attribute = function(keyword){
     return this.getAttributeByName(keyword);
+}
+
+
+// NEW
+// toString()
+
+oNode.prototype.toString = function(){
+    return this.fullPath;
 }
  
  
@@ -2304,11 +2380,12 @@ oDrawing.prototype.toString = function(){
  
 // oAttribute constructor
  
+// NEW 
 function oAttribute(oNodeObject, attributeObject, parentAttribute){
     this.node = oNodeObject;
     this.attributeObject = attributeObject;
-    this.keyword = attributeObject.fullKeyword()
-    this.shortKeyword = attributeObject.keyword()
+    this._keyword = attributeObject.fullKeyword()
+    this._shortKeyword = attributeObject.keyword()
     this.parentAttribute = parentAttribute; // only for subAttributes
  
     var _subAttributes = [];
@@ -2317,19 +2394,19 @@ function oAttribute(oNodeObject, attributeObject, parentAttribute){
         var _subAttributesList = attributeObject.getSubAttributes();
        
         for (var i in _subAttributesList){
-            var _keyword = _subAttributesList[i].keyword().toLowerCase();
+            /*var _keyword = _subAttributesList[i].keyword().toLowerCase();
             // hard coding a fix for 3DPath attribute name which starts with a numberOf
-            if (_keyword == "3dpath") _keyword = "path3d"
+            if (_keyword == "3dpath") _keyword = "path3d"*/
            
             var _subAttribute = new oAttribute(this.node, _subAttributesList[i], this)
-                       
+            var _keyword = _subAttribute.shortKeyword;     
             // creating a property on the attribute object with the subattribute name to access it
-            this[_keyword] = _subAttribute
+            this[_keyword] = _subAttribute;
             _subAttributes.push(_subAttribute)
         }
     }
  
-    // subAttributes is made available as an array for more formal access
+    // subAttributes is made available as an array of pointers for more formal access
     this.subAttributes = _subAttributes;
 }
  
@@ -2345,20 +2422,48 @@ Object.defineProperty(oAttribute.prototype, 'type', {
  
  
 // NEW
+// string keyword
+
+Object.defineProperty(oAttribute.prototype, 'keyword', {
+    get : function(){
+        // formatting the keyword for our purposes
+        // hard coding a fix for 3DPath attribute name which starts with a number
+        var _keyword = this._keyword.toLowerCase();
+        if (_keyword == "3dpath") _keyword = "path3d";
+        return _keyword;
+    }
+})
+
+
+// NEW
+// string shortKeyword
+
+Object.defineProperty(oAttribute.prototype, 'shortKeyword', {
+    get : function(){
+        // formatting the keyword for our purposes
+        // hard coding a fix for 3DPath attribute name which starts with a number
+        var _keyword = this._shortKeyword.toLowerCase();
+        if (_keyword == "3dpath") _keyword = "path3d";
+        return _keyword;
+    }
+})
+
+ 
+// NEW
 // oColumn column
  
 Object.defineProperty(oAttribute.prototype, 'column', {
     get : function(){
-        var _column = node.linkedColumn (this.node.fullPath, this.keyword)
+        var _column = node.linkedColumn (this.node.fullPath, this._keyword)
         return this.node.scene.$column(_column, this)
     },
  
     set : function(columnObject){
         // unlink if provided with null value or empty string
         if (columnObject == "" || columnObject == null){
-            node.unlinkAttr(this.node.fullPath, this.keyword)
+            node.unlinkAttr(this.node.fullPath, this._keyword)
         }else{
-            node.linkAttr(this.node.fullPath, this.keyword, columnObject.uniqueName)
+            node.linkAttr(this.node.fullPath, this._keyword, columnObject.uniqueName)
             // TODO: transfer current value of attribute to a first key on the column
         }
     }
@@ -2403,7 +2508,7 @@ Object.defineProperty(oAttribute.prototype, "useSeparate", {
 Object.defineProperty(oAttribute.prototype, "defaultValue", {
     get : function(){
         // TODO: we could use this to reset bones/deformers to their rest states
-        var _keyword = this.keyword;
+        var _keyword = this._keyword;
        
         switch (_keyword){
             case "OFFSET.X" :
@@ -2469,7 +2574,7 @@ oAttribute.prototype.getKeyFrames = function(){
  
 oAttribute.prototype.setValue = function (value, frame) {
     if (typeof frame === 'undefined') var frame = 1;
-    MessageLog.trace('setting frame :'+frame+' to value: '+value+' of attribute: '+this.keyword)
+    // MessageLog.trace('setting frame :'+frame+' to value: '+value+' of attribute: '+this.keyword)
  
     var _attr = this.attributeObject;
     var _column = this.column;
@@ -2483,6 +2588,8 @@ oAttribute.prototype.setValue = function (value, frame) {
         this.column = _column;
         _animate = true;
     }
+    
+    // MessageLog.trace(_type)
    
     // TODO deal with subattributes ? for ex pass a oPoint object to an attribute with x, y, z properties?
     switch (_type){
@@ -2490,15 +2597,11 @@ oAttribute.prototype.setValue = function (value, frame) {
         case "COLOR" :
             value = new oColorValue(value)
             value = ColorRGBA(value.r, value.g, value.b, value.a)
-            if (_animate){
-                _attr.setValueAt(value, frame);
-            }else{
-                _attr.setValue(value);
-            }
+            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
             break;
            
         case "GENERIC_ENUM" :
-            node.setTextAttr(this.node.fullPath, this.keyword, frame, value)
+            node.setTextAttr(this.node.fullPath, this._keyword, frame, value)
             break;
            
         case "PATH_3D" :
@@ -2511,16 +2614,33 @@ oAttribute.prototype.setValue = function (value, frame) {
                 this.parentAttribute.attributeObject.setValueAt(value, frame);
             }
             break;
+            
+        case 'POSITION_2D':
+            value = Point2d(value.x, value.y)
+            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+            break;
+            
+        case 'POSITION_2D':
+            value = Point2d(value.x, value.y)
+            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+            break;
+
+        case 'POSITION_3D':
+            value = Point3d(value.x, value.y, value.z)
+            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+            break;
            
         case "ELEMENT" :
+            _column = this.column;
             column.setEntry(_column.uniqueName, 1, frame, value+"");
             break;
            
         default :
-            if (_animate){
-                _attr.setValueAt(value, frame);
-            }else{
-                _attr.setValue(value);
+            // MessageLog.trace(this.keyword+" "+(typeof value))
+            try{
+                _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+            }catch(err){
+                throw new Error("Couldn't set attribute "+this.keyword+" to value "+value+". Incompatible type.")
             }
     }
  
@@ -2531,7 +2651,7 @@ oAttribute.prototype.setValue = function (value, frame) {
 // various getValue(frame)
  
 oAttribute.prototype.getValue = function (frame) {
-    MessageLog.trace('getting value of frame :'+frame+' of attribute: '+this.keyword)
+    // MessageLog.trace('getting value of frame :'+frame+' of attribute: '+this._keyword)
     
     if (typeof frame === 'undefined') var frame = 1;
  
@@ -2543,6 +2663,7 @@ oAttribute.prototype.getValue = function (frame) {
     //MessageBox.information("getting "+this.keyword)
     //MessageBox.information(_type)
     
+    // handling conversion of all return types into our own types
     switch (_type){
         case 'BOOL':
             _value = _attr.boolValueAt(frame)
@@ -2567,10 +2688,17 @@ oAttribute.prototype.getValue = function (frame) {
  
         case 'POSITION_2D':
             _value = _attr.pos2dValueAt(frame)
+            _value = new oPoint(_value.x, _value.y)
             break;
            
         case 'POSITION_3D':
             _value = _attr.pos3dValueAt(frame)
+            _value = new oPoint(_value.x, _value.y, _value.z)
+            break;
+            
+        case 'SCALE_3D':
+            _value = _attr.pos3dValueAt(frame)
+            _value = new oPoint(_value.x, _value.y, _value.z)
             break;
            
         case 'PATH_3D':
@@ -2582,15 +2710,17 @@ oAttribute.prototype.getValue = function (frame) {
                 _value = _attr.pos3dValueAt(frame);
             }
             break;
+            
+        case 'DRAWING':
+            // override with returning an oElement object
+            value = _column.element;
+            break;
            
         case 'ELEMENT':
             // an element always has a column, so we'll fetch it from there
-            //MessageBox.information("?value of column "+_column.uniqueName+" at frame "+frame)
             _value = column.getEntry(_column.uniqueName, 1, frame)
-            //MessageBox.information("value of column "+_column.uniqueName)
             // Convert to an instance of oDrawing
             _value = _column.element.getDrawingByName(_value)
-            //MessageLog.trace(_value)
             break;
        
         // TODO: How does QUATERNION_PATH work? subcolumns I imagine
@@ -2599,6 +2729,13 @@ oAttribute.prototype.getValue = function (frame) {
         default:
             // enums, etc
             _value = _attr.textValueAt(frame)
+           
+            // in case of subattributes, create a fake string that can have properties
+            if (_attr.hasSubAttributes()){
+                _value = {value:_value};
+                _value.toString() = function(){return _value}
+            }
+            
     }
        
     return _value;
@@ -3745,9 +3882,6 @@ Object.defineProperty(oPathPoint.prototype, 'z', {
 })
 
 
-
-
-
 // NEW
 // double tension
 
@@ -4086,9 +4220,10 @@ oFolder.prototype.getFiles = function(filter){
 oFolder.prototype.listFiles = function(filter){
    
     if (typeof filter === 'undefined') var filter = "*";
-   
+
     var _dir = new QDir;
     _dir.setPath(this.path);
+    if (!_dir.exists) throw new Error("can't get files from folder "+this.path+" because it doesn't exist");
     _dir.setNameFilters([filter]);
     _dir.setFilter( QDir.Files);
     var _files = _dir.entryList();
@@ -4120,6 +4255,7 @@ oFolder.prototype.listFolders = function(filter){
    
     var _dir = new QDir;
     _dir.setPath(this.path);
+    if (!_dir.exists) throw new Error("can't get files from folder "+this.path+" because it doesn't exist");
     _dir.setNameFilters([filter]);
     _dir.setFilter(QDir.Dirs); //QDir.NoDotAndDotDot not supported?
     var _folders = _dir.entryList();
@@ -4176,7 +4312,13 @@ oFolder.prototype.move = function(destFolderPath, overwrite){
     var destPath = fileMapper.toNativePath(dir.path+"/")
  
     var destDir = new Dir;
-    return destDir.rename(this.path, destPath)
+    try {
+        destDir.rename(path, destPath)
+        return true;
+    }catch (err){
+        throw new Error ("Couldn't move folder "+this.path+" to new address "+destPath)
+        return false
+    }
 }
  
  
