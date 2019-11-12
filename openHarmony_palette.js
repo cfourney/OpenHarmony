@@ -39,6 +39,92 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//        oColorValue class         //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+ 
+ 
+// Constructor
+//
+// oColorValue(colorValue)  // colorValue can be a hex string or a {r, g, b, a} object
+//
+// Properties
+//
+// double r
+// double g
+// double b
+// double a
+//
+// Methods
+//
+// void parseHexString(string)
+// string toString
+
+
+/**
+ * The base class for the oColorValue.
+ * @constructor
+ * @classdesc  oColorValue Base Class
+ * @param   {string/object}            colorValue            Hex string value, or object in form {rgba}
+ *
+ * @property {int}                    r                      The int value of the red component.
+ * @property {int}                    g                      The int value of the green component.
+ * @property {int}                    b                      The int value of the blue component.
+ * @property {int}                    a                      The int value of the alpha component.
+ */
+function oColorValue( colorValue ){
+    if (typeof colorValue === 'undefined') var colorValue = "#000000ff";
+    MessageLog.trace("init oColorValue object"+JSON.stringify(colorValue)+" "+(typeof colorValue === 'string' ))
+    if (typeof colorValue === 'string'){
+        colorValue = this.parseColorString(colorValue);
+    }else{    
+        this.r = colorValue.r;
+        this.g = colorValue.g;
+        this.b = colorValue.b;
+        this.a = colorValue.a;
+    }
+}
+
+
+/**
+ * The colour value represented as a string.
+ * @return: {string}       RGBA components in a string in format #RRGGBBAA
+ */
+oColorValue.prototype.toString = function (){
+    var _hex = "#";
+    _hex += this.r.toString(16);
+    _hex += this.g.toString(16);
+    _hex += this.b.toString(16);
+    _hex += this.a.toString(16);
+ 
+    return _hex;
+}
+ 
+ 
+/**
+ * Ingest a hex string in form #RRGGBBAA to define the colour.
+ * @param   {string}    hexString                The colour in form #RRGGBBAA
+ */
+oColorValue.prototype.fromColorString = function (hexString){
+    hexString = hexString.replace("#","");
+    if (hexString.length == 6) hexString+"ff";
+    if (hexString.length != 8) throw new Error("incorrect color string format");
+    
+    this.r = parseInt(hexString.slice(0,2), 16);
+    this.g = parseInt(hexString.slice(2,4), 16);
+    this.b = parseInt(hexString.slice(4,6), 16);
+    this.a = parseInt(hexString.slice(6,8), 16);
+}
+
+
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -193,3 +279,4 @@ oPalette.prototype.remove = function ( removeFile ){
     //Todo: should actually check for its removal.
     return true;
 }
+

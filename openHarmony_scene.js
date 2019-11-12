@@ -179,13 +179,71 @@ oScene.prototype.getNodeByPath = function(fullPath){
 }
 
 /**
+ * Gets a column by the name.
+ * @param  {string}             uniqueName               The unique name of the column as a string.
+ * @param  {oAttribute}         oAttributeObject         The oAttributeObject owning the column.
+ *  
+ * @return {oColumn}                    The node found given the query.
+ */
+oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
+    var _type = column.type(uniqueName);
+
+    switch (_type) {
+        case "" :
+            return null;
+        case "DRAWING" :
+            return new oDrawingColumn(uniqueName, oAttributeObject);
+        default :
+            return new oColumn(uniqueName, oAttributeObject);
+    }
+}
+
+ 
+/**
+ * Gets a palette by the path.
+ * @param   {string}   name            The palette name to query and find.
+ *  
+ * @return  {oPalette}                 The oPalette found given the query.
+ */
+oScene.prototype.getPaletteByName = function(name){
+    var _paletteList = PaletteObjectManager.getScenePaletteList();
+    for (var i=0; i<_paletteList.numPalettes; i++){
+        if (_paletteList.getPaletteByIndex(i).getName() == name)
+        return new oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
+    }
+    return null;
+}
+
+
+/**
  * Gets a node by the path.
  * @param   {string}   fullPath         The path of the node in question.
  *  
- * @return {oNode}                     The node found given the query.
+ * @return  {oNode}                     The node found given the query.
  */
-oScene.prototype.$node = function(fullPath){
-    return this.getNodeByPath(fullPath);
+oScene.prototype.$node = function( fullPath ){
+    return this.getNodeByPath( fullPath );
+}
+
+/**
+ * Gets a column by the name.
+ * @param  {string}             uniqueName               The unique name of the column as a string.
+ * @param  {oAttributeObject}   oAttributeObject         The oAttributeObject owning the column.
+ *  
+ * @return {oColumn}                    The node found given the query.
+ */
+oScene.prototype.$column = function( uniqueName, oAttributeObject ){
+    return this.getColumnByName( uniqueName, oAttributeObject );
+}
+
+/**
+ * Gets a palette by the path.
+ * @param   {string}   name            The palette name to query and find.
+ *  
+ * @return  {oPalette}                 The oPalette found given the query.
+ */
+oScene.prototype.$palette = function( name ){
+    return this.getPaletteByName( name );
 }
 
 
@@ -517,17 +575,15 @@ oScene.prototype.nodeSearch = function( query, sort_result ){
  * @param   {string}   name            The name of the newly created node.
  * @param   {string}   group           The groupname to add the node.
  * @param   {oPoint}   nodePosition    The position for the node to be placed in the network.
- * @param   {bool}     increment       If the name already exists in the group, increment an integer on the name.
  * 
  * @return {oNode}    The created node, or bool as false.
  */
-oScene.prototype.addNode = function( type, name, group, nodePosition, increment ){
+oScene.prototype.addNode = function( type, name, group, nodePosition ){
     // Defaults for optional parameters
     
     if (typeof group === 'undefined') var group = "Top"
     if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
     if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
-    if (typeof increment === 'undefined') var increment = false;
     
     try{
       if( group._type == "groupNode" ){ //Also allow oGroupNode types for group as input. Convert to string. 
@@ -535,54 +591,43 @@ oScene.prototype.addNode = function( type, name, group, nodePosition, increment 
       }else if( group._type == "node" ){ //If a node is given, assume we want to place it in same context as this node.
         group = group.parent.fullPath;
       }
-    }catch( err ){}
-    
-    this.$.debug( "CREATING THE NODE: " + group + "/" + name, this.$.DEBUG_LEVEL.LOG );
-    
-    var options = false; /* WIP */
-    
-    if( node.getName( group + "/" + name ) ){
-      if( increment ){
-          var name_idx = 1;
-          var name_inc = name + "_" + name_idx;
-          while( node.getName( group + "/" + name_inc ) ){
-            name_idx++;
-            name_inc = name + "_" + name_idx;
-          }
-          name = name_inc;
-      }
+    }catch( err ){
     }
     
-    //Error Handling ahead of time.
-    if( node.getName( group + "/" + name ) ){
-      if( options && options.exists ){
-        if( options.exists == "adopt" ){
-          this.$.debug( "ADOPTED THE NODE: "     + group + "/" + name, this.$.DEBUG_LEVEL.LOG );
-          return this.getNodeByPath( _nodePath );
-          
-        }
-      }else{
-        this.$.debug( "NODE ALREADY EXISTED: " + group + "/" + name, this.$.DEBUG_LEVEL.WARNING );
-        throw "Node already exists at path: " + group + "/" + name;
-      }
+    // sanitize input for node name creation
+    name = name.split(" ").join("_");
+    
+    // increment name if a node with the same name already exists
+    var _name = name.split("_");
+    var _count = parseInt(_name.pop(), 10);
+    
+    // get name without suffix
+    if ( isNaN( _count ) ) { // check for NaN value -> no number already added
+        _name = name;
+        _count = 0;
+    }else{
+        _name = _name.join("_");
     }
- 
-    var _nodePath = node.add( group, name, type, nodePosition.x, nodePosition.y, nodePosition.z );
-    var _node = this.getNodeByPath( _nodePath );
- 
-    if( _node ){
-      this.$.debug( "CREATED THE NODE: " + _node, this.$.DEBUG_LEVEL.LOG );
+    
+    // loop to increment until we get a node name that is free
+    var _nodePath = group+"/"+_name;
+    var _node = new oNode(_nodePath)
+    
+    while( _node.exists ){
+        _count++;
+        name = _name+"_"+_count;
+        _nodePath = group+"/"+name; 
+        _node = new oNode( _nodePath );
     }
- 
+    
+    // create node and return result
+    var _path = node.add( group, name, type, nodePosition.x, nodePosition.y, nodePosition.z );
+    _node = this.$node(_path)
+
     return _node;
 }
  
 
- 
- 
- 
- 
- 
 /**
  * Adds a column to the scene.
  * @param   {string}   type                           The type of the column.
@@ -788,18 +833,19 @@ oScene.prototype.getSelectedPalette = function(){
  * @return {oPalette}   oPalette with provided name.
  */
 oScene.prototype.importPalette = function( path, name, index, paletteStorage, storeInElement ){
-    if (typeof paletteStorage === 'undefined') var destination = "scene";
-    if (typeof index === 'undefined') var index = 0;
+    if (typeof paletteStorage === 'undefined') var paletteStorage = "scene";
+    var _list = PaletteObjectManager.getScenePaletteList();
+   
+    if (typeof index === 'undefined') var index = _list.numPalettes;
    
     var _paletteFile = new oFile(path);
     if (typeof name === 'undefined') var name = _paletteFile.name;
     if (typeof storeInElement === 'undefined'){
-        if (paletteStorage == "element") throw "Element parameter cannot be omitted if palette destination is Element"
+        if (paletteStorage == "element") throw new Error("Element parameter cannot be omitted if palette destination is Element")
         var _element = 1;
     }
    
-    var _list = PaletteObjectManager.getScenePaletteList();
-    var _destination = ""
+    var _destination = "";
    
     switch (paletteStorage) {
         case "environnement" :
@@ -821,40 +867,44 @@ oScene.prototype.importPalette = function( path, name, index, paletteStorage, st
         default :
             break;
     }
-    
-    //CF Note: To test, does this only accept a path to a file? If so, why are we passing a name? Not clear on this function and how we can best provide a 
-    //path to a file, and rename it to the desired name as a result.
-    
-    var _newPalette = list.insertPaletteAtLocation( _destination, _element, name, index );
-    return new oPalette(_newPalette);
+   
+    // create a dummy palette to get the destination path
+    var _newPalette = new oPalette(_list.insertPaletteAtLocation(_destination, _element, "_dummy_palette", index), this, _list);
+    var _path = _newPalette.path
+   
+    var _file = new oFile(_path)
+    var copy = _paletteFile.copy(_file.folder.path, _paletteFile.name, true)
+       
+    // reload palette
+    _newPalette.remove();
+    _newPalette = new oPalette(_list.insertPalette(copy.path.replace(".plt", ""), index), this, _list);
+   
+    return _newPalette;
 }
 
 
 /**
  * Imports a PSD to the node view.
  * @param   {string}       path                          The palette file to import.
- * @param   {string}       group                         The group to import the PSD into.
- * @param   {oPoint}       nodePosition                  The position for the node to be placed in the network.
- * @param   {bool}         separateLayers                Separate the layers of the PSD.
- * @param   {bool}         addPeg                        Whether to add a peg.
- * @param   {bool}         addComposite                  Whether to add a composite.
- * @param   {string}       alignment                     Alignment type.
+ * @param   {string}       [group]                       The group to import the PSD into.
+ * @param   {oPoint}       [nodePosition]                The position for the node to be placed in the network.
+ * @param   {bool}         [separateLayers]              Separate the layers of the PSD.
+ * @param   {bool}         [addPeg]                      Whether to add a peg.
+ * @param   {bool}         [addComposite]                Whether to add a composite.
+ * @param   {string}       [alignment]                   Alignment type.
  * 
  * @return {oNode[]}     The nodes being created as part of the PSD import.
  */
-oScene.prototype.importPSD = function(path, group, nodePosition, separateLayers, addPeg, addComposite, alignment){
-
-    // CFNOTE: We should also consider importing the TGA directly as a 'drawing' for non-Harmony bitmap types, optional.
-
+oScene.prototype.importPSD = function( path, group, nodePosition, separateLayers, addPeg, addComposite, alignment ){
     if (typeof alignment === 'undefined') var alignment = "ASIS" // create an enum for alignments?
     if (typeof addComposite === 'undefined') var addComposite = true;
     if (typeof addPeg === 'undefined') var addPeg = true;
     if (typeof separateLayers === 'undefined') var separateLayers = true;
-    if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0)
-    if (typeof group === 'undefined') var group = "Top"
+    if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
+    if (typeof group === 'undefined') var group = "Top";
  
-    var _psdFile = new oFile(path)
-    var _elementName = _psdFile.name
+    var _psdFile = new oFile( path );
+    var _elementName = _psdFile.name;
  
     var _xSpacing = 45
     var _ySpacing = 30  
@@ -874,12 +924,14 @@ oScene.prototype.importPSD = function(path, group, nodePosition, separateLayers,
     if (addComposite) var _comp = this.addNode("COMPOSITE", _elementName+"-Composite", group, nodePosition)
    
     // Import the PSD in the element
-    CELIO.pasteImageFile({ src : path, dst : { elementId : _element.id, exposure : _drawing.name}})
-    var _layers = CELIO.getLayerInformation(path);
-   
+    CELIO.pasteImageFile({ src : _psdFile.path, dst : { elementId : _element.id, exposure : _drawing.name}})
+    var _layers = CELIO.getLayerInformation(_psdFile.path);
+    var _info = CELIO.getInformation(_psdFile.path)
+    
     // create the nodes for each layer
     if (separateLayers){
-       
+
+        var _scale = _info.height/scene.defaultResolutionY()
         var _x = nodePosition.x - _layers.length/2*_xSpacing
         var _y = nodePosition.y - _layers.length/2*_ySpacing
        
@@ -887,29 +939,33 @@ oScene.prototype.importPSD = function(path, group, nodePosition, separateLayers,
        
         for (var i in _layers){
             // generate nodes and set them to show the element for each layer
-            var _layer = _layers[i].layer;
-            var _layerName = _layers[i].layerName.split(" ").join("_");
-            var _nodePosition = new oPoint(_x+=_xSpacing, _y +=_ySpacing, 0);
+            var _layer = _layers[i].layer
+            var _layerName = _layers[i].layerName.split(" ").join("_")
+            var _nodePosition = new oPoint(_x+=_xSpacing, _y +=_ySpacing, 0)
            
             //TODO: set into right group according to PSD organisation
            
             var _group = group //"Top/"+_layers[i].layerPathComponents.join("/");
- 
-            var _node = this.addDrawingNode(_layerName, _group, _nodePosition, _element);
- 
-            _node.enabled = _layers[i].visible;
+           
+            var _node = this.addDrawingNode(_layerName, _group, _nodePosition, _element)
+
+            _node.enabled = _layers[i].visible
             _node.can_animate = false // use general pref?
             _node.apply_matte_to_color = "Straight"
-            _node.alignment_rule = alignment;
+            _node.alignment_rule = alignment
+            _node.scale.x = _scale;
+            _node.scale.y = _scale;
            
-            _node.attributes.drawing.element.setValue(_layer != ""?"1:"+_layer:1, 1);
+            _node.attributes.drawing.element.setValue(_layer != ""?"1:"+_layer:1, 1)
             _node.attributes.drawing.element.column.extendExposures();
+            
+            if (addPeg) _node.linkInNode(_peg)
+            if (addComposite) _node.linkOutNode(_comp,0,0)
  
-            if (addPeg) _node.linkInNode(_peg);
-            if (addComposite) _node.linkOutNode(_comp);
- 
-            _nodes.push(_node);
+            _nodes.push(_node)
         }
+    }else{
+        throw new Error("importing PSD as a flattened layer not yet implemented");
     }
    
     if (addPeg){
@@ -927,6 +983,142 @@ oScene.prototype.importPSD = function(path, group, nodePosition, separateLayers,
 }
  
 /**
+ * Updates a PSD to the node view.
+ * @param   {string}       path                          The palette file to import.
+ * @param   {bool}         [separateLayers]              Separate the layers of the PSD.
+ */
+oScene.prototype.updatePSD = function( path, separateLayers ){
+    if (typeof separateLayers === 'undefined') var separateLayers = true;
+
+    var _psdFile = new oFile(path);
+   
+    // get info from the PSD
+    var _info = CELIO.getInformation(_psdFile.path);
+    var _layers = CELIO.getLayerInformation(_psdFile.path);
+    var _scale = _info.height/scene.defaultResolutionY();
+    
+    // use layer information to find nodes from precedent export
+    if (separateLayers){
+        var _nodes = this.$node("Top").subNodes(true).filter(function(x){return x.type == "READ"});
+        var _nodeNames = _nodes.map(function(x){return x.name});
+       
+        var _psdNodes = [];
+        var _missingLayers = [];
+        var _PSDelement = "";
+        var _positions = new Array(_layers.length);
+        var _scale = _info.height/scene.defaultResolutionY();
+       
+        // for each layer find the node by looking at the column name
+        for (var i in _layers){
+            var _layer = _layers[i];
+            // MessageLog.trace(_layer.position)
+            var _layerName = _layers[i].layerName.split(" ").join("_");
+            var _found = false;
+ 
+            // find the node
+            for (var j in _nodes){
+                if (_nodes[j].element.format != "PSD") continue;
+               
+                var _drawingColumn = _nodes[j].attributes.drawing.element.column;
+ 
+                // update the node if found
+                if (_drawingColumn.name == _layer.layer){
+                    _psdNodes.push(_nodes[j]);
+                    _found = true;
+
+                    // MessageLog.trace("scale: "+_scale)
+                    // update scale in case PSDfile size changed
+                    _nodes[j].scale.x = _scale;
+                    _nodes[j].scale.y = _scale;
+                    
+                    // MessageLog.trace("scale: "+_scale)
+                    
+                    _positions[_layer.position] = _nodes[j];
+                
+                    // store the element
+                    _PSDelement = _nodes[j].element
+                                       
+                    break;
+                }
+                // if not found, add to the list of layers to import
+                _found = false;
+            }
+           
+            if (!_found) _missingLayers.push(_layer);
+        }
+       
+        MessageLog.trace("psdnodes: "+_psdNodes.map(function(x){return x.name}));
+        MessageLog.trace("missingLayers: "+_missingLayers.map(function(x){return x.layerName}));
+       
+        if (_psdNodes.length == 0){
+            // PSD was never imported, use import instead?
+            throw new Error("can't find a PSD element to update");
+            return;
+        }
+        
+        // pasting updated PSD into element
+        CELIO.pasteImageFile({ src : _psdFile.path, dst : { elementId : _PSDelement.id, exposure : "1"}})
+       
+        for (var i in _missingLayers){
+            // find previous import Settings re: group/alignment etc
+            var _layer = _missingLayers[i];
+            var _layerName = _layer.layerName.split(" ").join("_");
+
+            var _layerIndex = _layer.position;
+            var _nodePosition = new oPoint(0,0,0);
+            var _group = _psdNodes[0].path;
+            var _alignment = _psdNodes[0].alignment_rule;
+            var _scale = _psdNodes[0].scale.x;
+            // MessageLog.trace("scale: "+_scale)
+            var _peg = _psdNodes[0].inNodes[0];
+            var _comp = _psdNodes[0].outNodes[0];
+            var _scale = _info.height/scene.defaultResolutionY()
+            var _port;
+            
+            //TODO: set into right group according to PSD organisation
+            // looking for the existing node below and get the comp port from it
+            for (var j = _layerIndex-1; j>=0; j--){
+                if (_positions[j] != undefined) break;
+            }
+            var _nodeBelow = _positions[j];
+            
+            var _compNodes = _comp.inNodes;
+            
+            for (var j=0; j<_compNodes.length; j++){
+                if (_nodeBelow.fullPath == _compNodes[j].fullPath){
+                    _port = j+1;
+                    _nodePosition = _compNodes[j].nodePosition;
+                    _nodePosition.x -= 35;
+                    _nodePosition.y -= 25;
+                }
+            }
+            
+            // generate nodes and set them to show the element for each layer         
+            var _node = this.addDrawingNode(_layerName, _group, _nodePosition, _PSDelement);
+ 
+            _node.enabled = _layer.visible;
+            _node.can_animate = false; // use general pref?
+            _node.apply_matte_to_color = "Straight";
+            _node.alignment_rule = _alignment;
+            _node.scale.x = _scale;
+            _node.scale.y = _scale;
+           
+            _node.attributes.drawing.element.setValue(_layer.layer != ""?"1:"+_layer.layer:1, 1);
+            _node.attributes.drawing.element.column.extendExposures();
+ 
+            // find composite/peg to connect to based on other layers
+           
+            //if (addPeg) _node.linkInNode(_peg)
+            if (_port) _node.linkOutNode(_comp, 0, _port)
+ 
+            _nodes.push(_node);
+        }  
+    } else{
+        throw new Error("updating a PSD imported as a flattened layer not yet implemented");
+    }
+}
+ 
+/**
  * Imports a QT into the node view.
  * @param   {string}       path                          The palette file to import.
  * @param   {string}       group                         The group to import the PSD into.
@@ -936,12 +1128,13 @@ oScene.prototype.importPSD = function(path, group, nodePosition, separateLayers,
  * 
  * @return {oNode}        The imported Quicktime Node.
  */
-oScene.prototype.importQT = function( path, group, nodePosition, extendScene, alignment ){
+oScene.prototype.importQT = function( path, group, importSound, nodePosition, extendScene, alignment ){
     if (typeof alignment === 'undefined') var alignment = "ASIS";
     if (typeof extendScene === 'undefined') var extendScene = true;
+    if (typeof importSound === 'undefined') var importSound = true;
     if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
     if (typeof group === 'undefined') var group = "Top";
-    // MessageLog.trace("importing QT file :"+path)
+    // MessageLog.trace("importing QT file :"+filename)
  
     var _QTFile = new oFile(path);
     var _elementName = _QTFile.name;
@@ -977,7 +1170,7 @@ oScene.prototype.importQT = function( path, group, nodePosition, extendScene, al
     }
    
     // creating an audio column for the sound
-    if ( MovieImport.isAudioFileCreated() ){
+    if (importSound && MovieImport.isAudioFileCreated() ){
         var _soundName = _elementName + "_sound";
         var _soundColumn = this.addColumn("SOUND", _soundName);
         column.importSound( _soundColumn.name, 1, _audioPath);

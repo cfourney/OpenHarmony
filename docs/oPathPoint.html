@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oFile</title>
+    <title>Class: oPathPoint</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -1307,7 +1307,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="oFile.html">Class: oFile</h1>
+        <h1 class="page-title" data-filename="oPathPoint.html">Class: oPathPoint</h1>
         
 
 
@@ -1316,10 +1316,10 @@
     
 <header>
     <h2>
-    oFile
+    oPathPoint
     </h2>
     
-        <div class="class-description">oFile Base Class</div>
+        <div class="class-description">oList Base Class</div>
     
 </header>  
 
@@ -1331,14 +1331,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oFile">
+        <h4 class="name" id="oPathPoint">
             
-            new oFile<span class="signature">(path)</span>
+            new oPathPoint<span class="signature">(oColumnObject, oFrameObject)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony_misc.js, line 618
+            openHarmony_path.js, line 61
         </div>
         
     </div>
@@ -1349,7 +1349,7 @@
     
     
     <div class="description">
-        The oFile helper class -- providing utilities for file manipulation and access.
+        The base class for the oList.
     </div>
     
 
@@ -1380,13 +1380,13 @@
 	
         <tr>
             
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>oColumnObject</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="oColumn.html">oColumn</a></span>
 
 
             
@@ -1396,7 +1396,30 @@
             
             <td class="description last">
                 
-                The path to the file.</td>
+                The array that this oList represents.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>oFrameObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="oFrame.html">oFrame</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The index at which this list starts.</td>
         </tr>
 	
 	
@@ -1434,13 +1457,13 @@
 	
         <tr>
             
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>column</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="oColumn.html">oColumn</a></span>
 
 
             
@@ -1450,7 +1473,30 @@
             
             
             
-            <td class="description last">The path to the file.</td>
+            <td class="description last">The indexed object of the item.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>frame</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="oFrame.html">oFrame</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The indexed object of the item.</td>
         </tr>
 	
 	
@@ -1514,7 +1560,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="exists">exists<span class="type-signature type bool">bool</span> </h4>
+        <h4 class="name" id="bias">bias<span class="type-signature type float">float</span> </h4>
     </div>
     
     
@@ -1522,7 +1568,7 @@
 <dd>
     
     <div class="description">
-        Whether the file exists already.
+        The bias at the current keyframe point.
     </div>
     
     
@@ -1559,7 +1605,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="extension">extension<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="continuity">continuity<span class="type-signature type float">float</span> </h4>
     </div>
     
     
@@ -1567,7 +1613,7 @@
 <dd>
     
     <div class="description">
-        The extension of the file.
+        The continuity at the current keyframe point.
     </div>
     
     
@@ -1604,7 +1650,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="folder">folder<span class="type-signature type ofolder"><a href="oFolder.html">oFolder</a></span> </h4>
+        <h4 class="name" id="lock">lock<span class="type-signature type float">float</span> </h4>
     </div>
     
     
@@ -1612,7 +1658,7 @@
 <dd>
     
     <div class="description">
-        The folder containing the file.
+        The bezier lock at the current keyframe point.
     </div>
     
     
@@ -1649,7 +1695,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="name">name<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="pointIndex">pointIndex<span class="type-signature type int">int</span> </h4>
     </div>
     
     
@@ -1657,7 +1703,7 @@
 <dd>
     
     <div class="description">
-        The name of the file.
+        The keyframe index of the frame/key at this point.
     </div>
     
     
@@ -1694,7 +1740,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="path">path<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="tension">tension<span class="type-signature type float">float</span> </h4>
     </div>
     
     
@@ -1702,7 +1748,187 @@
 <dd>
     
     <div class="description">
-        The path of the file.
+        The tension at the current keyframe point.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="velocity">velocity<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The velocity at the current keyframe point.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="x">x<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The X value of the path element.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="y">y<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The Y value of the path element.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="z">z<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The Z value of the path element.
     </div>
     
     
@@ -1745,14 +1971,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="copy">
+        <h4 class="name" id="set">
             
-            copy<span class="signature">(<span class="optional">folder</span>, <span class="optional">copyName</span>, <span class="optional">overwrite</span>)</span>
+            set<span class="signature">(pseudoPathPoint)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony_misc.js, line 760
+            openHarmony_path.js, line 257
         </div>
         
     </div>
@@ -1763,7 +1989,7 @@
     
     
     <div class="description">
-        Copies the file to the folder.
+        Matches this path point to the provided one.
     </div>
     
 
@@ -1794,13 +2020,13 @@
 	
         <tr>
             
-                <td class="name"><code>folder</code></td>
+                <td class="name"><code>pseudoPathPoint</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="oPathPoint.html">oPathPoint</a></span>
 
 
             
@@ -1810,372 +2036,12 @@
             
             <td class="description last">
                 
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Content to write to the file.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>copyName</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Name of the copied file.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>overwrite</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to overwrite the file.</td>
+                The path point object to match this to.</td>
         </tr>
 	
 	
 	</tbody>
 </table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="move">
-            
-            move<span class="signature">(folder, <span class="optional">overwrite</span>)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony_misc.js, line 729
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Moves the file to the folder.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>folder</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                Content to write to the file.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>overwrite</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to overwrite the file.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="read">
-            
-            read<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony_misc.js, line 685
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Reads the content of the file.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="remove">
-            
-            remove<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony_misc.js, line 789
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Removes the file.
-    </div>
-    
-
-    
-    
-    
-    
     
     
     
@@ -2228,7 +2094,7 @@
     
         
         <div class="tag-source">
-            openHarmony_misc.js, line 798
+            openHarmony_path.js, line 279
         </div>
         
     </div>
@@ -2239,7 +2105,7 @@
     
     
     <div class="description">
-        Used in converting the file to a string value, provides the string-path.
+        Converts the pathpoint to a string.
     </div>
     
 
@@ -2306,151 +2172,12 @@
                         
                     
             </td>
-            <td class="description last">The file path's as a string.</td>
+            <td class="description last">The pathpoint represented as a string.</td>
         </tr>
     
     </tbody>
 </table>
 
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="write">
-            
-            write<span class="signature">(content, append)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony_misc.js, line 705
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Writes to the file.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>content</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Content to write to the file.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>append</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Whether to append to the file.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
     
     
     

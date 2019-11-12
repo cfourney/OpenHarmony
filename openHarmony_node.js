@@ -77,17 +77,7 @@ oNode = function(path, oSceneObject){
     
     for (var i in _attributes){
         var _attr = _attributes[i]
-        
-         // create getter setters only for attributes without subattributes, 
-         // otherwise create an object to host the subattributes getter setters
-         
-        this.setAttrGetterSetter( _attr );
-        if ( _attr.subAttributes.length >0 ){
-            var _keyword = _attr.keyword.toLowerCase();
-            for (var j in _attr.subAttributes){
-                this.setAttrGetterSetter(_attr.subAttributes[j], _keyword );
-            }
-        }
+        this.setAttrGetterSetter(_attr)
     }
 }
 
@@ -96,55 +86,80 @@ oNode = function(path, oSceneObject){
  * @private 
  * @return  {void}   Nothing returned.
  */
-oNode.prototype.setAttrGetterSetter = function ( attr, parent_attr ){
-    var _keyword = attr.shortKeyword.toLowerCase();
-    // hard coding a fix for 3DPath attribute name which starts with a number
-    if (_keyword == "3dpath") _keyword = "path3d";
-    //System.println( "Setting getter setters for attribute: "+_keyword+" of node: "+this.name );
+oNode.prototype.setAttrGetterSetter = function (attr, context){
+    if (typeof context === 'undefined') context = this;
+    // MessageLog.trace("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name)
+    // System.println( "Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name );
+ 
+    var _keyword = attr.shortKeyword;
     
-    var has_parent_attr = true;
-    if (typeof context === 'undefined') has_parent_attr = false; 
+    if( typeof( this[_keyword] ) !== 'undefined' ){
+      //Already exists in properties.
+      return;
+    }
     
-    //Only set the getter/setter if this base class doesn't already have it. 
-    //There were issued with X,Y,Z,POSITION, ECT. So, we prevent the overlap.
-    if( typeof( has_parent_attr ? this[parent_attr][_keyword] : this[_keyword] ) === 'undefined' ){
-      try{
-      
-        var getSet_obj = {
-            get : function(){
-                // System.println( "getting attribute "+attr.keyword+". animated: "+(attr.column != null) );
-                //MessageLog.trace("getting attribute "+attr.keyword+". animated: "+(attr.column != null))
+    Object.defineProperty( context, _keyword, {
+        enumerable : false,
+        configurable : true,
+        get : function(){
+            // MessageLog.trace("getting attribute "+attr.keyword+". animated: "+(attr.column != null))
+            var _subAttrs = attr.subAttributes;
+            if (_subAttrs.length == 0){
                 // if attribute has animation, return the frames
-                if (attr.column != null) return attr.frames
+                if (attr.column != null) return attr.frames;
                 // otherwise return the value
-                return attr.getValue()
-            },
-           
-            set : function(newValue){
-                //MessageLog.trace("setting attribute "+attr.keyword+" to value: ")
-                // if attribute has animation, passed value must be a frame object
+                var _value =  attr.getValue();
+            }else{
+                // if there are subattributes, create getter setters for each on the returned object
+                var _value = (attr.column != null)?new oList(attr.frames, 1):attr.getValue();
+                for (var i in _subAttrs){
+                    this.setAttrGetterSetter( _subAttrs[i], _value );
+                }
+            }
+            return _value;
+        },
+       
+        set : function(newValue){
+            // MessageLog.trace("setting attribute "+attr.keyword+" to value: "+newValue)
+            // if attribute has animation, passed value must be a frame object            
+            var _subAttrs = attr.subAttributes;
+            // MessageLog.trace("is animated? "+(attr.column != null)+" has subattributes? "+(_subAttrs.length != 0))
+            
+            if (_subAttrs.length == 0){
                 if (attr.column != null) {
-                    if (!newValue instanceof oFrame) throw "must pass an oFrame object to set an animated attribute"
+                    // MessageLog.trace("value is oFrame? "+(newValue instanceof oFrame))
+                    if (!(newValue instanceof oFrame)) {
+                        // throw new Error("must pass an oFrame object to set an animated attribute")
+                        // fallback to set frame 1
+                        newValue = {value:newValue, frameNumber:1};
+                    }
                     attr.setValue(newValue.value, newValue.frameNumber)
                 }else{          
-                    return attr.setValue(newValue);
+                    return attr.setValue(newValue)
+                }
+            }else{
+                var _frame = 1;
+                var _value = newValue;
+                // dealing with value being an object with frameNumber for animated values
+                if (attr.column != null) {
+                    if (!(newValue instanceof oFrame)) {
+                        // throw new Error("must pass an oFrame object to set an animated attribute")
+                        // fallback to set frame 1
+                        newValue = {value:newValue, frameNumber:1};
+                    }
+
+                    _frame = newValue.frameNumber;
+                    _value = newValue.value;
+                }
+                
+                for (var i in _subAttrs){
+                    // ignore the getter setters by setting each subAttr individually, and only set the ones that exist in the provided object
+                    var _keyword = _subAttrs[i].shortKeyword;
+                    if (_value.hasOwnProperty(_keyword)) _subAttrs[i].setValue(_value[_keyword], _frame);
                 }
             }
         }
-        
-        //The exact object has to be used, using a variable to provide the object to extends results in extending that temporary variable, not this as the source.
-        if( has_parent_attr ){
-          Object.defineProperty( this[parent_attr], _keyword, getSet_obj );
-        }else{
-          Object.defineProperty( this, _keyword, getSet_obj );
-        }
-      
-      }catch( err ){
-        System.println( err + " (" + err.lineNumber + ")" );
-      }
-    }else{
-      // System.println( "Failed in setting getter setters for attribute: "+_keyword+" of node: "+this.name );
-    }
+    })
 };
 
 /**
@@ -171,12 +186,8 @@ Object.defineProperty(oNode.prototype, 'fullPath', {
  * @name oNode#type
  * @type {string}
  */
-Object.defineProperty(oNode.prototype, 'type', {
+Object.defineProperty( oNode.prototype, 'type', {
     get : function( ){
-      if( this.root ){
-        return 'root';
-      }
-    
       return node.type( this.fullPath );
     },
  
@@ -237,21 +248,12 @@ Object.defineProperty(oNode.prototype, 'children', {
  */
 Object.defineProperty(oNode.prototype, 'exists', {
     get : function( ){
-      if( this.root ){
+      if( this.type ){
         return true;
-        
-      }else if( node.type(this.fullPath) ){
-        return true;
-        
       }else{
         return false;
-        
       }
-    },
- 
-    set : function( bool_exist ){
     }
- 
 });
 
 
@@ -561,10 +563,9 @@ Object.defineProperty(oNode.prototype, 'attributes', {
         for (var i in _attributesList){
      
             var _attribute = new oAttribute(this, _attributesList[i]);
-            var _keyword = _attribute.keyword.toLowerCase();
+            var _keyword = _attribute.keyword;
      
             _attributes[_keyword] = _attribute;
-     
         }
      
         return _attributes;
@@ -916,7 +917,6 @@ oNode.prototype.remove = function( deleteColumns, deleteElements ){
  * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
  */
 oPegNode = function( path, oSceneObject ) {
-    // oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'PEG') throw "'path' parameter must point to a 'PEG' type node";
     oNode.call( this, path, oSceneObject );
     
@@ -1053,7 +1053,7 @@ oDrawingNode.prototype.extractPeg = function(){
  *
  * @return  {oPoint[][]}   The contour curves.
  */
-oDrawingNode.prototype.getCountourCurves = function( count, frame ){
+oDrawingNode.prototype.getContourCurves = function( count, frame ){
   
   if (typeof frame === 'undefined') var frame = this.scene.currentFrame;
   if (typeof count === 'undefined') var count = 3;
@@ -1098,7 +1098,7 @@ oDrawingNode.prototype.getCountourCurves = function( count, frame ){
  * The group module base class for the node.
  * @constructor
  * @augments   oNode
- * @classdesc  Node Class    
+ * @classdesc  oGroupNode Class    
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
  * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
@@ -1192,7 +1192,7 @@ oGroupNode.prototype.orderNodeView = function(recurse){
  /**
  * Provides a matching attribute based on provided keyword name.
  * @param   {string}    keyword                    The attribute keyword to search.
- * @return  {oAttribute}   The matched attribute object, given the keywod.
+ * @return  {oAttribute}   The matched attribute object, given the keyword.
  */
 oNode.prototype.getAttributeByName = function( keyword ){
     if (keyword.indexOf(".")){
@@ -1211,4 +1211,12 @@ oNode.prototype.getAttributeByName = function( keyword ){
         if (!this.hasOwnProperty(keyword)) return null;
         return this.attributes[keyword];
     }
+}
+
+ /**
+ * Used in converting the node to a string value, provides the string-path.
+ * @return  {string}   The node path's as a string.
+ */
+oNode.prototype.toString = function(){
+    return this.fullPath;
 }

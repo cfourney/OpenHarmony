@@ -55,10 +55,10 @@
  * @constructor
  * @classdesc  oColumn Class
  * @param   {string}                   uniqueName                  The unique name of the column.
- * @param   {oAttributeObject}         oAttributeObject            The oAttribute thats connected to the column.
+ * @param   {oAttribute}               oAttributeObject            The oAttribute thats connected to the column.
  *
  * @property {string}                  uniqueName                  The unique name of the column.
- * @property {oAttributeObject}        attributeObject             The attribute object that the column is attached to.
+ * @property {oAttribute}              attributeObject             The attribute object that the column is attached to.
  */
 oColumn = function( uniqueName, oAttributeObject ){
 
@@ -173,6 +173,7 @@ Object.defineProperty(oColumn.prototype, 'subColumns', {
  
 /**
  * Extends the exposure of the drawing's keyframes given the provided arguments.
+ * @deprecated
  * @param   {oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
  * @param   {int}       amount               The amount to extend.
  * @param   {bool}      replace              Setting this to false will insert frames as opposed to overwrite existing ones.
@@ -247,4 +248,79 @@ oColumn.prototype.getKeyFrames = function(){
     var _frames = this.frames;
     _frames = _frames.filter(function(x){return x.isKeyFrame});
     return _frames;
+}
+
+
+
+//------------------------------------------------------
+//TODO FULL IMPLEMENTATION OF THIS.
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//       oDrawingColumn class       //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+ 
+
+/**
+ * The extension class for drawing columns.
+ * @constructor
+ * @classdesc  oDrawingColumn Class
+ * @augments   oColumn
+ * @param   {string}                   uniqueName                  The unique name of the column.
+ * @param   {oAttribute}               oAttributeObject            The oAttribute thats connected to the column.
+ *
+ * @property {string}                  uniqueName                  The unique name of the column.
+ * @property {oAttribute}              attributeObject             The attribute object that the column is attached to.
+ */
+function oDrawingColumn( uniqueName, oAttributeObject ) {
+    // oDrawingColumn can only represent a column of type 'DRAWING'
+    if (column.type(uniqueName) != 'DRAWING') throw new Error("'uniqueName' parameter must point to a 'DRAWING' type node");
+    //MessageBox.information("getting an instance of oDrawingColumn for column : "+uniqueName)
+    oColumn.call(this, uniqueName, oAttributeObject);
+}
+
+ 
+// extends oColumn and can use its methods
+oDrawingColumn.prototype = Object.create(oColumn.prototype);
+
+
+/**
+ * Provides the drawing element attached to the column.
+ * @name oDrawingColumn#element
+ * @type {oElement}
+ */
+Object.defineProperty(oDrawingColumn.prototype, 'element', {
+    get : function(){
+        return new oElement(column.getElementIdOfDrawing( this.uniqueName), this);
+    },
+
+    set : function(oElementObject){
+        column.setElementIdOfDrawing( this.uniqueName, oElementObject.id );
+        oElementObject.column = this;
+    }
+})
+
+
+/**
+ * Extends the exposure of the drawing's keyframes given the provided arguments.
+ * @param   {oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
+ * @param   {int}       amount               The amount to extend.
+ * @param   {bool}      replace              Setting this to false will insert frames as opposed to overwrite existing ones.
+ */
+oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace){
+    // if amount is undefined, extend function below will automatically fill empty frames
+    if (typeof exposures === 'undefined') var exposures = this.getKeyFrames();
+ 
+    //MessageBox.information("extendingExposures "+exposures.map(function(x){return x.frameNumber}))
+    for (var i in exposures) {
+        //MessageBox.information(i+" extending: "+exposures[i])
+        //MessageBox.information(exposures[i].isBlank)
+        if (!exposures[i].isBlank) exposures[i].extend(amount, replace);
+    }
 }

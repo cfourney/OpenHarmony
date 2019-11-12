@@ -57,7 +57,7 @@
  * @param   {attr}                   attributeObject            The internal harmony Attribute Object.
  * @param   {oAttribute}             parentAttribute            The parent attribute of the subattribute.
  *
- * @property {int}                   oNodeObject                The name of the drawing.
+ * @property {oNodeObject}           node                       The name of the drawing.
  * @property {attr}                  attributeObject            The element object associated to the element.
  * @property {string}                keyword                    The name of the drawing.
  * @property {string}                shortKeyword               The element object associated to the element.
@@ -68,67 +68,110 @@ oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
   this._type = "attribute";
   this.$     = false;
 
-  this.oNodeObject = oNodeObject;
+  this.node = oNodeObject;
   this.attributeObject = attributeObject;
   
+  this._shortKeyword = attributeObject.keyword();
   if(attributeObject.fullKeyword){
-    this.keyword = attributeObject.fullKeyword();
+    this._keyword = attributeObject.fullKeyword();
   }else{
-    this.keyword = attributeObject.keyword();
+    if( parentAttribute ){
+      //Derive it for older versions.
+      this._keyword = parentAttribute._keyword + "." + this._shortKeyword;
+    }else{
+      this._keyword = this._shortKeyword;
+    }
   }
   
-  this.shortKeyword = attributeObject.keyword();
   this.parentAttribute = parentAttribute; // only for subAttributes
-
-  var _subAttributes = [];
   
+  var _subAttributes = [];
   if ( attributeObject.hasSubAttributes && attributeObject.hasSubAttributes() ){
-      var _subAttributesList = attributeObject.getSubAttributes();
-      
-      for (var i in _subAttributesList){
-          var _keyword = _subAttributesList[i].keyword().toLowerCase();
-          // hard coding a fix for 3DPath attribute name which starts with a numberOf
-          if (_keyword == "3dpath") _keyword = "path3d";
-          
-          var _subAttribute = new oAttribute( this.oNodeObject, _subAttributesList[i], this );
-                      
-          // creating a property on the attribute object with the subattribute name to access it
-          this[_keyword] = _subAttribute;
-          _subAttributes.push(_subAttribute);
-      }
+        var _subAttributesList = attributeObject.getSubAttributes();
+       
+        for (var i in _subAttributesList){
+            var _subAttribute = new oAttribute( this.node, _subAttributesList[i], this );
+            var _keyword = _subAttribute.shortKeyword;     
+            // creating a property on the attribute object with the subattribute name to access it
+            this[_keyword] = _subAttribute;
+            _subAttributes.push(_subAttribute)
+        }
   }else if( !attributeObject.hasSubAttributes ){
-    //Older versions of Harmony don't have hasSubAttributes, or getSubAttributes
-    switch( this.type ){
-        case "POSITION_3D" :
-          //hard coded subAttr handler for POSITION_3D in older versions of Harmony.
-          var x_attr = node.getAttr( this.oNodeObject.fullPath, 1, this.keyword+".x" );
-          var y_attr = node.getAttr( this.oNodeObject.fullPath, 1, this.keyword+".y" );
-          var z_attr = node.getAttr( this.oNodeObject.fullPath, 1, this.keyword+".z" );
-          
-          var _subAttributeX = new oAttribute( this.oNodeObject, x_attr, this );
-          var _subAttributeY = new oAttribute( this.oNodeObject, y_attr, this );
-          var _subAttributeZ = new oAttribute( this.oNodeObject, z_attr, this );
-          
-          this["x"] = _subAttributeX;
-          this["y"] = _subAttributeY;
-          this["z"] = _subAttributeZ;
-          
-          _subAttributes.push(_subAttributeX);
-          _subAttributes.push(_subAttributeY);
-          _subAttributes.push(_subAttributeZ);
-          
-          break
-        default:
-          break
-    }
+        //Older versions of Harmony don't have hasSubAttributes, or getSubAttributes
+        _subAttributes = this.subAttributes_oldVersion( _subAttributes );
   }
 
   // subAttributes is made available as an array for more formal access
   this.subAttributes = _subAttributes;
 }
  
-// oAttribute Object Properties
+/**
+ * Private function to add utility to subattributes on older versions of Harmony.
+ * @private 
+ * @return  {void}   Nothing returned.
+ */
+oAttribute.prototype.subAttributes_oldVersion = function ( _subAttributes ){
+    var sub_attrs = [];
+    
+    switch( this.type ){
+        case "POSITION_3D" :
+          //hard coded subAttr handler for POSITION_3D in older versions of Harmony.
+          sub_attrs = [ 'x', 'y', 'z' ];
+          break
+        case "ROTATION_3D" :
+          // System.println( "ROTATION_3D Not Implemented" );
+          break
+        case "SCALE_3D" :
+          // System.println( "SCALE3D Not Implemented" );
+          break
+        default:
+          break
+    }
+    
+  for( var n=0;n<sub_attrs.length;n++ ){
+    var _attr = node.getAttr( this.node.fullPath, 1, this._keyword+"."+sub_attrs[n] );  
+    if( _attr ){
+      var _subAttribute = new oAttribute( this.node, _attr, this );  
+      this[ sub_attrs[n] ] = _subAttribute;  
+      _subAttributes.push( _subAttribute );
+    }
+  }
+  
+  return _subAttributes;
+}
  
+/**
+ * The full keyword of the attribute.
+ * @name oAttribute#keyword
+ * @type {string}
+ */
+Object.defineProperty(oAttribute.prototype, 'keyword', {
+    get : function(){
+        // formatting the keyword for our purposes
+        // hard coding a fix for 3DPath attribute name which starts with a number
+        var _keyword = this._keyword.toLowerCase();
+        if (_keyword == "3dpath") _keyword = "path3d";
+        return _keyword;
+    }
+});
+
+
+/**
+ * The short keyword of the attribute.
+ * @name oAttribute#shortKeyword
+ * @type {string}
+ */
+Object.defineProperty(oAttribute.prototype, 'shortKeyword', {
+    get : function(){
+        // formatting the keyword for our purposes
+        // hard coding a fix for 3DPath attribute name which starts with a number
+        var _keyword = this._shortKeyword.toLowerCase();
+        if (_keyword == "3dpath") _keyword = "path3d";
+        return _keyword;
+    }
+});
+
+
 /**
  * The type of the attribute.
  * @name oAttribute#type
@@ -138,8 +181,7 @@ Object.defineProperty(oAttribute.prototype, 'type', {
     get : function(){
         return this.attributeObject.typeName();
     }
-})
- 
+});
  
 /**
  * The column attached to the attribute.
@@ -148,19 +190,24 @@ Object.defineProperty(oAttribute.prototype, 'type', {
  */
 Object.defineProperty(oAttribute.prototype, 'column', {
     get : function(){
-        var _column = node.linkedColumn (this.oNodeObject.fullPath, this.keyword)
-        return (_column!="")?new oColumn( this.$, _column, this ):null
+        var _column = node.linkedColumn ( this.node.fullPath, this._keyword );
+        if( _column ){
+          return this.node.scene.$column( _column, this );
+        }else{
+          return null;
+        }
     },
  
     set : function(columnObject){
         // unlink if provided with null value or empty string
         if (columnObject == "" || columnObject == null){
-            node.unLinkAttr(this.oNodeObject.fullPath, this.keyword)
+            node.unlinkAttr(this.node.fullPath, this._keyword);
         }else{
-            node.linkAttr(this.oNodeObject.fullPath, this.keyword, columnObject.uniqueName)
+            node.linkAttr(this.node.fullPath, this._keyword, columnObject.uniqueName);
+            // TODO: transfer current value of attribute to a first key on the column
         }
     }
-})
+});
  
  
  /**
@@ -205,19 +252,79 @@ Object.defineProperty(oAttribute.prototype, 'keyframes', {
 /**
  * WIP.
  * @name oAttribute#useSeparate
- * @type {oFrame[]}
+ * @type {bool}
  */
 //CF Note: Not sure if this should be a general attribute, or a subattribute.
 Object.defineProperty(oAttribute.prototype, "useSeparate", {
     get : function(){
-       
+        // TODO
+        throw new Error("not yet implemented");
     },
    
     set : function( _value ){
         // TODO: when swapping from one to the other, copy key values and link new columns if missing
+        throw new Error("not yet implemented");
     }
-})
+});
 
+
+/**
+ * WIP.
+ * @name oAttribute#defaultValue
+ * @type {bool}
+ */
+Object.defineProperty(oAttribute.prototype, "defaultValue", {
+    get : function(){
+        // TODO: we could use this to reset bones/deformers to their rest states
+        var _keyword = this._keyword;
+       
+        switch (_keyword){
+            case "OFFSET.X" :
+            case "OFFSET.Y" :
+            case "OFFSET.Z" :
+           
+            case "POSITION.X" :
+            case "POSITION.Y" :
+            case "POSITION.Z" :
+           
+            case "PIVOT.X":
+            case "PIVOT.Y":
+            case "PIVOT.Z":
+           
+            case "ROTATION.ANGLEX":
+            case "ROTATION.ANGLEY":
+            case "ROTATION.ANGLEZ":
+           
+            case "ANGLE":
+            case "SKEW":
+           
+            case "SPLINE_OFFSET.X":
+            case "SPLINE_OFFSET.Y":
+            case "SPLINE_OFFSET.Z":
+           
+                return 0;
+               
+            case "SCALE.X" :
+            case "SCALE.Y" :
+            case "SCALE.Z" :
+                return 1;
+               
+            case "OPACITY" :
+                return 100;
+                
+            case "COLOR" :
+                return new oColorValue();
+               
+            case "OFFSET.3DPATH":
+                // pseudo oPathPoint
+                // CFNote: is this supposed to be an object?
+                return "{x:0, y:0, z:0}";
+               
+            default:
+                return null; // for attributes that don't have a default value, we return null
+        }
+    }
+});
  
 // oAttribute Class methods
 
@@ -238,66 +345,74 @@ oAttribute.prototype.getKeyFrames = function(){
  * @param   {string}     value                 The value to set on the attribute.
  * @param   {int}        [frame]               The frame at which to set the value, if not set, assumes 1
  */
-oAttribute.prototype.setValue = function( value, frame ){
-
+oAttribute.prototype.setValue = function (value, frame) {
     if (typeof frame === 'undefined') var frame = 1;
-    //MessageLog.trace('setting frame :'+frame+' to value: '+value+' of attribute: '+this.keyword)
- 
+    
     var _attr = this.attributeObject;
+    var _column = this.column;
     var _type = this.type;
- 
-    if (frame != 1 && this.column == null){
+    var _animate = false;
+
+    if (frame != 1 && _column == null){
         // generate a new column to be able to animate
         var _doc = new oScene();
-        var _column = _doc.addColumn()
+        _column = _doc.addColumn()
         this.column = _column;
+        _animate = true;
     }
     
-    // TODO deal with subattributes ? for ex pass a oPoint object to an attribute with x, y, z properties?
-    
-    
-    
-    switch(_type){
+    switch (_type){
         // TODO: sanitize input
+        case "COLOR" :
+            value = new oColorValue(value)
+            value = ColorRGBA(value.r, value.g, value.b, value.a)
+            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+            break;
+           
         case "GENERIC_ENUM" :
-            node.setTextAttr(this.oNodeObject.fullPath, this.keyword, frame, value)
+            node.setTextAttr(this.node.fullPath, this._keyword, frame, value)
             break;
-            
+           
         case "PATH_3D" :
-            // TODO include velocity
-            _attr.attributeObject.setValueAt(value, frame)
-            break;
-            
-        case "POSITION_3D" :
-            // BREAK APART THE SUBATTRS
-            
-            
-            
-            try{
-              if( value._type && value._type == "point" ){
-                //Fetch the XYZ, set them directly.
-                this["x"].setValue( value.x, frame );
-                this["y"].setValue( value.y, frame );            
-                this["z"].setValue( value.z, frame );
-                
-                break;
-              }
-            }catch( err ){
-              throw "Unable to set position3d : " + err.message + "(Line "+ err.lineNumber +") in " + err.fileName;
+            var _frame = new oFrame(frame, this.column, this.column.subColumns);
+            if (_frame.isKeyFrame){
+                var _point = new oPathPoint (this.column, _frame);
+                _point.set(value);
+            }else{
+                // TODO: create keyframe?
+                this.parentAttribute.attributeObject.setValueAt(value, frame);
             }
-            break; 
-            
-        case "ELEMENT" :
-            column.setEntry( this.column.uniqueName, 1, frame, value );
             break;
-          
-        default : 
+            
+        case 'POSITION_2D':
+            value = Point2d(value.x, value.y)
+            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+            break;
+            
+        case 'POSITION_2D':
+            value = Point2d(value.x, value.y)
+            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+            break;
+
+        case 'POSITION_3D':
+            value = Point3d(value.x, value.y, value.z)
+            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+            break;
+           
+        case "ELEMENT" :
+            _column = this.column;
+            column.setEntry(_column.uniqueName, 1, frame, value+"");
+            break;
+           
+        default :
+            // MessageLog.trace(this.keyword+" "+(typeof value))
             try{
-              _attr.setValueAt(value, frame);
+                _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
             }catch(err){
-              _attr.setValue( value, frame );
+                throw new Error("Couldn't set attribute "+this.keyword+" to value "+value+". Incompatible type.")
             }
     }
+ 
 }
  
 
@@ -308,14 +423,20 @@ oAttribute.prototype.setValue = function( value, frame ){
  *  
  * @return {object}      The value of the attribute in the native format of that attribute (contextual to the attribute).
  */
-oAttribute.prototype.getValue = function(frame){
+oAttribute.prototype.getValue = function (frame) {
+    // MessageLog.trace('getting value of frame :'+frame+' of attribute: '+this._keyword)
+    
     if (typeof frame === 'undefined') var frame = 1;
  
     var _attr = this.attributeObject;
     var _type = this.type;
     var _value;
-           
-    //MessageLog.trace("getting "+this.keyword+" "+_type+" "+frame)
+    var _column = this.column
+
+    //MessageBox.information("getting "+this.keyword)
+    //MessageBox.information(_type)
+    
+    // handling conversion of all return types into our own types
     switch (_type){
         case 'BOOL':
             _value = _attr.boolValueAt(frame)
@@ -335,36 +456,59 @@ oAttribute.prototype.getValue = function(frame){
             break;
            
         case 'COLOR':
-            _value = _attr.colorValueAt(frame)
+            _value = new oColorValue(_attr.colorValueAt(frame))
             break;
-
+ 
         case 'POSITION_2D':
             _value = _attr.pos2dValueAt(frame)
+            _value = new oPoint(_value.x, _value.y)
             break;
            
         case 'POSITION_3D':
             _value = _attr.pos3dValueAt(frame)
+            _value = new oPoint(_value.x, _value.y, _value.z)
             break;
             
-        case 'PATH_3D':
-            _attr = this.parentAttribute.attributeObject
+        case 'SCALE_3D':
             _value = _attr.pos3dValueAt(frame)
-            // get the velocity in any other way than getting the subcolumn?
-            //_value = new oPoint (_value.x, _value.y, _value.z)
+            _value = new oPoint(_value.x, _value.y, _value.z)
+            break;
+           
+        case 'PATH_3D':
+            _attr = this.parentAttribute.attributeObject;
+              var _frame = new oFrame(frame, _column, _column.subColumns);
+            if(_frame.isKeyFrame){
+                _value = new oPathPoint(_column, _frame);
+            } else{
+                _value = _attr.pos3dValueAt(frame);
+            }
             break;
             
+        case 'DRAWING':
+            // override with returning an oElement object
+            value = _column.element;
+            break;
+           
         case 'ELEMENT':
             // an element always has a column, so we'll fetch it from there
-            _value = column.getEntry(this.column.uniqueName, 1, frame)
-            //MessageLog.trace(_value)
+            _value = column.getEntry(_column.uniqueName, 1, frame)
+            // Convert to an instance of oDrawing
+            _value = _column.element.getDrawingByName(_value)
             break;
-        
+       
         // TODO: How does QUATERNION_PATH work? subcolumns I imagine
         // TODO: How to get types SCALE_3D, ROTATION_3D, DRAWING, GENERIC_ENUM? -> maybe we don't need to, they don't have intrinsic values
            
         default:
             // enums, etc
             _value = _attr.textValueAt(frame)
+           
+            // in case of subattributes, create a fake string that can have properties
+            if (_attr.hasSubAttributes()){
+                _value = { value:_value };
+                _value.toString = function(){ return _value }
+            }
+            
     }
        
     return _value;

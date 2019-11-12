@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oFile</title>
+    <title>Class: oDrawingColumn</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -1307,7 +1307,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="oFile.html">Class: oFile</h1>
+        <h1 class="page-title" data-filename="oDrawingColumn.html">Class: oDrawingColumn</h1>
         
 
 
@@ -1316,10 +1316,10 @@
     
 <header>
     <h2>
-    oFile
+    oDrawingColumn
     </h2>
     
-        <div class="class-description">oFile Base Class</div>
+        <div class="class-description">oDrawingColumn Class</div>
     
 </header>  
 
@@ -1331,14 +1331,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oFile">
+        <h4 class="name" id="oDrawingColumn">
             
-            new oFile<span class="signature">(path)</span>
+            new oDrawingColumn<span class="signature">(uniqueName, oAttributeObject)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony_misc.js, line 618
+            openHarmony_column.js, line 281
         </div>
         
     </div>
@@ -1349,7 +1349,7 @@
     
     
     <div class="description">
-        The oFile helper class -- providing utilities for file manipulation and access.
+        The extension class for drawing columns.
     </div>
     
 
@@ -1380,7 +1380,7 @@
 	
         <tr>
             
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>uniqueName</code></td>
             
             
             <td class="type">
@@ -1396,7 +1396,30 @@
             
             <td class="description last">
                 
-                The path to the file.</td>
+                The unique name of the column.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>oAttributeObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="oAttribute.html">oAttribute</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The oAttribute thats connected to the column.</td>
         </tr>
 	
 	
@@ -1434,7 +1457,7 @@
 	
         <tr>
             
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>uniqueName</code></td>
             
             
             <td class="type">
@@ -1450,7 +1473,30 @@
             
             
             
-            <td class="description last">The path to the file.</td>
+            <td class="description last">The unique name of the column.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>attributeObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="oAttribute.html">oAttribute</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The attribute object that the column is attached to.</td>
         </tr>
 	
 	
@@ -1498,6 +1544,12 @@
     </div>
     
     
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li><a href="oColumn.html">oColumn</a></li>
+        </ul>
+    
     
     
     
@@ -1514,7 +1566,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="exists">exists<span class="type-signature type bool">bool</span> </h4>
+        <h4 class="name" id="element">element<span class="type-signature type oelement"><a href="oElement.html">oElement</a></span> </h4>
     </div>
     
     
@@ -1522,7 +1574,7 @@
 <dd>
     
     <div class="description">
-        Whether the file exists already.
+        Provides the drawing element attached to the column.
     </div>
     
     
@@ -1559,7 +1611,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="extension">extension<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="frames">frames<span class="type-signature type array.<oframe>">Array.&lt;<a href="oFrame.html">oFrame</a>></span> </h4>
     </div>
     
     
@@ -1567,7 +1619,7 @@
 <dd>
     
     <div class="description">
-        The extension of the file.
+        An array of the oFrame objects provided by the column.
     </div>
     
     
@@ -1604,7 +1656,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="folder">folder<span class="type-signature type ofolder"><a href="oFolder.html">oFolder</a></span> </h4>
+        <h4 class="name" id="keyframes">keyframes<span class="type-signature type array.<oframe>">Array.&lt;<a href="oFrame.html">oFrame</a>></span> </h4>
     </div>
     
     
@@ -1612,7 +1664,7 @@
 <dd>
     
     <div class="description">
-        The folder containing the file.
+        An array of the keyframes provided by the column.
     </div>
     
     
@@ -1657,7 +1709,7 @@
 <dd>
     
     <div class="description">
-        The name of the file.
+        The name of the column.
     </div>
     
     
@@ -1694,7 +1746,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="path">path<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="subColumns">subColumns<span class="type-signature type object">object</span> </h4>
     </div>
     
     
@@ -1702,7 +1754,52 @@
 <dd>
     
     <div class="description">
-        The path of the file.
+        Provides the available subcolumns, based on the type of the column.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="type">type<span class="type-signature type string">string</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The type of the column.
     </div>
     
     
@@ -1744,15 +1841,17 @@
         <dl>
             
 <dt>
-    <div class="nameContainer">
-        <h4 class="name" id="copy">
+    <div class="nameContainer inherited">
+        <h4 class="name" id="duplicate">
             
-            copy<span class="signature">(<span class="optional">folder</span>, <span class="optional">copyName</span>, <span class="optional">overwrite</span>)</span>
+                <span class="inherited"><a href="oColumn.html#duplicate">inherited</a></span>
+            
+            duplicate<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony_misc.js, line 760
+            openHarmony_column.js, line 237
         </div>
         
     </div>
@@ -1763,7 +1862,78 @@
     
     
     <div class="description">
-        Copies the file to the folder.
+        Not yet implemented.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="extendExposures">
+            
+            extendExposures<span class="signature">(exposures, amount, replace)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony_column.js, line 316
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Extends the exposure of the drawing's keyframes given the provided arguments.
     </div>
     
 
@@ -1794,13 +1964,13 @@
 	
         <tr>
             
-                <td class="name"><code>folder</code></td>
+                <td class="name"><code>exposures</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Array.&lt;<a href="oFrame.html">oFrame</a>></span>
 
 
             
@@ -1810,27 +1980,20 @@
             
             <td class="description last">
                 
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Content to write to the file.</td>
+                The exposures to extend. If UNDEFINED, extends all keyframes.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>copyName</code></td>
+                <td class="name"><code>amount</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">int</span>
 
 
             
@@ -1840,21 +2003,14 @@
             
             <td class="description last">
                 
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Name of the copied file.</td>
+                The amount to extend.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>overwrite</code></td>
+                <td class="name"><code>replace</code></td>
             
             
             <td class="type">
@@ -1870,14 +2026,7 @@
             
             <td class="description last">
                 
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to overwrite the file.</td>
+                Setting this to false will insert frames as opposed to overwrite existing ones.</td>
         </tr>
 	
 	
@@ -1927,15 +2076,17 @@
         
             
 <dt>
-    <div class="nameContainer">
-        <h4 class="name" id="move">
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getKeyFrames">
             
-            move<span class="signature">(folder, <span class="optional">overwrite</span>)</span>
+                <span class="inherited"><a href="oColumn.html#getKeyFrames">inherited</a></span>
+            
+            getKeyFrames<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;<a href="oFrame.html">oFrame</a>>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony_misc.js, line 729
+            openHarmony_column.js, line 247
         </div>
         
     </div>
@@ -1946,300 +2097,7 @@
     
     
     <div class="description">
-        Moves the file to the folder.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>folder</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                Content to write to the file.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>overwrite</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to overwrite the file.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="read">
-            
-            read<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony_misc.js, line 685
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Reads the content of the file.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="remove">
-            
-            remove<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony_misc.js, line 789
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Removes the file.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="toString">
-            
-            toString<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony_misc.js, line 798
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Used in converting the file to a string value, provides the string-path.
+        Filters out only the keyframes from the frames array.
     </div>
     
 
@@ -2302,11 +2160,11 @@
             
             <td class="type">
             
-                        string
+                        Array.&lt;<a href="oFrame.html">oFrame</a>>
                         
                     
             </td>
-            <td class="description last">The file path's as a string.</td>
+            <td class="description last">Provides the array of frames from the column.</td>
         </tr>
     
     </tbody>
@@ -2320,15 +2178,17 @@
         
             
 <dt>
-    <div class="nameContainer">
-        <h4 class="name" id="write">
+    <div class="nameContainer inherited">
+        <h4 class="name" id="removeDuplicateKeys">
             
-            write<span class="signature">(content, append)</span>
+                <span class="inherited"><a href="oColumn.html#removeDuplicateKeys">inherited</a></span>
+            
+            removeDuplicateKeys<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony_misc.js, line 705
+            openHarmony_column.js, line 198
         </div>
         
     </div>
@@ -2339,7 +2199,7 @@
     
     
     <div class="description">
-        Writes to the file.
+        Removes concurrent/duplicate keys from drawing layers.
     </div>
     
 
@@ -2347,74 +2207,6 @@
     
     
     
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>content</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Content to write to the file.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>append</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Whether to append to the file.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     

@@ -94,8 +94,10 @@ $.directoryGet = function( file_path ){
 $.directory = $.directoryGet( __file__ );
 
 // The included files should be relative to the path of THIS file!
-include( $.directory + "/openHarmony_misc.js");        
-include( $.directory + "/openHarmony_timeline.js");    
+include( $.directory + "/openHarmony_misc.js");   
+include( $.directory + "/openHarmony_path.js");   
+include( $.directory + "/openHarmony_list.js");       
+include( $.directory + "/openHarmony_timeline.js");  
 include( $.directory + "/openHarmony_attribute.js");   
 include( $.directory + "/openHarmony_frame.js");       
 include( $.directory + "/openHarmony_element.js");     
