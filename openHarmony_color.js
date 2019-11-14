@@ -281,7 +281,7 @@ Object.defineProperty(oColor.prototype, 'selected', {
  * @name oColor#value
  * @type {object}
  */
-bject.defineProperty(oColor.prototype, 'value', {
+Object.defineProperty(oColor.prototype, 'value', {
     get : function(){
         var _color = this.colorObject;
         switch(this.type){
