@@ -50,7 +50,7 @@ function openHarmony_install_update(){
       var fname = (x+1)+": "+apic[x].name.toUpperCase();
       if( fname == res ){
         
-        fnd = apic[x]["commit"]["url"];
+        fnd = apic[x]["commit"]["sha"];
         
         branch_data = apic[x].name.toUpperCase();        
         branch_data = branch_data + "\n" + fnd;
@@ -64,25 +64,38 @@ function openHarmony_install_update(){
       return;
     }
     
-    var apic = new api_call( fnd );
+    var contents_url = "https://api.github.com/repos/cfourney/OpenHarmony/contents?ref="+fnd;
+    
+    var apic = new api_call( contents_url );
     if( !apic ){
-      MessageBox.information( "API Error - Failed to get available branches." );
+      MessageBox.information( "API Error - Failed to get available branch content." );
       return;
     }
     
-    if( apic["files"] && apic["files"].length ){
+    if( apic && apic.length ){
       //Download the files.
       var progress = new QProgressDialog();
       progress.setLabelText( "Downloading files..." );
       progress.show();
-      progress.setRange( 0, apic["files"].length );
+      progress.setRange( 0, 100 );
       
-      for( var n=0;n<apic["files"].length;n++ ){
+      var file_download_listing = recurse_files( apic, [] );
+      progress.setRange( 0, file_download_listing.length );
+
+      for( var n=0;n<file_download_listing.length;n++ ){
         progress.setValue( n );
         QCoreApplication.processEvents();
         
-        var raw_url = apic["files"][n]["raw_url"];
-        var local_path = library_base+'/'+apic["files"][n]["filename"];
+        var raw_url = file_download_listing[n][0];
+        var path    = file_download_listing[n][1];
+        
+        var local_path = library_base+'/'+path;
+        
+        if( path.slice( 0, path.indexOf("/") ) == "tools" ){
+          //Dont include the tools directory, these will be installed as needed.
+          continue;
+        }
+        
         var local_dir  = local_path.slice( 0, local_path.lastIndexOf("/") );
         
         var libdir = new Dir(local_dir);
@@ -127,7 +140,27 @@ function openHarmony_install_update(){
   }
 }
 
-function api_call( address, callback ){
+function recurse_files( contents, arr_files ){
+  for( var n=0;n<contents.length;n++ ){
+    var tfl = contents[n];
+    
+    if( contents[n].type == "file" ){
+      arr_files.push( [tfl["download_url"], tfl["path"]] );
+      
+    }else if( contents[n].type == "dir" ){
+      //Get more contents.
+      QCoreApplication.processEvents();
+      var apic = new api_call( tfl["url"] );
+      if( apic ){
+        arr_files = recurse_files( apic, arr_files );
+      }
+    }
+  }
+  
+  return arr_files;
+}
+
+function api_call( address ){
   try{
   
     var avail_paths = [ 
