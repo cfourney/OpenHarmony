@@ -3,7 +3,7 @@
 //
 //
 //
-//                           openHarmony Library v0.13
+//                           openHarmony Library v0.14
 //
 //
 //         Developped by Mathieu Chaptel, ...
@@ -315,7 +315,7 @@ oScene.prototype.addNode = function(type, name, group, nodePosition){
     while (_node.exists){
         _count++;
         name = _name+"_"+_count;
-        _nodePath = group+"/"+name; 
+        _nodePath = group+"/"+name;
         _node = new oNode (_nodePath);
     }
     
@@ -453,6 +453,43 @@ oScene.prototype.addGroup = function(name, includeNodes, addComposite, addPeg, g
     return _group;
 }
  
+// NEW
+// addBackdrop(string groupPath, nodes, x, y, width, height, title, body, color)
+
+oScene.prototype.addBackdrop = function(groupPath, nodes, x, y, width, height, title, body, color){
+    if (typeof color === 'undefined') var color = new oColorValue("#323232ff");
+    if (typeof body === 'undefined') var body = "";
+	if (typeof groupPath === 'undefined') var groupPath = "Top";
+	
+	var _index = Backdrop.backdrops(groupPath).length;
+	
+    if (typeof title === 'undefined') var title = "Backdrop"+(_index?"_"+_index:"")
+    if (typeof nodes === 'undefined') var nodes = [];
+
+    if (nodes.length != 0) {
+	    var _nodeBox = new oBox();
+        _nodeBox.includeNodes(nodes)
+    }else{
+		_nodeBox = new oBox(-50, -50, 50, 50)
+	}
+	
+    if (typeof x === 'undefined') var x = _nodeBox.left-15;
+    if (typeof y === 'undefined') var y = _nodeBox.top-15;
+    if (typeof width === 'undefined') var width = _nodeBox.width+30;
+    if (typeof height === 'undefined') var height = _nodeBox.height+30;
+
+    var _backdrop = {
+		"position"    : {"x":x, "y":y, "w":width, "h":height},
+		"title"       : {"text":title, "color":4278190080, "size":12, "font":"Arial"},
+		"description" : {"text":body, "color":4278190080, "size":12, "font":"Arial"},
+		"color"       : color.toInt()
+    }
+		
+    Backdrop.addBackdrop(groupPath, _backdrop)
+	return new oBackdrop(groupPath, _index, _backdrop)
+	
+};
+
  
 // oTimeline getTimeline(display)
  
@@ -501,7 +538,7 @@ oScene.prototype.getSelectedPalette = function(){
 }
  
  
-// NEW
+
 // oPalette importPalette(filename, name, paletteStorage)
  
 oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement){
@@ -555,7 +592,7 @@ oScene.prototype.importPalette = function(filename, name, index, paletteStorage,
 }
  
  
-// NEW
+
 // {[oNodes]} importPSD(filename, group, nodePosition, separateLayers, addPeg, addComposite, alignment)
  
 oScene.prototype.importPSD = function(filename, group, nodePosition, separateLayers, addPeg, addComposite, alignment){
@@ -646,7 +683,7 @@ oScene.prototype.importPSD = function(filename, group, nodePosition, separateLay
 }
  
  
-// NEW
+
 // {nodes[]} updatePSD(string filename, bool separateLayers)
  
 oScene.prototype.updatePSD = function(filename, separateLayers){
@@ -783,7 +820,7 @@ oScene.prototype.updatePSD = function(filename, separateLayers){
 }
  
  
-// NEW
+
 // {oNode} importQT (filename, group, importSound, nodePosition, extendScene, alignment)
  
 oScene.prototype.importQT = function(filename, group, importSound, nodePosition, extendScene, alignment){
@@ -1210,7 +1247,7 @@ Object.defineProperty(oNode.prototype, 'locked', {
 })
  
  
-  
+ 
 // bool exists
  
 Object.defineProperty(oNode.prototype, 'exists', {
@@ -1627,7 +1664,7 @@ oNode.prototype.$attribute = function(keyword){
 }
 
 
-// NEW
+
 // toString()
 
 oNode.prototype.toString = function(){
@@ -1961,7 +1998,7 @@ Object.defineProperty(oColumn.prototype, 'frames', {
 })
  
 
-// NEW
+
 // string easeType
 
 Object.defineProperty(oColumn.prototype, 'easeType', {
@@ -1996,7 +2033,7 @@ Object.defineProperty(oColumn.prototype, 'subColumns', {
         return null;
     }
 })
-  
+ 
 
 // oColumn Class methods
  
@@ -2081,7 +2118,7 @@ oColumn.prototype.getKeyFrames = function(){
 }
 
 
-// NEW
+
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -2121,7 +2158,7 @@ function oDrawingColumn(uniqueName, oAttributeObject) {
 oDrawingColumn.prototype = Object.create(oColumn.prototype);
 
 
-// NEW
+
 // oElement element
 
 Object.defineProperty(oDrawingColumn.prototype, 'element', {
@@ -2138,7 +2175,7 @@ Object.defineProperty(oDrawingColumn.prototype, 'element', {
 
 // oDrawingColumn Class methods
 
-// NEW
+
 // extendExposures( {[oFrame]} exposures)
    
 oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace){
@@ -2233,7 +2270,7 @@ Object.defineProperty(oElement.prototype, 'drawings', {
 })
  
  
-// NEW
+
 // string format
  
 Object.defineProperty(oElement.prototype, 'format', {
@@ -2245,7 +2282,7 @@ Object.defineProperty(oElement.prototype, 'format', {
 })
 
 
-// NEW
+
 // oElement Class methods
  
 oElement.prototype.addDrawing = function(atFrame, name, filename){
@@ -2338,7 +2375,7 @@ Object.defineProperty(oDrawing.prototype, 'path', {
  
 // oDrawing Class methods
 
-// NEW
+
 // string toString()
 
 oDrawing.prototype.toString = function(){
@@ -2380,7 +2417,7 @@ oDrawing.prototype.toString = function(){
  
 // oAttribute constructor
  
-// NEW 
+
 function oAttribute(oNodeObject, attributeObject, parentAttribute){
     this.node = oNodeObject;
     this.attributeObject = attributeObject;
@@ -2421,7 +2458,7 @@ Object.defineProperty(oAttribute.prototype, 'type', {
 })
  
  
-// NEW
+
 // string keyword
 
 Object.defineProperty(oAttribute.prototype, 'keyword', {
@@ -2435,7 +2472,7 @@ Object.defineProperty(oAttribute.prototype, 'keyword', {
 })
 
 
-// NEW
+
 // string shortKeyword
 
 Object.defineProperty(oAttribute.prototype, 'shortKeyword', {
@@ -2449,7 +2486,7 @@ Object.defineProperty(oAttribute.prototype, 'shortKeyword', {
 })
 
  
-// NEW
+
 // oColumn column
  
 Object.defineProperty(oAttribute.prototype, 'column', {
@@ -2569,7 +2606,7 @@ oAttribute.prototype.getKeyFrames = function(){
 }
  
  
-// NEW
+
 // void setValue(value, double frame)
  
 oAttribute.prototype.setValue = function (value, frame) {
@@ -2647,7 +2684,7 @@ oAttribute.prototype.setValue = function (value, frame) {
 }
  
  
-// NEW
+
 // various getValue(frame)
  
 oAttribute.prototype.getValue = function (frame) {
@@ -2777,7 +2814,7 @@ oAttribute.prototype.getValue = function (frame) {
 // easeType
 // string continuity
 //
-// Methods 
+// Methods
 //
 // bool extend(int duration, bool replace)
 
@@ -2898,7 +2935,7 @@ Object.defineProperty(oFrame.prototype, 'marker', {
 })
 
 
-// NEW
+
 // int keyframeIndex
 
 Object.defineProperty(oFrame.prototype, 'keyframeIndex', {
@@ -2910,7 +2947,7 @@ Object.defineProperty(oFrame.prototype, 'keyframeIndex', {
 })
 
 
-// NEW 
+
 // string continuity
 
 Object.defineProperty(oFrame.prototype, 'continuity', {
@@ -2933,7 +2970,7 @@ Object.defineProperty(oFrame.prototype, 'continuity', {
 })
 
 
-// NEW
+
 // easeIn
 
 Object.defineProperty(oFrame.prototype, 'easeIn', {
@@ -2984,7 +3021,7 @@ Object.defineProperty(oFrame.prototype, 'easeIn', {
 })
 
 
-// NEW
+
 // easeOut
 
 Object.defineProperty(oFrame.prototype, 'easeOut', {
@@ -3034,7 +3071,7 @@ Object.defineProperty(oFrame.prototype, 'easeOut', {
 
 
  
-// NEW 
+
 // bool extend(int duration, bool replace)
  
 oFrame.prototype.extend = function(duration, replace){
@@ -3163,6 +3200,258 @@ Object.defineProperty(oNodeLink.prototype, 'path', {
 // oNodeLink Class methods
  
  
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//          oBackdrop class         //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+ 
+ 
+// Constructor
+//
+// oBackdrop(groupPath, index)
+//
+// Properties
+//
+// string id
+// string name
+// string path
+// bool selected
+// {[oColor]} colors
+//
+// Methods
+//
+// addColor (name, type, colorData)
+ 
+ 
+// oBackdrop constructor
+ 
+function oBackdrop(groupPath, index, backdropObject){
+    this.group = groupPath;
+    this.index = index;
+    if (typeof backdropObject === 'undefined') var backdropObject = Backdrop.backdrops(this.group)[index];
+	this.backdropObject = backdropObject;
+}
+
+
+// oBackdrop Object Properties
+
+// string title
+
+Object.defineProperty(oBackdrop.prototype, 'title', {
+    get : function(){
+         var _title = this.backdropObject.title.text;
+         return _title;
+    },
+ 
+    set : function(newTitle){
+        var _backdrops = Backdrop.backdrops(this.group);
+        _backdrops[this.index].title.text = newTitle;
+
+        Backdrop.setBackdrops(this.group, _backdrops);
+    }
+})
+
+
+
+// string body
+
+Object.defineProperty(oBackdrop.prototype, 'body', {
+    get : function(){
+         var _title = this.backdropObject.description.text;
+         return _title;
+    },
+ 
+    set : function(newBody){
+        var _backdrops = Backdrop.backdrops(this.group);
+        _backdrops[this.index].description.text = newBody;
+
+        Backdrop.setBackdrops(this.group, _backdrops);
+    }
+})
+
+
+
+// string titleFont
+
+Object.defineProperty(oBackdrop.prototype, 'titleFont', {
+    get : function(){
+         var _font = {family : this.backdropObject.title.font,
+                      size : this.backdropObject.title.size,
+                      color : new oColorValue().parseColorFromInt(this.backdropObject.title.color)}
+         return _font;
+    },
+ 
+    set : function(newFont){
+        var _backdrops = Backdrop.backdrops(this.group);
+        _backdrops[this.index].title.font = newFont.family;
+        _backdrops[this.index].title.size = newFont.size;
+        _backdrops[this.index].title.color = newFont.color.toInt();
+
+        Backdrop.setBackdrops(this.group, _backdrops);
+    }
+})
+
+
+// string bodyFont
+
+Object.defineProperty(oBackdrop.prototype, 'bodyFont', {
+    get : function(){
+         var _font = {family : this.backdropObject.description.font,
+                      size : this.backdropObject.description.size,
+                      color : new oColorValue().parseColorFromInt(this.backdropObject.description.color)}
+         return _font;
+    },
+ 
+    set : function(newFont){
+        var _backdrops = Backdrop.backdrops(this.group);
+        _backdrops[this.index].title.font = newFont.family;
+        _backdrops[this.index].title.size = newFont.size;
+        _backdrops[this.index].title.color = newFont.color.toInt();
+
+        Backdrop.setBackdrops(this.group, _backdrops);
+    }
+})
+
+
+// int x
+
+Object.defineProperty(oBackdrop.prototype, 'x', {
+    get : function(){
+         var _x = this.backdropObject.position.x;
+         return _x;
+    },
+ 
+    set : function(newX){
+        var _backdrops = Backdrop.backdrops(this.group);
+        _backdrops[this.index].position.x = newX;
+
+        Backdrop.setBackdrops(this.group, _backdrops);
+    }
+})
+
+
+// int y
+
+Object.defineProperty(oBackdrop.prototype, 'y', {
+    get : function(){
+         var _y = this.backdropObject.position.y;
+         return _y;
+    },
+ 
+    set : function(newY){
+        var _backdrops = Backdrop.backdrops(this.group);
+        _backdrops[this.index].position.y = newY;
+
+        Backdrop.setBackdrops(this.group, _backdrops);
+    }
+})
+
+
+// int width
+
+Object.defineProperty(oBackdrop.prototype, 'width', {
+    get : function(){
+         var _width = this.backdropObject.position.w;
+         return _width;
+    },
+ 
+    set : function(newWidth){
+        var _backdrops = Backdrop.backdrops(this.group);
+        _backdrops[this.index].position.w = newWidth;
+
+        Backdrop.setBackdrops(this.group, _backdrops);
+    }
+})
+
+
+
+// int height
+
+Object.defineProperty(oBackdrop.prototype, 'height', {
+    get : function(){
+         var _height = this.backdropObject.position.h;
+         return _height;
+    },
+ 
+    set : function(newHeight){
+        var _backdrops = Backdrop.backdrops(this.group);
+        _backdrops[this.index].position.h = newHeight;
+
+        Backdrop.setBackdrops(this.group, _backdrops);
+    }
+})
+
+
+// oPoint position
+
+Object.defineProperty(oBackdrop.prototype, 'position', {
+    get : function(){
+         var _position = new oPoint(this.x, this.y, this.index)
+         return _position;
+    },
+ 
+    set : function(newPos){
+        var _backdrops = Backdrop.backdrops(this.group);
+        _backdrops[this.index].position.x = newPos.x;
+        _backdrops[this.index].position.y = newPos.y;
+        Backdrop.setBackdrops(this.group, _backdrops);
+    }
+})
+
+
+
+// oBox bounds
+
+Object.defineProperty(oBackdrop.prototype, 'bounds', {
+    get : function(){
+         var _box = new oBox(this.x, this.y, this.width+this.x, this.heigth+this.y)
+         return _box;
+    },
+ 
+    set : function(newBounds){
+        var _backdrops = Backdrop.backdrops(this.group);
+        _backdrops[this.index].position.x = newBounds.top;
+        _backdrops[this.index].position.y = newBounds.left;
+        _backdrops[this.index].position.w = newBounds.width;
+        _backdrops[this.index].position.h = newBounds.height;
+
+        Backdrop.setBackdrops(this.group, _backdrops);
+    }
+})
+
+
+
+// oColorValue color
+
+Object.defineProperty(oBackdrop.prototype, 'color', {
+    get : function(){
+         var _color = this.backdropObject.color;
+         // TODO: get the rgba values from the int
+         return _color;
+    },
+ 
+    set : function(newOColorValue){
+		MessageLog.trace(typeof newOColorValue)
+		if (newOColorValue instanceof oColorValue){
+			var _color = newOColorValue;
+		}else{
+			var _color = new oColorValue(newOColorValue);
+		}
+
+        var _backdrops = Backdrop.backdrops(this.group);
+        _backdrops[this.index].color = _color.toInt()
+
+        Backdrop.setBackdrops(this.group, _backdrops);
+    }
+})
+
+
  
 //////////////////////////////////////
 //////////////////////////////////////
@@ -3233,7 +3522,7 @@ Object.defineProperty(oPalette.prototype, 'name', {
 })
 
 
-// NEW
+
 // String path
  
 Object.defineProperty(oPalette.prototype, 'path', {
@@ -3249,7 +3538,7 @@ Object.defineProperty(oPalette.prototype, 'path', {
 })
  
  
-// NEW
+
 // int index
  
 Object.defineProperty(oPalette.prototype, 'index', {
@@ -3563,7 +3852,7 @@ oColor.prototype.remove = function (){
  
  
  
-// NEW
+
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -3594,12 +3883,19 @@ oColor.prototype.remove = function (){
 
 // Constructor
 
+// NEW
+
 function oColorValue(colorValue){
     if (typeof colorValue === 'undefined') var colorValue = "#000000ff";
-    MessageLog.trace("init oColorValue object"+JSON.stringify(colorValue)+" "+(typeof colorValue === 'string' ))
+    //MessageLog.trace("init oColorValue object"+JSON.stringify(colorValue)+" "+(typeof colorValue === 'string' ))
     if (typeof colorValue === 'string'){
         colorValue = this.parseColorString(colorValue);
-    }else{    
+    }else{
+		if (typeof colorValue.r === 'undefined') colorValue.r = 0;
+		if (typeof colorValue.g === 'undefined') colorValue.g = 0;
+		if (typeof colorValue.b === 'undefined') colorValue.b = 0;
+		if (typeof colorValue.a === 'undefined') colorValue.a = 255;
+		
         this.r = colorValue.r;
         this.g = colorValue.g;
         this.b = colorValue.b;
@@ -3619,13 +3915,30 @@ oColorValue.prototype.toString = function (){
  
     return _hex;
 }
- 
+
+
+// NEW
+// int toInt()
+
+oColorValue.prototype.toInt = function (){
+     return ((this.a & 0xff) << 24) | ((this.r & 0xff) << 16) | ((this.g & 0xff) << 8) | (this.b & 0xff);
+}
+
+// NEW
+// parseColorFromInt
+
+oColorValue.prototype.parseColorFromInt = function(colorInt){
+     var _color = colorInt.toString(16).slice(-6)
+     this.parseColorString(_color)
+}
+
  
 // oColorValue parseColorString (hexString)
  
 oColorValue.prototype.parseColorString = function (hexString){
     hexString = hexString.replace("#","");
-    if (hexString.length == 6) hexString+"ff";
+	MessageLog.trace(hexString+" "+hexString.length)
+    if (hexString.length == 6) hexString += "ff";
     if (hexString.length != 8) throw new Error("incorrect color string format");
     
     this.r = parseInt(hexString.slice(0,2), 16);
@@ -3636,7 +3949,7 @@ oColorValue.prototype.parseColorString = function (hexString){
 
 
 
-// NEW
+
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -3667,7 +3980,7 @@ oColorValue.prototype.parseColorString = function (hexString){
 
 // Constructor
 
-// NEW
+
 // oList(Array array, int startIndex)
  
 function oList(array, startIndex){
@@ -3681,7 +3994,7 @@ function oList(array, startIndex){
 }
 
 
-// NEW
+
 // int length
  
 Object.defineProperty(oList.prototype, 'length', {
@@ -3696,7 +4009,7 @@ Object.defineProperty(oList.prototype, 'length', {
 })
 
 
-// NEW
+
 // int startIndex
 
 Object.defineProperty(oList.prototype, 'startIndex', {
@@ -3712,7 +4025,7 @@ Object.defineProperty(oList.prototype, 'startIndex', {
 
 // Methods must be declared as unenumerable properties this way
 
-// NEW
+
 // Array toArray()
 
 Object.defineProperty(oList.prototype, 'toArray', {
@@ -3727,7 +4040,7 @@ Object.defineProperty(oList.prototype, 'toArray', {
 })
 
 
-// NEW
+
 // oList filterProperty(string property, various search)
 
 Object.defineProperty(oList.prototype, 'filterProperty', {
@@ -3744,7 +4057,7 @@ Object.defineProperty(oList.prototype, 'filterProperty', {
 })
 
 
-// NEW
+
 // oList sortByProperty(property, ascending)
 
 Object.defineProperty(oList.prototype, 'sortByProperty', {
@@ -3765,7 +4078,7 @@ Object.defineProperty(oList.prototype, 'sortByProperty', {
 })
 
 
-// NEW
+
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -3792,11 +4105,11 @@ Object.defineProperty(oList.prototype, 'sortByProperty', {
 // double bias
 // int lock
 // double velocity
-// 
+//
 // Methods
 //
 // set(pseudoPathPoint)
-// 
+//
 
 
 // oPathPoint(oColumnObject, oFrameObject)
@@ -3809,7 +4122,7 @@ function oPathPoint(oColumnObject, oFrameObject){
 
 // oPathPoint properties
 
-// NEW
+
 // int pointIndex
 
 Object.defineProperty(oPathPoint.prototype, 'pointIndex', {
@@ -3819,8 +4132,8 @@ Object.defineProperty(oPathPoint.prototype, 'pointIndex', {
 })
 
 
-// NEW
-// double x 
+
+// double x
 
 Object.defineProperty(oPathPoint.prototype, 'x', {
     get : function(){
@@ -3840,8 +4153,8 @@ Object.defineProperty(oPathPoint.prototype, 'x', {
 })
 
 
-// NEW
-// double y 
+
+// double y
 
 Object.defineProperty(oPathPoint.prototype, 'y', {
     get : function(){
@@ -3861,7 +4174,7 @@ Object.defineProperty(oPathPoint.prototype, 'y', {
 })
 
 
-// NEW
+
 // double z
 
 Object.defineProperty(oPathPoint.prototype, 'z', {
@@ -3882,7 +4195,7 @@ Object.defineProperty(oPathPoint.prototype, 'z', {
 })
 
 
-// NEW
+
 // double tension
 
 Object.defineProperty(oPathPoint.prototype, 'tension', {
@@ -3901,7 +4214,7 @@ Object.defineProperty(oPathPoint.prototype, 'tension', {
 })
 
 
-// NEW
+
 // double continuity
 
 Object.defineProperty(oPathPoint.prototype, 'continuity', {
@@ -3920,7 +4233,7 @@ Object.defineProperty(oPathPoint.prototype, 'continuity', {
 })
 
 
-// NEW
+
 // double bias
 
 Object.defineProperty(oPathPoint.prototype, 'bias', {
@@ -3940,7 +4253,7 @@ Object.defineProperty(oPathPoint.prototype, 'bias', {
 })
 
 
-// NEW 
+
 // int lock
 
 Object.defineProperty(oPathPoint.prototype, 'lock', {
@@ -3959,7 +4272,7 @@ Object.defineProperty(oPathPoint.prototype, 'lock', {
 })
 
 
-// NEW
+
 // double velocity
 
 Object.defineProperty(oPathPoint.prototype, 'velocity', {
@@ -3977,7 +4290,7 @@ Object.defineProperty(oPathPoint.prototype, 'velocity', {
 
 // oPathPoint class methods
 
-// NEW
+
 // set(pseudoPathPoint)
 
 oPathPoint.prototype.set = function (pseudoPathPoint){
@@ -4024,7 +4337,7 @@ function oPoint (x, y, z){
     this.z = z;
 }
 
-// NEW
+
 oPoint.prototype.toString = function(){
     return "{x:"+this.x+", y:"+this.y+", z:"+this.z+"}"
 }
@@ -4180,7 +4493,7 @@ Object.defineProperty(oFolder.prototype, 'name', {
 })
  
 
-// NEW
+
 // {oFolder} folder       returns the parent folder
 
 Object.defineProperty(oFolder.prototype, 'folder', {
@@ -4191,7 +4504,7 @@ Object.defineProperty(oFolder.prototype, 'folder', {
 })
 
 
-// NEW
+
 // bool exists
 
 Object.defineProperty(oFolder.prototype, 'exists', {
@@ -4268,7 +4581,7 @@ oFolder.prototype.listFolders = function(filter){
 }
 
 
-// NEW
+
 // bool create()
 
 oFolder.prototype.create = function(){
@@ -4279,7 +4592,7 @@ oFolder.prototype.create = function(){
 }
 
 
-// NEW
+
 // bool copy(folderPath, copyName, overwrite)
 
 oFolder.prototype.copy = function(folderPath, copyName, overwrite){
@@ -4296,7 +4609,7 @@ oFolder.prototype.copy = function(folderPath, copyName, overwrite){
 }
 
 
-// NEW
+
 // bool move(string destFolderPath, bool overwrite)
 
 oFolder.prototype.move = function(destFolderPath, overwrite){
@@ -4371,7 +4684,7 @@ Object.defineProperty(oFile.prototype, 'extension', {
 })
  
  
-// NEW
+
 // oFolder folder
  
 Object.defineProperty(oFile.prototype, 'folder', {
@@ -4428,7 +4741,7 @@ oFile.prototype.writeFile = function(content, append){
 }
  
  
-// NEW
+
 // oFile move(string folderPath, bool overwrite)
  
 oFile.prototype.move = function(folderPath, overwrite){
@@ -4447,7 +4760,7 @@ oFile.prototype.move = function(folderPath, overwrite){
 }
  
  
-// NEW
+
 // oFile copy(string destPath, bool overwrite)
  
 oFile.prototype.copy = function(folderPath, copyName, overwrite){
@@ -4538,4 +4851,7 @@ oDebug.prototype.logObj = function(object, debugLevel){
         }
     }
 }
+
+
+
 
