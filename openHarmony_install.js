@@ -1,4 +1,4 @@
-function openHarmony_install_update(){
+function openHarmony_install_main(){
   try{
     var d = new Dialog();
     d.title = "Install/Update OpenHarmony";
@@ -107,6 +107,17 @@ function openHarmony_install_update(){
           MessageBox.information( "Failed to create openHarmony directory: " + local_dir );
           progress.accept();
           return;
+        }
+        
+        //Override path of active scripts to ensure they're accessible to the user.
+        //----------------------------------------------------------------------------
+        var active_scripts = {
+                                "openHarmony_tools.js" : specialFolders.userScripts + "/openHarmony_tools.js"
+                             };
+        
+        var file_name = local_path.slice( local_path.lastIndexOf("/")+1 );
+        if( active_scripts[ file_name ] ){
+          local_path = active_scripts[ file_name ];
         }
         
         var downloaded = download( raw_url, local_path );

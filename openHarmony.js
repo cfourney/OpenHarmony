@@ -95,6 +95,7 @@ $.directory = $.directoryGet( __file__ );
 
 // The included files should be relative to the path of THIS file!
 include( $.directory + "/openHarmony_misc.js");   
+include( $.directory + "/openHarmony_network.js");   
 include( $.directory + "/openHarmony_path.js");   
 include( $.directory + "/openHarmony_list.js");       
 include( $.directory + "/openHarmony_timeline.js");  
@@ -107,8 +108,7 @@ include( $.directory + "/openHarmony_nodeLink.js");
 include( $.directory + "/openHarmony_node.js");        
 include( $.directory + "/openHarmony_column.js");      
 include( $.directory + "/openHarmony_drawing.js");     
-include( $.directory + "/openHarmony_scene.js" );      
-
+include( $.directory + "/openHarmony_scene.js" );
 
 /**
  * The standard debug that uses logic and level to write to the messagelog. Everything should just call this to write internally to a log in OpenHarmony.
@@ -116,8 +116,13 @@ include( $.directory + "/openHarmony_scene.js" );
  * @param   {int}   level          The debug level of the incoming message to log.
  */
 $.debug = function( obj, level ){
+
+  System.println( obj );
+  System.println( level );
+  
   if( level <= this.debug_level ){
     //We log it.
+    
     
     //Identify the types.
     if( (typeof obj) == "string" ){
@@ -163,3 +168,7 @@ $.logObj = function( object ){
 $.s     = new oScene( $ );
 $.scn   = $.s;
 $.scene = $.s;
+
+
+//---- Attach Helpers ------
+$.network = new oNetwork( $ );
