@@ -169,6 +169,7 @@ $.s     = new oScene( $ );
 $.scn   = $.s;
 $.scene = $.s;
 
+$.global = this;
 
 //---- Attach Helpers ------
 $.network = new oNetwork( $ );

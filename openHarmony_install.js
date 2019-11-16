@@ -112,7 +112,8 @@ function openHarmony_install_main(){
         //Override path of active scripts to ensure they're accessible to the user.
         //----------------------------------------------------------------------------
         var active_scripts = {
-                                "openHarmony_tools.js" : specialFolders.userScripts + "/openHarmony_tools.js"
+                                "openHarmony_tools.js"   : specialFolders.userScripts + "/openHarmony_tools.js",
+                                "openHarmony_install.js" : specialFolders.userScripts + "/openHarmony_install.js"
                              };
         
         var file_name = local_path.slice( local_path.lastIndexOf("/")+1 );
@@ -132,7 +133,8 @@ function openHarmony_install_main(){
       
       if( (new File( local_dir + "/" + "openHarmony.js" )).exists ){
         MessageBox.information( "OpenHarmony successfully installed." );
-        preferences.setString( 'openHarmonyPath', ( local_dir + "/" + "openHarmony.js" ) );
+        preferences.setString( 'openHarmonyInclude', ( local_dir + "/" + "openHarmony.js" ) );
+        preferences.setString( 'openHarmonyPath', ( local_dir ) );
         
         try {
           var install_path = local_dir + "/" + "INSTALL";

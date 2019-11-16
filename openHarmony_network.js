@@ -56,7 +56,7 @@
  * @param   {dom}                  $         The connection back to the DOM.
  *
  */
-function oNetwork( dom ){
+oNetwork = function( dom ){
     this.$ = dom;
     
     //Expect a path for CURL.
@@ -111,7 +111,7 @@ oNetwork.prototype.webQuery = function ( address, callback_func, use_json ){
           return readOut;
           
         }catch(err){
-          this.$.debug( err + " ("+address.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
+          this.$.debug( err + " ("+err.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
           return false;
         }
       }else{
@@ -130,7 +130,7 @@ oNetwork.prototype.webQuery = function ( address, callback_func, use_json ){
         return true;
       }
     }catch( err ){
-      this.$.debug( err + " ("+address.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
+      this.$.debug( err + " ("+err.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
       return false;
     }
   }else{
@@ -172,14 +172,14 @@ oNetwork.prototype.webQuery = function ( address, callback_func, use_json ){
             try{
               result = JSON.parse( result );
             }catch(err){
-              this.$.debug( err + " ("+address.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
+              this.$.debug( err + " ("+err.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
               callback_func( false );
             }
           }
           
           callback_func( result );
         }catch(err){
-          this.$.debug( err + " ("+address.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
+          this.$.debug( err + " ("+err.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
           callback_func( false );
         }
       }
@@ -252,14 +252,14 @@ oNetwork.prototype.webQuery = function ( address, callback_func, use_json ){
           try{
             result = JSON.parse( result );
           }catch(err){
-            this.$.debug( err + " ("+address.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
+            this.$.debug( err + " ("+err.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
           }
         }
         
         return( result );
       }catch(err){
         System.println( err );
-        this.$.debug( err + " ("+address.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
+        this.$.debug( err + " ("+err.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
       }
       
       return( false );
@@ -305,7 +305,7 @@ oNetwork.prototype.downloadSingle = function ( address, path, replace ){
       return false;
     }
   }catch( err ){
-    this.$.debug( err + " ("+address.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
+    this.$.debug( err + " ("+err.lineNumber+")", this.$.DEBUG_LEVEL["ERROR"] );
     return false;
   }
 }
