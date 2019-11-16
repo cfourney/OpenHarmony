@@ -3,7 +3,7 @@
 //
 //
 //
-//                           openHarmony Library v0.15
+//                           openHarmony Library v0.16
 //
 //
 //         Developped by Mathieu Chaptel, ...
@@ -454,17 +454,14 @@ oScene.prototype.addGroup = function(name, includeNodes, addComposite, addPeg, g
 }
  
 // NEW
-// addBackdrop(string groupPath, nodes, x, y, width, height, title, body, color)
+// addBackdrop(title, nodes, color, x, y, width, height, body, groupPath)
 
-oScene.prototype.addBackdrop = function(groupPath, nodes, x, y, width, height, title, body, color){
+oScene.prototype.addBackdrop = function(title, nodes, color, x, y, width, height, body, groupPath){
     if (typeof color === 'undefined') var color = new oColorValue("#323232ff");
-    if (typeof body === 'undefined') var body = "";
-	if (typeof groupPath === 'undefined') var groupPath = "Top";
 
 	var _groupBackdrops = Backdrop.backdrops(groupPath);
 	
     if (typeof title === 'undefined') var title = "Backdrop";
-
 
 	// incrementing title so that two backdrops can't have the same title
 	var names = _groupBackdrops.map(function(x){return x.title.text})
@@ -477,21 +474,22 @@ oScene.prototype.addBackdrop = function(groupPath, nodes, x, y, width, height, t
 	}
 	title = newTitle;
 	
-
+	// get default size from node bounds
     if (typeof nodes === 'undefined') var nodes = [];
-
+	
     if (nodes.length != 0) {
 	    var _nodeBox = new oBox();
         _nodeBox.includeNodes(nodes);
     }else{
 		_nodeBox = new oBox(-50, -50, 50, 50);
 	}
-	
-    if (typeof x === 'undefined') var x = _nodeBox.left-15;
+	if (typeof x === 'undefined') var x = _nodeBox.left-15;
     if (typeof y === 'undefined') var y = _nodeBox.top-15;
     if (typeof width === 'undefined') var width = _nodeBox.width+30;
     if (typeof height === 'undefined') var height = _nodeBox.height+30;
 
+	if (typeof groupPath === 'undefined') var groupPath = nodes.length?nodes[0].path:"Top";
+	if (typeof body === 'undefined') var body = "";
 
     var _backdrop = {
 		"position"    : {"x":x, "y":y, "w":width, "h":height},
