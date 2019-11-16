@@ -458,22 +458,8 @@ oScene.prototype.addGroup = function(name, includeNodes, addComposite, addPeg, g
 
 oScene.prototype.addBackdrop = function(title, nodes, color, x, y, width, height, body, groupPath){
     if (typeof color === 'undefined') var color = new oColorValue("#323232ff");
+	if (typeof body === 'undefined') var body = "";
 
-	var _groupBackdrops = Backdrop.backdrops(groupPath);
-	
-    if (typeof title === 'undefined') var title = "Backdrop";
-
-	// incrementing title so that two backdrops can't have the same title
-	var names = _groupBackdrops.map(function(x){return x.title.text})
-	var count = 0;
-	var newTitle = title
-	
-	while (names.indexOf(newTitle) != -1){
-		count++;
-		newTitle = title+"_"+count;
-	}
-	title = newTitle;
-	
 	// get default size from node bounds
     if (typeof nodes === 'undefined') var nodes = [];
 	
@@ -489,7 +475,22 @@ oScene.prototype.addBackdrop = function(title, nodes, color, x, y, width, height
     if (typeof height === 'undefined') var height = _nodeBox.height+30;
 
 	if (typeof groupPath === 'undefined') var groupPath = nodes.length?nodes[0].path:"Top";
-	if (typeof body === 'undefined') var body = "";
+    
+	// incrementing title so that two backdrops can't have the same title
+	if (typeof title === 'undefined') var title = "Backdrop";
+		
+	var _groupBackdrops = Backdrop.backdrops(groupPath);
+	var names = _groupBackdrops.map(function(x){return x.title.text})
+	var count = 0;
+	var newTitle = title;
+	// MessageLog.trace(names)
+	while (names.indexOf(newTitle) != -1){
+		// MessageLog.trace("backdrop "+newTitle+" already exists")
+		count++;
+		newTitle = title+"_"+count;
+	}
+	title = newTitle;
+	// MessageLog.trace("backdrop "+title+" will be created")
 
     var _backdrop = {
 		"position"    : {"x":x, "y":y, "w":width, "h":height},
@@ -500,7 +501,6 @@ oScene.prototype.addBackdrop = function(title, nodes, color, x, y, width, height
 		
     Backdrop.addBackdrop(groupPath, _backdrop)
 	return new oBackdrop(groupPath, _backdrop)
-	
 };
 
  
@@ -4000,7 +4000,7 @@ oColorValue.prototype.parseColorFromInt = function(colorInt){
  
 oColorValue.prototype.parseColorString = function (hexString){
     hexString = hexString.replace("#","");
-	MessageLog.trace(hexString+" "+hexString.length)
+	// MessageLog.trace(hexString+" "+hexString.length)
     if (hexString.length == 6) hexString += "ff";
     if (hexString.length != 8) throw new Error("incorrect color string format");
     
