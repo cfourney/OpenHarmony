@@ -3,7 +3,7 @@
 //
 //
 //
-//                           openHarmony Library v0.16
+//                           openHarmony Library v0.18
 //
 //
 //         Developped by Mathieu Chaptel, ...
@@ -322,7 +322,7 @@ oScene.prototype.addNode = function(type, name, group, nodePosition){
     // create node and return result
     var _path = node.add(group, name, type, nodePosition.x, nodePosition.y, nodePosition.z)
     _node = this.$node(_path)
-    MessageLog.trace(_path+' '+_nodePath+" "+_node)
+    // MessageLog.trace(_path+' '+_nodePath+" "+_node)
 
     return _node;
 }
@@ -336,24 +336,23 @@ oScene.prototype.addColumn = function(type, name, oElementObject){
    
     var _increment = 1;
     var _columnName = name;
-   
+	
     // increment name if a column with that name already exists
     while (column.type(_columnName) != ""){
         _columnName = name+"_"+_increment;
         _increment++;
     }
-   
     column.add(_columnName, type);
                
     var _column = this.$column(_columnName)
  
     if (type == "DRAWING" && typeof oElementObject !== 'undefined'){
         oElementObject.column = this;// TODO: fix: this doesn't seem to actually work for some reason?
-        MessageLog.trace("set element "+oElementObject.id+" to column "+_column.uniqueName)
+        // MessageLog.trace("set element "+oElementObject.id+" to column "+_column.uniqueName)
         _column.element = oElementObject;
     }
- 
-    column.update();
+
+	// if (!about.isInteractiveApp()) column.update();
     return _column;
 }
  
@@ -396,7 +395,6 @@ oScene.prototype.addDrawingNode = function(name, group, nodePosition, oElementOb
    
     // setup the node
     // setup animate mode/separate based on preferences?  
-   
     _node.attributes.drawing.element.column = drawingColumn;
    
     return _node;
@@ -604,7 +602,42 @@ oScene.prototype.importPalette = function(filename, name, index, paletteStorage,
     return _newPalette;
 }
  
- 
+
+// NEW
+// importTemplate(string tplPath, string group, [oNodes] destinationNodes, bool extendScene, oPoint nodePosition, pasteOptions pasteOptions){
+
+
+oScene.prototype.importTemplate = function(tplPath, group, destinationNodes, extendScene, nodePosition, pasteOptions){
+	if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
+	if (typeof group === 'undefined') var group = "Top";
+	if (typeof destinationNodes === 'undefined') var destinationNodes = false;
+	if (typeof extendScene === 'undefined') var extendScene = true;
+	
+	if (typeof pasteOptions === 'undefined') var pasteOptions = copyPaste.getCurrentPasteOptions();
+	pasteOptions.extendScene = extendScene;
+	
+	var copyOptions = copyPaste.getCurrentCreateOptions();
+	
+	var tpl = copyPaste.copyFromTemplate(tplPath, 0, 999, copyOptions); // any way to get the length of a template before importing it?
+	
+	if (destinationNodes){
+		// TODO: deal with import options to specify frames
+		copyPaste.paste(tpl, destinationNodes.map(function(x){return x.fullPath}), 0, 999, pasteOptions);
+		var nodes = destinationNodes;
+	}else{
+		copyPaste.pasteNewNodes(tpl, group, pasteOptions);
+		var that = this;
+		var nodes = selection.selectedNodes().map(function(x){return that.$node(x)});
+		for (var i in nodes){
+			nodes[i].x += nodePosition.x;
+			nodes[i].y += nodePosition.y;
+		}
+	}
+	
+	return nodes;
+}
+
+
 
 // {[oNodes]} importPSD(filename, group, nodePosition, separateLayers, addPeg, addComposite, alignment)
  
@@ -709,7 +742,7 @@ oScene.prototype.updatePSD = function(filename, separateLayers){
     var _layers = CELIO.getLayerInformation(_psdFile.path);
     var _scale = _info.height/scene.defaultResolutionY()
     
-    MessageLog.trace(_layers.map(function(x){return x.position+" "+x.layerName}))
+    // MessageLog.trace(_layers.map(function(x){return x.position+" "+x.layerName}))
     
     // use layer information to find nodes from precedent export
     if (separateLayers){
@@ -860,7 +893,7 @@ oScene.prototype.importQT = function(filename, group, importSound, nodePosition,
    
     var _tempFolder = scene.tempProjectPathRemapped () + "/movImport/" + _elementName
     var _audioPath = _tempFolder + "/" + _elementName + ".wav"
- 
+
     // setup import
     MovieImport.setMovieFilename(_QTFile.path);
     MovieImport.setImageFolder(_tempFolder);
@@ -868,7 +901,7 @@ oScene.prototype.importQT = function(filename, group, importSound, nodePosition,
     MovieImport.setAudioFile(_audioPath);
     MovieImport.doImport();
    
-    if (extendScene && this.length < MovieImport.numberOfImages()) this.length = MovieImport.numberOfImages();
+    if (extendScene && this.length < MovieImport.numberOfImages()) this.length = MovieImport.numberOfImages()-1;
    
     // create expositions on the node
     for (var i = 1; i <= MovieImport.numberOfImages(); i++ ) {
@@ -1449,19 +1482,47 @@ Object.defineProperty(oNode.prototype, 'linkedColumns', {
 // oNode Class methods
  
  
-// bool linkInNode(oNode oNodeObject, int inPort, int outPort)
+// bool linkInNode(oNode nodeToLink, int inPort, int outPort)
  
-oNode.prototype.linkInNode = function(oNodeObject, inPort, outPort){
-    var _node = oNodeObject.fullPath;
+oNode.prototype.linkInNode = function(nodeToLink, inPort, outPort, createPorts){
+	var _node = nodeToLink.fullPath;
  
     // Default values for optional parameters
-    if (typeof inPort === 'undefined') inPort = 0;
-    if (typeof outPort === 'undefined') outPort = 0;//node.numberOfOutputPorts(_node);
- 
-    return node.link(_node, outPort, this.fullPath, inPort, true, true);
- 
+    if (typeof inPort === 'undefined') var inPort = 0;
+    if (typeof outPort === 'undefined') var outPort = 0;//node.numberOfOutputPorts(_node);
+	if (typeof createPorts === 'undefined'){
+		// by default, only create a port if none exist
+		var createPorts = (nodeToLink.type == "MULTIPORT_IN" && nodeToLink.outNodes.length == 0)||
+						  (nodeToLink.type == "GROUP" && nodeToLink.outNodes.length == 0)||
+						  (this.type == "GROUP" && this.inNodes.length == 0)||
+						  (this.type == "MULTIPORT_OUT" && this.outNodes.length == 0)
+	}
+	
+	// MessageLog.trace("linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length);
+    return node.link(_node, outPort, this.fullPath, inPort, createPorts, createPorts);
 }
+
+
+// bool linkOutNode(oNode nodeToLink, int outPort, int inPort)
  
+oNode.prototype.linkOutNode = function(nodeToLink, outPort, inPort, createPorts){
+    var _node = nodeToLink.fullPath;
+ 
+    // Default values for optional parameters
+    // TODO: careful since now READ nodes have two ports but one only accepts drawing link
+    if (typeof inPort === 'undefined') var inPort = 0//node.numberOfInputPorts(_node);
+    if (typeof outPort === 'undefined') var outPort = 0//(nodeToLink.type == "READ"||nodeToLink.inNodes.length == 0)?0:node.numberOfOutputPorts(this.fullPath);
+    if (typeof createPorts === 'undefined'){
+		// by default, only create a port if none exist
+		var createPorts = (nodeToLink.type == "MULTIPORT_OUT" && nodeToLink.inNodes.length == 0)||
+						  (nodeToLink.type == "GROUP" && nodeToLink.inNodes.length == 0)||
+						  (this.type == "GROUP" && this.outNodes.length == 0)||
+						  (this.type == "MULTIPORT_IN" && this.inNodes.length == 0)
+	}
+ 
+    // MessageLog.trace("linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length);
+    return node.link(this.fullPath, outPort, _node, inPort, createPorts, createPorts);
+}
  
  
 // bool unlinkInNode(oNode oNodeObject)
@@ -1502,21 +1563,6 @@ oNode.prototype.unlinkOutNode = function(oNodeObject){
 }
  
  
-// bool linkOutNode(oNode oNodeObject, int outPort, int inPort)
- 
-oNode.prototype.linkOutNode = function(oNodeObject, outPort, inPort){
-    var _node = oNodeObject.fullPath;
- 
-    // Default values for optional parameters
-    // TODO: careful since now READ nodes have two ports but one only accepts drawing link
-    if (typeof inPort === 'undefined') inPort = node.numberOfInputPorts(_node);
-    if (typeof outPort === 'undefined') outPort = 0//node.numberOfOutputPorts(this.fullPath);
- 
-    // MessageBox.information("linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort);
-    return node.link(this.fullPath, outPort, _node, inPort, true, true);
-}
- 
- 
  
 // int timelineIndex
  
@@ -1545,7 +1591,7 @@ oNode.prototype.centerAbove = function(oNodeArray, xOffset, yOffset){
     // Works with nodes and nodes array
     if (!Array.isArray(oNodeArray)) oNodeArray = [oNodeArray];
  
-    MessageLog.trace(oNodeArray);
+    // MessageLog.trace(oNodeArray);
     var _box = new oBox();
     _box.includeNodes(oNodeArray);
    
@@ -2783,7 +2829,7 @@ oAttribute.prototype.getValue = function (frame) {
             // in case of subattributes, create a fake string that can have properties
             if (_attr.hasSubAttributes()){
                 _value = {value:_value};
-                _value.toString() = function(){return _value}
+                _value.toString = function(){return _value}
             }
             
     }
