@@ -39,16 +39,16 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * The base class for the oList.
+ * The base class for the $.oList.
  * @constructor
- * @classdesc  oList Base Class
- * @param   {object[]}                 array                 The array that this oList represents.
+ * @classdesc  $.oList Base Class
+ * @param   {object[]}                 array                 The array that this $.oList represents.
  * @param   {int}                      startIndex            The index at which this list starts.
  * @param   {int}                      currentIndex          The current index of this list iterator.
  *
  * @property {object[]}                index[int]            The indexed object of the item.
  */
-function oList(array, startIndex){
+$.oList = function(array, startIndex){
     if(typeof startIndex == 'undefined') var startIndex = 0;
     
     this.currentIndex = 0;
@@ -62,12 +62,12 @@ function oList(array, startIndex){
 
 
 /**
- * The internal type of oList object, should always return list.
- * @name oList#_type
+ * The internal type of $.oList object, should always return list.
+ * @name $.oList#_type
  * @private
  * @type {string}
  */
-Object.defineProperty(oList.prototype, '_type', {
+Object.defineProperty($.oList.prototype, '_type', {
     enumerable : false,
     get: function(){
         return 'list';
@@ -77,10 +77,10 @@ Object.defineProperty(oList.prototype, '_type', {
 
 /**
  * The length of the array that this represents.
- * @name oList#length
+ * @name $.oList#length
  * @type {int}
  */
-Object.defineProperty(oList.prototype, 'length', {
+Object.defineProperty($.oList.prototype, 'length', {
     enumerable : false,
     get: function(){
         var _start = this.startIndex;
@@ -95,10 +95,10 @@ Object.defineProperty(oList.prototype, 'length', {
 
 /**
  * The start index of the array that this represents.
- * @name oList#startIndex
+ * @name $.oList#startIndex
  * @type {int}
  */
-Object.defineProperty(oList.prototype, 'startIndex', {
+Object.defineProperty($.oList.prototype, 'startIndex', {
     enumerable : false,
     get: function(){
         var _start = 0;
@@ -114,10 +114,10 @@ Object.defineProperty(oList.prototype, 'startIndex', {
 // Methods must be declared as unenumerable properties this way
 /**
  * The elements of this list, represented by an array again.
- * @name oList#toArray
+ * @name $.oList#toArray
  * @return  {object[]}   The list represented as an array.
  */
-Object.defineProperty(oList.prototype, 'toArray', {
+Object.defineProperty($.oList.prototype, 'toArray', {
     enumerable : false,
     value : function(){
         var _array = [];
@@ -131,12 +131,12 @@ Object.defineProperty(oList.prototype, 'toArray', {
 
 /**
  * The elements of this list, represented by an array again, filtered.
- * @name oList#filterFunction
+ * @name $.oList#filterFunction
  * @param   {function}     func                    A function that is used to filter, returns true if it is to be kept in the list.
  *
  * @return  {object[]}   The list represented as an array, filtered given the function.
  */
-Object.defineProperty(oList.prototype, 'filterFunction', {
+Object.defineProperty($.oList.prototype, 'filterFunction', {
     enumerable : false,
     value : function( func ){
         var _results = [];
@@ -147,20 +147,20 @@ Object.defineProperty(oList.prototype, 'filterFunction', {
             }
         }
 
-        return new oList( _results );
+        return new $.oList( _results );
     }
 });
 
 
 /**
  * The elements of this list, represented by an array again, filtered.
- * @name oList#filterProperty
+ * @name $.oList#filterProperty
  * @param   {string}    property                    The property to find.
  * @param   {string}    search                      The value to search for in the property.
  *
  * @return  {object[]}   The list represented as an array, filtered given its properties.
  */
-Object.defineProperty(oList.prototype, 'filterProperty', {
+Object.defineProperty($.oList.prototype, 'filterProperty', {
     enumerable : false,
     value : function(property, search){
         var _results = [];
@@ -169,20 +169,20 @@ Object.defineProperty(oList.prototype, 'filterProperty', {
             if (this[i].hasOwnProperty(property) && this[i][property] == search) _results.push(this[i]);
         }
 
-        return new oList( _results );
+        return new $.oList( _results );
     }
 });
 
 
 /**
  * The elements of this list, represented by an array again, sorted.
- * @name oList#sortByProperty
+ * @name $.oList#sortByProperty
  * @param   {string}    property                    The property to find.
  * @param   {bool}      ascending                   Whether the sort is ascending/descending.
  *
  * @return  {object[]}   The list represented as an array, sorted given its properties.
  */
-Object.defineProperty(oList.prototype, 'sortByProperty', {
+Object.defineProperty($.oList.prototype, 'sortByProperty', {
     enumerable : false,
     value : function( property, ascending ){
         if (typeof ascending === 'undefined') var ascending = false;
@@ -195,36 +195,36 @@ Object.defineProperty(oList.prototype, 'sortByProperty', {
         }
 
         // Sort in place or return a copy?
-        return new oList( results, this.startIndex );
+        return new $.oList( results, this.startIndex );
     }
 });
 
 
 /**
  * The elements of this list, represented by an array, sorted.
- * @name oList#sortByFunction
+ * @name $.oList#sortByFunction
  * @param   {function}   func                    A function that is used to sort, in form function (a,b){return a - b}.
  *
  * @return  {object[]}   The list represented as an array, sorted given its function.
  */
-Object.defineProperty(oList.prototype, 'sortByFunction', {
+Object.defineProperty($.oList.prototype, 'sortByFunction', {
     enumerable : false,
     value : function( func ){
         var _array = this.toArray();
         var results = _array.sort( func );
 
         // Sort in place or return a copy?
-        return new oList( results, this.startIndex );
+        return new $.oList( results, this.startIndex );
     }
 });
 
 
 /**
  * The first item in the list, resets the iterator to the first entry.
- * @name oList#first
+ * @name $.oList#first
  * @return {object}   The first item in the list.
  */
-Object.defineProperty(oList.prototype, 'first', {
+Object.defineProperty($.oList.prototype, 'first', {
     enumerable : false,
     value: function(){
         this.currentIndex = this.startIndex;
@@ -235,15 +235,15 @@ Object.defineProperty(oList.prototype, 'first', {
 
 /**
  * The next item in the list, bool false if reaching the end of the list.
- * @name oList#next
+ * @name $.oList#next
  * @type {object}
  * @example
- *         var item = oList.first();
+ *         var item = $.oList.first();
  *         while( item ){
- *              item = oList.next();    
+ *              item = $.oList.next();    
  *         }
  */
-Object.defineProperty(oList.prototype, 'next', {
+Object.defineProperty($.oList.prototype, 'next', {
     value: function(){
         enumerable : false,
         this.currentIndex++;

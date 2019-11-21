@@ -41,7 +41,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//        oPathPoint class          //
+//        $.oPathPoint class          //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -58,7 +58,7 @@
  * @property {oColumn}                 column                The indexed object of the item.
  * @property {oFrame}                  frame                 The indexed object of the item.
  */
-function oPathPoint(oColumnObject, oFrameObject){
+$.oPathPoint = function(oColumnObject, oFrameObject){
     this.column = oColumnObject;
     this.frame = oFrameObject;
 }
@@ -66,10 +66,10 @@ function oPathPoint(oColumnObject, oFrameObject){
 
 /**
  * The keyframe index of the frame/key at this point.
- * @name oPathPoint#pointIndex
+ * @name $.oPathPoint#pointIndex
  * @type {int}
  */
-Object.defineProperty(oPathPoint.prototype, 'pointIndex', {
+Object.defineProperty($.oPathPoint.prototype, 'pointIndex', {
     get : function(){
          return this.frame.keyframeIndex;
     }
@@ -78,10 +78,10 @@ Object.defineProperty(oPathPoint.prototype, 'pointIndex', {
 
 /**
  * The X value of the path element.
- * @name oPathPoint#x
+ * @name $.oPathPoint#x
  * @type {float}
  */
-Object.defineProperty(oPathPoint.prototype, 'x', {
+Object.defineProperty($.oPathPoint.prototype, 'x', {
     get : function(){
          var _column = this.column.uniqueName;
          var _index = this.pointIndex;
@@ -101,10 +101,10 @@ Object.defineProperty(oPathPoint.prototype, 'x', {
 
 /**
  * The Y value of the path element.
- * @name oPathPoint#y
+ * @name $.oPathPoint#y
  * @type {float}
  */
-Object.defineProperty(oPathPoint.prototype, 'y', {
+Object.defineProperty($.oPathPoint.prototype, 'y', {
     get : function(){
          var _column = this.column.uniqueName;
          var _index = this.pointIndex;
@@ -124,10 +124,10 @@ Object.defineProperty(oPathPoint.prototype, 'y', {
 
 /**
  * The Z value of the path element.
- * @name oPathPoint#z
+ * @name $.oPathPoint#z
  * @type {float}
  */
-Object.defineProperty(oPathPoint.prototype, 'z', {
+Object.defineProperty($.oPathPoint.prototype, 'z', {
     get : function(){
          var _column = this.column.uniqueName;
          var _index = this.pointIndex;
@@ -147,10 +147,10 @@ Object.defineProperty(oPathPoint.prototype, 'z', {
 
 /**
  * The tension at the current keyframe point.
- * @name oPathPoint#tension
+ * @name $.oPathPoint#tension
  * @type {float}
  */
-Object.defineProperty(oPathPoint.prototype, 'tension', {
+Object.defineProperty($.oPathPoint.prototype, 'tension', {
     get : function(){
          var _column = this.column.uniqueName;
          var _index = this.pointIndex;
@@ -168,10 +168,10 @@ Object.defineProperty(oPathPoint.prototype, 'tension', {
 
 /**
  * The continuity at the current keyframe point.
- * @name oPathPoint#continuity
+ * @name $.oPathPoint#continuity
  * @type {float}
  */
-Object.defineProperty(oPathPoint.prototype, 'continuity', {
+Object.defineProperty($.oPathPoint.prototype, 'continuity', {
     get : function(){
          var _column = this.column.uniqueName;
          var _index = this.pointIndex;
@@ -189,10 +189,10 @@ Object.defineProperty(oPathPoint.prototype, 'continuity', {
 
 /**
  * The bias at the current keyframe point.
- * @name oPathPoint#bias
+ * @name $.oPathPoint#bias
  * @type {float}
  */
-Object.defineProperty(oPathPoint.prototype, 'bias', {
+Object.defineProperty($.oPathPoint.prototype, 'bias', {
     get : function(){
          var _column = this.column.uniqueName;
          var _index = this.pointIndex;
@@ -211,10 +211,10 @@ Object.defineProperty(oPathPoint.prototype, 'bias', {
 
 /**
  * The bezier lock at the current keyframe point.
- * @name oPathPoint#lock
+ * @name $.oPathPoint#lock
  * @type {float}
  */
-Object.defineProperty(oPathPoint.prototype, 'lock', {
+Object.defineProperty($.oPathPoint.prototype, 'lock', {
     get : function(){
          var _column = this.column.uniqueName;
          var _index = this.pointIndex;
@@ -225,17 +225,17 @@ Object.defineProperty(oPathPoint.prototype, 'lock', {
         var _column = this.column.uniqueName;
         var _index = this.pointIndex;
 
-        throw new Error("oPathPoint.lock (set) - not yet implemented")
+        throw new Error("$.oPathPoint.lock (set) - not yet implemented")
     }
 })
 
 
 /**
  * The velocity at the current keyframe point.
- * @name oPathPoint#velocity
+ * @name $.oPathPoint#velocity
  * @type {float}
  */
-Object.defineProperty(oPathPoint.prototype, 'velocity', {
+Object.defineProperty($.oPathPoint.prototype, 'velocity', {
     get : function(){
          var _column = this.column.uniqueName;
          return column.getEntry(this.column.uniqueName, 4, this.frame.frameNumber)
@@ -248,14 +248,14 @@ Object.defineProperty(oPathPoint.prototype, 'velocity', {
 })
 
 
-// oPathPoint class methods
+// $.oPathPoint class methods
 
 /**
  * Matches this path point to the provided one.
- * @param   {oPathPoint}    pseudoPathPoint                The path point object to match this to.
+ * @param   {$.oPathPoint}    pseudoPathPoint                The path point object to match this to.
  */
-oPathPoint.prototype.set = function( pseudoPathPoint ){
-    // Set a point by providing all values in an object corresponding to a dumb oPathPoint object with static values for each property;
+$.oPathPoint.prototype.set = function( pseudoPathPoint ){
+    // Set a point by providing all values in an object corresponding to a dumb $.oPathPoint object with static values for each property;
     var _point = pseudoPathPoint;
 
     // default values for missing values in pseudoPathPoint
@@ -276,6 +276,6 @@ oPathPoint.prototype.set = function( pseudoPathPoint ){
  * Converts the pathpoint to a string.
  * @return {string}    The pathpoint represented as a string.
  */
-oPathPoint.prototype.toString = function(){
+$.oPathPoint.prototype.toString = function(){
     return "{x:"+this.x+", y:"+this.y+", z:"+this.z+"}"
 }

@@ -43,7 +43,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//         oTimeline class          //
+//         $.oTimeline class          //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -51,9 +51,9 @@
  
 
 /**
- * The base class for the oTimeline.
+ * The base class for the $.oTimeline.
  * @constructor
- * @classdesc  oTimeline Base Class
+ * @classdesc  $.oTimeline Base Class
  * @param   {string}                   display               The display node's path.
  * @param   {oScene}                   oSceneObject          The scene object of the DOM.
  *
@@ -61,7 +61,7 @@
  * @property {oColumnObject}           composition           The composition order of the scene.
  * @property {oScene}                  scene                 The scene object of the DOM.
  */
-oTimeline = function( display, oSceneObject ){
+$.oTimeline = function( display, oSceneObject ){
     this.display = display
     this.composition = ''
     this.scene = oSceneObject;
@@ -78,10 +78,10 @@ oTimeline = function( display, oSceneObject ){
 
 /**
  * The node layers in the scene, based on the timeline's order given a specific display.
- * @name oTimeline#layers
+ * @name $.oTimeline#layers
  * @type {oNode[]}
  */
-Object.defineProperty(oTimeline.prototype, 'layers', {
+Object.defineProperty($.oTimeline.prototype, 'layers', {
     get : function(){
         var _timeline = this.layersList;
         var _scene = this.scene;
@@ -94,10 +94,10 @@ Object.defineProperty(oTimeline.prototype, 'layers', {
  
 /**
  * Gets the paths of the layers in order, given the specific display's timeline.
- * @name oTimeline#layersList
+ * @name $.oTimeline#layersList
  * @type {string[]}
  */
-Object.defineProperty(oTimeline.prototype, 'layersList', {
+Object.defineProperty($.oTimeline.prototype, 'layersList', {
     get : function(){
         var _composition = this.composition;
         var _timeline = [];

@@ -42,7 +42,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          oElement class          //
+//          $.oElement class          //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -50,31 +50,31 @@
 
 
 /**
- * The base class for the oElement.
+ * The base class for the $.oElement.
  * @constructor
- * @classdesc  oElement Class
+ * @classdesc  $.oElement Class
  * @param   {int}                   id                          The element ID.
  * @param   {oColumn}               oColumnObject               The column object associated to the element.
  *
  * @property {int}                  id                          The element ID.
  * @property {oColumn}              oColumnObject               The column object associated to the element.
  */
-oElement = function( id, oColumnObject){
+$.oElement = function( id, oColumnObject){
   this._type = "element";
-  this.$     = false;
+  this.$     = $;
   
   this.id = id;
   this.column = oColumnObject;
 }
 
-// oElement Object Properties
+// $.oElement Object Properties
 
 /**
  * The name of the column.
- * @name oElement#name
+ * @name $.oElement#name
  * @type {string}
  */
-Object.defineProperty(oElement.prototype, 'name', {
+Object.defineProperty($.oElement.prototype, 'name', {
     get : function(){
          return element.getNameById(this.id)
     },
@@ -86,10 +86,10 @@ Object.defineProperty(oElement.prototype, 'name', {
 
 /**
  * The folder path of the element on the filesystem.
- * @name oElement#path
+ * @name $.oElement#path
  * @type {string}
  */
-Object.defineProperty(oElement.prototype, 'path', {
+Object.defineProperty($.oElement.prototype, 'path', {
     get : function(){
          return fileMapper.toNativePath(element.completeFolder(this.id))
     }
@@ -97,22 +97,22 @@ Object.defineProperty(oElement.prototype, 'path', {
  
 /**
  * The drawings available in the element.
- * @name oElement#drawings
+ * @name $.oElement#drawings
  * @type {oDrawing[]}
  */
-Object.defineProperty(oElement.prototype, '', {
+Object.defineProperty($.oElement.prototype, '', {
     get : function(){
         var _drawingsNumber = Drawings.numberOf(this.id)
         var _drawings = [];
         for (var i=0; i<_drawingsNumber; i++){
-            _drawings.push( new oDrawing(Drawing.name(this.id, i), this) );
+            _drawings.push( new $.oDrawing(Drawing.name(this.id, i), this) );
         }
         return _drawings;
     }
 })
  
  
-// oElement Class methods
+// $.oElement Class methods
 
 /**
  * Adds a drawing to the element.
@@ -122,7 +122,7 @@ Object.defineProperty(oElement.prototype, '', {
  *  
  * @return {oDrawing}      The added drawing
  */
-oElement.prototype.addDrawing = function( atFrame, name, filename ){
+$.oElement.prototype.addDrawing = function( atFrame, name, filename ){
     if (typeof filename === 'undefined') var filename = false;
     if (typeof name === 'undefined') var name = atFrame+''
    
@@ -135,7 +135,7 @@ oElement.prototype.addDrawing = function( atFrame, name, filename ){
         var _file = Drawing.filename( this.id, name );
         //MessageLog.trace(_file)
        
-        var _frameFile = new oFile( filename );
+        var _frameFile = new $.oFile( filename );
         _frameFile.move( _file, true );
        
     }
@@ -144,7 +144,7 @@ oElement.prototype.addDrawing = function( atFrame, name, filename ){
     if (this.column != null || this.column != undefined)
         column.setEntry(this.column.uniqueName, 1, atFrame, name)
    
-    return new oDrawing( name, this );
+    return new $.oDrawing( name, this );
 }
  
 
@@ -154,14 +154,14 @@ oElement.prototype.addDrawing = function( atFrame, name, filename ){
  * 
  * @return { oDrawing }      The added drawing
  */
-oElement.prototype.getDrawingByName = function ( name ){
-    return new oDrawing( name, this );
+$.oElement.prototype.getDrawingByName = function ( name ){
+    return new $.oDrawing( name, this );
 }
  
 /**
  * Not yet implemented.
  * @param   {string}        paletteFile              The path to the palette file to link.
  */
-oElement.prototype.linkPalette = function ( paletteFile ){
+$.oElement.prototype.linkPalette = function ( paletteFile ){
   throw "Not yet implemented";
 }

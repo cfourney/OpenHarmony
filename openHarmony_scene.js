@@ -42,7 +42,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          oScene class            //
+//          $.oScene class          //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -55,30 +55,30 @@
  * @constructor
  * @classdesc  Scene Class
  * @param   {$dom}         dom                  Access to the direct dom object.
- * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
+ * <br> The constructor for the scene object, new $.oScene($) to create a scene with DOM access.
  */
-oScene = function( dom ){
-    // oScene.nodes property is a class property shared by all instances, so it can be passed by reference and always contain all nodes in the scene
+$.oScene = function( ){
+    // $.oScene.nodes property is a class property shared by all instances, so it can be passed by reference and always contain all nodes in the scene
  
-    //var _topNode = new oNode("Top");
+    //var _topNode = new $.oNode("Top");
     //this.__proto__.nodes = _topNode.subNodes(true);
   
-  this.$     = dom;
+  this.$     = $;
   this._type = "scene";
 }
 
 
 //-------------------------------------------------------------------------------------
-//--- oScene Objects Properties
+//--- $.oScene Objects Properties
 //-------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
 
 /**
  * Contains the list of nodes present in the scene.
- * @name oScene#nodes
+ * @name $.oScene#nodes
  * @type {oNode[]}
  */
-Object.defineProperty(oScene.prototype, 'nodes', {
+Object.defineProperty($.oScene.prototype, 'nodes', {
     get : function(){
         var _topNode = this.getNodeByPath( "Top", this );
         return _topNode.subNodes( true );
@@ -88,14 +88,14 @@ Object.defineProperty(oScene.prototype, 'nodes', {
 
 /**
  * Contains the list of columns present in the scene.
- * @name oScene#columns
+ * @name $.oScene#columns
  * @type {oColumn[]}
  */
-Object.defineProperty(oScene.prototype, 'columns', {
+Object.defineProperty($.oScene.prototype, 'columns', {
     get : function(){
         var _columns = [];
         for (var i=0; i<columns.numberOf(); i++){
-            _columns.push( new oColumn( this, column.getName(i)) );
+            _columns.push( new $.oColumn( this, column.getName(i)) );
         }
         return _columns;
     }
@@ -104,15 +104,15 @@ Object.defineProperty(oScene.prototype, 'columns', {
 
 /**
  * Contains the list of scene palettes present in the scene.
- * @name oScene#palettes
+ * @name $.oScene#palettes
  * @type {oPalette[]}
  */
-Object.defineProperty(oScene.prototype, 'palettes', {
+Object.defineProperty($.oScene.prototype, 'palettes', {
     get : function(){
         var _paletteList = PaletteObjectManager.getScenePaletteList();
         var _palettes = [];
         for (var i=0; i<_paletteList.numPalettes; i++){
-            _palettes.push( new oPalette( _paletteList.getPaletteByIndex(i), this, _paletteList ) );
+            _palettes.push( new $.oPalette( _paletteList.getPaletteByIndex(i), this, _paletteList ) );
         }
         return _palettes;
     }
@@ -122,10 +122,10 @@ Object.defineProperty(oScene.prototype, 'palettes', {
 
 /**
  * The length of the scene.
- * @name oScene#length
+ * @name $.oScene#length
  * @type {int}
  */
-Object.defineProperty(oScene.prototype, 'length', {
+Object.defineProperty($.oScene.prototype, 'length', {
     get : function(){
         return frame.numberOf()
     },
@@ -144,10 +144,10 @@ Object.defineProperty(oScene.prototype, 'length', {
 
 /**
  * The current frame of the scene.
- * @name oScene#currentFrame
+ * @name $.oScene#currentFrame
  * @type {int}
  */
-Object.defineProperty(oScene.prototype, 'currentFrame', {
+Object.defineProperty($.oScene.prototype, 'currentFrame', {
     get : function(){
         return frame.current();
     },
@@ -159,7 +159,7 @@ Object.defineProperty(oScene.prototype, 'currentFrame', {
  
 
 //-------------------------------------------------------------------------------------
-//--- oScene Objects Methods
+//--- $.oScene Objects Methods
 //-------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
 
@@ -170,12 +170,12 @@ Object.defineProperty(oScene.prototype, 'currentFrame', {
  *  
  * @return {oNode}                     The node found given the query.
  */
-oScene.prototype.getNodeByPath = function(fullPath){
+$.oScene.prototype.getNodeByPath = function(fullPath){
     if (node.type(fullPath) == "") return null; // TODO: remove this if we implement a .exists property for oNode
-    if (node.type(fullPath) == "READ") return new oDrawingNode( fullPath, this );
-    if (node.type(fullPath) == "PEG") return new oPegNode( fullPath, this );
-    if (node.type(fullPath) == "GROUP") return new oGroupNode( fullPath, this );
-    return new oNode( fullPath, this );
+    if (node.type(fullPath) == "READ") return new $.oDrawingNode( fullPath, this );
+    if (node.type(fullPath) == "PEG") return new $.oPegNode( fullPath, this );
+    if (node.type(fullPath) == "GROUP") return new $.oGroupNode( fullPath, this );
+    return new $.oNode( fullPath, this );
 }
 
 /**
@@ -185,16 +185,16 @@ oScene.prototype.getNodeByPath = function(fullPath){
  *  
  * @return {oColumn}                    The node found given the query.
  */
-oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
+$.oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
     var _type = column.type(uniqueName);
 
     switch (_type) {
         case "" :
             return null;
         case "DRAWING" :
-            return new oDrawingColumn(uniqueName, oAttributeObject);
+            return new $.oDrawingColumn(uniqueName, oAttributeObject);
         default :
-            return new oColumn(uniqueName, oAttributeObject);
+            return new $.oColumn(uniqueName, oAttributeObject);
     }
 }
 
@@ -205,11 +205,11 @@ oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
  *  
  * @return  {oPalette}                 The oPalette found given the query.
  */
-oScene.prototype.getPaletteByName = function(name){
+$.oScene.prototype.getPaletteByName = function(name){
     var _paletteList = PaletteObjectManager.getScenePaletteList();
     for (var i=0; i<_paletteList.numPalettes; i++){
         if (_paletteList.getPaletteByIndex(i).getName() == name)
-        return new oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
+        return new $.oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
     }
     return null;
 }
@@ -221,7 +221,7 @@ oScene.prototype.getPaletteByName = function(name){
  *  
  * @return  {oNode}                     The node found given the query.
  */
-oScene.prototype.$node = function( fullPath ){
+$.oScene.prototype.$node = function( fullPath ){
     return this.getNodeByPath( fullPath );
 }
 
@@ -232,7 +232,7 @@ oScene.prototype.$node = function( fullPath ){
  *  
  * @return {oColumn}                    The node found given the query.
  */
-oScene.prototype.$column = function( uniqueName, oAttributeObject ){
+$.oScene.prototype.$column = function( uniqueName, oAttributeObject ){
     return this.getColumnByName( uniqueName, oAttributeObject );
 }
 
@@ -242,7 +242,7 @@ oScene.prototype.$column = function( uniqueName, oAttributeObject ){
  *  
  * @return  {oPalette}                 The oPalette found given the query.
  */
-oScene.prototype.$palette = function( name ){
+$.oScene.prototype.$palette = function( name ){
     return this.getPaletteByName( name );
 }
 
@@ -253,7 +253,7 @@ oScene.prototype.$palette = function( name ){
  *  
  * @return {oNode[]}                   The selected nodes.
  */
-oScene.prototype.getSelectedNodes = function( recurse, sort_result ){
+$.oScene.prototype.getSelectedNodes = function( recurse, sort_result ){
     if (typeof recurse === 'undefined') var recurse = false;
     if (typeof sort_result    === 'undefined') var sort_result = true;     //Avoid sorting, save time, if unnecessary and used internally.
     
@@ -286,7 +286,7 @@ oScene.prototype.getSelectedNodes = function( recurse, sort_result ){
  *  
  * @return {oNode[]}                   The node[s] found given the query.
  */
-oScene.prototype.nodeSearch = function( query, sort_result ){
+$.oScene.prototype.nodeSearch = function( query, sort_result ){
   if (typeof sort_result    === 'undefined') var sort_result = true;     //Avoid sorting, save time, if unnecessary and used internally.
   
   //-----------------------------------
@@ -409,7 +409,7 @@ oScene.prototype.nodeSearch = function( query, sort_result ){
             if( regexp_filter.test( all_nodes[n].fullPath ) ){
               this.$.debug( "WILDCARD NODE TESTED SUCCESS: "+all_nodes[n].fullPath, this.$.DEBUG_LEVEL.LOG );
               
-              var node_ret = all_nodes[n]; //this.getNodeByPath( all_nodes[n].fullPath ); //new oNode( this.$, all_nodes[n].fullPath );
+              var node_ret = all_nodes[n]; //this.getNodeByPath( all_nodes[n].fullPath ); //new $.oNode( this.$, all_nodes[n].fullPath );
               if( node_ret && node_ret.exists ){
                 this.$.debug( "WILDCARD NODE MATCH: "+all_nodes[n].fullPath+"\n", this.$.DEBUG_LEVEL.LOG );
                 nodes_returned.push( node_ret );
@@ -439,7 +439,7 @@ oScene.prototype.nodeSearch = function( query, sort_result ){
             if( regexp_filter.test( all_nodes[n].fullPath ) ){
               this.$.debug( "REGEXP NODE TESTED SUCCESS: "+all_nodes[n].fullPath, this.$.DEBUG_LEVEL.LOG );
               
-              var node_ret = all_nodes[n]; //new oNode( this.$, all_nodes[n].fullPath );
+              var node_ret = all_nodes[n]; //new $.oNode( this.$, all_nodes[n].fullPath );
               if( node_ret && node_ret.exists ){
                 this.$.debug( "REGEXP NODE MATCH: "+all_nodes[n].fullPath+"\n", this.$.DEBUG_LEVEL.LOG );
                 nodes_returned.push( node_ret );
@@ -452,7 +452,7 @@ oScene.prototype.nodeSearch = function( query, sort_result ){
         //ITS JUST THE EXACT NODE.
         this.$.debug( "EXACT NODE QUERY: "+query_list[x], this.$.DEBUG_LEVEL.LOG );
         
-        var node_ret = this.getNodeByPath( query_list[x] ); //new oNode( this.$, query_list[x] );
+        var node_ret = this.getNodeByPath( query_list[x] ); //new $.oNode( this.$, query_list[x] );
         if( !added_nodes[ query_list[x] ] ){
           if( node_ret && node_ret.exists ){
             this.$.debug( "EXACT NODE MATCH: "+query_list[x]+"\n", this.$.DEBUG_LEVEL.LOG );
@@ -578,11 +578,11 @@ oScene.prototype.nodeSearch = function( query, sort_result ){
  * 
  * @return {oNode}    The created node, or bool as false.
  */
-oScene.prototype.addNode = function( type, name, group, nodePosition ){
+$.oScene.prototype.addNode = function( type, name, group, nodePosition ){
     // Defaults for optional parameters
     
     if (typeof group === 'undefined') var group = "Top"
-    if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
+    if (typeof nodePosition === 'undefined') var nodePosition = new $.oPoint(0,0,0);
     if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
     
     try{
@@ -611,13 +611,13 @@ oScene.prototype.addNode = function( type, name, group, nodePosition ){
     
     // loop to increment until we get a node name that is free
     var _nodePath = group+"/"+_name;
-    var _node = new oNode(_nodePath)
+    var _node = new $.oNode(_nodePath)
     
     while( _node.exists ){
         _count++;
         name = _name+"_"+_count;
         _nodePath = group+"/"+name; 
-        _node = new oNode( _nodePath );
+        _node = new $.oNode( _nodePath );
     }
     
     // create node and return result
@@ -637,7 +637,7 @@ oScene.prototype.addNode = function( type, name, group, nodePosition ){
  * @return {oColumn}  The created column, or bool as false.
  */
  
-oScene.prototype.addColumn = function( type, name, oElementObject ){
+$.oScene.prototype.addColumn = function( type, name, oElementObject ){
     // Defaults for optional parameters 
     if (typeof name === 'undefined') var name = column.generateAnonymousName();
    
@@ -654,7 +654,7 @@ oScene.prototype.addColumn = function( type, name, oElementObject ){
    
     column.add(_columnName, type);
                
-    var _column = new oColumn( _columnName );
+    var _column = new $.oColumn( _columnName );
  
     if (type == "DRAWING" && typeof oElementObject !== 'undefined'){
         oElementObject.column = this;// TODO: fix: this doesn't seem to actually work for some reason?
@@ -676,7 +676,7 @@ oScene.prototype.addColumn = function( type, name, oElementObject ){
  *  
  * @return {oColumn}  The created column, or bool as false.
  */
-oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
+$.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
     // Defaults for optional parameters
     if (typeof scanType === 'undefined') var scanType = "COLOR";
     if (typeof fieldGuide === 'undefined') var fieldGuide = 12;
@@ -686,7 +686,7 @@ oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
     var _vectorFormat = (imageFormat == "TVG")?imageFormat:"None";
  
     var _id = element.add(name, scanType, fieldGuide, _fileFormat, _vectorFormat);
-    var _element = new oElement( _id )
+    var _element = new $.oElement( _id )
  
     return _element;
 }
@@ -704,14 +704,14 @@ oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
  * @return {oNode}    The created node, or bool as false.
  */
  
-oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElementObject, drawingColumn, options ){
+$.oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElementObject, drawingColumn, options ){
     // add drawing column and element if not passed as parameters
     if (typeof oElementObject === 'undefined') var oElementObject = this.addElement( name );
     if (typeof drawingColumn === 'undefined') var drawingColumn = this.addColumn( "DRAWING", name, oElementObject );
        
     // Defaults for optional parameters
     if (typeof group === 'undefined') var group = "Top"
-    if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
+    if (typeof nodePosition === 'undefined') var nodePosition = new $.oPoint(0,0,0);
     if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
    
     var _node = this.addNode( "READ", name, group, nodePosition );
@@ -736,12 +736,12 @@ oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElementO
  
  * @return {oGroup}   The created node, or bool as false.
  */
-oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, group, nodePosition ){
+$.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, group, nodePosition ){
     // Defaults for optional parameters
     if (typeof addPeg === 'undefined') var addPeg = false;
     if (typeof addComposite === 'undefined') var addComposite = false;
     if (typeof group === 'undefined') var group = "Top";
-    if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
+    if (typeof nodePosition === 'undefined') var nodePosition = new $.oPoint(0,0,0);
     if (typeof includeNodes === 'undefined') var includeNodes = [];
    
     var _group = this.addNode( "GROUP", name, group, nodePosition );
@@ -789,9 +789,9 @@ oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, 
  * @param   {string}    display                The display node to build the timeline for.
  * @return {oTimeline}    The timelne object given the display.
  */
-oScene.prototype.getTimeline = function(display){
+$.oScene.prototype.getTimeline = function(display){
     if (typeof display === 'undefined') var display = '';
-    return new oTimeline( display, this );
+    return new $.oTimeline( display, this );
 }
 
 
@@ -800,11 +800,11 @@ oScene.prototype.getTimeline = function(display){
  * @param   {string}     name                The name of the palette to return, if available.
  * @return {oPalette}   oPalette with provided name.
  */
-oScene.prototype.getPaletteByName = function( name ){
+$.oScene.prototype.getPaletteByName = function( name ){
     var _paletteList = PaletteObjectManager.getScenePaletteList();
     for (var i=0; i<_paletteList.numPalettes; i++){
         if (_paletteList.getPaletteByIndex(i).getName() == name)
-        return new oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
+        return new $.oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
     }
     return null;
 }
@@ -814,10 +814,10 @@ oScene.prototype.getPaletteByName = function( name ){
  * Provides the selected palette.
  * @return {oPalette}   oPalette with provided name.
  */
-oScene.prototype.getSelectedPalette = function(){
+$.oScene.prototype.getSelectedPalette = function(){
     var _paletteList = PaletteManager.getScenePaletteList();
     var _id = PaletteManager.getCurrentPaletteId()
-    var _palette = new oPalette(_paletteList.getPaletteById(_id), this, _paletteList);
+    var _palette = new $.oPalette(_paletteList.getPaletteById(_id), this, _paletteList);
     return _palette;
 }
 
@@ -832,13 +832,13 @@ oScene.prototype.getSelectedPalette = function(){
  * 
  * @return {oPalette}   oPalette with provided name.
  */
-oScene.prototype.importPalette = function( path, name, index, paletteStorage, storeInElement ){
+$.oScene.prototype.importPalette = function( path, name, index, paletteStorage, storeInElement ){
     if (typeof paletteStorage === 'undefined') var paletteStorage = "scene";
     var _list = PaletteObjectManager.getScenePaletteList();
    
     if (typeof index === 'undefined') var index = _list.numPalettes;
    
-    var _paletteFile = new oFile(path);
+    var _paletteFile = new $.oFile(path);
     if (typeof name === 'undefined') var name = _paletteFile.name;
     if (typeof storeInElement === 'undefined'){
         if (paletteStorage == "element") throw new Error("Element parameter cannot be omitted if palette destination is Element")
@@ -869,15 +869,15 @@ oScene.prototype.importPalette = function( path, name, index, paletteStorage, st
     }
    
     // create a dummy palette to get the destination path
-    var _newPalette = new oPalette(_list.insertPaletteAtLocation(_destination, _element, "_dummy_palette", index), this, _list);
+    var _newPalette = new $.oPalette(_list.insertPaletteAtLocation(_destination, _element, "_dummy_palette", index), this, _list);
     var _path = _newPalette.path
    
-    var _file = new oFile(_path)
+    var _file = new $.oFile(_path)
     var copy = _paletteFile.copy(_file.folder.path, _paletteFile.name, true)
        
     // reload palette
     _newPalette.remove();
-    _newPalette = new oPalette(_list.insertPalette(copy.path.replace(".plt", ""), index), this, _list);
+    _newPalette = new $.oPalette(_list.insertPalette(copy.path.replace(".plt", ""), index), this, _list);
    
     return _newPalette;
 }
@@ -895,15 +895,15 @@ oScene.prototype.importPalette = function( path, name, index, paletteStorage, st
  * 
  * @return {oNode[]}     The nodes being created as part of the PSD import.
  */
-oScene.prototype.importPSD = function( path, group, nodePosition, separateLayers, addPeg, addComposite, alignment ){
+$.oScene.prototype.importPSD = function( path, group, nodePosition, separateLayers, addPeg, addComposite, alignment ){
     if (typeof alignment === 'undefined') var alignment = "ASIS" // create an enum for alignments?
     if (typeof addComposite === 'undefined') var addComposite = true;
     if (typeof addPeg === 'undefined') var addPeg = true;
     if (typeof separateLayers === 'undefined') var separateLayers = true;
-    if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
+    if (typeof nodePosition === 'undefined') var nodePosition = new $.oPoint(0,0,0);
     if (typeof group === 'undefined') var group = "Top";
  
-    var _psdFile = new oFile( path );
+    var _psdFile = new $.oFile( path );
     var _elementName = _psdFile.name;
  
     var _xSpacing = 45
@@ -941,7 +941,7 @@ oScene.prototype.importPSD = function( path, group, nodePosition, separateLayers
             // generate nodes and set them to show the element for each layer
             var _layer = _layers[i].layer
             var _layerName = _layers[i].layerName.split(" ").join("_")
-            var _nodePosition = new oPoint(_x+=_xSpacing, _y +=_ySpacing, 0)
+            var _nodePosition = new $.oPoint(_x+=_xSpacing, _y +=_ySpacing, 0)
            
             //TODO: set into right group according to PSD organisation
            
@@ -987,10 +987,10 @@ oScene.prototype.importPSD = function( path, group, nodePosition, separateLayers
  * @param   {string}       path                          The palette file to import.
  * @param   {bool}         [separateLayers]              Separate the layers of the PSD.
  */
-oScene.prototype.updatePSD = function( path, separateLayers ){
+$.oScene.prototype.updatePSD = function( path, separateLayers ){
     if (typeof separateLayers === 'undefined') var separateLayers = true;
 
-    var _psdFile = new oFile(path);
+    var _psdFile = new $.oFile(path);
    
     // get info from the PSD
     var _info = CELIO.getInformation(_psdFile.path);
@@ -1065,7 +1065,7 @@ oScene.prototype.updatePSD = function( path, separateLayers ){
             var _layerName = _layer.layerName.split(" ").join("_");
 
             var _layerIndex = _layer.position;
-            var _nodePosition = new oPoint(0,0,0);
+            var _nodePosition = new $.oPoint(0,0,0);
             var _group = _psdNodes[0].path;
             var _alignment = _psdNodes[0].alignment_rule;
             var _scale = _psdNodes[0].scale.x;
@@ -1128,15 +1128,15 @@ oScene.prototype.updatePSD = function( path, separateLayers ){
  * 
  * @return {oNode}        The imported Quicktime Node.
  */
-oScene.prototype.importQT = function( path, group, importSound, nodePosition, extendScene, alignment ){
+$.oScene.prototype.importQT = function( path, group, importSound, nodePosition, extendScene, alignment ){
     if (typeof alignment === 'undefined') var alignment = "ASIS";
     if (typeof extendScene === 'undefined') var extendScene = true;
     if (typeof importSound === 'undefined') var importSound = true;
-    if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
+    if (typeof nodePosition === 'undefined') var nodePosition = new $.oPoint(0,0,0);
     if (typeof group === 'undefined') var group = "Top";
     // MessageLog.trace("importing QT file :"+filename)
  
-    var _QTFile = new oFile(path);
+    var _QTFile = new $.oFile(path);
     var _elementName = _QTFile.name;
    
     var _element = this.addElement(_elementName, "PNG");
@@ -1188,7 +1188,7 @@ oScene.prototype.importQT = function( path, group, importSound, nodePosition, ex
  * 
  * @return {oNode}        The resulting drawing node from the merge.
  */
-oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
+$.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
     // TODO: is there a way to do this without Action.perform?
     // pass a oNode object as argument for destination node instead of name/group?
    

@@ -42,7 +42,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//        oNetwork methods          //
+//        $.oNetwork methods        //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -56,8 +56,8 @@
  * @param   {dom}                  $         The connection back to the DOM.
  *
  */
-oNetwork = function( dom ){
-    this.$ = dom;
+$.oNetwork = function( ){
+    this.$ = $;
     
     //Expect a path for CURL.
     var avail_paths = [ 
@@ -91,7 +91,7 @@ oNetwork = function( dom ){
  // *  
  // * @return: {string/object}       The resulting object/string from the query -- otherwise a bool as false when an error occured..
  // */
-oNetwork.prototype.webQuery = function ( address, callback_func, use_json ){
+$.oNetwork.prototype.webQuery = function ( address, callback_func, use_json ){
   if (typeof callback_func === 'undefined') var callback_func = false;
   if (typeof use_json === 'undefined') var use_json = false;
   
@@ -276,12 +276,12 @@ oNetwork.prototype.webQuery = function ( address, callback_func, use_json ){
  // *  
  // * @return: {string/object}       The resulting object/string from the query -- otherwise a bool as false when an error occured..
  // */
-oNetwork.prototype.downloadSingle = function ( address, path, replace ){
+$.oNetwork.prototype.downloadSingle = function ( address, path, replace ){
   if (typeof replace === 'undefined') var replace = false;
   
   try{
     if( this.useCurl && this.curlPath ){            
-      var file = new oFile( path );
+      var file = new $.oFile( path );
       if( file.exists ){
         if( replace ){
           file.remove();
@@ -297,7 +297,7 @@ oNetwork.prototype.downloadSingle = function ( address, path, replace ){
       p.start( this.curlPath, cmdline );  
       p.waitForFinished( 10000 );
       
-      var file = new oFile( path );
+      var file = new $.oFile( path );
       return file.exists;
       
     }else{
@@ -318,7 +318,7 @@ oNetwork.prototype.downloadSingle = function ( address, path, replace ){
  // *  
  // * @return: {bool[]}       The results of the download, for each file in the instruction bool[]
  // */
-oNetwork.prototype.downloadMulti = function ( address_path, replace ){
+$.oNetwork.prototype.downloadMulti = function ( address_path, replace ){
   if (typeof replace === 'undefined') var replace = false;
   
   var progress = new QProgressDialog();
@@ -356,7 +356,7 @@ oNetwork.prototype.downloadMulti = function ( address_path, replace ){
             in_proc = procs;
           }
           
-          var file = new oFile( path );
+          var file = new this.$.oFile( path );
           if( file.exists ){
             if( replace ){
               file.remove();
@@ -398,6 +398,8 @@ oNetwork.prototype.downloadMulti = function ( address_path, replace ){
         in_proc = procs;
       }
 
+      progress.accept();
+      
       var file_results = [];
       for( var x=0;x<address_path.length;x++ ){
         file_results.push( false );
@@ -406,7 +408,7 @@ oNetwork.prototype.downloadMulti = function ( address_path, replace ){
         }
         
         var add_grp = address_path[x];
-        var file = new oFile( add_grp.path );
+        var file = new this.$.oFile( add_grp.path );
         if( file.exists ){
           file_results[x] = true;
         }

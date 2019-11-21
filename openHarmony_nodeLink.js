@@ -42,7 +42,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//         oNodeLink class          //
+//         $.oNodeLink class          //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -65,7 +65,7 @@
  * @property   {int}                     _cacheOutLink          The outlink of the outport on the outNode that is connecting this link.
  * @property   {int}                     _cacheInPort           The inport of the inNode that is connecting the link.
  */
-oNodeLink = function( outNode, inNode, outPort, outLink, inPort ){
+$.oNodeLink = function( outNode, inNode, outPort, outLink, inPort ){
     this.outNode = outNode;
     this.inNode = inNode;
     this._cacheOutPort = outPort;
@@ -75,11 +75,11 @@ oNodeLink = function( outNode, inNode, outPort, outLink, inPort ){
 
 
 /**
- * The outport of this oNodeLink.
- * @name oNodeLink#outPort
+ * The outport of this $.oNodeLink.
+ * @name $.oNodeLink#outPort
  * @type {oNode[]}
  */
-Object.defineProperty(oNodeLink.prototype, 'outPort', {
+Object.defineProperty($.oNodeLink.prototype, 'outPort', {
     get : function(){
         // Check against the cache before computing again
         var _port = this._cacheOutPort;
@@ -115,10 +115,10 @@ Object.defineProperty(oNodeLink.prototype, 'outPort', {
 
 /**
  * Not yet implemented.
- * @name oNodeLink#inPort
+ * @name $.oNodeLink#inPort
  * @type {oNode[]}
  */
-Object.defineProperty(oNodeLink.prototype, 'inPort', {
+Object.defineProperty($.oNodeLink.prototype, 'inPort', {
     get : function(){
       throw "Not yet implemented.";
     },
@@ -128,4 +128,4 @@ Object.defineProperty(oNodeLink.prototype, 'inPort', {
 });
 
  
-// oNodeLink Class methods
+// $.oNodeLink Class methods

@@ -42,7 +42,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          oFrame class            //
+//          $.oFrame class          //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -50,9 +50,9 @@
  
  
 /**
- * The base class for the oFrame.
+ * The base class for the $.oFrame.
  * @constructor
- * @classdesc  oFrame Base Class
+ * @classdesc  $.oFrame Base Class
  * @param   {int}                    frameNumber             The frame to which this references.
  * @param   {oColumn}                oColumnObject           The column to which this frame references.
  * @param   {int}                    subColumns              The subcolumn index.
@@ -62,9 +62,9 @@
  * @property {oAttribute}              oAttributeObject       The oAttributeObject to which this frame references.
  * @property {int}                     subColumns            The subcolumn index.
  */
-oFrame = function( frameNumber, oColumnObject, subColumns ){
+$.oFrame = function( frameNumber, oColumnObject, subColumns ){
   this._type = "frame";
-  this.$     = false;
+  this.$     = $;
   
   if (typeof subColumns === 'undefined') var subColumns = 0;
 
@@ -82,13 +82,13 @@ oFrame = function( frameNumber, oColumnObject, subColumns ){
 }
  
  
-// oFrame Object Properties
+// $.oFrame Object Properties
 /**
  * The value of the frame. Contextual to the attribute type.
- * @name oFrame#value
+ * @name $.oFrame#value
  * @type {object}
  */
-Object.defineProperty(oFrame.prototype, 'value', {
+Object.defineProperty($.oFrame.prototype, 'value', {
     get : function(){
         return this.attributeObject.getValue( this.frameNumber );
     },
@@ -106,10 +106,10 @@ Object.defineProperty(oFrame.prototype, 'value', {
  
 /**
  * Whether the frame is a keyframe.
- * @name oFrame#isKeyFrame
+ * @name $.oFrame#isKeyFrame
  * @type {bool}
  */
-Object.defineProperty(oFrame.prototype, 'isKeyFrame', {
+Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
     get : function(){
       if( !this.column ){
         return true;
@@ -141,10 +141,10 @@ Object.defineProperty(oFrame.prototype, 'isKeyFrame', {
  
 /**
  * The duration of the keyframe exposure of the frame.
- * @name oFrame#duration
+ * @name $.oFrame#duration
  * @type {int}
  */
-Object.defineProperty(oFrame.prototype, 'duration', {
+Object.defineProperty($.oFrame.prototype, 'duration', {
     get : function(){
         var _startFrame = this.startFrame;
         var _sceneLength = frame.numberOf()
@@ -169,10 +169,10 @@ Object.defineProperty(oFrame.prototype, 'duration', {
  
 /**
  * Identifies if the frame is blank/empty.
- * @name oFrame#isBlank
+ * @name $.oFrame#isBlank
  * @type {int}
  */
-Object.defineProperty(oFrame.prototype, 'isBlank', {
+Object.defineProperty($.oFrame.prototype, 'isBlank', {
     get : function(){
       if( !this.column ){
         return false;
@@ -189,10 +189,10 @@ Object.defineProperty(oFrame.prototype, 'isBlank', {
 
 /**
  * Identifies the starting frame of the exposed drawing.
- * @name oFrame#startFrame
+ * @name $.oFrame#startFrame
  * @type {int}
  */
-Object.defineProperty(oFrame.prototype, 'startFrame', {
+Object.defineProperty($.oFrame.prototype, 'startFrame', {
     get : function(){
       if( !this.column ){
         return 1;
@@ -216,10 +216,10 @@ Object.defineProperty(oFrame.prototype, 'startFrame', {
  
 /**
  * Returns the drawing types used in the drawing column. K = key drawings, I = inbetween, B = breakdown
- * @name oFrame#marker
+ * @name $.oFrame#marker
  * @type {string}
  */
-Object.defineProperty(oFrame.prototype, 'marker', {
+Object.defineProperty($.oFrame.prototype, 'marker', {
     get : function(){
         if( !this.column ){
           return "";
@@ -247,7 +247,7 @@ Object.defineProperty(oFrame.prototype, 'marker', {
  * @param   {int}        duration              The duration to extend it to; if no duration specified, extends to the next available keyframe.
  * @param   {bool}       replace               Setting this to false will insert frames as opposed to overwrite existing ones.
  */
-oFrame.prototype.extend = function( duration, replace ){
+$.oFrame.prototype.extend = function( duration, replace ){
     if (typeof replace === 'undefined') var replace = true;
     // setting this to false will insert frames as opposed to overwrite existing ones
  

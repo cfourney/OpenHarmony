@@ -43,34 +43,16 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//        oColorValue class         //
+//        $.oColorValue class       //
 //                                  //
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
  
- 
-// Constructor
-//
-// oColorValue(colorValue)  // colorValue can be a hex string or a {r, g, b, a} object
-//
-// Properties
-//
-// double r
-// double g
-// double b
-// double a
-//
-// Methods
-//
-// void parseHexString(string)
-// string toString
-
-
 /**
- * The base class for the oColorValue.
+ * The base class for the $.oColorValue.
  * @constructor
- * @classdesc  oColorValue Base Class
+ * @classdesc  $.oColorValue Base Class
  * @param   {string/object}            colorValue            Hex string value, or object in form {rgba}
  *
  * @property {int}                    r                      The int value of the red component.
@@ -78,9 +60,9 @@
  * @property {int}                    b                      The int value of the blue component.
  * @property {int}                    a                      The int value of the alpha component.
  */
-oColorValue = function( colorValue ){
+$.oColorValue = function( colorValue ){
     if (typeof colorValue === 'undefined') var colorValue = "#000000ff";
-    MessageLog.trace("init oColorValue object"+JSON.stringify(colorValue)+" "+(typeof colorValue === 'string' ))
+    MessageLog.trace("init $.oColorValue object"+JSON.stringify(colorValue)+" "+(typeof colorValue === 'string' ))
     if (typeof colorValue === 'string'){
         colorValue = this.parseColorString(colorValue);
     }else{    
@@ -96,7 +78,7 @@ oColorValue = function( colorValue ){
  * The colour value represented as a string.
  * @return: {string}       RGBA components in a string in format #RRGGBBAA
  */
-oColorValue.prototype.toString = function (){
+$.oColorValue.prototype.toString = function (){
     var _hex = "#";
     _hex += this.r.toString(16);
     _hex += this.g.toString(16);
@@ -111,7 +93,7 @@ oColorValue.prototype.toString = function (){
  * Ingest a hex string in form #RRGGBBAA to define the colour.
  * @param   {string}    hexString                The colour in form #RRGGBBAA
  */
-oColorValue.prototype.fromColorString = function (hexString){
+$.oColorValue.prototype.fromColorString = function (hexString){
     hexString = hexString.replace("#","");
     if (hexString.length == 6) hexString+"ff";
     if (hexString.length != 8) throw new Error("incorrect color string format");
@@ -127,7 +109,7 @@ oColorValue.prototype.fromColorString = function (hexString){
 //////////////////////////////////////
 //                                  //
 //                                  //
-//           oColor class           //
+//           $.oColor class         //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -137,31 +119,31 @@ oColorValue.prototype.fromColorString = function (hexString){
 // oPalette constructor
 
 /**
- * The base class for the oColor.
+ * The base class for the $.oColor.
  * @constructor
- * @classdesc  oColor Base Class
+ * @classdesc  $.oColor Base Class
  * @param   {oPaletteObject}         oPaletteObject             The palette to which the color belongs.
  * @param   {int}                    attributeObject            The index of the color in the palette.
  *
  * @property {oPaletteObject}        palette                    The palette to which the color belongs.
  */
-oColor = function( oPaletteObject, index ){
+$.oColor = function( oPaletteObject, index ){
   // We don't use id in the constructor as multiple colors with the same id can exist in the same palette.
   this._type = "color";
-  this.$     = oPaletteObject.$;
+  this.$     = $;
 
   this.palette = oPaletteObject;
   this._index = index;
 }
  
-// oColor Object Properties
+// $.oColor Object Properties
 
 /**
  * The Harmony color object.
- * @name oColor#colorObject
+ * @name $.oColor#colorObject
  * @type {BaseColor}
  */
-Object.defineProperty(oColor.prototype, 'colorObject', {
+Object.defineProperty($.oColor.prototype, 'colorObject', {
     get : function(){
         return this.palette.paletteObject.getColorByIndex(this._index);
     }, 
@@ -175,10 +157,10 @@ Object.defineProperty(oColor.prototype, 'colorObject', {
 
 /**
  * The name of the color.
- * @name oColor#name
+ * @name $.oColor#name
  * @type {string}
  */
-Object.defineProperty(oColor.prototype, 'name', {
+Object.defineProperty($.oColor.prototype, 'name', {
     get : function(){
         var _color = this.colorObject;
         return _color.name;
@@ -193,10 +175,10 @@ Object.defineProperty(oColor.prototype, 'name', {
 
 /**
  * The id of the color.
- * @name oColor#id
+ * @name $.oColor#id
  * @type {string}
  */
-Object.defineProperty(oColor.prototype, 'id', {
+Object.defineProperty($.oColor.prototype, 'id', {
     get : function(){
         var _color = this.colorObject;
         return _color.id
@@ -211,10 +193,10 @@ Object.defineProperty(oColor.prototype, 'id', {
 
 /**
  * The index of the color.
- * @name oColor#index
+ * @name $.oColor#index
  * @type {int}
  */
-Object.defineProperty(oColor.prototype, 'index', {
+Object.defineProperty($.oColor.prototype, 'index', {
     get : function(){
         return this._index;
     },
@@ -228,10 +210,10 @@ Object.defineProperty(oColor.prototype, 'index', {
 
 /**
  * The type of the color.
- * @name oColor#type
+ * @name $.oColor#type
  * @type {int}
  */
-Object.defineProperty(oColor.prototype, 'type', {
+Object.defineProperty($.oColor.prototype, 'type', {
     set : function(){
       throw "Not yet implemented.";
     },
@@ -255,10 +237,10 @@ Object.defineProperty(oColor.prototype, 'type', {
 
 /**
  * Whether the color is selected.
- * @name oColor#selected
+ * @name $.oColor#selected
  * @type {bool}
  */
-Object.defineProperty(oColor.prototype, 'selected', {
+Object.defineProperty($.oColor.prototype, 'selected', {
     get : function(){
         var _currentId = PaletteManager.getCurrentColorId()
         var _colors = this.palette.colors;
@@ -278,15 +260,15 @@ Object.defineProperty(oColor.prototype, 'selected', {
 
 /**
  * Takes a string or array of strings for gradients and filename for textures. Instead of passing rgba objects, it accepts "#rrggbbaa" hex strings for convenience.<br>set gradients, provide an array of {string color, double position} objects that define a gradient scale.
- * @name oColor#value
+ * @name $.oColor#value
  * @type {object}
  */
-Object.defineProperty(oColor.prototype, 'value', {
+Object.defineProperty($.oColor.prototype, 'value', {
     get : function(){
         var _color = this.colorObject;
         switch(this.type){
             case "solid":
-                return new oColorValue(_color.colorData)
+                return new $.oColorValue(_color.colorData)
             case "texture":
                 // TODO: no way to return the texture file name?
             case "gradient":
@@ -295,7 +277,7 @@ Object.defineProperty(oColor.prototype, 'value', {
                 var _value = [];
                 for (var i = 0; i<_gradientArray.length; i++){
                     var _tack = {}
-                    _tack.color = new oColorValue(_gradientArray[i]).toString()
+                    _tack.color = new $.oColorValue(_gradientArray[i]).toString()
                     _tack.position = _gradientArray[i].t
                     _value.push(_tack)
                 }
@@ -319,7 +301,7 @@ Object.defineProperty(oColor.prototype, 'value', {
                 var _gradientArray = newValue;
                 var _value = [];
                 for (var i = 0; i<_gradientArray.length; i++){
-                    var _tack = new oColorValue(_gradientArray[i].color)
+                    var _tack = new $.oColorValue(_gradientArray[i].color)
                     _tack.t = _gradientArray[i]. position
                     _value.push()
                 }
@@ -338,9 +320,9 @@ Object.defineProperty(oColor.prototype, 'value', {
  * @param   {oPaletteObject}     oPaletteObject              The paletteObject to move this color into.
  * @param   {int}                index                       Need clarification from mchap
  *  
- * @return: {oColor}           The new resulting oColor object.
+ * @return: {$.oColor}           The new resulting $.oColor object.
  */
-oColor.prototype.moveToPalette = function ( oPaletteObject, index ){
+$.oColor.prototype.moveToPalette = function ( oPaletteObject, index ){
     var _color = this.colorObject;
     
     oPaletteObject.paletteObject.cloneColor(_color)
@@ -358,7 +340,7 @@ oColor.prototype.moveToPalette = function ( oPaletteObject, index ){
 /**
  * Removes the color from the palette it belongs to.
  */
-oColor.prototype.remove = function (){
+$.oColor.prototype.remove = function (){
     // TODO: find a way to work with index as more than one color can have the same id
     this.palette.paletteObject.removeColor(this.id);
 }
@@ -371,7 +353,7 @@ oColor.prototype.remove = function (){
  * @static
  * @return: { string }    Hex color string in format #FFFFFFFF.
  */
-oColor.prototype.rgbaToHex = function (rgbaObject){
+$.oColor.prototype.rgbaToHex = function (rgbaObject){
     var _hex = "#";
     _hex += rvbObject.r.toString(16)
     _hex += rvbObject.g.toString(16)
@@ -389,7 +371,7 @@ oColor.prototype.rgbaToHex = function (rgbaObject){
  * @static
  * @return: { obj }    The hex object returned { r:int, g:int, b:int, a:int }
  */
-oColor.prototype.hexToRgba = function (hexString){
+$.oColor.prototype.hexToRgba = function (hexString){
     var _rgba = {};
     //Needs a better fail state.
     

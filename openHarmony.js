@@ -116,10 +116,6 @@ include( $.directory + "/openHarmony_scene.js" );
  * @param   {int}   level          The debug level of the incoming message to log.
  */
 $.debug = function( obj, level ){
-
-  System.println( obj );
-  System.println( level );
-  
   if( level <= this.debug_level ){
     //We log it.
     
@@ -165,11 +161,10 @@ $.logObj = function( object ){
 }
 
 
-$.s     = new oScene( $ );
+$.s     = new $.oScene( );
 $.scn   = $.s;
 $.scene = $.s;
-
 $.global = this;
 
 //---- Attach Helpers ------
-$.network = new oNetwork( $ );
+$.network = new $.oNetwork( );

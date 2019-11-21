@@ -43,7 +43,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          oColumn class           //
+//          $.oColumn class         //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -53,30 +53,30 @@
 /**
  * The base class for the column.
  * @constructor
- * @classdesc  oColumn Class
+ * @classdesc  $.oColumn Class
  * @param   {string}                   uniqueName                  The unique name of the column.
  * @param   {oAttribute}               oAttributeObject            The oAttribute thats connected to the column.
  *
  * @property {string}                  uniqueName                  The unique name of the column.
  * @property {oAttribute}              attributeObject             The attribute object that the column is attached to.
  */
-oColumn = function( uniqueName, oAttributeObject ){
+$.oColumn = function( uniqueName, oAttributeObject ){
 
   this._type = "column";
-  this.$     = false;
+  this.$     = $;
   
   this.uniqueName = uniqueName;
   this.attributeObject = oAttributeObject
 }
 
 
-// oColumn Object Properties 
+// $.oColumn Object Properties 
 /**
  * The name of the column.
- * @name oColumn#name
+ * @name $.oColumn#name
  * @type {string}
  */
-Object.defineProperty( oColumn.prototype, 'name', {
+Object.defineProperty( $.oColumn.prototype, 'name', {
     get : function(){
          return column.getDisplayName(this.uniqueName)
     },
@@ -94,10 +94,10 @@ Object.defineProperty( oColumn.prototype, 'name', {
 
 /**
  * The type of the column.
- * @name oColumn#type
+ * @name $.oColumn#type
  * @type {string}
  */
-Object.defineProperty( oColumn.prototype, 'type', {
+Object.defineProperty( $.oColumn.prototype, 'type', {
     get : function(){
         return column.type(this.uniqueName)
     },
@@ -110,14 +110,14 @@ Object.defineProperty( oColumn.prototype, 'type', {
 
 /**
  * An array of the oFrame objects provided by the column.
- * @name oColumn#frames
+ * @name $.oColumn#frames
  * @type {oFrame[]}
  */
-Object.defineProperty(oColumn.prototype, 'frames', {
+Object.defineProperty($.oColumn.prototype, 'frames', {
     get : function(){
         var _frames = new Array(frame.numberOf()+1);
         for (var i=1; i<_frames.length; i++){
-            _frames[i] = new oFrame( i, this );
+            _frames[i] = new $.oFrame( i, this );
         }
         return _frames;
     },
@@ -130,10 +130,10 @@ Object.defineProperty(oColumn.prototype, 'frames', {
 
 /**
  * An array of the keyframes provided by the column.
- * @name oColumn#keyframes
+ * @name $.oColumn#keyframes
  * @type {oFrame[]}
  */
-Object.defineProperty(oColumn.prototype, 'keyframes', {
+Object.defineProperty($.oColumn.prototype, 'keyframes', {
     get : function(){
       var _frames = this.frames;
       _frames = _frames.filter(function(x){return x.isKeyFrame});
@@ -148,10 +148,10 @@ Object.defineProperty(oColumn.prototype, 'keyframes', {
 
 /**
  * Provides the available subcolumns, based on the type of the column.
- * @name oColumn#subColumns
+ * @name $.oColumn#subColumns
  * @type {object}
  */
-Object.defineProperty(oColumn.prototype, 'subColumns', {
+Object.defineProperty($.oColumn.prototype, 'subColumns', {
     get : function(){
       //CF Note: Not sure of this use.
         if (this.type == "3DPATH"){
@@ -169,7 +169,7 @@ Object.defineProperty(oColumn.prototype, 'subColumns', {
 })
  
  
-// oColumn Class methods
+// $.oColumn Class methods
  
 /**
  * Extends the exposure of the drawing's keyframes given the provided arguments.
@@ -178,7 +178,7 @@ Object.defineProperty(oColumn.prototype, 'subColumns', {
  * @param   {int}       amount               The amount to extend.
  * @param   {bool}      replace              Setting this to false will insert frames as opposed to overwrite existing ones.
  */
-oColumn.prototype.extendExposures = function( exposures, amount, replace){
+$.oColumn.prototype.extendExposures = function( exposures, amount, replace){
     if (this.type != "DRAWING") return false;
     // if amount is undefined, extend function below will automatically fill empty frames
    
@@ -195,7 +195,7 @@ oColumn.prototype.extendExposures = function( exposures, amount, replace){
 /**
  * Removes concurrent/duplicate keys from drawing layers.
  */
-oColumn.prototype.removeDuplicateKeys = function(){
+$.oColumn.prototype.removeDuplicateKeys = function(){
     var _keys = this.getKeyFrames();
         
     var _pointsToRemove = [];
@@ -234,7 +234,7 @@ oColumn.prototype.removeDuplicateKeys = function(){
 /**
  * Not yet implemented.
  */
-oColumn.prototype.duplicate = function() {
+$.oColumn.prototype.duplicate = function() {
     throw "Not yet implemented.";
 }
 
@@ -244,7 +244,7 @@ oColumn.prototype.duplicate = function() {
  *
  * @return {oFrame[]}    Provides the array of frames from the column.
  */
-oColumn.prototype.getKeyFrames = function(){
+$.oColumn.prototype.getKeyFrames = function(){
     var _frames = this.frames;
     _frames = _frames.filter(function(x){return x.isKeyFrame});
     return _frames;
@@ -260,7 +260,7 @@ oColumn.prototype.getKeyFrames = function(){
 //////////////////////////////////////
 //                                  //
 //                                  //
-//       oDrawingColumn class       //
+//       $.oDrawingColumn class     //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -270,34 +270,34 @@ oColumn.prototype.getKeyFrames = function(){
 /**
  * The extension class for drawing columns.
  * @constructor
- * @classdesc  oDrawingColumn Class
- * @augments   oColumn
+ * @classdesc  $.oDrawingColumn Class
+ * @augments   $.oColumn
  * @param   {string}                   uniqueName                  The unique name of the column.
  * @param   {oAttribute}               oAttributeObject            The oAttribute thats connected to the column.
  *
  * @property {string}                  uniqueName                  The unique name of the column.
  * @property {oAttribute}              attributeObject             The attribute object that the column is attached to.
  */
-function oDrawingColumn( uniqueName, oAttributeObject ) {
-    // oDrawingColumn can only represent a column of type 'DRAWING'
+$.oDrawingColumn = function( uniqueName, oAttributeObject ) {
+    // $.oDrawingColumn can only represent a column of type 'DRAWING'
     if (column.type(uniqueName) != 'DRAWING') throw new Error("'uniqueName' parameter must point to a 'DRAWING' type node");
-    //MessageBox.information("getting an instance of oDrawingColumn for column : "+uniqueName)
-    oColumn.call(this, uniqueName, oAttributeObject);
+    //MessageBox.information("getting an instance of $.oDrawingColumn for column : "+uniqueName)
+    $.oColumn.call(this, uniqueName, oAttributeObject);
 }
 
  
-// extends oColumn and can use its methods
-oDrawingColumn.prototype = Object.create(oColumn.prototype);
+// extends $.oColumn and can use its methods
+$.oDrawingColumn.prototype = Object.create($.oColumn.prototype);
 
 
 /**
  * Provides the drawing element attached to the column.
- * @name oDrawingColumn#element
+ * @name $.oDrawingColumn#element
  * @type {oElement}
  */
-Object.defineProperty(oDrawingColumn.prototype, 'element', {
+Object.defineProperty($.oDrawingColumn.prototype, 'element', {
     get : function(){
-        return new oElement(column.getElementIdOfDrawing( this.uniqueName), this);
+        return new $.oElement(column.getElementIdOfDrawing( this.uniqueName), this);
     },
 
     set : function(oElementObject){
@@ -313,7 +313,7 @@ Object.defineProperty(oDrawingColumn.prototype, 'element', {
  * @param   {int}       amount               The amount to extend.
  * @param   {bool}      replace              Setting this to false will insert frames as opposed to overwrite existing ones.
  */
-oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace){
+$.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace){
     // if amount is undefined, extend function below will automatically fill empty frames
     if (typeof exposures === 'undefined') var exposures = this.getKeyFrames();
  

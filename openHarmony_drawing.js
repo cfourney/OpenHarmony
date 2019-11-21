@@ -42,7 +42,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          oDrawing class          //
+//          $.oDrawing class        //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -50,18 +50,18 @@
 
 
 /**
- * The base class for the oDrawing.
+ * The base class for the $.oDrawing.
  * @constructor
- * @classdesc  oDrawing Base Class
+ * @classdesc  $.oDrawing Base Class
  * @param   {int}                    name                       The name of the drawing.
  * @param   {oElement}               oElementObject             The element object associated to the element.
  *
  * @property {int}                   name                       The name of the drawing.
  * @property {oElement}              element                    The element object associated to the element.
  */
-oDrawing = function( name, oElementObject ){
+$.oDrawing = function( name, oElementObject ){
   this._type = "drawing";
-  this.$     = false;
+  this.$     = $;
 
   this.name = name;
   this.element = oElementObject;
@@ -69,14 +69,14 @@ oDrawing = function( name, oElementObject ){
  
 /**
  * The folder path of the drawing on the filesystem.
- * @name oDrawing#path
+ * @name $.oDrawing#path
  * @type {string}
  */
-Object.defineProperty( oDrawing.prototype, 'path', {
+Object.defineProperty( $.oDrawing.prototype, 'path', {
     get : function(){
          return fileMapper.toNativePath(Drawing.filename(this.element.id, this.name))
     }
 })
 
 
-// oDrawing Class methods
+// $.oDrawing Class methods

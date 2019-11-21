@@ -43,7 +43,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          oPoint class            //
+//          $.oPoint class          //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -52,9 +52,9 @@
  
 
 /**
- * The oPoint helper class - representing a 3D point.
+ * The $.oPoint helper class - representing a 3D point.
  * @constructor
- * @classdesc  oPoint Base Class
+ * @classdesc  $.oPoint Base Class
  * @param     {float}              x                              Horizontal coordinate
  * @param     {float}              y                              Vertical coordinate
  * @param     {float}             [z]                             Depth Coordinate
@@ -63,7 +63,7 @@
  * @property     {float}           y                              Vertical coordinate
  * @property     {float}           z                              Depth Coordinate
  */
-oPoint = function(x, y, z){
+$.oPoint = function(x, y, z){
     if (typeof z === 'undefined') var z = 0;
     
     this._type = "point";
@@ -74,12 +74,12 @@ oPoint = function(x, y, z){
 }
  
 /**
- * Adds the input box to the bounds of the current oBox.
- * @param   {oPoint}       add_pt                The point to add to this point. 
+ * Adds the input box to the bounds of the current $.oBox.
+ * @param   {$.oPoint}       add_pt                The point to add to this point. 
  *
- * @return: { oPoint }                           Returns self (for inline addition).
+ * @return: { $.oPoint }                           Returns self (for inline addition).
  */
-oPoint.prototype.pointAdd = function( add_pt ){
+$.oPoint.prototype.pointAdd = function( add_pt ){
     this.x += add_pt.x;
     this.y += add_pt.y;
     this.z += add_pt.z;
@@ -88,12 +88,12 @@ oPoint.prototype.pointAdd = function( add_pt ){
 }
 
 /**
- * Subtracts the input box to the bounds of the current oBox.
- * @param   {oPoint}       sub_pt                The point to subtract to this point. 
+ * Subtracts the input box to the bounds of the current $.oBox.
+ * @param   {$.oPoint}       sub_pt                The point to subtract to this point. 
  *
- * @return: { oPoint }                           Returns self (for inline addition).
+ * @return: { $.oPoint }                           Returns self (for inline addition).
  */
-oPoint.prototype.pointSubtract = function( sub_pt ){
+$.oPoint.prototype.pointSubtract = function( sub_pt ){
     this.x -= sub_pt.x;
     this.y -= sub_pt.y;
     this.z -= sub_pt.z;
@@ -105,9 +105,9 @@ oPoint.prototype.pointSubtract = function( sub_pt ){
  * Multiply all coordinates by this value.
  * @param   {float}       float_val                Multiply all coordinates by this value. 
  *
- * @return: { oPoint }                           Returns self (for inline addition).
+ * @return: { $.oPoint }                           Returns self (for inline addition).
  */
-oPoint.prototype.multiply = function( float_val ){
+$.oPoint.prototype.multiply = function( float_val ){
     this.x *= float_val;
     this.y *= float_val;
     this.z *= float_val;
@@ -119,9 +119,9 @@ oPoint.prototype.multiply = function( float_val ){
  * Divides all coordinates by this value.
  * @param   {float}       float_val                Divide all coordinates by this value. 
  *
- * @return: { oPoint }                           Returns self (for inline addition).
+ * @return: { $.oPoint }                           Returns self (for inline addition).
  */
-oPoint.prototype.divide = function( float_val ){
+$.oPoint.prototype.divide = function( float_val ){
     this.x /= float_val;
     this.y /= float_val;
     this.z /= float_val;
@@ -131,12 +131,12 @@ oPoint.prototype.divide = function( float_val ){
 
 /**
  * Find average of provided points.
- * @param   {oPoint[]}       point_array         The array of points to get the average. 
+ * @param   {$.oPoint[]}       point_array         The array of points to get the average. 
  *
- * @return: { oPoint }                           Returns the oPoint average of provided points.
+ * @return: { $.oPoint }                           Returns the $.oPoint average of provided points.
  */
-oPoint.prototype.pointAverage = function( point_array ){
-  var _avg = new oPoint( 0.0, 0.0, 0.0 );
+$.oPoint.prototype.pointAverage = function( point_array ){
+  var _avg = new $.oPoint( 0.0, 0.0, 0.0 );
   for( var x=0;x<point_array.length;x++ ){
     _avg.pointAdd( point_array[x] );
   }
@@ -148,13 +148,13 @@ oPoint.prototype.pointAverage = function( point_array ){
 
 /**
  * Linearily Interpolate between this (0.0) and the provided point (1.0)
- * @param   {oPoint}       point                The target point at 100%
+ * @param   {$.oPoint}       point                The target point at 100%
  * @param   {double}       perc                 0-1.0 value to linearily interp
  *
- * @return: { oPoint }                          The interpolated value.
+ * @return: { $.oPoint }                          The interpolated value.
  */
-oPoint.prototype.lerp = function( point, perc ){
-  var delta = new oPoint( point.x, point.y, point.z );
+$.oPoint.prototype.lerp = function( point, perc ){
+  var delta = new $.oPoint( point.x, point.y, point.z );
  
   delta = delta.pointSubtract( this );
   delta.multiply( perc );
@@ -167,7 +167,7 @@ oPoint.prototype.lerp = function( point, perc ){
 //////////////////////////////////////
 //                                  //
 //                                  //
-//            oBox class            //
+//            $.oBox class            //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -176,9 +176,9 @@ oPoint.prototype.lerp = function( point, perc ){
 
  
 /**
- * The oBox helper class - representing a 2D box.
+ * The $.oBox helper class - representing a 2D box.
  * @constructor
- * @classdesc  oBox Base Class
+ * @classdesc  $.oBox Base Class
  * @param      {float}       left                             left horizontal bound
  * @param      {float}       top                              top vertical bound
  * @param      {float}       right                            right horizontal bound
@@ -189,7 +189,7 @@ oPoint.prototype.lerp = function( point, perc ){
  * @property      {float}       right                            right horizontal bound
  * @property      {float}       bottom                           bottom vertical bound
  */
-oBox = function( left, top, right, bottom ){
+$.oBox = function( left, top, right, bottom ){
     this._type = "box";
 
     if (typeof top === 'undefined') var top = Infinity
@@ -206,10 +206,10 @@ oBox = function( left, top, right, bottom ){
  
 /**
  * The width of the box.
- * @name oBox#width
+ * @name $.oBox#width
  * @type {float}
  */
-Object.defineProperty(oBox.prototype, 'width', {
+Object.defineProperty($.oBox.prototype, 'width', {
     get : function(){
          return this.right - this.left + 1; //Inclusive size.
     }
@@ -218,10 +218,10 @@ Object.defineProperty(oBox.prototype, 'width', {
  
 /**
  * The height of the box.
- * @name oBox#height
+ * @name $.oBox#height
  * @type {float}
  */
-Object.defineProperty(oBox.prototype, 'height', {
+Object.defineProperty($.oBox.prototype, 'height', {
     get : function(){
          return this.bottom - this.top;
     }
@@ -230,21 +230,21 @@ Object.defineProperty(oBox.prototype, 'height', {
  
 /**
  * The center of the box.
- * @name oBox#center
- * @type {oPoint}
+ * @name $.oBox#center
+ * @type {$.oPoint}
  */
-Object.defineProperty(oBox.prototype, 'center', {
+Object.defineProperty($.oBox.prototype, 'center', {
     get : function(){
-         return new oPoint(this.left+this.width/2, this.top+this.height/2);
+         return new $.oPoint(this.left+this.width/2, this.top+this.height/2);
     }
 })
  
  
 /**
- * Adds the input box to the bounds of the current oBox.
- * @param   {oBox}       box                The oBox to include.                    
+ * Adds the input box to the bounds of the current $.oBox.
+ * @param   {$.oBox}       box                The $.oBox to include.                    
  */
-oBox.prototype.include = function(box){
+$.oBox.prototype.include = function(box){
     if (box.left < this.left) this.left = box.left;
     if (box.top < this.top) this.top = box.top;
     if (box.right > this.right) this.right = box.right;
@@ -252,10 +252,10 @@ oBox.prototype.include = function(box){
 }
 
 /**
- * Adds the bounds of the nodes to the current oBox.
+ * Adds the bounds of the nodes to the current $.oBox.
  * @param   {oNode[]}       oNodeArray                An array of nodes to include in the box.                 
  */
-oBox.prototype.includeNodes = function(oNodeArray){
+$.oBox.prototype.includeNodes = function(oNodeArray){
     for (var i in oNodeArray){
          var _node = oNodeArray[i];
          var _nodeBox = _node.bounds;
@@ -267,7 +267,7 @@ oBox.prototype.includeNodes = function(oNodeArray){
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          oFolder class           //
+//          $.oFolder class         //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -275,27 +275,26 @@ oBox.prototype.includeNodes = function(oNodeArray){
  
  
 /**
- * The oFolder helper class -- providing utilities for folder manipulation and access.
+ * The $.oFolder helper class -- providing utilities for folder manipulation and access.
  * @constructor
- * @classdesc  oFolder Base Class
+ * @classdesc  $.oFolder Base Class
  * @param       {string}              path                      The path to the folder.
  *
  * @property    {string}             path                      The path to the folder.
  */
-oFolder = function(path){
+$.oFolder = function(path){
     this._type = "folder";
-
     this._path = fileMapper.toNativePath(path).split("\\").join("/");
-    if (this.path.slice(-1) != "/") this.path += "/";
+    //if (this.path.slice(-1) != "/") this.path += "/";
 }
 
 
 /**
  * The path of the folder.
- * @name oFolder#path
+ * @name $.oFolder#path
  * @type {string}
  */
-Object.defineProperty(oFolder.prototype, 'path', {
+Object.defineProperty($.oFolder.prototype, 'path', {
     get: function(){
         return this._path;
     },
@@ -305,7 +304,7 @@ Object.defineProperty(oFolder.prototype, 'path', {
           return;
         }
         
-        var folder = new oFolder( newPath );
+        var folder = new $.oFolder( newPath );
         if( folder.exists ){
           throw "Target path already exists. No default replace.";
         }
@@ -322,10 +321,10 @@ Object.defineProperty(oFolder.prototype, 'path', {
 
 /**
  * The name of the folder.
- * @name oFolder#name
+ * @name $.oFolder#name
  * @type {string}
  */
-Object.defineProperty(oFolder.prototype, 'name', {
+Object.defineProperty($.oFolder.prototype, 'name', {
     get: function(){
         var _name = this.path.split("/");
         _name = _name[_name.length-2];
@@ -336,23 +335,23 @@ Object.defineProperty(oFolder.prototype, 'name', {
 
 /**
  * The parent folder.
- * @name oFolder#folder
+ * @name $.oFolder#folder
  * @type {string}
  */
-Object.defineProperty(oFolder.prototype, 'folder', {
+Object.defineProperty($.oFolder.prototype, 'folder', {
     get: function(){
         var _folder = this.path.slice(0,this.path.lastIndexOf("/", this.path.length-2));
-        return new oFolder(_folder);
+        return new $.oFolder(_folder);
     }
 });
 
 
 /**
  * The parent folder.
- * @name oFolder#exists
+ * @name $.oFolder#exists
  * @type {string}
  */
-Object.defineProperty(oFolder.prototype, 'exists', {
+Object.defineProperty($.oFolder.prototype, 'exists', {
     get: function(){
         var dir = new Dir;
         dir.path = this.path
@@ -363,10 +362,10 @@ Object.defineProperty(oFolder.prototype, 'exists', {
 
 /**
  * The files in the folder.
- * @name oFolder#files
- * @type {oFile[]}
+ * @name $.oFolder#files
+ * @type {$.oFile[]}
  */
-Object.defineProperty(oFolder.prototype, 'files', {
+Object.defineProperty($.oFolder.prototype, 'files', {
     get: function(){
       var dir = new QDir;
       dir.setPath(this.path);
@@ -374,17 +373,17 @@ Object.defineProperty(oFolder.prototype, 'files', {
    
       if (!dir.exists) throw new Error("can't get files from folder "+this.path+" because it doesn't exist");
    
-      return dir.entryList().map(function(x){return new oFile(dir.path()+"/"+x)});
+      return dir.entryList().map(function(x){return new $.oFile(dir.path()+"/"+x)});
     }
 });
 
 
 /**
  * The folders within this folder.
- * @name oFolder#folders
- * @type {oFile[]}
+ * @name $.oFolder#folders
+ * @type {$.oFile[]}
  */
-Object.defineProperty(oFolder.prototype, 'folders', {
+Object.defineProperty($.oFolder.prototype, 'folders', {
     get: function(){
       var _dir = new QDir;
       _dir.setPath(this.path);
@@ -396,17 +395,17 @@ Object.defineProperty(oFolder.prototype, 'folders', {
           if (_folders[i] == "." || _folders[i] == "..") _folders.splice(i,1);
       }
       
-      return _folders.map(function(x){return new oFolder( dir.path() + "/" + x )});
+      return _folders.map(function(x){return new $.oFolder( dir.path() + "/" + x )});
     }
 });
 
 
 /**
  * The content within the folder -- both folders and files.
- * @name oFolder#content
- * @type {oFile/oFolder[] }
+ * @name $.oFolder#content
+ * @type {$.oFile/$.oFolder[] }
  */
-Object.defineProperty(oFolder.prototype, 'content', {
+Object.defineProperty($.oFolder.prototype, 'content', {
     get: function(){
       var content = this.files;
           content = content.concat( this.folders );
@@ -421,7 +420,7 @@ Object.defineProperty(oFolder.prototype, 'content', {
  *  
  * @return: { string[] }                      The file content of folder.                     
  */
-oFolder.prototype.listFiles = function(filter){
+$.oFolder.prototype.listFiles = function(filter){
     if (typeof filter === 'undefined') var filter = "*";
 
     var _dir = new QDir;
@@ -435,28 +434,28 @@ oFolder.prototype.listFiles = function(filter){
 }
 
 /**
- * Lists the directory files as an oFolder
+ * Lists the directory files as an $.oFolder
  * @param   {string}   [filter]              Filter wildcards for the content of the folder.
  *  
- * @return: { oFile[] }                      The file content of folder.                     
+ * @return: { $.oFile[] }                      The file content of folder.                     
  */
-oFolder.prototype.getFiles = function( filter ){
+$.oFolder.prototype.getFiles = function( filter ){
     if (typeof filter === 'undefined') var filter = "*";
-    // returns the list of oFile in a directory that match a filter
+    // returns the list of $.oFile in a directory that match a filter
     var _path = this.path;
-    var _files = this.listFiles(filter).map( function(x){ return new oFile(_path+x) } );
+    var _files = this.listFiles(filter).map( function(x){ return new $.oFile(_path+x) } );
    
     return _files;
 }
 
 
 /**
- * Adds the input box to the bounds of the current oBox.
+ * Adds the input box to the bounds of the current $.oBox.
  * @param   {string}   [filter]              Filter wildcards for the content of the folder.
  *  
- * @return: { oFile[] }                      The file content of folder.                     
+ * @return: { $.oFile[] }                      The file content of folder.                     
  */
-oFolder.prototype.listFolders = function(filter){
+$.oFolder.prototype.listFolders = function(filter){
    
     if (typeof filter === 'undefined') var filter = "*";
    
@@ -479,7 +478,7 @@ oFolder.prototype.listFolders = function(filter){
  *  
  * @return: { bool }                         The existence of the newly created folder.                 
  */
-oFolder.prototype.create = function(){
+$.oFolder.prototype.create = function(){
     if( this.exists ){
       return true;
     }
@@ -494,11 +493,11 @@ oFolder.prototype.create = function(){
  
 /**
  * Copy the folder and its contents to another path. WIP
- * @param   {string}   [folderPath]          The path to the folder location to copy to (CFNote: Should this not be a oFolder?)
+ * @param   {string}   [folderPath]          The path to the folder location to copy to (CFNote: Should this not be a $.oFolder?)
  * @param   {string}   [copyName]            The name of the folder to copy (CFNote: Should this be avoided and the folderPath be the full path?)
  * @param   {bool}     [overwrite]           Whether to overwrite the target.
  */
-oFolder.prototype.copy = function( folderPath, copyName, overwrite ){
+$.oFolder.prototype.copy = function( folderPath, copyName, overwrite ){
     if (typeof overwrite === 'undefined') var overwrite = false;
     if (typeof copyName === 'undefined') var copyName = this.name;
     if (typeof folderPath === 'undefined') var folderPath = this.folder.path;
@@ -514,12 +513,12 @@ oFolder.prototype.copy = function( folderPath, copyName, overwrite ){
 
 /**
  * Move this folder to a different location.
- * @param   {string}   destFolderPath           The path to the folder location to copy to (CFNote: Should this not be a oFolder?)
+ * @param   {string}   destFolderPath           The path to the folder location to copy to (CFNote: Should this not be a $.oFolder?)
  * @param   {bool}     [overwrite]              Whether to overwrite the target. Default is false.
  *  
  * @return: { bool }                            The result of the move.                    
  */
-oFolder.prototype.move = function( destFolderPath, overwrite ){
+$.oFolder.prototype.move = function( destFolderPath, overwrite ){
     if (typeof overwrite === 'undefined') var overwrite = false;
 
     try{
@@ -552,12 +551,12 @@ oFolder.prototype.move = function( destFolderPath, overwrite ){
 
 /**
  * Move this folder to a different parent folder, while retaining its content and base name.
- * @param   {string}   destFolderPath           The path to the folder location to copy to (CFNote: Should this not be a oFolder?)
+ * @param   {string}   destFolderPath           The path to the folder location to copy to (CFNote: Should this not be a $.oFolder?)
  * @param   {bool}     [overwrite]              Whether to overwrite the target. Default is false.
  *  
  * @return: { bool }                            The result of the move.                    
  */
-oFolder.prototype.moveToFolder = function( destFolderPath, overwrite ){
+$.oFolder.prototype.moveToFolder = function( destFolderPath, overwrite ){
     if (typeof overwrite === 'undefined') var overwrite = false;
 
     try{
@@ -591,7 +590,7 @@ oFolder.prototype.moveToFolder = function( destFolderPath, overwrite ){
  * Used in converting the folder to a string value, provides the string-path.
  * @return  {string}   The folder path's as a string.
  */
-oFolder.prototype.toString = function(){
+$.oFolder.prototype.toString = function(){
     return this.path;
 }
 
@@ -600,7 +599,7 @@ oFolder.prototype.toString = function(){
 //////////////////////////////////////
 //                                  //
 //                                  //
-//           oFile class            //
+//           $.oFile class          //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -608,14 +607,14 @@ oFolder.prototype.toString = function(){
  
 
 /**
- * The oFile helper class -- providing utilities for file manipulation and access.
+ * The $.oFile helper class -- providing utilities for file manipulation and access.
  * @constructor
- * @classdesc  oFile Base Class
+ * @classdesc  $.oFile Base Class
  * @param      {string}              path                     The path to the file.
  *
  * @property    {string}             path                     The path to the file.
  */
-oFile = function(path){
+$.oFile = function(path){
     this._type = "file";
 
     this._path = fileMapper.toNativePath(path).split('\\').join('/');
@@ -624,10 +623,10 @@ oFile = function(path){
 
 /**
  * The name of the file.
- * @name oFile#name
+ * @name $.oFile#name
  * @type {string}
  */
-Object.defineProperty(oFile.prototype, 'name', {
+Object.defineProperty($.oFile.prototype, 'name', {
     get: function(){
         var _name = this.path.slice(this.path.lastIndexOf("/")+1, this.path.lastIndexOf("."));
         return _name;
@@ -637,10 +636,10 @@ Object.defineProperty(oFile.prototype, 'name', {
 
 /**
  * The extension of the file.
- * @name oFile#extension
+ * @name $.oFile#extension
  * @type {string}
  */
-Object.defineProperty(oFile.prototype, 'extension', {
+Object.defineProperty($.oFile.prototype, 'extension', {
     get: function(){
         var _extension = this.path.slice(this.path.lastIndexOf(".")+1);
         return _extension;
@@ -650,23 +649,23 @@ Object.defineProperty(oFile.prototype, 'extension', {
 
 /**
  * The folder containing the file.
- * @name oFile#folder
- * @type {oFolder}
+ * @name $.oFile#folder
+ * @type {$.oFolder}
  */
-Object.defineProperty(oFile.prototype, 'folder', {
+Object.defineProperty($.oFile.prototype, 'folder', {
     get: function(){
         var _folder = this.path.slice(0,this.path.lastIndexOf("/"));
-        return new oFolder(_folder);
+        return new $.oFolder(_folder);
     }
 })
  
 
 /**
  * Whether the file exists already.
- * @name oFile#exists
+ * @name $.oFile#exists
  * @type {bool}
  */
-Object.defineProperty(oFile.prototype, 'exists', {
+Object.defineProperty($.oFile.prototype, 'exists', {
     get: function(){
         var _file = new File( this.path );
         return _file.exists;
@@ -682,7 +681,7 @@ Object.defineProperty(oFile.prototype, 'exists', {
  *  
  * @return: { string }                      The contents of the file.                     
  */
-oFile.prototype.read = function() {
+$.oFile.prototype.read = function() {
     var file = new File(this.path);
  
     try {
@@ -702,7 +701,7 @@ oFile.prototype.read = function() {
  * @param   {string}   content               Content to write to the file.
  * @param   {bool}     append                Whether to append to the file.   
  */
-oFile.prototype.write = function(content, append){
+$.oFile.prototype.write = function(content, append){
     if (typeof append === 'undefined') var append = false
    
     var file = new File(this.path);
@@ -726,7 +725,7 @@ oFile.prototype.write = function(content, append){
  *  
  * @return: { bool }                           The result of the move.     
  */
-oFile.prototype.move = function( folder, overwrite ){
+$.oFile.prototype.move = function( folder, overwrite ){
     if (typeof overwrite === 'undefined') var overwrite = false;
     
     try{
@@ -744,7 +743,7 @@ oFile.prototype.move = function( folder, overwrite ){
         throw new Error("destination file "+folderPath+"/"+this.name+"."+this.extension+" exists and will not be overwritten. Can't move file.");
  
     var success = _file.move(_dest);
-    if (success) return new oFile(_dest.path)
+    if (success) return new $.oFile(_dest.path)
     return false;
 }
  
@@ -757,7 +756,7 @@ oFile.prototype.move = function( folder, overwrite ){
  *  
  * @return: { bool }                           The result of the copy.     
  */
-oFile.prototype.copy = function( folder, copyName, overwrite){
+$.oFile.prototype.copy = function( folder, copyName, overwrite){
     if (typeof overwrite === 'undefined') var overwrite = false;
     if (typeof copyName === 'undefined') var copyName = this.name;
     if (typeof folderPath === 'undefined') var folder = this.folder.path;
@@ -778,7 +777,7 @@ oFile.prototype.copy = function( folder, copyName, overwrite){
         throw new Error("destination file "+folder+"/"+copyName+"."+this.extension+" exists and will not be overwritten. Can't copy file.");
    
     var success = _file.copy(_dest);
-    if (success) return new oFile(_dest.path())
+    if (success) return new $.oFile(_dest.path())
     return false;
 }
 
@@ -786,7 +785,7 @@ oFile.prototype.copy = function( folder, copyName, overwrite){
  * Removes the file.
  * @return: { bool }                           The result of the removal.     
  */
-oFile.prototype.remove = function(){
+$.oFile.prototype.remove = function(){
     var _file = new PermanentFile(this.path)
     if (_file.exists) return _file.remove()
 }
@@ -795,17 +794,17 @@ oFile.prototype.remove = function(){
  * Used in converting the file to a string value, provides the string-path.
  * @return  {string}   The file path's as a string.
  */
-oFile.prototype.toString = function(){
+$.oFile.prototype.toString = function(){
     return this.path;
 }
 
 
 /**
  * The path of the file.
- * @name oFile#path
+ * @name $.oFile#path
  * @type {string}
  */
-Object.defineProperty( oFile.prototype, 'path', {
+Object.defineProperty( $.oFile.prototype, 'path', {
     get: function(){
         return this._path;
     },
@@ -816,7 +815,7 @@ Object.defineProperty( oFile.prototype, 'path', {
           return;
         }
         
-        var file = new oFile( newPath );
+        var file = new $.oFile( newPath );
         if( file.exists ){
           throw "Target path already exists. No default replace.";
         }

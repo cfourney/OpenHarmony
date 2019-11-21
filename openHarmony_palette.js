@@ -44,18 +44,18 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          oPalette class          //
+//          $.oPalette class          //
 //                                  //
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
  
  
-// oPalette constructor
+// $.oPalette constructor
 /**
- * The base class for the oPalette.
+ * The base class for the $.oPalette.
  * @constructor
- * @classdesc  oPalette Base Class
+ * @classdesc  $.oPalette Base Class
  * @param   {palette}                 paletteObject             The Harmony palette object.
  * @param   {oSceneObject}            oSceneObject              The DOM Scene object.
  * @param   {paletteList}             paletteListObject         The Harmony paletteListObject object.
@@ -63,9 +63,9 @@
  * @property   {palette}                 paletteObject          The Harmony palette object.
  * @property   {oSceneObject}            scene                  The DOM Scene object.
  */
-oPalette = function( paletteObject, oSceneObject, paletteListObject ){
+$.oPalette = function( paletteObject, oSceneObject, paletteListObject ){
   this._type = "palette";
-  this.$     = oSceneObject.$;
+  this.$     = $;
 
   this.paletteObject = paletteObject;
   this._paletteList  = paletteListObject;
@@ -73,13 +73,13 @@ oPalette = function( paletteObject, oSceneObject, paletteListObject ){
 }
  
  
-// oPalette Object Properties
+// $.oPalette Object Properties
 /**
  * The palette ID.
- * @name oPalette#id
+ * @name $.oPalette#id
  * @type {string}
  */
-Object.defineProperty(oPalette.prototype, 'id', {
+Object.defineProperty($.oPalette.prototype, 'id', {
     get : function(){
         return this.paletteObject.id;
     },
@@ -94,10 +94,10 @@ Object.defineProperty(oPalette.prototype, 'id', {
 
 /**
  * The palette name.
- * @name oPalette#name
+ * @name $.oPalette#name
  * @type {string}
  */
-Object.defineProperty(oPalette.prototype, 'name', {
+Object.defineProperty($.oPalette.prototype, 'name', {
     get : function(){
          return this.paletteObject.getName();
     },
@@ -111,10 +111,10 @@ Object.defineProperty(oPalette.prototype, 'name', {
  
 /**
  * The palette path on disk.
- * @name oPalette#path
+ * @name $.oPalette#path
  * @type {string}
  */
-Object.defineProperty(oPalette.prototype, 'path', {
+Object.defineProperty($.oPalette.prototype, 'path', {
     get : function(){
          var _path = this.paletteObject.getPath()
          _path = fileMapper.toNativePath(_path)
@@ -130,10 +130,10 @@ Object.defineProperty(oPalette.prototype, 'path', {
 
 /**
  * Whether the palette is selected.
- * @name oPalette#selected
+ * @name $.oPalette#selected
  * @type {bool}
  */
-Object.defineProperty(oPalette.prototype, 'selected', {
+Object.defineProperty($.oPalette.prototype, 'selected', {
     get : function(){
         var _currentId = PaletteManager.getCurrentPaletteId()
         return this.id == _currentId;
@@ -151,26 +151,26 @@ Object.defineProperty(oPalette.prototype, 'selected', {
 
 /**
  * The oColor objects contained in the palette.
- * @name oPalette#colors
+ * @name $.oPalette#colors
  * @type {oColor[]}
  */
-Object.defineProperty(oPalette.prototype, 'colors', {
+Object.defineProperty($.oPalette.prototype, 'colors', {
     get : function(){
         var _palette = this.paletteObject
         var _colors = []
         for (var i = 0; i<_palette.nColors; i++){
-            _colors.push (new oColor (this, i))
+            _colors.push (new $.oColor (this, i))
         }
         return _colors
     }
 })
 
 
-// oPalette Class methods
+// $.oPalette Class methods
 /**
  * Not yet implemented.
  */
-oPalette.prototype.addColor = function (name, type, colorData){
+$.oPalette.prototype.addColor = function (name, type, colorData){
     throw "Not yet implemented.";
 }
 
@@ -181,13 +181,13 @@ oPalette.prototype.addColor = function (name, type, colorData){
  *  
  * @return: {bool}       The success-result of the removal.
  */
-oPalette.prototype.remove = function ( removeFile ){
+$.oPalette.prototype.remove = function ( removeFile ){
     if (typeof removeFile === 'undefined') var removeFile = false;
     
     this._paletteList.removePaletteById( this.id );
     
     if( removeFile ){
-      var _paletteFile = new oFile(this.path)
+      var _paletteFile = new $.oFile(this.path)
       _paletteFile.remove();
     }
     

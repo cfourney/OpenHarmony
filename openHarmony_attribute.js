@@ -43,30 +43,30 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//        oAttribute class          //
+//        $.oAttribute class        //
 //                                  //
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
 
 /**
- * The base class for the oAttribute.
+ * The base class for the $.oAttribute.
  * @constructor
- * @classdesc  oAttribute Base Class
+ * @classdesc  $.oAttribute Base Class
  * @param   {oNode}                  oNodeObject                The oNodeObject that the attribute is associated to.
  * @param   {attr}                   attributeObject            The internal harmony Attribute Object.
- * @param   {oAttribute}             parentAttribute            The parent attribute of the subattribute.
+ * @param   {$.oAttribute}             parentAttribute            The parent attribute of the subattribute.
  *
  * @property {oNodeObject}           node                       The name of the drawing.
  * @property {attr}                  attributeObject            The element object associated to the element.
  * @property {string}                keyword                    The name of the drawing.
  * @property {string}                shortKeyword               The element object associated to the element.
- * @property {oAttribute}            parentAttribute            The element object associated to the element.
- * @property {oAttribute[]}          subAttributes              The subattributes, if any exist, of this attribute.
+ * @property {$.oAttribute}            parentAttribute            The element object associated to the element.
+ * @property {$.oAttribute[]}          subAttributes              The subattributes, if any exist, of this attribute.
  */
-oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
+$.oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
   this._type = "attribute";
-  this.$     = false;
+  this.$     = $;
 
   this.node = oNodeObject;
   this.attributeObject = attributeObject;
@@ -90,7 +90,7 @@ oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
         var _subAttributesList = attributeObject.getSubAttributes();
        
         for (var i in _subAttributesList){
-            var _subAttribute = new oAttribute( this.node, _subAttributesList[i], this );
+            var _subAttribute = new $.oAttribute( this.node, _subAttributesList[i], this );
             var _keyword = _subAttribute.shortKeyword;     
             // creating a property on the attribute object with the subattribute name to access it
             this[_keyword] = _subAttribute;
@@ -110,7 +110,7 @@ oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
  * @private 
  * @return  {void}   Nothing returned.
  */
-oAttribute.prototype.subAttributes_oldVersion = function ( _subAttributes ){
+$.oAttribute.prototype.subAttributes_oldVersion = function ( _subAttributes ){
     var sub_attrs = [];
     
     switch( this.type ){
@@ -131,7 +131,7 @@ oAttribute.prototype.subAttributes_oldVersion = function ( _subAttributes ){
   for( var n=0;n<sub_attrs.length;n++ ){
     var _attr = node.getAttr( this.node.fullPath, 1, this._keyword+"."+sub_attrs[n] );  
     if( _attr ){
-      var _subAttribute = new oAttribute( this.node, _attr, this );  
+      var _subAttribute = new $.oAttribute( this.node, _attr, this );  
       this[ sub_attrs[n] ] = _subAttribute;  
       _subAttributes.push( _subAttribute );
     }
@@ -142,10 +142,10 @@ oAttribute.prototype.subAttributes_oldVersion = function ( _subAttributes ){
  
 /**
  * The full keyword of the attribute.
- * @name oAttribute#keyword
+ * @name $.oAttribute#keyword
  * @type {string}
  */
-Object.defineProperty(oAttribute.prototype, 'keyword', {
+Object.defineProperty($.oAttribute.prototype, 'keyword', {
     get : function(){
         // formatting the keyword for our purposes
         // hard coding a fix for 3DPath attribute name which starts with a number
@@ -158,10 +158,10 @@ Object.defineProperty(oAttribute.prototype, 'keyword', {
 
 /**
  * The short keyword of the attribute.
- * @name oAttribute#shortKeyword
+ * @name $.oAttribute#shortKeyword
  * @type {string}
  */
-Object.defineProperty(oAttribute.prototype, 'shortKeyword', {
+Object.defineProperty($.oAttribute.prototype, 'shortKeyword', {
     get : function(){
         // formatting the keyword for our purposes
         // hard coding a fix for 3DPath attribute name which starts with a number
@@ -174,10 +174,10 @@ Object.defineProperty(oAttribute.prototype, 'shortKeyword', {
 
 /**
  * The type of the attribute.
- * @name oAttribute#type
+ * @name $.oAttribute#type
  * @type {string}
  */
-Object.defineProperty(oAttribute.prototype, 'type', {
+Object.defineProperty($.oAttribute.prototype, 'type', {
     get : function(){
         return this.attributeObject.typeName();
     }
@@ -185,10 +185,10 @@ Object.defineProperty(oAttribute.prototype, 'type', {
  
 /**
  * The column attached to the attribute.
- * @name oAttribute#column
+ * @name $.oAttribute#column
  * @type {oColumn}
  */
-Object.defineProperty(oAttribute.prototype, 'column', {
+Object.defineProperty($.oAttribute.prototype, 'column', {
     get : function(){
         var _column = node.linkedColumn ( this.node.fullPath, this._keyword );
         if( _column ){
@@ -212,17 +212,17 @@ Object.defineProperty(oAttribute.prototype, 'column', {
  
  /**
  * The oFrames of attached to the column..
- * @name oAttribute#frames
+ * @name $.oAttribute#frames
  * @type {oFrame[]}
  */
-Object.defineProperty(oAttribute.prototype, 'frames', {
+Object.defineProperty($.oAttribute.prototype, 'frames', {
     get : function(){
          var _column = this.column
          if (_column != null){
             return _column.frames;
          }else{
           //Need a method to get frames of non-column values. Local Values.
-            return [ new oFrame( 1, this, false ) ];
+            return [ new $.oFrame( 1, this, false ) ];
          }
     },
     
@@ -234,10 +234,10 @@ Object.defineProperty(oAttribute.prototype, 'frames', {
 
 /**
  * Returns the filtered keyframes of the attached to the column.
- * @name oAttribute#keyframes
+ * @name $.oAttribute#keyframes
  * @type {oFrame[]}
  */
-Object.defineProperty(oAttribute.prototype, 'keyframes', {
+Object.defineProperty($.oAttribute.prototype, 'keyframes', {
     get : function(){
       var _frames = this.frames;
       _frames = _frames.filter(function(x){return x.isKeyFrame});
@@ -251,11 +251,11 @@ Object.defineProperty(oAttribute.prototype, 'keyframes', {
 
 /**
  * WIP.
- * @name oAttribute#useSeparate
+ * @name $.oAttribute#useSeparate
  * @type {bool}
  */
 //CF Note: Not sure if this should be a general attribute, or a subattribute.
-Object.defineProperty(oAttribute.prototype, "useSeparate", {
+Object.defineProperty($.oAttribute.prototype, "useSeparate", {
     get : function(){
         // TODO
         throw new Error("not yet implemented");
@@ -270,10 +270,10 @@ Object.defineProperty(oAttribute.prototype, "useSeparate", {
 
 /**
  * WIP.
- * @name oAttribute#defaultValue
+ * @name $.oAttribute#defaultValue
  * @type {bool}
  */
-Object.defineProperty(oAttribute.prototype, "defaultValue", {
+Object.defineProperty($.oAttribute.prototype, "defaultValue", {
     get : function(){
         // TODO: we could use this to reset bones/deformers to their rest states
         var _keyword = this._keyword;
@@ -313,7 +313,7 @@ Object.defineProperty(oAttribute.prototype, "defaultValue", {
                 return 100;
                 
             case "COLOR" :
-                return new oColorValue();
+                return new $.oColorValue();
                
             case "OFFSET.3DPATH":
                 // pseudo oPathPoint
@@ -326,14 +326,14 @@ Object.defineProperty(oAttribute.prototype, "defaultValue", {
     }
 });
  
-// oAttribute Class methods
+// $.oAttribute Class methods
 
 
 /**
  * Provides the keyframes of the attribute.
  * @return {oFrame[]}   The filtered keyframes.
  */
-oAttribute.prototype.getKeyFrames = function(){
+$.oAttribute.prototype.getKeyFrames = function(){
     var _frames = this.frames;
     _frames = _frames.filter(function(x){return x.isKeyFrame});
     return _frames;
@@ -345,7 +345,7 @@ oAttribute.prototype.getKeyFrames = function(){
  * @param   {string}     value                 The value to set on the attribute.
  * @param   {int}        [frame]               The frame at which to set the value, if not set, assumes 1
  */
-oAttribute.prototype.setValue = function (value, frame) {
+$.oAttribute.prototype.setValue = function (value, frame) {
     if (typeof frame === 'undefined') var frame = 1;
     
     var _attr = this.attributeObject;
@@ -355,7 +355,7 @@ oAttribute.prototype.setValue = function (value, frame) {
 
     if (frame != 1 && _column == null){
         // generate a new column to be able to animate
-        var _doc = new oScene();
+        var _doc = new $.oScene();
         _column = _doc.addColumn()
         this.column = _column;
         _animate = true;
@@ -364,7 +364,7 @@ oAttribute.prototype.setValue = function (value, frame) {
     switch (_type){
         // TODO: sanitize input
         case "COLOR" :
-            value = new oColorValue(value)
+            value = new $.oColorValue(value)
             value = ColorRGBA(value.r, value.g, value.b, value.a)
             _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
             break;
@@ -374,9 +374,9 @@ oAttribute.prototype.setValue = function (value, frame) {
             break;
            
         case "PATH_3D" :
-            var _frame = new oFrame(frame, this.column, this.column.subColumns);
+            var _frame = new $.oFrame(frame, this.column, this.column.subColumns);
             if (_frame.isKeyFrame){
-                var _point = new oPathPoint (this.column, _frame);
+                var _point = new $.oPathPoint (this.column, _frame);
                 _point.set(value);
             }else{
                 // TODO: create keyframe?
@@ -423,7 +423,7 @@ oAttribute.prototype.setValue = function (value, frame) {
  *  
  * @return {object}      The value of the attribute in the native format of that attribute (contextual to the attribute).
  */
-oAttribute.prototype.getValue = function (frame) {
+$.oAttribute.prototype.getValue = function (frame) {
     // MessageLog.trace('getting value of frame :'+frame+' of attribute: '+this._keyword)
     
     if (typeof frame === 'undefined') var frame = 1;
@@ -456,29 +456,29 @@ oAttribute.prototype.getValue = function (frame) {
             break;
            
         case 'COLOR':
-            _value = new oColorValue(_attr.colorValueAt(frame))
+            _value = new $.oColorValue(_attr.colorValueAt(frame))
             break;
  
         case 'POSITION_2D':
             _value = _attr.pos2dValueAt(frame)
-            _value = new oPoint(_value.x, _value.y)
+            _value = new $.oPoint(_value.x, _value.y)
             break;
            
         case 'POSITION_3D':
             _value = _attr.pos3dValueAt(frame)
-            _value = new oPoint(_value.x, _value.y, _value.z)
+            _value = new $.oPoint(_value.x, _value.y, _value.z)
             break;
             
         case 'SCALE_3D':
             _value = _attr.pos3dValueAt(frame)
-            _value = new oPoint(_value.x, _value.y, _value.z)
+            _value = new $.oPoint(_value.x, _value.y, _value.z)
             break;
            
         case 'PATH_3D':
             _attr = this.parentAttribute.attributeObject;
-              var _frame = new oFrame(frame, _column, _column.subColumns);
+              var _frame = new $.oFrame(frame, _column, _column.subColumns);
             if(_frame.isKeyFrame){
-                _value = new oPathPoint(_column, _frame);
+                _value = new $.oPathPoint(_column, _frame);
             } else{
                 _value = _attr.pos3dValueAt(frame);
             }
@@ -520,6 +520,6 @@ oAttribute.prototype.getValue = function (frame) {
  *  
  * @return {object}      The value of the attribute in the native format of that attribute (contextual to the attribute).
  */
-oAttribute.prototype.value = function(frame){
+$.oAttribute.prototype.value = function(frame){
   return this.getValue( frame );
 }

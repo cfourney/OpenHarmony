@@ -43,7 +43,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//           oNode class            //
+//           $.oNode class          //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -60,9 +60,9 @@
  * @classdesc  Node Class    
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
+ * <br> The constructor for the scene object, new $.oScene($) to create a scene with DOM access.
  */
-oNode = function(path, oSceneObject){
+$.oNode = function(path, oSceneObject){
     this._fullPath = path;
     this.type = node.type(this.fullPath);
     this.scene = oSceneObject;
@@ -86,7 +86,7 @@ oNode = function(path, oSceneObject){
  * @private 
  * @return  {void}   Nothing returned.
  */
-oNode.prototype.setAttrGetterSetter = function (attr, context){
+$.oNode.prototype.setAttrGetterSetter = function (attr, context){
     if (typeof context === 'undefined') context = this;
     // MessageLog.trace("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name)
     // System.println( "Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name );
@@ -111,7 +111,7 @@ oNode.prototype.setAttrGetterSetter = function (attr, context){
                 var _value =  attr.getValue();
             }else{
                 // if there are subattributes, create getter setters for each on the returned object
-                var _value = (attr.column != null)?new oList(attr.frames, 1):attr.getValue();
+                var _value = (attr.column != null)?new $.oList(attr.frames, 1):attr.getValue();
                 for (var i in _subAttrs){
                     this.setAttrGetterSetter( _subAttrs[i], _value );
                 }
@@ -164,10 +164,10 @@ oNode.prototype.setAttrGetterSetter = function (attr, context){
 
 /**
  * The derived path to the node.
- * @name oNode#fullPath
+ * @name $.oNode#fullPath
  * @type {string}
  */
-Object.defineProperty(oNode.prototype, 'fullPath', {
+Object.defineProperty($.oNode.prototype, 'fullPath', {
     get : function( ){
       return this._fullPath;
     },
@@ -183,10 +183,10 @@ Object.defineProperty(oNode.prototype, 'fullPath', {
 
 /**
  * The type of the node.
- * @name oNode#type
+ * @name $.oNode#type
  * @type {string}
  */
-Object.defineProperty( oNode.prototype, 'type', {
+Object.defineProperty( $.oNode.prototype, 'type', {
     get : function( ){
       return node.type( this.fullPath );
     },
@@ -198,10 +198,10 @@ Object.defineProperty( oNode.prototype, 'type', {
 
 /**
  * Is the node a group?
- * @name oNode#isGroup
+ * @name $.oNode#isGroup
  * @type {bool}
  */
-Object.defineProperty(oNode.prototype, 'isGroup', {
+Object.defineProperty($.oNode.prototype, 'isGroup', {
     get : function( ){
       if( this.root ){
         //in a sense, its a group.
@@ -217,11 +217,11 @@ Object.defineProperty(oNode.prototype, 'isGroup', {
 
 
 /**
- * The oNode objects contained in this group.
- * @name oNode#children
- * @type {oNode[]}
+ * The $.oNode objects contained in this group.
+ * @name $.oNode#children
+ * @type {$.oNode[]}
  */
-Object.defineProperty(oNode.prototype, 'children', {
+Object.defineProperty($.oNode.prototype, 'children', {
     get : function( ){
       if( !this.isGroup ){ return []; }
       
@@ -243,10 +243,10 @@ Object.defineProperty(oNode.prototype, 'children', {
 
 /**
  * Does the node exist?
- * @name oNode#exists
+ * @name $.oNode#exists
  * @type {bool}
  */
-Object.defineProperty(oNode.prototype, 'exists', {
+Object.defineProperty($.oNode.prototype, 'exists', {
     get : function( ){
       if( this.type ){
         return true;
@@ -259,10 +259,10 @@ Object.defineProperty(oNode.prototype, 'exists', {
 
 /**
  * Is the node selected?
- * @name oNode#selected
+ * @name $.oNode#selected
  * @type {bool}
  */
-Object.defineProperty(oNode.prototype, 'selected', {
+Object.defineProperty($.oNode.prototype, 'selected', {
     get : function( ){
       for( var n=0;n<selection.numberOfNodesSelected;n++ ){
           if( selection.selectedNode(n) == this.fullPath ){
@@ -287,10 +287,10 @@ Object.defineProperty(oNode.prototype, 'selected', {
 
 /**
  * The node's name.
- * @name oNode#name
+ * @name $.oNode#name
  * @type {string}
  */
-Object.defineProperty(oNode.prototype, 'name', {
+Object.defineProperty($.oNode.prototype, 'name', {
     get : function(){
          return node.getName(this.fullPath)
     },
@@ -306,10 +306,10 @@ Object.defineProperty(oNode.prototype, 'name', {
 
 /**
  * The path to the node, the parent path specifically.
- * @name oNode#path
+ * @name $.oNode#path
  * @type {string}
  */
-Object.defineProperty(oNode.prototype, 'path', {
+Object.defineProperty($.oNode.prototype, 'path', {
     get : function(){
          return node.parentNode(this.fullPath)
     },
@@ -325,11 +325,11 @@ Object.defineProperty(oNode.prototype, 'path', {
  
 
 /**
- * The oNode object for the parent in which this node exists.
- * @name oNode#parent
- * @type {oNode}
+ * The $.oNode object for the parent in which this node exists.
+ * @name $.oNode#parent
+ * @type {$.oNode}
  */
-Object.defineProperty( oNode.prototype, 'parent', {
+Object.defineProperty( $.oNode.prototype, 'parent', {
     get : function(){
       if( this.root ){ return false; }
     
@@ -345,10 +345,10 @@ Object.defineProperty( oNode.prototype, 'parent', {
 
 /**
  * Is the node enabled?
- * @name oNode#enabled
+ * @name $.oNode#enabled
  * @type {bool}
  */
-Object.defineProperty(oNode.prototype, 'enabled', {
+Object.defineProperty($.oNode.prototype, 'enabled', {
     get : function(){
          return node.getEnable(this.fullPath)
     },
@@ -361,10 +361,10 @@ Object.defineProperty(oNode.prototype, 'enabled', {
  
 /**
  * Is the node locked?
- * @name oNode#locked
+ * @name $.oNode#locked
  * @type {bool}
  */
-Object.defineProperty(oNode.prototype, 'locked', {
+Object.defineProperty($.oNode.prototype, 'locked', {
     get : function(){
          return node.getLocked(this.fullPath)
     },
@@ -377,10 +377,10 @@ Object.defineProperty(oNode.prototype, 'locked', {
 
 /**
  * Is the node the root?
- * @name oNode#isRoot
+ * @name $.oNode#isRoot
  * @type {bool}
  */
-Object.defineProperty(oNode.prototype, 'isRoot', {
+Object.defineProperty($.oNode.prototype, 'isRoot', {
     get : function(){
          return this.fullPath == "Top"
     }
@@ -389,14 +389,14 @@ Object.defineProperty(oNode.prototype, 'isRoot', {
 
 /**
  * The position of the node.
- * @name oNode#nodePosition
+ * @name $.oNode#nodePosition
  * @type {oPoint}
  */
-Object.defineProperty(oNode.prototype, 'nodePosition', {
+Object.defineProperty($.oNode.prototype, 'nodePosition', {
     get : function(){
       var _z = 0.0;
       try{ _z = node.coordZ(this.fullPath); } catch( err ){} //coordZ not implemented in earlier Harmony versions. 
-         return new oPoint(node.coordX(this.fullPath), node.coordY(this.fullPath), _z );
+         return new $.oPoint(node.coordX(this.fullPath), node.coordY(this.fullPath), _z );
     },
  
     set : function(newPosition){
@@ -407,10 +407,10 @@ Object.defineProperty(oNode.prototype, 'nodePosition', {
 
 /**
  * The horizontal position of the node in the node view.
- * @name oNode#x
+ * @name $.oNode#x
  * @type {float}
  */
-Object.defineProperty(oNode.prototype, 'x', {
+Object.defineProperty($.oNode.prototype, 'x', {
     get : function(){
          return node.coordX(this.fullPath)
     },
@@ -425,10 +425,10 @@ Object.defineProperty(oNode.prototype, 'x', {
 
 /**
  * The vertical position of the node in the node view.
- * @name oNode#y
+ * @name $.oNode#y
  * @type {float}
  */
-Object.defineProperty(oNode.prototype, 'y', {
+Object.defineProperty($.oNode.prototype, 'y', {
     get : function(){
          return node.coordY(this.fullPath)
     },
@@ -442,10 +442,10 @@ Object.defineProperty(oNode.prototype, 'y', {
 
 /**
  * The depth position of the node in the node view.
- * @name oNode#z
+ * @name $.oNode#z
  * @type {float}
  */ 
-Object.defineProperty(oNode.prototype, 'z', {
+Object.defineProperty($.oNode.prototype, 'z', {
     get : function(){
         var _z = 0.0;
         try{ _z = node.coordZ(this.fullPath); } catch( err ){} //coordZ not implemented in earlier Harmony versions. 
@@ -462,10 +462,10 @@ Object.defineProperty(oNode.prototype, 'z', {
  
 /**
  * The width of the node in the node view.
- * @name oNode#width
+ * @name $.oNode#width
  * @type {float}
  */ 
-Object.defineProperty(oNode.prototype, 'width', {
+Object.defineProperty($.oNode.prototype, 'width', {
     get : function(){
          return node.width(this.fullPath)
     }
@@ -474,10 +474,10 @@ Object.defineProperty(oNode.prototype, 'width', {
 
 /**
  * The height of the node in the node view.
- * @name oNode#height
+ * @name $.oNode#height
  * @type {float}
  */  
-Object.defineProperty(oNode.prototype, 'height', {
+Object.defineProperty($.oNode.prototype, 'height', {
     get : function(){
          return node.height(this.fullPath)
     }
@@ -486,10 +486,10 @@ Object.defineProperty(oNode.prototype, 'height', {
 
 /**
  * The list of nodes connected to the inport of this node, in order of inport.
- * @name oNode#inNodes
- * @type {oNode[]}
+ * @name $.oNode#inNodes
+ * @type {$.oNode[]}
 */
-Object.defineProperty(oNode.prototype, 'inNodes', {
+Object.defineProperty($.oNode.prototype, 'inNodes', {
     get : function(){
         var _inNodes = [];
         // TODO: ignore/traverse groups
@@ -504,10 +504,10 @@ Object.defineProperty(oNode.prototype, 'inNodes', {
 
 /**
  * The list of nodes connected to the outport of this node, in order of outport and links.
- * @name oNode#outNodes
- * @type {oNode[][]}
+ * @name $.oNode#outNodes
+ * @type {$.oNode[][]}
 */
-Object.defineProperty(oNode.prototype, 'outNodes', {
+Object.defineProperty($.oNode.prototype, 'outNodes', {
     get : function(){
         var _outNodes = [];
         for (var i = 0; i < node.numberOfOutputPorts(this.fullPath); i++){
@@ -529,10 +529,10 @@ Object.defineProperty(oNode.prototype, 'outNodes', {
 
 /**
  * The list of nodes connected to the inport of this node, in order of inport.
- * @name oNode#ins
- * @type {oNode[]}
+ * @name $.oNode#ins
+ * @type {$.oNode[]}
 */
-Object.defineProperty(oNode.prototype, 'ins', {
+Object.defineProperty($.oNode.prototype, 'ins', {
     get : function(){
       return this.inNodes;
     }
@@ -540,10 +540,10 @@ Object.defineProperty(oNode.prototype, 'ins', {
 
 /**
  * The list of nodes connected to the outport of this node, in order of outport and links.
- * @name oNode#outs
- * @type {oNode[][]}
+ * @name $.oNode#outs
+ * @type {$.oNode[][]}
 */
-Object.defineProperty(oNode.prototype, 'outs', {
+Object.defineProperty($.oNode.prototype, 'outs', {
     get : function(){
       return this.outNodes;
     }
@@ -552,17 +552,17 @@ Object.defineProperty(oNode.prototype, 'outs', {
 
 /**
  * The list of attributes that this node contains.
- * @name oNode#attributes
+ * @name $.oNode#attributes
  * @type {oAttribute}
 */
-Object.defineProperty(oNode.prototype, 'attributes', {
+Object.defineProperty($.oNode.prototype, 'attributes', {
     get : function(){
         var _attributesList = node.getAttrList(this.fullPath, 1);
         var _attributes = {};
      
         for (var i in _attributesList){
      
-            var _attribute = new oAttribute(this, _attributesList[i]);
+            var _attribute = new $.oAttribute(this, _attributesList[i]);
             var _keyword = _attribute.keyword;
      
             _attributes[_keyword] = _attribute;
@@ -575,12 +575,12 @@ Object.defineProperty(oNode.prototype, 'attributes', {
 
 /**
  * The bounds of the node.
- * @name oNode#bounds
+ * @name $.oNode#bounds
  * @type {oBox}
 */
-Object.defineProperty( oNode.prototype, 'bounds', {
+Object.defineProperty( $.oNode.prototype, 'bounds', {
     get : function(){
-      return new oBox(this.x, this.y, this.x+this.width, this.y+this.height);
+      return new $.oBox(this.x, this.y, this.x+this.width, this.y+this.height);
     }
 }); 
 
@@ -589,10 +589,10 @@ Object.defineProperty( oNode.prototype, 'bounds', {
 
 /**
  * The linked columns associated with the node.
- * @name oNode#linkedColumns
+ * @name $.oNode#linkedColumns
  * @type {oColumn[]}
 */
-Object.defineProperty(oNode.prototype, 'linkedColumns', {
+Object.defineProperty($.oNode.prototype, 'linkedColumns', {
     get : function(){
         var _attributes = this.attributes
         var _columns = [];
@@ -620,20 +620,20 @@ Object.defineProperty(oNode.prototype, 'linkedColumns', {
  *  
  * @return  {int}    The index within that timeline.
  */
- oNode.prototype.timelineIndex = function(timeline){
+ $.oNode.prototype.timelineIndex = function(timeline){
     var _timeline = timeline.layersList;
     return _timeline.indexOf(this.fullPath);
 }
  
 /**
  * Link's this node's in-port to the given module, at the inport and outport indices.
- * @param   {oNode}   oNodeObject            The node to link this one's inport to.
- * @param   {int}     inPort                 This node's inport to connect.
- * @param   {int}     outPort                The target node's outport to connect. 
+ * @param   {$.oNode}   oNodeObject            The node to link this one's inport to.
+ * @param   {int}       inPort                 This node's inport to connect.
+ * @param   {int}       outPort                The target node's outport to connect. 
  *  
  * @return  {bool}    The result of the link, if successful.
  */
-oNode.prototype.linkInNode = function( oNodeObject, inPort, outPort ){
+$.oNode.prototype.linkInNode = function( oNodeObject, inPort, outPort ){
     var _node = oNodeObject.fullPath;
  
     // Default values for optional parameters
@@ -646,16 +646,16 @@ oNode.prototype.linkInNode = function( oNodeObject, inPort, outPort ){
 
 
 /**
- * Searches for and unlinks the oNodeObject from this node's inNodes.
- * @param   {oNode}   oNodeObject            The node to link this one's inport to.
+ * Searches for and unlinks the $.oNodeObject from this node's inNodes.
+ * @param   {$.oNode}   oNodeObject            The node to link this one's inport to.
  * @return  {bool}    The result of the unlink.
  */
-oNode.prototype.unlinkInNode = function( oNodeObject ){
+$.oNode.prototype.unlinkInNode = function( oNodeObject ){
     //CF Note: Should be able to define the port.
   
     var _node = oNodeObject.fullPath;
    
-    // MessageLog.trace("unlinking "+this.name+" from "+oNodeObject.name)
+    // MessageLog.trace("unlinking "+this.name+" from "+$.oNodeObject.name)
     var _inNodes = this.inNodes;
     // MessageLog.trace(_inNodes.length)
    
@@ -673,13 +673,13 @@ oNode.prototype.unlinkInNode = function( oNodeObject ){
 
 /**
  * Link's this node's out-port to the given module, at the inport and outport indices.
- * @param   {oNode}   oNodeObject            The node to link this one's outport to.
+ * @param   {$.oNode} oNodeObject            The node to link this one's outport to.
  * @param   {int}     inPort                 The target node's inport to connect.
  * @param   {int}     outPort                This node's outport to connect. 
  *  
  * @return  {bool}    The result of the link, if successful.
  */
-oNode.prototype.linkOutNode = function(oNodeObject, outPort, inPort){
+$.oNode.prototype.linkOutNode = function( oNodeObject, outPort, inPort ){
     var _node = oNodeObject.fullPath;
  
     // Default values for optional parameters
@@ -692,11 +692,11 @@ oNode.prototype.linkOutNode = function(oNodeObject, outPort, inPort){
 
 /**
  * Link's this node's out-port to the given module, at the inport and outport indices.
- * @param   {oNode}   oNodeObject            The node to unlink from this node's outports.
+ * @param   {$.oNode}   $.oNodeObject            The node to unlink from this node's outports.
  *  
  * @return  {bool}    The result of the link, if successful.
  */
-oNode.prototype.unlinkOutNode = function(oNodeObject){
+$.oNode.prototype.unlinkOutNode = function( oNodeObject ){
     //CF Note: Should be able to define the port.
   
     var _node = oNodeObject.fullPath;
@@ -715,15 +715,15 @@ oNode.prototype.unlinkOutNode = function(oNodeObject){
 
 
 /**
- * Inserts the oNodeObject provided as an innode to this node, placing it between any existing nodes if the link already exists.
+ * Inserts the $.oNodeObject provided as an innode to this node, placing it between any existing nodes if the link already exists.
  * @param   {int}     inPort                 This node's inport to connect.
- * @param   {oNode}   oNodeObject            The node to link this one's outport to.
+ * @param   {$.oNode} oNodeObject            The node to link this one's outport to.
  * @param   {int}     inPortTarget           The target node's inPort to connect.
  * @param   {int}     outPortTarget          The target node's outPort to connect.
  *  
  * @return  {bool}    The result of the link, if successful.
  */
-oNode.prototype.insertInNode = function( inPort, oNodeObject, inPortTarget, outPortTarget ){
+$.oNode.prototype.insertInNode = function( inPort, oNodeObject, inPortTarget, outPortTarget ){
     var _node = oNodeObject.fullPath;
  
     //QScriptValue 	
@@ -747,16 +747,16 @@ oNode.prototype.insertInNode = function( inPort, oNodeObject, inPortTarget, outP
  * @DEPRECATED
  * @param   {bool}   recurse           Whether to recurse internally for nodes within children groups.
  *  
- * @return  {oNode[]}    The subbnodes contained in the group.
+ * @return  {$.oNode[]}    The subbnodes contained in the group.
  */
-oNode.prototype.subNodes = function(recurse){
+$.oNode.prototype.subNodes = function(recurse){
     if (typeof recurse === 'undefined') recurse = false;
     var _nodes = node.subNodes(this.fullPath);
     var _subNodes = [];
     for (var _node in _nodes){
-        var _oNodeObject = new oNode( this.$, _nodes[_node] );
+        var _oNodeObject = new $.oNode( this.$, _nodes[_node] );
         _subNodes.push(_oNodeObject);
-        if (recurse && node.isGroup(_nodes[_node])) _subNodes = _subNodes.concat(_oNodeObject.subNodes(recurse));
+        if (recurse && node.isGroup(_nodes[_node])) _subNodes = _subNodes.concat(_$.oNodeObject.subNodes(recurse));
     }
  
     return _subNodes;
@@ -765,79 +765,79 @@ oNode.prototype.subNodes = function(recurse){
  
  /**
  * Place a node above one or more nodes with an offset.
- * @param   {oNode[]}       oNodeArray                The array of nodes to center this above.
+ * @param   {$.oNode[]}     oNodeArray                The array of nodes to center this above.
  * @param   {float}         xOffset                   The horizontal offset to apply after centering.
  * @param   {float}         yOffset                   The vertical offset to apply after centering.
  *                                                    
  * @return  {oPoint}   The resulting position of the node.
  */
-oNode.prototype.centerAbove = function( oNodeArray, xOffset, yOffset ){
+$.oNode.prototype.centerAbove = function( oNodeArray, xOffset, yOffset ){
     // Defaults for optional parameters
     if (typeof xOffset === 'undefined') var xOffset = 0;
     if (typeof yOffset === 'undefined') var yOffset = 0;
  
     // Works with nodes and nodes array
-    if (typeof oNodeArray === 'oNode') oNodeArray = [ oNodeArray ];
+    if (typeof oNodeArray === '$.oNode') oNodeArray = [ oNodeArray ];
  
-    var _box = new oBox();
+    var _box = new $.oBox();
     _box.includeNodes( oNodeArray )
     
     this.x = _box.center.x - this.width/2 + xOffset;
     this.y = _box.top - this.height + yOffset;
    
-    return new oPoint(this.x, this.y, this.z);
+    return new $.oPoint(this.x, this.y, this.z);
 };
  
 
  /**
  * Place a node below one or more nodes with an offset.
- * @param   {oNode[]}   oNodeArray           The array of nodes to center this below.
+ * @param   {$.oNode[]} oNodeArray           The array of nodes to center this below.
  * @param   {float}     xOffset              The horizontal offset to apply after centering.
  * @param   {float}     yOffset              The vertical offset to apply after centering.
  *  
  * @return  {oPoint}   The resulting position of the node.
  */
-oNode.prototype.centerBelow = function(oNodeArray, xOffset, yOffset){
+$.oNode.prototype.centerBelow = function( oNodeArray, xOffset, yOffset){
     // Defaults for optional parameters
     if (typeof xOffset === 'undefined') var xOffset = 0;
     if (typeof yOffset === 'undefined') var yOffset = 0;
  
     // Works with nodes and nodes array
-    if (typeof oNodeArray === 'oNode') oNodeArray = [oNodeArray];
+    if (typeof oNodeArray === '$.oNode') oNodeArray = [oNodeArray];
     
-    var _box = new oBox();
+    var _box = new $.oBox();
     _box.includeNodes(oNodeArray)
  
     this.x = _box.center.x - this.width/2 + xOffset;
     this.y = _box.bottom - this.height + yOffset;
    
-    return new oPoint(this.x, this.y, this.z)
+    return new $.oPoint(this.x, this.y, this.z)
 }
 
 
  /**
  * Place at center of one or more nodes with an offset.
- * @param   {oNode[]}   oNodeArray           The array of nodes to center this below.
+ * @param   {$.oNode[]} oNodeArray           The array of nodes to center this below.
  * @param   {float}     xOffset              The horizontal offset to apply after centering.
  * @param   {float}     yOffset              The vertical offset to apply after centering.
  *  
  * @return  {oPoint}   The resulting position of the node.
  */
-oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
+$.oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
     // Defaults for optional parameters
     if (typeof xOffset === 'undefined') var xOffset = 0;
     if (typeof yOffset === 'undefined') var yOffset = 0;
  
     // Works with nodes and nodes array
-    if (typeof oNodeArray === 'oNode') oNodeArray = [oNodeArray];
+    if (typeof oNodeArray === '$.oNode') oNodeArray = [oNodeArray];
  
-    var _box = new oBox();
+    var _box = new $.oBox();
     _box.includeNodes(oNodeArray)
  
     this.x = _box.center.x - this.width/2 + xOffset;
     this.y = _box.center.y - this.height/2 + yOffset;
    
-    return new oPoint(this.x, this.y, this.z)
+    return new $.oPoint(this.x, this.y, this.z)
 }
  
  
@@ -848,7 +848,7 @@ oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
  * @param   {oPoint}    newPosition          The new position for the cloned module.
  * @param   {string}    newGroup             The group in which to place the cloned module.
  */
-oNode.prototype.clone = function( newName, newPosition, newGroup ){
+$.oNode.prototype.clone = function( newName, newPosition, newGroup ){
     // Defaults for optional parameters
     if (typeof newGroup === 'undefined') var newGroup = this.path;
 
@@ -867,7 +867,7 @@ oNode.prototype.clone = function( newName, newPosition, newGroup ){
  * @param   {string}    newName              The new name for the cloned module.
  * @param   {oPoint}    newPosition          The new position for the cloned module.
  */
-oNode.prototype.duplicate= function(oNodeObject, newName, newPosition){
+$.oNode.prototype.duplicate= function( oNodeObject, newName, newPosition ){
     // TODO
 };
  
@@ -878,7 +878,7 @@ oNode.prototype.duplicate= function(oNodeObject, newName, newPosition){
  *  
  * @return  {void}
  */
-oNode.prototype.remove = function( deleteColumns, deleteElements ){
+$.oNode.prototype.remove = function( deleteColumns, deleteElements ){
     if (typeof deleteFrames === 'undefined') var deleteColumns = true;
     if (typeof deleteElements === 'undefined') var deleteElements = true;
    
@@ -896,12 +896,43 @@ oNode.prototype.remove = function( deleteColumns, deleteElements ){
     node.deleteNode(this.fullPath, deleteColumns, deleteElements)
 }
 
+ /**
+ * Provides a matching attribute based on provided keyword name.
+ * @param   {string}    keyword                    The attribute keyword to search.
+ * @return  {oAttribute}   The matched attribute object, given the keyword.
+ */
+$.oNode.prototype.getAttributeByName = function( keyword ){
+    if (keyword.indexOf(".")){
+        keyword = keyword.toLowerCase();
+        keyword = keyword.split(".");
+        var _attribute = keyword[0];
+        var _subAttribute = keyword[1];
+        
+        if (_subAttribute == "3dpath") _subAttribute = "path3d";
+        
+        if (!this.attributes.hasOwnProperty(_attribute)) return null;
+        if (!this.attributes[_attribute].hasOwnProperty(_subAttribute)) return this.attributes[_attribute];
+        
+        return this.attributes[_attribute][_subAttribute];
+    }else{
+        if (!this.hasOwnProperty(keyword)) return null;
+        return this.attributes[keyword];
+    }
+}
+
+ /**
+ * Used in converting the node to a string value, provides the string-path.
+ * @return  {string}   The node path's as a string.
+ */
+$.oNode.prototype.toString = function(){
+    return this.fullPath;
+}
 
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          oPegNode class          //
+//          $.oPegNode class        //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -910,29 +941,29 @@ oNode.prototype.remove = function( deleteColumns, deleteElements ){
 /**
  * The peg module base class for the node.
  * @constructor
- * @augments   oNode
+ * @augments   $.oNode
  * @classdesc  Peg Moudle Class    
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
+ * <br> The constructor for the scene object, new $.oScene($) to create a scene with DOM access.
  */
-oPegNode = function( path, oSceneObject ) {
+$.oPegNode = function( path, oSceneObject ) {
     if (node.type(path) != 'PEG') throw "'path' parameter must point to a 'PEG' type node";
-    oNode.call( this, path, oSceneObject );
+    $.oNode.call( this, path, oSceneObject );
     
     this._type = 'pegNode';
 }
  
-// extends oNode and can use its methods
-oPegNode.prototype = Object.create( oNode.prototype );
+// extends $.oNode and can use its methods
+$.oPegNode.prototype = Object.create( $.oNode.prototype );
  
 //CF NOTE: Use Separate is ambiguous, as scale, and position can be separate too. Perhaps useSeparate is distinct for position, and rotationUseSeparate otherwise?
  /**
  * Whether the position is separate.
- * @name oPegNode#useSeparate
+ * @name $.oPegNode#useSeparate
  * @type {bool}
  */
-Object.defineProperty(oPegNode.prototype, "useSeparate", {
+Object.defineProperty($.oPegNode.prototype, "useSeparate", {
     get : function(){
        
     },
@@ -949,7 +980,7 @@ Object.defineProperty(oPegNode.prototype, "useSeparate", {
 //////////////////////////////////////
 //                                  //
 //                                  //
-//        oDrawingNode class        //
+//        $.oDrawingNode class      //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -960,31 +991,31 @@ Object.defineProperty(oPegNode.prototype, "useSeparate", {
 /**
  * The drawing module base class for the node.
  * @constructor
- * @augments   oNode
+ * @augments   $.oNode
  * @classdesc  Drawing Moudle Class    
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
+ * <br> The constructor for the scene object, new $.oScene($) to create a scene with DOM access.
  */
-oDrawingNode = function(path, oSceneObject) {
-    // oDrawingNode can only represent a node of type 'READ'
+$.oDrawingNode = function(path, oSceneObject) {
+    // $.oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'READ') throw "'path' parameter must point to a 'READ' type node";
-    oNode.call(this, path, oSceneObject);
+    $.oNode.call(this, path, oSceneObject);
     
     this._type = 'drawingNode';
 }
  
-oDrawingNode.prototype = Object.create(oNode.prototype);
+$.oDrawingNode.prototype = Object.create($.oNode.prototype);
  
 /**
  * The oElement class of the drawing.
- * @name oDrawingNode#element
+ * @name $.oDrawingNode#element
  * @type {oElement}
  */
-Object.defineProperty(oDrawingNode.prototype, "element", {
+Object.defineProperty($.oDrawingNode.prototype, "element", {
     get : function(){
         var _column = this.attributes.drawing.element.column;
-        return ( new oElement( node.getElementId(this.fullPath), _column ) );
+        return ( new $.oElement( node.getElementId(this.fullPath), _column ) );
     },
    
     set : function( oElementObject ){
@@ -996,10 +1027,10 @@ Object.defineProperty(oDrawingNode.prototype, "element", {
 
 /**
  * The drawing.element keyframes.
- * @name oDrawingNode#timings
+ * @name $.oDrawingNode#timings
  * @type {oFrames[]}
  */
-Object.defineProperty(oDrawingNode.prototype, "timings", {
+Object.defineProperty($.oDrawingNode.prototype, "timings", {
     get : function(){
         return this.attributes.drawing.element.getKeyFrames()
    }
@@ -1009,9 +1040,9 @@ Object.defineProperty(oDrawingNode.prototype, "timings", {
 
  /**
  * Extracts the position information on a drawing node, and applies it to a new peg instead.
- * @return  {oPegNode}   The created peg.
+ * @return  {$.oPegNode}   The created peg.
  */
-oDrawingNode.prototype.extractPeg = function(){
+$.oDrawingNode.prototype.extractPeg = function(){
     var _drawingNode = this;
     var _peg = this.scene.addNode("PEG", this.name+"-P");
     var _columns = _drawingNode.linkedColumns;
@@ -1053,7 +1084,7 @@ oDrawingNode.prototype.extractPeg = function(){
  *
  * @return  {oPoint[][]}   The contour curves.
  */
-oDrawingNode.prototype.getContourCurves = function( count, frame ){
+$.oDrawingNode.prototype.getContourCurves = function( count, frame ){
   
   if (typeof frame === 'undefined') var frame = this.scene.currentFrame;
   if (typeof count === 'undefined') var count = 3;
@@ -1073,10 +1104,10 @@ oDrawingNode.prototype.getContourCurves = function( count, frame ){
                         );
   if( res.success ){
     var _curves = res.results.map( function (x){ return [ 
-                                                          new oPoint( x[0][0], x[0][1], 0.0 ),
-                                                          new oPoint( x[1][0], x[1][1], 0.0 ),
-                                                          new oPoint( x[2][0], x[2][1], 0.0 ),
-                                                          new oPoint( x[3][0], x[3][1], 0.0 )
+                                                          new $.oPoint( x[0][0], x[0][1], 0.0 ),
+                                                          new $.oPoint( x[1][0], x[1][1], 0.0 ),
+                                                          new $.oPoint( x[2][0], x[2][1], 0.0 ),
+                                                          new $.oPoint( x[3][0], x[3][1], 0.0 )
                                                         ]; } );
     return _curves;
   }
@@ -1088,7 +1119,7 @@ oDrawingNode.prototype.getContourCurves = function( count, frame ){
 //////////////////////////////////////
 //                                  //
 //                                  //
-//         oGroupNode class         //
+//         $.oGroupNode class         //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -1097,28 +1128,28 @@ oDrawingNode.prototype.getContourCurves = function( count, frame ){
 /**
  * The group module base class for the node.
  * @constructor
- * @augments   oNode
- * @classdesc  oGroupNode Class    
+ * @augments   $.oNode
+ * @classdesc  $.oGroupNode Class    
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new oScene($) to create a scene with DOM access.
+ * <br> The constructor for the scene object, new $.oScene($) to create a scene with DOM access.
  */
-oGroupNode = function(path, oSceneObject) {
-    // oDrawingNode can only represent a node of type 'READ'
+$.oGroupNode = function(path, oSceneObject) {
+    // $.oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'GROUP') throw "'path' parameter must point to a 'GROUP' type node";
-    oNode.call(this, path, oSceneObject);
+    $.oNode.call(this, path, oSceneObject);
     
     this._type = 'groupNode';
 }
-oGroupNode.prototype = Object.create(oNode.prototype);
+$.oGroupNode.prototype = Object.create($.oNode.prototype);
 
 
 /**
  * The multiport in node of the group.
- * @name oGroupNode#multiportIn
- * @type {oNode}
+ * @name $.oGroupNode#multiportIn
+ * @type {$.oNode}
  */
-Object.defineProperty(oGroupNode.prototype, "multiportIn", {
+Object.defineProperty($.oGroupNode.prototype, "multiportIn", {
     get : function(){
         if (this.isRoot) return null
         var _MPI = this.scene.getNodeByPath(node.getGroupInputModule(this.fullPath, "Multiport-In", 0,-100,0),this.scene)
@@ -1129,10 +1160,10 @@ Object.defineProperty(oGroupNode.prototype, "multiportIn", {
 
 /**
  * The multiport out node of the group.
- * @name oGroupNode#multiportOut
- * @type {oNode}
+ * @name $.oGroupNode#multiportOut
+ * @type {$.oNode}
  */
-Object.defineProperty(oGroupNode.prototype, "multiportOut", {
+Object.defineProperty($.oGroupNode.prototype, "multiportOut", {
     get : function(){
         if (this.isRoot) return null
         var _MPO = this.scene.getNodeByPath(node.getGroupOutputModule(this.fullPath, "Multiport-Out", 0, 100,0),this.scene)
@@ -1145,9 +1176,9 @@ Object.defineProperty(oGroupNode.prototype, "multiportOut", {
  * Gets all subnodes withing the group.
  * @param   {bool}    [recurse]                    Whether to recurse the groups within the groups.
  *  
- * @return  {oNode[]}   The nodes in the group
+ * @return  {$.oNode[]}   The nodes in the group
  */
-oGroupNode.prototype.subNodes = function(recurse){
+$.oGroupNode.prototype.subNodes = function(recurse){
     if (typeof recurse === 'undefined') recurse = false;
    
     var _nodes = node.subNodes(this.fullPath);
@@ -1156,7 +1187,7 @@ oGroupNode.prototype.subNodes = function(recurse){
     for (var i in _nodes){
         var _oNodeObject = this.scene.getNodeByPath(_nodes[i]);
         _subNodes.push(_oNodeObject);
-        if (recurse && node.isGroup(_nodes[i])) _subNodes = _subNodes.concat(_oNodeObject.subNodes(recurse));
+        if (recurse && node.isGroup(_nodes[i])) _subNodes = _subNodes.concat(_$.oNodeObject.subNodes(recurse));
     }
  
     return _subNodes;
@@ -1168,7 +1199,7 @@ oGroupNode.prototype.subNodes = function(recurse){
  * Sorts out the node view inside the group
  * @param   {bool}   [recurse]                    Whether to recurse the groups within the groups.
  */
-oGroupNode.prototype.orderNodeView = function(recurse){
+$.oGroupNode.prototype.orderNodeView = function(recurse){
     if (typeof recurse === 'undefined') var recurse = false;
    
     TB_orderNetworkUpBatchFromList(node.subNodes(this.fullPath))
@@ -1189,34 +1220,3 @@ oGroupNode.prototype.orderNodeView = function(recurse){
 }
 
 
- /**
- * Provides a matching attribute based on provided keyword name.
- * @param   {string}    keyword                    The attribute keyword to search.
- * @return  {oAttribute}   The matched attribute object, given the keyword.
- */
-oNode.prototype.getAttributeByName = function( keyword ){
-    if (keyword.indexOf(".")){
-        keyword = keyword.toLowerCase();
-        keyword = keyword.split(".");
-        var _attribute = keyword[0];
-        var _subAttribute = keyword[1];
-        
-        if (_subAttribute == "3dpath") _subAttribute = "path3d";
-        
-        if (!this.attributes.hasOwnProperty(_attribute)) return null;
-        if (!this.attributes[_attribute].hasOwnProperty(_subAttribute)) return this.attributes[_attribute];
-        
-        return this.attributes[_attribute][_subAttribute];
-    }else{
-        if (!this.hasOwnProperty(keyword)) return null;
-        return this.attributes[keyword];
-    }
-}
-
- /**
- * Used in converting the node to a string value, provides the string-path.
- * @return  {string}   The node path's as a string.
- */
-oNode.prototype.toString = function(){
-    return this.fullPath;
-}
