@@ -388,7 +388,6 @@ function openHarmony_toolInstaller(){
               var install_detail_script = oh_install + "/" + item["name"];
               var install_file = new $.oFile( install_detail_script );
               
-              System.println( install_detail_script );
               if( install_file.exists ){
                 //--The file exists. It might be an remove if same version, or an upgrade.
                 var read_file = install_file.read().split("\n");
