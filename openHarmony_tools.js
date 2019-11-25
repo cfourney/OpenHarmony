@@ -74,7 +74,7 @@ function openHarmony_toolInstaller(){
         this.$ = $;
         var oh_path = preferences.getString( 'openHarmonyPath', false );
         this.loaded = false;
-        this.ui_path = oh_path + "/openHarmony_toolInstall.ui";
+        this.ui_path = oh_path + "/openHarmony/openHarmony_toolInstall.ui";
         
         var branch_list = "https://api.github.com/repos/cfourney/OpenHarmony/branches";
         
