@@ -321,7 +321,7 @@ function openHarmony_toolInstaller(){
                     if( !confirmDialog( "Overwrite File", "Overwrite " + lpth, "Overwrite", "Cancel" ) ){ continue; }
                   }
                   
-                  install_instructions.push( [ url, lpth ] );
+                  install_instructions.push( { "url": url, "path": lpth } );
                 }catch(err){
                   continue;
                 }
@@ -329,7 +329,14 @@ function openHarmony_toolInstaller(){
               
               var downloaded = $.network.downloadMulti( install_instructions, true );
               
-              if( !downloaded ){
+              var all_success = true;
+              for( var x=0;x<downloaded.length;x++ ){
+                if( !downloaded[x] ){
+                  all_success = false;
+                }
+              }
+              
+              if( !all_success ){
                 MessageBox.information( "Failed to download " + item["name"] +", try again later." );
                 return;
               }
