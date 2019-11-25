@@ -57,8 +57,6 @@
  *
  */
 $.oNetwork = function( ){
-    this.$ = $;
-    
     //Expect a path for CURL.
     var avail_paths = [ 
                         "c:\\Windows\\System32\\curl.exe"

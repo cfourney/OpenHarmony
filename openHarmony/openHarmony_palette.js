@@ -44,7 +44,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          $.oPalette class          //
+//          $.oPalette class        //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -65,7 +65,6 @@
  */
 $.oPalette = function( paletteObject, oSceneObject, paletteListObject ){
   this._type = "palette";
-  this.$     = $;
 
   this.paletteObject = paletteObject;
   this._paletteList  = paletteListObject;

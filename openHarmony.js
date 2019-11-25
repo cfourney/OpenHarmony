@@ -91,24 +91,25 @@ $.directoryGet = function( file_path ){
   return file_path.split( "/" ).slice(0, -1).join('/');
 };
 
+
 $.directory = $.directoryGet( __file__ );
 
 // The included files should be relative to the path of THIS file!
-include( $.directory + "/openHarmony_misc.js");   
-include( $.directory + "/openHarmony_network.js");   
-include( $.directory + "/openHarmony_path.js");   
-include( $.directory + "/openHarmony_list.js");       
-include( $.directory + "/openHarmony_timeline.js");  
-include( $.directory + "/openHarmony_attribute.js");   
-include( $.directory + "/openHarmony_frame.js");       
-include( $.directory + "/openHarmony_element.js");     
-include( $.directory + "/openHarmony_color.js");       
-include( $.directory + "/openHarmony_palette.js");     
-include( $.directory + "/openHarmony_nodeLink.js");    
-include( $.directory + "/openHarmony_node.js");        
-include( $.directory + "/openHarmony_column.js");      
-include( $.directory + "/openHarmony_drawing.js");     
-include( $.directory + "/openHarmony_scene.js" );
+include( $.directory + "/openHarmony/openHarmony_misc.js"      );   
+include( $.directory + "/openHarmony/openHarmony_network.js"   );   
+include( $.directory + "/openHarmony/openHarmony_path.js"      );   
+include( $.directory + "/openHarmony/openHarmony_list.js"      );       
+include( $.directory + "/openHarmony/openHarmony_timeline.js"  );  
+include( $.directory + "/openHarmony/openHarmony_attribute.js" );   
+include( $.directory + "/openHarmony/openHarmony_frame.js"     );       
+include( $.directory + "/openHarmony/openHarmony_element.js"   );     
+include( $.directory + "/openHarmony/openHarmony_color.js"     );       
+include( $.directory + "/openHarmony/openHarmony_palette.js"   );     
+include( $.directory + "/openHarmony/openHarmony_nodeLink.js"  );    
+include( $.directory + "/openHarmony/openHarmony_node.js"      );        
+include( $.directory + "/openHarmony/openHarmony_column.js"    );      
+include( $.directory + "/openHarmony/openHarmony_drawing.js"   );     
+include( $.directory + "/openHarmony/openHarmony_scene.js"     );
 
 /**
  * The standard debug that uses logic and level to write to the messagelog. Everything should just call this to write internally to a log in OpenHarmony.
@@ -160,11 +161,35 @@ $.logObj = function( object ){
     }
 }
 
-
+//---- Scene  --------------
 $.s     = new $.oScene( );
 $.scn   = $.s;
 $.scene = $.s;
-$.global = this;
 
 //---- Attach Helpers ------
 $.network = new $.oNetwork( );
+$.global  = this;
+
+
+//---- Instantiate Class $ DOM Access ------
+function addDOMAccess( target, item ){
+  Object.defineProperty( target, '$', {
+      get: function(){
+          return item;
+      }
+  });
+}
+
+//Add the context as a local member of the classes.
+for( var classItem in $ ){
+  if( ( typeof $[classItem] ) == "function" ){
+    try{
+      addDOMAccess( $[classItem].prototype, $ );
+    }catch(err){
+      System.println( "Error extending DOM access to : " + classItem );
+    }
+    
+    //Also extend it to the global object.
+    this[classItem] = $[classItem];
+  }
+}

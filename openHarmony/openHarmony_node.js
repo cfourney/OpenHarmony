@@ -62,7 +62,7 @@
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
  * <br> The constructor for the scene object, new $.oScene($) to create a scene with DOM access.
  */
-$.oNode = function(path, oSceneObject){
+$.oNode = function( path, oSceneObject ){
     this._fullPath = path;
     this.type = node.type(this.fullPath);
     this.scene = oSceneObject;
@@ -754,7 +754,7 @@ $.oNode.prototype.subNodes = function(recurse){
     var _nodes = node.subNodes(this.fullPath);
     var _subNodes = [];
     for (var _node in _nodes){
-        var _oNodeObject = new $.oNode( this.$, _nodes[_node] );
+        var _oNodeObject = new $.oNode( _nodes[_node] );
         _subNodes.push(_oNodeObject);
         if (recurse && node.isGroup(_nodes[_node])) _subNodes = _subNodes.concat(_$.oNodeObject.subNodes(recurse));
     }

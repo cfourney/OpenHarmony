@@ -64,7 +64,6 @@
  */
 $.oFrame = function( frameNumber, oColumnObject, subColumns ){
   this._type = "frame";
-  this.$     = $;
   
   if (typeof subColumns === 'undefined') var subColumns = 0;
 

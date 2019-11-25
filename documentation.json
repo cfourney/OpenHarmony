@@ -3,7 +3,8 @@
     "recurseDepth": 10,
     "source": {
         "include": ["."],
-        "includePattern": ".+\\.js(doc|x)?$"
+        "includePattern": ".+\\.js(doc|x)?$",
+        "exclude": [ "./openHarmony_tools.js" ]
     },
     "sourceType": "module",
     "tags": {

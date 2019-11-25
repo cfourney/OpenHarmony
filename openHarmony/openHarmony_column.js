@@ -55,15 +55,13 @@
  * @constructor
  * @classdesc  $.oColumn Class
  * @param   {string}                   uniqueName                  The unique name of the column.
- * @param   {oAttribute}               oAttributeObject            The oAttribute thats connected to the column.
+ * @param   {$.oAttribute}             oAttributeObject            The oAttribute thats connected to the column.
  *
  * @property {string}                  uniqueName                  The unique name of the column.
- * @property {oAttribute}              attributeObject             The attribute object that the column is attached to.
+ * @property {$.oAttribute}            attributeObject             The attribute object that the column is attached to.
  */
 $.oColumn = function( uniqueName, oAttributeObject ){
-
   this._type = "column";
-  this.$     = $;
   
   this.uniqueName = uniqueName;
   this.attributeObject = oAttributeObject
@@ -111,7 +109,7 @@ Object.defineProperty( $.oColumn.prototype, 'type', {
 /**
  * An array of the oFrame objects provided by the column.
  * @name $.oColumn#frames
- * @type {oFrame[]}
+ * @type {$.oFrame[]}
  */
 Object.defineProperty($.oColumn.prototype, 'frames', {
     get : function(){
@@ -131,7 +129,7 @@ Object.defineProperty($.oColumn.prototype, 'frames', {
 /**
  * An array of the keyframes provided by the column.
  * @name $.oColumn#keyframes
- * @type {oFrame[]}
+ * @type {$.oFrame[]}
  */
 Object.defineProperty($.oColumn.prototype, 'keyframes', {
     get : function(){
@@ -174,9 +172,9 @@ Object.defineProperty($.oColumn.prototype, 'subColumns', {
 /**
  * Extends the exposure of the drawing's keyframes given the provided arguments.
  * @deprecated
- * @param   {oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
- * @param   {int}       amount               The amount to extend.
- * @param   {bool}      replace              Setting this to false will insert frames as opposed to overwrite existing ones.
+ * @param   {$.oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
+ * @param   {int}         amount               The amount to extend.
+ * @param   {bool}        replace              Setting this to false will insert frames as opposed to overwrite existing ones.
  */
 $.oColumn.prototype.extendExposures = function( exposures, amount, replace){
     if (this.type != "DRAWING") return false;
@@ -242,7 +240,7 @@ $.oColumn.prototype.duplicate = function() {
 /**
  * Filters out only the keyframes from the frames array.
  *
- * @return {oFrame[]}    Provides the array of frames from the column.
+ * @return {$.oFrame[]}    Provides the array of frames from the column.
  */
 $.oColumn.prototype.getKeyFrames = function(){
     var _frames = this.frames;
@@ -273,10 +271,10 @@ $.oColumn.prototype.getKeyFrames = function(){
  * @classdesc  $.oDrawingColumn Class
  * @augments   $.oColumn
  * @param   {string}                   uniqueName                  The unique name of the column.
- * @param   {oAttribute}               oAttributeObject            The oAttribute thats connected to the column.
+ * @param   {$.oAttribute}             oAttributeObject            The oAttribute thats connected to the column.
  *
  * @property {string}                  uniqueName                  The unique name of the column.
- * @property {oAttribute}              attributeObject             The attribute object that the column is attached to.
+ * @property {$.oAttribute}            attributeObject             The attribute object that the column is attached to.
  */
 $.oDrawingColumn = function( uniqueName, oAttributeObject ) {
     // $.oDrawingColumn can only represent a column of type 'DRAWING'
@@ -293,7 +291,7 @@ $.oDrawingColumn.prototype = Object.create($.oColumn.prototype);
 /**
  * Provides the drawing element attached to the column.
  * @name $.oDrawingColumn#element
- * @type {oElement}
+ * @type {$.oElement}
  */
 Object.defineProperty($.oDrawingColumn.prototype, 'element', {
     get : function(){
@@ -309,9 +307,9 @@ Object.defineProperty($.oDrawingColumn.prototype, 'element', {
 
 /**
  * Extends the exposure of the drawing's keyframes given the provided arguments.
- * @param   {oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
- * @param   {int}       amount               The amount to extend.
- * @param   {bool}      replace              Setting this to false will insert frames as opposed to overwrite existing ones.
+ * @param   {$.oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
+ * @param   {int}         amount               The amount to extend.
+ * @param   {bool}        replace              Setting this to false will insert frames as opposed to overwrite existing ones.
  */
 $.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace){
     // if amount is undefined, extend function below will automatically fill empty frames

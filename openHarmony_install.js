@@ -6,26 +6,18 @@ function openHarmony_install_main(){
     
     //Standard install paths.
     var install_base = specialFolders.userScripts;
-    var library_base = install_base + '/openHarmony';
+    var library_base = install_base;
     
     var libdir = new Dir(library_base);
     var label = new Label;
-    if( libdir.exists ) {
-      label.text = "Update openHarmony libraries?\n";    
-      d.okButtonText = "Update";
-    }else{
-      label.text = "Install openHarmony libraries?\n";
-      d.okButtonText = "Install";
-    }
+        label.text = "Install openHarmony libraries?\n";
+    
     d.add( label );
     
     if ( !d.exec() ){
       return;
     }
     
-    if( !libdir.exists ){ 
-      libdir.mkdirs();
-    }
     if( !libdir.exists ){
       MessageBox.information( "Failed to create folders for openHarmony - please check permissions." );
     }
@@ -111,16 +103,6 @@ function openHarmony_install_main(){
         
         //Override path of active scripts to ensure they're accessible to the user.
         //----------------------------------------------------------------------------
-        var active_scripts = {
-                                "openHarmony_tools.js"   : specialFolders.userScripts + "/openHarmony_tools.js",
-                                "openHarmony_install.js" : specialFolders.userScripts + "/openHarmony_install.js"
-                             };
-        
-        var file_name = local_path.slice( local_path.lastIndexOf("/")+1 );
-        if( active_scripts[ file_name ] ){
-          local_path = active_scripts[ file_name ];
-        }
-        
         var downloaded = download( raw_url, local_path );
         if( !downloaded ){
           MessageBox.information( "Failed to create openHarmony file: " + local_path );

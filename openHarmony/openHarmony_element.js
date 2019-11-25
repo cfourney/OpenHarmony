@@ -42,7 +42,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          $.oElement class          //
+//          $.oElement class        //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -54,14 +54,13 @@
  * @constructor
  * @classdesc  $.oElement Class
  * @param   {int}                   id                          The element ID.
- * @param   {oColumn}               oColumnObject               The column object associated to the element.
+ * @param   {$.oColumn}             oColumnObject               The column object associated to the element.
  *
  * @property {int}                  id                          The element ID.
- * @property {oColumn}              oColumnObject               The column object associated to the element.
+ * @property {$.oColumn}            oColumnObject               The column object associated to the element.
  */
 $.oElement = function( id, oColumnObject){
   this._type = "element";
-  this.$     = $;
   
   this.id = id;
   this.column = oColumnObject;
@@ -98,7 +97,7 @@ Object.defineProperty($.oElement.prototype, 'path', {
 /**
  * The drawings available in the element.
  * @name $.oElement#drawings
- * @type {oDrawing[]}
+ * @type {$.oDrawing[]}
  */
 Object.defineProperty($.oElement.prototype, '', {
     get : function(){
@@ -120,7 +119,7 @@ Object.defineProperty($.oElement.prototype, '', {
  * @param   {name}       name                 The name of the drawing to add.
  * @param   {bool}       filename             The filename for the drawing to add.
  *  
- * @return {oDrawing}      The added drawing
+ * @return {$.oDrawing}      The added drawing
  */
 $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
     if (typeof filename === 'undefined') var filename = false;
@@ -152,7 +151,7 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
  * Gets a drawing object by the name.
  * @param   {string}     name              The name of the drawing to get.
  * 
- * @return { oDrawing }      The added drawing
+ * @return { $.oDrawing }      The added drawing
  */
 $.oElement.prototype.getDrawingByName = function ( name ){
     return new $.oDrawing( name, this );

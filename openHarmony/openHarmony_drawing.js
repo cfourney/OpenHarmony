@@ -38,74 +38,44 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//          $.oDrawing class        //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
 
-//////////////////////////////////////
-//////////////////////////////////////
-//                                  //
-//                                  //
-//         $.oTimeline class          //
-//                                  //
-//                                  //
-//////////////////////////////////////
-//////////////////////////////////////
- 
 
 /**
- * The base class for the $.oTimeline.
+ * The base class for the $.oDrawing.
  * @constructor
- * @classdesc  $.oTimeline Base Class
- * @param   {string}                   display               The display node's path.
- * @param   {oScene}                   oSceneObject          The scene object of the DOM.
+ * @classdesc  $.oDrawing Base Class
+ * @param   {int}                    name                       The name of the drawing.
+ * @param   {$.oElement}             oElementObject             The element object associated to the element.
  *
- * @property {int}                     display               The display node's path.
- * @property {oColumnObject}           composition           The composition order of the scene.
- * @property {oScene}                  scene                 The scene object of the DOM.
+ * @property {int}                   name                       The name of the drawing.
+ * @property {$.oElement}            element                    The element object associated to the element.
  */
-$.oTimeline = function( display, oSceneObject ){
-    this.display = display
-    this.composition = ''
-    this.scene = oSceneObject;
-   
-    if (node.type(this.display) == '') {
-        this.composition = compositionOrder.buildDefaultCompositionOrder();
-    }else{
-        this.composition = compositionOrder.buildCompositionOrderForDisplay(display);
-    }
-   
+$.oDrawing = function( name, oElementObject ){
+  this._type = "drawing";
+
+  this.name = name;
+  this.element = oElementObject;
 }
  
-// Properties
-
 /**
- * The node layers in the scene, based on the timeline's order given a specific display.
- * @name $.oTimeline#layers
- * @type {oNode[]}
+ * The folder path of the drawing on the filesystem.
+ * @name $.oDrawing#path
+ * @type {string}
  */
-Object.defineProperty($.oTimeline.prototype, 'layers', {
+Object.defineProperty( $.oDrawing.prototype, 'path', {
     get : function(){
-        var _timeline = this.layersList;
-        var _scene = this.scene;
-       
-        _timeline = _timeline.map( function(x){return _scene.getNodeByPath(x)} );
-       
-        return _timeline;
-    }
-});
- 
-/**
- * Gets the paths of the layers in order, given the specific display's timeline.
- * @name $.oTimeline#layersList
- * @type {string[]}
- */
-Object.defineProperty($.oTimeline.prototype, 'layersList', {
-    get : function(){
-        var _composition = this.composition;
-        var _timeline = [];
-       
-        for (var i in _composition){
-            _timeline.push( _composition[i].node )
-        }
-       
-        return _timeline;
+         return fileMapper.toNativePath(Drawing.filename(this.element.id, this.name))
     }
 })
+
+
+// $.oDrawing Class methods

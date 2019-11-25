@@ -58,6 +58,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="installLabel">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="installButton">
         <property name="text">
          <string>INSTALL/REMOVE</string>

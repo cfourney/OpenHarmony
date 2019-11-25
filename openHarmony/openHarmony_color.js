@@ -122,15 +122,14 @@ $.oColorValue.prototype.fromColorString = function (hexString){
  * The base class for the $.oColor.
  * @constructor
  * @classdesc  $.oColor Base Class
- * @param   {oPaletteObject}         oPaletteObject             The palette to which the color belongs.
+ * @param   {$.oPalette}             oPaletteObject             The palette to which the color belongs.
  * @param   {int}                    attributeObject            The index of the color in the palette.
  *
- * @property {oPaletteObject}        palette                    The palette to which the color belongs.
+ * @property {$.oPalette}            palette                    The palette to which the color belongs.
  */
 $.oColor = function( oPaletteObject, index ){
   // We don't use id in the constructor as multiple colors with the same id can exist in the same palette.
   this._type = "color";
-  this.$     = $;
 
   this.palette = oPaletteObject;
   this._index = index;
@@ -317,7 +316,7 @@ Object.defineProperty($.oColor.prototype, 'value', {
 
 /**
  * Moves the palette to another Palette Object (CFNote: perhaps have it push to paletteObject, instead of being done at the color level)
- * @param   {oPaletteObject}     oPaletteObject              The paletteObject to move this color into.
+ * @param   {$.oPalette}         oPaletteObject              The paletteObject to move this color into.
  * @param   {int}                index                       Need clarification from mchap
  *  
  * @return: {$.oColor}           The new resulting $.oColor object.

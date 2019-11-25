@@ -53,20 +53,19 @@
  * The base class for the $.oAttribute.
  * @constructor
  * @classdesc  $.oAttribute Base Class
- * @param   {oNode}                  oNodeObject                The oNodeObject that the attribute is associated to.
- * @param   {attr}                   attributeObject            The internal harmony Attribute Object.
+ * @param   {$.oNode}                  oNodeObject                The oNodeObject that the attribute is associated to.
+ * @param   {attr}                     attributeObject            The internal harmony Attribute Object.
  * @param   {$.oAttribute}             parentAttribute            The parent attribute of the subattribute.
  *
- * @property {oNodeObject}           node                       The name of the drawing.
- * @property {attr}                  attributeObject            The element object associated to the element.
- * @property {string}                keyword                    The name of the drawing.
- * @property {string}                shortKeyword               The element object associated to the element.
+ * @property {$.oNode}                 node                       The name of the drawing.
+ * @property {attr}                    attributeObject            The element object associated to the element.
+ * @property {string}                  keyword                    The name of the drawing.
+ * @property {string}                  shortKeyword               The element object associated to the element.
  * @property {$.oAttribute}            parentAttribute            The element object associated to the element.
  * @property {$.oAttribute[]}          subAttributes              The subattributes, if any exist, of this attribute.
  */
 $.oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
   this._type = "attribute";
-  this.$     = $;
 
   this.node = oNodeObject;
   this.attributeObject = attributeObject;
@@ -186,7 +185,7 @@ Object.defineProperty($.oAttribute.prototype, 'type', {
 /**
  * The column attached to the attribute.
  * @name $.oAttribute#column
- * @type {oColumn}
+ * @type {$.oColumn}
  */
 Object.defineProperty($.oAttribute.prototype, 'column', {
     get : function(){
@@ -213,7 +212,7 @@ Object.defineProperty($.oAttribute.prototype, 'column', {
  /**
  * The oFrames of attached to the column..
  * @name $.oAttribute#frames
- * @type {oFrame[]}
+ * @type {$.oFrame[]}
  */
 Object.defineProperty($.oAttribute.prototype, 'frames', {
     get : function(){
@@ -235,7 +234,7 @@ Object.defineProperty($.oAttribute.prototype, 'frames', {
 /**
  * Returns the filtered keyframes of the attached to the column.
  * @name $.oAttribute#keyframes
- * @type {oFrame[]}
+ * @type {$.oFrame[]}
  */
 Object.defineProperty($.oAttribute.prototype, 'keyframes', {
     get : function(){
@@ -331,7 +330,7 @@ Object.defineProperty($.oAttribute.prototype, "defaultValue", {
 
 /**
  * Provides the keyframes of the attribute.
- * @return {oFrame[]}   The filtered keyframes.
+ * @return {$.oFrame[]}   The filtered keyframes.
  */
 $.oAttribute.prototype.getKeyFrames = function(){
     var _frames = this.frames;

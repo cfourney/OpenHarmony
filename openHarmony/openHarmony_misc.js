@@ -67,7 +67,7 @@ $.oPoint = function(x, y, z){
     if (typeof z === 'undefined') var z = 0;
     
     this._type = "point";
-    
+
     this.x = x;
     this.y = y;
     this.z = z;
@@ -286,8 +286,8 @@ $.oFolder = function(path){
     this._type = "folder";
     this._path = fileMapper.toNativePath(path).split("\\").join("/");
     //if (this.path.slice(-1) != "/") this.path += "/";
+    
 }
-
 
 /**
  * The path of the folder.
@@ -442,9 +442,15 @@ $.oFolder.prototype.listFiles = function(filter){
 $.oFolder.prototype.getFiles = function( filter ){
     if (typeof filter === 'undefined') var filter = "*";
     // returns the list of $.oFile in a directory that match a filter
+
     var _path = this.path;
-    var _files = this.listFiles(filter).map( function(x){ return new $.oFile(_path+x) } );
-   
+    
+    var _files = [];
+    var _file_list = this.listFiles(filter);
+    for( var x=0;x<_file_list.length;x++ ){
+      _files.push( new this.$.oFile( _path+'/'+_file_list[x] ) );
+    }
+    
     return _files;
 }
 
@@ -616,7 +622,6 @@ $.oFolder.prototype.toString = function(){
  */
 $.oFile = function(path){
     this._type = "file";
-
     this._path = fileMapper.toNativePath(path).split('\\').join('/');
 }
 

@@ -63,7 +63,6 @@ $.oScene = function( ){
     //var _topNode = new $.oNode("Top");
     //this.__proto__.nodes = _topNode.subNodes(true);
   
-  this.$     = $;
   this._type = "scene";
 }
 
