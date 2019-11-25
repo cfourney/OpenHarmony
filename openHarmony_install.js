@@ -74,6 +74,34 @@ function openHarmony_install_main(){
       var file_download_listing = recurse_files( apic, [] );
       progress.setRange( 0, file_download_listing.length );
 
+      
+      
+      var oh_install = specialFolders.userScripts + "/" + "openHarmony_install";
+      var libdir = new Dir( oh_install );
+      if( !libdir.exists ){
+        libdir.mkdirs();
+      }
+      if( libdir.exists ){
+        var oh_install_file = oh_install + "/" + "OpenHarmony";
+        
+        var file = new File( oh_install_file );
+        try {
+          var content = [ fnd ];
+          for( var n=0;n<file_download_listing.length;n++ ){
+            var path    = file_download_listing[n][1];
+            var local_path = library_base+'/'+path;
+            
+            content.push( local_path );
+          }
+          
+          file.open(FileAccess.WriteOnly);
+          file.write( content.join("\n") );
+          file.close();
+        } catch (err) {
+        }
+      }
+      
+      
       for( var n=0;n<file_download_listing.length;n++ ){
         progress.setValue( n );
         QCoreApplication.processEvents();

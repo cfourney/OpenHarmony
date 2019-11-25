@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oPalette</title>
+    <title>Class: oFile</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -1293,7 +1293,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oPalette.html">Class: oPalette</h1>
+        <h1 class="page-title" data-filename="$.oFile.html">Class: oFile</h1>
         
 
 
@@ -1304,10 +1304,10 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a>.</span>
     
-    oPalette
+    oFile
     </h2>
     
-        <div class="class-description">$.oPalette Base Class</div>
+        <div class="class-description">$.oFile Base Class</div>
     
 </header>  
 
@@ -1319,14 +1319,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oPalette">
+        <h4 class="name" id="oFile">
             
-            new $.oPalette<span class="signature">(paletteObject, oSceneObject, paletteListObject)</span>
+            new $.oFile<span class="signature">(path)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_palette.js, line 66
+            openHarmony/openHarmony_misc.js, line 623
         </div>
         
     </div>
@@ -1337,7 +1337,7 @@
     
     
     <div class="description">
-        The base class for the $.oPalette.
+        The $.oFile helper class -- providing utilities for file manipulation and access.
     </div>
     
 
@@ -1368,13 +1368,13 @@
 	
         <tr>
             
-                <td class="name"><code>paletteObject</code></td>
+                <td class="name"><code>path</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">palette</span>
+<span class="param-type">string</span>
 
 
             
@@ -1384,53 +1384,7 @@
             
             <td class="description last">
                 
-                The Harmony palette object.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>oSceneObject</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">oSceneObject</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The DOM Scene object.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>paletteListObject</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">paletteList</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The Harmony paletteListObject object.</td>
+                The path to the file.</td>
         </tr>
 	
 	
@@ -1468,13 +1422,13 @@
 	
         <tr>
             
-                <td class="name"><code>paletteObject</code></td>
+                <td class="name"><code>path</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">palette</span>
+<span class="param-type">string</span>
 
 
             
@@ -1484,30 +1438,7 @@
             
             
             
-            <td class="description last">The Harmony palette object.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>scene</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">oSceneObject</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The DOM Scene object.</td>
+            <td class="description last">The path to the file.</td>
         </tr>
 	
 	
@@ -1571,7 +1502,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="colors">colors<span class="type-signature type array.<ocolor>">Array.&lt;oColor></span> </h4>
+        <h4 class="name" id="exists">exists<span class="type-signature type bool">bool</span> </h4>
     </div>
     
     
@@ -1579,7 +1510,7 @@
 <dd>
     
     <div class="description">
-        The oColor objects contained in the palette.
+        Whether the file exists already.
     </div>
     
     
@@ -1616,7 +1547,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="id">id<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="extension">extension<span class="type-signature type string">string</span> </h4>
     </div>
     
     
@@ -1624,7 +1555,52 @@
 <dd>
     
     <div class="description">
-        The palette ID.
+        The extension of the file.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="folder">folder<span class="type-signature type $.ofolder"><a href="$.oFolder.html">$.oFolder</a></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The folder containing the file.
     </div>
     
     
@@ -1669,7 +1645,7 @@
 <dd>
     
     <div class="description">
-        The palette name.
+        The name of the file.
     </div>
     
     
@@ -1714,52 +1690,7 @@
 <dd>
     
     <div class="description">
-        The palette path on disk.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="selected">selected<span class="type-signature type bool">bool</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Whether the palette is selected.
+        The path of the file.
     </div>
     
     
@@ -1802,14 +1733,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="addColor">
+        <h4 class="name" id="copy">
             
-            addColor<span class="signature">()</span>
+            copy<span class="signature">(<span class="optional">folder</span>, <span class="optional">copyName</span>, <span class="optional">overwrite</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_palette.js, line 172
+            openHarmony/openHarmony_misc.js, line 764
         </div>
         
     </div>
@@ -1820,7 +1751,341 @@
     
     
     <div class="description">
-        Not yet implemented.
+        Copies the file to the folder.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>folder</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Content to write to the file.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>copyName</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Name of the copied file.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>overwrite</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether to overwrite the file.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="move">
+            
+            move<span class="signature">(folder, <span class="optional">overwrite</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_misc.js, line 733
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Moves the file to the folder.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>folder</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                Content to write to the file.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>overwrite</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether to overwrite the file.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="read">
+            
+            read<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_misc.js, line 689
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Reads the content of the file.
     </div>
     
 
@@ -1875,12 +2140,12 @@
     <div class="nameContainer">
         <h4 class="name" id="remove">
             
-            remove<span class="signature">(removeFile)</span>
+            remove<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_palette.js, line 183
+            openHarmony/openHarmony_misc.js, line 793
         </div>
         
     </div>
@@ -1891,7 +2156,178 @@
     
     
     <div class="description">
-        Removes the palette file from the filesystem and palette list.
+        Removes the file.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="toString">
+            
+            toString<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_misc.js, line 802
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Used in converting the file to a string value, provides the string-path.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        string
+                        
+                    
+            </td>
+            <td class="description last">The file path's as a string.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="write">
+            
+            write<span class="signature">(content, append)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_misc.js, line 709
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Writes to the file.
     </div>
     
 
@@ -1922,7 +2358,30 @@
 	
         <tr>
             
-                <td class="name"><code>removeFile</code></td>
+                <td class="name"><code>content</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                Content to write to the file.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>append</code></td>
             
             
             <td class="type">
@@ -1938,7 +2397,7 @@
             
             <td class="description last">
                 
-                Whether the palette file should be removed on the filesystem.</td>
+                Whether to append to the file.</td>
         </tr>
 	
 	
@@ -2004,7 +2463,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Nov 25 2019 14:34:06 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Nov 25 2019 15:35:23 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>

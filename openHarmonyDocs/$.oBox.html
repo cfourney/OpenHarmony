@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oColorValue</title>
+    <title>Class: oBox</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -1293,7 +1293,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oColorValue.html">Class: oColorValue</h1>
+        <h1 class="page-title" data-filename="$.oBox.html">Class: oBox</h1>
         
 
 
@@ -1304,10 +1304,10 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a>.</span>
     
-    oColorValue
+    oBox
     </h2>
     
-        <div class="class-description">$.oColorValue Base Class</div>
+        <div class="class-description">$.oBox Base Class</div>
     
 </header>  
 
@@ -1319,14 +1319,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oColorValue">
+        <h4 class="name" id="oBox">
             
-            new $.oColorValue<span class="signature">(colorValue)</span>
+            new $.oBox<span class="signature">(left, top, right, bottom)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_color.js, line 63
+            openHarmony/openHarmony_misc.js, line 192
         </div>
         
     </div>
@@ -1337,7 +1337,7 @@
     
     
     <div class="description">
-        The base class for the $.oColorValue.
+        The $.oBox helper class - representing a 2D box.
     </div>
     
 
@@ -1368,13 +1368,13 @@
 	
         <tr>
             
-                <td class="name"><code>colorValue</code></td>
+                <td class="name"><code>left</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string/object</span>
+<span class="param-type">float</span>
 
 
             
@@ -1384,7 +1384,76 @@
             
             <td class="description last">
                 
-                Hex string value, or object in form {rgba}</td>
+                left horizontal bound</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>top</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                top vertical bound</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>right</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                right horizontal bound</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>bottom</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                bottom vertical bound</td>
         </tr>
 	
 	
@@ -1422,13 +1491,13 @@
 	
         <tr>
             
-                <td class="name"><code>r</code></td>
+                <td class="name"><code>left</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">float</span>
 
 
             
@@ -1438,20 +1507,20 @@
             
             
             
-            <td class="description last">The int value of the red component.</td>
+            <td class="description last">left horizontal bound</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>g</code></td>
+                <td class="name"><code>top</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">float</span>
 
 
             
@@ -1461,20 +1530,20 @@
             
             
             
-            <td class="description last">The int value of the green component.</td>
+            <td class="description last">top vertical bound</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>b</code></td>
+                <td class="name"><code>right</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">float</span>
 
 
             
@@ -1484,20 +1553,20 @@
             
             
             
-            <td class="description last">The int value of the blue component.</td>
+            <td class="description last">right horizontal bound</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>a</code></td>
+                <td class="name"><code>bottom</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">float</span>
 
 
             
@@ -1507,7 +1576,7 @@
             
             
             
-            <td class="description last">The int value of the alpha component.</td>
+            <td class="description last">bottom vertical bound</td>
         </tr>
 	
 	
@@ -1565,6 +1634,145 @@
     
     
     
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="center">center<span class="type-signature type $.opoint"><a href="$.oPoint.html">$.oPoint</a></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The center of the box.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="height">height<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The height of the box.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="width">width<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The width of the box.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
     
     
         <h3 class="subsection-title">Methods</h3>
@@ -1573,14 +1781,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="fromColorString">
+        <h4 class="name" id="include">
             
-            fromColorString<span class="signature">(hexString)</span>
+            include<span class="signature">(box)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_color.js, line 96
+            openHarmony/openHarmony_misc.js, line 247
         </div>
         
     </div>
@@ -1591,7 +1799,7 @@
     
     
     <div class="description">
-        Ingest a hex string in form #RRGGBBAA to define the colour.
+        Adds the input box to the bounds of the current $.oBox.
     </div>
     
 
@@ -1622,13 +1830,13 @@
 	
         <tr>
             
-                <td class="name"><code>hexString</code></td>
+                <td class="name"><code>box</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="$.oBox.html">$.oBox</a></span>
 
 
             
@@ -1638,7 +1846,7 @@
             
             <td class="description last">
                 
-                The colour in form #RRGGBBAA</td>
+                The $.oBox to include.</td>
         </tr>
 	
 	
@@ -1689,14 +1897,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="toString">
+        <h4 class="name" id="includeNodes">
             
-            toString<span class="signature">()</span>
+            includeNodes<span class="signature">(oNodeArray)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_color.js, line 81
+            openHarmony/openHarmony_misc.js, line 258
         </div>
         
     </div>
@@ -1707,7 +1915,7 @@
     
     
     <div class="description">
-        The colour value represented as a string.
+        Adds the bounds of the nodes to the current $.oBox.
     </div>
     
 
@@ -1715,6 +1923,51 @@
     
     
     
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>oNodeArray</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;oNode></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                An array of nodes to include in the box.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -1775,7 +2028,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Nov 25 2019 14:34:05 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Nov 25 2019 15:35:23 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>

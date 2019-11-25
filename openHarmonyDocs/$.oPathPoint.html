@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oScene</title>
+    <title>Class: oPathPoint</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -1293,7 +1293,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oScene.html">Class: oScene</h1>
+        <h1 class="page-title" data-filename="$.oPathPoint.html">Class: oPathPoint</h1>
         
 
 
@@ -1304,10 +1304,10 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a>.</span>
     
-    oScene
+    oPathPoint
     </h2>
     
-        <div class="class-description">Scene Class</div>
+        <div class="class-description">oList Base Class</div>
     
 </header>  
 
@@ -1319,14 +1319,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oScene">
+        <h4 class="name" id="oPathPoint">
             
-            new $.oScene<span class="signature">(dom)</span>
+            new $.oPathPoint<span class="signature">(oColumnObject, oFrameObject)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 60
+            openHarmony/openHarmony_path.js, line 61
         </div>
         
     </div>
@@ -1337,7 +1337,7 @@
     
     
     <div class="description">
-        The base class for the scene.
+        The base class for the oList.
     </div>
     
 
@@ -1368,13 +1368,13 @@
 	
         <tr>
             
-                <td class="name"><code>dom</code></td>
+                <td class="name"><code>oColumnObject</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">$dom</span>
+<span class="param-type">oColumn</span>
 
 
             
@@ -1384,8 +1384,30 @@
             
             <td class="description last">
                 
-                Access to the direct dom object.
-<br> The constructor for the scene object, new $.oScene($) to create a scene with DOM access.</td>
+                The array that this oList represents.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>oFrameObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oFrame</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The index at which this list starts.</td>
         </tr>
 	
 	
@@ -1395,6 +1417,80 @@
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>column</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oColumn</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The indexed object of the item.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>frame</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oFrame</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The indexed object of the item.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -1452,7 +1548,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="columns">columns<span class="type-signature type array.<ocolumn>">Array.&lt;oColumn></span> </h4>
+        <h4 class="name" id="bias">bias<span class="type-signature type float">float</span> </h4>
     </div>
     
     
@@ -1460,7 +1556,7 @@
 <dd>
     
     <div class="description">
-        Contains the list of columns present in the scene.
+        The bias at the current keyframe point.
     </div>
     
     
@@ -1497,7 +1593,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="currentFrame">currentFrame<span class="type-signature type int">int</span> </h4>
+        <h4 class="name" id="continuity">continuity<span class="type-signature type float">float</span> </h4>
     </div>
     
     
@@ -1505,7 +1601,7 @@
 <dd>
     
     <div class="description">
-        The current frame of the scene.
+        The continuity at the current keyframe point.
     </div>
     
     
@@ -1542,7 +1638,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="length">length<span class="type-signature type int">int</span> </h4>
+        <h4 class="name" id="lock">lock<span class="type-signature type float">float</span> </h4>
     </div>
     
     
@@ -1550,7 +1646,7 @@
 <dd>
     
     <div class="description">
-        The length of the scene.
+        The bezier lock at the current keyframe point.
     </div>
     
     
@@ -1587,7 +1683,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="nodes">nodes<span class="type-signature type array.<onode>">Array.&lt;oNode></span> </h4>
+        <h4 class="name" id="pointIndex">pointIndex<span class="type-signature type int">int</span> </h4>
     </div>
     
     
@@ -1595,7 +1691,7 @@
 <dd>
     
     <div class="description">
-        Contains the list of nodes present in the scene.
+        The keyframe index of the frame/key at this point.
     </div>
     
     
@@ -1632,7 +1728,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="palettes">palettes<span class="type-signature type array.<opalette>">Array.&lt;oPalette></span> </h4>
+        <h4 class="name" id="tension">tension<span class="type-signature type float">float</span> </h4>
     </div>
     
     
@@ -1640,7 +1736,187 @@
 <dd>
     
     <div class="description">
-        Contains the list of scene palettes present in the scene.
+        The tension at the current keyframe point.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="velocity">velocity<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The velocity at the current keyframe point.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="x">x<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The X value of the path element.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="y">y<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The Y value of the path element.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="z">z<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The Z value of the path element.
     </div>
     
     
@@ -1683,14 +1959,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="$column">
+        <h4 class="name" id="set">
             
-            $column<span class="signature">(uniqueName, oAttributeObject)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oColumn}</span>
+            set<span class="signature">(pseudoPathPoint)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 234
+            openHarmony/openHarmony_path.js, line 257
         </div>
         
     </div>
@@ -1701,7 +1977,7 @@
     
     
     <div class="description">
-        Gets a column by the name.
+        Matches this path point to the provided one.
     </div>
     
 
@@ -1732,13 +2008,13 @@
 	
         <tr>
             
-                <td class="name"><code>uniqueName</code></td>
+                <td class="name"><code>pseudoPathPoint</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="$.oPathPoint.html">$.oPathPoint</a></span>
 
 
             
@@ -1748,30 +2024,7 @@
             
             <td class="description last">
                 
-                The unique name of the column as a string.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>oAttributeObject</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">oAttributeObject</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The oAttributeObject owning the column.</td>
+                The path point object to match this to.</td>
         </tr>
 	
 	
@@ -1814,35 +2067,6 @@
     
     
     
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oColumn
-                        
-                    
-            </td>
-            <td class="description last">The node found given the query.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
     
     
 </dd>
@@ -1851,14 +2075,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="$node">
+        <h4 class="name" id="toString">
             
-            $node<span class="signature">(fullPath)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oNode}</span>
+            toString<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 223
+            openHarmony/openHarmony_path.js, line 279
         </div>
         
     </div>
@@ -1869,2184 +2093,7 @@
     
     
     <div class="description">
-        Gets a node by the path.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>fullPath</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The path of the node in question.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oNode
-                        
-                    
-            </td>
-            <td class="description last">The node found given the query.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="$palette">
-            
-            $palette<span class="signature">(name)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oPalette}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 244
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Gets a palette by the path.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The palette name to query and find.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oPalette
-                        
-                    
-            </td>
-            <td class="description last">The oPalette found given the query.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="addColumn">
-            
-            addColumn<span class="signature">(type, name, oElementObject)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oColumn}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 639
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Adds a column to the scene.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The type of the column.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The name of the column.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>oElementObject</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">oElementObject</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The elementObject to link, if a drawing, and wanting to share an element</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oColumn
-                        
-                    
-            </td>
-            <td class="description last">The created column, or bool as false.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="addDrawingNode">
-            
-            addDrawingNode<span class="signature">(name, group, nodePosition, element, drawingColumn, options)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oNode}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 706
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Adds a drawing element to the scene.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The name of the newly created node.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>group</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The group in which the node is added.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>nodePosition</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">oPoint</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The position for the node to be placed in the network.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>element</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The element to attach to the column.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>drawingColumn</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The column to attach to the drawing module.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The creation options, nothing available at this point.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oNode
-                        
-                    
-            </td>
-            <td class="description last">The created node, or bool as false.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="addElement">
-            
-            addElement<span class="signature">(name, imageFormat, fieldGuide, scanType)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oColumn}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 678
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Adds an element to the scene.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The name of the</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>imageFormat</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The object to log.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>fieldGuide</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The debug level.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>scanType</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The debug level.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oColumn
-                        
-                    
-            </td>
-            <td class="description last">The created column, or bool as false.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="addGroup">
-            
-            addGroup<span class="signature">(name, includeNodes, addComposite, addPeg, group, nodePosition)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oGroup}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 738
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Adds a drawing element to the scene.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The name of the newly created group.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>includeNodes</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The nodes to add to the group.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>addComposite</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">oPoint</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Whether to add a composite.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>addPeg</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Whether to add a peg.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>group</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The group in which the node is added.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>nodePosition</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">oPoint</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The position for the node to be placed in the network.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oGroup
-                        
-                    
-            </td>
-            <td class="description last">The created node, or bool as false.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="addNode">
-            
-            addNode<span class="signature">(type, name, group, nodePosition)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oNode}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 580
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Adds a node to the scene.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The type-name of the node to add.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The name of the newly created node.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>group</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The groupname to add the node.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>nodePosition</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">oPoint</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The position for the node to be placed in the network.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oNode
-                        
-                    
-            </td>
-            <td class="description last">The created node, or bool as false.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getColumnByName">
-            
-            getColumnByName<span class="signature">(uniqueName, oAttributeObject)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oColumn}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 187
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Gets a column by the name.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>uniqueName</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The unique name of the column as a string.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>oAttributeObject</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">oAttribute</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The oAttributeObject owning the column.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oColumn
-                        
-                    
-            </td>
-            <td class="description last">The node found given the query.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getNodeByPath">
-            
-            getNodeByPath<span class="signature">(fullPath)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oNode}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 172
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Gets a node by the path.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>fullPath</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The path of the node in question.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oNode
-                        
-                    
-            </td>
-            <td class="description last">The node found given the query.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getPaletteByName">
-            
-            getPaletteByName<span class="signature">(name)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oPalette}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 207
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Gets a palette by the path.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The palette name to query and find.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oPalette
-                        
-                    
-            </td>
-            <td class="description last">The oPalette found given the query.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getPaletteByName">
-            
-            getPaletteByName<span class="signature">(name)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oPalette}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 802
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Provides a palette object based on name.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The name of the palette to return, if available.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oPalette
-                        
-                    
-            </td>
-            <td class="description last">oPalette with provided name.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getSelectedNodes">
-            
-            getSelectedNodes<span class="signature">(recurse)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;oNode>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 255
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Gets a node by the path.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>recurse</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Whether to recurse into groups.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        Array.&lt;oNode>
-                        
-                    
-            </td>
-            <td class="description last">The selected nodes.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getSelectedPalette">
-            
-            getSelectedPalette<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oPalette}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 816
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Provides the selected palette.
+        Converts the pathpoint to a string.
     </div>
     
 
@@ -4109,1452 +2156,16 @@
             
             <td class="type">
             
-                        oPalette
+                        string
                         
                     
             </td>
-            <td class="description last">oPalette with provided name.</td>
+            <td class="description last">The pathpoint represented as a string.</td>
         </tr>
     
     </tbody>
 </table>
 
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getTimeline">
-            
-            getTimeline<span class="signature">(display)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oTimeline}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 791
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Adds a drawing element to the scene.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>display</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The display node to build the timeline for.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oTimeline
-                        
-                    
-            </td>
-            <td class="description last">The timelne object given the display.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="importPalette">
-            
-            importPalette<span class="signature">(path, name, index, paletteStorage, storeInElement)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oPalette}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 834
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Provides a palette object based on name.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The palette file to import.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The name for the palette.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>index</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Index at which to insert the palette.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>paletteStorage</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Storage type: environment, job, scene, element, external.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>storeInElement</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">oElement</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The name of the palette to return, if available.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oPalette
-                        
-                    
-            </td>
-            <td class="description last">oPalette with provided name.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="importPSD">
-            
-            importPSD<span class="signature">(path, <span class="optional">group</span>, <span class="optional">nodePosition</span>, <span class="optional">separateLayers</span>, <span class="optional">addPeg</span>, <span class="optional">addComposite</span>, <span class="optional">alignment</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;oNode>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 897
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Imports a PSD to the node view.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                The palette file to import.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>group</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The group to import the PSD into.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>nodePosition</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">oPoint</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The position for the node to be placed in the network.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>separateLayers</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Separate the layers of the PSD.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>addPeg</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to add a peg.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>addComposite</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to add a composite.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>alignment</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Alignment type.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        Array.&lt;oNode>
-                        
-                    
-            </td>
-            <td class="description last">The nodes being created as part of the PSD import.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="importQT">
-            
-            importQT<span class="signature">(path, group, nodePosition, extendScene, alignment)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oNode}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1130
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Imports a QT into the node view.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The palette file to import.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>group</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The group to import the PSD into.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>nodePosition</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">oPoint</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The position for the node to be placed in the network.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>extendScene</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Whether to add a composite.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>alignment</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Alignment type.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oNode
-                        
-                    
-            </td>
-            <td class="description last">The imported Quicktime Node.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="mergeNodes">
-            
-            mergeNodes<span class="signature">(nodes, resultName, deleteMerged)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oNode}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1190
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Merges Drawing nodes into a single node.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>nodes</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;oNode></span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The Drawing nodes to merge.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>resultName</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The Node name for the resulting node of the merged content.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>deleteMerged</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Whether the original nodes be deleted.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        oNode
-                        
-                    
-            </td>
-            <td class="description last">The resulting drawing node from the merge.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="nodeSearch">
-            
-            nodeSearch<span class="signature">(query)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;oNode>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 288
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Searches for a node based on the query.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>query</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The query for finding the node[s].</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        Array.&lt;oNode>
-                        
-                    
-            </td>
-            <td class="description last">The node[s] found given the query.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="updatePSD">
-            
-            updatePSD<span class="signature">(path, <span class="optional">separateLayers</span>)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 989
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Updates a PSD to the node view.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                The palette file to import.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>separateLayers</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Separate the layers of the PSD.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
     
     
     
@@ -5579,7 +2190,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Nov 25 2019 14:34:06 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Nov 25 2019 15:35:23 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>

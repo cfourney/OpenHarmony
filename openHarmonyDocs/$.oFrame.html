@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oPathPoint</title>
+    <title>Class: oFrame</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -1293,7 +1293,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oPathPoint.html">Class: oPathPoint</h1>
+        <h1 class="page-title" data-filename="$.oFrame.html">Class: oFrame</h1>
         
 
 
@@ -1304,10 +1304,10 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a>.</span>
     
-    oPathPoint
+    oFrame
     </h2>
     
-        <div class="class-description">oList Base Class</div>
+        <div class="class-description">$.oFrame Base Class</div>
     
 </header>  
 
@@ -1319,14 +1319,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oPathPoint">
+        <h4 class="name" id="oFrame">
             
-            new $.oPathPoint<span class="signature">(oColumnObject, oFrameObject)</span>
+            new $.oFrame<span class="signature">(frameNumber, oColumnObject, subColumns)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_path.js, line 61
+            openHarmony/openHarmony_frame.js, line 65
         </div>
         
     </div>
@@ -1337,7 +1337,7 @@
     
     
     <div class="description">
-        The base class for the oList.
+        The base class for the $.oFrame.
     </div>
     
 
@@ -1368,6 +1368,29 @@
 	
         <tr>
             
+                <td class="name"><code>frameNumber</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The frame to which this references.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>oColumnObject</code></td>
             
             
@@ -1384,20 +1407,20 @@
             
             <td class="description last">
                 
-                The array that this oList represents.</td>
+                The column to which this frame references.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>oFrameObject</code></td>
+                <td class="name"><code>subColumns</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">oFrame</span>
+<span class="param-type">int</span>
 
 
             
@@ -1407,7 +1430,7 @@
             
             <td class="description last">
                 
-                The index at which this list starts.</td>
+                The subcolumn index.</td>
         </tr>
 	
 	
@@ -1445,6 +1468,29 @@
 	
         <tr>
             
+                <td class="name"><code>frameNumber</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The frame to which this references.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>column</code></td>
             
             
@@ -1461,20 +1507,20 @@
             
             
             
-            <td class="description last">The indexed object of the item.</td>
+            <td class="description last">The oColumnObject to which this frame references.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>frame</code></td>
+                <td class="name"><code>oAttributeObject</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">oFrame</span>
+<span class="param-type">oAttribute</span>
 
 
             
@@ -1484,7 +1530,30 @@
             
             
             
-            <td class="description last">The indexed object of the item.</td>
+            <td class="description last">The oAttributeObject to which this frame references.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>subColumns</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The subcolumn index.</td>
         </tr>
 	
 	
@@ -1548,7 +1617,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="bias">bias<span class="type-signature type float">float</span> </h4>
+        <h4 class="name" id="duration">duration<span class="type-signature type int">int</span> </h4>
     </div>
     
     
@@ -1556,7 +1625,7 @@
 <dd>
     
     <div class="description">
-        The bias at the current keyframe point.
+        The duration of the keyframe exposure of the frame.
     </div>
     
     
@@ -1593,7 +1662,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="continuity">continuity<span class="type-signature type float">float</span> </h4>
+        <h4 class="name" id="isBlank">isBlank<span class="type-signature type int">int</span> </h4>
     </div>
     
     
@@ -1601,7 +1670,7 @@
 <dd>
     
     <div class="description">
-        The continuity at the current keyframe point.
+        Identifies if the frame is blank/empty.
     </div>
     
     
@@ -1638,7 +1707,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="lock">lock<span class="type-signature type float">float</span> </h4>
+        <h4 class="name" id="isKeyFrame">isKeyFrame<span class="type-signature type bool">bool</span> </h4>
     </div>
     
     
@@ -1646,7 +1715,7 @@
 <dd>
     
     <div class="description">
-        The bezier lock at the current keyframe point.
+        Whether the frame is a keyframe.
     </div>
     
     
@@ -1683,7 +1752,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="pointIndex">pointIndex<span class="type-signature type int">int</span> </h4>
+        <h4 class="name" id="marker">marker<span class="type-signature type string">string</span> </h4>
     </div>
     
     
@@ -1691,7 +1760,7 @@
 <dd>
     
     <div class="description">
-        The keyframe index of the frame/key at this point.
+        Returns the drawing types used in the drawing column. K = key drawings, I = inbetween, B = breakdown
     </div>
     
     
@@ -1728,7 +1797,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="tension">tension<span class="type-signature type float">float</span> </h4>
+        <h4 class="name" id="startFrame">startFrame<span class="type-signature type int">int</span> </h4>
     </div>
     
     
@@ -1736,7 +1805,7 @@
 <dd>
     
     <div class="description">
-        The tension at the current keyframe point.
+        Identifies the starting frame of the exposed drawing.
     </div>
     
     
@@ -1773,7 +1842,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="velocity">velocity<span class="type-signature type float">float</span> </h4>
+        <h4 class="name" id="value">value<span class="type-signature type object">object</span> </h4>
     </div>
     
     
@@ -1781,142 +1850,7 @@
 <dd>
     
     <div class="description">
-        The velocity at the current keyframe point.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="x">x<span class="type-signature type float">float</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The X value of the path element.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="y">y<span class="type-signature type float">float</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The Y value of the path element.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="z">z<span class="type-signature type float">float</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The Z value of the path element.
+        The value of the frame. Contextual to the attribute type.
     </div>
     
     
@@ -1959,14 +1893,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="set">
+        <h4 class="name" id="extend">
             
-            set<span class="signature">(pseudoPathPoint)</span>
+            extend<span class="signature">(duration, replace)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_path.js, line 257
+            openHarmony/openHarmony_frame.js, line 249
         </div>
         
     </div>
@@ -1977,7 +1911,7 @@
     
     
     <div class="description">
-        Matches this path point to the provided one.
+        Extends the frames value to the specified duration, replaces in the event that replace is specified.
     </div>
     
 
@@ -2008,13 +1942,13 @@
 	
         <tr>
             
-                <td class="name"><code>pseudoPathPoint</code></td>
+                <td class="name"><code>duration</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type"><a href="$.oPathPoint.html">$.oPathPoint</a></span>
+<span class="param-type">int</span>
 
 
             
@@ -2024,7 +1958,30 @@
             
             <td class="description last">
                 
-                The path point object to match this to.</td>
+                The duration to extend it to; if no duration specified, extends to the next available keyframe.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>replace</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                Setting this to false will insert frames as opposed to overwrite existing ones.</td>
         </tr>
 	
 	
@@ -2071,106 +2028,6 @@
     
 </dd>
 
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="toString">
-            
-            toString<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_path.js, line 279
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Converts the pathpoint to a string.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        string
-                        
-                    
-            </td>
-            <td class="description last">The pathpoint represented as a string.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
         </dl>
     
     
@@ -2190,7 +2047,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Nov 25 2019 14:34:06 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Nov 25 2019 15:35:23 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>

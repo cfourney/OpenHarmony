@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oElement</title>
+    <title>Class: oNodeLink</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -1293,7 +1293,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oElement.html">Class: oElement</h1>
+        <h1 class="page-title" data-filename="$.oNodeLink.html">Class: oNodeLink</h1>
         
 
 
@@ -1304,10 +1304,10 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a>.</span>
     
-    oElement
+    oNodeLink
     </h2>
     
-        <div class="class-description">$.oElement Class</div>
+        <div class="class-description">oTimeline Base Class</div>
     
 </header>  
 
@@ -1319,14 +1319,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oElement">
+        <h4 class="name" id="oNodeLink">
             
-            new $.oElement<span class="signature">(id, oColumnObject)</span>
+            new $.oNodeLink<span class="signature">(outNode, inNode, outPort, outLink, inPort)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_element.js, line 62
+            openHarmony/openHarmony_nodeLink.js, line 68
         </div>
         
     </div>
@@ -1337,7 +1337,7 @@
     
     
     <div class="description">
-        The base class for the $.oElement.
+        The base class for the oTimeline.
     </div>
     
 
@@ -1368,7 +1368,53 @@
 	
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>outNode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oNode</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The source oNode of the link.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>inNode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oNode</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The destination oNode of the link.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>outPort</code></td>
             
             
             <td class="type">
@@ -1384,20 +1430,20 @@
             
             <td class="description last">
                 
-                The element ID.</td>
+                The outport of the outNode that is connecting this link.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>oColumnObject</code></td>
+                <td class="name"><code>outLink</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type"><a href="$.oColumn.html">$.oColumn</a></span>
+<span class="param-type">int</span>
 
 
             
@@ -1407,7 +1453,30 @@
             
             <td class="description last">
                 
-                The column object associated to the element.</td>
+                The outlink of the outport on the outNode that is connecting this link.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>inPort</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The inport of the inNode that is connecting the link.</td>
         </tr>
 	
 	
@@ -1445,7 +1514,53 @@
 	
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>outNode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oNode</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The source oNode of the link.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>inNode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oNode</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The destination oNode of the link.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>_cacheOutPort</code></td>
             
             
             <td class="type">
@@ -1461,20 +1576,20 @@
             
             
             
-            <td class="description last">The element ID.</td>
+            <td class="description last">The outport of the outNode that is connecting this link.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>oColumnObject</code></td>
+                <td class="name"><code>_cacheOutLink</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type"><a href="$.oColumn.html">$.oColumn</a></span>
+<span class="param-type">int</span>
 
 
             
@@ -1484,7 +1599,30 @@
             
             
             
-            <td class="description last">The column object associated to the element.</td>
+            <td class="description last">The outlink of the outport on the outNode that is connecting this link.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>_cacheInPort</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The inport of the inNode that is connecting the link.</td>
         </tr>
 	
 	
@@ -1548,554 +1686,61 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="drawings">drawings<span class="type-signature type array.<$.odrawing>">Array.&lt;<a href="$.oDrawing.html">$.oDrawing</a>></span> </h4>
+        <h4 class="name" id="inPort">inPort<span class="type-signature type array.<onode>">Array.&lt;oNode></span> </h4>
     </div>
     
     
 </dt>
 <dd>
-    
-    <div class="description">
-        The drawings available in the element.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="name">name<span class="type-signature type string">string</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The name of the column.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="path">path<span class="type-signature type string">string</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The folder path of the element on the filesystem.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        </dl>
-    
-    
-    
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl>
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="addDrawing">
-            
-            addDrawing<span class="signature">(atFrame, name, filename)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oDrawing.html">$.oDrawing</a>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_element.js, line 124
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Adds a drawing to the element.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>atFrame</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The exposures to extend. If UNDEFINED, extends all keyframes.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">name</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The name of the drawing to add.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>filename</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The filename for the drawing to add.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        <a href="$.oDrawing.html">$.oDrawing</a>
-                        
-                    
-            </td>
-            <td class="description last">The added drawing</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getDrawingByName">
-            
-            getDrawingByName<span class="signature">(name)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oDrawing.html">$.oDrawing</a>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_element.js, line 156
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Gets a drawing object by the name.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The name of the drawing to get.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        <a href="$.oDrawing.html">$.oDrawing</a>
-                        
-                    
-            </td>
-            <td class="description last">The added drawing</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="linkPalette">
-            
-            linkPalette<span class="signature">(paletteFile)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_element.js, line 164
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
     
     <div class="description">
         Not yet implemented.
     </div>
     
-
     
     
-    
-    
+<dl class="details">
     
         
+    
+    
+    
 
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>paletteFile</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
+    
+    
+</dd>
 
+        
             
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The path to the palette file to link.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="outPort">outPort<span class="type-signature type array.<onode>">Array.&lt;oNode></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The outport of this $.oNodeLink.
+    </div>
     
     
     
@@ -2125,19 +1770,11 @@
 
     
     
-
-    
-
-    
-    
-    
-    
-    
-    
-    
 </dd>
 
         </dl>
+    
+    
     
     
     
@@ -2156,7 +1793,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Nov 25 2019 14:34:06 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Nov 25 2019 15:35:23 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>
