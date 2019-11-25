@@ -2,12 +2,21 @@
  *  Load the Open Harmony Library as needed.
  */
 function oh_load(){
-  //Load only if its not already loaded/in memory.
+  try{
+    //If an override debug path exists, use it.
+    var oh_incl = preferences.getString( 'openHarmonyIncludeDebug', false );
+    if( oh_incl ){
+      oh_incl = preferences.getString( 'openHarmonyInclude', false );
+    }
   
-  //How do we manage this location and have a consistent path for the library?
-  //We'll have to assume a consistent location in resources.
-  if( !this["$"] ){  
-    include("C:\\_dev\\openHarmony\\OpenHarmony\\openHarmony.js");
+    if( !this["$"] ){  
+      include( oh_incl );
+    }
+    if( !this["$"] ){  
+      MessageBox.warning( "Unable to load the openHarmony library. Is it installed?" );
+    }
+  }catch(err){
+    System.println( err + " : " + err.lineNumber + " " + err.fileName );
   }
 }
 
