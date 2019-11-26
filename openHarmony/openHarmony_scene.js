@@ -1410,12 +1410,12 @@ $.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body,
 
 /**
  * Adds a backdrop to a group around specified nodes
- * @param   {string}         tplPath                           The group in which this backdrop is created. 
- * @param   {string}         group                             The nodes that the backdrop encompasses.
- * @param   {oNode[]}        destinationNodes                             The title of the backdrop.
- * @param   {bool}           extendScene                              The body text of the backdrop.
- * @param   {oPoint}         nodePosition                             The oColorValue of the node.
- * @param   {object}         pasteOptions                                 The X position of the backdrop, an offset value if nodes are specified.
+ * @param   {string}          tplPath                                       The path of the TPL file to import. 
+ * @param   {string}         [group]                                        The target group to which the TPL is imported.
+ * @param   {oNode[]}        [destinationNodes]                             The nodes affected by the template.
+ * @param   {bool}           [extendScene]                                  Whether to extend the exposures of the content imported.
+ * @param   {oPoint}         [nodePosition]                                 The position to offset imported new nodes.
+ * @param   {object}         [pasteOptions]                                 An object containing paste options as per Harmony's standard paste options.
  * 
  * @return {oNode[]}         The resulting pasted nodes.
  */

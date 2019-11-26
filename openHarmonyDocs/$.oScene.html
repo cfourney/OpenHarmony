@@ -1304,6 +1304,8 @@
             
                 <li data-name="$.oScene#importQT"><a href="$.oScene.html#importQT">importQT</a></li>
             
+                <li data-name="$.oScene#importTemplate"><a href="$.oScene.html#importTemplate">importTemplate</a></li>
+            
                 <li data-name="$.oScene#mergeNodes"><a href="$.oScene.html#mergeNodes">mergeNodes</a></li>
             
                 <li data-name="$.oScene#nodeSearch"><a href="$.oScene.html#nodeSearch">nodeSearch</a></li>
@@ -5766,6 +5768,306 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="importTemplate">
+            
+            importTemplate<span class="signature">(tplPath, <span class="optional">group</span>, <span class="optional">destinationNodes</span>, <span class="optional">extendScene</span>, <span class="optional">nodePosition</span>, <span class="optional">pasteOptions</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;oNode>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_scene.js, line 1422
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Adds a backdrop to a group around specified nodes
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>tplPath</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                The path of the TPL file to import.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The target group to which the TPL is imported.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>destinationNodes</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;oNode></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The nodes affected by the template.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>extendScene</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether to extend the exposures of the content imported.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>nodePosition</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oPoint</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The position to offset imported new nodes.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pasteOptions</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                An object containing paste options as per Harmony's standard paste options.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Array.&lt;oNode>
+                        
+                    
+            </td>
+            <td class="description last">The resulting pasted nodes.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="mergeNodes">
             
             mergeNodes<span class="signature">(nodes, resultName, deleteMerged)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{oNode}</span>
@@ -6268,7 +6570,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Nov 26 2019 15:01:56 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Nov 26 2019 17:30:32 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>
