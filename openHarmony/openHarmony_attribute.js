@@ -89,7 +89,7 @@ $.oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
         var _subAttributesList = attributeObject.getSubAttributes();
        
         for (var i in _subAttributesList){
-            var _subAttribute = new $.oAttribute( this.node, _subAttributesList[i], this );
+            var _subAttribute = new this.$.oAttribute( this.node, _subAttributesList[i], this );
             var _keyword = _subAttribute.shortKeyword;     
             // creating a property on the attribute object with the subattribute name to access it
             this[_keyword] = _subAttribute;
@@ -130,7 +130,7 @@ $.oAttribute.prototype.subAttributes_oldVersion = function ( _subAttributes ){
   for( var n=0;n<sub_attrs.length;n++ ){
     var _attr = node.getAttr( this.node.fullPath, 1, this._keyword+"."+sub_attrs[n] );  
     if( _attr ){
-      var _subAttribute = new $.oAttribute( this.node, _attr, this );  
+      var _subAttribute = new this.$.oAttribute( this.node, _attr, this );  
       this[ sub_attrs[n] ] = _subAttribute;  
       _subAttributes.push( _subAttribute );
     }
@@ -221,7 +221,7 @@ Object.defineProperty($.oAttribute.prototype, 'frames', {
             return _column.frames;
          }else{
           //Need a method to get frames of non-column values. Local Values.
-            return [ new $.oFrame( 1, this, false ) ];
+            return [ new this.$.oFrame( 1, this, false ) ];
          }
     },
     
@@ -312,7 +312,7 @@ Object.defineProperty($.oAttribute.prototype, "defaultValue", {
                 return 100;
                 
             case "COLOR" :
-                return new $.oColorValue();
+                return new this.$.oColorValue();
                
             case "OFFSET.3DPATH":
                 // pseudo oPathPoint
@@ -354,7 +354,7 @@ $.oAttribute.prototype.setValue = function (value, frame) {
 
     if (frame != 1 && _column == null){
         // generate a new column to be able to animate
-        var _doc = new $.oScene();
+        var _doc = new this.$.oScene();
         _column = _doc.addColumn()
         this.column = _column;
         _animate = true;
@@ -363,7 +363,7 @@ $.oAttribute.prototype.setValue = function (value, frame) {
     switch (_type){
         // TODO: sanitize input
         case "COLOR" :
-            value = new $.oColorValue(value)
+            value = new this.$.oColorValue(value)
             value = ColorRGBA(value.r, value.g, value.b, value.a)
             _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
             break;
@@ -373,9 +373,9 @@ $.oAttribute.prototype.setValue = function (value, frame) {
             break;
            
         case "PATH_3D" :
-            var _frame = new $.oFrame(frame, this.column, this.column.subColumns);
+            var _frame = new this.$.oFrame(frame, this.column, this.column.subColumns);
             if (_frame.isKeyFrame){
-                var _point = new $.oPathPoint (this.column, _frame);
+                var _point = new this.$.oPathPoint (this.column, _frame);
                 _point.set(value);
             }else{
                 // TODO: create keyframe?
@@ -455,29 +455,29 @@ $.oAttribute.prototype.getValue = function (frame) {
             break;
            
         case 'COLOR':
-            _value = new $.oColorValue(_attr.colorValueAt(frame))
+            _value = new this.$.oColorValue(_attr.colorValueAt(frame))
             break;
  
         case 'POSITION_2D':
             _value = _attr.pos2dValueAt(frame)
-            _value = new $.oPoint(_value.x, _value.y)
+            _value = new this.$.oPoint(_value.x, _value.y)
             break;
            
         case 'POSITION_3D':
             _value = _attr.pos3dValueAt(frame)
-            _value = new $.oPoint(_value.x, _value.y, _value.z)
+            _value = new this.$.oPoint(_value.x, _value.y, _value.z)
             break;
             
         case 'SCALE_3D':
             _value = _attr.pos3dValueAt(frame)
-            _value = new $.oPoint(_value.x, _value.y, _value.z)
+            _value = new this.$.oPoint(_value.x, _value.y, _value.z)
             break;
            
         case 'PATH_3D':
             _attr = this.parentAttribute.attributeObject;
-              var _frame = new $.oFrame(frame, _column, _column.subColumns);
+              var _frame = new this.$.oFrame(frame, _column, _column.subColumns);
             if(_frame.isKeyFrame){
-                _value = new $.oPathPoint(_column, _frame);
+                _value = new this.$.oPathPoint(_column, _frame);
             } else{
                 _value = _attr.pos3dValueAt(frame);
             }

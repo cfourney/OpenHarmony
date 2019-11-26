@@ -104,7 +104,7 @@ Object.defineProperty($.oElement.prototype, '', {
         var _drawingsNumber = Drawings.numberOf(this.id)
         var _drawings = [];
         for (var i=0; i<_drawingsNumber; i++){
-            _drawings.push( new $.oDrawing(Drawing.name(this.id, i), this) );
+            _drawings.push( new this.$.oDrawing(Drawing.name(this.id, i), this) );
         }
         return _drawings;
     }
@@ -134,7 +134,7 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
         var _file = Drawing.filename( this.id, name );
         //MessageLog.trace(_file)
        
-        var _frameFile = new $.oFile( filename );
+        var _frameFile = new this.$.oFile( filename );
         _frameFile.move( _file, true );
        
     }
@@ -143,7 +143,7 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
     if (this.column != null || this.column != undefined)
         column.setEntry(this.column.uniqueName, 1, atFrame, name)
    
-    return new $.oDrawing( name, this );
+    return new this.$.oDrawing( name, this );
 }
  
 
@@ -154,7 +154,7 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
  * @return { $.oDrawing }      The added drawing
  */
 $.oElement.prototype.getDrawingByName = function ( name ){
-    return new $.oDrawing( name, this );
+    return new this.$.oDrawing( name, this );
 }
  
 /**

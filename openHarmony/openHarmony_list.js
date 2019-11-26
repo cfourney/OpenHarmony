@@ -147,7 +147,7 @@ Object.defineProperty($.oList.prototype, 'filterFunction', {
             }
         }
 
-        return new $.oList( _results );
+        return new this.$.oList( _results );
     }
 });
 
@@ -169,7 +169,7 @@ Object.defineProperty($.oList.prototype, 'filterProperty', {
             if (this[i].hasOwnProperty(property) && this[i][property] == search) _results.push(this[i]);
         }
 
-        return new $.oList( _results );
+        return new this.$.oList( _results );
     }
 });
 
@@ -195,7 +195,7 @@ Object.defineProperty($.oList.prototype, 'sortByProperty', {
         }
 
         // Sort in place or return a copy?
-        return new $.oList( results, this.startIndex );
+        return new this.$.oList( results, this.startIndex );
     }
 });
 
@@ -214,7 +214,7 @@ Object.defineProperty($.oList.prototype, 'sortByFunction', {
         var results = _array.sort( func );
 
         // Sort in place or return a copy?
-        return new $.oList( results, this.startIndex );
+        return new this.$.oList( results, this.startIndex );
     }
 });
 

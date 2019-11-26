@@ -55,12 +55,12 @@
  * @constructor
  * @classdesc  Scene Class
  * @param   {$dom}         dom                  Access to the direct dom object.
- * <br> The constructor for the scene object, new $.oScene($) to create a scene with DOM access.
+ * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
  */
 $.oScene = function( ){
     // $.oScene.nodes property is a class property shared by all instances, so it can be passed by reference and always contain all nodes in the scene
  
-    //var _topNode = new $.oNode("Top");
+    //var _topNode = new this.$.oNode("Top");
     //this.__proto__.nodes = _topNode.subNodes(true);
   
   this._type = "scene";
@@ -94,7 +94,7 @@ Object.defineProperty($.oScene.prototype, 'columns', {
     get : function(){
         var _columns = [];
         for (var i=0; i<columns.numberOf(); i++){
-            _columns.push( new $.oColumn( this, column.getName(i)) );
+            _columns.push( new this.$.oColumn( this, column.getName(i)) );
         }
         return _columns;
     }
@@ -111,7 +111,7 @@ Object.defineProperty($.oScene.prototype, 'palettes', {
         var _paletteList = PaletteObjectManager.getScenePaletteList();
         var _palettes = [];
         for (var i=0; i<_paletteList.numPalettes; i++){
-            _palettes.push( new $.oPalette( _paletteList.getPaletteByIndex(i), this, _paletteList ) );
+            _palettes.push( new this.$.oPalette( _paletteList.getPaletteByIndex(i), this, _paletteList ) );
         }
         return _palettes;
     }
@@ -171,10 +171,10 @@ Object.defineProperty($.oScene.prototype, 'currentFrame', {
  */
 $.oScene.prototype.getNodeByPath = function(fullPath){
     if (node.type(fullPath) == "") return null; // TODO: remove this if we implement a .exists property for oNode
-    if (node.type(fullPath) == "READ") return new $.oDrawingNode( fullPath, this );
-    if (node.type(fullPath) == "PEG") return new $.oPegNode( fullPath, this );
-    if (node.type(fullPath) == "GROUP") return new $.oGroupNode( fullPath, this );
-    return new $.oNode( fullPath, this );
+    if (node.type(fullPath) == "READ") return new this.$.oDrawingNode( fullPath, this );
+    if (node.type(fullPath) == "PEG") return new this.$.oPegNode( fullPath, this );
+    if (node.type(fullPath) == "GROUP") return new this.$.oGroupNode( fullPath, this );
+    return new this.$.oNode( fullPath, this );
 }
 
 /**
@@ -191,9 +191,9 @@ $.oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
         case "" :
             return null;
         case "DRAWING" :
-            return new $.oDrawingColumn(uniqueName, oAttributeObject);
+            return new this.$.oDrawingColumn(uniqueName, oAttributeObject);
         default :
-            return new $.oColumn(uniqueName, oAttributeObject);
+            return new this.$.oColumn(uniqueName, oAttributeObject);
     }
 }
 
@@ -208,7 +208,7 @@ $.oScene.prototype.getPaletteByName = function(name){
     var _paletteList = PaletteObjectManager.getScenePaletteList();
     for (var i=0; i<_paletteList.numPalettes; i++){
         if (_paletteList.getPaletteByIndex(i).getName() == name)
-        return new $.oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
+        return new this.$.oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
     }
     return null;
 }
@@ -408,7 +408,7 @@ $.oScene.prototype.nodeSearch = function( query, sort_result ){
             if( regexp_filter.test( all_nodes[n].fullPath ) ){
               this.$.debug( "WILDCARD NODE TESTED SUCCESS: "+all_nodes[n].fullPath, this.$.DEBUG_LEVEL.LOG );
               
-              var node_ret = all_nodes[n]; //this.getNodeByPath( all_nodes[n].fullPath ); //new $.oNode( this.$, all_nodes[n].fullPath );
+              var node_ret = all_nodes[n]; //this.getNodeByPath( all_nodes[n].fullPath ); //new this.$.oNode( this.$, all_nodes[n].fullPath );
               if( node_ret && node_ret.exists ){
                 this.$.debug( "WILDCARD NODE MATCH: "+all_nodes[n].fullPath+"\n", this.$.DEBUG_LEVEL.LOG );
                 nodes_returned.push( node_ret );
@@ -438,7 +438,7 @@ $.oScene.prototype.nodeSearch = function( query, sort_result ){
             if( regexp_filter.test( all_nodes[n].fullPath ) ){
               this.$.debug( "REGEXP NODE TESTED SUCCESS: "+all_nodes[n].fullPath, this.$.DEBUG_LEVEL.LOG );
               
-              var node_ret = all_nodes[n]; //new $.oNode( this.$, all_nodes[n].fullPath );
+              var node_ret = all_nodes[n]; //new this.$.oNode( this.$, all_nodes[n].fullPath );
               if( node_ret && node_ret.exists ){
                 this.$.debug( "REGEXP NODE MATCH: "+all_nodes[n].fullPath+"\n", this.$.DEBUG_LEVEL.LOG );
                 nodes_returned.push( node_ret );
@@ -451,7 +451,7 @@ $.oScene.prototype.nodeSearch = function( query, sort_result ){
         //ITS JUST THE EXACT NODE.
         this.$.debug( "EXACT NODE QUERY: "+query_list[x], this.$.DEBUG_LEVEL.LOG );
         
-        var node_ret = this.getNodeByPath( query_list[x] ); //new $.oNode( this.$, query_list[x] );
+        var node_ret = this.getNodeByPath( query_list[x] ); //new this.$.oNode( this.$, query_list[x] );
         if( !added_nodes[ query_list[x] ] ){
           if( node_ret && node_ret.exists ){
             this.$.debug( "EXACT NODE MATCH: "+query_list[x]+"\n", this.$.DEBUG_LEVEL.LOG );
@@ -581,7 +581,7 @@ $.oScene.prototype.addNode = function( type, name, group, nodePosition ){
     // Defaults for optional parameters
     
     if (typeof group === 'undefined') var group = "Top"
-    if (typeof nodePosition === 'undefined') var nodePosition = new $.oPoint(0,0,0);
+    if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
     if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
     
     try{
@@ -610,13 +610,13 @@ $.oScene.prototype.addNode = function( type, name, group, nodePosition ){
     
     // loop to increment until we get a node name that is free
     var _nodePath = group+"/"+_name;
-    var _node = new $.oNode(_nodePath)
+    var _node = new this.$.oNode(_nodePath)
     
     while( _node.exists ){
         _count++;
         name = _name+"_"+_count;
         _nodePath = group+"/"+name; 
-        _node = new $.oNode( _nodePath );
+        _node = new this.$.oNode( _nodePath );
     }
     
     // create node and return result
@@ -653,7 +653,7 @@ $.oScene.prototype.addColumn = function( type, name, oElementObject ){
    
     column.add(_columnName, type);
                
-    var _column = new $.oColumn( _columnName );
+    var _column = new this.$.oColumn( _columnName );
  
     if (type == "DRAWING" && typeof oElementObject !== 'undefined'){
         oElementObject.column = this;// TODO: fix: this doesn't seem to actually work for some reason?
@@ -685,7 +685,7 @@ $.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType
     var _vectorFormat = (imageFormat == "TVG")?imageFormat:"None";
  
     var _id = element.add(name, scanType, fieldGuide, _fileFormat, _vectorFormat);
-    var _element = new $.oElement( _id )
+    var _element = new this.$.oElement( _id )
  
     return _element;
 }
@@ -710,7 +710,7 @@ $.oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElemen
        
     // Defaults for optional parameters
     if (typeof group === 'undefined') var group = "Top"
-    if (typeof nodePosition === 'undefined') var nodePosition = new $.oPoint(0,0,0);
+    if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
     if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
    
     var _node = this.addNode( "READ", name, group, nodePosition );
@@ -740,7 +740,7 @@ $.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg
     if (typeof addPeg === 'undefined') var addPeg = false;
     if (typeof addComposite === 'undefined') var addComposite = false;
     if (typeof group === 'undefined') var group = "Top";
-    if (typeof nodePosition === 'undefined') var nodePosition = new $.oPoint(0,0,0);
+    if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
     if (typeof includeNodes === 'undefined') var includeNodes = [];
    
     var _group = this.addNode( "GROUP", name, group, nodePosition );
@@ -790,7 +790,7 @@ $.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg
  */
 $.oScene.prototype.getTimeline = function(display){
     if (typeof display === 'undefined') var display = '';
-    return new $.oTimeline( display, this );
+    return new this.$.oTimeline( display, this );
 }
 
 
@@ -803,7 +803,7 @@ $.oScene.prototype.getPaletteByName = function( name ){
     var _paletteList = PaletteObjectManager.getScenePaletteList();
     for (var i=0; i<_paletteList.numPalettes; i++){
         if (_paletteList.getPaletteByIndex(i).getName() == name)
-        return new $.oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
+        return new this.$.oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
     }
     return null;
 }
@@ -816,7 +816,7 @@ $.oScene.prototype.getPaletteByName = function( name ){
 $.oScene.prototype.getSelectedPalette = function(){
     var _paletteList = PaletteManager.getScenePaletteList();
     var _id = PaletteManager.getCurrentPaletteId()
-    var _palette = new $.oPalette(_paletteList.getPaletteById(_id), this, _paletteList);
+    var _palette = new this.$.oPalette(_paletteList.getPaletteById(_id), this, _paletteList);
     return _palette;
 }
 
@@ -837,7 +837,7 @@ $.oScene.prototype.importPalette = function( path, name, index, paletteStorage, 
    
     if (typeof index === 'undefined') var index = _list.numPalettes;
    
-    var _paletteFile = new $.oFile(path);
+    var _paletteFile = new this.$.oFile(path);
     if (typeof name === 'undefined') var name = _paletteFile.name;
     if (typeof storeInElement === 'undefined'){
         if (paletteStorage == "element") throw new Error("Element parameter cannot be omitted if palette destination is Element")
@@ -868,15 +868,15 @@ $.oScene.prototype.importPalette = function( path, name, index, paletteStorage, 
     }
    
     // create a dummy palette to get the destination path
-    var _newPalette = new $.oPalette(_list.insertPaletteAtLocation(_destination, _element, "_dummy_palette", index), this, _list);
+    var _newPalette = new this.$.oPalette(_list.insertPaletteAtLocation(_destination, _element, "_dummy_palette", index), this, _list);
     var _path = _newPalette.path
    
-    var _file = new $.oFile(_path)
+    var _file = new this.$.oFile(_path)
     var copy = _paletteFile.copy(_file.folder.path, _paletteFile.name, true)
        
     // reload palette
     _newPalette.remove();
-    _newPalette = new $.oPalette(_list.insertPalette(copy.path.replace(".plt", ""), index), this, _list);
+    _newPalette = new this.$.oPalette(_list.insertPalette(copy.path.replace(".plt", ""), index), this, _list);
    
     return _newPalette;
 }
@@ -899,10 +899,10 @@ $.oScene.prototype.importPSD = function( path, group, nodePosition, separateLaye
     if (typeof addComposite === 'undefined') var addComposite = true;
     if (typeof addPeg === 'undefined') var addPeg = true;
     if (typeof separateLayers === 'undefined') var separateLayers = true;
-    if (typeof nodePosition === 'undefined') var nodePosition = new $.oPoint(0,0,0);
+    if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
     if (typeof group === 'undefined') var group = "Top";
  
-    var _psdFile = new $.oFile( path );
+    var _psdFile = new this.$.oFile( path );
     var _elementName = _psdFile.name;
  
     var _xSpacing = 45
@@ -940,7 +940,7 @@ $.oScene.prototype.importPSD = function( path, group, nodePosition, separateLaye
             // generate nodes and set them to show the element for each layer
             var _layer = _layers[i].layer
             var _layerName = _layers[i].layerName.split(" ").join("_")
-            var _nodePosition = new $.oPoint(_x+=_xSpacing, _y +=_ySpacing, 0)
+            var _nodePosition = new this.$.oPoint(_x+=_xSpacing, _y +=_ySpacing, 0)
            
             //TODO: set into right group according to PSD organisation
            
@@ -989,7 +989,7 @@ $.oScene.prototype.importPSD = function( path, group, nodePosition, separateLaye
 $.oScene.prototype.updatePSD = function( path, separateLayers ){
     if (typeof separateLayers === 'undefined') var separateLayers = true;
 
-    var _psdFile = new $.oFile(path);
+    var _psdFile = new this.$.oFile(path);
    
     // get info from the PSD
     var _info = CELIO.getInformation(_psdFile.path);
@@ -1064,7 +1064,7 @@ $.oScene.prototype.updatePSD = function( path, separateLayers ){
             var _layerName = _layer.layerName.split(" ").join("_");
 
             var _layerIndex = _layer.position;
-            var _nodePosition = new $.oPoint(0,0,0);
+            var _nodePosition = new this.$.oPoint(0,0,0);
             var _group = _psdNodes[0].path;
             var _alignment = _psdNodes[0].alignment_rule;
             var _scale = _psdNodes[0].scale.x;
@@ -1131,11 +1131,11 @@ $.oScene.prototype.importQT = function( path, group, importSound, nodePosition, 
     if (typeof alignment === 'undefined') var alignment = "ASIS";
     if (typeof extendScene === 'undefined') var extendScene = true;
     if (typeof importSound === 'undefined') var importSound = true;
-    if (typeof nodePosition === 'undefined') var nodePosition = new $.oPoint(0,0,0);
+    if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
     if (typeof group === 'undefined') var group = "Top";
     // MessageLog.trace("importing QT file :"+filename)
  
-    var _QTFile = new $.oFile(path);
+    var _QTFile = new this.$.oFile(path);
     var _elementName = _QTFile.name;
    
     var _element = this.addElement(_elementName, "PNG");
@@ -1263,3 +1263,146 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
     }
     return _mergedNode
 }
+
+
+
+
+
+/**
+ * Adds a backdrop to a group in a specific position.
+ * @param   {string}         groupPath                         The group in which this backdrop is created. 
+ * @param   {string}         title                             The title of the backdrop.
+ * @param   {string}         body                              The body text of the backdrop.
+ * @param   {oColorValue}    color                             The oColorValue of the node.
+ * @param   {float}          x                                 The X position of the backdrop, an offset value if nodes are specified.
+ * @param   {float}          y                                 The Y position of the backdrop, an offset value if nodes are specified.
+ * @param   {float}          width                             The Width of the backdrop, a padding value if nodes are specified.
+ * @param   {float}          height                            The Height of the backdrop, a padding value if nodes are specified.
+ * 
+ * @return {oBackdrop}       The created backdrop.
+ */
+$.oScene.prototype.addBackdrop = function( groupPath, title, body, color, x, y, width, height ){
+  if (typeof color === 'undefined') var color = new this.$.oColorValue("#323232ff");
+  if (typeof body === 'undefined') var body = "";
+  
+  if (typeof x === 'undefined') var x = 0;
+  if (typeof y === 'undefined') var y = 0;
+  if (typeof width === 'undefined') var width = 30;
+  if (typeof height === 'undefined') var height = 30;
+  
+  var position = {"x":x, "y":y, "w":width, "h":height};
+
+	if (typeof groupPath === 'undefined') var groupPath = "Top";
+    
+  try{
+    if( groupPath._type == "groupNode" ){
+      groupPath = groupPath.fullPath;
+    }
+  }catch(err){}
+    
+	// incrementing title so that two backdrops can't have the same title
+	if (typeof title === 'undefined') var title = "Backdrop";
+		
+	var _groupBackdrops = Backdrop.backdrops(groupPath);
+	var names = _groupBackdrops.map(function(x){return x.title.text})
+	var count = 0;
+	var newTitle = title;
+	// MessageLog.trace(names)
+	while (names.indexOf(newTitle) != -1){
+		// MessageLog.trace("backdrop "+newTitle+" already exists")
+		count++;
+		newTitle = title+"_"+count;
+	}
+	title = newTitle;
+	// MessageLog.trace("backdrop "+title+" will be created")
+
+    var _backdrop = {
+		"position"    : position,
+		"title"       : {"text":title, "color":4278190080, "size":12, "font":"Arial"},
+		"description" : {"text":body, "color":4278190080, "size":12, "font":"Arial"},
+		"color"       : color.toInt() 
+    }
+		
+    Backdrop.addBackdrop(groupPath, _backdrop)
+	return new this.$.oBackdrop(groupPath, _backdrop)
+};
+
+
+/**
+ * Adds a backdrop to a group around specified nodes
+ * @param   {string}         groupPath                         The group in which this backdrop is created. 
+ * @param   {oNode[]}        nodes                             The nodes that the backdrop encompasses.
+ * @param   {string}         title                             The title of the backdrop.
+ * @param   {string}         body                              The body text of the backdrop.
+ * @param   {oColorValue}    color                             The oColorValue of the node.
+ * @param   {float}          x                                 The X position of the backdrop, an offset value if nodes are specified.
+ * @param   {float}          y                                 The Y position of the backdrop, an offset value if nodes are specified.
+ * @param   {float}          width                             The Width of the backdrop, a padding value if nodes are specified.
+ * @param   {float}          height                            The Height of the backdrop, a padding value if nodes are specified.
+ * 
+ * @return {oBackdrop}       The created backdrop.
+ */
+$.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body, color, x, y, width, height ){
+  if (typeof color === 'undefined') var color = new this.$.oColorValue("#323232ff");
+  if (typeof body === 'undefined') var body = "";
+
+  // get default size from node bounds
+  if (typeof nodes === 'undefined') var nodes = [];
+
+  var position = {"x":-50, "y":-50, "w":100, "h":100};
+  
+  if (typeof x === 'undefined') var x = 0;
+  if (typeof y === 'undefined') var y = 0;
+  if (typeof width === 'undefined') var width = 0;
+  if (typeof height === 'undefined') var height = 0;
+  
+  if (nodes.length > 0) {
+    var _nodeBox = new this.$.oBox();
+    _nodeBox.includeNodes(nodes);
+    
+    position.x      = _nodeBox.left   - x - ( width/2.0 );
+    position.y      = _nodeBox.top    - y - ( height/2.0 );
+    position.width  = _nodeBox.width  + width;
+    position.height = _nodeBox.height + height;
+    
+  }else{
+    position.x      = x - ( width/2.0 );
+    position.y      = y - ( height/2.0 );
+    position.width  = width;
+    position.height = height;
+	}
+  
+	if (typeof groupPath === 'undefined') var groupPath = nodes.length?nodes[0].path:"Top";
+    
+  try{
+    if( groupPath._type == "groupNode" ){
+      groupPath = groupPath.fullPath;
+    }
+  }catch(err){}
+    
+	// incrementing title so that two backdrops can't have the same title
+	if (typeof title === 'undefined') var title = "Backdrop";
+		
+	var _groupBackdrops = Backdrop.backdrops(groupPath);
+	var names = _groupBackdrops.map(function(x){return x.title.text})
+	var count = 0;
+	var newTitle = title;
+	// MessageLog.trace(names)
+	while (names.indexOf(newTitle) != -1){
+		// MessageLog.trace("backdrop "+newTitle+" already exists")
+		count++;
+		newTitle = title+"_"+count;
+	}
+	title = newTitle;
+	// MessageLog.trace("backdrop "+title+" will be created")
+
+    var _backdrop = {
+		"position"    : position,
+		"title"       : {"text":title, "color":4278190080, "size":12, "font":"Arial"},
+		"description" : {"text":body, "color":4278190080, "size":12, "font":"Arial"},
+		"color"       : color.toInt() 
+    }
+		
+    Backdrop.addBackdrop(groupPath, _backdrop)
+	return new this.$.oBackdrop(groupPath, _backdrop)
+};

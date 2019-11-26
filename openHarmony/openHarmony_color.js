@@ -105,6 +105,17 @@ $.oColorValue.prototype.fromColorString = function (hexString){
 }
 
 
+/**
+ * Uses a color integer (used in backdrops) and parses the INT; applies the RGBA components of the INT to thos oColorValue 
+ * @param   { int }    colorInt                      24 bit-shifted integer containing RGBA values 
+ */
+$.oColorValue.prototype.parseColorFromInt = function(colorInt){
+	this.r = colorInt >> 16 & 0xFF;
+	this.g = colorInt >> 8 & 0xFF;
+	this.b = colorInt & 0xFF;
+  this.a = colorInt >> 24 & 0xFF;
+}
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -267,7 +278,7 @@ Object.defineProperty($.oColor.prototype, 'value', {
         var _color = this.colorObject;
         switch(this.type){
             case "solid":
-                return new $.oColorValue(_color.colorData)
+                return new this.$.oColorValue(_color.colorData)
             case "texture":
                 // TODO: no way to return the texture file name?
             case "gradient":
@@ -276,7 +287,7 @@ Object.defineProperty($.oColor.prototype, 'value', {
                 var _value = [];
                 for (var i = 0; i<_gradientArray.length; i++){
                     var _tack = {}
-                    _tack.color = new $.oColorValue(_gradientArray[i]).toString()
+                    _tack.color = new this.$.oColorValue(_gradientArray[i]).toString()
                     _tack.position = _gradientArray[i].t
                     _value.push(_tack)
                 }
@@ -300,7 +311,7 @@ Object.defineProperty($.oColor.prototype, 'value', {
                 var _gradientArray = newValue;
                 var _value = [];
                 for (var i = 0; i<_gradientArray.length; i++){
-                    var _tack = new $.oColorValue(_gradientArray[i].color)
+                    var _tack = new this.$.oColorValue(_gradientArray[i].color)
                     _tack.t = _gradientArray[i]. position
                     _value.push()
                 }
@@ -381,3 +392,4 @@ $.oColor.prototype.hexToRgba = function (hexString){
 
     return _rgba;
 }
+

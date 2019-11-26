@@ -158,7 +158,7 @@ Object.defineProperty($.oPalette.prototype, 'colors', {
         var _palette = this.paletteObject
         var _colors = []
         for (var i = 0; i<_palette.nColors; i++){
-            _colors.push (new $.oColor (this, i))
+            _colors.push (new this.$.oColor (this, i))
         }
         return _colors
     }
@@ -186,7 +186,7 @@ $.oPalette.prototype.remove = function ( removeFile ){
     this._paletteList.removePaletteById( this.id );
     
     if( removeFile ){
-      var _paletteFile = new $.oFile(this.path)
+      var _paletteFile = new this.$.oFile(this.path)
       _paletteFile.remove();
     }
     

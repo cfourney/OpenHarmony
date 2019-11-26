@@ -136,7 +136,7 @@ $.oPoint.prototype.divide = function( float_val ){
  * @return: { $.oPoint }                           Returns the $.oPoint average of provided points.
  */
 $.oPoint.prototype.pointAverage = function( point_array ){
-  var _avg = new $.oPoint( 0.0, 0.0, 0.0 );
+  var _avg = new this.$.oPoint( 0.0, 0.0, 0.0 );
   for( var x=0;x<point_array.length;x++ ){
     _avg.pointAdd( point_array[x] );
   }
@@ -154,7 +154,7 @@ $.oPoint.prototype.pointAverage = function( point_array ){
  * @return: { $.oPoint }                          The interpolated value.
  */
 $.oPoint.prototype.lerp = function( point, perc ){
-  var delta = new $.oPoint( point.x, point.y, point.z );
+  var delta = new this.$.oPoint( point.x, point.y, point.z );
  
   delta = delta.pointSubtract( this );
   delta.multiply( perc );
@@ -235,7 +235,7 @@ Object.defineProperty($.oBox.prototype, 'height', {
  */
 Object.defineProperty($.oBox.prototype, 'center', {
     get : function(){
-         return new $.oPoint(this.left+this.width/2, this.top+this.height/2);
+         return new this.$.oPoint(this.left+this.width/2, this.top+this.height/2);
     }
 })
  
@@ -304,7 +304,7 @@ Object.defineProperty($.oFolder.prototype, 'path', {
           return;
         }
         
-        var folder = new $.oFolder( newPath );
+        var folder = new this.$.oFolder( newPath );
         if( folder.exists ){
           throw "Target path already exists. No default replace.";
         }
@@ -341,7 +341,7 @@ Object.defineProperty($.oFolder.prototype, 'name', {
 Object.defineProperty($.oFolder.prototype, 'folder', {
     get: function(){
         var _folder = this.path.slice(0,this.path.lastIndexOf("/", this.path.length-2));
-        return new $.oFolder(_folder);
+        return new this.$.oFolder(_folder);
     }
 });
 
@@ -373,7 +373,7 @@ Object.defineProperty($.oFolder.prototype, 'files', {
    
       if (!dir.exists) throw new Error("can't get files from folder "+this.path+" because it doesn't exist");
    
-      return dir.entryList().map(function(x){return new $.oFile(dir.path()+"/"+x)});
+      return dir.entryList().map(function(x){return new this.$.oFile(dir.path()+"/"+x)});
     }
 });
 
@@ -395,7 +395,7 @@ Object.defineProperty($.oFolder.prototype, 'folders', {
           if (_folders[i] == "." || _folders[i] == "..") _folders.splice(i,1);
       }
       
-      return _folders.map(function(x){return new $.oFolder( dir.path() + "/" + x )});
+      return _folders.map(function(x){return new this.$.oFolder( dir.path() + "/" + x )});
     }
 });
 
@@ -660,7 +660,7 @@ Object.defineProperty($.oFile.prototype, 'extension', {
 Object.defineProperty($.oFile.prototype, 'folder', {
     get: function(){
         var _folder = this.path.slice(0,this.path.lastIndexOf("/"));
-        return new $.oFolder(_folder);
+        return new this.$.oFolder(_folder);
     }
 })
  
@@ -748,7 +748,7 @@ $.oFile.prototype.move = function( folder, overwrite ){
         throw new Error("destination file "+folderPath+"/"+this.name+"."+this.extension+" exists and will not be overwritten. Can't move file.");
  
     var success = _file.move(_dest);
-    if (success) return new $.oFile(_dest.path)
+    if (success) return new this.$.oFile(_dest.path)
     return false;
 }
  
@@ -782,7 +782,7 @@ $.oFile.prototype.copy = function( folder, copyName, overwrite){
         throw new Error("destination file "+folder+"/"+copyName+"."+this.extension+" exists and will not be overwritten. Can't copy file.");
    
     var success = _file.copy(_dest);
-    if (success) return new $.oFile(_dest.path())
+    if (success) return new this.$.oFile(_dest.path())
     return false;
 }
 
@@ -820,7 +820,7 @@ Object.defineProperty( $.oFile.prototype, 'path', {
           return;
         }
         
-        var file = new $.oFile( newPath );
+        var file = new this.$.oFile( newPath );
         if( file.exists ){
           throw "Target path already exists. No default replace.";
         }

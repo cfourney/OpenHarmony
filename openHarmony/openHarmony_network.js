@@ -279,7 +279,7 @@ $.oNetwork.prototype.downloadSingle = function ( address, path, replace ){
   
   try{
     if( this.useCurl && this.curlPath ){            
-      var file = new $.oFile( path );
+      var file = new this.$.oFile( path );
       if( file.exists ){
         if( replace ){
           file.remove();
@@ -295,7 +295,7 @@ $.oNetwork.prototype.downloadSingle = function ( address, path, replace ){
       p.start( this.curlPath, cmdline );  
       p.waitForFinished( 10000 );
       
-      var file = new $.oFile( path );
+      var file = new this.$.oFile( path );
       return file.exists;
       
     }else{

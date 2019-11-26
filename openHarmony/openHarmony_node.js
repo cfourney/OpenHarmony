@@ -60,7 +60,7 @@
  * @classdesc  Node Class    
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new $.oScene($) to create a scene with DOM access.
+ * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
  */
 $.oNode = function( path, oSceneObject ){
     this._fullPath = path;
@@ -111,7 +111,7 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
                 var _value =  attr.getValue();
             }else{
                 // if there are subattributes, create getter setters for each on the returned object
-                var _value = (attr.column != null)?new $.oList(attr.frames, 1):attr.getValue();
+                var _value = (attr.column != null)?new this.$.oList(attr.frames, 1):attr.getValue();
                 for (var i in _subAttrs){
                     this.setAttrGetterSetter( _subAttrs[i], _value );
                 }
@@ -396,7 +396,7 @@ Object.defineProperty($.oNode.prototype, 'nodePosition', {
     get : function(){
       var _z = 0.0;
       try{ _z = node.coordZ(this.fullPath); } catch( err ){} //coordZ not implemented in earlier Harmony versions. 
-         return new $.oPoint(node.coordX(this.fullPath), node.coordY(this.fullPath), _z );
+         return new this.$.oPoint(node.coordX(this.fullPath), node.coordY(this.fullPath), _z );
     },
  
     set : function(newPosition){
@@ -562,7 +562,7 @@ Object.defineProperty($.oNode.prototype, 'attributes', {
      
         for (var i in _attributesList){
      
-            var _attribute = new $.oAttribute(this, _attributesList[i]);
+            var _attribute = new this.$.oAttribute(this, _attributesList[i]);
             var _keyword = _attribute.keyword;
      
             _attributes[_keyword] = _attribute;
@@ -580,7 +580,7 @@ Object.defineProperty($.oNode.prototype, 'attributes', {
 */
 Object.defineProperty( $.oNode.prototype, 'bounds', {
     get : function(){
-      return new $.oBox(this.x, this.y, this.x+this.width, this.y+this.height);
+      return new this.$.oBox(this.x, this.y, this.x+this.width, this.y+this.height);
     }
 }); 
 
@@ -754,7 +754,7 @@ $.oNode.prototype.subNodes = function(recurse){
     var _nodes = node.subNodes(this.fullPath);
     var _subNodes = [];
     for (var _node in _nodes){
-        var _oNodeObject = new $.oNode( _nodes[_node] );
+        var _oNodeObject = new this.$.oNode( _nodes[_node] );
         _subNodes.push(_oNodeObject);
         if (recurse && node.isGroup(_nodes[_node])) _subNodes = _subNodes.concat(_$.oNodeObject.subNodes(recurse));
     }
@@ -779,13 +779,13 @@ $.oNode.prototype.centerAbove = function( oNodeArray, xOffset, yOffset ){
     // Works with nodes and nodes array
     if (typeof oNodeArray === '$.oNode') oNodeArray = [ oNodeArray ];
  
-    var _box = new $.oBox();
+    var _box = new this.$.oBox();
     _box.includeNodes( oNodeArray )
     
     this.x = _box.center.x - this.width/2 + xOffset;
     this.y = _box.top - this.height + yOffset;
    
-    return new $.oPoint(this.x, this.y, this.z);
+    return new this.$.oPoint(this.x, this.y, this.z);
 };
  
 
@@ -805,13 +805,13 @@ $.oNode.prototype.centerBelow = function( oNodeArray, xOffset, yOffset){
     // Works with nodes and nodes array
     if (typeof oNodeArray === '$.oNode') oNodeArray = [oNodeArray];
     
-    var _box = new $.oBox();
+    var _box = new this.$.oBox();
     _box.includeNodes(oNodeArray)
  
     this.x = _box.center.x - this.width/2 + xOffset;
     this.y = _box.bottom - this.height + yOffset;
    
-    return new $.oPoint(this.x, this.y, this.z)
+    return new this.$.oPoint(this.x, this.y, this.z)
 }
 
 
@@ -831,13 +831,13 @@ $.oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
     // Works with nodes and nodes array
     if (typeof oNodeArray === '$.oNode') oNodeArray = [oNodeArray];
  
-    var _box = new $.oBox();
+    var _box = new this.$.oBox();
     _box.includeNodes(oNodeArray)
  
     this.x = _box.center.x - this.width/2 + xOffset;
     this.y = _box.center.y - this.height/2 + yOffset;
    
-    return new $.oPoint(this.x, this.y, this.z)
+    return new this.$.oPoint(this.x, this.y, this.z)
 }
  
  
@@ -945,7 +945,7 @@ $.oNode.prototype.toString = function(){
  * @classdesc  Peg Moudle Class    
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new $.oScene($) to create a scene with DOM access.
+ * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
  */
 $.oPegNode = function( path, oSceneObject ) {
     if (node.type(path) != 'PEG') throw "'path' parameter must point to a 'PEG' type node";
@@ -995,7 +995,7 @@ Object.defineProperty($.oPegNode.prototype, "useSeparate", {
  * @classdesc  Drawing Moudle Class    
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new $.oScene($) to create a scene with DOM access.
+ * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
  */
 $.oDrawingNode = function(path, oSceneObject) {
     // $.oDrawingNode can only represent a node of type 'READ'
@@ -1015,7 +1015,7 @@ $.oDrawingNode.prototype = Object.create($.oNode.prototype);
 Object.defineProperty($.oDrawingNode.prototype, "element", {
     get : function(){
         var _column = this.attributes.drawing.element.column;
-        return ( new $.oElement( node.getElementId(this.fullPath), _column ) );
+        return ( new this.$.oElement( node.getElementId(this.fullPath), _column ) );
     },
    
     set : function( oElementObject ){
@@ -1104,10 +1104,10 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
                         );
   if( res.success ){
     var _curves = res.results.map( function (x){ return [ 
-                                                          new $.oPoint( x[0][0], x[0][1], 0.0 ),
-                                                          new $.oPoint( x[1][0], x[1][1], 0.0 ),
-                                                          new $.oPoint( x[2][0], x[2][1], 0.0 ),
-                                                          new $.oPoint( x[3][0], x[3][1], 0.0 )
+                                                          new this.$.oPoint( x[0][0], x[0][1], 0.0 ),
+                                                          new this.$.oPoint( x[1][0], x[1][1], 0.0 ),
+                                                          new this.$.oPoint( x[2][0], x[2][1], 0.0 ),
+                                                          new this.$.oPoint( x[3][0], x[3][1], 0.0 )
                                                         ]; } );
     return _curves;
   }
@@ -1119,7 +1119,7 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
 //////////////////////////////////////
 //                                  //
 //                                  //
-//         $.oGroupNode class         //
+//         $.oGroupNode class       //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -1132,7 +1132,7 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
  * @classdesc  $.oGroupNode Class    
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new $.oScene($) to create a scene with DOM access.
+ * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
  */
 $.oGroupNode = function(path, oSceneObject) {
     // $.oDrawingNode can only represent a node of type 'READ'
