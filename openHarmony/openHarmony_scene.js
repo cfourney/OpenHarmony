@@ -1406,3 +1406,57 @@ $.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body,
     Backdrop.addBackdrop(groupPath, _backdrop)
 	return new this.$.oBackdrop(groupPath, _backdrop)
 };
+
+
+/**
+ * Adds a backdrop to a group around specified nodes
+ * @param   {string}         tplPath                           The group in which this backdrop is created. 
+ * @param   {string}         group                             The nodes that the backdrop encompasses.
+ * @param   {oNode[]}        destinationNodes                             The title of the backdrop.
+ * @param   {bool}           extendScene                              The body text of the backdrop.
+ * @param   {oPoint}         nodePosition                             The oColorValue of the node.
+ * @param   {object}         pasteOptions                                 The X position of the backdrop, an offset value if nodes are specified.
+ * 
+ * @return {oNode[]}         The resulting pasted nodes.
+ */
+$.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, extendScene, nodePosition, pasteOptions ){
+	if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
+	if (typeof group === 'undefined') var group = "Top";
+	if (typeof destinationNodes === 'undefined') var destinationNodes = false;
+	if (typeof extendScene === 'undefined') var extendScene = true;
+	
+	if (typeof pasteOptions === 'undefined') var pasteOptions = copyPaste.getCurrentPasteOptions();
+	pasteOptions.extendScene = extendScene;
+	
+  try{
+    if( tplPath._type == "folder" ){
+      tplPath = tplPath.path;
+    }
+  }catch(err){}
+  
+  
+  try{
+    if( group._type == "groupNode" ){
+      group = group.fullPath;
+    }
+  }catch(err){}
+  
+	var copyOptions = copyPaste.getCurrentCreateOptions();
+	var tpl = copyPaste.copyFromTemplate(tplPath, 0, 999, copyOptions); // any way to get the length of a template before importing it?
+	
+	if (destinationNodes){
+		// TODO: deal with import options to specify frames
+		copyPaste.paste(tpl, destinationNodes.map(function(x){return x.fullPath}), 0, 999, pasteOptions);
+		var nodes = destinationNodes;
+	}else{
+		copyPaste.pasteNewNodes(tpl, group, pasteOptions);
+		var that = this;
+		var nodes = selection.selectedNodes().map(function(x){return that.$node(x)});
+		for (var i in nodes){
+			nodes[i].x += nodePosition.x;
+			nodes[i].y += nodePosition.y;
+		}
+	}
+	
+	return nodes;
+}
