@@ -85,13 +85,13 @@ Object.defineProperty($.oNodeLink.prototype, 'outPort', {
         var _port = this._cacheOutPort;
         var _link = this._cacheOutLink;
 
-        if (node.inNode(this.outNode.fullPath, _port, _link) != this.inNode.fullPath){
+        if (node.inNode(this.outNode.path, _port, _link) != this.inNode.path){
             // First look amongst direct inNodes
             var _outNodes = this.outNode.outNodes;
 
             for (var i in _outNodes){
                 for (var j in _outNodes[i]){
-                    if(_outNodes[i][j].fullPath == this.inNode.fullPath) {
+                    if(_outNodes[i][j].path == this.inNode.path) {
                         _port = this._cacheOutPort = i;
                         _link = this._cacheOutLink = j;
                         return {port: _port, link: _link}

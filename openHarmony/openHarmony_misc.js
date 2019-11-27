@@ -833,3 +833,90 @@ Object.defineProperty( $.oFile.prototype, 'path', {
         this.move( newPath, false );
     }
 });
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//           $.oTools class          //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+ 
+
+/**
+ * The $.oUtils helper class -- providing generic utilities.
+ * @constructor
+ * @classdesc  $.tools utility Class
+ */
+$.oUtils = function(){
+    this._type = "tools";
+}
+
+/**
+ * Copies the file to the folder.
+ * @param   {string}   [folder]                Content to write to the file.
+ * @param   {string}   [copyName]              Name of the copied file.
+ * @param   {bool}     [overwrite]             Whether to overwrite the file.   
+ *  
+ * @return: { object }                           The result of the copy.     
+ */
+$.oUtils.prototype.longestCommonSubstring = function( str1, str2 ){
+	if (!str1 || !str2)
+		return {
+			length: 0,
+			sequence: "",
+			offset: 0
+		};
+ 
+	var sequence = "",
+		str1Length = str1.length,
+		str2Length = str2.length,
+		num = new Array(str1Length),
+		maxlen = 0,
+		lastSubsBegin = 0;
+ 
+	for (var i = 0; i < str1Length; i++) {
+		var subArray = new Array(str2Length);
+		for (var j = 0; j < str2Length; j++)
+			subArray[j] = 0;
+		num[i] = subArray;
+	}
+	var subsBegin = null;
+	for (var i = 0; i < str1Length; i++)
+	{
+		for (var j = 0; j < str2Length; j++)
+		{
+			if (str1[i] !== str2[j])
+				num[i][j] = 0;
+			else
+			{
+				if ((i === 0) || (j === 0))
+					num[i][j] = 1;
+				else
+					num[i][j] = 1 + num[i - 1][j - 1];
+ 
+				if (num[i][j] > maxlen){
+					maxlen = num[i][j];
+					subsBegin = i - num[i][j] + 1;
+					if (lastSubsBegin === subsBegin){//if the current LCS is the same as the last time this block ran
+						sequence += str1[i];
+					}else //this block resets the string builder if a different LCS is found
+					{
+						lastSubsBegin = subsBegin;
+						sequence= ""; //clear it
+						sequence += str1.substr(lastSubsBegin, (i + 1) - lastSubsBegin);
+					}
+				}
+			}
+		}
+	}
+	return {
+		length: maxlen,
+		sequence: sequence,
+		offset: subsBegin
+	};
+}

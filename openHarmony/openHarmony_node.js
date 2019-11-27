@@ -63,8 +63,8 @@
  * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
  */
 $.oNode = function( path, oSceneObject ){
-    this._fullPath = path;
-    this.type = node.type(this.fullPath);
+    this._path = path;
+    this.type  = node.type(this.path);
     this.scene = oSceneObject;
     
     this._type = 'node';
@@ -164,22 +164,40 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
 
 /**
  * The derived path to the node.
+ * @deprecated
  * @name $.oNode#fullPath
  * @type {string}
  */
 Object.defineProperty($.oNode.prototype, 'fullPath', {
     get : function( ){
-      return this._fullPath;
+      return this._path;
     },
  
-    set : function( str_fullpath ){
+    set : function( str_path ){
       //A move and rename might be in order. . .  Manage this here.
       
-      this.$.debug( "ERROR - changing the path is not supported yet: " + this._fullPath, this.$.DEBUG_LEVEL.WARNING );
+      this.$.debug( "ERROR - changing the path is not supported yet: " + this._path, this.$.DEBUG_LEVEL.WARNING );
       throw "ERROR - changing the path is not supported yet."
     }
 });
 
+/**
+ * The derived path to the node.
+ * @name $.oNode#path
+ * @type {string}
+ */
+Object.defineProperty($.oNode.prototype, 'path', {
+    get : function( ){
+      return this._path;
+    },
+ 
+    set : function( str_path ){
+      //A move and rename might be in order. . .  Manage this here.
+      
+      this.$.debug( "ERROR - changing the path is not supported yet: " + this._path, this.$.DEBUG_LEVEL.WARNING );
+      throw "ERROR - changing the path is not supported yet."
+    }
+});
 
 /**
  * The type of the node.
@@ -188,7 +206,7 @@ Object.defineProperty($.oNode.prototype, 'fullPath', {
  */
 Object.defineProperty( $.oNode.prototype, 'type', {
     get : function( ){
-      return node.type( this.fullPath );
+      return node.type( this.path );
     },
  
     set : function( bool_exist ){
@@ -208,7 +226,7 @@ Object.defineProperty($.oNode.prototype, 'isGroup', {
         return true;
       }
     
-      return node.isGroup( this.fullPath );
+      return node.isGroup( this.path );
     },
  
     set : function( bool_exist ){
@@ -226,7 +244,7 @@ Object.defineProperty($.oNode.prototype, 'children', {
       if( !this.isGroup ){ return []; }
       
       var _children = [];
-      var _subnodes = node.subNodes( this.fullPath );
+      var _subnodes = node.subNodes( this.path );
       for( var n=0; n<_subnodes.length; n++ ){
         _children.push( this.scene.getNodeByPath( _subnodes[n] ) );
       }
@@ -265,7 +283,7 @@ Object.defineProperty($.oNode.prototype, 'exists', {
 Object.defineProperty($.oNode.prototype, 'selected', {
     get : function( ){
       for( var n=0;n<selection.numberOfNodesSelected;n++ ){
-          if( selection.selectedNode(n) == this.fullPath ){
+          if( selection.selectedNode(n) == this.path ){
             return true;
           }
       }
@@ -276,9 +294,9 @@ Object.defineProperty($.oNode.prototype, 'selected', {
     //Add it to the selection.
     set : function( bool_exist ){
       if( bool_exist ){
-        selection.addNodeToSelection( this.fullPath );
+        selection.addNodeToSelection( this.path );
       }else{
-        selection.removeNodeFromSelection( this.fullPath );
+        selection.removeNodeFromSelection( this.path );
       }
     }
  
@@ -292,33 +310,33 @@ Object.defineProperty($.oNode.prototype, 'selected', {
  */
 Object.defineProperty($.oNode.prototype, 'name', {
     get : function(){
-         return node.getName(this.fullPath)
+         return node.getName(this.path)
     },
  
     set : function(newName){
-        var _parent = node.parentNode(this.fullPath)
-        var _node = node.rename(this.fullPath, newName)
-        this.fullPath = _parent+'/'+newName;
+        var _parent = node.parentNode(this.path)
+        var _node = node.rename(this.path, newName)
+        this.path = _parent+'/'+newName;
     }
  
 });
 
 
 /**
- * The path to the node, the parent path specifically.
- * @name $.oNode#path
+ * The group containing the node, the parent path, not including this node specifically.
+ * @name $.oNode#group
  * @type {string}
  */
-Object.defineProperty($.oNode.prototype, 'path', {
+Object.defineProperty($.oNode.prototype, 'group', {
     get : function(){
-         return node.parentNode(this.fullPath)
+         return node.parentNode(this.path)
     },
  
     set : function(newPath){
         // TODO: make moveNode() method?
         var _name = this.name
-        node.moveToGroup(this.fullPath, newPath)
-        this.fullPath = newPath + '/' + _name;
+        node.moveToGroup(this.path, newPath)
+        this.path = newPath + '/' + _name;
     }
  
 });
@@ -333,7 +351,7 @@ Object.defineProperty( $.oNode.prototype, 'parent', {
     get : function(){
       if( this.root ){ return false; }
     
-      return this.scene.getNodeByPath( node.parentNode( this.fullPath ) ); 
+      return this.scene.getNodeByPath( node.parentNode( this.path ) ); 
     },
  
     set : function(newPath){
@@ -350,11 +368,11 @@ Object.defineProperty( $.oNode.prototype, 'parent', {
  */
 Object.defineProperty($.oNode.prototype, 'enabled', {
     get : function(){
-         return node.getEnable(this.fullPath)
+         return node.getEnable(this.path)
     },
  
     set : function(enabled){
-         node.setEnable(this.fullPath, enabled)
+         node.setEnable(this.path, enabled)
     }
 });
  
@@ -366,11 +384,11 @@ Object.defineProperty($.oNode.prototype, 'enabled', {
  */
 Object.defineProperty($.oNode.prototype, 'locked', {
     get : function(){
-         return node.getLocked(this.fullPath)
+         return node.getLocked(this.path)
     },
  
     set : function(locked){
-         node.setLocked(this.fullPath, locked)
+         node.setLocked(this.path, locked)
     }
 });
  
@@ -382,7 +400,7 @@ Object.defineProperty($.oNode.prototype, 'locked', {
  */
 Object.defineProperty($.oNode.prototype, 'isRoot', {
     get : function(){
-         return this.fullPath == "Top"
+         return this.path == "Top"
     }
 });
  
@@ -395,12 +413,12 @@ Object.defineProperty($.oNode.prototype, 'isRoot', {
 Object.defineProperty($.oNode.prototype, 'nodePosition', {
     get : function(){
       var _z = 0.0;
-      try{ _z = node.coordZ(this.fullPath); } catch( err ){} //coordZ not implemented in earlier Harmony versions. 
-         return new this.$.oPoint(node.coordX(this.fullPath), node.coordY(this.fullPath), _z );
+      try{ _z = node.coordZ(this.path); } catch( err ){} //coordZ not implemented in earlier Harmony versions. 
+         return new this.$.oPoint(node.coordX(this.path), node.coordY(this.path), _z );
     },
  
     set : function(newPosition){
-        node.setCoord(this.fullPath, newPosition.x, newPosition.y, newPosition.y);
+        node.setCoord(this.path, newPosition.x, newPosition.y, newPosition.y);
     }
 });
  
@@ -412,12 +430,12 @@ Object.defineProperty($.oNode.prototype, 'nodePosition', {
  */
 Object.defineProperty($.oNode.prototype, 'x', {
     get : function(){
-         return node.coordX(this.fullPath)
+         return node.coordX(this.path)
     },
  
     set : function(x){
         var _pos = this.nodePosition;
-        node.setCoord(this.fullPath, x, _pos.y, _pos.z)
+        node.setCoord(this.path, x, _pos.y, _pos.z)
     }
 });
  
@@ -430,12 +448,12 @@ Object.defineProperty($.oNode.prototype, 'x', {
  */
 Object.defineProperty($.oNode.prototype, 'y', {
     get : function(){
-         return node.coordY(this.fullPath)
+         return node.coordY(this.path)
     },
  
     set : function(y){
         var _pos = this.nodePosition;
-        node.setCoord(this.fullPath, _pos.x, y, _pos.z)
+        node.setCoord(this.path, _pos.x, y, _pos.z)
     }
 });
  
@@ -448,14 +466,14 @@ Object.defineProperty($.oNode.prototype, 'y', {
 Object.defineProperty($.oNode.prototype, 'z', {
     get : function(){
         var _z = 0.0;
-        try{ _z = node.coordZ(this.fullPath); } catch( err ){} //coordZ not implemented in earlier Harmony versions. 
+        try{ _z = node.coordZ(this.path); } catch( err ){} //coordZ not implemented in earlier Harmony versions. 
     
         return _z;
     },
  
     set : function(z){
         var _pos = this.nodePosition;
-        node.setCoord( this.fullPath, _pos.x, _pos.y, z );
+        node.setCoord( this.path, _pos.x, _pos.y, z );
     }
 });
  
@@ -467,7 +485,7 @@ Object.defineProperty($.oNode.prototype, 'z', {
  */ 
 Object.defineProperty($.oNode.prototype, 'width', {
     get : function(){
-         return node.width(this.fullPath)
+         return node.width(this.path)
     }
 });
  
@@ -479,7 +497,7 @@ Object.defineProperty($.oNode.prototype, 'width', {
  */  
 Object.defineProperty($.oNode.prototype, 'height', {
     get : function(){
-         return node.height(this.fullPath)
+         return node.height(this.path)
     }
 });
  
@@ -493,8 +511,8 @@ Object.defineProperty($.oNode.prototype, 'inNodes', {
     get : function(){
         var _inNodes = [];
         // TODO: ignore/traverse groups
-        for (var i = 0; i < node.numberOfInputPorts(this.fullPath); i++){
-            var _node = node.srcNode(this.fullPath, i)
+        for (var i = 0; i < node.numberOfInputPorts(this.path); i++){
+            var _node = node.srcNode(this.path, i)
             _inNodes.push(this.scene.getNodeByPath(_node))
         }
         return _inNodes;
@@ -510,11 +528,11 @@ Object.defineProperty($.oNode.prototype, 'inNodes', {
 Object.defineProperty($.oNode.prototype, 'outNodes', {
     get : function(){
         var _outNodes = [];
-        for (var i = 0; i < node.numberOfOutputPorts(this.fullPath); i++){
+        for (var i = 0; i < node.numberOfOutputPorts(this.path); i++){
             var _outLinks = [];
-            for (var j = 0; j < node.numberOfOutputLinks(this.fullPath, i); j++){
+            for (var j = 0; j < node.numberOfOutputLinks(this.path, i); j++){
                 // TODO: ignore/traverse groups
-                var _node = node.dstNode(this.fullPath, i, j);
+                var _node = node.dstNode(this.path, i, j);
                 _outLinks.push(this.scene.getNodeByPath(_node));
             }
             if (_outLinks.length > 1){
@@ -557,7 +575,7 @@ Object.defineProperty($.oNode.prototype, 'outs', {
 */
 Object.defineProperty($.oNode.prototype, 'attributes', {
     get : function(){
-        var _attributesList = node.getAttrList(this.fullPath, 1);
+        var _attributesList = node.getAttrList(this.path, 1);
         var _attributes = {};
      
         for (var i in _attributesList){
@@ -622,7 +640,7 @@ Object.defineProperty($.oNode.prototype, 'linkedColumns', {
  */
  $.oNode.prototype.timelineIndex = function(timeline){
     var _timeline = timeline.layersList;
-    return _timeline.indexOf(this.fullPath);
+    return _timeline.indexOf(this.path);
 }
  
 /**
@@ -634,13 +652,13 @@ Object.defineProperty($.oNode.prototype, 'linkedColumns', {
  * @return  {bool}    The result of the link, if successful.
  */
 $.oNode.prototype.linkInNode = function( oNodeObject, inPort, outPort ){
-    var _node = oNodeObject.fullPath;
+    var _node = oNodeObject.path;
  
     // Default values for optional parameters
     if (typeof inPort === 'undefined') inPort = 0;
     if (typeof outPort === 'undefined') outPort = 0//node.numberOfOutputPorts(_node);
  
-    return node.link(_node, outPort, this.fullPath, inPort, true, true);
+    return node.link(_node, outPort, this.path, inPort, true, true);
  
 };
 
@@ -653,7 +671,7 @@ $.oNode.prototype.linkInNode = function( oNodeObject, inPort, outPort ){
 $.oNode.prototype.unlinkInNode = function( oNodeObject ){
     //CF Note: Should be able to define the port.
   
-    var _node = oNodeObject.fullPath;
+    var _node = oNodeObject.path;
    
     // MessageLog.trace("unlinking "+this.name+" from "+$.oNodeObject.name)
     var _inNodes = this.inNodes;
@@ -661,10 +679,10 @@ $.oNode.prototype.unlinkInNode = function( oNodeObject ){
    
     for (var i in _inNodes){
        
-        // MessageLog.trace(_inNodes[i].fullPath+" "+_node)
+        // MessageLog.trace(_inNodes[i].path+" "+_node)
        
-        if (_inNodes[i].fullPath == _node){
-            return node.unlink(this.fullPath, i)
+        if (_inNodes[i].path == _node){
+            return node.unlink(this.path, i)
         }
     }
     return false;
@@ -680,14 +698,14 @@ $.oNode.prototype.unlinkInNode = function( oNodeObject ){
  * @return  {bool}    The result of the link, if successful.
  */
 $.oNode.prototype.linkOutNode = function( oNodeObject, outPort, inPort ){
-    var _node = oNodeObject.fullPath;
+    var _node = oNodeObject.path;
  
     // Default values for optional parameters
     if (typeof inPort === 'undefined') inPort = node.numberOfInputPorts(_node);;
-    if (typeof outPort === 'undefined') outPort = 0//node.numberOfOutputPorts(this.fullPath);
+    if (typeof outPort === 'undefined') outPort = 0//node.numberOfOutputPorts(this.path);
  
     //CF Note: Forcing ( . . . true, true ) is likely not a good idea in most context, we'll need to provide solution to add links to composites purposefully.
-    return node.link(this.fullPath, outPort, _node, inPort, true, true); 
+    return node.link(this.path, outPort, _node, inPort, true, true); 
 };
 
 /**
@@ -699,12 +717,12 @@ $.oNode.prototype.linkOutNode = function( oNodeObject, outPort, inPort ){
 $.oNode.prototype.unlinkOutNode = function( oNodeObject ){
     //CF Note: Should be able to define the port.
   
-    var _node = oNodeObject.fullPath;
+    var _node = oNodeObject.path;
    
     var _inNodes = oNodeObject.inNodes;
    
     for (var i in _inNodes){
-        if (_inNodes[i].fullPath == this.fullPath){
+        if (_inNodes[i].path == this.path){
             return node.unlink(_node, i)
         }
     }
@@ -724,15 +742,15 @@ $.oNode.prototype.unlinkOutNode = function( oNodeObject ){
  * @return  {bool}    The result of the link, if successful.
  */
 $.oNode.prototype.insertInNode = function( inPort, oNodeObject, inPortTarget, outPortTarget ){
-    var _node = oNodeObject.fullPath;
+    var _node = oNodeObject.path;
  
     //QScriptValue 	
     if( this.ins[inPort] ){
       //INSERT BETWEEN.
-      var node_linkinfo = node.srcNodeInfo( this.fullPath, inPort );
+      var node_linkinfo = node.srcNodeInfo( this.path, inPort );
       node.link( node_linkinfo.node, node_linkinfo.port, _node, inPortTarget, true, true ); 
-      node.unlink( this.fullPath, inPort );
-      return node.link( oNodeObject.fullPath, outPortTarget, this.fullPath, inPort, true, true ); 
+      node.unlink( this.path, inPort );
+      return node.link( oNodeObject.path, outPortTarget, this.path, inPort, true, true ); 
     }
 
     return this.linkInNode( oNodeObject, inPort, outPortTarget );
@@ -751,7 +769,7 @@ $.oNode.prototype.insertInNode = function( inPort, oNodeObject, inPortTarget, ou
  */
 $.oNode.prototype.subNodes = function(recurse){
     if (typeof recurse === 'undefined') recurse = false;
-    var _nodes = node.subNodes(this.fullPath);
+    var _nodes = node.subNodes(this.path);
     var _subNodes = [];
     for (var _node in _nodes){
         var _oNodeObject = new this.$.oNode( _nodes[_node] );
@@ -846,15 +864,15 @@ $.oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
  * Place a node above one or more nodes with an offset.
  * @param   {string}    newName              The new name for the cloned module.
  * @param   {oPoint}    newPosition          The new position for the cloned module.
- * @param   {string}    newGroup             The group in which to place the cloned module.
+ * @param   {string}    [newGroup]           The group in which to place the cloned module.
  */
 $.oNode.prototype.clone = function( newName, newPosition, newGroup ){
     // Defaults for optional parameters
-    if (typeof newGroup === 'undefined') var newGroup = this.path;
+    if (typeof newGroup === 'undefined') var newGroup = this.group;
 
     // TODO implement cloning through column linking as opposed to copy paste logic
  
-    var _node = this.fullPath;
+    var _node = this.path;
     var _copyOptions = copyPaste.getCurrentCreateOptions();
     var _copy = copyPaste.copy([_node], 1, frame.numberOf(), _copyOptions);
     var _pasteOptions = copyPaste.getCurrentPasteOptions();
@@ -893,7 +911,7 @@ $.oNode.prototype.remove = function( deleteColumns, deleteElements ){
         }
     }
    
-    node.deleteNode(this.fullPath, deleteColumns, deleteElements)
+    node.deleteNode(this.path, deleteColumns, deleteElements)
 }
 
  /**
@@ -925,7 +943,7 @@ $.oNode.prototype.getAttributeByName = function( keyword ){
  * @return  {string}   The node path's as a string.
  */
 $.oNode.prototype.toString = function(){
-    return this.fullPath;
+    return this.path;
 }
 
 //////////////////////////////////////
@@ -1015,7 +1033,7 @@ $.oDrawingNode.prototype = Object.create($.oNode.prototype);
 Object.defineProperty($.oDrawingNode.prototype, "element", {
     get : function(){
         var _column = this.attributes.drawing.element.column;
-        return ( new this.$.oElement( node.getElementId(this.fullPath), _column ) );
+        return ( new this.$.oElement( node.getElementId(this.path), _column ) );
     },
    
     set : function( oElementObject ){
@@ -1089,7 +1107,7 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
   if (typeof frame === 'undefined') var frame = this.scene.currentFrame;
   if (typeof count === 'undefined') var count = 3;
 
-  var res = EnvelopeCreator().getDrawingBezierPath( this.fullPath, 
+  var res = EnvelopeCreator().getDrawingBezierPath( this.path, 
                            frame,      //FRAME
                            2.5,        //DISCRETIZER
                            0,          //K
@@ -1152,7 +1170,7 @@ $.oGroupNode.prototype = Object.create($.oNode.prototype);
 Object.defineProperty($.oGroupNode.prototype, "multiportIn", {
     get : function(){
         if (this.isRoot) return null
-        var _MPI = this.scene.getNodeByPath(node.getGroupInputModule(this.fullPath, "Multiport-In", 0,-100,0),this.scene)
+        var _MPI = this.scene.getNodeByPath(node.getGroupInputModule(this.path, "Multiport-In", 0,-100,0),this.scene)
         return (_MPI)
     }
 })
@@ -1166,7 +1184,7 @@ Object.defineProperty($.oGroupNode.prototype, "multiportIn", {
 Object.defineProperty($.oGroupNode.prototype, "multiportOut", {
     get : function(){
         if (this.isRoot) return null
-        var _MPO = this.scene.getNodeByPath(node.getGroupOutputModule(this.fullPath, "Multiport-Out", 0, 100,0),this.scene)
+        var _MPO = this.scene.getNodeByPath(node.getGroupOutputModule(this.path, "Multiport-Out", 0, 100,0),this.scene)
         return (_MPO)
     }
 });
@@ -1181,7 +1199,7 @@ Object.defineProperty($.oGroupNode.prototype, "multiportOut", {
 $.oGroupNode.prototype.subNodes = function(recurse){
     if (typeof recurse === 'undefined') recurse = false;
    
-    var _nodes = node.subNodes(this.fullPath);
+    var _nodes = node.subNodes(this.path);
     var _subNodes = [];
    
     for (var i in _nodes){
@@ -1202,7 +1220,7 @@ $.oGroupNode.prototype.subNodes = function(recurse){
 $.oGroupNode.prototype.orderNodeView = function(recurse){
     if (typeof recurse === 'undefined') var recurse = false;
    
-    TB_orderNetworkUpBatchFromList(node.subNodes(this.fullPath))
+    TB_orderNetworkUpBatchFromList( node.subNodes(this.path) );
    
     if (!this.isRoot){
         var _MPO = this.multiportOut;

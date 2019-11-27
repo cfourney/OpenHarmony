@@ -332,8 +332,8 @@ $.oScene.prototype.nodeSearch = function( query, sort_result ){
            
     var all_nodes = this.nodes;
     for( var x=0;x<all_nodes.length;x++ ){
-      if( !sel_list[ all_nodes[x].fullPath ] ){
-        var node_ret = this.getNodeByPath( all_nodes[x].fullPath );
+      if( !sel_list[ all_nodes[x].path ] ){
+        var node_ret = this.getNodeByPath( all_nodes[x].path );
         if( node_ret && node_ret.exists ){
           nodes_returned.push( node_ret );
         }
@@ -403,17 +403,17 @@ $.oScene.prototype.nodeSearch = function( query, sort_result ){
             
         var regexp_filter = RegExp( regexp, 'gi' );
         for( var n=0;n<all_nodes.length;n++ ){
-          if( !added_nodes[all_nodes[n].fullPath] ){
-            this.$.debug( "WILDCARD NODE TEST: "+all_nodes[n].fullPath, this.$.DEBUG_LEVEL.LOG );
-            if( regexp_filter.test( all_nodes[n].fullPath ) ){
-              this.$.debug( "WILDCARD NODE TESTED SUCCESS: "+all_nodes[n].fullPath, this.$.DEBUG_LEVEL.LOG );
+          if( !added_nodes[all_nodes[n].path] ){
+            this.$.debug( "WILDCARD NODE TEST: "+all_nodes[n].path, this.$.DEBUG_LEVEL.LOG );
+            if( regexp_filter.test( all_nodes[n].path ) ){
+              this.$.debug( "WILDCARD NODE TESTED SUCCESS: "+all_nodes[n].path, this.$.DEBUG_LEVEL.LOG );
               
-              var node_ret = all_nodes[n]; //this.getNodeByPath( all_nodes[n].fullPath ); //new this.$.oNode( this.$, all_nodes[n].fullPath );
+              var node_ret = all_nodes[n]; //this.getNodeByPath( all_nodes[n].path ); //new this.$.oNode( this.$, all_nodes[n].path );
               if( node_ret && node_ret.exists ){
-                this.$.debug( "WILDCARD NODE MATCH: "+all_nodes[n].fullPath+"\n", this.$.DEBUG_LEVEL.LOG );
+                this.$.debug( "WILDCARD NODE MATCH: "+all_nodes[n].path+"\n", this.$.DEBUG_LEVEL.LOG );
                 nodes_returned.push( node_ret );
               }
-              added_nodes[ all_nodes[n].fullPath ] = true;
+              added_nodes[ all_nodes[n].path ] = true;
             }
           }
         }
@@ -433,17 +433,17 @@ $.oScene.prototype.nodeSearch = function( query, sort_result ){
             
         var regexp_filter = RegExp( regexp, 'gi' );
         for( var n=0;n<all_nodes.length;n++ ){
-          if( !added_nodes[all_nodes[n].fullPath] ){
-            this.$.debug( "REGEXP NODE TEST: "+all_nodes[n].fullPath, this.$.DEBUG_LEVEL.LOG );
-            if( regexp_filter.test( all_nodes[n].fullPath ) ){
-              this.$.debug( "REGEXP NODE TESTED SUCCESS: "+all_nodes[n].fullPath, this.$.DEBUG_LEVEL.LOG );
+          if( !added_nodes[all_nodes[n].path] ){
+            this.$.debug( "REGEXP NODE TEST: "+all_nodes[n].path, this.$.DEBUG_LEVEL.LOG );
+            if( regexp_filter.test( all_nodes[n].path ) ){
+              this.$.debug( "REGEXP NODE TESTED SUCCESS: "+all_nodes[n].path, this.$.DEBUG_LEVEL.LOG );
               
-              var node_ret = all_nodes[n]; //new this.$.oNode( this.$, all_nodes[n].fullPath );
+              var node_ret = all_nodes[n]; //new this.$.oNode( this.$, all_nodes[n].path );
               if( node_ret && node_ret.exists ){
-                this.$.debug( "REGEXP NODE MATCH: "+all_nodes[n].fullPath+"\n", this.$.DEBUG_LEVEL.LOG );
+                this.$.debug( "REGEXP NODE MATCH: "+all_nodes[n].path+"\n", this.$.DEBUG_LEVEL.LOG );
                 nodes_returned.push( node_ret );
               }
-              added_nodes[ all_nodes[n].fullPath ] = true;
+              added_nodes[ all_nodes[n].path ] = true;
             }
           }
         }
@@ -528,7 +528,7 @@ $.oScene.prototype.nodeSearch = function( query, sort_result ){
             }
             
             for( var x=0;x<filtered_nodes.length;x++ ){
-              if( sel_list[ filtered_nodes[x].fullPath ] ){
+              if( sel_list[ filtered_nodes[x].path ] ){
                 res_nodes.push( filtered_nodes[x] );
               }
             }
@@ -546,7 +546,7 @@ $.oScene.prototype.nodeSearch = function( query, sort_result ){
             }
             
             for( var x=0;x<filtered_nodes.length;x++ ){
-              if( !sel_list[ filtered_nodes[x].fullPath ] ){
+              if( !sel_list[ filtered_nodes[x].path ] ){
                 res_nodes.push( filtered_nodes[x] );
               }
             }
@@ -586,9 +586,9 @@ $.oScene.prototype.addNode = function( type, name, group, nodePosition ){
     
     try{
       if( group._type == "groupNode" ){ //Also allow oGroupNode types for group as input. Convert to string. 
-        group = group.fullPath;
+        group = group.path;
       }else if( group._type == "node" ){ //If a node is given, assume we want to place it in same context as this node.
-        group = group.parent.fullPath;
+        group = group.parent.path;
       }
     }catch( err ){
     }
@@ -749,12 +749,12 @@ $.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg
     var _MPO = _group.multiportOut
  
     if (addComposite){
-        var _composite = this.addNode("COMPOSITE", name+"_Composite", _group.fullPath)
+        var _composite = this.addNode("COMPOSITE", name+"_Composite", _group.path)
         _composite.composite_mode = "Pass Through" //
         _composite.linkOutNode(_MPO);
     }
     if (addPeg){
-        var _peg = this.addNode("PEG", name+"-P", _group.fullPath)
+        var _peg = this.addNode("PEG", name+"-P", _group.path)
         _peg.linkInNode(_MPI)
     }
    
@@ -765,10 +765,10 @@ $.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg
         for (var i in includeNodes){
             var _node = includeNodes[i];
             var _nodeName = _node.name;
-            node.moveToGroup(_node.fullPath, _group.fullPath)
+            node.moveToGroup(_node.path, _group.path)
            
            // updating the fullPath of the oNode objects passed by reference
-            _node.fullPath = _group.fullPath+'/'+_nodeName;          
+            _node.path = _group.path+'/'+_nodeName;          
            
             if (addPeg){
                 _node.unlinkInNode(_MPI)
@@ -1065,7 +1065,7 @@ $.oScene.prototype.updatePSD = function( path, separateLayers ){
 
             var _layerIndex = _layer.position;
             var _nodePosition = new this.$.oPoint(0,0,0);
-            var _group = _psdNodes[0].path;
+            var _group = _psdNodes[0].group;
             var _alignment = _psdNodes[0].alignment_rule;
             var _scale = _psdNodes[0].scale.x;
             // MessageLog.trace("scale: "+_scale)
@@ -1084,7 +1084,7 @@ $.oScene.prototype.updatePSD = function( path, separateLayers ){
             var _compNodes = _comp.inNodes;
             
             for (var j=0; j<_compNodes.length; j++){
-                if (_nodeBelow.fullPath == _compNodes[j].fullPath){
+                if (_nodeBelow.path == _compNodes[j].path){
                     _port = j+1;
                     _nodePosition = _compNodes[j].nodePosition;
                     _nodePosition.x -= 35;
@@ -1192,7 +1192,7 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
     // pass a oNode object as argument for destination node instead of name/group?
    
     if (typeof resultName === 'undefined') var resultName = nodes[0].name+"_merged"
-    if (typeof group === 'undefined') var group = nodes[0].path;
+    if (typeof group === 'undefined') var group = nodes[0].group;
     if (typeof deleteMerged === 'undefined') var deleteMerged = true;
    
     // only merge READ nodes so we filter out other nodes from parameters
@@ -1238,13 +1238,13 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
         for (var j=nodes.length-1; j>=0; j--){
             //if (nodes[j].attributes.drawing.element.frames[_frame].isBlank) continue;
            
-            DrawingTools.setCurrentDrawingFromNodeName( nodes[j].fullPath, _frame );
+            DrawingTools.setCurrentDrawingFromNodeName( nodes[j].path, _frame );
             Action.perform("selectAll()", "cameraView");
            
             // select all and check. If empty, operation ends for the current frame
             if (Action.validate("copy()", "cameraView").enabled){
                 Action.perform("copy()", "cameraView");
-                DrawingTools.setCurrentDrawingFromNodeName( _mergedNode.fullPath, _frame );
+                DrawingTools.setCurrentDrawingFromNodeName( _mergedNode.path, _frame );
                 Action.perform("paste()", "cameraView");
             }
         }
@@ -1296,7 +1296,7 @@ $.oScene.prototype.addBackdrop = function( groupPath, title, body, color, x, y, 
     
   try{
     if( groupPath._type == "groupNode" ){
-      groupPath = groupPath.fullPath;
+      groupPath = groupPath.path;
     }
   }catch(err){}
     
@@ -1372,11 +1372,11 @@ $.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body,
     position.height = height;
 	}
   
-	if (typeof groupPath === 'undefined') var groupPath = nodes.length?nodes[0].path:"Top";
+	if (typeof groupPath === 'undefined') var groupPath = nodes.length?nodes[0].group:"Top";
     
   try{
     if( groupPath._type == "groupNode" ){
-      groupPath = groupPath.fullPath;
+      groupPath = groupPath.path;
     }
   }catch(err){}
     
@@ -1437,7 +1437,7 @@ $.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, 
   
   try{
     if( group._type == "groupNode" ){
-      group = group.fullPath;
+      group = group.path;
     }
   }catch(err){}
   
@@ -1446,7 +1446,7 @@ $.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, 
 	
 	if (destinationNodes){
 		// TODO: deal with import options to specify frames
-		copyPaste.paste(tpl, destinationNodes.map(function(x){return x.fullPath}), 0, 999, pasteOptions);
+		copyPaste.paste(tpl, destinationNodes.map(function(x){return x.path}), 0, 999, pasteOptions);
 		var nodes = destinationNodes;
 	}else{
 		copyPaste.pasteNewNodes(tpl, group, pasteOptions);

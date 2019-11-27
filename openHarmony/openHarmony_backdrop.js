@@ -66,7 +66,7 @@ $.oBackdrop = function( groupPath, backdropObject ){
   try{
     if( groupPath._type == "groupNode" ){
       //Its an oNode objet type.
-      this.group = groupPath.fullPath;
+      this.group = groupPath.path;
     }
   }catch(err){
   }

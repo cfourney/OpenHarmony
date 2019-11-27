@@ -98,7 +98,8 @@ $.directory = $.directoryGet( __file__ );
 include( $.directory + "/openHarmony/openHarmony_misc.js"      );   
 include( $.directory + "/openHarmony/openHarmony_network.js"   );   
 include( $.directory + "/openHarmony/openHarmony_path.js"      );   
-include( $.directory + "/openHarmony/openHarmony_list.js"      );       
+include( $.directory + "/openHarmony/openHarmony_list.js"      );
+include( $.directory + "/openHarmony/openHarmony_backdrop.js"  );      
 include( $.directory + "/openHarmony/openHarmony_timeline.js"  );  
 include( $.directory + "/openHarmony/openHarmony_attribute.js" );   
 include( $.directory + "/openHarmony/openHarmony_frame.js"     );       
@@ -168,6 +169,7 @@ $.scene = $.s;
 
 //---- Attach Helpers ------
 $.network = new $.oNetwork( );
+$.utils   = new $.oUtils( );
 $.global  = this;
 
 

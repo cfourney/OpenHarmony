@@ -128,7 +128,7 @@ $.oAttribute.prototype.subAttributes_oldVersion = function ( _subAttributes ){
     }
     
   for( var n=0;n<sub_attrs.length;n++ ){
-    var _attr = node.getAttr( this.node.fullPath, 1, this._keyword+"."+sub_attrs[n] );  
+    var _attr = node.getAttr( this.node.path, 1, this._keyword+"."+sub_attrs[n] );  
     if( _attr ){
       var _subAttribute = new this.$.oAttribute( this.node, _attr, this );  
       this[ sub_attrs[n] ] = _subAttribute;  
@@ -189,7 +189,7 @@ Object.defineProperty($.oAttribute.prototype, 'type', {
  */
 Object.defineProperty($.oAttribute.prototype, 'column', {
     get : function(){
-        var _column = node.linkedColumn ( this.node.fullPath, this._keyword );
+        var _column = node.linkedColumn ( this.node.path, this._keyword );
         if( _column ){
           return this.node.scene.$column( _column, this );
         }else{
@@ -200,9 +200,9 @@ Object.defineProperty($.oAttribute.prototype, 'column', {
     set : function(columnObject){
         // unlink if provided with null value or empty string
         if (columnObject == "" || columnObject == null){
-            node.unlinkAttr(this.node.fullPath, this._keyword);
+            node.unlinkAttr(this.node.path, this._keyword);
         }else{
-            node.linkAttr(this.node.fullPath, this._keyword, columnObject.uniqueName);
+            node.linkAttr(this.node.path, this._keyword, columnObject.uniqueName);
             // TODO: transfer current value of attribute to a first key on the column
         }
     }
@@ -369,7 +369,7 @@ $.oAttribute.prototype.setValue = function (value, frame) {
             break;
            
         case "GENERIC_ENUM" :
-            node.setTextAttr(this.node.fullPath, this._keyword, frame, value)
+            node.setTextAttr(this.node.path, this._keyword, frame, value)
             break;
            
         case "PATH_3D" :
