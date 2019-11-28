@@ -118,7 +118,6 @@ function oh_rigging_addBackdropToSelected(){
       
       this.gui_buttonColor["clicked"].connect( this, this.changeColor );
       
-      
       //When the dialog comes into view, select the input area immediately.
       var gui_focuser  = this.gui;
       var text_focuser = this.gui_name;
@@ -303,7 +302,7 @@ function oh_rigging_addBackdropToSelected(){
         continue;
       }
       
-      $.scene.addBackdropToNodes( grp, grp_items, res.name, res.text, res.color );
+      $.scene.addBackdropToNodes( grp, grp_items, res.name, res.text, res.color, 0, 0, 35, 35 );
     }
     
     scene.endUndoRedoAccum( );

@@ -1359,17 +1359,17 @@ $.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body,
   if (nodes.length > 0) {
     var _nodeBox = new this.$.oBox();
     _nodeBox.includeNodes(nodes);
-    
+       
     position.x      = _nodeBox.left   - x - ( width/2.0 );
     position.y      = _nodeBox.top    - y - ( height/2.0 );
-    position.width  = _nodeBox.width  + width;
-    position.height = _nodeBox.height + height;
-    
+    position.w      = _nodeBox.width  + width;
+    position.h      = _nodeBox.height + height;
+     
   }else{
     position.x      = x - ( width/2.0 );
     position.y      = y - ( height/2.0 );
-    position.width  = width;
-    position.height = height;
+    position.w      = width;
+    position.h      = height;
 	}
   
 	if (typeof groupPath === 'undefined') var groupPath = nodes.length?nodes[0].group:"Top";
