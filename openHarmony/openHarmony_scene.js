@@ -54,7 +54,7 @@
  * The base class for the scene.
  * @constructor
  * @classdesc  Scene Class
- * @param   {$dom}         dom                  Access to the direct dom object.
+ * @param   {$dom}         dom                  Access to the direct dom object. Available and automatically instantiated as $.scene, $.s
  * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
  */
 $.oScene = function( ){

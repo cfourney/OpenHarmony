@@ -62,15 +62,44 @@
  */
 $.oColorValue = function( colorValue ){
     if (typeof colorValue === 'undefined') var colorValue = "#000000ff";
-    MessageLog.trace("init $.oColorValue object"+JSON.stringify(colorValue)+" "+(typeof colorValue === 'string' ))
-    if (typeof colorValue === 'string'){
-        colorValue = this.parseColorString(colorValue);
-    }else{    
-        this.r = colorValue.r;
-        this.g = colorValue.g;
-        this.b = colorValue.b;
-        this.a = colorValue.a;
+    
+    this.r = 0; this.g = 0; this.b = 0; this.a = 255;
+    
+    //Special case in which RGBA values are defined directly.
+    switch( arguments.length ){
+      case 4:
+        this.a = ( (typeof arguments[3]) == "number" ) ? arguments[3] : 0; 
+      case 3:
+        this.r = ( (typeof arguments[0]) == "number" ) ? arguments[0] : 0; 
+        this.g = ( (typeof arguments[1]) == "number" ) ? arguments[1] : 0; 
+        this.b = ( (typeof arguments[2]) == "number" ) ? arguments[2] : 0; 
+        return;
+      default:
+        break;
     }
+    
+    if (typeof colorValue === 'string'){
+      this.fromColorString(colorValue);
+    }else{
+      if (typeof colorValue.r === 'undefined') colorValue.r = 0;
+      if (typeof colorValue.g === 'undefined') colorValue.g = 0;
+      if (typeof colorValue.b === 'undefined') colorValue.b = 0;
+      if (typeof colorValue.a === 'undefined') colorValue.a = 255;
+      
+      this.r = colorValue.r;
+      this.g = colorValue.g;
+      this.b = colorValue.b;
+      this.a = colorValue.a;
+    }
+}
+
+
+/**
+ * Creates an int from the color value, as used for backdrop colors.
+ * @return: {string}       ALPHA<<24  RED<<16  GREEN<<8  BLUE
+ */
+$.oColorValue.prototype.toInt = function (){
+     return ((this.a & 0xff) << 24) | ((this.r & 0xff) << 16) | ((this.g & 0xff) << 8) | (this.b & 0xff);
 }
 
 
@@ -80,14 +109,24 @@ $.oColorValue = function( colorValue ){
  */
 $.oColorValue.prototype.toString = function (){
     var _hex = "#";
-    _hex += this.r.toString(16);
-    _hex += this.g.toString(16);
-    _hex += this.b.toString(16);
-    _hex += this.a.toString(16);
+    
+    var r = ("00"+this.r.toString(16)).slice(-2);
+    var g = ("00"+this.g.toString(16)).slice(-2);
+    var b = ("00"+this.b.toString(16)).slice(-2);
+    var a = ("00"+this.a.toString(16)).slice(-2);
+    
+    _hex += r + g + b + a;
  
     return _hex;
 }
- 
+
+/**
+ * The colour value represented as a string.
+ * @return: {string}       RGBA components in a string in format #RRGGBBAA
+ */
+$.oColorValue.prototype.toHex = function (){
+  return this.toString();
+}
  
 /**
  * Ingest a hex string in form #RRGGBBAA to define the colour.
@@ -97,6 +136,8 @@ $.oColorValue.prototype.fromColorString = function (hexString){
     hexString = hexString.replace("#","");
     if (hexString.length == 6) hexString+"ff";
     if (hexString.length != 8) throw new Error("incorrect color string format");
+    
+    System.println( "HEX : " + hexString );
     
     this.r = parseInt(hexString.slice(0,2), 16);
     this.g = parseInt(hexString.slice(2,4), 16);
