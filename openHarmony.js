@@ -182,8 +182,20 @@ function getSceneDOM(){
     return new oScene();
 }
  
- 
+
 // oScene Objects Properties
+
+
+// NEW 
+// string oScene.name
+// Contains the list of nodes present in the scene
+ 
+Object.defineProperty(oScene.prototype, 'name', {
+    get : function(){
+        return scene.currentScene();
+    }
+})
+
  
 // Array oScene.nodes
 // Contains the list of nodes present in the scene
@@ -548,19 +560,17 @@ oScene.prototype.getSelectedPalette = function(){
     return _palette;
 }
  
- 
+// NEW 
+// addPalette
 
-// oPalette importPalette(filename, name, paletteStorage)
- 
-oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement){
+oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, storeInElement){
     if (typeof paletteStorage === 'undefined') var paletteStorage = "scene";
+    if (typeof insertAtIndex === 'undefined') var insertAtIndex = 0;
+    
     var _list = PaletteObjectManager.getScenePaletteList();
-   
-    if (typeof index === 'undefined') var index = _list.numPalettes;
-   
-    var _paletteFile = new oFile(filename);
-    if (typeof name === 'undefined') var name = _paletteFile.name;
+    
     if (typeof storeInElement === 'undefined'){
+        if (paletteStorage == "external") throw new Error("Elemnt parameter should point to storage path if palette destination is External")
         if (paletteStorage == "element") throw new Error("Element parameter cannot be omitted if palette destination is Element")
         var _element = 1;
     }
@@ -587,14 +597,28 @@ oScene.prototype.importPalette = function(filename, name, index, paletteStorage,
         default :
             break;
     }
-   
+    
+    if (paletteStorage == "external"){
+        var _palette = new oPalette(_list.createPalette(storeInElement+"/"+name, insertAtIndex))
+    }
+    
+    var _palette = new oPalette(_list.createPaletteAtLocation(_destination, storeInElement, name, insertAtIndex))
+
+    return _palette
+}    
+
+// NEW
+// oPalette importPalette(filename, name, paletteStorage)
+ 
+oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement){
+    
     // create a dummy palette to get the destination path
-    var _newPalette = new oPalette(_list.insertPaletteAtLocation(_destination, _element, "_dummy_palette", index), this, _list);
+    var _newPalette = this.addPalette("_dummy_palette", index, paletteStorage, storeInElement);
     var _path = _newPalette.path
    
     var _file = new oFile(_path)
     var copy = _paletteFile.copy(_file.folder.path, _paletteFile.name, true)
-       
+
     // reload palette
     _newPalette.remove();
     _newPalette = new oPalette(_list.insertPalette(copy.path.replace(".plt", ""), index), this, _list);
@@ -603,9 +627,8 @@ oScene.prototype.importPalette = function(filename, name, index, paletteStorage,
 }
  
 
-// NEW
-// importTemplate(string tplPath, string group, [oNodes] destinationNodes, bool extendScene, oPoint nodePosition, pasteOptions pasteOptions){
 
+// importTemplate(string tplPath, string group, [oNodes] destinationNodes, bool extendScene, oPoint nodePosition, pasteOptions pasteOptions){
 
 oScene.prototype.importTemplate = function(tplPath, group, destinationNodes, extendScene, nodePosition, pasteOptions){
 	if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
@@ -615,6 +638,7 @@ oScene.prototype.importTemplate = function(tplPath, group, destinationNodes, ext
 	
 	if (typeof pasteOptions === 'undefined') var pasteOptions = copyPaste.getCurrentPasteOptions();
 	pasteOptions.extendScene = extendScene;
+    // TODO: 
 	
 	var copyOptions = copyPaste.getCurrentCreateOptions();
 	
@@ -637,6 +661,51 @@ oScene.prototype.importTemplate = function(tplPath, group, destinationNodes, ext
 	return nodes;
 }
 
+// NEW
+// exportTemplate(string tplPath, string group, [oNodes] destinationNodes, bool extendScene, oPoint nodePosition, pasteOptions pasteOptions){
+// exportPalettesMode can have the values : "usedOnly", "all", "createPalette"
+
+oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMode, copyOptions){
+    if (typeof exportPalettesMode === 'undefined') var exportPalettesMode = "usedOnly";
+    if (typeof copyOptions === 'undefined') var copyOptions = copyPaste.getCurrentCreateOptions();
+    
+    var _readNodes = nodes.filter(function(x){return x.type == "READ"})
+    
+    // get used colors
+    var _usedColorIds = [];
+    for (var i in _readNodes){
+        _usedColorIds = _usedColorIds.concat(nodes[i].usedColorIds)
+    }
+    
+    // find used Palettes and Colors
+    if (exportPalettesMode != "all"){
+        // find RGB values
+        var _palettes = this.palettes;
+        var _usedColors = new Array(_usedColorIds.length);
+        var _usedPalettes = [];
+        
+        for (var i in _usedColorIds){
+            for (var j in _palettes){
+                _usedColors = _palettes[j].getColorById(_usedColorIds[i]);
+                // color found
+                if (_usedColors[i] != null){
+                    if (_usedPalettes.indexOf(_palettes[j]) == -1) _usedPalettes.push(_palettes[j]);
+                    break;
+                }
+            }
+        }
+    }
+    
+    if (exportPalettesMode == "createPalette"){
+        var exportFile = new oFolder(exportPath);
+        var paletteName = exportFile.name;
+        this.addPalette(paletteName);
+    }
+        
+    if (exportPalettesMode != "all"){
+        
+    }
+}
 
 
 // {[oNodes]} importPSD(filename, group, nodePosition, separateLayers, addPeg, addComposite, alignment)
@@ -865,7 +934,7 @@ oScene.prototype.updatePSD = function(filename, separateLayers){
     }
 }
  
- 
+
 
 // {oNode} importQT (filename, group, importSound, nodePosition, extendScene, alignment)
  
@@ -1405,7 +1474,8 @@ Object.defineProperty(oNode.prototype, 'inNodes', {
     }
 })
  
- 
+
+// NEW
 // Array outNodes
  
 Object.defineProperty(oNode.prototype, 'outNodes', {
@@ -1418,11 +1488,11 @@ Object.defineProperty(oNode.prototype, 'outNodes', {
                 var _node = node.dstNode(this.fullPath, i, j);
                 _outLinks.push(this.scene.$node(_node));
             }
-            if (_outLinks.length > 1){
+            /*if (_outLinks.length > 1){
                 _outNodes.push(_outLinks);
-            }else{
+            }else{*/
                 _outNodes = _outNodes.concat(_outLinks);
-            }
+            //}
         }
         return _outNodes;
     }
@@ -1832,6 +1902,29 @@ Object.defineProperty(oDrawingNode.prototype, "timings", {
     }
 })
  
+// NEW
+// {[oColor]} usedColors      returns the drawing.element keyframes
+ 
+Object.defineProperty(oDrawingNode.prototype, "usedColorIds", {
+    get : function(){
+        var _timings = this.timings;
+        var _colors = [];
+        
+        for (var i in _timings){
+            var _drawingColors = DrawingTools.getDrawingUsedColors({node: this.fullPath, frame: _timings[i].frameNumber});
+ 
+            for (var c in _drawingColors){
+                if (_colors.indexOf(_drawingColors[c]) == -1)
+                    _colors.push(_drawingColors[c]);
+            }
+        }
+        
+        return _colors;
+    }
+})
+ 
+ 
+ 
  
 // Class Methods
  
@@ -2101,8 +2194,6 @@ Object.defineProperty(oColumn.prototype, 'subColumns', {
 oColumn.prototype.removeDuplicateKeys = function(){
     var _keys = this.getKeyFrames();
    
-    // MessageLog.trace(this.attributeObject.node.name)
-    //MessageLog.trace(this.attributeObject.keyword+" keys: "+_keys.map(function (x){return x.frameNumber}))
     if (_keys.length < 2) return;
    
     var _pointsToRemove = [];
@@ -2112,19 +2203,13 @@ oColumn.prototype.removeDuplicateKeys = function(){
     var _pointA = _keys[0].value+"";
     var _pointB = _keys[1].value+"";
     
-    if (_pointA == _pointB) _pointsToRemove.push(_keys[0].frameNumber);
-    //if (JSON.stringify(_pointA) == JSON.stringify(_pointB)) _pointsToRemove.push(_keys[0].frameNumber)
-    // MessageLog.trace(this.attributeObject.keyword+" pointA: "+(_pointA)+" pointB: "+(_pointB))
-    
+    if (_pointA == _pointB) _pointsToRemove.push(_keys[0].frameNumber); 
     
     for (var k=1; k<_keys.length-1; k++){
         _pointA = _keys[k-1].value+"";
         _pointB = _keys[k].value+"";
         _pointC = _keys[k+1].value+"";
        
-        // MessageLog.trace(_keys[k].frameNumber+" - "+this.attributeObject.keyword+" pointA: "+(_pointA)+" pointB: "+(_pointB)+" pointC: "+(_pointC))
-       
-        //if (JSON.stringify(_pointA) == JSON.stringify(_pointB) && JSON.stringify(_pointB) == JSON.stringify(_pointC)){
         if (_pointA == _pointB && _pointB == _pointC){
             _pointsToRemove.push(_keys[k].frameNumber);
         }
@@ -2134,25 +2219,17 @@ oColumn.prototype.removeDuplicateKeys = function(){
         _pointA = _keys[_keys.length-2].value+"";
         _pointB = _keys[_keys.length-1].value+"";
         if (_pointA == _pointB) _pointsToRemove.push(_keys[_keys.length-1].frameNumber);
-        //if (JSON.stringify(_pointA) == JSON.stringify(_pointB)) _pointsToRemove.push(_keys[_keys.length-1].frameNumber)
-        // MessageLog.trace(this.attributeObject.keyword+" pointA: "+(_pointA)+" pointB: "+(_pointB))
     }
    
     var _frames = this.frames;
  
     for (var i=_pointsToRemove.length-1; i>=0; i--){
-        // MessageLog.trace("removing key "+_pointsToRemove[i]+" of column "+this.attributeObject.keyword)
-       
         // we don't remove the last key remaining when it isn't the default value
        
-        // var _value = JSON.stringify(_frames[_pointsToRemove[i]].value)
-        // var _default = JSON.stringify(this.attributeObject.defaultValue)
         var _value = _frames[_pointsToRemove[i]].value+"";
         var _default = this.attributeObject.defaultValue+"";
        
-        // MessageLog.trace(_value+" is equal to default "+_default+" ? "+( _value == _default))
         if (i==0 && this.getKeyFrames().length == 1 && _value != _default) continue;
-        // MessageLog.trace("removing key "+_pointsToRemove[i]+"/"+_pointsToRemove.length)
         
         _frames[_pointsToRemove[i]].isKeyFrame = false;
     }
@@ -2241,10 +2318,7 @@ oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace)
     // if amount is undefined, extend function below will automatically fill empty frames
     if (typeof exposures === 'undefined') var exposures = this.getKeyFrames();
  
-    //MessageBox.information("extendingExposures "+exposures.map(function(x){return x.frameNumber}))
     for (var i in exposures) {
-        //MessageBox.information(i+" extending: "+exposures[i])
-        //MessageBox.information(exposures[i].isBlank)
         if (!exposures[i].isBlank) exposures[i].extend(amount, replace);
     }
 }
@@ -3706,6 +3780,17 @@ oPalette.prototype.addColor = function (name, type, colorData){
     // TODO
     throw new Error("oPalette.addColor() not yet implemented")
 }
+
+
+// NEW
+// getColorById(id)
+oPalette.prototype.getColorById = function (id){
+    var _colors = this.colors;
+    var ids = _colors.map(function(x){return x.id})
+    if (ids.indexOf(id) != -1) return _colors[ids.indexOf(id)]
+    return null;
+}
+
  
  
 // remove()
@@ -3929,16 +4014,26 @@ Object.defineProperty(oColor.prototype, 'value', {
 })
  
  
-// Methods
+// Methods 
  
- 
+// NEW
 // oColor moveToPalette (oPaletteObject, index)
  
 oColor.prototype.moveToPalette = function (oPaletteObject, index){
+    var duplicate = this.copyToPalette(oPaletteObject, index)
+    this.remove()
+    
+    return _duplicate;
+}
+ 
+ 
+// NEW
+// oColor copyToPalette (oPaletteObject, index)
+ 
+oColor.prototype.copyToPalette = function (oPaletteObject, index){
     var _color = this.colorObject;
    
     oPaletteObject.paletteObject.cloneColor(_color)
-    this.palette.paletteObject.removeColor(_color.id)
  
     var _colors = oPaletteObject.colors
     var _duplicate = _colors.pop()
@@ -3947,7 +4042,7 @@ oColor.prototype.moveToPalette = function (oPaletteObject, index){
  
     return _duplicate;
 }
- 
+  
  
  
 // oColor remove ()
@@ -4942,7 +5037,7 @@ oDebug.prototype.log = function(message, debugLevel){
  
  
 // logObj(object (, debugLevel))
- 
+
 oDebug.prototype.logObj = function(object, debugLevel){
     if (typeof debugLevel === 'undefined') var debugLevel = 'general'
  
