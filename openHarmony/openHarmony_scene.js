@@ -785,7 +785,7 @@ $.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg
 
 /**
  * Adds a drawing element to the scene.
- * @param   {string}    display                The display node to build the timeline for.
+ * @param   {string}    [display]                The display node to build the timeline for.
  * @return {oTimeline}    The timelne object given the display.
  */
 $.oScene.prototype.getTimeline = function(display){

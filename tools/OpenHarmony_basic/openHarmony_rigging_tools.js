@@ -302,6 +302,7 @@ function oh_rigging_addBackdropToSelected(){
         continue;
       }
       
+      //Add that beautiful backdrop.
       $.scene.addBackdropToNodes( grp, grp_items, res.name, res.text, res.color, 0, 0, 35, 35 );
     }
     

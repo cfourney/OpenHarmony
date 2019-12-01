@@ -64,7 +64,13 @@ $.oColumn = function( uniqueName, oAttributeObject ){
   this._type = "column";
   
   this.uniqueName = uniqueName;
-  this.attributeObject = oAttributeObject
+  this.attributeObject = oAttributeObject;
+  
+  //Helper cache for subsequent actions.
+  if( !this.$.cache_columnToNodeAttribute ){ this.$.cache_columnToNodeAttribute = {}; }
+  if( !this.$.cache_columnToNodeAttribute[this.uniqueName] ){ this.$.cache_columnToNodeAttribute[this.uniqueName] = []; }
+  
+  this.$.cache_columnToNodeAttribute[this.uniqueName].push( { "node":oAttributeObject.node, "attribute": this } );
 }
 
 
@@ -76,7 +82,7 @@ $.oColumn = function( uniqueName, oAttributeObject ){
  */
 Object.defineProperty( $.oColumn.prototype, 'name', {
     get : function(){
-         return column.getDisplayName(this.uniqueName)
+         return column.getDisplayName(this.uniqueName);
     },
  
     set : function(newName){
@@ -105,6 +111,33 @@ Object.defineProperty( $.oColumn.prototype, 'type', {
     }
 });
  
+ 
+/**
+ * Whether the column is selected.
+ * @name $.oColumn#selected
+ * @type {bool}
+ */
+Object.defineProperty($.oColumn.prototype, 'selected', {
+    get : function(){
+        var sel_num = selection.numberOfColumnsSelected();
+        for( var n=0;n<sel_num;n++ ){
+          var col = selection.selectedColumn( n );
+          if( col == this.uniqueName ){
+            return true;
+          }
+        }
+        
+        //Also look through the timeline.
+        System.println( "TODO" );
+        
+        return false;
+    },
+    
+    set : function(){
+      throw "Not yet implemented."
+    }
+});
+
 
 /**
  * An array of the oFrame objects provided by the column.

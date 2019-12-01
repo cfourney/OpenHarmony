@@ -575,9 +575,9 @@ Object.defineProperty($.oNode.prototype, 'outs', {
 */
 Object.defineProperty($.oNode.prototype, 'attributes', {
     get : function(){
-        var _attributesList = node.getAttrList(this.path, 1);
+        var _attributesList = node.getAttrList( this.path, 1 );
         var _attributes = {};
-     
+        
         for (var i in _attributesList){
      
             var _attribute = new this.$.oAttribute(this, _attributesList[i]);
@@ -795,7 +795,7 @@ $.oNode.prototype.centerAbove = function( oNodeArray, xOffset, yOffset ){
     if (typeof yOffset === 'undefined') var yOffset = 0;
  
     // Works with nodes and nodes array
-    if (typeof oNodeArray === '$.oNode') oNodeArray = [ oNodeArray ];
+    if (typeof oNodeArray === 'oNode') oNodeArray = [ oNodeArray ];
  
     var _box = new this.$.oBox();
     _box.includeNodes( oNodeArray )
@@ -847,7 +847,7 @@ $.oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
     if (typeof yOffset === 'undefined') var yOffset = 0;
  
     // Works with nodes and nodes array
-    if (typeof oNodeArray === '$.oNode') oNodeArray = [oNodeArray];
+    if (typeof oNodeArray === 'oNode') oNodeArray = [oNodeArray];
  
     var _box = new this.$.oBox();
     _box.includeNodes(oNodeArray)
@@ -945,6 +945,73 @@ $.oNode.prototype.getAttributeByName = function( keyword ){
 $.oNode.prototype.toString = function(){
     return this.path;
 }
+
+
+ /**
+ * Provides a matching attribute based on the column name provided.
+ * @param   {string}       columnName                    The column name to search.
+ * @return  {oAttribute[]}   The matched attribute object, given the keyword.
+ */
+$.oNode.prototype.getAttributesByColumnName = function( columnName ){
+  var attribs = [];
+  
+  for( var n in this.attributes ){
+    var t_attrib = this.attributes[n];
+    if( t_attrib.subAttributes.length>0 ){
+      //Also check subattributes.
+      for( var t=0;t<t_attrib.subAttributes.length;t++ ){
+        var t_attr = t_attrib.subAttributes[t];
+        if( t_attr.column ){
+          if( t_attr.column.uniqueName == columnName){
+            attribs.push( t_attr );
+          }
+        }
+      }
+    }
+    
+    if( t_attrib.column ){
+      if(t_attrib.column.uniqueName == columnName){
+        attribs.push( t_attrib );
+      }
+    }
+  }
+  
+  return attribs;
+}
+
+ /**
+ * Provides a column->attribute lookup table for timeline building.
+ * @return  {object}   The column_name->attribute object LUT.  {colName: { "node":oNode, "column":oColumn } }
+ */
+$.oNode.prototype.getAttributesColumnCache = function( obj_lut ){
+  if (typeof obj_lut === 'undefined') obj_lut = {};
+   
+  for( var n in this.attributes ){
+    var t_attrib = this.attributes[n];
+    if( t_attrib.subAttributes.length>0 ){
+      //Also check subattributes.
+      for( var t=0;t<t_attrib.subAttributes.length;t++ ){
+        var t_attr = t_attrib.subAttributes[t];
+        if( t_attr.column ){
+          if( !obj_lut[ t_attr.column.uniqueName ] ){
+            obj_lut[ t_attr.column.uniqueName ] = [];
+          }
+          obj_lut[ t_attr.column.uniqueName ].push( { "node":this, "attribute":t_attr } );
+        }
+      }
+    }
+    
+    if( t_attrib.column ){
+      if( !obj_lut[ t_attr.column.uniqueName ] ){
+        obj_lut[ t_attr.column.uniqueName ] = [];
+      }
+      obj_lut[ t_attr.column.uniqueName ].push( { "node":this, "attribute":t_attr } );
+    }
+  }
+  
+  return obj_lut;
+}
+
 
 //////////////////////////////////////
 //////////////////////////////////////

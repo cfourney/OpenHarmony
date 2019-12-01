@@ -43,7 +43,76 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//         $.oTimeline class          //
+//      $.oTimelineLayer class      //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+/**
+ * The base class for the $.oTimelineLayer.
+ * @constructor
+ * @classdesc  $.oTimelineLayer Base Class
+ * @param   {int}                      index                 The index of the layer on the timeline.
+ * @param   {oTimeline}                oTimelineObject       The timeline associated to this layer.
+ *
+ * @property {int}                     index                 The index of the layer on the timeline.
+ * @property {oTimeline}               timeline              The timeline associated to this layer.
+ * @property {string}                  layerType             The type of layer, either node or column.
+ * @property {oNode}                   node                  The node associated to the layer.
+ * @property {oAttribute[]}            attributes            The associated attributes to the layer.
+ * @property {oColumn}                 column                The column associated to the layer.
+ */
+$.oTimelineLayer = function( index, oTimelineObject ){
+    this.index    = index;
+    this.timeline = oTimelineObject;
+    
+    this._type = "timelineLayer";
+    
+    this.node       = false;
+    this.column     = false;
+    this.attributes = [];
+
+    if( Timeline.layerIsColumn( index ) ){
+      this.layerType     = 'column';
+      var col            = Timeline.layerToColumn( index ); 
+      
+      if( this.$.cache_columnToNodeAttribute && this.$.cache_columnToNodeAttribute[col] ){
+        this.attributes = [];
+        for( var n=0;n<this.$.cache_columnToNodeAttribute[col].length;n++ ){
+          this.attributes.push( this.$.cache_columnToNodeAttribute[col][n].attribute );
+          this.node   = this.$.cache_columnToNodeAttribute[col][n].node;
+          this.column = this.$.cache_columnToNodeAttribute[col][n].attribute.column;
+        }
+        
+      }else{
+        var pnode_idx      = Timeline.parentNodeIndex( index );
+        if( pnode_idx >= 0 ){
+          var pnode_name     = Timeline.layerToNode( pnode_idx );
+          this.node          = this.$.scene.$node( pnode_name );
+          this.attributes    = this.node.getAttributesByColumnName( col );
+
+          if( this.attributes.length == 0 ){
+            //Might be drawing.
+          }else{
+            this.column      = this.attributes[0].column;
+          }
+        }else{
+          //Find a drawing module if its that type.
+        }
+      }
+    }else if( Timeline.layerIsNode( index ) ){
+      this.layerType     = 'node';
+      var node_name      = Timeline.layerToNode( index );
+      this.node          = this.$.scene.$node( pnode_name );
+    }
+}
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//         $.oTimeline class        //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -58,7 +127,7 @@
  * @param   {oScene}                   oSceneObject          The scene object of the DOM.
  *
  * @property {int}                     display               The display node's path.
- * @property {oColumnObject}           composition           The composition order of the scene.
+ * @property {string[]}                composition           The composition order of the scene.
  * @property {oScene}                  scene                 The scene object of the DOM.
  */
 $.oTimeline = function( display, oSceneObject ){
@@ -66,38 +135,34 @@ $.oTimeline = function( display, oSceneObject ){
     this.composition = ''
     this.scene = oSceneObject;
    
-    if (node.type(this.display) == '') {
-        this.composition = compositionOrder.buildDefaultCompositionOrder();
-    }else{
-        this.composition = compositionOrder.buildCompositionOrderForDisplay(display);
-    }
-   
+    //Build the initial composition.
+    this.refresh();
+    this.buildLayerCache();
 }
  
 // Properties
-
 /**
  * The node layers in the scene, based on the timeline's order given a specific display.
- * @name $.oTimeline#layers
+ * @name $.oTimeline#compositionLayers
  * @type {oNode[]}
  */
-Object.defineProperty($.oTimeline.prototype, 'layers', {
+Object.defineProperty($.oTimeline.prototype, 'compositionLayers', {
     get : function(){
-        var _timeline = this.layersList;
-        var _scene = this.scene;
+        var _timeline = this.compositionLayersList;
+        var _scene    = this.scene;
        
         _timeline = _timeline.map( function(x){return _scene.getNodeByPath(x)} );
-       
+        
         return _timeline;
     }
 });
  
 /**
  * Gets the paths of the layers in order, given the specific display's timeline.
- * @name $.oTimeline#layersList
+ * @name $.oTimeline#compositionLayersList
  * @type {string[]}
  */
-Object.defineProperty($.oTimeline.prototype, 'layersList', {
+Object.defineProperty($.oTimeline.prototype, 'compositionLayersList', {
     get : function(){
         var _composition = this.composition;
         var _timeline = [];
@@ -109,3 +174,80 @@ Object.defineProperty($.oTimeline.prototype, 'layersList', {
         return _timeline;
     }
 });
+
+
+/**
+ * Gets the list of layers as oTimelineLayer objects.
+ * @name $.oTimeline#layers
+ * @type {string[]}
+ */
+Object.defineProperty($.oTimeline.prototype, 'layers', {
+    get : function(){
+        var olayers = [];
+        for( var n=0; n<Timeline.numLayers; n++ ){
+          olayers.push( new this.$.oTimelineLayer( n, this ) );
+        }
+       
+        return olayers;
+    }
+});
+
+/**
+ * Gets the list of selected layers as oTimelineLayer objects.
+ * @name $.oTimeline#selectedLayers
+ * @type {string[]}
+ */
+Object.defineProperty($.oTimeline.prototype, 'selectedLayers', {
+    get : function(){
+        var olayers = [];
+        for( var n=0; n<Timeline.numLayerSel; n++ ){
+          olayers.push( new this.$.oTimelineLayer( Timeline.selToLayer( n ), this ) );
+        }
+        
+        return olayers;
+    }
+});
+
+
+/**
+ * Refreshes the oTimeline's cached listing- in the event it changes in the runtime of the script.
+ */
+$.oTimeline.prototype.refresh = function( ){
+    if (node.type(this.display) == '') {
+        this.composition = compositionOrder.buildDefaultCompositionOrder();
+    }else{
+        this.composition = compositionOrder.buildCompositionOrderForDisplay(display);
+    }
+    
+}
+
+
+/**
+ * Build column to oNode/Attribute lookup cache. Makes the layer generation faster if using oTimeline.layers, oTimeline.selectedLayers
+ */
+$.oTimeline.prototype.buildLayerCache = function( forced ){
+  if (typeof forced === 'undefined') forced = false;
+  
+  var cdate   = (new Date).getTime();
+  var rebuild = forced;
+  if( !this.$.cache_columnToNodeAttribute_date ){
+    rebuild = true;
+  }else if( !rebuild ){
+    if( ( cdate - this.$.cache_columnToNodeAttribute_date ) > 1000*10 ){
+      rebuild = true;
+    }
+  }
+  
+  if(rebuild){
+    var nodeLayers = this.compositionLayers;
+    
+    if( this.$.cache_nodeAttribute ){
+      this.$.cache_columnToNodeAttribute = {};
+    }
+    
+    for( var n=0;n<nodeLayers.length;n++ ){
+      this.$.cache_columnToNodeAttribute    = nodeLayers[n].getAttributesColumnCache( this.$.cache_columnToNodeAttribute );
+    }
+    this.$.cache_columnToNodeAttribute_date = cdate;
+  }
+}

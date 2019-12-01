@@ -51,6 +51,8 @@
 $.oList = function(array, startIndex){
     if(typeof startIndex == 'undefined') var startIndex = 0;
     
+    this._type = "list";
+    
     this.currentIndex = 0;
     
     for (var i in array){

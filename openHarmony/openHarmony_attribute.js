@@ -118,24 +118,27 @@ $.oAttribute.prototype.subAttributes_oldVersion = function ( _subAttributes ){
           sub_attrs = [ 'x', 'y', 'z' ];
           break
         case "ROTATION_3D" :
-          // System.println( "ROTATION_3D Not Implemented" );
+          sub_attrs = [ 'anglex', 'angley', 'anglez' ];
           break
         case "SCALE_3D" :
-          // System.println( "SCALE3D Not Implemented" );
+          sub_attrs = [ 'x', 'y', 'z' ];
+          break
+        case "DRAWING" :
+          sub_attrs = [ 'element', 'element.layer', 'elementMode', 'customName.name' ];
           break
         default:
           break
     }
     
-  for( var n=0;n<sub_attrs.length;n++ ){
-    var _attr = node.getAttr( this.node.path, 1, this._keyword+"."+sub_attrs[n] );  
-    if( _attr ){
-      var _subAttribute = new this.$.oAttribute( this.node, _attr, this );  
-      this[ sub_attrs[n] ] = _subAttribute;  
-      _subAttributes.push( _subAttribute );
+    for( var n=0;n<sub_attrs.length;n++ ){
+      var _attr = node.getAttr( this.node.path, 1, this._keyword+"."+sub_attrs[n] );  
+      if( _attr ){
+        var _subAttribute = new this.$.oAttribute( this.node, _attr, this );  
+        this[ sub_attrs[n] ] = _subAttribute;  
+        _subAttributes.push( _subAttribute );
+      }
     }
-  }
-  
+    
   return _subAttributes;
 }
  

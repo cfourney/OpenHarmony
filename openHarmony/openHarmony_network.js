@@ -81,14 +81,14 @@ $.oNetwork = function( ){
 }
 
 
-// /**
- // *  Connects to HTTP and gets the text response from a web site/API.<br><b>Note, Harmony has issues with HTTPS, useCurl=true prevents this</b>
- // * @param   {string}       address                    The address for the web query.
- // * @param   {function}     callback_func              Providing a callback function prevents blocking, and will respond on this function. The callback function is in form func( results ){}
- // * @param   {bool}         use_json                   In the event of a JSON api, this will return an object converted from the returned JSON.
- // *  
- // * @return: {string/object}       The resulting object/string from the query -- otherwise a bool as false when an error occured..
- // */
+/**
+ *  Connects to HTTP and gets the text response from a web site/API.<br><b>Note, Harmony has issues with HTTPS, useCurl=true prevents this</b>
+ * @param   {string}       address                    The address for the web query.
+ * @param   {function}     callback_func              Providing a callback function prevents blocking, and will respond on this function. The callback function is in form func( results ){}
+ * @param   {bool}         use_json                   In the event of a JSON api, this will return an object converted from the returned JSON.
+ *  
+ * @return: {string/object}       The resulting object/string from the query -- otherwise a bool as false when an error occured..
+ */
 $.oNetwork.prototype.webQuery = function ( address, callback_func, use_json ){
   if (typeof callback_func === 'undefined') var callback_func = false;
   if (typeof use_json === 'undefined') var use_json = false;
@@ -266,14 +266,14 @@ $.oNetwork.prototype.webQuery = function ( address, callback_func, use_json ){
 }
 
 
-// /**
- // *  Downloads a file from the internet at the given address<br><b>Note, only implemented with useCurl=true.</b>
- // * @param   {string}       address                    The address for the file to be downloaded.
- // * @param   {function}     path                       The local file path to save the download.
- // * @param   {bool}         replace                    Replace the file if it exists.
- // *  
- // * @return: {string/object}       The resulting object/string from the query -- otherwise a bool as false when an error occured..
- // */
+/**
+ *  Downloads a file from the internet at the given address<br><b>Note, only implemented with useCurl=true.</b>
+ * @param   {string}       address                    The address for the file to be downloaded.
+ * @param   {function}     path                       The local file path to save the download.
+ * @param   {bool}         replace                    Replace the file if it exists.
+ *  
+ * @return: {string/object}       The resulting object/string from the query -- otherwise a bool as false when an error occured..
+ */
 $.oNetwork.prototype.downloadSingle = function ( address, path, replace ){
   if (typeof replace === 'undefined') var replace = false;
   
@@ -309,13 +309,13 @@ $.oNetwork.prototype.downloadSingle = function ( address, path, replace ){
 }
 
 
-// /**
- // *  Threads multiple downloads at a time [10 concurrent].  Downloads a from the internet at the given addresses<br><b>Note, only implemented with useCurl=true.</b>
- // * @param   {object[]}     instructions               The instructions for download, in format [ { "path": localPathOnDisk, "url":"DownloadPath" } ]
- // * @param   {bool}         replace                    Replace the file if it exists.
- // *  
- // * @return: {bool[]}       The results of the download, for each file in the instruction bool[]
- // */
+/**
+ *  Threads multiple downloads at a time [10 concurrent].  Downloads a from the internet at the given addresses<br><b>Note, only implemented with useCurl=true.</b>
+ * @param   {object[]}     instructions               The instructions for download, in format [ { "path": localPathOnDisk, "url":"DownloadPath" } ]
+ * @param   {bool}         replace                    Replace the file if it exists.
+ *  
+ * @return: {bool[]}       The results of the download, for each file in the instruction bool[]
+ */
 $.oNetwork.prototype.downloadMulti = function ( address_path, replace ){
   if (typeof replace === 'undefined') var replace = false;
   
