@@ -192,8 +192,8 @@ Object.defineProperty($.oAttribute.prototype, 'type', {
  */
 Object.defineProperty($.oAttribute.prototype, 'column', {
     get : function(){
-        var _column = node.linkedColumn ( this.node.path, this._keyword );
-        if( _column ){
+        var _column = node.linkedColumn ( this.node.path, this._keyword ); 
+        if( _column && _column.length ){
           return this.node.scene.$column( _column, this );
         }else{
           return null;
@@ -340,7 +340,6 @@ $.oAttribute.prototype.getKeyFrames = function(){
     _frames = _frames.filter(function(x){return x.isKeyFrame});
     return _frames;
 }
- 
 
 /**
  * Sets the value of the attribute at the given frame.
@@ -348,22 +347,29 @@ $.oAttribute.prototype.getKeyFrames = function(){
  * @param   {int}        [frame]               The frame at which to set the value, if not set, assumes 1
  */
 $.oAttribute.prototype.setValue = function (value, frame) {
-    if (typeof frame === 'undefined') var frame = 1;
+    var frame_set = true;
+    if (typeof frame === 'undefined'){
+      frame     = 1;
+      frame_set = false;
+    }
     
     var _attr = this.attributeObject;
     var _column = this.column;
     var _type = this.type;
     var _animate = false;
 
-    if (frame != 1 && _column == null){
+    if ( frame_set && _column == null ){
         // generate a new column to be able to animate
         var _doc = new this.$.oScene();
         _column = _doc.addColumn()
         this.column = _column;
-        _animate = true;
     }
     
-    switch (_type){
+    if( _column ){
+      _animate = true;
+    }
+    
+    switch(_type){
         // TODO: sanitize input
         case "COLOR" :
             value = new this.$.oColorValue(value)
@@ -409,12 +415,13 @@ $.oAttribute.prototype.setValue = function (value, frame) {
         default :
             // MessageLog.trace(this.keyword+" "+(typeof value))
             try{
-                _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+                _animate ? _attr.setValueAt( value, frame ) : _attr.setValue( value );
             }catch(err){
-                throw new Error("Couldn't set attribute "+this.keyword+" to value "+value+". Incompatible type.")
+                node.setTextAttr( this.node.path, this._keyword, frame, value );
+                
+                // throw new Error("Couldn't set attribute "+this.keyword+" to value "+value+". Incompatible type.")
             }
     }
- 
 }
  
 
@@ -433,7 +440,7 @@ $.oAttribute.prototype.getValue = function (frame) {
     var _attr = this.attributeObject;
     var _type = this.type;
     var _value;
-    var _column = this.column
+    var _column = this.column;
 
     //MessageBox.information("getting "+this.keyword)
     //MessageBox.information(_type)
@@ -488,6 +495,8 @@ $.oAttribute.prototype.getValue = function (frame) {
             
         case 'DRAWING':
             // override with returning an oElement object
+            System.println( "DRAWING: " + this.keyword );
+            
             value = _column.element;
             break;
            
@@ -506,7 +515,7 @@ $.oAttribute.prototype.getValue = function (frame) {
             _value = _attr.textValueAt(frame)
            
             // in case of subattributes, create a fake string that can have properties
-            if (_attr.hasSubAttributes()){
+            if ( _attr.hasSubAttributes && _attr.hasSubAttributes() ){
                 _value = { value:_value };
                 _value.toString = function(){ return _value }
             }

@@ -176,7 +176,7 @@ $.global  = this;
 //---- Cache Helpers ------
 $.cache_columnToNodeAttribute = {};
 $.cache_columnToNodeAttribute_date = (new Date()).getTime();
-
+$.cache_oNode = {};
 
 
 //---- Instantiate Class $ DOM Access ------

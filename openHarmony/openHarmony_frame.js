@@ -59,7 +59,7 @@
  *
  * @property {int}                     frameNumber           The frame to which this references.
  * @property {oColumn}                 column                The oColumnObject to which this frame references.
- * @property {oAttribute}              oAttributeObject       The oAttributeObject to which this frame references.
+ * @property {oAttribute}              attributeObject       The oAttributeObject to which this frame references.
  * @property {int}                     subColumns            The subcolumn index.
  */
 $.oFrame = function( frameNumber, oColumnObject, subColumns ){
@@ -116,7 +116,13 @@ Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
     
       var _column = this.column.uniqueName
       if (this.column.type == 'DRAWING' || this.column.type == 'TIMING'){
-          return !column.getTimesheetEntry(_column, 1, this.frameNumber).heldFrame
+        if( column.getTimesheetEntry){
+          return !column.getTimesheetEntry(_column, 1, this.frameNumber).heldFrame;
+        }else{
+          //Older versions of Harmony.
+          var timing = column.getDrawingTimings( _column );
+          return ( timing.indexOf(this.frameNumber)>=0 );
+        }
       }else if (['BEZIER', '3DPATH', 'EASE', 'QUATERNION'].indexOf(this.column.type) != -1){
           return column.isKeyFrame(_column, 1, this.frameNumber)
       }
@@ -163,7 +169,7 @@ Object.defineProperty($.oFrame.prototype, 'duration', {
     set : function( val ){
       throw "Not implemented.";
     }
-})
+});
  
  
 /**
@@ -173,17 +179,24 @@ Object.defineProperty($.oFrame.prototype, 'duration', {
  */
 Object.defineProperty($.oFrame.prototype, 'isBlank', {
     get : function(){
-      if( !this.column ){
+      var col = this.column;
+      if( !col ){
         return false;
       }
       
-      return column.getTimesheetEntry(this.column.uniqueName, 1, this.frameNumber).emptyCell;
+      if ( col.type != "DRAWING") return false;
+      
+      if( !column.getTimesheetEntry ){
+        return (this.value == "");
+      }
+      
+      return column.getTimesheetEntry( col.uniqueName, 1, this.frameNumber ).emptyCell;
     },
     
     set : function( val ){
       throw "Not implemented.";
     }
-})
+});
  
 
 /**
@@ -210,7 +223,7 @@ Object.defineProperty($.oFrame.prototype, 'startFrame', {
     set : function( val ){
       throw "Not implemented.";
     }
-})
+});
  
  
 /**
@@ -238,7 +251,197 @@ Object.defineProperty($.oFrame.prototype, 'marker', {
         if (_column.type != "DRAWING") throw "can't set 'marker' property on columns that are not 'DRAWING' type"
         column.setDrawingType( _column.uniqueName, this.frameNumber, marker );
     }
+});
+ 
+ 
+/**
+ * Find the index of this frame in the corresponding columns keyframes. -1 if unavailable.
+ * @name $.oFrame#keyframeIndex
+ * @type {int}
+ */
+Object.defineProperty($.oFrame.prototype, 'keyframeIndex', {
+    get : function(){
+        var _kf = this.column.getKeyFrames().map(function(x){return x.frameNumber});
+        var _kfIndex = _kf.indexOf(this.frameNumber);
+        return _kfIndex;
+    }
+});
+ 
+ 
+/**
+ * Find the the nearest keyframe to this, on the left. Returns itself if it is a key.
+ * @name $.oFrame#keyframeLeft
+ * @type {oFrame}
+ */
+Object.defineProperty($.oFrame.prototype, 'keyframeLeft', {
+    get : function(){
+        var kfs = this.column.getKeyFrames();
+        var lkf = false;
+        
+        for( var n=0;n<kfs.length;n++ ){
+          if( kfs[n].frameNumber <= this.frameNumber ){
+            lkf = kfs[n];
+          }else{
+            return lkf;
+          }
+        }
+        return lkf;
+    }
+});
+ 
+ 
+/**
+ * Find the the nearest keyframe to this, on the right.
+ * @name $.oFrame#keyframeRight
+ * @type {oFrame}
+ */
+Object.defineProperty($.oFrame.prototype, 'keyframeRight', {
+    get : function(){
+        var kfs = this.column.getKeyFrames();       
+        for( var n=0;n<kfs.length;n++ ){
+          if( kfs[n].frameNumber > this.frameNumber ){
+            return kfs[n];
+          }
+        }
+        return false;
+    }
+});
+ 
+ 
+/**
+ * Determines the frame's continuity, smooth or otherwise. No setter yet.
+ * @name $.oFrame#continuity
+ * @type {string}
+ */
+Object.defineProperty($.oFrame.prototype, 'continuity', {
+    get : function(){
+        // Not a valid property for non keyframes and blank frames
+        var _kfIndex = this.keyframeIndex;
+        if ( _kfIndex == -1 ) return null;
+        if ( this.isBlank ) return null;
+
+        var _column = this.column.uniqueName;
+
+        if(func.pointConstSeg (_column, _kfIndex)){
+            var _smooth = "CONSTANT";
+        }else{
+            var _smooth = func.pointContinuity(_column, _kfIndex);
+        }
+
+        return _smooth;
+    }, 
+    set : function( new_continuity ){
+      throw "Not yet implemented";
+    }
+});
+
+
+
+/**
+ * Gets the ease parameter of the segment, easing into this frame.
+ * @name $.oFrame#easeIn
+ * @type {oPoint/object}
+ */
+Object.defineProperty($.oFrame.prototype, 'easeIn', {
+    get : function(){
+        // Not a valid property for non keyframes and blank frames
+        var _kfIndex = this.keyframeIndex;
+        if (_kfIndex == -1) return null;
+        if (this.isBlank) return null;
+
+        var _column = this.column.uniqueName;
+
+        if(this.column.easeType == "BEZIER"){
+            var _leftHandleX = func.pointHandleLeftX (_column, _kfIndex);
+            var _leftHandleY = func.pointHandleLeftY (_column, _kfIndex);
+            return new this.$.oPoint (_leftHandleX, _leftHandleY, 0);
+        }
+
+        if(this.column.easeType == "EASE"){
+            var _frames = func.pointEaseIn(_column, _kfIndex);
+            var _angle = func.angleEaseIn(_column, _kfIndex);
+            return {frames: _frames, angle: _angle}
+        }
+
+    },
+
+    set : function(newEaseIn){
+        // Not a valid property for non keyframes and blank frames
+        var _kfIndex = this.keyframeIndex;
+        if (_kfIndex == -1) throw new Error("can't set ease on a non keyframe");
+        if (this.isBlank) throw new Error("can't set ease on an empty frame");
+
+        var _column = this.column.uniqueName;
+
+        if(this.column.easeType == "BEZIER"){
+            // Provided easeIn parameter must be a point object representing the left bezier
+            var _rightHandle = this.easeOut;
+            
+            func.setBezierPoint (_column, this.frameNumber, this.value, newEaseIn.x, newEaseIn.y, _rightHandle.x, _rightHandle.y, this.continuity == "CONSTANT", this.continuity)
+        }
+
+        if(this.column.easeType == "EASE"){
+            // Provided easeIn parameter must be an object with a 'frame' and 'angle' property
+            var _easeOut = this.easeOut;
+
+            func.setEasePoint (_column, this.frameNumber, this.value, newEaseIn.frame, newEaseIn.angle, _easeOut.frame, _easeOut.angle, this.continuity== "CONSTANT", this.continuity)
+        }
+    }
 })
+
+
+/**
+ * Gets the ease parameter of the segment, easing out of this frame.
+ * @name $.oFrame#easeOut
+ * @type {oPoint/object}
+ */
+Object.defineProperty($.oFrame.prototype, 'easeOut', {
+    get : function(){
+        // Not a valid property for non keyframes and blank frames
+        var _kfIndex = this.keyframeIndex;
+        if (_kfIndex == -1) return null;
+        if (this.isBlank) return null;
+
+        var _column = this.column.uniqueName;
+
+        if(this.column.easeType == "BEZIER"){
+            var _rightHandleX = func.pointHandleRightX (_column, _kfIndex);
+            var _rightHandleY = func.pointHandleRightY (_column, _kfIndex);
+            return new this.$.oPoint (_rightHandleX, _rightHandleY, 0);
+        }
+
+        if(this.column.easeType == "EASE"){
+            var _frames = func.pointEaseOut(_column, _kfIndex);
+            var _angle = func.angleEaseOut(_column, _kfIndex);
+            return {frames: _frames, angle: _angle}
+        }
+    },
+
+    set : function(newEaseOut){
+        // Not a valid property for non keyframes and blank frames
+        var _kfIndex = this.keyframeIndex;
+        if (_kfIndex == -1) throw new Error("can't set ease on a non keyframe");
+        if (this.isBlank) throw new Error("can't set ease on an empty frame");
+
+        var _column = this.column.uniqueName;
+
+        if(this.column.easeType == "BEZIER"){
+            // Provided newEaseOut parameter must be a point object representing the left bezier
+            var _leftHandle = this.easeIn;
+            func.setBezierPoint( _column, this.frameNumber, this.value, newEaseOut.x, newEaseOut.y, _leftHandle.x, _leftHandle.y, this.continuity == "CONSTANT", this.continuity)
+        }
+
+        if(this.column.easeType == "EASE"){
+            // Provided easeIn parameter must be an object with a 'frame' and 'angle' property
+            var _easeIn = this.easeIn;
+
+            func.setEasePoint( _column, this.frameNumber, this.value, _easeIn.frame, _easeIn.angle, newEaseOut.frame, newEaseOut.angle, this.continuity == "CONSTANT", this.continuity)
+        }
+    }
+});
+ 
+ 
+ 
  
  
 /**
@@ -280,4 +483,38 @@ $.oFrame.prototype.extend = function( duration, replace ){
         }
         _frames[startExtending+i].value = _value;
     }  
+}
+
+
+/**
+ * Sets a keyframe at the given frame. This uses a cheat at the moment and should be reworked. Does setAttrib work this way?
+ */
+$.oFrame.prototype.setKey = function(  ) {
+  if (typeof constseg === 'undefined') constseg = true;
+  var _column = this.column;
+  
+  if( !_column ){ return; }
+  
+  if( _column.easeType == "BEZIER" ){
+      //USING A CHEAT TO AUTOMATICALLY ADD A KEYFRAME WITH SET TEXT ATTR.
+      var val = this.value; 
+
+      //IF THE VALUE IS UNCHANGED, IT DOESNT CREATE A KEY, SO CHANGE IT JUST A LITTLE.
+      this.value = val+0.001;
+      this.value = val;
+  }else if(this.column.easeType == "EASE"){
+      //USING A CHEAT TO AUTOMATICALLY ADD A KEYFRAME WITH SET TEXT ATTR.
+      var val = this.value; 
+
+      //IF THE VALUE IS UNCHANGED, IT DOESNT CREATE A KEY, SO CHANGE IT JUST A LITTLE.
+      this.value = val+0.001;
+      this.value = val;
+  }else{
+    System.println( "NOT IMPLEMENTED KEY SET FOR " + this.column.easeType  );
+    var val = this.value; 
+
+    //IF THE VALUE IS UNCHANGED, IT DOESNT CREATE A KEY, SO CHANGE IT JUST A LITTLE.
+    this.value = val+0.001;
+    this.value = val;
+  }
 }

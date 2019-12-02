@@ -170,11 +170,30 @@ Object.defineProperty($.oScene.prototype, 'currentFrame', {
  * @return {oNode}                     The node found given the query.
  */
 $.oScene.prototype.getNodeByPath = function(fullPath){
-    if (node.type(fullPath) == "") return null; // TODO: remove this if we implement a .exists property for oNode
-    if (node.type(fullPath) == "READ") return new this.$.oDrawingNode( fullPath, this );
-    if (node.type(fullPath) == "PEG") return new this.$.oPegNode( fullPath, this );
-    if (node.type(fullPath) == "GROUP") return new this.$.oGroupNode( fullPath, this );
-    return new this.$.oNode( fullPath, this );
+    var node_type = node.type(fullPath);
+    if (node_type == "") return null; // TODO: remove this if we implement a .exists property for oNode
+    
+    if( this.$.cache_oNode[fullPath] ){
+      //Check for consistent type.
+      if ( this.$.cache_oNode[fullPath].type == node_type ){
+        return this.$.cache_oNode[fullPath];
+      }
+    }
+    
+    var tn = false;
+    if (node.type(fullPath) == "READ"){
+      tn = new this.$.oDrawingNode( fullPath, this );
+    }else if (node.type(fullPath) == "PEG"){
+      tn = new this.$.oPegNode( fullPath, this )
+    }else if (node.type(fullPath) == "GROUP"){
+      tn = new this.$.oGroupNode( fullPath, this )
+    }else{
+      tn = new this.$.oNode( fullPath, this );
+    }
+    
+    this.$.cache_oNode[fullPath] = tn;
+    
+    return tn;
 }
 
 /**

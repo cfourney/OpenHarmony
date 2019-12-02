@@ -68,9 +68,7 @@ $.oColumn = function( uniqueName, oAttributeObject ){
   
   //Helper cache for subsequent actions.
   if( !this.$.cache_columnToNodeAttribute ){ this.$.cache_columnToNodeAttribute = {}; }
-  if( !this.$.cache_columnToNodeAttribute[this.uniqueName] ){ this.$.cache_columnToNodeAttribute[this.uniqueName] = []; }
-  
-  this.$.cache_columnToNodeAttribute[this.uniqueName].push( { "node":oAttributeObject.node, "attribute": this } );
+  this.$.cache_columnToNodeAttribute[this.uniqueName] = { "node":oAttributeObject.node, "attribute": this, "date": (new Date()).getTime() };
 }
 
 
@@ -197,6 +195,25 @@ Object.defineProperty($.oColumn.prototype, 'subColumns', {
     set : function(){
       throw "Not available."
     }
+});
+ 
+
+Object.defineProperty($.oColumn.prototype, 'easeType', {
+    get : function(){
+        switch(this.type){
+            case "BEZIER":
+                return "BEZIER";
+            case "3DPATH":
+                return column.getVelocityType( this.uniqueName );
+            default:
+                return null;
+        }
+    },
+
+    set : function (){
+        //TODO
+        throw new Error("oColumn.easeType (set) - not yet implemented");
+    }
 })
  
  
@@ -276,6 +293,9 @@ $.oColumn.prototype.duplicate = function() {
  * @return {$.oFrame[]}    Provides the array of frames from the column.
  */
 $.oColumn.prototype.getKeyFrames = function(){
+    //This can be done better via Func and bezier analysis. Would be a lot faster.
+    System.println( "NOTE: reimplement with bezier usage." );
+    
     var _frames = this.frames;
     _frames = _frames.filter(function(x){return x.isKeyFrame});
     return _frames;

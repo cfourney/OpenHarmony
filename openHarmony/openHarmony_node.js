@@ -70,7 +70,8 @@ $.oNode = function( path, oSceneObject ){
     this._type = 'node';
     
     // generate properties from node attributes to allow for dot notation access
-     var _attributes = this.attributes
+    this.attributesBuildCache();
+    var _attributes = this.attributes
      
     // for each attribute, create a getter setter as a property of the node object 
     // that handles the animated/not animated duality
@@ -79,7 +80,31 @@ $.oNode = function( path, oSceneObject ){
         var _attr = _attributes[i]
         this.setAttrGetterSetter(_attr)
     }
+    
 }
+
+/**
+ * Initialize the attribute cache.
+ * @private 
+ */
+$.oNode.prototype.attributesBuildCache = function (){
+  //Cache time can be used at later times, to check for auto-rebuild of caches. Not yet implemented.
+  this._cacheTime = (new Date()).getTime();   
+
+  var _attributesList = node.getAttrList( this.path, 1 );
+  var _attributes = {};
+  
+  for (var i in _attributesList){
+
+      var _attribute = new this.$.oAttribute(this, _attributesList[i]);
+      var _keyword = _attribute.keyword;
+
+      _attributes[_keyword] = _attribute;
+  }
+  
+  this._attributes_cached = _attributes;
+}
+
 
 /**
  * Private function to create attributes setters and getters as properties of the node
@@ -575,18 +600,7 @@ Object.defineProperty($.oNode.prototype, 'outs', {
 */
 Object.defineProperty($.oNode.prototype, 'attributes', {
     get : function(){
-        var _attributesList = node.getAttrList( this.path, 1 );
-        var _attributes = {};
-        
-        for (var i in _attributesList){
-     
-            var _attribute = new this.$.oAttribute(this, _attributesList[i]);
-            var _keyword = _attribute.keyword;
-     
-            _attributes[_keyword] = _attribute;
-        }
-     
-        return _attributes;
+        return this._attributes_cached;
     }
 }); 
 
@@ -948,12 +962,22 @@ $.oNode.prototype.toString = function(){
 
 
  /**
- * Provides a matching attribute based on the column name provided.
+ * Provides a matching attribute based on the column name provided. Assumes only one match at the moment.
  * @param   {string}       columnName                    The column name to search.
- * @return  {oAttribute[]}   The matched attribute object, given the keyword.
+ * @return  {oAttribute}   The matched attribute object, given the column name.
  */
-$.oNode.prototype.getAttributesByColumnName = function( columnName ){
-  var attribs = [];
+$.oNode.prototype.getAttributeByColumnName = function( columnName ){
+  // var attribs = [];
+  
+  //Initially check for cache.
+  var cdate = (new Date()).getTime();
+  if( this.$.cache_columnToNodeAttribute[columnName] ){
+    if( ( cdate - this.$.cache_columnToNodeAttribute[columnName].date ) < 5000 ){
+      //Cache is in form : { "node":oAttributeObject.node, "attribute": this, "date": (new Date()).getTime() }
+      // attribs.push( this.$.cache_columnToNodeAttribute[columnName].attribute );
+      return this.$.cache_columnToNodeAttribute[columnName].attribute;
+    }
+  }
   
   for( var n in this.attributes ){
     var t_attrib = this.attributes[n];
@@ -963,7 +987,8 @@ $.oNode.prototype.getAttributesByColumnName = function( columnName ){
         var t_attr = t_attrib.subAttributes[t];
         if( t_attr.column ){
           if( t_attr.column.uniqueName == columnName){
-            attribs.push( t_attr );
+            // attribs.push( t_attr );
+            return t_attr;
           }
         }
       }
@@ -971,12 +996,14 @@ $.oNode.prototype.getAttributesByColumnName = function( columnName ){
     
     if( t_attrib.column ){
       if(t_attrib.column.uniqueName == columnName){
-        attribs.push( t_attrib );
+        // attribs.push( t_attrib );
+        return t_attrib;
       }
     }
   }
   
-  return attribs;
+  return false;
+  // return attribs;
 }
 
  /**
@@ -993,19 +1020,21 @@ $.oNode.prototype.getAttributesColumnCache = function( obj_lut ){
       for( var t=0;t<t_attrib.subAttributes.length;t++ ){
         var t_attr = t_attrib.subAttributes[t];
         if( t_attr.column ){
-          if( !obj_lut[ t_attr.column.uniqueName ] ){
-            obj_lut[ t_attr.column.uniqueName ] = [];
-          }
-          obj_lut[ t_attr.column.uniqueName ].push( { "node":this, "attribute":t_attr } );
+          // if( !obj_lut[ t_attr.column.uniqueName ] ){
+            // obj_lut[ t_attr.column.uniqueName ] = [];
+          // }
+          // obj_lut[ t_attr.column.uniqueName ].push( { "node":this, "attribute":t_attr } );
+          obj_lut[ t_attr.column.uniqueName ] = { "node":this, "attribute":t_attr };
         }
       }
     }
     
     if( t_attrib.column ){
-      if( !obj_lut[ t_attr.column.uniqueName ] ){
-        obj_lut[ t_attr.column.uniqueName ] = [];
-      }
-      obj_lut[ t_attr.column.uniqueName ].push( { "node":this, "attribute":t_attr } );
+      // if( !obj_lut[ t_attr.column.uniqueName ] ){
+        // obj_lut[ t_attr.column.uniqueName ] = [];
+      // }
+      // obj_lut[ t_attr.column.uniqueName ].push( { "node":this, "attribute":t_attr } );
+      obj_lut[ t_attr.column.uniqueName ] = { "node":this, "attribute":t_attr };
     }
   }
   
