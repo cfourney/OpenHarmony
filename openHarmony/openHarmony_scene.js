@@ -72,10 +72,265 @@ $.oScene = function( ){
 //-------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
 
+
+/**
+ * The folder that contains this scene.
+ * @name $.oScene#path
+ * @type {$.oFolder}
+ */
+Object.defineProperty($.oScene.prototype, 'path', {
+    get : function(){
+        return new this.$.oFolder( scene.currentProjectPath );
+    },
+    set : function(val){
+        throw "Not yet implemented"; //Perhaps a save as/save new version?
+    }
+});
+
+/**
+ * The stage file of the scene.
+ * @name $.oScene#stage
+ * @type {$.oFile}
+ */
+Object.defineProperty($.oScene.prototype, 'stage', {
+    get : function(){
+        return this.path + "/" + scene.currentVersionName() + ".xstage";
+    },
+    set : function(val){
+        throw "Not yet implemented"; //Perhaps a save as/save new version?
+    }
+});
+
+/**
+ * The sceneName file of the scene.
+ * @name $.oScene#sceneName
+ * @type {string}
+ */
+Object.defineProperty($.oScene.prototype, 'sceneName', {
+    get : function(){
+        return scene.currentScene();
+    },
+    set : function(val){
+        throw "Not yet implemented";
+    }
+});
+
+
+
+
+/**
+ * The startframe to the playback of the scene.
+ * @name $.oScene#startFrame
+ * @type {int}
+ */
+Object.defineProperty($.oScene.prototype, 'startFrame', {
+    get : function(){
+        return scene.getStartFrame();
+    },
+    set : function(val){
+        scene.setStartFrame( val );
+    }
+});
+
+/**
+ * The stopFrame to the playback of the scene.
+ * @name $.oScene#startFrame
+ * @type {int}
+ */
+Object.defineProperty($.oScene.prototype, 'getStopFrame', {
+    get : function(){
+        return scene.getStartFrame();
+    },
+    set : function(val){
+        scene.setStopFrame( val );
+    }
+});
+
+/**
+ * The frame rate of the scene.
+ * @name $.oScene#framerate
+ * @type {float}
+ */
+Object.defineProperty($.oScene.prototype, 'framerate', {
+    get : function(){
+        return scene.getFrameRate();
+    },
+    set : function(val){
+        return scene.setFrameRate( val );
+    }
+});
+
+
+/**
+ * The horizontal aspect ratio.
+ * @name $.oScene#aspectRatioX
+ * @type {double}
+ */
+Object.defineProperty($.oScene.prototype, 'aspectRatioX', {
+    get : function(){
+        return scene.unitsAspectRatioX();
+    },
+    set : function(val){
+        scene.setUnitsAspectRatio( val, this.aspectRatioY );
+    }
+});
+
+/**
+ * The vertical aspect ratio.
+ * @name $.oScene#aspectRatioY
+ * @type {double}
+ */
+Object.defineProperty($.oScene.prototype, 'aspectRatioY', {
+    get : function(){
+        return scene.unitsAspectRatioY();
+    },
+    set : function(val){
+        scene.setUnitsAspectRatio( this.aspectRatioY, val );
+    }
+});
+
+/**
+ * The horizontal unit count.
+ * @name $.oScene#unitsX
+ * @type {double}
+ */
+Object.defineProperty($.oScene.prototype, 'unitsX', {
+    get : function(){
+        return scene.numberOfUnitsX();
+    },
+    set : function(val){
+        scene.setNumberOfUnits( val, this.unitsY, this.unitsZ );
+    }
+});
+
+/**
+ * The vertical unit count.
+ * @name $.oScene#unitsY
+ * @type {double}
+ */
+Object.defineProperty($.oScene.prototype, 'unitsY', {
+    get : function(){
+        return scene.numberOfUnitsY();
+    },
+    set : function(val){
+        scene.setNumberOfUnits( this.unitsX, val, this.unitsZ );
+    }
+});
+
+/**
+ * The depth unit count.
+ * @name $.oScene#unitsZ
+ * @type {double}
+ */
+Object.defineProperty($.oScene.prototype, 'unitsZ', {
+    get : function(){
+        return scene.numberOfUnitsZ();
+    },
+    set : function(val){
+        scene.setNumberOfUnits( this.unitsX, this.unitsY, val );
+    }
+});
+
+
+/**
+ * The center coordinates of the scene.
+ * @name $.oScene#center
+ * @type {$.oPoint}
+ */
+Object.defineProperty($.oScene.prototype, 'center', {
+    get : function(){
+        return new this.$.oPoint( scene.coordAtCenterX(), scene.coordAtCenterY(), 0.0 );
+    },
+    set : function( val ){
+        scene.setCoordAtCenter( val.x, val.y );
+    }
+});
+
+
+
+/**
+ * The horizontal resolution.
+ * @name $.oScene#resolutionX
+ * @type {int}
+ */
+Object.defineProperty($.oScene.prototype, 'resolutionX', {
+    get : function(){
+        return scene.currentResolutionX();
+    },
+});
+
+/**
+ * The vertical resolution.
+ * @name $.oScene#resolutionY
+ * @type {int}
+ */
+Object.defineProperty($.oScene.prototype, 'resolutionY', {
+    get : function(){
+        return scene.currentResolutionY();
+    },
+});
+
+/**
+ * The default horizontal resolution.
+ * @name $.oScene#resolutionX
+ * @type {int}
+ */
+Object.defineProperty($.oScene.prototype, 'defaultResolutionX', {
+    get : function(){
+        return scene.defaultResolutionX();
+    },
+    set : function(val){
+        scene.setDefaultResolution( val, this.defaultResolutionY, this.fov );
+    }
+});
+
+/**
+ * The default vertical resolution.
+ * @name $.oScene#resolutionY
+ * @type {int}
+ */
+Object.defineProperty($.oScene.prototype, 'defaultResolutionY', {
+    get : function(){
+        return scene.defaultResolutionY();
+    },
+    set : function(val){
+        scene.setDefaultResolution( this.defaultResolutionX, val, this.fov );
+    }
+});
+
+/**
+ * The field of view of the scene.
+ * @name $.oScene#fov
+ * @type {double}
+ */
+Object.defineProperty($.oScene.prototype, 'fov', {
+    get : function(){
+        return scene.defaultResolutionFOV();
+    },
+    set : function(val){
+        scene.setDefaultResolution( this.defaultResolutionX, this.defaultResolutionY, val );
+    }
+});
+
+
+/**
+ * Whether the scene is currently dirty (changes unsaved).
+ * @name $.oScene#dirty
+ * @type {bool}
+ */
+Object.defineProperty($.oScene.prototype, 'dirty', {
+    get : function(){
+        return scene.isDirty();
+    }
+});
+
+
+
+
 /**
  * Contains the list of nodes present in the scene.
  * @name $.oScene#nodes
- * @type {oNode[]}
+ * @type {$.oNode[]}
  */
 Object.defineProperty($.oScene.prototype, 'nodes', {
     get : function(){
@@ -84,11 +339,10 @@ Object.defineProperty($.oScene.prototype, 'nodes', {
     }
 });
 
-
 /**
  * Contains the list of columns present in the scene.
  * @name $.oScene#columns
- * @type {oColumn[]}
+ * @type {$.oColumn[]}
  */
 Object.defineProperty($.oScene.prototype, 'columns', {
     get : function(){
@@ -104,7 +358,7 @@ Object.defineProperty($.oScene.prototype, 'columns', {
 /**
  * Contains the list of scene palettes present in the scene.
  * @name $.oScene#palettes
- * @type {oPalette[]}
+ * @type {$.oPalette[]}
  */
 Object.defineProperty($.oScene.prototype, 'palettes', {
     get : function(){
@@ -167,7 +421,7 @@ Object.defineProperty($.oScene.prototype, 'currentFrame', {
  * Gets a node by the path.
  * @param   {string}   fullPath         The path of the node in question.
  *  
- * @return {oNode}                     The node found given the query.
+ * @return {$.oNode}                    The node found given the query.
  */
 $.oScene.prototype.getNodeByPath = function(fullPath){
     var node_type = node.type(fullPath);
@@ -199,9 +453,9 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
 /**
  * Gets a column by the name.
  * @param  {string}             uniqueName               The unique name of the column as a string.
- * @param  {oAttribute}         oAttributeObject         The oAttributeObject owning the column.
+ * @param  {$.oAttribute}       oAttributeObject         The oAttributeObject owning the column.
  *  
- * @return {oColumn}                    The node found given the query.
+ * @return {$.oColumn}                    The node found given the query.
  */
 $.oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
     var _type = column.type(uniqueName);
@@ -221,7 +475,7 @@ $.oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
  * Gets a palette by the path.
  * @param   {string}   name            The palette name to query and find.
  *  
- * @return  {oPalette}                 The oPalette found given the query.
+ * @return  {$.oPalette}                 The oPalette found given the query.
  */
 $.oScene.prototype.getPaletteByName = function(name){
     var _paletteList = PaletteObjectManager.getScenePaletteList();
@@ -237,7 +491,7 @@ $.oScene.prototype.getPaletteByName = function(name){
  * Gets a node by the path.
  * @param   {string}   fullPath         The path of the node in question.
  *  
- * @return  {oNode}                     The node found given the query.
+ * @return  {$.oNode}                     The node found given the query.
  */
 $.oScene.prototype.$node = function( fullPath ){
     return this.getNodeByPath( fullPath );
@@ -246,9 +500,9 @@ $.oScene.prototype.$node = function( fullPath ){
 /**
  * Gets a column by the name.
  * @param  {string}             uniqueName               The unique name of the column as a string.
- * @param  {oAttributeObject}   oAttributeObject         The oAttributeObject owning the column.
+ * @param  {$.oAttribute}       oAttributeObject         The oAttributeObject owning the column.
  *  
- * @return {oColumn}                    The node found given the query.
+ * @return {$.oColumn}          The node found given the query.
  */
 $.oScene.prototype.$column = function( uniqueName, oAttributeObject ){
     return this.getColumnByName( uniqueName, oAttributeObject );
@@ -258,7 +512,7 @@ $.oScene.prototype.$column = function( uniqueName, oAttributeObject ){
  * Gets a palette by the path.
  * @param   {string}   name            The palette name to query and find.
  *  
- * @return  {oPalette}                 The oPalette found given the query.
+ * @return  {$.oPalette}               The oPalette found given the query.
  */
 $.oScene.prototype.$palette = function( name ){
     return this.getPaletteByName( name );
@@ -267,9 +521,9 @@ $.oScene.prototype.$palette = function( name ){
 
 /**
  * Gets a node by the path.
- * @param   {bool}   recurse            Whether to recurse into groups.
+ * @param  {bool}   recurse            Whether to recurse into groups.
  *  
- * @return {oNode[]}                   The selected nodes.
+ * @return {$.oNode[]}                 The selected nodes.
  */
 $.oScene.prototype.getSelectedNodes = function( recurse, sort_result ){
     if (typeof recurse === 'undefined') var recurse = false;
@@ -302,7 +556,7 @@ $.oScene.prototype.getSelectedNodes = function( recurse, sort_result ){
  * Searches for a node based on the query.
  * @param   {string}   query            The query for finding the node[s].
  *  
- * @return {oNode[]}                   The node[s] found given the query.
+ * @return {$.oNode[]}                 The node[s] found given the query.
  */
 $.oScene.prototype.nodeSearch = function( query, sort_result ){
   if (typeof sort_result    === 'undefined') var sort_result = true;     //Avoid sorting, save time, if unnecessary and used internally.
@@ -592,9 +846,9 @@ $.oScene.prototype.nodeSearch = function( query, sort_result ){
  * @param   {string}   type            The type-name of the node to add.
  * @param   {string}   name            The name of the newly created node.
  * @param   {string}   group           The groupname to add the node.
- * @param   {oPoint}   nodePosition    The position for the node to be placed in the network.
+ * @param   {$.oPoint} nodePosition    The position for the node to be placed in the network.
  * 
- * @return {oNode}    The created node, or bool as false.
+ * @return {$.oNode}   The created node, or bool as false.
  */
 $.oScene.prototype.addNode = function( type, name, group, nodePosition ){
     // Defaults for optional parameters
@@ -650,9 +904,9 @@ $.oScene.prototype.addNode = function( type, name, group, nodePosition ){
  * Adds a column to the scene.
  * @param   {string}   type                           The type of the column.
  * @param   {string}   name                           The name of the column.
- * @param   {oElementObject}   oElementObject         The elementObject to link, if a drawing, and wanting to share an element
+ * @param   {$.oElement}   oElementObject         The elementObject to link, if a drawing, and wanting to share an element
  *  
- * @return {oColumn}  The created column, or bool as false.
+ * @return {$.oColumn}  The created column, or bool as false.
  */
  
 $.oScene.prototype.addColumn = function( type, name, oElementObject ){
@@ -692,7 +946,7 @@ $.oScene.prototype.addColumn = function( type, name, oElementObject ){
  * @param   {string}   fieldGuide         The debug level.
  * @param   {string}   scanType         The debug level. 
  *  
- * @return {oColumn}  The created column, or bool as false.
+ * @return {$.oColumn}  The created column, or bool as false.
  */
 $.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
     // Defaults for optional parameters
@@ -712,14 +966,14 @@ $.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType
  
 /**
  * Adds a drawing element to the scene.
- * @param   {string}   name            The name of the newly created node.
- * @param   {string}   group           The group in which the node is added.
- * @param   {oPoint}   nodePosition    The position for the node to be placed in the network.
- * @param   {object}   element         The element to attach to the column.
- * @param   {object}   drawingColumn   The column to attach to the drawing module.
- * @param   {object}   options         The creation options, nothing available at this point.
+ * @param   {string}     name            The name of the newly created node.
+ * @param   {string}     group           The group in which the node is added.
+ * @param   {$.oPoint}   nodePosition    The position for the node to be placed in the network.
+ * @param   {$.object}   element         The element to attach to the column.
+ * @param   {object}     drawingColumn   The column to attach to the drawing module.
+ * @param   {object}     options         The creation options, nothing available at this point.
  
- * @return {oNode}    The created node, or bool as false.
+ * @return {$.oNode}     The created node, or bool as false.
  */
  
 $.oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElementObject, drawingColumn, options ){
@@ -745,14 +999,14 @@ $.oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElemen
  
 /**
  * Adds a drawing element to the scene.
- * @param   {string}   name                   The name of the newly created group.
- * @param   {string}   includeNodes           The nodes to add to the group.
- * @param   {oPoint}   addComposite           Whether to add a composite.
- * @param   {bool}     addPeg                 Whether to add a peg.
- * @param   {string}   group                  The group in which the node is added.
- * @param   {oPoint}   nodePosition           The position for the node to be placed in the network.
+ * @param   {string}     name                   The name of the newly created group.
+ * @param   {string}     includeNodes           The nodes to add to the group.
+ * @param   {$.oPoint}   addComposite           Whether to add a composite.
+ * @param   {bool}       addPeg                 Whether to add a peg.
+ * @param   {string}     group                  The group in which the node is added.
+ * @param   $.{oPoint}   nodePosition           The position for the node to be placed in the network.
  
- * @return {oGroup}   The created node, or bool as false.
+ * @return {$.oGroupNode}   The created node, or bool as false.
  */
 $.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, group, nodePosition ){
     // Defaults for optional parameters
@@ -804,8 +1058,8 @@ $.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg
 
 /**
  * Adds a drawing element to the scene.
- * @param   {string}    [display]                The display node to build the timeline for.
- * @return {oTimeline}    The timelne object given the display.
+ * @param   {string}        [display]                The display node to build the timeline for.
+ * @return {$.oTimeline}    The timelne object given the display.
  */
 $.oScene.prototype.getTimeline = function(display){
     if (typeof display === 'undefined') var display = '';
@@ -815,8 +1069,8 @@ $.oScene.prototype.getTimeline = function(display){
 
 /**
  * Provides a palette object based on name.
- * @param   {string}     name                The name of the palette to return, if available.
- * @return {oPalette}   oPalette with provided name.
+ * @param   {string}       name                The name of the palette to return, if available.
+ * @return  {$.oPalette}   oPalette with provided name.
  */
 $.oScene.prototype.getPaletteByName = function( name ){
     var _paletteList = PaletteObjectManager.getScenePaletteList();
@@ -830,7 +1084,7 @@ $.oScene.prototype.getPaletteByName = function( name ){
  
 /**
  * Provides the selected palette.
- * @return {oPalette}   oPalette with provided name.
+ * @return {$.oPalette}   oPalette with provided name.
  */
 $.oScene.prototype.getSelectedPalette = function(){
     var _paletteList = PaletteManager.getScenePaletteList();
@@ -842,13 +1096,13 @@ $.oScene.prototype.getSelectedPalette = function(){
  
 /**
  * Provides a palette object based on name.
- * @param   {string}       path                          The palette file to import.
- * @param   {string}       name                          The name for the palette.
- * @param   {string}       index                         Index at which to insert the palette.
- * @param   {string}       paletteStorage                Storage type: environment, job, scene, element, external.
- * @param   {oElement}     storeInElement                The name of the palette to return, if available.
+ * @param   {string}         path                          The palette file to import.
+ * @param   {string}         name                          The name for the palette.
+ * @param   {string}         index                         Index at which to insert the palette.
+ * @param   {string}         paletteStorage                Storage type: environment, job, scene, element, external.
+ * @param   {$.oElement}     storeInElement                The name of the palette to return, if available.
  * 
- * @return {oPalette}   oPalette with provided name.
+ * @return {$.oPalette}   oPalette with provided name.
  */
 $.oScene.prototype.importPalette = function( path, name, index, paletteStorage, storeInElement ){
     if (typeof paletteStorage === 'undefined') var paletteStorage = "scene";
@@ -903,15 +1157,15 @@ $.oScene.prototype.importPalette = function( path, name, index, paletteStorage, 
 
 /**
  * Imports a PSD to the node view.
- * @param   {string}       path                          The palette file to import.
- * @param   {string}       [group]                       The group to import the PSD into.
- * @param   {oPoint}       [nodePosition]                The position for the node to be placed in the network.
- * @param   {bool}         [separateLayers]              Separate the layers of the PSD.
- * @param   {bool}         [addPeg]                      Whether to add a peg.
- * @param   {bool}         [addComposite]                Whether to add a composite.
- * @param   {string}       [alignment]                   Alignment type.
+ * @param   {string}         path                          The palette file to import.
+ * @param   {string}         [group]                       The group to import the PSD into.
+ * @param   {$.oPoint}       [nodePosition]                The position for the node to be placed in the network.
+ * @param   {bool}           [separateLayers]              Separate the layers of the PSD.
+ * @param   {bool}           [addPeg]                      Whether to add a peg.
+ * @param   {bool}           [addComposite]                Whether to add a composite.
+ * @param   {string}         [alignment]                   Alignment type.
  * 
- * @return {oNode[]}     The nodes being created as part of the PSD import.
+ * @return {$.oNode[]}     The nodes being created as part of the PSD import.
  */
 $.oScene.prototype.importPSD = function( path, group, nodePosition, separateLayers, addPeg, addComposite, alignment ){
     if (typeof alignment === 'undefined') var alignment = "ASIS" // create an enum for alignments?
@@ -1138,13 +1392,13 @@ $.oScene.prototype.updatePSD = function( path, separateLayers ){
  
 /**
  * Imports a QT into the node view.
- * @param   {string}       path                          The palette file to import.
- * @param   {string}       group                         The group to import the PSD into.
- * @param   {oPoint}       nodePosition                  The position for the node to be placed in the network.
- * @param   {bool}         extendScene                   Whether to add a composite.
- * @param   {string}       alignment                     Alignment type.
+ * @param   {string}         path                          The palette file to import.
+ * @param   {string}         group                         The group to import the PSD into.
+ * @param   {$.oPoint}       nodePosition                  The position for the node to be placed in the network.
+ * @param   {bool}           extendScene                   Whether to add a composite.
+ * @param   {string}         alignment                     Alignment type.
  * 
- * @return {oNode}        The imported Quicktime Node.
+ * @return {$.oNode}        The imported Quicktime Node.
  */
 $.oScene.prototype.importQT = function( path, group, importSound, nodePosition, extendScene, alignment ){
     if (typeof alignment === 'undefined') var alignment = "ASIS";
@@ -1200,11 +1454,11 @@ $.oScene.prototype.importQT = function( path, group, importSound, nodePosition, 
 
 /**
  * Merges Drawing nodes into a single node.
- * @param   {oNode[]}      nodes                         The Drawing nodes to merge.
- * @param   {string}       resultName                    The Node name for the resulting node of the merged content.
- * @param   {bool}         deleteMerged                  Whether the original nodes be deleted.
+ * @param   {$.oNode[]}      nodes                         The Drawing nodes to merge.
+ * @param   {string}         resultName                    The Node name for the resulting node of the merged content.
+ * @param   {bool}           deleteMerged                  Whether the original nodes be deleted.
  * 
- * @return {oNode}        The resulting drawing node from the merge.
+ * @return {$.oNode}        The resulting drawing node from the merge.
  */
 $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
     // TODO: is there a way to do this without Action.perform?
@@ -1289,16 +1543,16 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
 
 /**
  * Adds a backdrop to a group in a specific position.
- * @param   {string}         groupPath                         The group in which this backdrop is created. 
- * @param   {string}         title                             The title of the backdrop.
- * @param   {string}         body                              The body text of the backdrop.
- * @param   {oColorValue}    color                             The oColorValue of the node.
- * @param   {float}          x                                 The X position of the backdrop, an offset value if nodes are specified.
- * @param   {float}          y                                 The Y position of the backdrop, an offset value if nodes are specified.
- * @param   {float}          width                             The Width of the backdrop, a padding value if nodes are specified.
- * @param   {float}          height                            The Height of the backdrop, a padding value if nodes are specified.
+ * @param   {string}           groupPath                         The group in which this backdrop is created. 
+ * @param   {string}           title                             The title of the backdrop.
+ * @param   {string}           body                              The body text of the backdrop.
+ * @param   {$.oColorValue}    color                             The oColorValue of the node.
+ * @param   {float}            x                                 The X position of the backdrop, an offset value if nodes are specified.
+ * @param   {float}            y                                 The Y position of the backdrop, an offset value if nodes are specified.
+ * @param   {float}            width                             The Width of the backdrop, a padding value if nodes are specified.
+ * @param   {float}            height                            The Height of the backdrop, a padding value if nodes are specified.
  * 
- * @return {oBackdrop}       The created backdrop.
+ * @return {$.oBackdrop}       The created backdrop.
  */
 $.oScene.prototype.addBackdrop = function( groupPath, title, body, color, x, y, width, height ){
   if (typeof color === 'undefined') var color = new this.$.oColorValue("#323232ff");
@@ -1349,17 +1603,17 @@ $.oScene.prototype.addBackdrop = function( groupPath, title, body, color, x, y, 
 
 /**
  * Adds a backdrop to a group around specified nodes
- * @param   {string}         groupPath                         The group in which this backdrop is created. 
- * @param   {oNode[]}        nodes                             The nodes that the backdrop encompasses.
- * @param   {string}         title                             The title of the backdrop.
- * @param   {string}         body                              The body text of the backdrop.
- * @param   {oColorValue}    color                             The oColorValue of the node.
- * @param   {float}          x                                 The X position of the backdrop, an offset value if nodes are specified.
- * @param   {float}          y                                 The Y position of the backdrop, an offset value if nodes are specified.
- * @param   {float}          width                             The Width of the backdrop, a padding value if nodes are specified.
- * @param   {float}          height                            The Height of the backdrop, a padding value if nodes are specified.
+ * @param   {string}           groupPath                         The group in which this backdrop is created. 
+ * @param   {$.oNode[]}        nodes                             The nodes that the backdrop encompasses.
+ * @param   {string}           title                             The title of the backdrop.
+ * @param   {string}           body                              The body text of the backdrop.
+ * @param   {$.oColorValue}    color                             The oColorValue of the node.
+ * @param   {float}            x                                 The X position of the backdrop, an offset value if nodes are specified.
+ * @param   {float}            y                                 The Y position of the backdrop, an offset value if nodes are specified.
+ * @param   {float}            width                             The Width of the backdrop, a padding value if nodes are specified.
+ * @param   {float}            height                            The Height of the backdrop, a padding value if nodes are specified.
  * 
- * @return {oBackdrop}       The created backdrop.
+ * @return {$.oBackdrop}       The created backdrop.
  */
 $.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body, color, x, y, width, height ){
   if (typeof color === 'undefined') var color = new this.$.oColorValue("#323232ff");
@@ -1429,14 +1683,14 @@ $.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body,
 
 /**
  * Adds a backdrop to a group around specified nodes
- * @param   {string}          tplPath                                       The path of the TPL file to import. 
- * @param   {string}         [group]                                        The target group to which the TPL is imported.
- * @param   {oNode[]}        [destinationNodes]                             The nodes affected by the template.
- * @param   {bool}           [extendScene]                                  Whether to extend the exposures of the content imported.
- * @param   {oPoint}         [nodePosition]                                 The position to offset imported new nodes.
- * @param   {object}         [pasteOptions]                                 An object containing paste options as per Harmony's standard paste options.
+ * @param   {string}            tplPath                                       The path of the TPL file to import. 
+ * @param   {string}           [group]                                        The target group to which the TPL is imported.
+ * @param   {$.oNode[]}        [destinationNodes]                             The nodes affected by the template.
+ * @param   {bool}             [extendScene]                                  Whether to extend the exposures of the content imported.
+ * @param   {$.oPoint}         [nodePosition]                                 The position to offset imported new nodes.
+ * @param   {object}           [pasteOptions]                                 An object containing paste options as per Harmony's standard paste options.
  * 
- * @return {oNode[]}         The resulting pasted nodes.
+ * @return {$.oNode[]}         The resulting pasted nodes.
  */
 $.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, extendScene, nodePosition, pasteOptions ){
 	if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
@@ -1479,3 +1733,35 @@ $.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, 
 	
 	return nodes;
 }
+
+
+//SAVING FUNCTIONS--
+//-- TODO:  saveAs, saveAsNewVersion
+
+/**
+ * Saves the scene.
+ */
+$.oScene.prototype.save = function( ){
+  scene.saveAll();
+  
+}
+
+/**
+ * Closes the scene.
+ * @param   {bool}            [exit]                                       Whether it should exit after closing.
+ */
+$.oScene.prototype.close = function( exit ){
+  if (typeof nodePosition === 'undefined') exit = false;
+  
+  if( exit ){
+    scene.closeSceneAndExit();
+  }else{
+    scene.closeScene();
+  }
+}
+
+
+
+
+
+

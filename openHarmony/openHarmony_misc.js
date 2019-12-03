@@ -145,6 +145,32 @@ $.oPoint.prototype.pointAverage = function( point_array ){
   return _avg;
 }
 
+/**
+ * Uses the scene settings to convert this as a worldspace point into an OpenGL point, used in underlying transformation operations in Harmony.
+ */
+$.oPoint.convertToOpenGL = function(){
+  
+  var qpt = scene.toOGL( new QPoint( this.x, this.y, this.z ) );
+  
+  this.x = qpt.x;
+  this.y = qpt.y;
+  this.z = qpt.z;
+  
+}
+
+/**
+ * Uses the scene settings to convert this as an OpenGL point into a Harmony worldspace point, used in all displayed modules and Harmony coordinates.
+ */
+$.oPoint.convertToWorldspace = function(){
+
+  var qpt = scene.fromOGL( new QPoint( this.x, this.y, this.z ) );
+  
+  this.x = qpt.x;
+  this.y = qpt.y;
+  this.z = qpt.z;
+
+}
+
 
 /**
  * Linearily Interpolate between this (0.0) and the provided point (1.0)
@@ -167,7 +193,7 @@ $.oPoint.prototype.lerp = function( point, perc ){
 //////////////////////////////////////
 //                                  //
 //                                  //
-//            $.oBox class            //
+//            $.oBox class          //
 //                                  //
 //                                  //
 //////////////////////////////////////

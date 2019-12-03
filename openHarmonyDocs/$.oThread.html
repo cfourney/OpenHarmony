@@ -54,13 +54,23 @@
             
             <span class="subtitle">Methods</span>
             
+                <li data-name="$.beginUndo"><a href="$.html#.beginUndo">beginUndo</a></li>
+            
+                <li data-name="$.cancelUndo"><a href="$.html#.cancelUndo">cancelUndo</a></li>
+            
                 <li data-name="$.debug"><a href="$.html#.debug">debug</a></li>
             
                 <li data-name="$.directoryGet"><a href="$.html#.directoryGet">directoryGet</a></li>
             
+                <li data-name="$.endUndo"><a href="$.html#.endUndo">endUndo</a></li>
+            
                 <li data-name="$.log"><a href="$.html#.log">log</a></li>
             
                 <li data-name="$.logObj"><a href="$.html#.logObj">logObj</a></li>
+            
+                <li data-name="$.redo"><a href="$.html#.redo">redo</a></li>
+            
+                <li data-name="$.undo"><a href="$.html#.undo">undo</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -199,11 +209,17 @@
             
                 <li data-name="$.oColor#colorObject"><a href="$.oColor.html#colorObject">colorObject</a></li>
             
+                <li data-name="$.oColor#h"><a href="$.oColor.html#h">h</a></li>
+            
                 <li data-name="$.oColor#id"><a href="$.oColor.html#id">id</a></li>
             
                 <li data-name="$.oColor#index"><a href="$.oColor.html#index">index</a></li>
             
+                <li data-name="$.oColor#l"><a href="$.oColor.html#l">l</a></li>
+            
                 <li data-name="$.oColor#name"><a href="$.oColor.html#name">name</a></li>
+            
+                <li data-name="$.oColor#s"><a href="$.oColor.html#s">s</a></li>
             
                 <li data-name="$.oColor#selected"><a href="$.oColor.html#selected">selected</a></li>
             
@@ -1272,6 +1288,10 @@
             
             <span class="subtitle">Methods</span>
             
+                <li data-name="$.oPoint.convertToOpenGL"><a href="$.oPoint.html#.convertToOpenGL">convertToOpenGL</a></li>
+            
+                <li data-name="$.oPoint.convertToWorldspace"><a href="$.oPoint.html#.convertToWorldspace">convertToWorldspace</a></li>
+            
                 <li data-name="$.oPoint#divide"><a href="$.oPoint.html#divide">divide</a></li>
             
                 <li data-name="$.oPoint#lerp"><a href="$.oPoint.html#lerp">lerp</a></li>
@@ -1299,15 +1319,51 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oScene#aspectRatioX"><a href="$.oScene.html#aspectRatioX">aspectRatioX</a></li>
+            
+                <li data-name="$.oScene#aspectRatioY"><a href="$.oScene.html#aspectRatioY">aspectRatioY</a></li>
+            
+                <li data-name="$.oScene#center"><a href="$.oScene.html#center">center</a></li>
+            
                 <li data-name="$.oScene#columns"><a href="$.oScene.html#columns">columns</a></li>
             
                 <li data-name="$.oScene#currentFrame"><a href="$.oScene.html#currentFrame">currentFrame</a></li>
+            
+                <li data-name="$.oScene#dirty"><a href="$.oScene.html#dirty">dirty</a></li>
+            
+                <li data-name="$.oScene#fov"><a href="$.oScene.html#fov">fov</a></li>
+            
+                <li data-name="$.oScene#framerate"><a href="$.oScene.html#framerate">framerate</a></li>
             
                 <li data-name="$.oScene#length"><a href="$.oScene.html#length">length</a></li>
             
                 <li data-name="$.oScene#nodes"><a href="$.oScene.html#nodes">nodes</a></li>
             
                 <li data-name="$.oScene#palettes"><a href="$.oScene.html#palettes">palettes</a></li>
+            
+                <li data-name="$.oScene#path"><a href="$.oScene.html#path">path</a></li>
+            
+                <li data-name="$.oScene#resolutionX"><a href="$.oScene.html#resolutionX">resolutionX</a></li>
+            
+                <li data-name="$.oScene#resolutionX"><a href="$.oScene.html#resolutionX">resolutionX</a></li>
+            
+                <li data-name="$.oScene#resolutionY"><a href="$.oScene.html#resolutionY">resolutionY</a></li>
+            
+                <li data-name="$.oScene#resolutionY"><a href="$.oScene.html#resolutionY">resolutionY</a></li>
+            
+                <li data-name="$.oScene#sceneName"><a href="$.oScene.html#sceneName">sceneName</a></li>
+            
+                <li data-name="$.oScene#stage"><a href="$.oScene.html#stage">stage</a></li>
+            
+                <li data-name="$.oScene#startFrame"><a href="$.oScene.html#startFrame">startFrame</a></li>
+            
+                <li data-name="$.oScene#startFrame"><a href="$.oScene.html#startFrame">startFrame</a></li>
+            
+                <li data-name="$.oScene#unitsX"><a href="$.oScene.html#unitsX">unitsX</a></li>
+            
+                <li data-name="$.oScene#unitsY"><a href="$.oScene.html#unitsY">unitsY</a></li>
+            
+                <li data-name="$.oScene#unitsZ"><a href="$.oScene.html#unitsZ">unitsZ</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -1340,6 +1396,8 @@
             
                 <li data-name="$.oScene#addNode"><a href="$.oScene.html#addNode">addNode</a></li>
             
+                <li data-name="$.oScene#close"><a href="$.oScene.html#close">close</a></li>
+            
                 <li data-name="$.oScene#getColumnByName"><a href="$.oScene.html#getColumnByName">getColumnByName</a></li>
             
                 <li data-name="$.oScene#getNodeByPath"><a href="$.oScene.html#getNodeByPath">getNodeByPath</a></li>
@@ -1365,6 +1423,8 @@
                 <li data-name="$.oScene#mergeNodes"><a href="$.oScene.html#mergeNodes">mergeNodes</a></li>
             
                 <li data-name="$.oScene#nodeSearch"><a href="$.oScene.html#nodeSearch">nodeSearch</a></li>
+            
+                <li data-name="$.oScene#save"><a href="$.oScene.html#save">save</a></li>
             
                 <li data-name="$.oScene#updatePSD"><a href="$.oScene.html#updatePSD">updatePSD</a></li>
             
@@ -2450,7 +2510,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 02 2019 19:05:51 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Dec 03 2019 15:18:00 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>

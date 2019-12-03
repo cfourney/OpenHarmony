@@ -111,13 +111,13 @@ Object.defineProperty($.oPalette.prototype, 'name', {
 /**
  * The palette path on disk.
  * @name $.oPalette#path
- * @type {string}
+ * @type {$.oFile}
  */
 Object.defineProperty($.oPalette.prototype, 'path', {
     get : function(){
          var _path = this.paletteObject.getPath()
          _path = fileMapper.toNativePath(_path)
-         return _path+this.name+".plt"
+         return new this.$.oFile( _path+this.name+".plt" );
     },
  
     set : function(newPath){

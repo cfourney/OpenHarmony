@@ -157,6 +157,207 @@ $.oColorValue.prototype.parseColorFromInt = function(colorInt){
   this.a = colorInt >> 24 & 0xFF;
 }
 
+
+/**
+ * Gets the color's HUE value.
+ * @name $.oColor#h
+ * @type {float}
+ */
+Object.defineProperty($.oColorValue.prototype, 'h', {
+    get : function(){
+        var r = this.r;
+        var g = this.g;
+        var b = this.b;
+        
+        var cmin = Math.min(r,g,b);
+        var cmax = Math.max(r,g,b);
+        var delta = cmax - cmin;
+        var h = 0;
+        var s = 0;
+        var l = 0;
+            
+        if (delta == 0){
+          h = 0.0;
+        // Red is max
+        }else if (cmax == r){
+          h = ((g - b) / delta) % 6.0;
+        // Green is max
+        }else if (cmax == g){
+          h = (b - r) / delta + 2.0;
+        // Blue is max
+        }else{
+          h = (r - g) / delta + 4.0;
+        }
+          
+        h = Math.round(h * 60.0);
+        
+        //WRAP IN 360.        
+        if (h < 0){
+            h += 360.0;
+        }
+        
+        // // Calculate lightness
+        // l = (cmax + cmin) / 2.0;
+
+        // // Calculate saturation
+        // s = delta == 0 ? 0 : delta / (1.0 - Math.abs(2.0 * l - 1.0));
+          
+        // s = Math.min( Math.abs(s)*100.0, 100.0 );
+        // l = (Math.abs(l)/255.0)*100.0;
+        
+        return h; 
+    }, 
+    
+    set : function( new_h ){
+      var h = Math.min( new_h, 360.0 );
+      var s = Math.min( this.s, 100.0 )/100.0;
+      var l = Math.min( this.l, 100.0 )/100.0;
+      
+      var c = (1.0 - Math.abs(2.0 * l - 1.0)) * s;
+      var x = c * (1 - Math.abs((h / 60.0) % 2.0 - 1.0));
+      var m = l - c/2.0;
+      var r = 0.0;
+      var g = 0.0;
+      var b = 0.0;
+          
+      if (0.0 <= h && h < 60.0) {
+        r = c; g = x; b = 0;
+      } else if (60.0 <= h && h < 120.0) {
+        r = x; g = c; b = 0;
+      } else if (120.0 <= h && h < 180.0) {
+        r = 0; g = c; b = x;
+      } else if (180.0 <= h && h < 240.0) {
+        r = 0; g = x; b = c;
+      } else if (240.0 <= h && h < 300.0) {
+        r = x; g = 0; b = c;
+      } else if (300.0 <= h && h < 360.0) {
+        r = c; g = 0; b = x;
+      }
+
+      this.r = (r + m) * 255.0;
+      this.g = (g + m) * 255.0;
+      this.b = (b + m) * 255.0;
+    }
+});
+
+/**
+ * Gets the color's SATURATION value.
+ * @name $.oColor#s
+ * @type {float}
+ */
+Object.defineProperty($.oColorValue.prototype, 's', {
+    get : function(){
+        var r = this.r;
+        var g = this.g;
+        var b = this.b;
+        
+        var cmin = Math.min(r,g,b);
+        var cmax = Math.max(r,g,b);
+        var delta = cmax - cmin;
+        var s = 0;
+        var l = 0;
+            
+        // Calculate lightness
+        l = (cmax + cmin) / 2.0;
+        s = delta == 0 ? 0 : delta / (1.0 - Math.abs(2.0 * l - 1.0));
+        
+        // Calculate saturation
+        s = Math.min( Math.abs(s)*100.0, 100.0 );
+        
+        return s;
+    }, 
+    
+    set : function( new_s ){
+      var h = Math.min( this.h, 360.0 );
+      var s = Math.min( new_s, 100.0 )/100.0;
+      var l = Math.min( this.l, 100.0 )/100.0;
+      
+      var c = (1.0 - Math.abs(2.0 * l - 1.0)) * s;
+      var x = c * (1 - Math.abs((h / 60.0) % 2.0 - 1.0));
+      var m = l - c/2.0;
+      var r = 0.0;
+      var g = 0.0;
+      var b = 0.0;
+          
+      if (0.0 <= h && h < 60.0) {
+        r = c; g = x; b = 0;
+      } else if (60.0 <= h && h < 120.0) {
+        r = x; g = c; b = 0;
+      } else if (120.0 <= h && h < 180.0) {
+        r = 0; g = c; b = x;
+      } else if (180.0 <= h && h < 240.0) {
+        r = 0; g = x; b = c;
+      } else if (240.0 <= h && h < 300.0) {
+        r = x; g = 0; b = c;
+      } else if (300.0 <= h && h < 360.0) {
+        r = c; g = 0; b = x;
+      }
+
+      this.r = (r + m) * 255.0;
+      this.g = (g + m) * 255.0;
+      this.b = (b + m) * 255.0;
+    }
+});
+
+/**
+ * Gets the color's LIGHTNESS value.
+ * @name $.oColor#l
+ * @type {float}
+ */
+Object.defineProperty($.oColorValue.prototype, 'l', {
+    get : function(){
+        var r = this.r;
+        var g = this.g;
+        var b = this.b;
+        
+        var cmin = Math.min(r,g,b);
+        var cmax = Math.max(r,g,b);
+        var delta = cmax - cmin;
+        var s = 0;
+        var l = 0;
+            
+        
+        // Calculate lightness
+        l = (cmax + cmin) / 2.0;
+        l = (Math.abs(l)/255.0)*100.0;
+        return l;
+    }, 
+    
+    set : function( new_l ){
+      var h = Math.min( this.h, 360.0 );
+      var s = Math.min( this.s, 100.0 )/100.0;
+      var l = Math.min( new_l, 100.0 )/100.0;
+      
+      var c = (1.0 - Math.abs(2.0 * l - 1.0)) * s;
+      var x = c * (1 - Math.abs((h / 60.0) % 2.0 - 1.0));
+      var m = l - c/2.0;
+      var r = 0.0;
+      var g = 0.0;
+      var b = 0.0;
+          
+      if (0.0 <= h && h < 60.0) {
+        r = c; g = x; b = 0;
+      } else if (60.0 <= h && h < 120.0) {
+        r = x; g = c; b = 0;
+      } else if (120.0 <= h && h < 180.0) {
+        r = 0; g = c; b = x;
+      } else if (180.0 <= h && h < 240.0) {
+        r = 0; g = x; b = c;
+      } else if (240.0 <= h && h < 300.0) {
+        r = x; g = 0; b = c;
+      } else if (300.0 <= h && h < 360.0) {
+        r = c; g = 0; b = x;
+      }
+
+      this.r = (r + m) * 255.0;
+      this.g = (g + m) * 255.0;
+      this.b = (b + m) * 255.0;
+    }
+});
+
+
+
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -306,7 +507,7 @@ Object.defineProperty($.oColor.prototype, 'selected', {
             PaletteManager.setCurrentColorById(_id);
         }
     }
-})
+});
 
 
 /**
@@ -433,4 +634,6 @@ $.oColor.prototype.hexToRgba = function (hexString){
 
     return _rgba;
 }
+
+
 

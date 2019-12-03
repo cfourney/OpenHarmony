@@ -201,3 +201,53 @@ for( var classItem in $ ){
     this[classItem] = $[classItem];
   }
 }
+
+
+//------------------------------------------------
+//-- Undo operations
+
+/**
+ * Starts the tracking of the undo accumulation, all subsequent actions are done in a single undo operation.<br>Close the undo accum with $.endUndo().
+ * @param   {string}           undoName                                       The name of the operation that is being done in the undo accum.
+ * @see $.endUndo
+ */
+$.beginUndo = function( undoName ){
+  if (typeof undoName === 'undefined'){
+    undoName = ''+((new Date()).getTime()); //Using epoch as the temp name.
+  }
+  scene.beginUndoRedoAccum( undoName );
+}
+
+/**
+ * Cancels the tracking of the undo accumulation, everything between this and the start of the accumulation is undone.
+ * @see $.beginUndo
+ */
+$.cancelUndo = function( ){
+  scene.cancelUndoRedoAccum( );
+}
+
+/**
+ * Stops the tracking of the undo accumulation, everything between this and the start of the accumulation behaves as a single undo operation.
+ * @see $.beginUndo
+ */
+$.endUndo = function( ){
+  scene.endUndoRedoAccum( );
+}
+
+/**
+ * 	Undoes the last n operations. If n is not specified, it will be 1
+ * @param   {int}           n                                       The amount of operations to undo.
+ */
+$.undo = function( n ){
+  if (typeof dist === 'undefined'){ dist = 1; }
+  scene.undo( dist );
+}
+
+/**
+ * 	Redoes the last n operations. If n is not specified, it will be 1
+ * @param   {int}           n                                       The amount of operations to undo.
+ */
+$.redo = function( n ){
+  if (typeof dist === 'undefined'){ dist = 1; }
+  scene.redo( dist );
+}
