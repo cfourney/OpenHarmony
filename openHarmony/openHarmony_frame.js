@@ -99,7 +99,7 @@ Object.defineProperty($.oFrame.prototype, 'value', {
  
 
 /**
- * .
+ * Set or identify whether the frame is a keyframe.
  * @return: {bool}   
  */
  
@@ -119,26 +119,34 @@ Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
         if( column.getTimesheetEntry){
           return !column.getTimesheetEntry(_column, 1, this.frameNumber).heldFrame;
         }else{
-          //Older versions of Harmony.
-          var timing = column.getDrawingTimings( _column );
-          return ( timing.indexOf(this.frameNumber)>=0 );
+          return false;   //No valid way to check for keys on a drawing without getTimesheetEntry
         }
       }else if (['BEZIER', '3DPATH', 'EASE', 'QUATERNION'].indexOf(this.column.type) != -1){
-          return column.isKeyFrame(_column, 1, this.frameNumber)
+          return column.isKeyFrame(_column, 1, this.frameNumber);
       }
       return false
     },
  
     set : function(keyFrame){
-      if( !this.column ){
+      var col = this.column;
+      if( !col ){
         return;
       }
       
-      var _column = this.column.uniqueName
-      if (keyFrame){
-          column.setKeyFrame(_column, this.frameNumber)
+      var _column = col.uniqueName;
+      
+      if( col.type == "DRAWING" ){
+        if (keyFrame){
+          column.addKeyDrawingExposureAt( _column, this.frameNumber );
+        }else{
+          column.removeKeyDrawingExposureAt( _column, this.frameNumber );
+        }
       }else{
-          column.clearKeyFrame(_column, this.frameNumber)
+        if (keyFrame){
+            column.setKeyFrame( _column, this.frameNumber );
+        }else{
+            column.clearKeyFrame( _column, this.frameNumber );
+        }
       }
     }
 });
@@ -309,7 +317,66 @@ Object.defineProperty($.oFrame.prototype, 'keyframeRight', {
  
  
 /**
- * Determines the frame's continuity, smooth or otherwise. No setter yet.
+ * Whether the frame is tweened or constant. Uses nearest keyframe if this frame isnt.
+ * @name $.oFrame#constant
+ * @type {string}
+ */
+Object.defineProperty($.oFrame.prototype, 'constant', {
+    get : function(){
+      if(!this.column){
+        return false;
+      }
+      
+      var _column = this.column.uniqueName;
+      var idx_pt  = 0;
+      
+      for( var np=0; np<func.numberOfPoints(_column);np++ ){
+        if( func.pointX( _column, np ) <= this.frameNumber ){
+          idx_pt = np;
+        }else{
+          break;
+        }
+      }
+      
+      return func.pointConstSeg( _column, idx_pt );
+    }, 
+    set : function( new_constant ){
+      if( this.column ){
+        var _column = this.column.uniqueName;
+        
+        var frame = this.keyframeLeft;    //Works on the left keyframe, in the event that this is not a keyframe itself.
+        if( !frame ){ return; }
+        
+        if( frame.column.easeType == "BEZIER" ){
+          var easeIn  = frame.easeIn;
+          var easeOut = frame.easeOut;
+          func.setBezierPoint( _column, frame.frameNumber, frame.value, easeIn.x, easeIn.y, easeOut.x, easeOut.y, new_constant, frame.continuity );
+          
+        }else if( frame.column.easeType == "EASE" ){
+          var easeIn  = frame.easeIn;
+          var easeOut = frame.easeOut;
+          
+          func.setEasePoint( _column, frame.frameNumber, frame.value, easeIn.frame, easeIn.angle, easeOut.frame, easeOut.angle, new_constant, frame.continuity );
+        }
+      }
+    }
+});
+
+/**
+ * Identifies or sets whether there is a tween. Inverse of constant.
+ * @name $.oFrame#tween
+ * @type {string}
+ */
+Object.defineProperty($.oFrame.prototype, 'tween', {
+    get : function(){
+      return !this.constant;
+    }, 
+    set : function( new_tween ){
+      this.constant = !new_tween;
+    }
+});
+/**
+ * Determines the frame's continuity, smooth or otherwise.
  * @name $.oFrame#continuity
  * @type {string}
  */
@@ -321,12 +388,7 @@ Object.defineProperty($.oFrame.prototype, 'continuity', {
         if ( this.isBlank ) return null;
 
         var _column = this.column.uniqueName;
-
-        if(func.pointConstSeg (_column, _kfIndex)){
-            var _smooth = "CONSTANT";
-        }else{
-            var _smooth = func.pointContinuity(_column, _kfIndex);
-        }
+        var _smooth = func.pointContinuity( _column, _kfIndex );
 
         return _smooth;
     }, 
@@ -334,8 +396,6 @@ Object.defineProperty($.oFrame.prototype, 'continuity', {
       throw "Not yet implemented";
     }
 });
-
-
 
 /**
  * Gets the ease parameter of the segment, easing into this frame.
@@ -387,7 +447,7 @@ Object.defineProperty($.oFrame.prototype, 'easeIn', {
             func.setEasePoint (_column, this.frameNumber, this.value, newEaseIn.frame, newEaseIn.angle, _easeOut.frame, _easeOut.angle, this.continuity== "CONSTANT", this.continuity)
         }
     }
-})
+});
 
 
 /**
@@ -428,7 +488,7 @@ Object.defineProperty($.oFrame.prototype, 'easeOut', {
         if(this.column.easeType == "BEZIER"){
             // Provided newEaseOut parameter must be a point object representing the left bezier
             var _leftHandle = this.easeIn;
-            func.setBezierPoint( _column, this.frameNumber, this.value, newEaseOut.x, newEaseOut.y, _leftHandle.x, _leftHandle.y, this.continuity == "CONSTANT", this.continuity)
+            func.setBezierPoint( _column, this.frameNumber, this.value, _leftHandle.x, _leftHandle.y, newEaseOut.x, newEaseOut.y, this.continuity == "CONSTANT", this.continuity)
         }
 
         if(this.column.easeType == "EASE"){
@@ -483,38 +543,4 @@ $.oFrame.prototype.extend = function( duration, replace ){
         }
         _frames[startExtending+i].value = _value;
     }  
-}
-
-
-/**
- * Sets a keyframe at the given frame. This uses a cheat at the moment and should be reworked. Does setAttrib work this way?
- */
-$.oFrame.prototype.setKey = function(  ) {
-  if (typeof constseg === 'undefined') constseg = true;
-  var _column = this.column;
-  
-  if( !_column ){ return; }
-  
-  if( _column.easeType == "BEZIER" ){
-      //USING A CHEAT TO AUTOMATICALLY ADD A KEYFRAME WITH SET TEXT ATTR.
-      var val = this.value; 
-
-      //IF THE VALUE IS UNCHANGED, IT DOESNT CREATE A KEY, SO CHANGE IT JUST A LITTLE.
-      this.value = val+0.001;
-      this.value = val;
-  }else if(this.column.easeType == "EASE"){
-      //USING A CHEAT TO AUTOMATICALLY ADD A KEYFRAME WITH SET TEXT ATTR.
-      var val = this.value; 
-
-      //IF THE VALUE IS UNCHANGED, IT DOESNT CREATE A KEY, SO CHANGE IT JUST A LITTLE.
-      this.value = val+0.001;
-      this.value = val;
-  }else{
-    System.println( "NOT IMPLEMENTED KEY SET FOR " + this.column.easeType  );
-    var val = this.value; 
-
-    //IF THE VALUE IS UNCHANGED, IT DOESNT CREATE A KEY, SO CHANGE IT JUST A LITTLE.
-    this.value = val+0.001;
-    this.value = val;
-  }
 }

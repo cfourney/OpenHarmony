@@ -66,9 +66,11 @@ $.oColumn = function( uniqueName, oAttributeObject ){
   this.uniqueName = uniqueName;
   this.attributeObject = oAttributeObject;
   
+  this._cacheFrames = [];
+  
   //Helper cache for subsequent actions.
   if( !this.$.cache_columnToNodeAttribute ){ this.$.cache_columnToNodeAttribute = {}; }
-  this.$.cache_columnToNodeAttribute[this.uniqueName] = { "node":oAttributeObject.node, "attribute": this, "date": (new Date()).getTime() };
+  this.$.cache_columnToNodeAttribute[this.uniqueName] = { "node":oAttributeObject.node, "attribute": this.attributeObject, "date": (new Date()).getTime() };
 }
 
 
@@ -144,11 +146,13 @@ Object.defineProperty($.oColumn.prototype, 'selected', {
  */
 Object.defineProperty($.oColumn.prototype, 'frames', {
     get : function(){
-        var _frames = new Array(frame.numberOf()+1);
-        for (var i=1; i<_frames.length; i++){
-            _frames[i] = new this.$.oFrame( i, this );
+        var frm_cnt = frame.numberOf();
+        
+        while( this._cacheFrames.length < frame.numberOf()+1 ){
+          this._cacheFrames.push( new this.$.oFrame( this._cacheFrames.length, this ) );
         }
-        return _frames;
+        
+        return this._cacheFrames;
     },
     
     set : function(){
@@ -165,6 +169,18 @@ Object.defineProperty($.oColumn.prototype, 'frames', {
 Object.defineProperty($.oColumn.prototype, 'keyframes', {
     get : function(){
       var _frames = this.frames;
+      
+      var et = this.easeType;
+      if( et == "BEZIER" || et == "EASE" ){
+        var frm_ret = [];
+        var column_name = this.uniqueName;
+        for( var np=0; np<func.numberOfPoints( column_name );np++ ){
+          var frm_num = func.pointX( column_name, np )
+          frm_ret.push( _frames[frm_num] );
+        }
+        return frm_ret;
+      }
+      
       _frames = _frames.filter(function(x){return x.isKeyFrame});
       return _frames;
     },
@@ -293,12 +309,7 @@ $.oColumn.prototype.duplicate = function() {
  * @return {$.oFrame[]}    Provides the array of frames from the column.
  */
 $.oColumn.prototype.getKeyFrames = function(){
-    //This can be done better via Func and bezier analysis. Would be a lot faster.
-    System.println( "NOTE: reimplement with bezier usage." );
-    
-    var _frames = this.frames;
-    _frames = _frames.filter(function(x){return x.isKeyFrame});
-    return _frames;
+    return this.keyframes;
 }
 
 

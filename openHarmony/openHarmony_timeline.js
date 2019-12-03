@@ -62,8 +62,7 @@
  * @property {oAttribute}              attribute             The associated attributes to the layer.
  * @property {oColumn}                 column                The column associated to the layer.
  */
-$.oTimelineLayer = function( index, oTimelineObject ){
-    this.index    = index;
+$.oTimelineLayer = function( nodeName, columnName, oTimelineObject ){
     this.timeline = oTimelineObject;
     
     this._type = "timelineLayer";
@@ -71,35 +70,25 @@ $.oTimelineLayer = function( index, oTimelineObject ){
     this.node       = false;
     this.column     = false;
     this.attribute  = false;
-
-    if( Timeline.layerIsColumn( index ) ){
-      this.layerType     = 'column';
-      var col            = Timeline.layerToColumn( index ); 
+    
+    if( columnName && this.$.cache_columnToNodeAttribute && this.$.cache_columnToNodeAttribute[columnName] ){
+      this.attribute = this.$.cache_columnToNodeAttribute[columnName].attribute;
+      this.node      = this.$.cache_columnToNodeAttribute[columnName].node;
+      this.column    = this.$.cache_columnToNodeAttribute[columnName].attribute.column;
       
-      if( this.$.cache_columnToNodeAttribute && this.$.cache_columnToNodeAttribute[col] ){
-        this.attribute = this.$.cache_columnToNodeAttribute[col].attribute;
-        this.node      = this.$.cache_columnToNodeAttribute[col].node;
-        this.column    = this.$.cache_columnToNodeAttribute[col].attribute.column;
-      }else{
-          var pnode_idx      = Timeline.parentNodeIndex( index );
-          if( pnode_idx >= 0 ){
-            var pnode_name     = Timeline.layerToNode( pnode_idx );
-            this.node          = this.$.scene.$node( pnode_name );
-            this.attribute     = this.node.getAttributeByColumnName( col );
-
-            if( !this.attribute ){
-              //Might be drawing -- not provided by this type.
-            }
-          }else{
-            //Find a drawing module if its that type.
-            
-          }
+    }else{
+      if( nodeName ){
+        this.node = this.$.scene.$node( nodeName );
+        this.layerType     = "node";
+        
+        if( columnName ){
+          this.attribute     = this.node.getAttributeByColumnName( columnName );
+          this.column        = this.attribute.column;
+          this.layerType     = "column";
+        }
       }
-    }else if( Timeline.layerIsNode( index ) ){
-      this.layerType     = 'node';
-      var node_name      = Timeline.layerToNode( index );
-      this.node          = this.$.scene.$node( node_name );
     }
+    
 }
 
 
@@ -180,7 +169,7 @@ Object.defineProperty($.oTimeline.prototype, 'layers', {
     get : function(){
         var olayers = [];
         for( var n=0; n<Timeline.numLayers; n++ ){
-          olayers.push( new this.$.oTimelineLayer( n, this ) );
+          olayers.push( new this.$.oTimelineLayer( Timeline.layerToNode( n ), Timeline.layerToColumn( n ), this ) );
         }
        
         return olayers;
@@ -197,7 +186,7 @@ Object.defineProperty($.oTimeline.prototype, 'selectedLayers', {
         var olayers = [];
         System.println( "!!GETTING LAYERS" );
         for( var n=0; n<Timeline.numLayerSel; n++ ){
-          olayers.push( new this.$.oTimelineLayer( Timeline.selToLayer( n ), this ) );
+          olayers.push( new this.$.oTimelineLayer( Timeline.selToNode( n ), Timeline.selToColumn( n ), this ) );
         }
         System.println( "!!GOT LAYERS" );
         

@@ -71,7 +71,7 @@ $.oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
   this.attributeObject = attributeObject;
   
   this._shortKeyword = attributeObject.keyword();
-  if(attributeObject.fullKeyword){
+  if( attributeObject.fullKeyword ){
     this._keyword = attributeObject.fullKeyword();
   }else{
     if( parentAttribute ){
@@ -241,9 +241,14 @@ Object.defineProperty($.oAttribute.prototype, 'frames', {
  */
 Object.defineProperty($.oAttribute.prototype, 'keyframes', {
     get : function(){
-      var _frames = this.frames;
-      _frames = _frames.filter(function(x){return x.isKeyFrame});
-      return _frames;
+      var col     = this.column;
+      var frames  = this.frames;
+
+      if( !col ){
+        return frames[1];
+      }
+    
+      return this.column.keyframes;
     },
     
     set : function(){

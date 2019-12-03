@@ -33,58 +33,68 @@ function oh_anim_smartKey(){
     
     var timeline = $.scene.getTimeline();
     var layers   = timeline.selectedLayers;
-    var cseg_val = preferences.getBool( "SP_CONSTANT_SEGMENT", false );
     
     //--------------------------------------------------
     //--- The key function, used 
-    
-    var last_seg = false;
-    
+      
     var smart_key_item = function( attr ){
       var cfrm  = $.scene.currentFrame; 
       
       var frame = attr.frames[ cfrm ];
+
+      
+      if( attr.node.type == "READ" ){
+        
+        if( attr.column.type == "DRAWING" ){
+          frame.isKeyFrame = true;
+          return;
+        }
+        
+        //DONT KEY THE OFFSETS IF ITS NOT ANIMATEABLE.
+        var check_pos = {
+                          "offset.x"        : true,
+                          "offset.y"        : true,
+                          "offset.z"        : true,
+                          "skew"            : true,
+                          "scale.x"         : true,
+                          "scale.y"         : true,
+                          "scale.z"         : true,
+                          "rotation.anglez" : true
+                        }
+        if( !attr.node["can_animate"] ){
+          return;
+        }
+      }
       
       if( !frame.isKeyFrame ){
-        // var val   = attr.getValue( cfrm ); 
-        var nk    = frame.keyframeLeft;
+        var lk    = frame.keyframeLeft;
+        frame.isKeyFrame = true;
         
-        if(!nk){
+        if(!lk){
           //Consider this as static.
-          if( !last_seg ){
-            preferences.setBool( "SP_CONSTANT_SEGMENT", true );
-            last_seg = true;
-          }
+          frame.constant   = true;
         }else{
-          var cont = nk.continuity;
-          if( cont == "CONSTANT" ){
-            if( !last_seg ){
-              preferences.setBool( "SP_CONSTANT_SEGMENT", true );
-              last_seg = true;
-            }
+          if( lk.constant ){
+            frame.constant   = true;
+            // lk.constant      = true;   //UNNECESSARY, DEFAULT APPRAOCH TO isKeyFrame = true;
           }else{
-            var lk    = frame.keyframeRight;
-            if( lk ){
-              //Something is right, keep the tween.
-              if( last_seg ){
-                preferences.setBool( "SP_CONSTANT_SEGMENT", false );
-                last_seg = false;
-              }
+            var rk    = frame.keyframeRight;
+            
+            if( rk ){
+              //Something is to the right, keep the tween.
+              frame.constant   = false;
+              // lk.constant      = false;   //UNNECESSARY, DEFAULT APPRAOCH TO isKeyFrame = true;
             }else{
-              //Consider this a constant segment, nothing was to the right.
-              if( !last_seg ){
-                preferences.setBool( "SP_CONSTANT_SEGMENT", true );
-                last_seg = true;
-              }
+              frame.constant   = true;
+              lk.constant      = true;
             }
           }
         }
-        frame.setKey();
       }
     }
     
+    
     if( layers.length == 0 ){
-      System.println( "LAYERS" );
       var layers = timeline.compositionLayers;
       
       var items = [];
@@ -93,7 +103,7 @@ function oh_anim_smartKey(){
         for( var attrname in tlayer.attributes ){
           var tattr = tlayer.attributes[ attrname ];
           if( tattr.column ){
-            // smart_key_item( tattr );
+            smart_key_item( tattr );
           }else{
             for( var tt=0;tt<tattr.subAttributes.length;tt++ ){
               var subattr = tattr.subAttributes[tt];
@@ -106,11 +116,10 @@ function oh_anim_smartKey(){
       }
     }else{
       //Selected layers are sufficient.
-      System.println( "ITERATING LAYERS" );
       for( var n=0;n<layers.length;n++ ){
         var tlayer = layers[n];
         if( tlayer.attribute ){
-          if( tlayer.attribute.column ){
+          if( tlayer.attribute.column ){  
             smart_key_item( tlayer.attribute );
           }
         }
