@@ -1301,7 +1301,7 @@ $.oGroupNode.prototype.subNodes = function(recurse){
     for (var i in _nodes){
         var _oNodeObject = this.scene.getNodeByPath(_nodes[i]);
         _subNodes.push(_oNodeObject);
-        if (recurse && node.isGroup(_nodes[i])) _subNodes = _subNodes.concat(_$.oNodeObject.subNodes(recurse));
+        if (recurse && node.isGroup(_nodes[i])) _subNodes = _subNodes.concat(_oNodeObject.subNodes(recurse));
     }
  
     return _subNodes;
