@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oThread</title>
+    <title>Class: oGUI</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -1627,7 +1627,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oThread.html">Class: oThread</h1>
+        <h1 class="page-title" data-filename="$.oGUI.html">Class: oGUI</h1>
         
 
 
@@ -1638,10 +1638,10 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a>.</span>
     
-    oThread
+    oGUI
     </h2>
     
-        <div class="class-description">$.oThread Base Class</div>
+        <div class="class-description">$.oGUI Base Class -- helper class for showing GUI content.</div>
     
 </header>  
 
@@ -1653,14 +1653,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oThread">
+        <h4 class="name" id="oGUI">
             
-            new $.oThread<span class="signature">(kernel, list, <span class="optional">threadCount</span>, <span class="optional">start</span>, <span class="optional">timeout</span>, <span class="optional">reserveThread</span>)</span>
+            new $.oGUI<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_threading.js, line 71
+            openHarmony/openHarmony_gui.js, line 57
         </div>
         
     </div>
@@ -1671,7 +1671,7 @@
     
     
     <div class="description">
-        The base class for the $.oThread -- WIP, NOT TRULY THREADED AS THE EVENT MANAGER DOESNT ALLOW FOR THREADS YET.
+        The base class for the $.oGUI.
     </div>
     
 
@@ -1680,396 +1680,9 @@
     
     
     
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>kernel</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                The kernel that is iterating.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>list</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;object></span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                The list of elements to iterate upon.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>threadCount</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The amount of threads to initiate. Default: 5</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>start</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to start on instantiation, or to wait until prompted. Default: false</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>timeout</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Timeout in MS</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>reserveThread</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to reserve a thread for this to process while blocking.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
     
     
 <dl class="details">
-    
-        
-        <h5 class="subsection-title">Properties:</h5>
-        
-        <dl>
-
-<table class="props">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>threadCount</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The amount of threads to initiate.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>threads</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;QTimer></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The underlying QTimers that behave as threads.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>results_thread</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;object></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The results from the kernel, should match indices of provided list.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>error_thread</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;string></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The errors from the kernel, in the event there are code errors.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>complete_thread</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;bool></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The completion (note: not success) state of the thread. Success state would be the result.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>started</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The start state of all threads.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>timeout</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">MS timeout for blocking processes.</td>
-        </tr>
-	
-	
-	</tbody>
-</table></dl>
-        
     
         
     
@@ -2116,6 +1729,13 @@
     
     
     
+    
+        <h3 class="subsection-title">Classes</h3>
+        
+        <dl>
+            <dt><a href="$.oGUI_Progress.html">Progress</a></dt>
+            <dd></dd>
+        </dl>
     
     
     
@@ -2129,14 +1749,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="prepareThreads">
+        <h4 class="name" id="alert">
             
-            prepareThreads<span class="signature">(<span class="optional">block</span>)</span>
+            alert<span class="signature">(<span class="optional">title</span>, <span class="optional">labelText</span>, <span class="optional">okButtonText</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_threading.js, line 266
+            openHarmony/openHarmony_gui.js, line 104
         </div>
         
     </div>
@@ -2147,7 +1767,7 @@
     
     
     <div class="description">
-        If threads are not yet prepared, this will prepare them.
+        Prompts with an alert dialog (informational).
     </div>
     
 
@@ -2178,13 +1798,13 @@
 	
         <tr>
             
-                <td class="name"><code>block</code></td>
+                <td class="name"><code>title</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">bool</span>
+<span class="param-type">string</span>
 
 
             
@@ -2201,7 +1821,67 @@
                         
                     
                 
-                Whether the process should block and wait for completion.</td>
+                The title of the confirmation dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>labelText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The label/internal text of the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>okButtonText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The text on the OK button of the dialog.</td>
         </tr>
 	
 	
@@ -2252,14 +1932,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="runSingleThreaded">
+        <h4 class="name" id="confirm">
             
-            runSingleThreaded<span class="signature">()</span>
+            confirm<span class="signature">(<span class="optional">title</span>, <span class="optional">labelText</span>, <span class="optional">okButtonText</span>, <span class="optional">cancelButtonText</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_threading.js, line 337
+            openHarmony/openHarmony_gui.js, line 71
         </div>
         
     </div>
@@ -2270,78 +1950,7 @@
     
     
     <div class="description">
-        If started, will block until completion or timeout.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="start">
-            
-            start<span class="signature">(block)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_threading.js, line 233
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Start the thread and block if necessary.
+        Prompts with a confirmation dialog (yes/no choice).
     </div>
     
 
@@ -2372,13 +1981,13 @@
 	
         <tr>
             
-                <td class="name"><code>block</code></td>
+                <td class="name"><code>title</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">bool</span>
+<span class="param-type">string</span>
 
 
             
@@ -2388,113 +1997,27 @@
             
             <td class="description last">
                 
-                Whether the process should block and wait for completion.</td>
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The title of the confirmation dialog.</td>
         </tr>
 	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="wait">
-            
-            wait<span class="signature">(block_time)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_threading.js, line 309
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        If started, will block until completion or timeout.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
 	
 	
         <tr>
             
-                <td class="name"><code>block_time</code></td>
+                <td class="name"><code>labelText</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">string</span>
 
 
             
@@ -2504,7 +2027,74 @@
             
             <td class="description last">
                 
-                The MS time to block.</td>
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The label/internal text of the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>okButtonText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The text on the OK button of the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>cancelButtonText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The text on the CANCEL button of the dialog.</td>
         </tr>
 	
 	
@@ -2546,6 +2136,35 @@
     
     
     
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        bool
+                        
+                    
+            </td>
+            <td class="description last">Result of the confirmation dialog.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
     
     
     

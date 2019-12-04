@@ -593,6 +593,8 @@
             
                 <li data-name="$.oFile#folder"><a href="$.oFile.html#folder">folder</a></li>
             
+                <li data-name="$.oFile#fullName"><a href="$.oFile.html#fullName">fullName</a></li>
+            
                 <li data-name="$.oFile#name"><a href="$.oFile.html#name">name</a></li>
             
                 <li data-name="$.oFile#path"><a href="$.oFile.html#path">path</a></li>
@@ -663,6 +665,8 @@
                 <li data-name="$.oFolder#copy"><a href="$.oFolder.html#copy">copy</a></li>
             
                 <li data-name="$.oFolder#create"><a href="$.oFolder.html#create">create</a></li>
+            
+                <li data-name="$.oFolder#get"><a href="$.oFolder.html#get">get</a></li>
             
                 <li data-name="$.oFolder#getFiles"><a href="$.oFolder.html#getFiles">getFiles</a></li>
             
@@ -849,6 +853,62 @@
                 <li data-name="$.oGroupNode#unlinkInNode"><a href="$.oGroupNode.html#unlinkInNode">unlinkInNode</a></li>
             
                 <li data-name="$.oGroupNode#unlinkOutNode"><a href="$.oGroupNode.html#unlinkOutNode">unlinkOutNode</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="$.oGUI">
+            <span class="title">
+                <a href="$.oGUI.html">$.oGUI</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oGUI#alert"><a href="$.oGUI.html#alert">alert</a></li>
+            
+                <li data-name="$.oGUI#confirm"><a href="$.oGUI.html#confirm">confirm</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="$.oGUI#Progress">
+            <span class="title">
+                <a href="$.oGUI_Progress.html">$.oGUI#Progress</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oGUI#Progress#close"><a href="$.oGUI_Progress.html#close">close</a></li>
+            
+                <li data-name="$.oGUI#Progress#show"><a href="$.oGUI_Progress.html#show">show</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1600,7 +1660,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_misc.js, line 311
+            openHarmony/openHarmony_file.js, line 60
         </div>
         
     </div>
@@ -2104,7 +2164,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_misc.js, line 532
+            openHarmony/openHarmony_file.js, line 281
         </div>
         
     </div>
@@ -2287,7 +2347,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_misc.js, line 513
+            openHarmony/openHarmony_file.js, line 262
         </div>
         
     </div>
@@ -2351,6 +2411,122 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="get">
+            
+            get<span class="signature">(name)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_file.js, line 377
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Get the sub folder or file by name.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The sub name of a folder or file within a directory.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="getFiles">
             
             getFiles<span class="signature">(<span class="optional">filter</span>)</span>
@@ -2358,7 +2534,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_misc.js, line 468
+            openHarmony/openHarmony_file.js, line 217
         </div>
         
     </div>
@@ -2481,7 +2657,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_misc.js, line 449
+            openHarmony/openHarmony_file.js, line 198
         </div>
         
     </div>
@@ -2604,7 +2780,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_misc.js, line 490
+            openHarmony/openHarmony_file.js, line 239
         </div>
         
     </div>
@@ -2727,7 +2903,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_misc.js, line 553
+            openHarmony/openHarmony_file.js, line 302
         </div>
         
     </div>
@@ -2878,7 +3054,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_misc.js, line 591
+            openHarmony/openHarmony_file.js, line 340
         </div>
         
     </div>
@@ -3029,7 +3205,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_misc.js, line 625
+            openHarmony/openHarmony_file.js, line 398
         </div>
         
     </div>
@@ -3137,7 +3313,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Dec 03 2019 15:17:59 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 04 2019 00:24:55 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>

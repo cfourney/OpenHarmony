@@ -96,6 +96,8 @@ $.directory = $.directoryGet( __file__ );
 
 // The included files should be relative to the path of THIS file!
 include( $.directory + "/openHarmony/openHarmony_misc.js"      );
+include( $.directory + "/openHarmony/openHarmony_gui.js"      );
+include( $.directory + "/openHarmony/openHarmony_file.js"      );
 include( $.directory + "/openHarmony/openHarmony_threading.js" );
 include( $.directory + "/openHarmony/openHarmony_network.js"   );   
 include( $.directory + "/openHarmony/openHarmony_path.js"      );   
@@ -171,6 +173,7 @@ $.scene = $.s;
 //---- Attach Helpers ------
 $.network = new $.oNetwork( );
 $.utils   = new $.oUtils( );
+$.gui     = new $.oGUI( );
 $.global  = this;
 
 //---- Cache Helpers ------
@@ -238,8 +241,8 @@ $.endUndo = function( ){
  * 	Undoes the last n operations. If n is not specified, it will be 1
  * @param   {int}           n                                       The amount of operations to undo.
  */
-$.undo = function( n ){
-  if (typeof dist === 'undefined'){ dist = 1; }
+$.undo = function( dist ){
+  if (typeof dist === 'undefined'){ var dist = 1; }
   scene.undo( dist );
 }
 
@@ -247,7 +250,7 @@ $.undo = function( n ){
  * 	Redoes the last n operations. If n is not specified, it will be 1
  * @param   {int}           n                                       The amount of operations to undo.
  */
-$.redo = function( n ){
-  if (typeof dist === 'undefined'){ dist = 1; }
+$.redo = function( dist ){
+  if (typeof dist === 'undefined'){ var dist = 1; }
   scene.redo( dist );
 }

@@ -20,6 +20,81 @@ function oh_load(){
   }
 }
 
+/**
+ *  Finds and removes all unnecessary asset files from the filesystem.
+ */
+function oh_rigging_removeUnnecesaryPaletteFiles(){
+  oh_load();  //Load the copy of openHarmony.
+  
+  var palette_list = $.scene.palettes;
+  var registered_palette_files = {};
+  
+  //Find the path of all registered palettes. Add it to a group for easy lookup.
+  for( var n=0;n<palette_list.length;n++ ){
+    //-- Find the files for the palettes.
+    var t_pal = palette_list[n];
+    registered_palette_files[ t_pal.path ] = t_pal;
+    
+  }
+  
+  //The scene path of this file.
+  var scene_path = $.scene.path;
+  
+  //Look the all files in the plugin folder that are left over for some reason.
+  
+  var unreferenced_palettes = [];
+  
+  //Find the palette_library 
+  var palette_folder = scene_path.get( "palette-library" );
+  if( !palette_folder ){
+    $.gui.alert( "Palette Details", "Unable to find the palette-library." );
+    return;
+  }
+  
+  //Find all palette files within the palette folder (*.plt)
+  var fls = palette_folder.files;
+  for( var n=0;n<fls.length;n++ ){
+    var t_fl = fls[n];
+    if( t_fl.extension.toUpperCase() == "PLT" ){
+      if( !registered_palette_files[ t_fl.path ] ){
+        unreferenced_palettes.push( t_fl );
+        
+      }
+    }
+  }
+  
+  if( unreferenced_palettes.length == 0 ){
+    $.gui.alert( "Palette Details", "No unnecessary palettes to remove." );
+    return;
+  }
+  
+  //Confirm the action
+  var labelText = 'Remove ' + unreferenced_palettes.length + ' unnecessary palette(s)?\n';
+      for( var n=0;n<Math.min( unreferenced_palettes.length, 3 ); n++ ){
+        labelText += '      '+unreferenced_palettes[n].fullName + '\n';
+      }
+      if( unreferenced_palettes.length>3 ){
+        labelText += '\n      and '+(unreferenced_palettes.length-3)+' more . . .';
+      }
+      
+  var confirmation = $.gui.confirm( "Remove Palettes", labelText );
+  
+  if( confirmation ){
+    //Delete all palettes from disk.
+    var prog = new $.gui.Progress( "Removing Palettes", unreferenced_palettes.length, true );
+      
+    for( var n=0;n<unreferenced_palettes.length; n++ ){
+      var t_pal_fl = unreferenced_palettes[n];
+      
+      prog.text = "Removing: " + t_pal_fl.fullName;
+      prog.value = n;
+      
+      t_pal_fl.remove();
+    }
+    
+    prog.close();
+  }
+}
 
 /**
  *  Adds a peg with a pivot at the center of the selected drawings module(s).
@@ -72,6 +147,9 @@ function oh_rigging_addCenterWeightedPeg(){
 }
 
 
+/**
+ *  Adds a backdrop with specified color, to selected nodes in the node-view.
+ */
 function oh_rigging_addBackdropToSelected(){
   try{
     oh_load();

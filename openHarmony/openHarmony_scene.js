@@ -80,7 +80,7 @@ $.oScene = function( ){
  */
 Object.defineProperty($.oScene.prototype, 'path', {
     get : function(){
-        return new this.$.oFolder( scene.currentProjectPath );
+        return new this.$.oFolder( scene.currentProjectPath() );
     },
     set : function(val){
         throw "Not yet implemented"; //Perhaps a save as/save new version?
