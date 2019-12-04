@@ -143,11 +143,42 @@ Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
         }
       }else{
         if (keyFrame){
+            //Sanity check, in certain situations, the setKeyframe resets to 0 (specifically if there is no pre-existing key elsewhere.)
+            //This will check the value prior to the key, set the key, and enforce the value after.
+            
+            var val = 0.0;
+            try{
+              var val = this.value;
+            }catch(err){}
+          
             column.setKeyFrame( _column, this.frameNumber );
+            
+            try{
+              var post_val = this.value;
+              if( val != post_val ){
+                this.value = val
+              }
+            }catch(err){}         
         }else{
             column.clearKeyFrame( _column, this.frameNumber );
         }
       }
+    }
+});
+ 
+
+/**
+ * Whether the frame is a keyframe.
+ * @name $.oFrame#isKey
+ * @type {bool}
+ */
+Object.defineProperty($.oFrame.prototype, 'isKey', {
+    get : function(){
+      return this.isKeyFrame;
+    },
+ 
+    set : function(keyFrame){
+      this.isKeyFrame = keyFrame;
     }
 });
  

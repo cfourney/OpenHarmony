@@ -101,13 +101,11 @@ $.oDialog.prototype.confirm = function( title, labelText, okButtonText, cancelBu
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * 
  */
-$.oDialog.prototype.alert = function( title, labelText, okButtonText, modal ){   
+$.oDialog.prototype.alert = function( title, labelText, okButtonText ){   
     if (typeof title === 'undefined')            var title = "Alert";
     if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
     if (typeof labelText === 'undefined')        var labelText = false;
-    if (typeof modal === 'undefined')            var modal = false;
     
-
     var d = new QMessageBox( false, title, labelText, QMessageBox.Ok );
         d.setWindowTitle( title );
       
@@ -120,12 +118,8 @@ $.oDialog.prototype.alert = function( title, labelText, okButtonText, modal ){
     if ( !d.exec() ){
       return;
     }
-    
-  return;
 }
 
- 
- 
  
  
 //////////////////////////////////////
