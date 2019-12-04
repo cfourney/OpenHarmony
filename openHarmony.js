@@ -96,7 +96,7 @@ $.directory = $.directoryGet( __file__ );
 
 // The included files should be relative to the path of THIS file!
 include( $.directory + "/openHarmony/openHarmony_misc.js"      );
-include( $.directory + "/openHarmony/openHarmony_gui.js"      );
+include( $.directory + "/openHarmony/openHarmony_dialog.js"    );
 include( $.directory + "/openHarmony/openHarmony_file.js"      );
 include( $.directory + "/openHarmony/openHarmony_threading.js" );
 include( $.directory + "/openHarmony/openHarmony_network.js"   );   
@@ -173,8 +173,13 @@ $.scene = $.s;
 //---- Attach Helpers ------
 $.network = new $.oNetwork( );
 $.utils   = new $.oUtils( );
-$.gui     = new $.oGUI( );
+$.dialog  = new $.oDialog( );
 $.global  = this;
+
+// $.confirm = $.dialog.confirm;
+// $.alert   = $.dialog.alert;
+
+
 
 //---- Cache Helpers ------
 $.cache_columnToNodeAttribute = {};

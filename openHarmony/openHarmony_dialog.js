@@ -42,7 +42,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          $.gui class             //
+//          $.dialog class          //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -50,11 +50,11 @@
 
 
 /**
- * The base class for the $.oGUI.
+ * The base class for the $.oDialog.
  * @constructor
- * @classdesc  $.oGUI Base Class -- helper class for showing GUI content.
+ * @classdesc  $.oDialog Base Class -- helper class for showing GUI content.
  */
-$.oGUI = function( ){
+$.oDialog = function( ){
 
 }
 
@@ -68,7 +68,7 @@ $.oGUI = function( ){
  * 
  * @return  {bool}       Result of the confirmation dialog.
  */
-$.oGUI.prototype.confirm = function( title, labelText, okButtonText, cancelButtonText ){
+$.oDialog.prototype.confirm = function( title, labelText, okButtonText, cancelButtonText ){
     if (typeof title === 'undefined')            var title = "Confirmation";
     if (typeof okButtonText === 'undefined')     var okButtonText = "Okay";
     if (typeof cancelButtonText === 'undefined') var cancelButtonText = "Cancel";
@@ -101,23 +101,22 @@ $.oGUI.prototype.confirm = function( title, labelText, okButtonText, cancelButto
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * 
  */
-$.oGUI.prototype.alert = function( title, labelText, okButtonText ){   
+$.oDialog.prototype.alert = function( title, labelText, okButtonText, modal ){   
     if (typeof title === 'undefined')            var title = "Alert";
-    if (typeof okButtonText === 'undefined')     var okButtonText = "Okay";
+    if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
     if (typeof labelText === 'undefined')        var labelText = false;
+    if (typeof modal === 'undefined')            var modal = false;
     
-    var d = new Dialog();
-        d.title            = title;
-        d.okButtonText     = okButtonText;
-        d.cancelButtonText = false;
-    
+
+    var d = new QMessageBox( false, title, labelText, QMessageBox.Ok );
+        d.setWindowTitle( title );
+      
+        d.buttons()[0].text = okButtonText;
+      
     if( labelText ){
-      var label = new Label;
-          label.text = labelText;    
+      d.text = labelText;
     }
       
-    d.add( label );
-    
     if ( !d.exec() ){
       return;
     }
@@ -155,9 +154,9 @@ $.oGUI.prototype.alert = function( title, labelText, okButtonText ){
 /**
  * The progress bar GUI dialog.
  * @constructor
- * @classdesc  $.oGUI Base Class -- helper class for showing GUI content.
+ * @classdesc  $.oDialog Base Class -- helper class for showing GUI content.
  */
-$.oGUI.prototype.Progress  = function( labelText, range, show ){
+$.oDialog.prototype.Progress  = function( labelText, range, show ){
     if (typeof title === 'undefined')            var title = "Progress";
     if (typeof range === 'undefined')            var range = 100;
     if (typeof labelText === 'undefined')        var labelText = "";
@@ -192,7 +191,7 @@ $.oGUI.prototype.Progress  = function( labelText, range, show ){
  * Shows the dialog.
  * 
  */
-$.oGUI.prototype.Progress.prototype.show = function( title, labelText, okButtonText ){
+$.oDialog.prototype.Progress.prototype.show = function( title, labelText, okButtonText ){
   this.progress.show();
 }
 
@@ -200,7 +199,7 @@ $.oGUI.prototype.Progress.prototype.show = function( title, labelText, okButtonT
  * Closes the dialog.
  * 
  */
-$.oGUI.prototype.Progress.prototype.close = function( title, labelText, okButtonText ){
+$.oDialog.prototype.Progress.prototype.close = function( title, labelText, okButtonText ){
   this.value = this.range;
   this.progress.hide();
   this.progress = false;
@@ -209,10 +208,10 @@ $.oGUI.prototype.Progress.prototype.close = function( title, labelText, okButton
 
 /**
  * The text of the window.
- * @name $.oGUI.Progress#text
+ * @name $.oDialog.Progress#text
  * @type {string}
  */
-Object.defineProperty( $.oGUI.prototype.Progress.prototype, 'text', {
+Object.defineProperty( $.oDialog.prototype.Progress.prototype, 'text', {
     get: function(){
       return this._labelText;
     },
@@ -225,10 +224,10 @@ Object.defineProperty( $.oGUI.prototype.Progress.prototype, 'text', {
 
 /**
  * The range of the window.
- * @name $.oGUI.Progress#range
+ * @name $.oDialog.Progress#range
  * @type {int}
  */
-Object.defineProperty( $.oGUI.prototype.Progress.prototype, 'range', {
+Object.defineProperty( $.oDialog.prototype.Progress.prototype, 'range', {
     get: function(){
       return this._range;
     },
@@ -242,10 +241,10 @@ Object.defineProperty( $.oGUI.prototype.Progress.prototype, 'range', {
 
 /**
  * The current value of the window.
- * @name $.oGUI.Progress#value
+ * @name $.oDialog.Progress#value
  * @type {int}
  */
-Object.defineProperty( $.oGUI.prototype.Progress.prototype, 'value', {
+Object.defineProperty( $.oDialog.prototype.Progress.prototype, 'value', {
     get: function(){
       return this._value;
     },

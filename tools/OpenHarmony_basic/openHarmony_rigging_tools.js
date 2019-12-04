@@ -47,7 +47,7 @@ function oh_rigging_removeUnnecesaryPaletteFiles(){
   //Find the palette_library 
   var palette_folder = scene_path.get( "palette-library" );
   if( !palette_folder ){
-    $.gui.alert( "Palette Details", "Unable to find the palette-library." );
+    $.dialog.alert( "Palette Details", "Unable to find the palette-library." );
     return;
   }
   
@@ -64,7 +64,7 @@ function oh_rigging_removeUnnecesaryPaletteFiles(){
   }
   
   if( unreferenced_palettes.length == 0 ){
-    $.gui.alert( "Palette Details", "No unnecessary palettes to remove." );
+    $.dialog.alert( "Palette Details", "No unnecessary palettes to remove." );
     return;
   }
   
@@ -77,11 +77,11 @@ function oh_rigging_removeUnnecesaryPaletteFiles(){
         labelText += '\n      and '+(unreferenced_palettes.length-3)+' more . . .';
       }
       
-  var confirmation = $.gui.confirm( "Remove Palettes", labelText );
+  var confirmation = $.dialog.confirm( "Remove Palettes", labelText );
   
   if( confirmation ){
     //Delete all palettes from disk.
-    var prog = new $.gui.Progress( "Removing Palettes", unreferenced_palettes.length, true );
+    var prog = new $.dialog.Progress( "Removing Palettes", unreferenced_palettes.length, true );
       
     for( var n=0;n<unreferenced_palettes.length; n++ ){
       var t_pal_fl = unreferenced_palettes[n];
