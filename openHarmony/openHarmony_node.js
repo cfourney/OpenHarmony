@@ -350,11 +350,11 @@ Object.defineProperty($.oNode.prototype, 'name', {
 /**
  * The group containing the node, the parent path, not including this node specifically.
  * @name $.oNode#group
- * @type {string}
+ * @type {oGroupNode}
  */
 Object.defineProperty($.oNode.prototype, 'group', {
     get : function(){
-         return node.parentNode(this.path)
+         return this.scene.getNodeByPath( node.parentNode(this.path) )
     },
  
     set : function(newPath){
@@ -560,11 +560,16 @@ Object.defineProperty($.oNode.prototype, 'outNodes', {
                 var _node = node.dstNode(this.path, i, j);
                 _outLinks.push(this.scene.getNodeByPath(_node));
             }
-            if (_outLinks.length > 1){
-                _outNodes.push(_outLinks);
-            }else{
-                _outNodes = _outNodes.concat(_outLinks);
-            }
+            
+            //Always return the list of links for consistency.
+            _outNodes.push(_outLinks);
+            
+            //Deprecated.
+            // if (_outLinks.length > 1){
+                // _outNodes.push(_outLinks);
+            // }else{
+                // _outNodes = _outNodes.concat(_outLinks);
+            // }
         }
         return _outNodes;
     }
@@ -678,6 +683,42 @@ $.oNode.prototype.linkInNode = function( oNodeObject, inPort, outPort ){
 
 
 /**
+ * Unlinks a specific port from this node's input.
+ * @param   {int}       inPort                 The inport to disconnect.
+ *  
+ * @return  {bool}    The result of the unlink, if successful.
+ */
+$.oNode.prototype.unlinkInPort = function( inPort ){
+    // Default values for optional parameters
+    if (typeof inPort === 'undefined') inPort = 0;
+    
+    return node.unlink( this.path, inPort );
+};
+
+
+/**
+ * Unlinks a specific port/link from this node's output.
+ * @param   {int}     outPort                 The outPort to disconnect.
+ * @param   {int}     outLink                 The outLink to disconnect.
+ *  
+ * @return  {bool}    The result of the unlink, if successful.
+ */
+$.oNode.prototype.unlinkOutPort = function( outPort, outLink ){
+    // Default values for optional parameters
+    if (typeof inPort === 'undefined') outPort = 0;
+      
+    try{      
+      var srcNodeInfo = node.srcNodeInfo( this.path, outPort, outLink );
+      if( srcNodeInfo ){
+        var node = this.scene.getNodeByPath( srcNodeInfo.node );
+        node.unlinkInPort( srcNodeInfo.port );
+      }
+    }catch(err){
+    }
+};
+
+
+/**
  * Searches for and unlinks the $.oNodeObject from this node's inNodes.
  * @param   {$.oNode}   oNodeObject            The node to link this one's inport to.
  * @return  {bool}    The result of the unlink.
@@ -716,7 +757,7 @@ $.oNode.prototype.linkOutNode = function( oNodeObject, outPort, inPort ){
  
     // Default values for optional parameters
     if (typeof inPort === 'undefined') inPort = node.numberOfInputPorts(_node);;
-    if (typeof outPort === 'undefined') outPort = 0//node.numberOfOutputPorts(this.path);
+    if (typeof outPort === 'undefined') outPort = 0; //node.numberOfOutputPorts(this.path);
  
     //CF Note: Forcing ( . . . true, true ) is likely not a good idea in most context, we'll need to provide solution to add links to composites purposefully.
     return node.link(this.path, outPort, _node, inPort, true, true); 
@@ -920,7 +961,9 @@ $.oNode.prototype.remove = function( deleteColumns, deleteElements ){
         var outNodes = this.outNodes;
         for (var i in inNodes){
             for (var j in outNodes){
-                inNodes[i].linkOutNode(outNodes[j])
+              for( var k in outNodes[j] ){
+                inNodes[i].linkOutNode(outNodes[j][k])
+              }
             }
         }
     }
