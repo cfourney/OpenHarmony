@@ -658,7 +658,7 @@ Object.defineProperty($.oNode.prototype, 'linkedColumns', {
  * @return  {int}    The index within that timeline.
  */
  $.oNode.prototype.timelineIndex = function(timeline){
-    var _timeline = timeline.layersList;
+    var _timeline = timeline.layers;
     return _timeline.indexOf(this.path);
 }
  
