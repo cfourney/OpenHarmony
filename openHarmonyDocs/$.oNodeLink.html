@@ -588,7 +588,11 @@
             
                 <li data-name="$.oDrawingNode#unlinkInNode"><a href="$.oDrawingNode.html#unlinkInNode">unlinkInNode</a></li>
             
+                <li data-name="$.oDrawingNode#unlinkInPort"><a href="$.oDrawingNode.html#unlinkInPort">unlinkInPort</a></li>
+            
                 <li data-name="$.oDrawingNode#unlinkOutNode"><a href="$.oDrawingNode.html#unlinkOutNode">unlinkOutNode</a></li>
+            
+                <li data-name="$.oDrawingNode#unlinkOutPort"><a href="$.oDrawingNode.html#unlinkOutPort">unlinkOutPort</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -763,6 +767,8 @@
             
                 <li data-name="$.oFrame#isBlank"><a href="$.oFrame.html#isBlank">isBlank</a></li>
             
+                <li data-name="$.oFrame#isKey"><a href="$.oFrame.html#isKey">isKey</a></li>
+            
                 <li data-name="$.oFrame#isKeyFrame"><a href="$.oFrame.html#isKeyFrame">isKeyFrame</a></li>
             
                 <li data-name="$.oFrame#keyframeIndex"><a href="$.oFrame.html#keyframeIndex">keyframeIndex</a></li>
@@ -908,7 +914,11 @@
             
                 <li data-name="$.oGroupNode#unlinkInNode"><a href="$.oGroupNode.html#unlinkInNode">unlinkInNode</a></li>
             
+                <li data-name="$.oGroupNode#unlinkInPort"><a href="$.oGroupNode.html#unlinkInPort">unlinkInPort</a></li>
+            
                 <li data-name="$.oGroupNode#unlinkOutNode"><a href="$.oGroupNode.html#unlinkOutNode">unlinkOutNode</a></li>
+            
+                <li data-name="$.oGroupNode#unlinkOutPort"><a href="$.oGroupNode.html#unlinkOutPort">unlinkOutPort</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1092,7 +1102,11 @@
             
                 <li data-name="$.oNode#unlinkInNode"><a href="$.oNode.html#unlinkInNode">unlinkInNode</a></li>
             
+                <li data-name="$.oNode#unlinkInPort"><a href="$.oNode.html#unlinkInPort">unlinkInPort</a></li>
+            
                 <li data-name="$.oNode#unlinkOutNode"><a href="$.oNode.html#unlinkOutNode">unlinkOutNode</a></li>
+            
+                <li data-name="$.oNode#unlinkOutPort"><a href="$.oNode.html#unlinkOutPort">unlinkOutPort</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1109,7 +1123,15 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oNodeLink#freeze"><a href="$.oNodeLink.html#freeze">freeze</a></li>
+            
+                <li data-name="$.oNodeLink#inNode"><a href="$.oNodeLink.html#inNode">inNode</a></li>
+            
                 <li data-name="$.oNodeLink#inPort"><a href="$.oNodeLink.html#inPort">inPort</a></li>
+            
+                <li data-name="$.oNodeLink#outLink"><a href="$.oNodeLink.html#outLink">outLink</a></li>
+            
+                <li data-name="$.oNodeLink#outPort"><a href="$.oNodeLink.html#outPort">outPort</a></li>
             
                 <li data-name="$.oNodeLink#outPort"><a href="$.oNodeLink.html#outPort">outPort</a></li>
             
@@ -1121,6 +1143,14 @@
             
             </ul>
             <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oNodeLink#linkIn"><a href="$.oNodeLink.html#linkIn">linkIn</a></li>
+            
+                <li data-name="$.oNodeLink#linkOut"><a href="$.oNodeLink.html#linkOut">linkOut</a></li>
+            
+                <li data-name="$.oNodeLink#validate"><a href="$.oNodeLink.html#validate">validate</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1322,7 +1352,11 @@
             
                 <li data-name="$.oPegNode#unlinkInNode"><a href="$.oPegNode.html#unlinkInNode">unlinkInNode</a></li>
             
+                <li data-name="$.oPegNode#unlinkInPort"><a href="$.oPegNode.html#unlinkInPort">unlinkInPort</a></li>
+            
                 <li data-name="$.oPegNode#unlinkOutNode"><a href="$.oPegNode.html#unlinkOutNode">unlinkOutNode</a></li>
+            
+                <li data-name="$.oPegNode#unlinkOutPort"><a href="$.oPegNode.html#unlinkOutPort">unlinkOutPort</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1655,12 +1689,12 @@
     <div class="nameContainer">
         <h4 class="name" id="oNodeLink">
             
-            new $.oNodeLink<span class="signature">(outNode, inNode, outPort, outLink, inPort)</span>
+            new $.oNodeLink<span class="signature">(outNode, inNode, inPort)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_nodeLink.js, line 68
+            openHarmony/openHarmony_nodeLink.js, line 64
         </div>
         
     </div>
@@ -1748,52 +1782,6 @@
 	
         <tr>
             
-                <td class="name"><code>outPort</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The outport of the outNode that is connecting this link.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>outLink</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The outlink of the outport on the outNode that is connecting this link.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
                 <td class="name"><code>inPort</code></td>
             
             
@@ -1848,13 +1836,13 @@
 	
         <tr>
             
-                <td class="name"><code>outNode</code></td>
+                <td class="name"><code>exists</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">oNode</span>
+<span class="param-type">bool</span>
 
 
             
@@ -1864,20 +1852,20 @@
             
             
             
-            <td class="description last">The source oNode of the link.</td>
+            <td class="description last">Whether the connection as-it-is exists.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>inNode</code></td>
+                <td class="name"><code>autoDisconnect</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">oNode</span>
+<span class="param-type">bool</span>
 
 
             
@@ -1887,76 +1875,7 @@
             
             
             
-            <td class="description last">The destination oNode of the link.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>_cacheOutPort</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The outport of the outNode that is connecting this link.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>_cacheOutLink</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The outlink of the outport on the outNode that is connecting this link.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>_cacheInPort</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The inport of the inNode that is connecting the link.</td>
+            <td class="description last">Whether to auto-disconnect links if they already exist.</td>
         </tr>
 	
 	
@@ -2020,7 +1939,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="inPort">inPort<span class="type-signature type array.<onode>">Array.&lt;oNode></span> </h4>
+        <h4 class="name" id="freeze">freeze<span class="type-signature type bool">bool</span> </h4>
     </div>
     
     
@@ -2028,7 +1947,7 @@
 <dd>
     
     <div class="description">
-        Not yet implemented.
+        Whether to freeze the link changes, and apply them when unfrozen.
     </div>
     
     
@@ -2065,7 +1984,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="outPort">outPort<span class="type-signature type array.<onode>">Array.&lt;oNode></span> </h4>
+        <h4 class="name" id="inNode">inNode<span class="type-signature type $.onode"><a href="$.oNode.html">$.oNode</a></span> </h4>
     </div>
     
     
@@ -2073,7 +1992,187 @@
 <dd>
     
     <div class="description">
-        The outport of this $.oNodeLink.
+        The node that is accepting this link on its inport. It is inputting/accepting the link.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="inPort">inPort<span class="type-signature type array.<onode>">Array.&lt;oNode></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The inPort of this $.oNodeLink.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="outLink">outLink<span class="type-signature type int">int</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The outLink of this $.oNodeLink. The link index that the outNode connected to for this link.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="outPort">outPort<span class="type-signature type $.onode"><a href="$.oNode.html">$.oNode</a></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The node that is accepting this link on its outPort. It is outputting the link.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="outPort">outPort<span class="type-signature type int">int</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The outport of this $.oNodeLink. The port that the outNode connected to for this link.
     </div>
     
     
@@ -2110,6 +2209,388 @@
     
     
     
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="linkIn">
+            
+            linkIn<span class="signature">(onode, port)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_nodeLink.js, line 352
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Changes both the in-node and in-port at once.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>onode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oNode</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The node to link on the input.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>port</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The port to link on the input.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="linkOut">
+            
+            linkOut<span class="signature">(onode, port)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_nodeLink.js, line 362
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Changes both the out-node and out-port at once.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>onode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oNode</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The node to link on the output.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>port</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The port to link on the output.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="validate">
+            
+            validate<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_nodeLink.js, line 319
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Validates the details of a given connection. Used internally when details change.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        bool
+                        
+                    
+            </td>
+            <td class="description last">Whether the connection is a valid connection that exists currently in the node system.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        </dl>
+    
     
     
     
@@ -2127,7 +2608,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 04 2019 12:44:24 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Dec 05 2019 02:04:46 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>
