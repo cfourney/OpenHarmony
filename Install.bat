@@ -3,11 +3,12 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 SET dlPath=%~dp0
 set harmonyPrefsDir=%appdata%\Toon Boom Animation
 
+echo -- Starting install of openHarmony open source scripting library --
+
 rem Check Harmony Versions and make a list
 set i=0
 for /d %%D in ("%harmonyPrefsDir%\*") do (
   set harmonyVersionDir=%%~fD
-  echo !harmonyVersionDir!
   for /d %%V in ("!harmonyVersionDir!\*-layouts*") do (
     set /a i+=1
     set "folderName=%%~nD"
@@ -21,6 +22,7 @@ for /d %%D in ("%harmonyPrefsDir%\*") do (
 rem offer choice if more than one version
 if %i% GEQ 2 (
   rem print out the list
+  echo Found %i% installed Toonboom Harmony versions:
   for /l %%a in (1 1 %i%) do ( echo %%a. !versionString[%%a]! )
   set /p choice=Install OpenHarmony for which Harmony version? : 
 ) else (
@@ -35,7 +37,12 @@ rem create script folder if missing
 if not exist "%installDir%" mkdir "%installDir%"
 
 rem copy scriptfiles into destination
-xcopy "%dlPath%*" "%installDir%" /y /s /i  
+(echo .bat 
+echo .json
+echo .md)> exclude.txt
+
+xcopy "%dlPath%*" "%installDir%" /y /s /i /e /q /exclude:exclude.txt
+del exclude.txt
 
 echo - Install Complete -
 pause
