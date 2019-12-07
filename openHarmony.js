@@ -88,7 +88,7 @@ $ = {
  * @return  {string}                        The directory of the file.
  */
 $.directoryGet = function( file_path ){
-  return file_path.split( "/" ).slice(0, -1).join('/');
+  return file_path.split("\\").join("/").split( "/" ).slice(0, -1).join('/');
 };
 
 
@@ -114,6 +114,7 @@ include( $.directory + "/openHarmony/openHarmony_node.js"      );
 include( $.directory + "/openHarmony/openHarmony_column.js"    );      
 include( $.directory + "/openHarmony/openHarmony_drawing.js"   );     
 include( $.directory + "/openHarmony/openHarmony_scene.js"     );
+include(specialFolders.resource+"/scripts/TB_orderNetworkUp.js");
 
 /**
  * The standard debug that uses logic and level to write to the messagelog. Everything should just call this to write internally to a log in OpenHarmony.
@@ -150,19 +151,17 @@ $.log = function( str ){
  * @param   {int}      debugLevel        The debug level.
  */
 $.logObj = function( object ){
-    {
-        for (var i in object){
-            try {
-                $.log(i+' : '+object[i])
-                if (typeof object[i] == "Object"){
-                    $.log(' -> ')
-                    $.logObj(object[i])
-                    $.log(' ----- ')
-                }
-            }
-            catch(error){}
-        }
+  for (var i in object){
+    try {
+      $.log(i+' : '+object[i])
+      if (typeof object[i] == "Object"){
+        $.log(' -> ')
+        $.logObj(object[i])
+        $.log(' ----- ')
+      }
     }
+    catch(error){}
+  }
 }
 
 //---- Scene  --------------
@@ -176,9 +175,10 @@ $.utils   = new $.oUtils( );
 $.dialog  = new $.oDialog( );
 $.global  = this;
 
-// $.confirm = $.dialog.confirm;
-// $.alert   = $.dialog.alert;
-
+$.confirm = $.dialog.confirm;
+$.alert   = $.dialog.alert;
+$.browseForFile = $.dialog.browseForFile;
+$.browseForFolder = $.dialog.browseForFolder;
 
 
 //---- Cache Helpers ------
@@ -190,9 +190,9 @@ $.cache_oNode = {};
 //---- Instantiate Class $ DOM Access ------
 function addDOMAccess( target, item ){
   Object.defineProperty( target, '$', {
-      get: function(){
-          return item;
-      }
+    configurable: false,
+    enumerable: false,
+    value: item
   });
 }
 
@@ -220,9 +220,9 @@ for( var classItem in $ ){
  * @see $.endUndo
  */
 $.beginUndo = function( undoName ){
-  if (typeof undoName === 'undefined'){
-    undoName = ''+((new Date()).getTime()); //Using epoch as the temp name.
-  }
+  //Using epoch as the temp name.
+  if (typeof undoName === 'undefined') var undoName = ''+((new Date()).getTime()); 
+  
   scene.beginUndoRedoAccum( undoName );
 }
 

@@ -154,24 +154,42 @@ Object.defineProperty($.oPalette.prototype, 'selected', {
  * @type {oColor[]}
  */
 Object.defineProperty($.oPalette.prototype, 'colors', {
-    get : function(){
-        var _palette = this.paletteObject
-        var _colors = []
-        for (var i = 0; i<_palette.nColors; i++){
-            _colors.push (new this.$.oColor (this, i))
-        }
-        return _colors
+  get : function(){
+    var _palette = this.paletteObject
+    var _colors = []
+    for (var i = 0; i<_palette.nColors; i++){
+      _colors.push (new this.$.oColor (this, i))
     }
+    return _colors
+  }
 })
 
 
 // $.oPalette Class methods
+
 /**
  * Not yet implemented.
  */
 $.oPalette.prototype.addColor = function (name, type, colorData){
-    throw "Not yet implemented.";
+  throw "Not yet implemented.";
 }
+
+
+
+/**
+ * Gets a oColor object based on id.
+ * @param   {string}     id                          the color id as found in toonboom palette file.
+ *  
+ * @return: {oColor}     the found oColor object.
+ */
+// getColorById(id)
+$.oPalette.prototype.getColorById = function (id){
+  var _colors = this.colors;
+  var _ids = _colors.map(function(x){return x.id})
+  if (_ids.indexOf(id) != -1) return _colors[_ids.indexOf(id)]
+  return null;
+}
+
 
 
 /**
@@ -181,16 +199,16 @@ $.oPalette.prototype.addColor = function (name, type, colorData){
  * @return: {bool}       The success-result of the removal.
  */
 $.oPalette.prototype.remove = function ( removeFile ){
-    if (typeof removeFile === 'undefined') var removeFile = false;
-    
-    this._paletteList.removePaletteById( this.id );
-    
-    if( removeFile ){
-      var _paletteFile = new this.$.oFile(this.path)
-      _paletteFile.remove();
-    }
-    
-    //Todo: should actually check for its removal.
-    return true;
+  if (typeof removeFile === 'undefined') var removeFile = false;
+  
+  this._paletteList.removePaletteById( this.id );
+  
+  if( removeFile ){
+    var _paletteFile = new this.$.oFile(this.path)
+    _paletteFile.remove();
+  }
+  
+  //Todo: should actually check for its removal.
+  return true;
 }
 

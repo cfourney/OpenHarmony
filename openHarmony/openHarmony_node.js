@@ -83,6 +83,7 @@ $.oNode = function( path, oSceneObject ){
     
 }
 
+
 /**
  * Initialize the attribute cache.
  * @private 
@@ -187,6 +188,7 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
     })
 };
 
+
 /**
  * The derived path to the node.
  * @deprecated
@@ -206,6 +208,7 @@ Object.defineProperty($.oNode.prototype, 'fullPath', {
     }
 });
 
+
 /**
  * The derived path to the node.
  * @name $.oNode#path
@@ -223,6 +226,7 @@ Object.defineProperty($.oNode.prototype, 'path', {
       throw "ERROR - changing the path is not supported yet."
     }
 });
+
 
 /**
  * The type of the node.
@@ -260,7 +264,8 @@ Object.defineProperty($.oNode.prototype, 'isGroup', {
 
 
 /**
- * The $.oNode objects contained in this group.
+ * The $.oNode objects contained in this group. This is deprecated and was moved to oGroupNode
+ * @DEPRECATED
  * @name $.oNode#children
  * @type {$.oNode[]}
  */
@@ -290,7 +295,7 @@ Object.defineProperty($.oNode.prototype, 'children', {
  * @type {bool}
  */
 Object.defineProperty($.oNode.prototype, 'exists', {
-    get : function( ){
+    get : function(){
       if( this.type ){
         return true;
       }else{
@@ -306,7 +311,7 @@ Object.defineProperty($.oNode.prototype, 'exists', {
  * @type {bool}
  */
 Object.defineProperty($.oNode.prototype, 'selected', {
-    get : function( ){
+    get : function(){
       for( var n=0;n<selection.numberOfNodesSelected;n++ ){
           if( selection.selectedNode(n) == this.path ){
             return true;
@@ -465,7 +470,6 @@ Object.defineProperty($.oNode.prototype, 'x', {
 });
  
 
-
 /**
  * The vertical position of the node in the node view.
  * @name $.oNode#y
@@ -562,18 +566,21 @@ Object.defineProperty($.oNode.prototype, 'outNodes', {
             }
             
             //Always return the list of links for consistency.
-            _outNodes.push(_outLinks);
+            // _outNodes.push(_outLinks);
             
+            
+            // MCNote: move to concat so we always have a flat list?
             //Deprecated.
             // if (_outLinks.length > 1){
                 // _outNodes.push(_outLinks);
             // }else{
-                // _outNodes = _outNodes.concat(_outLinks);
+                _outNodes = _outNodes.concat(_outLinks);
             // }
         }
         return _outNodes;
     }
 });
+
 
 /**
  * The list of nodes connected to the inport of this node, in order of inport.
@@ -585,6 +592,7 @@ Object.defineProperty($.oNode.prototype, 'ins', {
       return this.inNodes;
     }
 });
+
 
 /**
  * The list of nodes connected to the outport of this node, in order of outport and links.
@@ -622,8 +630,6 @@ Object.defineProperty( $.oNode.prototype, 'bounds', {
 }); 
 
 
-
-
 /**
  * The linked columns associated with the node.
  * @name $.oNode#linkedColumns
@@ -651,6 +657,7 @@ Object.defineProperty($.oNode.prototype, 'linkedColumns', {
     }
 })
 
+
 /**
  * Retrieves the nodes index in the timeline provided.
  * @param   {oTimeline}   timeline            The timeline object to search the nodes index.
@@ -661,9 +668,10 @@ Object.defineProperty($.oNode.prototype, 'linkedColumns', {
     var _timeline = timeline.layers;
     return _timeline.indexOf(this.path);
 }
+
  
 /**
- * Link's this node's in-port to the given module, at the inport and outport indices.
+ * Links this node's inport to the given module, at the inport and outport indices.
  * @param   {$.oNode}   oNodeObject            The node to link this one's inport to.
  * @param   {int}       inPort                 This node's inport to connect.
  * @param   {int}       outPort                The target node's outport to connect. 
@@ -683,7 +691,7 @@ $.oNode.prototype.linkInNode = function( oNodeObject, inPort, outPort ){
 
 
 /**
- * Unlinks a specific port from this node's input.
+ * Unlinks a specific port from this node's inport.
  * @param   {int}       inPort                 The inport to disconnect.
  *  
  * @return  {bool}    The result of the unlink, if successful.
@@ -753,6 +761,8 @@ $.oNode.prototype.unlinkInNode = function( oNodeObject ){
  * @return  {bool}    The result of the link, if successful.
  */
 $.oNode.prototype.linkOutNode = function( oNodeObject, outPort, inPort ){
+    // check param types
+    if (!(oNodeObject instanceof this.$.oNode)) throw new Error("wrong parameter type in oNode.linkOutNode: "+oNodeObject+" is not an oNode")
     var _node = oNodeObject.path;
  
     // Default values for optional parameters
@@ -762,6 +772,7 @@ $.oNode.prototype.linkOutNode = function( oNodeObject, outPort, inPort ){
     //CF Note: Forcing ( . . . true, true ) is likely not a good idea in most context, we'll need to provide solution to add links to composites purposefully.
     return node.link(this.path, outPort, _node, inPort, true, true); 
 };
+
 
 /**
  * Link's this node's out-port to the given module, at the inport and outport indices.
@@ -783,8 +794,6 @@ $.oNode.prototype.unlinkOutNode = function( oNodeObject ){
     }
     return false;
 };
-
-
 
 
 /**
@@ -812,11 +821,8 @@ $.oNode.prototype.insertInNode = function( inPort, oNodeObject, inPortTarget, ou
 };
 
 
-
-
-
  /**
- * obtains the nodes contained in the group, allows recursive search.
+ * obtains the nodes contained in the group, allows recursive search. This method is deprecated and was moved to oGroupNode
  * @DEPRECATED
  * @param   {bool}   recurse           Whether to recurse internally for nodes within children groups.
  *  
@@ -914,7 +920,6 @@ $.oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
 }
  
  
-
  /**
  * Place a node above one or more nodes with an offset.
  * @param   {string}    newName              The new name for the cloned module.
@@ -944,6 +949,7 @@ $.oNode.prototype.duplicate= function( oNodeObject, newName, newPosition ){
     // TODO
 };
  
+ 
  /**
  * Removes the node from the scene.
  * @param   {bool}    deleteColumns              Should the columns of drawings be deleted as well?
@@ -971,6 +977,7 @@ $.oNode.prototype.remove = function( deleteColumns, deleteElements ){
     node.deleteNode(this.path, deleteColumns, deleteElements)
 }
 
+
  /**
  * Provides a matching attribute based on provided keyword name.
  * @param   {string}    keyword                    The attribute keyword to search.
@@ -994,6 +1001,7 @@ $.oNode.prototype.getAttributeByName = function( keyword ){
         return this.attributes[keyword];
     }
 }
+
 
  /**
  * Used in converting the node to a string value, provides the string-path.
@@ -1048,6 +1056,7 @@ $.oNode.prototype.getAttributeByColumnName = function( columnName ){
   return false;
   // return attribs;
 }
+
 
  /**
  * Provides a column->attribute lookup table for timeline building.
@@ -1164,23 +1173,47 @@ $.oDrawingNode = function(path, oSceneObject) {
  
 $.oDrawingNode.prototype = Object.create($.oNode.prototype);
  
+ 
 /**
  * The oElement class of the drawing.
  * @name $.oDrawingNode#element
  * @type {oElement}
  */
 Object.defineProperty($.oDrawingNode.prototype, "element", {
-    get : function(){
-        var _column = this.attributes.drawing.element.column;
-        return ( new this.$.oElement( node.getElementId(this.path), _column ) );
-    },
-   
-    set : function( oElementObject ){
-        var _column = this.attributes.drawing.element.column;
-        column.setElementIdOfDrawing( _column.uniqueName, oElementObject.id );
-    }
-})
+  get : function(){
+    var _column = this.attributes.drawing.element.column;
+    return ( new this.$.oElement( node.getElementId(this.path), _column ) );
+  },
+ 
+  set : function( oElementObject ){
+    var _column = this.attributes.drawing.element.column;
+    column.setElementIdOfDrawing( _column.uniqueName, oElementObject.id );
+  }
+});
 
+
+/**
+ * An array of the colorIds contained within the drawings displayed by the node.
+ * @name $.oDrawingNode#usedColorIds
+ * @type {int[]}
+ */
+Object.defineProperty($.oDrawingNode.prototype, "usedColorIds", {
+  get : function(){
+    var _timings = this.timings;
+    var _colors = [];
+    
+    for (var i in _timings){
+      var _drawingColors = DrawingTools.getDrawingUsedColors({node: this.fullPath, frame: _timings[i].frameNumber});
+
+      for (var c in _drawingColors){
+        if (_colors.indexOf(_drawingColors[c]) == -1) _colors.push(_drawingColors[c]);
+      }
+    }
+    
+    return _colors;
+  }
+});
+ 
 
 /**
  * The drawing.element keyframes.
@@ -1193,7 +1226,9 @@ Object.defineProperty($.oDrawingNode.prototype, "timings", {
    }
 })
 
+
 // Class Methods
+
 
  /**
  * Extracts the position information on a drawing node, and applies it to a new peg instead.
@@ -1234,6 +1269,7 @@ $.oDrawingNode.prototype.extractPeg = function(){
     return _peg;
 }
 
+
  /**
  * Gets the contour curves of the drawing, as a concave hull.
  * @param   {int}          [count]                          The number of points on the contour curve to derive.
@@ -1260,12 +1296,12 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
                            false
                         );
   if( res.success ){
-    var _curves = res.results.map( function (x){ return [ 
-                                                          new this.$.oPoint( x[0][0], x[0][1], 0.0 ),
-                                                          new this.$.oPoint( x[1][0], x[1][1], 0.0 ),
-                                                          new this.$.oPoint( x[2][0], x[2][1], 0.0 ),
-                                                          new this.$.oPoint( x[3][0], x[3][1], 0.0 )
-                                                        ]; } );
+    var _curves = res.results.map(function(x){return [ 
+                                                      new this.$.oPoint( x[0][0], x[0][1], 0.0 ),
+                                                      new this.$.oPoint( x[1][0], x[1][1], 0.0 ),
+                                                      new this.$.oPoint( x[2][0], x[2][1], 0.0 ),
+                                                      new this.$.oPoint( x[3][0], x[3][1], 0.0 )
+                                                    ]; } );
     return _curves;
   }
   
@@ -1331,8 +1367,8 @@ Object.defineProperty($.oGroupNode.prototype, "multiportOut", {
 
  /**
  * Gets all subnodes withing the group.
- * @param   {bool}    [recurse]                    Whether to recurse the groups within the groups.
- *  
+ * @param   {bool}    [recurse=false]             Whether to recurse the groups within the groups.
+ * 
  * @return  {$.oNode[]}   The nodes in the group
  */
 $.oGroupNode.prototype.subNodes = function(recurse){
@@ -1351,10 +1387,20 @@ $.oGroupNode.prototype.subNodes = function(recurse){
 }
 
 
+ /**
+ * Gets all children of the group.
+ * @param   {bool}    [recurse=false]             Whether to recurse the groups within the groups.
+ *  
+ * @return  {$.oNode[]}   The nodes in the group
+ */
+$.oGroupNode.prototype.children = function(recurse){
+  return this.subNodes(recurse);
+}
+
 
  /**
  * Sorts out the node view inside the group
- * @param   {bool}   [recurse]                    Whether to recurse the groups within the groups.
+ * @param   {bool}    [recurse=false]             Whether to recurse the groups within the groups.
  */
 $.oGroupNode.prototype.orderNodeView = function(recurse){
     if (typeof recurse === 'undefined') var recurse = false;
@@ -1377,3 +1423,601 @@ $.oGroupNode.prototype.orderNodeView = function(recurse){
 }
 
 
+/**
+ * Adds a node to the group.
+ * @param   {string}        type                   The type-name of the node to add.
+ * @param   {string}        [name=type]            The name of the newly created node.
+ * @param   {$.oPoint}      [nodePosition={0,0,0}] The position for the node to be placed in the network.
+ * 
+ * @return {$.oNode}   The created node, or bool as false.
+ */
+$.oGroupNode.prototype.addNode = function( type, name, nodePosition ){
+    // Defaults for optional parameters
+    if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+    if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
+    
+    var _group = this.path;
+    
+    // sanitize input for node name creation
+    name = name.split(" ").join("_");
+    
+    // increment name if a node with the same name already exists
+    var _name = name.split("_");
+    var _count = parseInt(_name.pop(), 10);
+    
+    // get name without suffix
+    if ( isNaN( _count ) ) { // check for NaN value -> no number already added
+        _name = name;
+        _count = 0;
+    }else{
+        _name = _name.join("_");
+    }
+    
+    // loop to increment until we get a node name that is free
+    var _nodePath = _group+"/"+_name;
+    var _node = new this.$.oNode(_nodePath)
+    
+    while( _node.exists ){
+        _count++;
+        name = _name+"_"+_count;
+        _nodePath = _group+"/"+name; 
+        _node = new this.$.oNode( _nodePath );
+    }
+    
+    // create node and return result
+    var _path = node.add( _group, name, type, nodePosition.x, nodePosition.y, nodePosition.z );
+    _node = this.scene.$node(_path)
+
+    return _node;
+}
+
+
+/**
+ * Adds a drawing layer to the group, with a drawing column and element linked. Possible to specify the column and element to use.
+ * @param   {string}     name                     The name of the newly created node.
+ * @param   {$.oPoint}   [nodePosition={0,0,0}]   The position for the node to be placed in the network.
+ * @param   {$.object}   [element]                The element to attach to the column.
+ * @param   {object}     [drawingColumn]          The column to attach to the drawing module.
+ * @param   {object}     [options]                The creation options, nothing available at this point.
+ 
+ * @return {$.oNode}     The created node, or bool as false.
+ */
+ 
+$.oGroupNode.prototype.addDrawingNode = function( name, nodePosition, oElementObject, drawingColumn, options ){
+    // add drawing column and element if not passed as parameters
+    if (typeof oElementObject === 'undefined') var oElementObject = this.scene.addElement( name );
+    if (typeof drawingColumn === 'undefined') var drawingColumn = this.scene.addColumn( "DRAWING", name, oElementObject );
+       
+    // Defaults for optional parameters
+    if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+    if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
+   
+    var _group = this.path
+   
+    var _node = this.addNode( "READ", name, _group, nodePosition );
+   
+    // setup the node
+    // setup animate mode/separate based on preferences?  
+    _node.attributes.drawing.element.column = drawingColumn;
+   
+    return _node;
+}
+
+
+/**
+ * Adds a new group to the group, and optionally move the specified nodes into it.
+ * @param   {string}     name                   The name of the newly created group.
+ * @param   {string}     [includeNodes]           The nodes to add to the group.
+ * @param   {$.oPoint}   [addComposite=false]           Whether to add a composite.
+ * @param   {bool}       [addPeg=false]                 Whether to add a peg.
+ * @param   $.{oPoint}   [nodePosition={0,0,0}]           The position for the node to be placed in the network.
+ 
+ * @return {$.oGroupNode}   The created node, or bool as false.
+ */
+$.oGroupNode.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, nodePosition ){
+    // Defaults for optional parameters
+    if (typeof addPeg === 'undefined') var addPeg = false;
+    if (typeof addComposite === 'undefined') var addComposite = false;
+    if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+    if (typeof includeNodes === 'undefined') var includeNodes = [];
+   
+    var _group = this.addNode( "GROUP", name, nodePosition );
+   
+    var _MPI = _group.multiportIn;
+    var _MPO = _group.multiportOut;
+ 
+    if (addComposite){
+        var _composite = _group.addNode("COMPOSITE", name+"_Composite");
+        _composite.composite_mode = "Pass Through"; //
+        _composite.linkOutNode(_MPO);
+    }
+    if (addPeg){
+        var _peg = _group.addNode("PEG", name+"-P");
+        _peg.linkInNode(_MPI);
+    }
+   
+    if (includeNodes.length > 0){
+        var _timeline = this.getTimeline();
+        includeNodes.sort(function(a, b){return a.timelineIndex(_timeline)-b.timelineIndex(_timeline)});
+       
+        for (var i in includeNodes){
+            var _node = includeNodes[i];
+            var _nodeName = _node.name;
+            node.moveToGroup(_node.path, _group.path);
+           
+           // updating the fullPath of the oNode objects passed by reference
+            _node.path = _group.path+'/'+_nodeName;          
+           
+            if (addPeg){
+                _node.unlinkInNode(_MPI);
+                _node.linkInNode(_peg);
+            }
+        }
+       
+        // TODO: restore links that existed outside of the group
+    }
+   
+    return _group;
+}
+
+
+/**
+ * Imports the specified template into the scene.
+ * @param   {string}           tplPath                                        The path of the TPL file to import. 
+ * @param   {$.oNode[]}        [destinationNodes=false]                       The nodes affected by the template.
+ * @param   {bool}             [extendScene=true]                             Whether to extend the exposures of the content imported.
+ * @param   {$.oPoint}         [nodePosition={0,0,0}]                         The position to offset imported new nodes.
+ * @param   {object}           [pasteOptions]                                 An object containing paste options as per Harmony's standard paste options.
+ * 
+ * @return {$.oNode[]}         The resulting pasted nodes.
+ */
+$.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, extendScene, nodePosition, pasteOptions ){
+	if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
+	if (typeof destinationNodes === 'undefined' || destinationNodes.length == 0) var destinationNodes = false;
+	if (typeof extendScene === 'undefined') var extendScene = true;
+	
+	if (typeof pasteOptions === 'undefined') var pasteOptions = copyPaste.getCurrentPasteOptions();
+	pasteOptions.extendScene = extendScene;
+	
+  var _group = this.path;
+  
+  if(tplPath instanceof this.$.oFolder) tplPath = tplPath.path; 
+  
+  this.$.log("importing template : "+tplPath)
+	var _copyOptions = copyPaste.getCurrentCreateOptions();
+	var _tpl = copyPaste.copyFromTemplate(tplPath, 0, 999, _copyOptions); // any way to get the length of a template before importing it?
+	
+	if (destinationNodes){
+		// TODO: deal with import options to specify frames
+		copyPaste.paste(_tpl, destinationNodes.map(function(x){return x.path}), 0, 999, pasteOptions);
+		var _nodes = destinationNodes;
+	}else{
+		copyPaste.pasteNewNodes(_tpl, _group, pasteOptions);
+		var _scene = this.scene;
+		var _nodes = selection.selectedNodes().map(function(x){return _scene.$node(x)});
+		for (var i in _nodes){
+			_nodes[i].x += nodePosition.x;
+			_nodes[i].y += nodePosition.y;
+		}
+	}
+	
+	return _nodes;
+}
+
+
+/**
+ * Adds a backdrop to a group in a specific position.
+ * @param   {string}           title                             The title of the backdrop.
+ * @param   {string}           [body=""]                         The body text of the backdrop.
+ * @param   {$.oColorValue}    [color="#323232ff"]               The oColorValue of the node.
+ * @param   {float}            [x=0]                             The X position of the backdrop, an offset value if nodes are specified.
+ * @param   {float}            [y=0]                             The Y position of the backdrop, an offset value if nodes are specified.
+ * @param   {float}            [width=30]                        The Width of the backdrop, a padding value if nodes are specified.
+ * @param   {float}            [height=30]                       The Height of the backdrop, a padding value if nodes are specified.
+ * 
+ * @return {$.oBackdrop}       The created backdrop.
+ */
+$.oGroupNode.prototype.addBackdrop = function(title, body, color, x, y, width, height ){
+  if (typeof color === 'undefined') var color = new this.$.oColorValue("#323232ff");
+  if (typeof body === 'undefined') var body = "";
+  
+  if (typeof x === 'undefined') var x = 0;
+  if (typeof y === 'undefined') var y = 0;
+  if (typeof width === 'undefined') var width = 30;
+  if (typeof height === 'undefined') var height = 30;
+  
+  var position = {"x":x, "y":y, "w":width, "h":height};
+
+	if (typeof groupPath === 'undefined') var groupPath = "Top";
+  
+  if(groupPath instanceof this.$.oGroupNode) groupPath = groupPath.path;
+  if(!(color instanceof this.$.oColorValue)) color = new this.$.oColorValue(color);
+ 
+ 
+	// incrementing title so that two backdrops can't have the same title
+	if (typeof title === 'undefined') var title = "Backdrop";
+		
+	var _groupBackdrops = Backdrop.backdrops(groupPath);
+	var names = _groupBackdrops.map(function(x){return x.title.text})
+	var count = 0;
+	var newTitle = title;
+  
+	while (names.indexOf(newTitle) != -1){
+		count++;
+		newTitle = title+"_"+count;
+	}
+	title = newTitle;
+  
+
+  var _backdrop = {
+  "position"    : position,
+  "title"       : {"text":title, "color":4278190080, "size":12, "font":"Arial"},
+  "description" : {"text":body, "color":4278190080, "size":12, "font":"Arial"},
+  "color"       : color.toInt() 
+  }
+  
+  Backdrop.addBackdrop(groupPath, _backdrop)
+	return new this.$.oBackdrop(groupPath, _backdrop)
+};
+
+
+/**
+ * Adds a backdrop to a group around specified nodes
+ * @param   {$.oNode[]}        nodes                             The nodes that the backdrop encompasses.
+ * @param   {string}           title                             The title of the backdrop.
+ * @param   {string}           body                              The body text of the backdrop.
+ * @param   {$.oColorValue}    color                             The oColorValue of the node.
+ * @param   {float}            x                                 The X position of the backdrop, an offset value if nodes are specified.
+ * @param   {float}            y                                 The Y position of the backdrop, an offset value if nodes are specified.
+ * @param   {float}            width                             The Width of the backdrop, a padding value if nodes are specified.
+ * @param   {float}            height                            The Height of the backdrop, a padding value if nodes are specified.
+ * 
+ * @return {$.oBackdrop}       The created backdrop.
+ * @example 
+ * function createColoredBackdrop(){
+ *  // This script will prompt for a color and create a backdrop around the selection
+ * 	$.beginUndo()
+ * 	
+ * 	var doc = $.scene; // grab the scene
+ * 	var nodes = doc.getSelectedNodes(); // grab the selection
+ * 	var color = pickColor(); // prompt for color
+ *   
+ *  var group = doc.$node("Top") // get the group to add the backdrop to
+ *  var backdrop = group.addBackdropToNodes(nodes, "BackDrop", "", color)
+ * 
+ *  $.endUndo()
+ * 
+ *  // function to get the color chosen by the user
+ * 	function pickColor(){
+ * 		var d = new QColorDialog;
+ * 		d.exec();
+ * 		var color = d.selectedColor();
+ * 		return new $.oColorValue({r:color.red(), g:color.green(), b:color.blue(), a:color.alpha()})
+ * 	}  
+ * }
+ */
+$.oGroupNode.prototype.addBackdropToNodes = function( nodes, title, body, color, x, y, width, height ){
+  if (typeof color === 'undefined') var color = new this.$.oColorValue("#323232ff");
+  if (typeof body === 'undefined') var body = "";
+
+  // get default size from node bounds
+  if (typeof nodes === 'undefined') var nodes = [];
+  
+  if (nodes.length > 0) {
+    var _nodeBox = new this.$.oBox();
+    _nodeBox.includeNodes(nodes);
+       
+    x = _nodeBox.left - x - ( width );
+    y = _nodeBox.top - y - ( height );
+    width = _nodeBox.width  + width*2;
+    height = _nodeBox.height + height*2;
+  }
+  
+  var _backdrop = this.addBackdrop(title, body, color, x, y, width, height)
+  
+	return _backdrop;
+};
+
+
+/**
+ * Imports a PSD into the group.
+ * @param   {string}         path                          The PSD file to import.
+ * @param   {bool}           [separateLayers=true]         Separate the layers of the PSD.
+ * @param   {bool}           [addPeg=true]                 Whether to add a peg.
+ * @param   {bool}           [addComposite=true]           Whether to add a composite.
+ * @param   {string}         [alignment="ASIS"]            Alignment type.
+ * @param   {$.oPoint}       [nodePosition={0,0,0}]        The position for the node to be placed in the node view.
+ * 
+ * @return {$.oNode[]}     The nodes being created as part of the PSD import.
+ * @example
+ * // This example browses for a PSD file then import it in the root of the scene, then connects it to the main composite.
+ *
+ * function importCustomPSD(){
+ *   $.beginUndo();
+ *   var psd = $.dialog.browseForFile("get PSD", "*.psd");       // prompt for a PSD file
+ *   
+ *   if (!psd) return;                                           // dialog was cancelled, exit the function
+ *
+ *   var doc = $.scene;                                          // get the scene object
+ *   var topGroup = doc.root                                     // grab the scene root group
+ *   var psdNodes = doc.importPSD(psd);                          // import the psd with default settings
+ *   var psdComp = psdNodes.pop()                                // get the composite node at the end of the psdNodes array
+ *   var sceneComp = doc.$node("Top/Composite")                  // get the scene main composite
+ *   psdComp.linkOutNode(sceneComp);                             // ... and link the two.
+ *   doc.orderNodeView();                                        // orders the node view
+ *   $.endUndo();
+ * }
+ */
+$.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addComposite, alignment, nodePosition){
+  if (typeof alignment === 'undefined') var alignment = "ASIS" // create an enum for alignments?
+  if (typeof addComposite === 'undefined') var addComposite = true;
+  if (typeof addPeg === 'undefined') var addPeg = true;
+  if (typeof separateLayers === 'undefined') var separateLayers = true;
+  if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+
+  var _psdFile = (path instanceof this.$.oFile)?path:new this.$.oFile( path );
+  var _elementName = _psdFile.name;
+
+  var _xSpacing = 45;
+  var _ySpacing = 30; 
+ 
+  var _element = this.scene.addElement(_elementName, "PSD");
+  var _column = this.scene.addColumn(_elementName, "DRAWING", _element);
+ 
+  // save scene otherwise PSD is copied correctly into the element
+  // but the TGA for each layer are not generated
+  // TODO: how to go around this to avoid saving?
+  scene.saveAll();
+  var _drawing = _element.addDrawing(1);
+ 
+  if (addPeg) var _peg = this.addNode("PEG", _elementName+"-P", nodePosition);
+  if (addComposite) var _comp = this.addNode("COMPOSITE", _elementName+"-Composite", nodePosition);
+ 
+  // Import the PSD in the element
+  CELIO.pasteImageFile({ src : _psdFile.path, dst : { elementId : _element.id, exposure : _drawing.name}});
+  var _layers = CELIO.getLayerInformation(_psdFile.path);
+  var _info = CELIO.getInformation(_psdFile.path);
+  
+  // create the nodes for each layer
+   
+  var _nodes = [];
+  if (separateLayers){
+
+    var _scale = _info.height/scene.defaultResolutionY();
+    var _x = nodePosition.x - _layers.length/2*_xSpacing;
+    var _y = nodePosition.y - _layers.length/2*_ySpacing;
+   
+    // TODO: discover and generate the groups present in the PSD
+   
+    for (var i in _layers){
+      // generate nodes and set them to show the element for each layer
+      var _layer = _layers[i].layer;
+      var _layerName = _layers[i].layerName.split(" ").join("_");
+      var _nodePosition = new this.$.oPoint(_x+=_xSpacing, _y +=_ySpacing, 0);
+     
+      //TODO: set into right group according to PSD organisation
+      // var _group = group; //"Top/"+_layers[i].layerPathComponents.join("/");
+     
+      var _node = this.addDrawingNode(_layerName, _nodePosition, _element)
+
+      _node.enabled = _layers[i].visible;
+      _node.can_animate = false; // use general pref?
+      _node.apply_matte_to_color = "Straight";
+      _node.alignment_rule = alignment;
+      _node.scale.x = _scale;
+      _node.scale.y = _scale;
+     
+      _node.attributes.drawing.element.setValue(_layer != ""?"1:"+_layer:1, 1);
+      _node.attributes.drawing.element.column.extendExposures();
+      
+      if (addPeg) _node.linkInNode(_peg);
+      if (addComposite) _node.linkOutNode(_comp,0,0);
+
+      _nodes.push(_node);
+    }
+  }else{
+    throw new Error("importing PSD as a flattened layer not yet implemented");
+  }
+ 
+  if (addPeg){
+    _peg.centerAbove(_nodes, 0, -_ySpacing )
+    _nodes.unshift(_peg)
+  }
+   
+  if (addComposite){
+    _comp.centerBelow(_nodes, 0, _ySpacing )
+    _nodes.push(_comp)
+  }
+  // TODO how to display only one node with the whole file
+ 
+  return _nodes
+}
+
+
+/**
+ * Updates a PSD previously imported into the group
+ * @param   {string}       path                          The palette file to import.
+ * @param   {bool}         [separateLayers=true]         Separate the layers of the PSD.
+ */
+$.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
+  if (typeof separateLayers === 'undefined') var separateLayers = true;
+
+  var _psdFile = (path instanceof this.$.oFile)?path:new this.$.oFile(path);
+ 
+  // get info from the PSD
+  var _info = CELIO.getInformation(_psdFile.path);
+  var _layers = CELIO.getLayerInformation(_psdFile.path);
+  var _scale = _info.height/scene.defaultResolutionY();
+  
+  // use layer information to find nodes from precedent export
+  if (separateLayers){
+    var _nodes = this.subNodes(true).filter(function(x){return x.type == "READ"});
+    var _nodeNames = _nodes.map(function(x){return x.name});
+   
+    var _psdNodes = [];
+    var _missingLayers = [];
+    var _PSDelement = "";
+    var _positions = new Array(_layers.length);
+    var _scale = _info.height/scene.defaultResolutionY();
+   
+    // for each layer find the node by looking at the column name
+    for (var i in _layers){
+      var _layer = _layers[i];
+      var _layerName = _layers[i].layerName.split(" ").join("_");
+      var _found = false;
+
+      // find the node
+      for (var j in _nodes){
+        if (_nodes[j].element.format != "PSD") continue;
+       
+        var _drawingColumn = _nodes[j].attributes.drawing.element.column;
+
+        // update the node if found
+        if (_drawingColumn.name == _layer.layerName){
+          _psdNodes.push(_nodes[j]);
+          _found = true;
+
+           // update scale in case PSDfile size changed
+          _nodes[j].scale.x = _scale;
+          _nodes[j].scale.y = _scale;
+          
+          
+          _positions[_layer.position] = _nodes[j];
+      
+          // store the element
+          _PSDelement = _nodes[j].element
+                             
+          break;
+        }
+        // if not found, add to the list of layers to import
+        _found = false;
+      }
+       
+      if (!_found) _missingLayers.push(_layer);
+    }
+   
+    
+    if (_psdNodes.length == 0){
+      // PSD was never imported, use import instead?
+      this.$.debug("can't find a PSD element to update", this.$.DEBUG_LEVEL.ERROR);
+      return;
+    }
+    
+    // pasting updated PSD into element
+    CELIO.pasteImageFile({ src : _psdFile.path, dst : { elementId : _PSDelement.id, exposure : "1"}})
+   
+    for (var i in _missingLayers){
+      // find previous import Settings re: group/alignment etc
+      var _layer = _missingLayers[i];
+      var _layerName = _layer.layerName.split(" ").join("_");
+
+      var _layerIndex = _layer.position;
+      var _nodePosition = new this.$.oPoint(0,0,0);
+      var _group = _psdNodes[0].group;
+      var _alignment = _psdNodes[0].alignment_rule;
+      var _scale = _psdNodes[0].scale.x;
+      var _peg = _psdNodes[0].inNodes[0];
+      var _comp = _psdNodes[0].outNodes[0];
+      var _scale = _info.height/scene.defaultResolutionY()
+      var _port;
+      
+      //TODO: set into right group according to PSD organisation
+      // looking for the existing node below and get the comp port from it
+      for (var j = _layerIndex-1; j>=0; j--){
+        if (_positions[j] != undefined) break;
+      }
+      var _nodeBelow = _positions[j];
+      
+      var _compNodes = _comp.inNodes;
+      
+      for (var j=0; j<_compNodes.length; j++){
+        if (_nodeBelow.path == _compNodes[j].path){
+          _port = j+1;
+          _nodePosition = _compNodes[j].nodePosition;
+          _nodePosition.x -= 35;
+          _nodePosition.y -= 25;
+        }
+      }
+      
+      // generate nodes and set them to show the element for each layer         
+      var _node = this.addDrawingNode(_layerName, _nodePosition, _PSDelement);
+
+      _node.enabled = _layer.visible;
+      _node.can_animate = false; // use general pref?
+      _node.apply_matte_to_color = "Straight";
+      _node.alignment_rule = _alignment;
+      _node.scale.x = _scale;
+      _node.scale.y = _scale;
+     
+      _node.attributes.drawing.element.setValue(_layer.layer != ""?"1:"+_layer.layer:1, 1);
+      _node.attributes.drawing.element.column.extendExposures();
+
+      // find composite/peg to connect to based on other layers
+     
+      //if (addPeg) _node.linkInNode(_peg)
+      if (_port) _node.linkOutNode(_comp, 0, _port)
+
+      _nodes.push(_node);
+    }  
+  } else{
+      throw new Error("updating a PSD imported as a flattened layer not yet implemented");
+  }
+}
+ 
+ 
+/**
+ * Imports a QT into the group
+ * @param   {string}         path                          The palette file to import.
+ * @param   {bool}           extendScene                   Whether to add a composite.
+ * @param   {string}         alignment                     Alignment type.
+ * @param   {$.oPoint}       nodePosition                  The position for the node to be placed in the network.
+ * 
+ * @return {$.oNode}        The imported Quicktime Node.
+ */
+$.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alignment, nodePosition){
+    if (typeof alignment === 'undefined') var alignment = "ASIS";
+    if (typeof extendScene === 'undefined') var extendScene = true;
+    if (typeof importSound === 'undefined') var importSound = true;
+    if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+    // MessageLog.trace("importing QT file :"+filename)
+ 
+    var _QTFile = (path instanceof this.$.oFile)?path:new this.$.oFile(path);
+    var _elementName = _QTFile.name;
+   
+    var _element = this.scene.addElement(_elementName, "PNG");
+    var _qtNode = this.addDrawingNode(_elementName, nodePosition, _element);
+    var _column = _qtNode.attributes.drawing.element.column;
+    _element.column = _column;
+   
+    // setup the node
+    _qtNode.can_animate = false;
+    _qtNode.alignment_rule = alignment;
+   
+    var _tempFolder = scene.tempProjectPathRemapped () + "/movImport/" + _elementName
+    var _audioPath = _tempFolder + "/" + _elementName + ".wav"
+ 
+    // setup import
+    MovieImport.setMovieFilename(_QTFile.path);
+    MovieImport.setImageFolder(_tempFolder);
+    MovieImport.setImagePrefix(_elementName);
+    MovieImport.setAudioFile(_audioPath);
+    MovieImport.doImport();
+   
+    if (extendScene && this.length < MovieImport.numberOfImages()) this.length = MovieImport.numberOfImages();
+   
+    // create expositions on the node
+    for (var i = 1; i <= MovieImport.numberOfImages(); i++ ) {
+        // move the frame into the drawing
+        var _framePath = _tempFolder + '/'+_elementName+'-' + i + '.png';
+        var _drawing = _element.addDrawing(i, i, _framePath)
+    }
+   
+    // creating an audio column for the sound
+    if (importSound && MovieImport.isAudioFileCreated() ){
+        var _soundName = _elementName + "_sound";
+        var _soundColumn = this.scene.addColumn("SOUND", _soundName);
+        column.importSound( _soundColumn.name, 1, _audioPath);
+    }
+ 
+    return _qtNode;
+}

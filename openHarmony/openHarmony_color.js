@@ -574,17 +574,31 @@ Object.defineProperty($.oColor.prototype, 'value', {
  *  
  * @return: {$.oColor}           The new resulting $.oColor object.
  */
-$.oColor.prototype.moveToPalette = function ( oPaletteObject, index ){
-    var _color = this.colorObject;
+$.oColor.prototype.moveToPalette = function (oPaletteObject, index){
+    var duplicate = this.copyToPalette(oPaletteObject, index)
+    this.remove()
     
-    oPaletteObject.paletteObject.cloneColor(_color)
-    this.palette.paletteObject.removeColor(_color.id)
+    return _duplicate;
+}
 
+
+/**
+ * Copies the palette to another Palette Object (CFNote: perhaps have it push to paletteObject, instead of being done at the color level)
+ * @param   {$.oPalette}         oPaletteObject              The paletteObject to move this color into.
+ * @param   {int}                index                       Need clarification from mchap
+ *  
+ * @return: {$.oColor}           The new resulting $.oColor object.
+ */
+$.oColor.prototype.copyToPalette = function (oPaletteObject, index){
+    var _color = this.colorObject;
+   
+    oPaletteObject.paletteObject.cloneColor(_color)
+ 
     var _colors = oPaletteObject.colors
     var _duplicate = _colors.pop()
-    
+   
     if (typeof index !== 'undefined') _duplicate.index = index;
-
+ 
     return _duplicate;
 }
 

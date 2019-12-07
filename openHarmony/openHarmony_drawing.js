@@ -4,7 +4,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -79,3 +79,13 @@ Object.defineProperty( $.oDrawing.prototype, 'path', {
 
 
 // $.oDrawing Class methods
+
+
+/**
+ * Converts the Drawing object to a string of the drawing name.
+ * @name toString
+ * @type {string}
+ */
+$.oDrawing.prototype.toString = function(){
+    return this.name;
+}

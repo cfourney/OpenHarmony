@@ -120,13 +120,61 @@ $.oDialog.prototype.alert = function( title, labelText, okButtonText ){
     }
 }
 
+
+/**
+ * Prompts with a file selector window
+ * @param   {string}           [text="Select a file:"]       The title of the confirmation dialog.
+ * @param   {string}           [filter="*"]                  The filter for the file type and/or file name that can be selected. Accepts wildcard charater "*".
+ * @param   {string}           [getExisting=true]            Whether to select an existing file or a save location
+ * @param   {string}           [acceptMultiple=false]        Whether or not selecting more than one file is ok. Is ignored if getExisting is falses.
+ * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
+ * 
+ * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
+ */
+$.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptMultiple, startDirectory){   
+    if (typeof title === 'undefined') var title = "Select a file:";
+    if (typeof filter === 'undefined') var filter = "*"
+    if (typeof getExisting === 'undefined') var getExisting = true;
+    if (typeof acceptMultiple === 'undefined') var acceptMultiple = false;
+    
+    
+    if (getExisting){
+      if (acceptMultiple){
+        var _files = QFileDialog.getOpenFileNames(0, text, startDirectory, filter)
+      }else{
+        var _files = QFileDialog.getOpenFileName(0, text, startDirectory, filter)
+      }        
+    }else{
+      var _files = QFileDialog.getSaveFileName(0, text, startDirectory, filter)
+    }
+
+    this.$.debug(_files)    
+    return _files;
+}
+
+
+/**
+ * Prompts with an alert dialog (informational).
+ * @param   {string}           [text]                        The title of the confirmation dialog.
+ * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
+ * 
+ * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled 
+ */
+$.oDialog.prototype.browseForFolder = function(text, startDirectory){   
+    if (typeof title === 'undefined') var title = "Select a folder:";
+    
+    var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory)
+    
+    this.$.debug(_folder)
+    return _folder;
+}
  
  
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
 //                                  //
-//       $.gui.Progress class       //
+//    $.oDialog.Progress class      //
 //                                  //
 //                                  //
 //////////////////////////////////////

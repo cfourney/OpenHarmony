@@ -238,6 +238,8 @@
             
             <span class="subtitle">Methods</span>
             
+                <li data-name="$.oColor#copyToPalette"><a href="$.oColor.html#copyToPalette">copyToPalette</a></li>
+            
                 <li data-name="$.oColor#hexToRgba"><a href="$.oColor.html#hexToRgba">hexToRgba</a></li>
             
                 <li data-name="$.oColor#moveToPalette"><a href="$.oColor.html#moveToPalette">moveToPalette</a></li>
@@ -351,6 +353,10 @@
             <span class="subtitle">Methods</span>
             
                 <li data-name="$.oDialog#alert"><a href="$.oDialog.html#alert">alert</a></li>
+            
+                <li data-name="$.oDialog#browseForFile"><a href="$.oDialog.html#browseForFile">browseForFile</a></li>
+            
+                <li data-name="$.oDialog#browseForFolder"><a href="$.oDialog.html#browseForFolder">browseForFolder</a></li>
             
                 <li data-name="$.oDialog#confirm"><a href="$.oDialog.html#confirm">confirm</a></li>
             
@@ -533,6 +539,8 @@
             
                 <li data-name="$.oDrawingNode#type"><a href="$.oDrawingNode.html#type">type</a></li>
             
+                <li data-name="$.oDrawingNode#usedColorIds"><a href="$.oDrawingNode.html#usedColorIds">usedColorIds</a></li>
+            
                 <li data-name="$.oDrawingNode#width"><a href="$.oDrawingNode.html#width">width</a></li>
             
                 <li data-name="$.oDrawingNode#x"><a href="$.oDrawingNode.html#x">x</a></li>
@@ -608,6 +616,8 @@
             <ul class="members itemMembers">
             
             <span class="subtitle">Members</span>
+            
+                <li data-name="$.oElement#drawings"><a href="$.oElement.html#drawings">drawings</a></li>
             
                 <li data-name="$.oElement#drawings"><a href="$.oElement.html#drawings">drawings</a></li>
             
@@ -817,8 +827,6 @@
             
                 <li data-name="$.oGroupNode#bounds"><a href="$.oGroupNode.html#bounds">bounds</a></li>
             
-                <li data-name="$.oGroupNode#children"><a href="$.oGroupNode.html#children">children</a></li>
-            
                 <li data-name="$.oGroupNode#enabled"><a href="$.oGroupNode.html#enabled">enabled</a></li>
             
                 <li data-name="$.oGroupNode#exists"><a href="$.oGroupNode.html#exists">exists</a></li>
@@ -880,9 +888,21 @@
             
             <span class="subtitle">Methods</span>
             
+                <li data-name="$.oGroupNode#addBackdrop"><a href="$.oGroupNode.html#addBackdrop">addBackdrop</a></li>
+            
+                <li data-name="$.oGroupNode#addBackdropToNodes"><a href="$.oGroupNode.html#addBackdropToNodes">addBackdropToNodes</a></li>
+            
+                <li data-name="$.oGroupNode#addDrawingNode"><a href="$.oGroupNode.html#addDrawingNode">addDrawingNode</a></li>
+            
+                <li data-name="$.oGroupNode#addGroup"><a href="$.oGroupNode.html#addGroup">addGroup</a></li>
+            
+                <li data-name="$.oGroupNode#addNode"><a href="$.oGroupNode.html#addNode">addNode</a></li>
+            
                 <li data-name="$.oGroupNode#centerAbove"><a href="$.oGroupNode.html#centerAbove">centerAbove</a></li>
             
                 <li data-name="$.oGroupNode#centerBelow"><a href="$.oGroupNode.html#centerBelow">centerBelow</a></li>
+            
+                <li data-name="$.oGroupNode#children"><a href="$.oGroupNode.html#children">children</a></li>
             
                 <li data-name="$.oGroupNode#clone"><a href="$.oGroupNode.html#clone">clone</a></li>
             
@@ -893,6 +913,12 @@
                 <li data-name="$.oGroupNode#getAttributeByName"><a href="$.oGroupNode.html#getAttributeByName">getAttributeByName</a></li>
             
                 <li data-name="$.oGroupNode#getAttributesColumnCache"><a href="$.oGroupNode.html#getAttributesColumnCache">getAttributesColumnCache</a></li>
+            
+                <li data-name="$.oGroupNode#importPSD"><a href="$.oGroupNode.html#importPSD">importPSD</a></li>
+            
+                <li data-name="$.oGroupNode#importQT"><a href="$.oGroupNode.html#importQT">importQT</a></li>
+            
+                <li data-name="$.oGroupNode#importTemplate"><a href="$.oGroupNode.html#importTemplate">importTemplate</a></li>
             
                 <li data-name="$.oGroupNode#insertInNode"><a href="$.oGroupNode.html#insertInNode">insertInNode</a></li>
             
@@ -919,6 +945,8 @@
                 <li data-name="$.oGroupNode#unlinkOutNode"><a href="$.oGroupNode.html#unlinkOutNode">unlinkOutNode</a></li>
             
                 <li data-name="$.oGroupNode#unlinkOutPort"><a href="$.oGroupNode.html#unlinkOutPort">unlinkOutPort</a></li>
+            
+                <li data-name="$.oGroupNode#updatePSD"><a href="$.oGroupNode.html#updatePSD">updatePSD</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1190,6 +1218,8 @@
             
                 <li data-name="$.oPalette#addColor"><a href="$.oPalette.html#addColor">addColor</a></li>
             
+                <li data-name="$.oPalette#getColorById"><a href="$.oPalette.html#getColorById">getColorById</a></li>
+            
                 <li data-name="$.oPalette#remove"><a href="$.oPalette.html#remove">remove</a></li>
             
             </ul>
@@ -1423,8 +1453,6 @@
             
                 <li data-name="$.oScene#currentFrame"><a href="$.oScene.html#currentFrame">currentFrame</a></li>
             
-                <li data-name="$.oScene#dirty"><a href="$.oScene.html#dirty">dirty</a></li>
-            
                 <li data-name="$.oScene#fov"><a href="$.oScene.html#fov">fov</a></li>
             
                 <li data-name="$.oScene#framerate"><a href="$.oScene.html#framerate">framerate</a></li>
@@ -1445,19 +1473,23 @@
             
                 <li data-name="$.oScene#resolutionY"><a href="$.oScene.html#resolutionY">resolutionY</a></li>
             
+                <li data-name="$.oScene#root"><a href="$.oScene.html#root">root</a></li>
+            
                 <li data-name="$.oScene#sceneName"><a href="$.oScene.html#sceneName">sceneName</a></li>
             
                 <li data-name="$.oScene#stage"><a href="$.oScene.html#stage">stage</a></li>
             
                 <li data-name="$.oScene#startFrame"><a href="$.oScene.html#startFrame">startFrame</a></li>
             
-                <li data-name="$.oScene#startFrame"><a href="$.oScene.html#startFrame">startFrame</a></li>
+                <li data-name="$.oScene#stopFrame"><a href="$.oScene.html#stopFrame">stopFrame</a></li>
             
                 <li data-name="$.oScene#unitsX"><a href="$.oScene.html#unitsX">unitsX</a></li>
             
                 <li data-name="$.oScene#unitsY"><a href="$.oScene.html#unitsY">unitsY</a></li>
             
                 <li data-name="$.oScene#unitsZ"><a href="$.oScene.html#unitsZ">unitsZ</a></li>
+            
+                <li data-name="$.oScene#unsaved"><a href="$.oScene.html#unsaved">unsaved</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -1490,7 +1522,11 @@
             
                 <li data-name="$.oScene#addNode"><a href="$.oScene.html#addNode">addNode</a></li>
             
+                <li data-name="$.oScene#addPalette"><a href="$.oScene.html#addPalette">addPalette</a></li>
+            
                 <li data-name="$.oScene#close"><a href="$.oScene.html#close">close</a></li>
+            
+                <li data-name="$.oScene#exportTemplate"><a href="$.oScene.html#exportTemplate">exportTemplate</a></li>
             
                 <li data-name="$.oScene#getColumnByName"><a href="$.oScene.html#getColumnByName">getColumnByName</a></li>
             
@@ -2045,51 +2081,6 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="dirty">dirty<span class="type-signature type bool">bool</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Whether the scene is currently dirty (changes unsaved).
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
         <h4 class="name" id="fov">fov<span class="type-signature type double">double</span> </h4>
     </div>
     
@@ -2233,7 +2224,7 @@
 <dd>
     
     <div class="description">
-        Contains the list of nodes present in the scene.
+        Contains the list of all the nodes present in the scene.
     </div>
     
     
@@ -2540,6 +2531,51 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="root">root<span class="type-signature type array.<$.onode>">Array.&lt;<a href="$.oNode.html">$.oNode</a>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The root group of the scene.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="sceneName">sceneName<span class="type-signature type string">string</span> </h4>
     </div>
     
@@ -2675,7 +2711,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="startFrame">startFrame<span class="type-signature type int">int</span> </h4>
+        <h4 class="name" id="stopFrame">stopFrame<span class="type-signature type int">int</span> </h4>
     </div>
     
     
@@ -2851,6 +2887,51 @@
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="unsaved">unsaved<span class="type-signature type bool">bool</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Whether the scene contains unsaved changes.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
         </dl>
     
     
@@ -2868,7 +2949,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 507
+            openHarmony/openHarmony_scene.js, line 1454
         </div>
         
     </div>
@@ -3036,7 +3117,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 496
+            openHarmony/openHarmony_scene.js, line 1443
         </div>
         
     </div>
@@ -3181,7 +3262,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 517
+            openHarmony/openHarmony_scene.js, line 1464
         </div>
         
     </div>
@@ -3326,7 +3407,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1557
+            openHarmony/openHarmony_scene.js, line 1345
         </div>
         
     </div>
@@ -3562,6 +3643,8 @@
     
 
     
+        <dt class="important tag-deprecated">Deprecated</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+    
     
     
     
@@ -3632,7 +3715,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1618
+            openHarmony/openHarmony_scene.js, line 1395
         </div>
         
     </div>
@@ -3891,6 +3974,8 @@
     
 
     
+        <dt class="important tag-deprecated">Deprecated</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+    
     
     
     
@@ -3948,6 +4033,34 @@
     
     
     
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>function createColoredBackdrop(){
+ // This script will prompt for a color and create a backdrop around the selection
+	$.beginUndo()
+	
+	var doc = $.scene; // grab the scene
+	var nodes = doc.getSelectedNodes(); // grab the selection
+	var color = pickColor(); // prompt for color
+  
+ var group = doc.$node("Top") // can pass the path or a oGroupNode object to the function
+ var backdrop = doc.addBackdropToNodes(group, nodes, "BackDrop", "", color)
+
+ $.endUndo()
+
+ // function to get the color chosen by the user
+	function pickColor(){
+		var d = new QColorDialog;
+		d.exec();
+		var color = d.selectedColor();
+		return new $.oColorValue({r:color.red(), g:color.green(), b:color.blue(), a:color.alpha()})
+	}  
+}</code></pre>
+    
+
+    
 </dd>
 
         
@@ -3961,7 +4074,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 912
+            openHarmony/openHarmony_scene.js, line 862
         </div>
         
     </div>
@@ -4152,7 +4265,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 979
+            openHarmony/openHarmony_scene.js, line 929
         </div>
         
     </div>
@@ -4163,7 +4276,7 @@
     
     
     <div class="description">
-        Adds a drawing element to the scene.
+        Adds a drawing layer to the scene, with a drawing column and element linked. Possible to specify the column and element to use.
     </div>
     
 
@@ -4342,6 +4455,8 @@
     
 
     
+        <dt class="important tag-deprecated">Deprecated</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+    
     
     
     
@@ -4412,7 +4527,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 951
+            openHarmony/openHarmony_scene.js, line 901
         </div>
         
     </div>
@@ -4626,7 +4741,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1011
+            openHarmony/openHarmony_scene.js, line 954
         </div>
         
     </div>
@@ -4637,7 +4752,7 @@
     
     
     <div class="description">
-        Adds a drawing element to the scene.
+        Adds a group to the scene.
     </div>
     
 
@@ -4816,6 +4931,8 @@
     
 
     
+        <dt class="important tag-deprecated">Deprecated</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+    
     
     
     
@@ -4886,7 +5003,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 853
+            openHarmony/openHarmony_scene.js, line 840
         </div>
         
     </div>
@@ -5030,6 +5147,8 @@
     
 
     
+        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>AddNode directly in the destination group by calling it on the oGroupNode</li><ul></dd>
+    
     
     
     
@@ -5093,6 +5212,220 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="addPalette">
+            
+            addPalette<span class="signature">(name, index, paletteStorage, storeInElement)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oPalette.html">$.oPalette</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_scene.js, line 1018
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Add a palette object to the specified location.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The name for the palette.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                Index at which to insert the palette.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>paletteStorage</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                Storage type: environment, job, scene, element, external.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>storeInElement</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oElement.html">$.oElement</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The name of the palette to return, if available.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oPalette.html">$.oPalette</a>
+                        
+                    
+            </td>
+            <td class="description last">newly created oPalette with provided name.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="close">
             
             close<span class="signature">(<span class="optional">exit</span>)</span>
@@ -5100,7 +5433,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1753
+            openHarmony/openHarmony_scene.js, line 1425
         </div>
         
     </div>
@@ -5216,6 +5549,246 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="exportTemplate">
+            
+            exportTemplate<span class="signature">(nodes, <span class="optional">exportPath</span>, <span class="optional">exportPalettesMode</span>, <span class="optional">copyOptions</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_scene.js, line 1190
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        export a template from the specified nodes.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>nodes</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;$.oNodes></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                The path of the TPL file to import.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>exportPath</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether to extend the exposures of the content imported.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>exportPalettesMode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                can have the values : "usedOnly", "all", "createPalette"</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>copyOptions</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">copyOptions</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                An object containing paste options as per Harmony's standard paste options.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        bool
+                        
+                    
+            </td>
+            <td class="description last">The success of the export.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="getColumnByName">
             
             getColumnByName<span class="signature">(uniqueName, oAttributeObject)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oColumn.html">$.oColumn</a>}</span>
@@ -5223,7 +5796,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 460
+            openHarmony/openHarmony_scene.js, line 478
         </div>
         
     </div>
@@ -5391,7 +5964,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 426
+            openHarmony/openHarmony_scene.js, line 441
         </div>
         
     </div>
@@ -5536,7 +6109,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 480
+            openHarmony/openHarmony_scene.js, line 498
         </div>
         
     </div>
@@ -5681,7 +6254,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1075
+            openHarmony/openHarmony_scene.js, line 985
         </div>
         
     </div>
@@ -5692,7 +6265,7 @@
     
     
     <div class="description">
-        Provides a palette object based on name.
+        Finds a palette object based on name.
     </div>
     
 
@@ -5826,7 +6399,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 528
+            openHarmony/openHarmony_scene.js, line 514
         </div>
         
     </div>
@@ -5971,7 +6544,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1089
+            openHarmony/openHarmony_scene.js, line 1000
         </div>
         
     </div>
@@ -5982,7 +6555,7 @@
     
     
     <div class="description">
-        Provides the selected palette.
+        Grabs the selected palette.
     </div>
     
 
@@ -6071,7 +6644,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1064
+            openHarmony/openHarmony_scene.js, line 973
         </div>
         
     </div>
@@ -6082,7 +6655,7 @@
     
     
     <div class="description">
-        Adds a drawing element to the scene.
+        Grabs the timeline object for a specific display.
     </div>
     
 
@@ -6223,7 +6796,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1107
+            openHarmony/openHarmony_scene.js, line 1074
         </div>
         
     </div>
@@ -6234,7 +6807,7 @@
     
     
     <div class="description">
-        Provides a palette object based on name.
+        Imports a palette into the specified location.
     </div>
     
 
@@ -6460,7 +7033,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1170
+            openHarmony/openHarmony_scene.js, line 1276
         </div>
         
     </div>
@@ -6471,7 +7044,7 @@
     
     
     <div class="description">
-        Imports a PSD to the node view.
+        Imports a PSD to the scene.
     </div>
     
 
@@ -6720,6 +7293,8 @@
     
 
     
+        <dt class="important tag-deprecated">Deprecated</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+    
     
     
     
@@ -6790,7 +7365,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1403
+            openHarmony/openHarmony_scene.js, line 1318
         </div>
         
     </div>
@@ -6801,7 +7376,7 @@
     
     
     <div class="description">
-        Imports a QT into the node view.
+        Imports a QT into the scene
     </div>
     
 
@@ -6957,6 +7532,8 @@
     
 
     
+        <dt class="important tag-deprecated">Deprecated</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+    
     
     
     
@@ -7027,7 +7604,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1695
+            openHarmony/openHarmony_scene.js, line 1250
         </div>
         
     </div>
@@ -7038,7 +7615,7 @@
     
     
     <div class="description">
-        Adds a backdrop to a group around specified nodes
+        Imports the specified template into the scene.
     </div>
     
 
@@ -7257,6 +7834,8 @@
     
 
     
+        <dt class="important tag-deprecated">Deprecated</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+    
     
     
     
@@ -7327,7 +7906,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1463
+            openHarmony/openHarmony_scene.js, line 1101
         </div>
         
     </div>
@@ -7518,7 +8097,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 561
+            openHarmony/openHarmony_scene.js, line 547
         </div>
         
     </div>
@@ -7663,7 +8242,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1744
+            openHarmony/openHarmony_scene.js, line 1416
         </div>
         
     </div>
@@ -7734,7 +8313,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1262
+            openHarmony/openHarmony_scene.js, line 1294
         </div>
         
     </div>
@@ -7893,7 +8472,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Dec 05 2019 02:04:46 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat Dec 07 2019 02:11:59 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

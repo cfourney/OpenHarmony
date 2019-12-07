@@ -295,7 +295,7 @@ $.oBox.prototype.includeNodes = function(oNodeArray){
 //////////////////////////////////////
 //                                  //
 //                                  //
-//           $.oTools class          //
+//           $.oTools class         //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -341,26 +341,23 @@ $.oUtils.prototype.longestCommonSubstring = function( str1, str2 ){
 		num[i] = subArray;
 	}
 	var subsBegin = null;
-	for (var i = 0; i < str1Length; i++)
-	{
-		for (var j = 0; j < str2Length; j++)
-		{
-			if (str1[i] !== str2[j])
+	for (var i = 0; i < str1Length; i++){
+		for (var j = 0; j < str2Length; j++){
+			if (str1[i] !== str2[j]){
 				num[i][j] = 0;
-			else
-			{
-				if ((i === 0) || (j === 0))
+			}else{
+				if ((i === 0) || (j === 0)){
 					num[i][j] = 1;
-				else
+				}else{
 					num[i][j] = 1 + num[i - 1][j - 1];
- 
+        }
 				if (num[i][j] > maxlen){
 					maxlen = num[i][j];
 					subsBegin = i - num[i][j] + 1;
 					if (lastSubsBegin === subsBegin){//if the current LCS is the same as the last time this block ran
 						sequence += str1[i];
-					}else //this block resets the string builder if a different LCS is found
-					{
+					}else{
+            //this block resets the string builder if a different LCS is found
 						lastSubsBegin = subsBegin;
 						sequence= ""; //clear it
 						sequence += str1.substr(lastSubsBegin, (i + 1) - lastSubsBegin);

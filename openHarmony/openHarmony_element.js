@@ -4,7 +4,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -83,6 +83,7 @@ Object.defineProperty($.oElement.prototype, 'name', {
     }
 })
 
+
 /**
  * The folder path of the element on the filesystem.
  * @name $.oElement#path
@@ -94,12 +95,13 @@ Object.defineProperty($.oElement.prototype, 'path', {
     }
 })
  
+ 
 /**
  * The drawings available in the element.
  * @name $.oElement#drawings
  * @type {$.oDrawing[]}
  */
-Object.defineProperty($.oElement.prototype, '', {
+Object.defineProperty($.oElement.prototype, 'drawings', {
     get : function(){
         var _drawingsNumber = Drawings.numberOf(this.id)
         var _drawings = [];
@@ -110,11 +112,25 @@ Object.defineProperty($.oElement.prototype, '', {
     }
 })
  
+
+/**
+ * The file format of the element.
+ * @name $.oElement#drawings
+ * @type {$.oDrawing[]}
+ */
+Object.defineProperty($.oElement.prototype, 'format', {
+    get : function(){
+        var _type = element.pixmapFormat(this.id);
+        if (_type == "SCAN") _type = "TVG"
+        return _type
+    }
+})
+ 
  
 // $.oElement Class methods
 
 /**
- * Adds a drawing to the element.
+ * Adds a drawing to the element. Provide a filename to import an external file as a drawing.
  * @param   {int}        atFrame              The exposures to extend. If UNDEFINED, extends all keyframes.
  * @param   {name}       name                 The name of the drawing to add.
  * @param   {bool}       filename             The filename for the drawing to add.
@@ -131,11 +147,11 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
    
     if (filename){
         //copy the imported file at the newly created drawing place
-        var _file = Drawing.filename( this.id, name );
+        var _file = new this.$.oFile(Drawing.filename(this.id, name));
         //MessageLog.trace(_file)
        
         var _frameFile = new this.$.oFile( filename );
-        _frameFile.move( _file, true );
+        _frameFile.move( _file.folder.path, true );
        
     }
    

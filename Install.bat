@@ -39,6 +39,7 @@ if not exist "%installDir%" mkdir "%installDir%"
 rem copy scriptfiles into destination
 (echo .bat 
 echo .json
+echo .txt
 echo .md)> exclude.txt
 
 xcopy "%dlPath%*" "%installDir%" /y /s /i /e /q /exclude:exclude.txt
