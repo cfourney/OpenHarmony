@@ -4,7 +4,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model

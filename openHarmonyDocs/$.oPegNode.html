@@ -965,9 +965,19 @@
             
                 <li data-name="$.oList#filterFunction"><a href="$.oList.html#filterFunction">filterFunction</a></li>
             
+                <li data-name="$.oList#filterFunction"><a href="$.oList.html#filterFunction">filterFunction</a></li>
+            
+                <li data-name="$.oList#filterFunction"><a href="$.oList.html#filterFunction">filterFunction</a></li>
+            
+                <li data-name="$.oList#filterFunction"><a href="$.oList.html#filterFunction">filterFunction</a></li>
+            
+                <li data-name="$.oList#filterProperty"><a href="$.oList.html#filterProperty">filterProperty</a></li>
+            
                 <li data-name="$.oList#filterProperty"><a href="$.oList.html#filterProperty">filterProperty</a></li>
             
                 <li data-name="$.oList#first"><a href="$.oList.html#first">first</a></li>
+            
+                <li data-name="$.oList#length"><a href="$.oList.html#length">length</a></li>
             
                 <li data-name="$.oList#length"><a href="$.oList.html#length">length</a></li>
             
@@ -980,6 +990,8 @@
                 <li data-name="$.oList#startIndex"><a href="$.oList.html#startIndex">startIndex</a></li>
             
                 <li data-name="$.oList#toArray"><a href="$.oList.html#toArray">toArray</a></li>
+            
+                <li data-name="$.oList#toString"><a href="$.oList.html#toString">toString</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -1730,7 +1742,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1116
+            openHarmony/openHarmony_node.js, line 1131
         </div>
         
     </div>
@@ -3119,7 +3131,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 853
+            openHarmony/openHarmony_node.js, line 866
         </div>
         
     </div>
@@ -3312,7 +3324,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 879
+            openHarmony/openHarmony_node.js, line 891
         </div>
         
     </div>
@@ -3505,7 +3517,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 929
+            openHarmony/openHarmony_node.js, line 941
         </div>
         
     </div>
@@ -3686,7 +3698,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 948
+            openHarmony/openHarmony_node.js, line 961
         </div>
         
     </div>
@@ -3697,7 +3709,7 @@
     
     
     <div class="description">
-        WIP.
+        WIP
     </div>
     
 
@@ -3798,6 +3810,13 @@
     
     
     
+    <dt class="tag-todo">TODO</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li></li>
+        </ul>
+    </dd>
+    
 </dl>
 
     
@@ -3827,7 +3846,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1020
+            openHarmony/openHarmony_node.js, line 1035
         </div>
         
     </div>
@@ -3974,7 +3993,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 986
+            openHarmony/openHarmony_node.js, line 999
         </div>
         
     </div>
@@ -4121,7 +4140,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1065
+            openHarmony/openHarmony_node.js, line 1080
         </div>
         
     </div>
@@ -4223,7 +4242,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 808
+            openHarmony/openHarmony_node.js, line 821
         </div>
         
     </div>
@@ -4434,12 +4453,12 @@
             
                 <span class="inherited"><a href="$.oNode.html#linkInNode">inherited</a></span>
             
-            linkInNode<span class="signature">(oNodeObject, inPort, outPort)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
+            linkInNode<span class="signature">(nodeToLink, <span class="optional">inPort</span>, <span class="optional">outPort</span>, <span class="optional">createPorts</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 681
+            openHarmony/openHarmony_node.js, line 682
         </div>
         
     </div>
@@ -4481,7 +4500,7 @@
 	
         <tr>
             
-                <td class="name"><code>oNodeObject</code></td>
+                <td class="name"><code>nodeToLink</code></td>
             
             
             <td class="type">
@@ -4496,6 +4515,11 @@
             
             
             <td class="description last">
+                
+                    
+                    
+                        
+                    
                 
                 The node to link this one's inport to.</td>
         </tr>
@@ -4520,6 +4544,13 @@
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
                 This node's inport to connect.</td>
         </tr>
 	
@@ -4543,7 +4574,44 @@
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
                 The target node's outport to connect.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>createPorts</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether to create new ports on the nodes.</td>
         </tr>
 	
 	
@@ -4627,12 +4695,12 @@
             
                 <span class="inherited"><a href="$.oNode.html#linkOutNode">inherited</a></span>
             
-            linkOutNode<span class="signature">(oNodeObject, inPort, outPort)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
+            linkOutNode<span class="signature">(nodeToLink, <span class="optional">inPort</span>, <span class="optional">outPort</span>, <span class="optional">createPorts</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 763
+            openHarmony/openHarmony_node.js, line 745
         </div>
         
     </div>
@@ -4643,7 +4711,7 @@
     
     
     <div class="description">
-        Link's this node's out-port to the given module, at the inport and outport indices.
+        Links this node's out-port to the given module, at the inport and outport indices.
     </div>
     
 
@@ -4674,7 +4742,7 @@
 	
         <tr>
             
-                <td class="name"><code>oNodeObject</code></td>
+                <td class="name"><code>nodeToLink</code></td>
             
             
             <td class="type">
@@ -4689,6 +4757,11 @@
             
             
             <td class="description last">
+                
+                    
+                    
+                        
+                    
                 
                 The node to link this one's outport to.</td>
         </tr>
@@ -4713,6 +4786,13 @@
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
                 The target node's inport to connect.</td>
         </tr>
 	
@@ -4736,7 +4816,44 @@
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
                 This node's outport to connect.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>createPorts</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether to create new ports on the nodes.</td>
         </tr>
 	
 	
@@ -4825,7 +4942,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 905
+            openHarmony/openHarmony_node.js, line 917
         </div>
         
     </div>
@@ -5018,7 +5135,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 960
+            openHarmony/openHarmony_node.js, line 973
         </div>
         
     </div>
@@ -5188,7 +5305,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 831
+            openHarmony/openHarmony_node.js, line 844
         </div>
         
     </div>
@@ -5484,7 +5601,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1010
+            openHarmony/openHarmony_node.js, line 1025
         </div>
         
     </div>
@@ -5586,7 +5703,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 734
+            openHarmony/openHarmony_node.js, line 710
         </div>
         
     </div>
@@ -5733,7 +5850,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 699
+            openHarmony/openHarmony_node.js, line 728
         </div>
         
     </div>
@@ -5880,7 +5997,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 783
+            openHarmony/openHarmony_node.js, line 774
         </div>
         
     </div>
@@ -5891,7 +6008,7 @@
     
     
     <div class="description">
-        Link's this node's out-port to the given module, at the inport and outport indices.
+        Links this node's out-port to the given module, at the inport and outport indices.
     </div>
     
 
@@ -6027,7 +6144,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 714
+            openHarmony/openHarmony_node.js, line 797
         </div>
         
     </div>
@@ -6203,7 +6320,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat Dec 07 2019 02:11:59 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Dec 08 2019 00:53:46 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

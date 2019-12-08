@@ -4,7 +4,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -906,6 +906,8 @@ $.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType
  
     var _fileFormat = (imageFormat == "TVG")?"SCAN":imageFormat;
     var _vectorFormat = (imageFormat == "TVG")?imageFormat:"None";
+    
+    name = name.split(" ").join("_");
  
     var _id = element.add(name, scanType, fieldGuide, _fileFormat, _vectorFormat);
     var _element = new this.$.oElement( _id )

@@ -6,7 +6,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -69,18 +69,16 @@
  * @property {oScene}  s                         - The harmony scene.
  */
 $ = {
-
-      debug_level    : 0,
-      DEBUG_LEVEL    : {
-                           'ERROR'   : 0,
-                           'WARNING' : 1,
-                           'LOG'     : 2
-                       },            
-      file           : __file__,
-  
-
-      directory : false
-    };
+  debug_level : 0,
+  DEBUG_LEVEL : {
+                 'ERROR'   : 0,
+                 'WARNING' : 1,
+                 'LOG'     : 2
+                },            
+  file        : __file__,
+  directory : false,
+  batchMode : false
+};
 
 /**
  * Helper function to split the filename, and get the directory name containing the file argument.
@@ -153,21 +151,23 @@ $.log = function( str ){
 $.logObj = function( object ){
   for (var i in object){
     try {
+      if (typeof object[i] === "function") continue;
       $.log(i+' : '+object[i])
       if (typeof object[i] == "Object"){
         $.log(' -> ')
         $.logObj(object[i])
         $.log(' ----- ')
       }
-    }
-    catch(error){}
+    }catch(error){}
   }
 }
+
 
 //---- Scene  --------------
 $.s     = new $.oScene( );
 $.scn   = $.s;
-$.scene = $.s;
+$.getScene = $.s;
+
 
 //---- Attach Helpers ------
 $.network = new $.oNetwork( );

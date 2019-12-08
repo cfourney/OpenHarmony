@@ -965,9 +965,19 @@
             
                 <li data-name="$.oList#filterFunction"><a href="$.oList.html#filterFunction">filterFunction</a></li>
             
+                <li data-name="$.oList#filterFunction"><a href="$.oList.html#filterFunction">filterFunction</a></li>
+            
+                <li data-name="$.oList#filterFunction"><a href="$.oList.html#filterFunction">filterFunction</a></li>
+            
+                <li data-name="$.oList#filterFunction"><a href="$.oList.html#filterFunction">filterFunction</a></li>
+            
+                <li data-name="$.oList#filterProperty"><a href="$.oList.html#filterProperty">filterProperty</a></li>
+            
                 <li data-name="$.oList#filterProperty"><a href="$.oList.html#filterProperty">filterProperty</a></li>
             
                 <li data-name="$.oList#first"><a href="$.oList.html#first">first</a></li>
+            
+                <li data-name="$.oList#length"><a href="$.oList.html#length">length</a></li>
             
                 <li data-name="$.oList#length"><a href="$.oList.html#length">length</a></li>
             
@@ -980,6 +990,8 @@
                 <li data-name="$.oList#startIndex"><a href="$.oList.html#startIndex">startIndex</a></li>
             
                 <li data-name="$.oList#toArray"><a href="$.oList.html#toArray">toArray</a></li>
+            
+                <li data-name="$.oList#toString"><a href="$.oList.html#toString">toString</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -1730,7 +1742,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1330
+            openHarmony/openHarmony_node.js, line 1345
         </div>
         
     </div>
@@ -3110,12 +3122,12 @@
     <div class="nameContainer">
         <h4 class="name" id="addBackdrop">
             
-            addBackdrop<span class="signature">(title, <span class="optional">body</span>, <span class="optional">color</span>, <span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">width</span>, <span class="optional">height</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oBackdrop.html">$.oBackdrop</a>}</span>
+            addBackdrop<span class="signature">(<span class="optional">title</span>, <span class="optional">body</span>, <span class="optional">color</span>, <span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">width</span>, <span class="optional">height</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oBackdrop.html">$.oBackdrop</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1620
+            openHarmony/openHarmony_node.js, line 1658
         </div>
         
     </div>
@@ -3174,11 +3186,15 @@
             
                 <td class="default">
                 
+                    "Backdrop"
+                
                 </td>
             
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
                     
                     
                         
@@ -3482,12 +3498,12 @@
     <div class="nameContainer">
         <h4 class="name" id="addBackdropToNodes">
             
-            addBackdropToNodes<span class="signature">(nodes, title, body, color, x, y, width, height)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oBackdrop.html">$.oBackdrop</a>}</span>
+            addBackdropToNodes<span class="signature">(nodes, <span class="optional">title</span>, <span class="optional">body</span>, <span class="optional">color</span>, <span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">width</span>, <span class="optional">height</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oBackdrop.html">$.oBackdrop</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1699
+            openHarmony/openHarmony_node.js, line 1737
         </div>
         
     </div>
@@ -3519,6 +3535,8 @@
 		<th>Type</th>
 		
 		
+		<th>Default</th>
+		
 		
 		<th class="last">Description</th>
 	</tr>
@@ -3542,8 +3560,17 @@
             </td>
             
             
+                <td class="default">
+                
+                </td>
+            
             
             <td class="description last">
+                
+                    
+                    
+                        
+                    
                 
                 The nodes that the backdrop encompasses.</td>
         </tr>
@@ -3565,8 +3592,21 @@
             </td>
             
             
+                <td class="default">
+                
+                    "Backdrop"
+                
+                </td>
+            
             
             <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
                 
                 The title of the backdrop.</td>
         </tr>
@@ -3588,8 +3628,21 @@
             </td>
             
             
+                <td class="default">
+                
+                    ""
+                
+                </td>
+            
             
             <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
                 
                 The body text of the backdrop.</td>
         </tr>
@@ -3611,8 +3664,21 @@
             </td>
             
             
+                <td class="default">
+                
+                    #323232ff
+                
+                </td>
+            
             
             <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
                 
                 The oColorValue of the node.</td>
         </tr>
@@ -3634,8 +3700,21 @@
             </td>
             
             
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
             
             <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
                 
                 The X position of the backdrop, an offset value if nodes are specified.</td>
         </tr>
@@ -3657,8 +3736,21 @@
             </td>
             
             
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
             
             <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
                 
                 The Y position of the backdrop, an offset value if nodes are specified.</td>
         </tr>
@@ -3680,8 +3772,21 @@
             </td>
             
             
+                <td class="default">
+                
+                    20
+                
+                </td>
+            
             
             <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
                 
                 The Width of the backdrop, a padding value if nodes are specified.</td>
         </tr>
@@ -3703,8 +3808,21 @@
             </td>
             
             
+                <td class="default">
+                
+                    20
+                
+                </td>
+            
             
             <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
                 
                 The Height of the backdrop, a padding value if nodes are specified.</td>
         </tr>
@@ -3786,24 +3904,24 @@
     
     <pre class="prettyprint"><code>function createColoredBackdrop(){
  // This script will prompt for a color and create a backdrop around the selection
-	$.beginUndo()
-	
-	var doc = $.scene; // grab the scene
-	var nodes = doc.getSelectedNodes(); // grab the selection
-	var color = pickColor(); // prompt for color
-  
+ $.beginUndo()
+
+ var doc = $.scene; // grab the scene
+ var nodes = doc.getSelectedNodes(); // grab the selection
+ var color = pickColor(); // prompt for color
+
  var group = doc.$node("Top") // get the group to add the backdrop to
  var backdrop = group.addBackdropToNodes(nodes, "BackDrop", "", color)
 
  $.endUndo()
 
  // function to get the color chosen by the user
-	function pickColor(){
-		var d = new QColorDialog;
-		d.exec();
-		var color = d.selectedColor();
-		return new $.oColorValue({r:color.red(), g:color.green(), b:color.blue(), a:color.alpha()})
-	}  
+ function pickColor(){
+   var d = new QColorDialog;
+   d.exec();
+   var color = d.selectedColor();
+   return new $.oColorValue({r:color.red(), g:color.green(), b:color.blue(), a:color.alpha()})
+ }
 }</code></pre>
     
 
@@ -3821,7 +3939,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1486
+            openHarmony/openHarmony_node.js, line 1524
         </div>
         
     </div>
@@ -4110,12 +4228,12 @@
     <div class="nameContainer">
         <h4 class="name" id="addGroup">
             
-            addGroup<span class="signature">(name, <span class="optional">includeNodes</span>, <span class="optional">addComposite</span>, <span class="optional">addPeg</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oGroupNode.html">$.oGroupNode</a>}</span>
+            addGroup<span class="signature">(name, <span class="optional">includeNodes</span>, <span class="optional">addComposite</span>, <span class="optional">addPeg</span>, <span class="optional">nodePosition</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oGroupNode.html">$.oGroupNode</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1517
+            openHarmony/openHarmony_node.js, line 1555
         </div>
         
     </div>
@@ -4297,13 +4415,13 @@
 	
         <tr>
             
-                <td class="name"><code>$.</code></td>
+                <td class="name"><code>nodePosition</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">oPoint</span>
+<span class="param-type"><a href="$.oPoint.html">$.oPoint</a></span>
 
 
             
@@ -4312,17 +4430,21 @@
             
                 <td class="default">
                 
+                    {0,0,0}
+                
                 </td>
             
             
             <td class="description last">
                 
                     
+                        <span class="optional">optional</span>
+                    
                     
                         
                     
                 
-                [nodePosition={0,0,0}]           The position for the node to be placed in the network.</td>
+                The position for the node to be placed in the network.</td>
         </tr>
 	
 	
@@ -4409,7 +4531,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1434
+            openHarmony/openHarmony_node.js, line 1472
         </div>
         
     </div>
@@ -4624,6 +4746,34 @@
     
     
     
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>// to add a node, simply call addNode on the group you want the node to be added to.
+var sceneRoot = $.scn.root; // grab the scene root group ("Top")
+
+var peg = sceneRoot.addNode("PEG", "MyNewlyCreatedPeg");           // adding a peg
+
+// Now we'll also create a drawing node to connect under the peg
+var sceneComposite = $.scn.getNodeByPath("Top/Composite");         // can also use $.scn.$node("Top/Composite") for shorter synthax
+
+var drawingNode = sceneRoot.addDrawingNode("myNewDrawingNode");
+drawingNode.linkOutNode(sceneComposite);
+drawingNode.can_animate = false                // setting some attributes on the newly created Node
+
+peg.linkOutNode(drawingNode);
+
+//through all this we didn't specify nodePosition parameters so we'll sort evertything at once
+
+sceneRoot.orderNodeView();
+
+// we can also do:
+
+peg.centerAbove(drawingNode);</code></pre>
+    
+
+    
 </dd>
 
         
@@ -4639,7 +4789,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 853
+            openHarmony/openHarmony_node.js, line 866
         </div>
         
     </div>
@@ -4832,7 +4982,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 879
+            openHarmony/openHarmony_node.js, line 891
         </div>
         
     </div>
@@ -5023,7 +5173,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1396
+            openHarmony/openHarmony_node.js, line 1411
         </div>
         
     </div>
@@ -5185,7 +5335,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 929
+            openHarmony/openHarmony_node.js, line 941
         </div>
         
     </div>
@@ -5366,7 +5516,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 948
+            openHarmony/openHarmony_node.js, line 961
         </div>
         
     </div>
@@ -5377,7 +5527,7 @@
     
     
     <div class="description">
-        WIP.
+        WIP
     </div>
     
 
@@ -5478,6 +5628,13 @@
     
     
     
+    <dt class="tag-todo">TODO</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li></li>
+        </ul>
+    </dd>
+    
 </dl>
 
     
@@ -5507,7 +5664,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1020
+            openHarmony/openHarmony_node.js, line 1035
         </div>
         
     </div>
@@ -5654,7 +5811,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 986
+            openHarmony/openHarmony_node.js, line 999
         </div>
         
     </div>
@@ -5801,7 +5958,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1065
+            openHarmony/openHarmony_node.js, line 1080
         </div>
         
     </div>
@@ -5901,7 +6058,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1751
+            openHarmony/openHarmony_node.js, line 1794
         </div>
         
     </div>
@@ -6233,7 +6390,7 @@
 function importCustomPSD(){
   $.beginUndo();
   var psd = $.dialog.browseForFile("get PSD", "*.psd");       // prompt for a PSD file
-  
+
   if (!psd) return;                                           // dialog was cancelled, exit the function
 
   var doc = $.scene;                                          // get the scene object
@@ -6261,7 +6418,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1977
+            openHarmony/openHarmony_node.js, line 2020
         </div>
         
     </div>
@@ -6475,7 +6632,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1574
+            openHarmony/openHarmony_node.js, line 1612
         </div>
         
     </div>
@@ -6775,7 +6932,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 808
+            openHarmony/openHarmony_node.js, line 821
         </div>
         
     </div>
@@ -6986,12 +7143,12 @@ function importCustomPSD(){
             
                 <span class="inherited"><a href="$.oNode.html#linkInNode">inherited</a></span>
             
-            linkInNode<span class="signature">(oNodeObject, inPort, outPort)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
+            linkInNode<span class="signature">(nodeToLink, <span class="optional">inPort</span>, <span class="optional">outPort</span>, <span class="optional">createPorts</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 681
+            openHarmony/openHarmony_node.js, line 682
         </div>
         
     </div>
@@ -7033,7 +7190,7 @@ function importCustomPSD(){
 	
         <tr>
             
-                <td class="name"><code>oNodeObject</code></td>
+                <td class="name"><code>nodeToLink</code></td>
             
             
             <td class="type">
@@ -7048,6 +7205,11 @@ function importCustomPSD(){
             
             
             <td class="description last">
+                
+                    
+                    
+                        
+                    
                 
                 The node to link this one's inport to.</td>
         </tr>
@@ -7072,6 +7234,13 @@ function importCustomPSD(){
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
                 This node's inport to connect.</td>
         </tr>
 	
@@ -7095,7 +7264,44 @@ function importCustomPSD(){
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
                 The target node's outport to connect.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>createPorts</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether to create new ports on the nodes.</td>
         </tr>
 	
 	
@@ -7179,12 +7385,12 @@ function importCustomPSD(){
             
                 <span class="inherited"><a href="$.oNode.html#linkOutNode">inherited</a></span>
             
-            linkOutNode<span class="signature">(oNodeObject, inPort, outPort)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
+            linkOutNode<span class="signature">(nodeToLink, <span class="optional">inPort</span>, <span class="optional">outPort</span>, <span class="optional">createPorts</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 763
+            openHarmony/openHarmony_node.js, line 745
         </div>
         
     </div>
@@ -7195,7 +7401,7 @@ function importCustomPSD(){
     
     
     <div class="description">
-        Link's this node's out-port to the given module, at the inport and outport indices.
+        Links this node's out-port to the given module, at the inport and outport indices.
     </div>
     
 
@@ -7226,7 +7432,7 @@ function importCustomPSD(){
 	
         <tr>
             
-                <td class="name"><code>oNodeObject</code></td>
+                <td class="name"><code>nodeToLink</code></td>
             
             
             <td class="type">
@@ -7241,6 +7447,11 @@ function importCustomPSD(){
             
             
             <td class="description last">
+                
+                    
+                    
+                        
+                    
                 
                 The node to link this one's outport to.</td>
         </tr>
@@ -7265,6 +7476,13 @@ function importCustomPSD(){
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
                 The target node's inport to connect.</td>
         </tr>
 	
@@ -7288,7 +7506,44 @@ function importCustomPSD(){
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
                 This node's outport to connect.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>createPorts</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether to create new ports on the nodes.</td>
         </tr>
 	
 	
@@ -7375,7 +7630,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1405
+            openHarmony/openHarmony_node.js, line 1420
         </div>
         
     </div>
@@ -7508,7 +7763,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 905
+            openHarmony/openHarmony_node.js, line 917
         </div>
         
     </div>
@@ -7701,7 +7956,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 960
+            openHarmony/openHarmony_node.js, line 973
         </div>
         
     </div>
@@ -7869,7 +8124,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1374
+            openHarmony/openHarmony_node.js, line 1389
         </div>
         
     </div>
@@ -8178,7 +8433,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1010
+            openHarmony/openHarmony_node.js, line 1025
         </div>
         
     </div>
@@ -8280,7 +8535,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 734
+            openHarmony/openHarmony_node.js, line 710
         </div>
         
     </div>
@@ -8427,7 +8682,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 699
+            openHarmony/openHarmony_node.js, line 728
         </div>
         
     </div>
@@ -8574,7 +8829,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 783
+            openHarmony/openHarmony_node.js, line 774
         </div>
         
     </div>
@@ -8585,7 +8840,7 @@ function importCustomPSD(){
     
     
     <div class="description">
-        Link's this node's out-port to the given module, at the inport and outport indices.
+        Links this node's out-port to the given module, at the inport and outport indices.
     </div>
     
 
@@ -8721,7 +8976,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 714
+            openHarmony/openHarmony_node.js, line 797
         </div>
         
     </div>
@@ -8889,7 +9144,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1842
+            openHarmony/openHarmony_node.js, line 1885
         </div>
         
     </div>
@@ -9060,7 +9315,7 @@ function importCustomPSD(){
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat Dec 07 2019 02:11:59 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Dec 08 2019 00:53:46 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

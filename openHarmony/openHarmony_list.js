@@ -4,7 +4,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -49,17 +49,12 @@
  * @property {object[]}                index[int]            The indexed object of the item.
  */
 $.oList = function(array, startIndex){
-    if(typeof startIndex == 'undefined') var startIndex = 0;
-    
-    this._type = "list";
-    
-    this.currentIndex = 0;
-    
-    for (var i in array){
-        if (i>=startIndex){
-            this[i] = array[i];
-        }
-    }
+  if(typeof startIndex == 'undefined') var startIndex = 0;
+  if(typeof array == 'undefined') var array = [];
+  
+  for (var i=0; i<array.length; i++){
+    this[i+startIndex] = array[i];
+  }
 }
 
 
@@ -71,32 +66,60 @@ $.oList = function(array, startIndex){
  */
 Object.defineProperty($.oList.prototype, '_type', {
     enumerable : false,
-    get: function(){
-        return 'list';
-    }
+    value: 'list'
 });
 
 
 /**
- * The length of the array that this represents.
+ * The internal type of $.oList object, should always return list.
+ * @name $.oList#_type
+ * @private
+ * @type {string}
+ */
+Object.defineProperty($.oList.prototype, 'currentIndex', {
+    enumerable : false,
+    configurable : true,
+    value: this.startIndex
+});
+
+
+
+/**
+ * The number of elements in the list
  * @name $.oList#length
  * @type {int}
  */
 Object.defineProperty($.oList.prototype, 'length', {
-    enumerable : false,
-    get: function(){
-        var _start = this.startIndex;
-        var i = _start;
-        while (this.hasOwnProperty(i)){
-            i++;
-        }
-        return i-_start;
+  enumerable : false,
+  get: function(){
+    var _start = this.startIndex;
+    var i = _start;
+    while (this.hasOwnProperty(i)){
+        i++;
     }
+    return i-_start;
+  }
 });
 
 
 /**
- * The start index of the array that this represents.
+ * The index of the last valid element of the list
+ * @name $.oList#length
+ * @type {int}
+ */
+Object.defineProperty($.oList.prototype, 'lastIndex', {
+  enumerable : false,
+  get: function(){
+    var _start = this.startIndex;
+    var i= _start;
+    while (this.hasOwnProperty(i)) i++;
+    return i-1;
+  }
+});
+
+
+/**
+ * The index of the first element of the list, as set at the creation of the oList
  * @name $.oList#startIndex
  * @type {int}
  */
@@ -115,7 +138,7 @@ Object.defineProperty($.oList.prototype, 'startIndex', {
 
 // Methods must be declared as unenumerable properties this way
 /**
- * The elements of this list, represented by an array again.
+ * Converts the oList to an array
  * @name $.oList#toArray
  * @return  {object[]}   The list represented as an array.
  */
@@ -123,16 +146,69 @@ Object.defineProperty($.oList.prototype, 'toArray', {
     enumerable : false,
     value : function(){
         var _array = [];
-        for (var i in this){
-            array[i-this.startIndex] = this[i];
+        for (var i=0; i<this.length; i++){
+            _array[i-this.startIndex] = this[i];
         }
-        return Array;
+        return _array;
+    }
+});
+
+
+
+/**
+ * Similar to Array.filter. Provide a filtering function as a parameter that returns a boolean.
+ * @name $.oList#filterFunction
+ * @param   {function}     func                    A function that is used to filter, returns true if it is to be kept in the list.
+ *
+ * @return  {object[]}   The list represented as an array, filtered given the function.
+ */
+Object.defineProperty($.oList.prototype, 'filter', {
+  enumerable : false,
+  value : function( func ){
+    this.$.log("oList.filter is deprecated. Consider using oList.filterByFunction")
+    var _results = this.toArray();
+    return new this.$.oList( _results.filter(func) );
+  }
+});
+
+
+/**
+ * Similar to Array.map. Provide a filtering function as a parameter that returns a boolean.
+ * @name $.oList#filterFunction
+ * @param   {function}     func                    A function that is used to filter, returns true if it is to be kept in the list.
+ *
+ * @return  {object[]}   The list represented as an array, filtered given the function.
+ */
+Object.defineProperty($.oList.prototype, 'map', {
+    enumerable : false,
+    value : function( func ){
+        this.$.log("oList.map is deprecated. Consider using oList.filterByProperty")
+        var _results = this.toArray();
+        return new this.$.oList( _results.map(func) );
     }
 });
 
 
 /**
- * The elements of this list, represented by an array again, filtered.
+ * Similar to Array.push. Provide a filtering function as a parameter that returns a boolean.
+ * @name $.oList#filterFunction
+ * @param   {function}     func                    A function that is used to filter, returns true if it is to be kept in the list.
+ *
+ * @return  {object[]}   The list represented as an array, filtered given the function.
+ */
+Object.defineProperty($.oList.prototype, 'push', {
+    enumerable : false,
+    value : function( newElement ){
+      this[this.lastIndex+1] = newElement;
+    }
+});
+
+
+
+
+
+/**
+ * Returns an oList object containing only the elements that passed the provided filter function.
  * @name $.oList#filterFunction
  * @param   {function}     func                    A function that is used to filter, returns true if it is to be kept in the list.
  *
@@ -155,24 +231,55 @@ Object.defineProperty($.oList.prototype, 'filterFunction', {
 
 
 /**
- * The elements of this list, represented by an array again, filtered.
+ * Returns an oList object containing only the elements that have the same property value as provided.
  * @name $.oList#filterProperty
  * @param   {string}    property                    The property to find.
  * @param   {string}    search                      The value to search for in the property.
  *
  * @return  {object[]}   The list represented as an array, filtered given its properties.
+ * @example
+ * var doc = $.s // grab the scene object
+ * var nodeList = new $.oList(doc.nodes, 1) // get a list of all the nodes, with a first index of 1
+ * 
+ * $.log(nodeList) // outputs the list of all the node paths
+ * 
+ * var readNodes = nodeList.filterProperty("type", "READ") // get a new list of only the nodes of type 'READ'
+ * 
+ * $.log(readNodes.extractProperty("name"))  // prints the names of the result
+ *
  */
 Object.defineProperty($.oList.prototype, 'filterProperty', {
-    enumerable : false,
-    value : function(property, search){
-        var _results = [];
-        for (var i in this){
-            // TODO: Implement partial match / regex?
-            if (this[i].hasOwnProperty(property) && this[i][property] == search) _results.push(this[i]);
-        }
-
-        return new this.$.oList( _results );
+  enumerable : false,
+  value : function(property, search){
+    var _results = []
+    var _lastIndex = this.lastIndex;
+    for (var i=this.startIndex; i < _lastIndex; i++){
+      // this.$.log(i+" "+(property in this[i])+" "+(this[i][property] == search)+_lastIndex)
+      if ((property in this[i]) && (this[i][property] == search)) _results.push(this[i])
     }
+    // this.$.log(_results)
+    return new this.$.oList(_results)
+  }
+});
+
+
+/**
+ * Returns an oList object containing only the values of the specified property.
+ * @name $.oList#filterProperty
+ * @param   {string}     property                    The property to find.
+ *
+ * @return  {object[]}   The newly created oList object containing the property values.
+ */
+Object.defineProperty($.oList.prototype, 'extractProperty', {
+  enumerable : false,
+  value : function(property){
+    var _results = []
+    var _lastIndex = this.lastIndex;
+    for (var i=this.startIndex; i < _lastIndex; i++){
+      _results.push(this[i][property])
+    }
+    return new this.$.oList(_results)
+  }
 });
 
 
@@ -246,13 +353,24 @@ Object.defineProperty($.oList.prototype, 'first', {
  *         }
  */
 Object.defineProperty($.oList.prototype, 'next', {
+    enumerable : false,
     value: function(){
-        enumerable : false,
         this.currentIndex++;
-        if( !this.hasOwnProperty(this.currentIndex) ){
-            return false;
-        }
+        if( !this.hasOwnProperty(this.currentIndex) ) return false;
 
         return this[ this.currentIndex ];
     }
+});
+
+
+/**
+ * outputs the list to a string for easy logging
+ * @name $.oList#toString
+ * @type {object}
+ */
+Object.defineProperty($.oList.prototype, 'toString', {
+  enumerable : false,
+  value: function(){
+    return this.toArray().join(",");
+  }
 });
