@@ -6,7 +6,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -57,30 +57,39 @@
 
 
 /**
- * Base access to openHarmony
+ * The $ global object that holds all the functions of openHarmony
  * @namespace
- * @classdesc  The base class for the DOM. <br> Access the Scene through $.scene.
- * @version    1.0
+ * @classdesc Base access to the whole openHarmony library. <br>All the classes can be accessed from it, and it can be passed to a different context.
+ * @version   1.0
  * @property {int}     debug_level               - The debug level of the DOM.
  * @property {string}  file                      - The openHarmony base file - THIS!
  *
+ * @property {oScene}  getScene                  - The harmony scene.
  * @property {oScene}  scene                     - The harmony scene.
  * @property {oScene}  scn                       - The harmony scene.
  * @property {oScene}  s                         - The harmony scene.
+ * @example
+ * // To access the functions, first call the $ object.
+ * 
+ * var doc = $.scn                    // grabbing the scene document
+ * $.log("hello")                     // prints out a message to the MessageLog.
+ * var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHarmony class.
  */
 $ = {
+  debug_level : 0,
 
-      debug_level    : 0,
-      DEBUG_LEVEL    : {
-                           'ERROR'   : 0,
-                           'WARNING' : 1,
-                           'LOG'     : 2
-                       },            
-      file           : __file__,
-  
-
-      directory : false
-    };
+ /**
+ * @enum
+ */
+  DEBUG_LEVEL : {
+                 'ERROR'   : 0,
+                 'WARNING' : 1,
+                 'LOG'     : 2
+                },            
+  file      : __file__,
+  directory : false,
+  batchMode : false
+};
 
 /**
  * Helper function to split the filename, and get the directory name containing the file argument.
@@ -88,7 +97,7 @@ $ = {
  * @return  {string}                        The directory of the file.
  */
 $.directoryGet = function( file_path ){
-  return file_path.split( "/" ).slice(0, -1).join('/');
+  return file_path.split("\\").join("/").split( "/" ).slice(0, -1).join('/');
 };
 
 
@@ -114,6 +123,8 @@ include( $.directory + "/openHarmony/openHarmony_node.js"      );
 include( $.directory + "/openHarmony/openHarmony_column.js"    );      
 include( $.directory + "/openHarmony/openHarmony_drawing.js"   );     
 include( $.directory + "/openHarmony/openHarmony_scene.js"     );
+include(specialFolders.resource+"/scripts/TB_orderNetworkUp.js");
+include(specialFolders.userScripts+"/TB_orderNetworkUp.js");       // for older versions of harmony
 
 /**
  * The standard debug that uses logic and level to write to the messagelog. Everything should just call this to write internally to a log in OpenHarmony.
@@ -150,25 +161,26 @@ $.log = function( str ){
  * @param   {int}      debugLevel        The debug level.
  */
 $.logObj = function( object ){
-    {
-        for (var i in object){
-            try {
-                $.log(i+' : '+object[i])
-                if (typeof object[i] == "Object"){
-                    $.log(' -> ')
-                    $.logObj(object[i])
-                    $.log(' ----- ')
-                }
-            }
-            catch(error){}
-        }
-    }
+  for (var i in object){
+    try {
+      if (typeof object[i] === "function") continue;
+      $.log(i+' : '+object[i])
+      if (typeof object[i] == "Object"){
+        $.log(' -> ')
+        $.logObj(object[i])
+        $.log(' ----- ')
+      }
+    }catch(error){}
+  }
 }
+
 
 //---- Scene  --------------
 $.s     = new $.oScene( );
 $.scn   = $.s;
 $.scene = $.s;
+$.getScene = $.s;
+
 
 //---- Attach Helpers ------
 $.network = new $.oNetwork( );
@@ -176,9 +188,10 @@ $.utils   = new $.oUtils( );
 $.dialog  = new $.oDialog( );
 $.global  = this;
 
-// $.confirm = $.dialog.confirm;
-// $.alert   = $.dialog.alert;
-
+$.confirm = $.dialog.confirm;
+$.alert   = $.dialog.alert;
+$.browseForFile = $.dialog.browseForFile;
+$.browseForFolder = $.dialog.browseForFolder;
 
 
 //---- Cache Helpers ------
@@ -190,9 +203,9 @@ $.cache_oNode = {};
 //---- Instantiate Class $ DOM Access ------
 function addDOMAccess( target, item ){
   Object.defineProperty( target, '$', {
-      get: function(){
-          return item;
-      }
+    configurable: false,
+    enumerable: false,
+    value: item
   });
 }
 
@@ -220,9 +233,9 @@ for( var classItem in $ ){
  * @see $.endUndo
  */
 $.beginUndo = function( undoName ){
-  if (typeof undoName === 'undefined'){
-    undoName = ''+((new Date()).getTime()); //Using epoch as the temp name.
-  }
+  //Using epoch as the temp name.
+  if (typeof undoName === 'undefined') var undoName = ''+((new Date()).getTime()); 
+  
   scene.beginUndoRedoAccum( undoName );
 }
 

@@ -4,7 +4,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -80,9 +80,9 @@ $.oPoint = function(x, y, z){
  * @return: { $.oPoint }                           Returns self (for inline addition).
  */
 $.oPoint.prototype.pointAdd = function( add_pt ){
-    this.x += add_pt.x;
-    this.y += add_pt.y;
-    this.z += add_pt.z;
+  this.x += add_pt.x;
+  this.y += add_pt.y;
+  this.z += add_pt.z;
     
   return this;
 }
@@ -94,9 +94,9 @@ $.oPoint.prototype.pointAdd = function( add_pt ){
  * @return: { $.oPoint }                           Returns self (for inline addition).
  */
 $.oPoint.prototype.pointSubtract = function( sub_pt ){
-    this.x -= sub_pt.x;
-    this.y -= sub_pt.y;
-    this.z -= sub_pt.z;
+  this.x -= sub_pt.x;
+  this.y -= sub_pt.y;
+  this.z -= sub_pt.z;
     
   return this;
 }
@@ -108,9 +108,9 @@ $.oPoint.prototype.pointSubtract = function( sub_pt ){
  * @return: { $.oPoint }                           Returns self (for inline addition).
  */
 $.oPoint.prototype.multiply = function( float_val ){
-    this.x *= float_val;
-    this.y *= float_val;
-    this.z *= float_val;
+  this.x *= float_val;
+  this.y *= float_val;
+  this.z *= float_val;
     
   return this;
 }
@@ -122,9 +122,9 @@ $.oPoint.prototype.multiply = function( float_val ){
  * @return: { $.oPoint }                           Returns self (for inline addition).
  */
 $.oPoint.prototype.divide = function( float_val ){
-    this.x /= float_val;
-    this.y /= float_val;
-    this.z /= float_val;
+  this.x /= float_val;
+  this.y /= float_val;
+  this.z /= float_val;
     
   return this;
 }
@@ -216,17 +216,17 @@ $.oPoint.prototype.lerp = function( point, perc ){
  * @property      {float}       bottom                           bottom vertical bound
  */
 $.oBox = function( left, top, right, bottom ){
-    this._type = "box";
+  this._type = "box";
 
-    if (typeof top === 'undefined') var top = Infinity
-    if (typeof left === 'undefined') var left = Infinity
-    if (typeof right === 'undefined') var right = -Infinity
-    if (typeof bottom === 'undefined') var bottom = -Infinity
-    
-    this.top = top;
-    this.left = left;
-    this.right = right;
-    this.bottom = bottom;
+  if (typeof top === 'undefined') var top = Infinity
+  if (typeof left === 'undefined') var left = Infinity
+  if (typeof right === 'undefined') var right = -Infinity
+  if (typeof bottom === 'undefined') var bottom = -Infinity
+
+  this.top = top;
+  this.left = left;
+  this.right = right;
+  this.bottom = bottom;
 }
  
  
@@ -236,9 +236,9 @@ $.oBox = function( left, top, right, bottom ){
  * @type {float}
  */
 Object.defineProperty($.oBox.prototype, 'width', {
-    get : function(){
-         return this.right - this.left + 1; //Inclusive size.
-    }
+  get : function(){
+    return this.right - this.left + 1; //Inclusive size.
+  }
 })
  
  
@@ -248,9 +248,9 @@ Object.defineProperty($.oBox.prototype, 'width', {
  * @type {float}
  */
 Object.defineProperty($.oBox.prototype, 'height', {
-    get : function(){
-         return this.bottom - this.top;
-    }
+  get : function(){
+    return this.bottom - this.top;
+  }
 })
  
  
@@ -260,9 +260,9 @@ Object.defineProperty($.oBox.prototype, 'height', {
  * @type {$.oPoint}
  */
 Object.defineProperty($.oBox.prototype, 'center', {
-    get : function(){
-         return new this.$.oPoint(this.left+this.width/2, this.top+this.height/2);
-    }
+  get : function(){
+    return new this.$.oPoint(this.left+this.width/2, this.top+this.height/2);
+  }
 })
  
  
@@ -271,10 +271,10 @@ Object.defineProperty($.oBox.prototype, 'center', {
  * @param   {$.oBox}       box                The $.oBox to include.                    
  */
 $.oBox.prototype.include = function(box){
-    if (box.left < this.left) this.left = box.left;
-    if (box.top < this.top) this.top = box.top;
-    if (box.right > this.right) this.right = box.right;
-    if (box.bottom > this.bottom) this.bottom = box.bottom;
+  if (box.left < this.left) this.left = box.left;
+  if (box.top < this.top) this.top = box.top;
+  if (box.right > this.right) this.right = box.right;
+  if (box.bottom > this.bottom) this.bottom = box.bottom;
 }
 
 /**
@@ -282,12 +282,15 @@ $.oBox.prototype.include = function(box){
  * @param   {oNode[]}       oNodeArray                An array of nodes to include in the box.                 
  */
 $.oBox.prototype.includeNodes = function(oNodeArray){
-    for (var i in oNodeArray){
-         var _node = oNodeArray[i];
-         var _nodeBox = _node.bounds;
-          
-         this.include(_nodeBox);
-    } 
+  // convert to array if only one node is passed
+  if (!Array.isArray(oNodeArray)) oNodeArray = [oNodeArray];
+  
+  for (var i in oNodeArray){
+     var _node = oNodeArray[i];
+     var _nodeBox = _node.bounds;
+      
+     this.include(_nodeBox);
+  } 
 }
 
 
@@ -295,7 +298,7 @@ $.oBox.prototype.includeNodes = function(oNodeArray){
 //////////////////////////////////////
 //                                  //
 //                                  //
-//           $.oTools class          //
+//           $.oTools class         //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -341,26 +344,23 @@ $.oUtils.prototype.longestCommonSubstring = function( str1, str2 ){
 		num[i] = subArray;
 	}
 	var subsBegin = null;
-	for (var i = 0; i < str1Length; i++)
-	{
-		for (var j = 0; j < str2Length; j++)
-		{
-			if (str1[i] !== str2[j])
+	for (var i = 0; i < str1Length; i++){
+		for (var j = 0; j < str2Length; j++){
+			if (str1[i] !== str2[j]){
 				num[i][j] = 0;
-			else
-			{
-				if ((i === 0) || (j === 0))
+			}else{
+				if ((i === 0) || (j === 0)){
 					num[i][j] = 1;
-				else
+				}else{
 					num[i][j] = 1 + num[i - 1][j - 1];
- 
+        }
 				if (num[i][j] > maxlen){
 					maxlen = num[i][j];
 					subsBegin = i - num[i][j] + 1;
 					if (lastSubsBegin === subsBegin){//if the current LCS is the same as the last time this block ran
 						sequence += str1[i];
-					}else //this block resets the string builder if a different LCS is found
-					{
+					}else{
+            //this block resets the string builder if a different LCS is found
 						lastSubsBegin = subsBegin;
 						sequence= ""; //clear it
 						sequence += str1.substr(lastSubsBegin, (i + 1) - lastSubsBegin);

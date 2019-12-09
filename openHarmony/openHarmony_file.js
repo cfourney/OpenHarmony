@@ -4,7 +4,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -546,16 +546,11 @@ $.oFile.prototype.write = function(content, append){
 $.oFile.prototype.move = function( folder, overwrite ){
     if (typeof overwrite === 'undefined') var overwrite = false;
     
-    try{
-      if( folder._type == "folder" ){
-        folder = folder.path;
-      }
-    }catch(err){
-    }
+    if(folder instanceof this.$.oFolder) folder = folder.path;
     
     var _file = new PermanentFile(this.path);
     var _dest = new PermanentFile(folder+"/"+this.name+"."+this.extension);
-    MessageLog.trace(_dest.path())
+    MessageLog.trace("moving "+_file.path()+" to "+_dest.path())
    
     if (_dest.exists && !overwrite)
         throw new Error("destination file "+folderPath+"/"+this.name+"."+this.extension+" exists and will not be overwritten. Can't move file.");
@@ -579,12 +574,7 @@ $.oFile.prototype.copy = function( folder, copyName, overwrite){
     if (typeof copyName === 'undefined') var copyName = this.name;
     if (typeof folderPath === 'undefined') var folder = this.folder.path;
    
-    try{
-      if( folder._type == "folder" ){
-        folder = folder.path;
-      }
-    }catch(err){
-    }
+    if(folder instanceof this.$.oFolder) folder = folder.path;
    
     if (this.name == copyName && folder == this.folder.path) copyName += "_copy";
    

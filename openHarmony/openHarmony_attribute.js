@@ -4,7 +4,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -71,73 +71,96 @@ $.oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
   this.attributeObject = attributeObject;
   
   this._shortKeyword = attributeObject.keyword();
+  
   if( attributeObject.fullKeyword ){
     this._keyword = attributeObject.fullKeyword();
   }else{
-    if( parentAttribute ){
-      //Derive it for older versions.
-      this._keyword = parentAttribute._keyword + "." + this._shortKeyword;
-    }else{
-      this._keyword = this._shortKeyword;
-    }
+    this._keyword = (parentAttribute?(parentAttribute._keyword+"."):"") + this._shortKeyword;
   }
   
   this.parentAttribute = parentAttribute; // only for subAttributes
-  
-  var _subAttributes = [];
-  if ( attributeObject.hasSubAttributes && attributeObject.hasSubAttributes() ){
-        var _subAttributesList = attributeObject.getSubAttributes();
-       
-        for (var i in _subAttributesList){
-            var _subAttribute = new this.$.oAttribute( this.node, _subAttributesList[i], this );
-            var _keyword = _subAttribute.shortKeyword;     
-            // creating a property on the attribute object with the subattribute name to access it
-            this[_keyword] = _subAttribute;
-            _subAttributes.push(_subAttribute)
-        }
-  }else if( !attributeObject.hasSubAttributes ){
-        //Older versions of Harmony don't have hasSubAttributes, or getSubAttributes
-        _subAttributes = this.subAttributes_oldVersion( _subAttributes );
-  }
 
+  // recursively add all subattributes as properties on the object  
+  this.createSubAttributes(attributeObject);
+}
+
+
+/**
+ * Private function to create subAttributes in an oAttribute object at initialisation.
+ * @private 
+ * @return  {void}   Nothing returned.
+ */
+$.oAttribute.prototype.createSubAttributes = function (attributeObject){
+  var _subAttributes = [];
+  
+  // if harmony version supports getSubAttributes
+  if (attributeObject.getSubAttributes){
+    var _subAttributesList = attributeObject.getSubAttributes();
+  }else{
+    var _subAttributesList = this.getSubAttributes_oldVersion( _subAttributes );
+  }
+  
+  if ( _subAttributesList.length > 0 ){
+    for (var i in _subAttributesList){ 
+      var _subAttribute = new this.$.oAttribute( this.node, _subAttributesList[i], this );
+      var _keyword = _subAttribute.shortKeyword;     
+      
+      this.createSubAttributes(_subAttributesList[i], _subAttribute)
+      // creating a property on the attribute object with the subattribute name to access it
+      this[_keyword] = _subAttribute;
+      _subAttributes.push(_subAttribute)
+    }
+  }
   // subAttributes is made available as an array for more formal access
   this.subAttributes = _subAttributes;
+
 }
+
  
 /**
  * Private function to add utility to subattributes on older versions of Harmony.
  * @private 
  * @return  {void}   Nothing returned.
  */
-$.oAttribute.prototype.subAttributes_oldVersion = function ( _subAttributes ){
-    var sub_attrs = [];
-    
-    switch( this.type ){
-        case "POSITION_3D" :
-          //hard coded subAttr handler for POSITION_3D in older versions of Harmony.
-          sub_attrs = [ 'x', 'y', 'z' ];
-          break
-        case "ROTATION_3D" :
-          sub_attrs = [ 'anglex', 'angley', 'anglez' ];
-          break
-        case "SCALE_3D" :
-          sub_attrs = [ 'x', 'y', 'z' ];
-          break
-        case "DRAWING" :
-          sub_attrs = [ 'element', 'element.layer', 'elementMode', 'customName.name' ];
-          break
-        default:
-          break
+$.oAttribute.prototype.getSubAttributes_oldVersion = function (){
+  var sub_attrs = [];
+  
+  switch( this.type ){
+      case "POSITION_3D" :
+        //hard coded subAttr handler for POSITION_3D in older versions of Harmony.
+        sub_attrs = [ 'separate', 'x', 'y', 'z'];
+        break
+      case "ROTATION_3D" :
+        sub_attrs = [ 'separate', 'anglex', 'angley', 'anglez', "quaternionPath" ];
+        break
+      case "SCALE_3D" :
+        sub_attrs = [ 'separate', 'inFields', 'xy', 'x', 'y', 'z' ];
+        break
+      case "DRAWING" :
+        sub_attrs = [ 'element', 'elementMode', 'customName'];
+        break
+      case "ELEMENT" :
+        sub_attrs = [ 'layer' ]
+        break
+      case "CUSTOM_NAME" :
+        sub_attrs = [ 'name', 'timing', 'extension', 'fieldChart' ]
+      default:
+        break
+  }
+  
+  var _node = this.node.path;
+  var _keyword = this._keyword;
+  var _subAttributes = sub_attrs.map(function(x){return node.getAttr( _node, 1, _keyword+"."+x )})
+  
+  /*
+  for( var n=0;n<sub_attrs.length;n++ ){
+    var _attr = node.getAttr( this.node.path, 1, this._keyword+"."+sub_attrs[n] );  
+    if( _attr ){
+      var _subAttribute = new this.$.oAttribute( this.node, _attr, this );  
+      this[ sub_attrs[n] ] = _subAttribute;  
+      _subAttributes.push( _subAttribute );
     }
-    
-    for( var n=0;n<sub_attrs.length;n++ ){
-      var _attr = node.getAttr( this.node.path, 1, this._keyword+"."+sub_attrs[n] );  
-      if( _attr ){
-        var _subAttribute = new this.$.oAttribute( this.node, _attr, this );  
-        this[ sub_attrs[n] ] = _subAttribute;  
-        _subAttributes.push( _subAttribute );
-      }
-    }
+  }*/
     
   return _subAttributes;
 }

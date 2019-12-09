@@ -4,7 +4,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -115,13 +115,13 @@ $.oTimelineLayer = function( nodeName, columnName, oTimelineObject ){
  * @property {oScene}                  scene                 The scene object of the DOM.
  */
 $.oTimeline = function( display, oSceneObject ){
-    this.display = display
-    this.composition = ''
-    this.scene = oSceneObject;
-   
-    //Build the initial composition.
-    this.refresh();
-    // this.buildLayerCache();
+  this.display = display
+  this.composition = ''
+  this.scene = oSceneObject;
+ 
+  //Build the initial composition.
+  this.refresh();
+  // this.buildLayerCache();
 }
  
 // Properties
@@ -131,14 +131,14 @@ $.oTimeline = function( display, oSceneObject ){
  * @type {oNode[]}
  */
 Object.defineProperty($.oTimeline.prototype, 'compositionLayers', {
-    get : function(){
-        var _timeline = this.compositionLayersList;
-        var _scene    = this.scene;
-       
-        _timeline = _timeline.map( function(x){return _scene.getNodeByPath(x)} );
-        
-        return _timeline;
-    }
+  get : function(){
+    var _timeline = this.compositionLayersList;
+    var _scene    = this.scene;
+   
+    _timeline = _timeline.map( function(x){return _scene.getNodeByPath(x)} );
+    
+    return _timeline;
+  }
 });
  
 /**
@@ -147,16 +147,16 @@ Object.defineProperty($.oTimeline.prototype, 'compositionLayers', {
  * @type {string[]}
  */
 Object.defineProperty($.oTimeline.prototype, 'compositionLayersList', {
-    get : function(){
-        var _composition = this.composition;
-        var _timeline = [];
-       
-        for (var i in _composition){
-            _timeline.push( _composition[i].node )
-        }
-       
-        return _timeline;
+  get : function(){
+    var _composition = this.composition;
+    var _timeline = [];
+   
+    for (var i in _composition){
+        _timeline.push( _composition[i].node )
     }
+   
+    return _timeline;
+  }
 });
 
 
@@ -166,14 +166,14 @@ Object.defineProperty($.oTimeline.prototype, 'compositionLayersList', {
  * @type {string[]}
  */
 Object.defineProperty($.oTimeline.prototype, 'layers', {
-    get : function(){
-        var olayers = [];
-        for( var n=0; n<Timeline.numLayers; n++ ){
-          olayers.push( new this.$.oTimelineLayer( Timeline.layerToNode( n ), Timeline.layerToColumn( n ), this ) );
-        }
-       
-        return olayers;
+  get : function(){
+    var olayers = [];
+    for( var n=0; n<Timeline.numLayers; n++ ){
+      olayers.push( new this.$.oTimelineLayer( Timeline.layerToNode( n ), Timeline.layerToColumn( n ), this ) );
     }
+   
+    return olayers;
+  }
 });
 
 /**
@@ -182,16 +182,16 @@ Object.defineProperty($.oTimeline.prototype, 'layers', {
  * @type {string[]}
  */
 Object.defineProperty($.oTimeline.prototype, 'selectedLayers', {
-    get : function(){
-        var olayers = [];
-        System.println( "!!GETTING LAYERS" );
-        for( var n=0; n<Timeline.numLayerSel; n++ ){
-          olayers.push( new this.$.oTimelineLayer( Timeline.selToNode( n ), Timeline.selToColumn( n ), this ) );
-        }
-        System.println( "!!GOT LAYERS" );
-        
-        return olayers;
+  get : function(){
+    var _layers = [];
+    System.println( "!!GETTING LAYERS" );
+    for( var n=0; n<Timeline.numLayerSel; n++ ){
+      _layers.push( new this.$.oTimelineLayer( Timeline.selToNode( n ), Timeline.selToColumn( n ), this ) );
     }
+    System.println( "!!GOT LAYERS" );
+    
+    return _layers;
+  }
 });
 
 

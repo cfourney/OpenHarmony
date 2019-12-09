@@ -4,7 +4,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -89,10 +89,12 @@ $.oFrame = function( frameNumber, oColumnObject, subColumns ){
  */
 Object.defineProperty($.oFrame.prototype, 'value', {
     get : function(){
-        return this.attributeObject.getValue( this.frameNumber );
+        // this.$.log("Getting value of frame "+this.frameNumber+" of column "+this.column.name) 
+      return this.attributeObject.getValue( this.frameNumber );
     },
  
     set : function(newValue){
+        // this.$.log("Setting frame "+this.frameNumber+" of column "+this.column.name+" to value: "+newValue)
         this.attributeObject.setValue( newValue, this.frameNumber );   
     }
 });
@@ -110,9 +112,7 @@ Object.defineProperty($.oFrame.prototype, 'value', {
  */
 Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
     get : function(){
-      if( !this.column ){
-        return true;
-      }
+      if( !this.column ) return true;
     
       var _column = this.column.uniqueName
       if (this.column.type == 'DRAWING' || this.column.type == 'TIMING'){
@@ -129,9 +129,7 @@ Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
  
     set : function(keyFrame){
       var col = this.column;
-      if( !col ){
-        return;
-      }
+      if( !col ) return;
       
       var _column = col.uniqueName;
       
@@ -147,18 +145,18 @@ Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
             //This will check the value prior to the key, set the key, and enforce the value after.
             
             var val = 0.0;
-            try{
+            // try{
               var val = this.value;
-            }catch(err){}
+            // }catch(err){}
           
             column.setKeyFrame( _column, this.frameNumber );
             
-            try{
+            // try{
               var post_val = this.value;
               if( val != post_val ){
                 this.value = val
               }
-            }catch(err){}         
+            // }catch(err){}         
         }else{
             column.clearKeyFrame( _column, this.frameNumber );
         }

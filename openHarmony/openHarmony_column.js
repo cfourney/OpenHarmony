@@ -4,7 +4,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -69,8 +69,11 @@ $.oColumn = function( uniqueName, oAttributeObject ){
   this._cacheFrames = [];
   
   //Helper cache for subsequent actions.
-  if( !this.$.cache_columnToNodeAttribute ){ this.$.cache_columnToNodeAttribute = {}; }
-  this.$.cache_columnToNodeAttribute[this.uniqueName] = { "node":oAttributeObject.node, "attribute": this.attributeObject, "date": (new Date()).getTime() };
+  try{
+    // fails when the column has no attribute
+    if( !this.$.cache_columnToNodeAttribute ){ this.$.cache_columnToNodeAttribute = {}; }
+    this.$.cache_columnToNodeAttribute[this.uniqueName] = { "node":oAttributeObject.node, "attribute": this.attributeObject, "date": (new Date()).getTime() };
+  }catch(err){}
 }
 
 
@@ -379,10 +382,10 @@ $.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replac
     // if amount is undefined, extend function below will automatically fill empty frames
     if (typeof exposures === 'undefined') var exposures = this.getKeyFrames();
  
-    //MessageBox.information("extendingExposures "+exposures.map(function(x){return x.frameNumber}))
+    // MessageBox.information("extendingExposures "+exposures.map(function(x){return x.frameNumber}))
     for (var i in exposures) {
-        //MessageBox.information(i+" extending: "+exposures[i])
-        //MessageBox.information(exposures[i].isBlank)
+        // MessageBox.information(i+" extending: "+exposures[i])
+        // MessageBox.information(exposures[i].isBlank)
         if (!exposures[i].isBlank) exposures[i].extend(amount, replace);
     }
 }

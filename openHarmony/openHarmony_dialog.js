@@ -4,7 +4,7 @@
 //                            openHarmony Library v0.01
 //
 //
-//         Developped by Mathieu Chaptel, ...
+//         Developped by Mathieu Chaptel, Chris Fourney...
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -61,6 +61,7 @@ $.oDialog = function( ){
 
 /**
  * Prompts with a confirmation dialog (yes/no choice).
+ * @name    $.oDialog#confirm
  * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
@@ -69,26 +70,31 @@ $.oDialog = function( ){
  * @return  {bool}       Result of the confirmation dialog.
  */
 $.oDialog.prototype.confirm = function( title, labelText, okButtonText, cancelButtonText ){
-    if (typeof title === 'undefined')            var title = "Confirmation";
-    if (typeof okButtonText === 'undefined')     var okButtonText = "Okay";
-    if (typeof cancelButtonText === 'undefined') var cancelButtonText = "Cancel";
-    if (typeof labelText === 'undefined')        var labelText = false;
+  if (this.$.batchMode) {
+    this.$.debug("$.oDialog.confirm not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
+    return;
+  }
+  
+  if (typeof title === 'undefined')            var title = "Confirmation";
+  if (typeof okButtonText === 'undefined')     var okButtonText = "Okay";
+  if (typeof cancelButtonText === 'undefined') var cancelButtonText = "Cancel";
+  if (typeof labelText === 'undefined')        var labelText = false;
+  
+  var d = new Dialog();
+      d.title            = title;
+      d.okButtonText     = okButtonText;
+      d.cancelButtonText = cancelButtonText;
+  
+  if( labelText ){
+    var label = new Label;
+    label.text = labelText;    
+  }
     
-    var d = new Dialog();
-        d.title            = title;
-        d.okButtonText     = okButtonText;
-        d.cancelButtonText = cancelButtonText;
-    
-    if( labelText ){
-      var label = new Label;
-          label.text = labelText;    
-    }
-      
-    d.add( label );
-    
-    if ( !d.exec() ){
-      return false;
-    }
+  d.add( label );
+  
+  if ( !d.exec() ){
+    return false;
+  }
     
   return true;
 }
@@ -101,32 +107,95 @@ $.oDialog.prototype.confirm = function( title, labelText, okButtonText, cancelBu
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * 
  */
-$.oDialog.prototype.alert = function( title, labelText, okButtonText ){   
-    if (typeof title === 'undefined')            var title = "Alert";
-    if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
-    if (typeof labelText === 'undefined')        var labelText = false;
+$.oDialog.prototype.alert = function( title, labelText, okButtonText ){ 
+  if (this.$.batchMode) {
+    this.$.debug("$.oDialog.alert not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
+    return;
+  }
+  
+  if (typeof title === 'undefined')            var title = "Alert";
+  if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
+  if (typeof labelText === 'undefined')        var labelText = false;
+  
+  var d = new QMessageBox( false, title, labelText, QMessageBox.Ok );
+      d.setWindowTitle( title );
     
-    var d = new QMessageBox( false, title, labelText, QMessageBox.Ok );
-        d.setWindowTitle( title );
-      
-        d.buttons()[0].text = okButtonText;
-      
-    if( labelText ){
-      d.text = labelText;
-    }
-      
-    if ( !d.exec() ){
-      return;
-    }
+      d.buttons()[0].text = okButtonText;
+    
+  if( labelText ){
+    d.text = labelText;
+  }
+    
+  if ( !d.exec() ){
+    return;
+  }
 }
 
+
+/**
+ * Prompts with a file selector window
+ * @param   {string}           [text="Select a file:"]       The title of the confirmation dialog.
+ * @param   {string}           [filter="*"]                  The filter for the file type and/or file name that can be selected. Accepts wildcard charater "*".
+ * @param   {string}           [getExisting=true]            Whether to select an existing file or a save location
+ * @param   {string}           [acceptMultiple=false]        Whether or not selecting more than one file is ok. Is ignored if getExisting is falses.
+ * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
+ * 
+ * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
+ */
+$.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptMultiple, startDirectory){   
+  if (this.$.batchMode) {
+    this.$.debug("$.oDialog.browseForFile not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
+    return;
+  }
+
+  if (typeof title === 'undefined') var title = "Select a file:";
+  if (typeof filter === 'undefined') var filter = "*"
+  if (typeof getExisting === 'undefined') var getExisting = true;
+  if (typeof acceptMultiple === 'undefined') var acceptMultiple = false;
+  
+  
+  if (getExisting){
+    if (acceptMultiple){
+      var _files = QFileDialog.getOpenFileNames(0, text, startDirectory, filter)
+    }else{
+      var _files = QFileDialog.getOpenFileName(0, text, startDirectory, filter)
+    }        
+  }else{
+    var _files = QFileDialog.getSaveFileName(0, text, startDirectory, filter)
+  }
+
+  this.$.debug(_files)    
+  return _files;
+}
+
+
+/**
+ * Prompts with an alert dialog (informational).
+ * @param   {string}           [text]                        The title of the confirmation dialog.
+ * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
+ * 
+ * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled 
+ */
+$.oDialog.prototype.browseForFolder = function(text, startDirectory){ 
+  if (this.$.batchMode) {
+    this.$.debug("$.oDialog.browseForFolder not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
+    return;
+  }
+
+  if (typeof title === 'undefined') var title = "Select a folder:";
+  
+  var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory)
+  
+  this.$.debug(_folder)
+  return _folder;
+}
  
  
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
 //                                  //
-//       $.gui.Progress class       //
+//    $.oDialog.Progress class      //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -134,23 +203,23 @@ $.oDialog.prototype.alert = function( title, labelText, okButtonText ){
 
  
 /**
- * The progress bar GUI dialog.
+ * The $.dialog.Progress constructor.
+ * @name        $.oDialog.Progress
  * @constructor
- * @classdesc  $.gui Progress gui dialog
+ * @classdesc   An simple progress dialog to
  * @param       {string}              labelText                  The path to the folder.
  * @param       {string}              range                      The path to the folder.
  * @param       {bool}                show                       Whether to immediately show the dialog.
  *
  * @property    {bool}                cancelled                  Whether the progress bar was cancelled.
  */
- 
- 
-/**
- * The progress bar GUI dialog.
- * @constructor
- * @classdesc  $.oDialog Base Class -- helper class for showing GUI content.
- */
 $.oDialog.prototype.Progress  = function( labelText, range, show ){
+    if (this.$.batchMode) {
+      this.$.debug("$.oDialog.Progress not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
+      return;
+    }
+  
+  
     if (typeof title === 'undefined')            var title = "Progress";
     if (typeof range === 'undefined')            var range = 100;
     if (typeof labelText === 'undefined')        var labelText = "";
@@ -183,9 +252,17 @@ $.oDialog.prototype.Progress  = function( labelText, range, show ){
 
 /**
  * Shows the dialog.
- * 
+ * @name    $.oDialog.Progress#show
+ * @param   {string}   title 
+ * @param   {string}   labelText
+ * @param   {string}   okButtonText
  */
 $.oDialog.prototype.Progress.prototype.show = function( title, labelText, okButtonText ){
+  if (this.$.batchMode) {
+    this.$.debug("$.oDialog.Progress not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
+    return;
+  }
+  
   this.progress.show();
 }
 
@@ -194,6 +271,11 @@ $.oDialog.prototype.Progress.prototype.show = function( title, labelText, okButt
  * 
  */
 $.oDialog.prototype.Progress.prototype.close = function( title, labelText, okButtonText ){
+  if (this.$.batchMode) {
+    this.$.debug("$.oDialog.Progress not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
+    return;
+  }
+
   this.value = this.range;
   this.progress.hide();
   this.progress = false;
@@ -206,6 +288,7 @@ $.oDialog.prototype.Progress.prototype.close = function( title, labelText, okBut
  * @type {string}
  */
 Object.defineProperty( $.oDialog.prototype.Progress.prototype, 'text', {
+  
     get: function(){
       return this._labelText;
     },
