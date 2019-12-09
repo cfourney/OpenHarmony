@@ -61,6 +61,7 @@ $.oDialog = function( ){
 
 /**
  * Prompts with a confirmation dialog (yes/no choice).
+ * @name    $.oDialog#confirm
  * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
@@ -202,21 +203,15 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
 
  
 /**
- * The progress bar GUI dialog.
+ * The $.dialog.Progress constructor.
+ * @name        $.oDialog.Progress
  * @constructor
- * @classdesc  $.gui Progress gui dialog
+ * @classdesc   An simple progress dialog to
  * @param       {string}              labelText                  The path to the folder.
  * @param       {string}              range                      The path to the folder.
  * @param       {bool}                show                       Whether to immediately show the dialog.
  *
  * @property    {bool}                cancelled                  Whether the progress bar was cancelled.
- */
- 
- 
-/**
- * The progress bar GUI dialog.
- * @constructor
- * @classdesc  $.oDialog Base Class -- helper class for showing GUI content.
  */
 $.oDialog.prototype.Progress  = function( labelText, range, show ){
     if (this.$.batchMode) {
@@ -257,7 +252,10 @@ $.oDialog.prototype.Progress  = function( labelText, range, show ){
 
 /**
  * Shows the dialog.
- * 
+ * @name    $.oDialog.Progress#show
+ * @param   {string}   title 
+ * @param   {string}   labelText
+ * @param   {string}   okButtonText
  */
 $.oDialog.prototype.Progress.prototype.show = function( title, labelText, okButtonText ){
   if (this.$.batchMode) {

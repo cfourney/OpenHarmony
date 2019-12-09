@@ -57,25 +57,36 @@
 
 
 /**
- * Base access to openHarmony
+ * The $ global object that holds all the functions of openHarmony
  * @namespace
- * @classdesc  The base class for the DOM. <br> Access the Scene through $.scene.
- * @version    1.0
+ * @classdesc Base access to the whole openHarmony library. <br>All the classes can be accessed from it, and it can be passed to a different context.
+ * @version   1.0
  * @property {int}     debug_level               - The debug level of the DOM.
  * @property {string}  file                      - The openHarmony base file - THIS!
  *
+ * @property {oScene}  getScene                  - The harmony scene.
  * @property {oScene}  scene                     - The harmony scene.
  * @property {oScene}  scn                       - The harmony scene.
  * @property {oScene}  s                         - The harmony scene.
+ * @example
+ * // To access the functions, first call the $ object.
+ * 
+ * var doc = $.scn                    // grabbing the scene document
+ * $.log("hello")                     // prints out a message to the MessageLog.
+ * var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHarmony class.
  */
 $ = {
   debug_level : 0,
+
+ /**
+ * @enum
+ */
   DEBUG_LEVEL : {
                  'ERROR'   : 0,
                  'WARNING' : 1,
                  'LOG'     : 2
                 },            
-  file        : __file__,
+  file      : __file__,
   directory : false,
   batchMode : false
 };
@@ -113,6 +124,7 @@ include( $.directory + "/openHarmony/openHarmony_column.js"    );
 include( $.directory + "/openHarmony/openHarmony_drawing.js"   );     
 include( $.directory + "/openHarmony/openHarmony_scene.js"     );
 include(specialFolders.resource+"/scripts/TB_orderNetworkUp.js");
+include(specialFolders.userScripts+"/TB_orderNetworkUp.js");       // for older versions of harmony
 
 /**
  * The standard debug that uses logic and level to write to the messagelog. Everything should just call this to write internally to a log in OpenHarmony.
@@ -166,6 +178,7 @@ $.logObj = function( object ){
 //---- Scene  --------------
 $.s     = new $.oScene( );
 $.scn   = $.s;
+$.scene = $.s;
 $.getScene = $.s;
 
 

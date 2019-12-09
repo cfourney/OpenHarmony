@@ -83,7 +83,7 @@ Object.defineProperty( $.oDrawing.prototype, 'path', {
 
 /**
  * Converts the Drawing object to a string of the drawing name.
- * @name toString
+ * @name $.oDrawing#toString
  * @type {string}
  */
 $.oDrawing.prototype.toString = function(){

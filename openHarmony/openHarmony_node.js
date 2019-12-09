@@ -55,12 +55,43 @@
 //TODO: group's multi-in-ports, multi-out-port modules
 
 /**
- * The base class for the node.
+ * Constructor for $.oNode class
+ * @classdesc 
+ * The oNode class represents a node in the Harmony scene. <br>
+ * It holds the value of its position in the node view, and functions to link to other nodes, as well as set the attributes of the node.<br> 
  * @constructor
- * @classdesc  Node Class
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
+ * @example
+ * // To grab a node object from the scene, it's possible to create a new node object by calling the constructor:
+ * var myNode = new $.oNode("Top/Drawing", $.scn) 
+ * 
+ * // However, most nodes will be grabbed directly from the scene object.
+ * var doc = $.scn 
+ * var nodes = doc.nodes;                   // grabs the list of all the nodes in the scene
+ *
+ * // It's possible to grab a single node from the path in the scene
+ * var myNode = doc.getNodeByPath("Top/Drawin")
+ * var myNode = doc.$node("Top/Drawing")    // short synthax but same function
+ *
+ * // depending on the type of node, oNode objects returned by these functions can actually be an instance the subclasses
+ * // oDrawingNode, oGroupNode, oPegNode...
+ * 
+ * $.log(myNode instanceof oNode)           // true
+ * $.log(myNode instanceof $.oDrawingNode)  // true
+ * 
+ * // These other subclasses of nodes have other methods that are only shared by nodes of a certain type.
+ * 
+ * // Not documented in this class, oNode objects have attributes which correspond to the values visible in the Layer Properties window.
+ * // The attributes values can be accessed and set by using the dot notation on the oNode object:
+ *
+ * myNode.can_animate = false;
+ * myNode.position.separate = false;
+ * myNode.position.x = 10;
+ *
+ * // To access the oAttribute objects in the node, call the oNode.attributes object that contains them
+ * 
+ * var attributes = myNode.attributes;
  */
 $.oNode = function( path, oSceneObject ){
     this._path = path;
@@ -149,11 +180,9 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
             // MessageLog.trace("setting attribute "+attr.keyword+" to value: "+newValue)
             // if attribute has animation, passed value must be a frame object
             var _subAttrs = attr.subAttributes;
-            // MessageLog.trace("is animated? "+(attr.column != null)+" has subattributes? "+(_subAttrs.length != 0))
 
             if (_subAttrs.length == 0){
                 if (attr.column != null) {
-                    // MessageLog.trace("value is oFrame? "+(newValue instanceof oFrame))
                     if (!(newValue instanceof oFrame)) {
                         // throw new Error("must pass an oFrame object to set an animated attribute")
                         // fallback to set frame 1
@@ -191,7 +220,7 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
 
 /**
  * The derived path to the node.
- * @deprecated
+ * @deprecated use oNode.path instead
  * @name $.oNode#fullPath
  * @type {string}
  */
@@ -265,7 +294,7 @@ Object.defineProperty($.oNode.prototype, 'isGroup', {
 
 /**
  * The $.oNode objects contained in this group. This is deprecated and was moved to oGroupNode
- * @DEPRECATED
+ * @DEPRECATED Use oGroupNode.children instead.
  * @name $.oNode#children
  * @type {$.oNode[]}
  */
@@ -363,12 +392,12 @@ Object.defineProperty($.oNode.prototype, 'group', {
     },
 
     set : function(newPath){
+        if (newPath instanceof oGroupNode) newPath = newPath.path;
         // TODO: make moveNode() method?
-        var _name = this.name
-        node.moveToGroup(this.path, newPath)
+        var _name = this.name;
+        node.moveToGroup(this.path, newPath);
         this.path = newPath + '/' + _name;
     }
-
 });
 
 
@@ -387,7 +416,6 @@ Object.defineProperty( $.oNode.prototype, 'parent', {
     set : function(newPath){
         // TODO: make moveNode() method?
     }
-
 });
 
 
@@ -609,6 +637,7 @@ Object.defineProperty($.oNode.prototype, 'outs', {
 /**
  * The list of attributes that this node contains.
  * @name $.oNode#attributes
+ * @Property
  * @type {oAttribute}
 */
 Object.defineProperty($.oNode.prototype, 'attributes', {
@@ -760,7 +789,7 @@ $.oNode.prototype.linkOutNode = function(nodeToLink, outPort, inPort, createPort
             (nodeToLink.type == "COMPOSITE")
   }
 
-  // MessageLog.trace("linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length);
+  MessageLog.trace("linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length);
   return node.link(this.fullPath, outPort, _node, inPort, createPorts, createPorts);
 }
 
@@ -992,7 +1021,7 @@ $.oNode.prototype.remove = function( deleteColumns, deleteElements ){
 
 
  /**
- * Provides a matching attribute based on provided keyword name.
+ * Provides a matching attribute based on provided keyword name. Keyword can include "." to get subattributes.
  * @param   {string}    keyword                    The attribute keyword to search.
  * @return  {oAttribute}   The matched attribute object, given the keyword.
  */
@@ -1139,11 +1168,15 @@ $.oPegNode = function( path, oSceneObject ) {
 $.oPegNode.prototype = Object.create( $.oNode.prototype );
 
 //CF NOTE: Use Separate is ambiguous, as scale, and position can be separate too. Perhaps useSeparate is distinct for position, and rotationUseSeparate otherwise?
- /**
+// MC Node: Agreed. Do we even want this class? Right now I can't think of anything to put in here...
+
+ /*
  * Whether the position is separate.
+ * @Deprecated
  * @name $.oPegNode#useSeparate
  * @type {bool}
  */
+ /*
 Object.defineProperty($.oPegNode.prototype, "useSeparate", {
     get : function(){
 
@@ -1152,7 +1185,7 @@ Object.defineProperty($.oPegNode.prototype, "useSeparate", {
     set : function( _value ){
         // TODO: when swapping from one to the other, copy key values and link new columns if missing
     }
-})
+})*/
 
 
 
@@ -1170,13 +1203,31 @@ Object.defineProperty($.oPegNode.prototype, "useSeparate", {
 //CFNote: DrawingNode is incorrect in terms of Harmony-- its actually a 'Read' module.
 
 /**
- * The drawing module base class for the node.
+ * The constructor for the scene object.
+ * @classdesc  The drawing node base class.
  * @constructor
  * @augments   $.oNode
- * @classdesc  Drawing Moudle Class
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
+ * @example
+ * // Drawing Nodes are more than a node, as they do not work without an associated Drawing column and element.
+ * // adding a drawing node will automatically create a column and an element, unless they are provided as arguments.
+ * // Creating an element makes importing a drawing file possible.
+ *
+ * var doc = $.scn;
+ *
+ * var drawingName = "myDrawing";
+ * var myElement = doc.addElement(drawingName, "TVG");                      // add an element that holds TVG(Toonboom Vector Drawing) files
+ * var myDrawingColumn = doc.addColumn("DRAWING", drawingName, myElement);  // create a column and link the element created to it
+ *
+ * var sceneRoot = doc.root;                                                // grab the scene root group
+ *
+ * // Creating the Drawing node and linking the previously created element and column
+ * var myDrawingNode = sceneRoot.addDrawingNode(drawingName, new $.oPoint(), myDrawingColumn, myElement);
+ *
+ * // This also works:
+ *
+ * var myOtherNode = sceneRoot.addDrawingNode("Drawing2");
  */
 $.oDrawingNode = function(path, oSceneObject) {
     // $.oDrawingNode can only represent a node of type 'READ'
@@ -1334,13 +1385,30 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
 //////////////////////////////////////
 
 /**
- * The group module base class for the node.
+ * Constructor for the $.oGroupNode class
+ * @classdesc  
+ * $.oGroupNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>
+ * It represents groups in the scene. From this class, it's possible to add nodes, and backdrops, import files and templates into the group.
  * @constructor
  * @augments   $.oNode
- * @classdesc  $.oGroupNode Class
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
+ * @example
+ * // to add a new node, grab the group it'll be created in first
+ * var doc = $.scn
+ * var sceneRoot = doc.root;                                              // grab the scene root group
+ * 
+ * var myGroup = sceneRoot.addNode("GROUP", "myGroup", false, false);     // create a group in the scene root
+ * var MPO = myGroup.multiportOut;                                         // grab the multiport in of the group
+ *
+ * var myNode = myGroup.addDrawingNode("myDrawingNode");                  // add a drawing node inside the group
+ * myNode.linkOutNode(MPO);                                               // link the newly created node to the multiport
+ * myNode.centerAbove(MPO);
+ * 
+ * var sceneComposite = doc.$node("Top/Composite");                       // grab the scene composite node
+ * myGroup.linkOutNode(sceneComposite);                                   // link the group to it
+ *
+ * myGroup.centerAbove(sceneComposite);
  */
 $.oGroupNode = function(path, oSceneObject) {
     // $.oDrawingNode can only represent a node of type 'READ'
@@ -1381,7 +1449,7 @@ Object.defineProperty($.oGroupNode.prototype, "multiportOut", {
 
 
  /**
- * Gets all subnodes withing the group.
+ * Gets all the nodes contained within the group.
  * @param   {bool}    [recurse=false]             Whether to recurse the groups within the groups.
  *
  * @return  {$.oNode[]}   The nodes in the group
@@ -1530,9 +1598,7 @@ $.oGroupNode.prototype.addDrawingNode = function( name, nodePosition, oElementOb
     if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
     if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
 
-    var _group = this.path
-
-    var _node = this.addNode( "READ", name, _group, nodePosition );
+    var _node = this.addNode( "READ", name, nodePosition );
 
     // setup the node
     // setup animate mode/separate based on preferences?
@@ -1716,14 +1782,17 @@ $.oGroupNode.prototype.addBackdrop = function(title, body, color, x, y, width, h
  *  // This script will prompt for a color and create a backdrop around the selection
  *  $.beginUndo()
  *
- *  var doc = $.scene; // grab the scene
+ *  var doc = $.scn; // grab the scene
  *  var nodes = doc.getSelectedNodes(); // grab the selection
+ *
+ *  if(!nodes) return    // exit the function if no nodes are selected
+ *
  *  var color = pickColor(); // prompt for color
  *
  *  var group = doc.$node("Top") // get the group to add the backdrop to
  *  var backdrop = group.addBackdropToNodes(nodes, "BackDrop", "", color)
  *
- *  $.endUndo()
+ *  $.endUndo();
  *
  *  // function to get the color chosen by the user
  *  function pickColor(){
@@ -1776,18 +1845,18 @@ $.oGroupNode.prototype.addBackdropToNodes = function( nodes, title, body, color,
  * // This example browses for a PSD file then import it in the root of the scene, then connects it to the main composite.
  *
  * function importCustomPSD(){
- *   $.beginUndo();
+ *   $.beginUndo("importCustomPSD");
  *   var psd = $.dialog.browseForFile("get PSD", "*.psd");       // prompt for a PSD file
  *
  *   if (!psd) return;                                           // dialog was cancelled, exit the function
  *
- *   var doc = $.scene;                                          // get the scene object
- *   var topGroup = doc.root                                     // grab the scene root group
- *   var psdNodes = doc.importPSD(psd);                          // import the psd with default settings
+ *   var doc = $.scn;                                            // get the scene object
+ *   var sceneRoot = doc.root                                    // grab the scene root group
+ *   var psdNodes = sceneRoot.importPSD(psd);                    // import the psd with default settings
  *   var psdComp = psdNodes.pop()                                // get the composite node at the end of the psdNodes array
  *   var sceneComp = doc.$node("Top/Composite")                  // get the scene main composite
  *   psdComp.linkOutNode(sceneComp);                             // ... and link the two.
- *   doc.orderNodeView();                                        // orders the node view
+ *   sceneRoot.orderNodeView();                                  // orders the node view inside the group
  *   $.endUndo();
  * }
  */
@@ -1879,7 +1948,7 @@ $.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addCo
 
 /**
  * Updates a PSD previously imported into the group
- * @param   {string}       path                          The palette file to import.
+ * @param   {string}       path                          The updated psd file to import.
  * @param   {bool}         [separateLayers=true]         Separate the layers of the PSD.
  */
 $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){

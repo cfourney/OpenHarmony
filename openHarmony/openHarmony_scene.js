@@ -51,11 +51,24 @@
 
 //TODO: Metadata, settings, aspect, camera peg, view.
 /**
- * The base class for the scene.
+ * The constructor for $.oScene.
+ * @classdesc
+ * The base Class to access all the contents of the scene, and add elements. <br>This is the main class to do exporting operations as well as column/element/palette creation.
  * @constructor
- * @classdesc  Scene Class
- * @param   {$dom}         dom                  Access to the direct dom object. Available and automatically instantiated as $.scene, $.s
- * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
+ * @example
+ * // Access to the direct dom object. Available and automatically instantiated as $.getScene, $.scene, $.scn, $.s
+ * var doc = $.getScene ;
+ * var doc = $.scn ;
+ * ver doc = $.s ;         // all these are equivalents
+ * 
+ * // To grab the scene from a QWidget Dialog callback, store the $ object in a local variable to access all the fonctions from the library.
+ * function myCallBackFunction(){
+ *   var this.$ = $;
+ *
+ *   var doc = this.$.scn;
+ * }
+ *
+ *
  */
 $.oScene = function( ){
     // $.oScene.nodes property is a class property shared by all instances, so it can be passed by reference and always contain all nodes in the scene
@@ -829,7 +842,7 @@ $.oScene.prototype.nodeSearch = function( query, sort_result ){
 
 /**
  * Adds a node to the scene.
- * @Deprecated         AddNode directly in the destination group by calling it on the oGroupNode
+ * @Deprecated         use AddNode directly in the destination group by calling it on the oGroupNode
  * @param   {string}   type            The type-name of the node to add.
  * @param   {string}   name            The name of the newly created node.
  * @param   {string}   group           The groupname to add the node.
@@ -918,7 +931,7 @@ $.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType
  
 /**
  * Adds a drawing layer to the scene, with a drawing column and element linked. Possible to specify the column and element to use.
- * @Deprecated
+ * @Deprecated Use oGroupNode.addDrawingNode instead
  * @param   {string}     name            The name of the newly created node.
  * @param   {string}     group           The group in which the node is added.
  * @param   {$.oPoint}   nodePosition    The position for the node to be placed in the network.
@@ -943,7 +956,7 @@ $.oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElemen
  
 /**
  * Adds a group to the scene.
- * @Deprecated
+ * @Deprecated Use oGroupNode.addGroup instead
  * @param   {string}     name                   The name of the newly created group.
  * @param   {string}     includeNodes           The nodes to add to the group.
  * @param   {$.oPoint}   addComposite           Whether to add a composite.
@@ -1024,7 +1037,7 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
   var _list = PaletteObjectManager.getScenePaletteList();
   
   if (typeof storeInElement === 'undefined'){
-    if (paletteStorage == "external") throw new Error("Elemnt parameter should point to storage path if palette destination is External")
+    if (paletteStorage == "external") throw new Error("Element parameter should point to storage path if palette destination is External")
     if (paletteStorage == "element") throw new Error("Element parameter cannot be omitted if palette destination is Element")
     var _element = 1;
   }
@@ -1371,28 +1384,6 @@ $.oScene.prototype.addBackdrop = function( groupPath, title, body, color, x, y, 
  * @param   {float}            height                            The Height of the backdrop, a padding value if nodes are specified.
  * 
  * @return {$.oBackdrop}       The created backdrop.
- * @example 
- * function createColoredBackdrop(){
- *  // This script will prompt for a color and create a backdrop around the selection
- * 	$.beginUndo()
- * 	
- * 	var doc = $.scene; // grab the scene
- * 	var nodes = doc.getSelectedNodes(); // grab the selection
- * 	var color = pickColor(); // prompt for color
- *   
- *  var group = doc.$node("Top") // can pass the path or a oGroupNode object to the function
- *  var backdrop = doc.addBackdropToNodes(group, nodes, "BackDrop", "", color)
- * 
- *  $.endUndo()
- * 
- *  // function to get the color chosen by the user
- * 	function pickColor(){
- * 		var d = new QColorDialog;
- * 		d.exec();
- * 		var color = d.selectedColor();
- * 		return new $.oColorValue({r:color.red(), g:color.green(), b:color.blue(), a:color.alpha()})
- * 	}  
- * }
  */
 $.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body, color, x, y, width, height ){
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
