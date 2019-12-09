@@ -220,7 +220,7 @@ $.oDialog.prototype.Progress  = function( labelText, range, show ){
     }
   
   
-    if (typeof title === 'undefined')            var title = "Progress";
+    if (typeof title === 'undefined')            var title = "Progress";  
     if (typeof range === 'undefined')            var range = 100;
     if (typeof labelText === 'undefined')        var labelText = "";
     

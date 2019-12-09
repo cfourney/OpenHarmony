@@ -76,6 +76,14 @@
             
                 <li data-name="$.undo"><a href="$.html#.undo">undo</a></li>
             
+                <li data-name="$#alert"><a href="$.html#alert">alert</a></li>
+            
+                <li data-name="$#browseForFile"><a href="$.html#browseForFile">browseForFile</a></li>
+            
+                <li data-name="$#browseForFolder"><a href="$.html#browseForFolder">browseForFolder</a></li>
+            
+                <li data-name="$#confirm"><a href="$.html#confirm">confirm</a></li>
+            
             </ul>
             <ul class="events itemMembers">
             
@@ -1741,7 +1749,7 @@
     $
     </h2>
     
-        <div class="class-description">Base access to the whole openHarmony library. <br>All the classes can be accessed from it, and it can be passed to a different context.</div>
+        <div class="class-description">All the classes can be accessed from it, and it can be passed to a different context.</div>
     
 </header>  
 
@@ -1751,7 +1759,7 @@
     
     
         
-            <div class="description">The $ global object that holds all the functions of openHarmony</div>
+            <div class="description">The $ global object that holds all the functions of openHarmony.</div>
         
         
         
@@ -1958,7 +1966,13 @@
 
 var doc = $.scn                    // grabbing the scene document
 $.log("hello")                     // prints out a message to the MessageLog.
-var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHarmony class.</code></pre>
+var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHarmony class.
+
+// members of the $ objects get published to the global scope, which means $ can be ommited
+
+var doc = scn
+log("hello)
+var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
 
         
@@ -2076,6 +2090,10 @@ var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHa
     
 </dt>
 <dd>
+    
+    <div class="description">
+        Enum to set the debug level of debug statements.
+    </div>
     
     
     
@@ -2226,7 +2244,7 @@ var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHa
     
         
         <div class="tag-source">
-            openHarmony.js, line 235
+            openHarmony.js, line 287
         </div>
         
     </div>
@@ -2349,7 +2367,7 @@ var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHa
     
         
         <div class="tag-source">
-            openHarmony.js, line 246
+            openHarmony.js, line 298
         </div>
         
     </div>
@@ -2427,7 +2445,7 @@ var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHa
     
         
         <div class="tag-source">
-            openHarmony.js, line 134
+            openHarmony.js, line 142
         </div>
         
     </div>
@@ -2566,7 +2584,7 @@ var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHa
     
         
         <div class="tag-source">
-            openHarmony.js, line 99
+            openHarmony.js, line 107
         </div>
         
     </div>
@@ -2711,7 +2729,7 @@ var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHa
     
         
         <div class="tag-source">
-            openHarmony.js, line 254
+            openHarmony.js, line 306
         </div>
         
     </div>
@@ -2789,7 +2807,7 @@ var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHa
     
         
         <div class="tag-source">
-            openHarmony.js, line 153
+            openHarmony.js, line 161
         </div>
         
     </div>
@@ -2905,7 +2923,7 @@ var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHa
     
         
         <div class="tag-source">
-            openHarmony.js, line 163
+            openHarmony.js, line 171
         </div>
         
     </div>
@@ -3044,7 +3062,7 @@ var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHa
     
         
         <div class="tag-source">
-            openHarmony.js, line 271
+            openHarmony.js, line 323
         </div>
         
     </div>
@@ -3160,7 +3178,7 @@ var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHa
     
         
         <div class="tag-source">
-            openHarmony.js, line 262
+            openHarmony.js, line 314
         </div>
         
     </div>
@@ -3265,6 +3283,915 @@ var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHa
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="alert">
+            
+            alert<span class="signature">(<span class="optional">title</span>, <span class="optional">labelText</span>, <span class="optional">okButtonText</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony.js, line 212
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Prompts with an alert dialog (informational).
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The title of the confirmation dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>labelText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The label/internal text of the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>okButtonText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The text on the OK button of the dialog.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="browseForFile">
+            
+            browseForFile<span class="signature">(<span class="optional">text</span>, <span class="optional">filter</span>, <span class="optional">getExisting</span>, <span class="optional">acceptMultiple</span>, <span class="optional">startDirectory</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;string>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony.js, line 223
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Prompts with a file selector window
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    "Select a file:"
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The title of the confirmation dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>filter</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    "*"
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The filter for the file type and/or file name that can be selected. Accepts wildcard charater "*".</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>getExisting</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether to select an existing file or a save location</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>acceptMultiple</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether or not selecting more than one file is ok. Is ignored if getExisting is falses.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>startDirectory</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The directory showed at the opening of the dialog.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Array.&lt;string>
+                        
+                    
+            </td>
+            <td class="description last">The list of selected Files, 'undefined' if the dialog is cancelled</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="browseForFolder">
+            
+            browseForFolder<span class="signature">(<span class="optional">text</span>, <span class="optional">startDirectory</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;string>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony.js, line 237
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Prompts with a folder selector window.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The title of the confirmation dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>startDirectory</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The directory showed at the opening of the dialog.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Array.&lt;string>
+                        
+                    
+            </td>
+            <td class="description last">The path of the selected folder, 'undefined' if the dialog is cancelled</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="confirm">
+            
+            confirm<span class="signature">(<span class="optional">title</span>, <span class="optional">labelText</span>, <span class="optional">okButtonText</span>, <span class="optional">cancelButtonText</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony.js, line 199
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Prompts with a confirmation dialog (yes/no choice).
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The title of the confirmation dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>labelText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The label/internal text of the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>okButtonText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The text on the OK button of the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>cancelButtonText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The text on the CANCEL button of the dialog.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        bool
+                        
+                    
+            </td>
+            <td class="description last">Result of the confirmation dialog.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
         </dl>
     
     
@@ -3284,7 +4211,7 @@ var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHa
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 09 2019 01:52:25 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 09 2019 22:16:29 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

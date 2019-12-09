@@ -57,9 +57,9 @@
 
 
 /**
- * The $ global object that holds all the functions of openHarmony
+ * The $ global object that holds all the functions of openHarmony.
  * @namespace
- * @classdesc Base access to the whole openHarmony library. <br>All the classes can be accessed from it, and it can be passed to a different context.
+ * @classdesc All the classes can be accessed from it, and it can be passed to a different context.
  * @version   1.0
  * @property {int}     debug_level               - The debug level of the DOM.
  * @property {string}  file                      - The openHarmony base file - THIS!
@@ -74,11 +74,19 @@
  * var doc = $.scn                    // grabbing the scene document
  * $.log("hello")                     // prints out a message to the MessageLog.
  * var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHarmony class.
+ *
+ * // members of the $ objects get published to the global scope, which means $ can be ommited
+ *
+ * var doc = scn
+ * log("hello)
+ * var myPoint = new oPoint(0,0,0)    // This is all valid
+ * 
  */
 $ = {
   debug_level : 0,
 
  /**
+ * Enum to set the debug level of debug statements.
  * @enum
  */
   DEBUG_LEVEL : {
@@ -188,9 +196,53 @@ $.utils   = new $.oUtils( );
 $.dialog  = new $.oDialog( );
 $.global  = this;
 
+/**
+ * Prompts with a confirmation dialog (yes/no choice).
+ * @function
+ * @name    $#confirm
+ * @param   {string}           [title]                        The title of the confirmation dialog.
+ * @param   {string}           [labelText]                    The label/internal text of the dialog.
+ * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
+ * @param   {string}           [cancelButtonText]             The text on the CANCEL button of the dialog.
+ * 
+ * @return  {bool}       Result of the confirmation dialog.
+ */
 $.confirm = $.dialog.confirm;
+
+/**
+ * Prompts with an alert dialog (informational).
+ * @function
+ * @name    $#alert
+ * @param   {string}           [title]                        The title of the confirmation dialog.
+ * @param   {string}           [labelText]                    The label/internal text of the dialog.
+ * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
+ * 
+ */
 $.alert   = $.dialog.alert;
+
+/**
+ * Prompts with a file selector window
+ * @name    $#browseForFile
+ * @function
+ * @param   {string}           [text="Select a file:"]       The title of the confirmation dialog.
+ * @param   {string}           [filter="*"]                  The filter for the file type and/or file name that can be selected. Accepts wildcard charater "*".
+ * @param   {string}           [getExisting=true]            Whether to select an existing file or a save location
+ * @param   {string}           [acceptMultiple=false]        Whether or not selecting more than one file is ok. Is ignored if getExisting is falses.
+ * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
+ * 
+ * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
+ */
 $.browseForFile = $.dialog.browseForFile;
+
+/**
+ * Prompts with a folder selector window.
+ * @name    $#browseForFolder
+ * @function
+ * @param   {string}           [text]                        The title of the confirmation dialog.
+ * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
+ * 
+ * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled 
+ */
 $.browseForFolder = $.dialog.browseForFolder;
 
 

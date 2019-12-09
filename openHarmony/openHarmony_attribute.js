@@ -97,23 +97,20 @@ $.oAttribute.prototype.createSubAttributes = function (attributeObject){
   if (attributeObject.getSubAttributes){
     var _subAttributesList = attributeObject.getSubAttributes();
   }else{
-    var _subAttributesList = this.getSubAttributes_oldVersion( _subAttributes );
+    var _subAttributesList = this.getSubAttributes_oldVersion();
   }
   
-  if ( _subAttributesList.length > 0 ){
-    for (var i in _subAttributesList){ 
-      var _subAttribute = new this.$.oAttribute( this.node, _subAttributesList[i], this );
-      var _keyword = _subAttribute.shortKeyword;     
-      
-      this.createSubAttributes(_subAttributesList[i], _subAttribute)
-      // creating a property on the attribute object with the subattribute name to access it
-      this[_keyword] = _subAttribute;
-      _subAttributes.push(_subAttribute)
-    }
+  for (var i in _subAttributesList){ 
+    var _subAttribute = new this.$.oAttribute( this.node, _subAttributesList[i], this );
+    var _keyword = _subAttribute.shortKeyword;     
+    
+    // creating a property on the attribute object with the subattribute name to access it
+    this[_keyword] = _subAttribute;
+    _subAttributes.push(_subAttribute)
   }
+
   // subAttributes is made available as an array for more formal access
   this.subAttributes = _subAttributes;
-
 }
 
  
@@ -128,41 +125,32 @@ $.oAttribute.prototype.getSubAttributes_oldVersion = function (){
   switch( this.type ){
       case "POSITION_3D" :
         //hard coded subAttr handler for POSITION_3D in older versions of Harmony.
-        sub_attrs = [ 'separate', 'x', 'y', 'z'];
+        sub_attrs = [ 'SEPARATE', 'X', 'Y', 'Z'];
         break
       case "ROTATION_3D" :
-        sub_attrs = [ 'separate', 'anglex', 'angley', 'anglez', "quaternionPath" ];
+        sub_attrs = [ 'SEPARATE', 'ANGLEX', 'ANGLEY', 'ANGLEZ', "QUATERNIONPATH" ];
         break
       case "SCALE_3D" :
-        sub_attrs = [ 'separate', 'inFields', 'xy', 'x', 'y', 'z' ];
+        sub_attrs = [ 'SEPARATE', 'IN_FIELDS', 'XY', 'X', 'Y', 'Z' ];
         break
       case "DRAWING" :
-        sub_attrs = [ 'element', 'elementMode', 'customName'];
+        sub_attrs = [ 'ELEMENT', 'ELEMENT_MODE', 'CUSTOM_NAME'];
         break
       case "ELEMENT" :
-        sub_attrs = [ 'layer' ]
+        sub_attrs = [ 'LAYER' ]
         break
       case "CUSTOM_NAME" :
-        sub_attrs = [ 'name', 'timing', 'extension', 'fieldChart' ]
+        sub_attrs = [ 'NAME', 'TIMING', 'EXTENSION', 'FIELD_CHART' ]
       default:
         break
   }
-  
+
   var _node = this.node.path;
-  var _keyword = this._keyword;
-  var _subAttributes = sub_attrs.map(function(x){return node.getAttr( _node, 1, _keyword+"."+x )})
+  var _keyword = this._keyword;  
+
+  sub_attrs = sub_attrs.map(function(x){return node.getAttr( _node, 1, _keyword+"."+x )})
   
-  /*
-  for( var n=0;n<sub_attrs.length;n++ ){
-    var _attr = node.getAttr( this.node.path, 1, this._keyword+"."+sub_attrs[n] );  
-    if( _attr ){
-      var _subAttribute = new this.$.oAttribute( this.node, _attr, this );  
-      this[ sub_attrs[n] ] = _subAttribute;  
-      _subAttributes.push( _subAttribute );
-    }
-  }*/
-    
-  return _subAttributes;
+  return sub_attrs;
 }
  
 /**

@@ -71,13 +71,13 @@
  * var nodes = doc.nodes;                   // grabs the list of all the nodes in the scene
  *
  * // It's possible to grab a single node from the path in the scene
- * var myNode = doc.getNodeByPath("Top/Drawin")
+ * var myNode = doc.getNodeByPath("Top/Drawing")
  * var myNode = doc.$node("Top/Drawing")    // short synthax but same function
  *
  * // depending on the type of node, oNode objects returned by these functions can actually be an instance the subclasses
  * // oDrawingNode, oGroupNode, oPegNode...
  * 
- * $.log(myNode instanceof oNode)           // true
+ * $.log(myNode instanceof $.oNode)           // true
  * $.log(myNode instanceof $.oDrawingNode)  // true
  * 
  * // These other subclasses of nodes have other methods that are only shared by nodes of a certain type.
@@ -86,7 +86,7 @@
  * // The attributes values can be accessed and set by using the dot notation on the oNode object:
  *
  * myNode.can_animate = false;
- * myNode.position.separate = false;
+ * myNode.position.separate = true;
  * myNode.position.x = 10;
  *
  * // To access the oAttribute objects in the node, call the oNode.attributes object that contains them
@@ -145,8 +145,7 @@ $.oNode.prototype.attributesBuildCache = function (){
  */
 $.oNode.prototype.setAttrGetterSetter = function (attr, context){
     if (typeof context === 'undefined') context = this;
-    // MessageLog.trace("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name)
-    // System.println( "Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name );
+    this.$.debug("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name, this.$.DEBUG_LEVEL.LOG)
 
     var _keyword = attr.shortKeyword;
 
@@ -635,10 +634,25 @@ Object.defineProperty($.oNode.prototype, 'outs', {
 
 
 /**
- * The list of attributes that this node contains.
+ * An object containing all attributes of this node.
  * @name $.oNode#attributes
  * @Property
  * @type {oAttribute}
+ * @example
+ * // You can get access to the actual oAttribute object for a node parameter by using the dot notation:
+ *
+ * var myNode = $.scn.$node("Top/Drawing")
+ * var drawingAttribute = myNode.attributes.drawing.element
+ *
+ * // from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
+ * 
+ * drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
+ * var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
+ * $.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
+ *
+ * // for a more direct way to access an attribute, it's possible to also call:
+ *
+ * var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");
 */
 Object.defineProperty($.oNode.prototype, 'attributes', {
   get : function(){

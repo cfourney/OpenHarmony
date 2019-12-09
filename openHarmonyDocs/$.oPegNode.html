@@ -76,6 +76,14 @@
             
                 <li data-name="$.undo"><a href="$.html#.undo">undo</a></li>
             
+                <li data-name="$#alert"><a href="$.html#alert">alert</a></li>
+            
+                <li data-name="$#browseForFile"><a href="$.html#browseForFile">browseForFile</a></li>
+            
+                <li data-name="$#browseForFolder"><a href="$.html#browseForFolder">browseForFolder</a></li>
+            
+                <li data-name="$#confirm"><a href="$.html#confirm">confirm</a></li>
+            
             </ul>
             <ul class="events itemMembers">
             
@@ -1762,7 +1770,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1160
+            openHarmony/openHarmony_node.js, line 1174
         </div>
         
     </div>
@@ -1925,7 +1933,7 @@
 <dd>
     
     <div class="description">
-        The list of attributes that this node contains.
+        An object containing all attributes of this node.
     </div>
     
     
@@ -1981,6 +1989,27 @@
 </dl>
 
     
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:
+
+var myNode = $.scn.$node("Top/Drawing")
+var drawingAttribute = myNode.attributes.drawing.element
+
+// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
+
+drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
+var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
+$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
+
+// for a more direct way to access an attribute, it's possible to also call:
+
+var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
+    
+
     
 </dd>
 
@@ -3132,7 +3161,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 895
+            openHarmony/openHarmony_node.js, line 909
         </div>
         
     </div>
@@ -3325,7 +3354,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 920
+            openHarmony/openHarmony_node.js, line 934
         </div>
         
     </div>
@@ -3518,7 +3547,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 970
+            openHarmony/openHarmony_node.js, line 984
         </div>
         
     </div>
@@ -3699,7 +3728,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 990
+            openHarmony/openHarmony_node.js, line 1004
         </div>
         
     </div>
@@ -3847,7 +3876,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1064
+            openHarmony/openHarmony_node.js, line 1078
         </div>
         
     </div>
@@ -3994,7 +4023,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1028
+            openHarmony/openHarmony_node.js, line 1042
         </div>
         
     </div>
@@ -4141,7 +4170,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1109
+            openHarmony/openHarmony_node.js, line 1123
         </div>
         
     </div>
@@ -4243,7 +4272,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 850
+            openHarmony/openHarmony_node.js, line 864
         </div>
         
     </div>
@@ -4459,7 +4488,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 711
+            openHarmony/openHarmony_node.js, line 725
         </div>
         
     </div>
@@ -4701,7 +4730,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 774
+            openHarmony/openHarmony_node.js, line 788
         </div>
         
     </div>
@@ -4943,7 +4972,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 946
+            openHarmony/openHarmony_node.js, line 960
         </div>
         
     </div>
@@ -5136,7 +5165,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1002
+            openHarmony/openHarmony_node.js, line 1016
         </div>
         
     </div>
@@ -5306,7 +5335,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 873
+            openHarmony/openHarmony_node.js, line 887
         </div>
         
     </div>
@@ -5455,7 +5484,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 696
+            openHarmony/openHarmony_node.js, line 710
         </div>
         
     </div>
@@ -5602,7 +5631,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1054
+            openHarmony/openHarmony_node.js, line 1068
         </div>
         
     </div>
@@ -5704,7 +5733,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 739
+            openHarmony/openHarmony_node.js, line 753
         </div>
         
     </div>
@@ -5851,7 +5880,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 757
+            openHarmony/openHarmony_node.js, line 771
         </div>
         
     </div>
@@ -5998,7 +6027,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 803
+            openHarmony/openHarmony_node.js, line 817
         </div>
         
     </div>
@@ -6145,7 +6174,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 826
+            openHarmony/openHarmony_node.js, line 840
         </div>
         
     </div>
@@ -6321,7 +6350,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 09 2019 01:52:26 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 09 2019 22:16:30 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>
