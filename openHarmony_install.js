@@ -22,7 +22,7 @@ function openHarmony_install_main(){
       MessageBox.information( "Failed to create folders for openHarmony - please check permissions." );
     }
     
-    var apic = new api_call( "https://api.github.com/repos/cfourney/OpenHarmony/branches" );
+    var apic = api_call( "https://api.github.com/repos/cfourney/OpenHarmony/branches" );
     if( !apic ){
       MessageBox.information( "API Error - Failed to get available branches." );
       return;
@@ -58,7 +58,7 @@ function openHarmony_install_main(){
     
     var contents_url = "https://api.github.com/repos/cfourney/OpenHarmony/contents?ref="+fnd;
     
-    var apic = new api_call( contents_url );
+    var apic = api_call( contents_url );
     if( !apic ){
       MessageBox.information( "API Error - Failed to get available branch content." );
       return;
@@ -173,7 +173,7 @@ function recurse_files( contents, arr_files ){
     }else if( contents[n].type == "dir" ){
       //Get more contents.
       QCoreApplication.processEvents();
-      var apic = new api_call( tfl["url"] );
+      var apic = api_call( tfl["url"] );
       if( apic ){
         arr_files = recurse_files( apic, arr_files );
       }
