@@ -142,37 +142,6 @@ Object.defineProperty($.oNodeLink.prototype, 'inNode', {
       
       this.applyLinks();
       
-      // if( this._inNode ){
-        // if( this._inNode.path == val ){
-          // return;
-        // }
-        
-        // this._inNode.unlinkInPort( this._inPort );
-      // }
-      
-      // if( !val ){ return; }
-      // if( !this._outNode ){ return; }
-      
-      
-      // //Are they the same group?
-      // if( val.group.path == this._outNode.group.path ){
-        // //Its a direct link, we are safe to link it without any special pathfinding.
-        // //Need composite handling for extending to composite.
-        
-        // if( this.autoDisconnect ){
-          // val.unlinkInPort( this.inPort );        
-        // }else{
-          // if( val.inNodes[0] ){
-            // throw "Unable to link "+this._outNode+" to "+val+", port "+this.inPort+" is already occupied.";
-          // }
-        // }
-        
-        // this._outNode.linkOutNode( val, this.inPort, this.outPort );
-      // }else{
-        // //We need pathfinding.
-        // throw "Not yet implemented";
-        
-      // }
     }
 });
 
@@ -371,4 +340,129 @@ $.oNodeLink.prototype.linkOut = function( onode, port ) {
  */
 $.oNodeLink.prototype.applyLinks = function ( ) {
   this._freeze = false;
+  
+  //CHECK AND APPLY THESE AS NEEDED.
+  /*
+  this._freeze        = false;
+  this._newInNode     = false;
+  this._newInPort     = false;
+  this._newOutNode    = false;
+  this._newOutPort    = false;
+  */
+  
+ 
+  //Force a reconnect -- track content as needed.
+  //Check and validate in ports.
+  
+  var inports_removed  = {};
+  var outports_removed = {};
+  
+  
+  var target_port = this._inPort;
+  var disconnect_in = false;
+  if( this._newInPort !== false ){
+    if( this._newInPort != this._inPort ){
+      target_port = this._newInPort;
+      disconnect_in = true;
+    }
+  }
+  
+  var old_inPortCount = false;    //Used to track if the inport count has changed upon its removal.
+  if( this._newInNode ){
+    if( this._inNode.path != this._newInNode.path ){
+      disconnect_in = true;
+    }
+  }
+  
+  //Check and validate out ports.
+  var disconnect_out = false;
+  if( this._newOutPort !== false ){
+    if( this._newOutPort != this._outPort ){
+      disconnect_out = true;
+    }
+  }
+  
+  if( this._newOutNode ){
+    if( this._outNode.path != this._newOutNode.path ){
+      disconnect_out = true;
+    }
+  }
+  
+  if( !disconnect_in && !disconnect_out ){
+    //Nothing happened.
+    System.println( "NOTHING TO DO\n" );
+    return;
+  }
+    
+  if( this._newInNode ){
+    if( this._newInNode.inNodes.length > target_port ){
+      if( this._newInNode.inNodes[ target_port ] ){
+        //-- Theres already a connection here-- lets remove it.
+        if( this.autoDisconnect ){
+          this._newInNode.unlinkInPort( target_port ); 
+          inports_removed[ this._newInNode.path ] = target_port;
+        }else{
+          throw "Unable to link "+this._outNode+" to "+this._newInNode+", port "+target_port+" is already occupied.";
+        }
+      }
+    }
+  }
+  
+  //We'll work with the new values -- pretend any new connection is a new one.
+  this._newInNode  = this._newInNode ? this._newInNode : this._inNode;
+  this._newOutNode = this._newOutNode ? this._newOutNode : this._outNode;
+  this._newOutPort = ( this._newOutPort === false ) ? this._outPort : this._newOutPort;
+  this._newInPort  = ( this._newInPort === false ) ? this._inPort : this._newInPort;
+  
+  if( !this._newInNode || !this._newOutNode ){
+    //Nothing to attach.
+    return;
+  }
+  
+  //Kill and rebuild the current connection - but first, calculate existing port indices so they can be reconnected contextually.
+  var newInPortCount   = this._newInNode ? this._newInNode.inNodes.length : 0;
+  var newOutPortCount  = this._newOutNode ? this._newOutNode.outNodes.length : 0;
+  
+  //Unlink it anyway! Dont worry, we'll reattach that after.
+  if( this._inNode ){
+    this._inNode.unlinkInPort( this._inPort );
+    if( this._outNode ){
+      outports_removed[ this._outNode.path ] = this._outPort;
+    }
+    inports_removed[ this._inNode.path ] = this._inPort;
+  }
+  
+  //Check to see if any of the port values have changed.
+  var newInPortCount_result   = this._newInNode ? this._newInNode.inNodes.length : 0;
+  var newOutPortCount_result  = this._newOutNode ? this._newOutNode.outNodes.length : 0;
+    
+  if( newOutPortCount_result != newOutPortCount ){
+    //Outport might have changed. React
+    if( this._newOutNode.path in outports_removed ){
+      if( this._newOutPort > outports_removed[ this._newOutNode.path ] ){
+        this._newOutPort-=1;
+      }
+    }
+  }
+  
+  if( newInPortCount_result != newOutPortCount ){
+    //Outport might have changed. React
+    if( this._newInNode.path in inports_removed ){
+      if( this._newInPort > inports_removed[ this._newInNode.path ] ){
+        this._newInPort-=1;
+      }
+    }
+  }
+  
+  
+  if( this._newInNode.group.path == this._newOutNode.group.path ){
+    //Simple direct connection within the same group.
+    
+    this._newOutNode.linkOutNode( this._newInNode, this._newInPort, this._newOutPort );
+  }else{
+    //Crazy pathfinding.
+    
+    
+  }
+  
 }

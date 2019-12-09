@@ -23,7 +23,6 @@ function openHarmony_install_main(){
     }
     
     var apic = api_call( "https://api.github.com/repos/cfourney/OpenHarmony/branches" );
-    
     if( !apic ){
       MessageBox.information( "API Error - Failed to get available branches." );
       return;
@@ -56,7 +55,7 @@ function openHarmony_install_main(){
     
     var contents_url = "https://api.github.com/repos/cfourney/OpenHarmony/contents?ref="+fnd;
     
-    var apic = new api_call( contents_url );
+    var apic = api_call( contents_url );
     if( !apic ){
       MessageBox.information( "API Error - Failed to get available branch content." );
       return;
