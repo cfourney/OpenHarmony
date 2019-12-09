@@ -17,7 +17,7 @@
     },
     "opts": {
         "encoding": "utf8",               
-        "destination": "./openHarmonyDocs/",          
+        "destination": "./docs/",          
         "recurse": true
     }
 }

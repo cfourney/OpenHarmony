@@ -110,6 +110,12 @@ function openHarmony_install_main(){
           //Dont include the tools directory, these will be installed as needed.
           continue;
         }
+
+        if( path.slice( 0, path.indexOf("/") ) == "docs" ){
+          //Dont include the docs directory, these will be installed as needed.
+          continue;
+        }
+
         
         var local_dir  = local_path.slice( 0, local_path.lastIndexOf("/") );
         

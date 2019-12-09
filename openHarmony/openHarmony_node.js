@@ -636,7 +636,6 @@ Object.defineProperty($.oNode.prototype, 'outs', {
 /**
  * An object containing all attributes of this node.
  * @name $.oNode#attributes
- * @Property
  * @type {oAttribute}
  * @example
  * // You can get access to the actual oAttribute object for a node parameter by using the dot notation:
@@ -997,7 +996,7 @@ $.oNode.prototype.clone = function( newName, newPosition, newGroup ){
 
  /**
  * WIP
- * @TODO
+ * @TODO Full implementation
  * @param   {string}    newName              The new name for the cloned module.
  * @param   {oPoint}    newPosition          The new position for the cloned module.
  */
