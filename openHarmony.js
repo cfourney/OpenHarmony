@@ -200,25 +200,25 @@ $.global  = this;
  * Prompts with a confirmation dialog (yes/no choice).
  * @function
  * @name    $#confirm
- * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
+ * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * @param   {string}           [cancelButtonText]             The text on the CANCEL button of the dialog.
  * 
  * @return  {bool}       Result of the confirmation dialog.
  */
-$.confirm = $.dialog.confirm;
+$.confirm = function(){ $.dialog.confirm.apply( $.dialog, arguments ) };
 
 /**
  * Prompts with an alert dialog (informational).
  * @function
  * @name    $#alert
- * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
+ * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * 
  */
-$.alert   = $.dialog.alert;
+$.alert   = function(){ $.dialog.alert.apply( $.dialog, arguments ) };
 
 /**
  * Prompts with a file selector window
@@ -232,7 +232,7 @@ $.alert   = $.dialog.alert;
  * 
  * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
  */
-$.browseForFile = $.dialog.browseForFile;
+$.browseForFile = function(){ $.dialog.browseForFile.apply( $.dialog, arguments ) };
 
 /**
  * Prompts with a folder selector window.
@@ -243,7 +243,7 @@ $.browseForFile = $.dialog.browseForFile;
  * 
  * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled 
  */
-$.browseForFolder = $.dialog.browseForFolder;
+$.browseForFolder = function(){ $.dialog.browseForFolder.apply( $.dialog, arguments ) };
 
 
 //---- Cache Helpers ------
