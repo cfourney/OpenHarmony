@@ -87,10 +87,10 @@ $.oNodeLink = function( outNode, inNode, inPort ){
     this._inPort  = inPort;
     
     this._freeze        = false;
-    this._newInNode     = false;
-    this._newInPort     = false;
-    this._newOutNode    = false;
-    this._newOutPort    = false;
+    this._newInNode     = null;
+    this._newInPort     = null;
+    this._newOutNode    = null;
+    this._newOutPort    = null;
         
     this.validate();
 }
@@ -360,7 +360,7 @@ $.oNodeLink.prototype.applyLinks = function ( ) {
   
   var target_port = this._inPort;
   var disconnect_in = false;
-  if( this._newInPort !== false ){
+  if( this._newInPort !== null ){
     if( this._newInPort != this._inPort ){
       target_port = this._newInPort;
       disconnect_in = true;
@@ -368,22 +368,30 @@ $.oNodeLink.prototype.applyLinks = function ( ) {
   }
   
   var old_inPortCount = false;    //Used to track if the inport count has changed upon its removal.
-  if( this._newInNode ){
-    if( this._inNode.path != this._newInNode.path ){
+  if( this._newInNode !== null ){
+    if( this._newInNode ){
+      if( !this._inNode || ( this._inNode.path != this._newInNode.path ) ){
+        disconnect_in = true;
+      }
+    }else if( this._inNode ){
       disconnect_in = true;
     }
   }
   
   //Check and validate out ports.
   var disconnect_out = false;
-  if( this._newOutPort !== false ){
-    if( this._newOutPort != this._outPort ){
+  if( this._newOutPort !== null ){
+    if( ( this._newOutPort !== this._outPort ) ){
       disconnect_out = true;
     }
   }
   
-  if( this._newOutNode ){
-    if( this._outNode.path != this._newOutNode.path ){
+  if( this._newOutNode !== null ){
+    if( this._newOutNode ){
+      if( !this._outNode || ( this._outNode.path != this._newOutNode.path ) ){
+        disconnect_out = true;
+      }
+    }else if( this._outNode ){
       disconnect_out = true;
     }
   }
@@ -454,15 +462,77 @@ $.oNodeLink.prototype.applyLinks = function ( ) {
     }
   }
   
-  
-  if( this._newInNode.group.path == this._newOutNode.group.path ){
+  var new_inGroup  = this._newInNode.group;
+  var new_outGroup = this._newOutNode.group;
+  if( new_inGroup.path == new_outGroup.path ){
     //Simple direct connection within the same group.
     
     this._newOutNode.linkOutNode( this._newInNode, this._newInPort, this._newOutPort );
   }else{
     //Crazy pathfinding.
+    System.println( "NEEDS PATHFINDING" );
+    //Look for an access route.
+    
+    var common_path = [];
+    var split_in  = new_inGroup.path.split( "/" );
+    var split_out = new_outGroup.path.split( "/" );
+    
+    //Find the common top path.
+    for( var n=0;n<Math.min(split_in.length, split_out.length);n++ ){
+      if( split_in[n] == split_out[n] ){
+        common_path.push( split_out[n] );
+      }else{
+        break;
+      }
+    }
+    
+    //The common path is the place we need to attach; find a common link.
+    //Work forward from in, backwards from out.
+    
+    var common_path = common_path.join( "/" );
+    
+    //Forward Path finding.
+    var find_forward = function( from, port, targ, path ){
+      if( from.group.path != targ ){
+        //Attach to a group one higher.
+        //multiportIn
+        var grp   = from.group;
+        var mport = grp.multiportOut;
+        // var found_pt = mport.inNodes.length;
+        var follow_port = mport.inPorts.length;
+        //Find if the outnodes of from, at the given outNode, connects to the multiPortOut already.
+        try{
+          var found_existing = false;
+          if( from.outNodes.lenth>port ){
+            for( var n=0;n<from.outNodes[port].length;n++ ){
+              if( from.outNodes[port].path == mport.path ){
+                //Dont add it as a new connection, add it as an existing one.
+                var info = node.dstNodeInfo( from.path, port, n );
+                if( info ){
+                  found_existing = true;
+                  follow_port = info.port;
+                  break;
+                }
+              }
+            }
+          }
+          
+          path.push( { "exists":found_existing, "from":from, "port":port, "to":mport, "port":follow_port  } );
+          find_forward( this.grp, follow_port, common_path, path );
+        }catch(err){
+          System.println( "ERR: " + err.message + "  " + err.lineNumber + " : " + err.fileName );
+        }
+        
+      }else{
+        path.push( from );
+      }
+      
+      return path;
+    }
+    var res = find_forward( this._newOutNode, this._newOutPort, common_path, [] );
     
     
+    System.println( "COMMON PATH: "+ common_path );
   }
   
 }

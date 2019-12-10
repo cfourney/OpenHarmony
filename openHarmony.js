@@ -202,25 +202,25 @@ $.global  = this;
  * Prompts with a confirmation dialog (yes/no choice).
  * @function
  * @name    $#confirm
- * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
+ * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * @param   {string}           [cancelButtonText]             The text on the CANCEL button of the dialog.
  * 
  * @return  {bool}       Result of the confirmation dialog.
  */
-$.confirm = function(title, labelText, okButtonText, cancelButtonText){$.dialog.confirmtitle, labelText, okButtonText, cancelButtonText};
+$.confirm = function(){ $.dialog.confirm.apply( $.dialog, arguments ) };
 
 /**
  * Prompts with an alert dialog (informational).
  * @function
  * @name    $#alert
- * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
+ * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * 
  */
-$.alert = function(message){$.dialog.alert(message);}
+$.alert   = function(){ $.dialog.alert.apply( $.dialog, arguments ) };
 
 /**
  * Prompts with a file selector window
@@ -234,7 +234,7 @@ $.alert = function(message){$.dialog.alert(message);}
  * 
  * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
  */
-$.browseForFile = function(text, filter, getExisting, acceptMultiple, startDirectory){$.dialog.browseForFile(text, filter, getExisting, acceptMultiple, startDirectory);}
+$.browseForFile = function(){ $.dialog.browseForFile.apply( $.dialog, arguments ) };
 
 /**
  * Prompts with a folder selector window.
@@ -245,7 +245,7 @@ $.browseForFile = function(text, filter, getExisting, acceptMultiple, startDirec
  * 
  * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled 
  */
-$.browseForFolder = function(text, startDirectory){$.dialog.browseForFolder(text, startDirectory);}
+$.browseForFolder = function(){ $.dialog.browseForFolder.apply( $.dialog, arguments ) };
 
 
 //---- Cache Helpers ------

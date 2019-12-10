@@ -63,23 +63,24 @@ $.oDialog = function( ){
  * Prompts with a confirmation dialog (yes/no choice).
  * @name    $.oDialog#confirm
  * @function
- * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
+ * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * @param   {string}           [cancelButtonText]             The text on the CANCEL button of the dialog.
  * 
  * @return  {bool}       Result of the confirmation dialog.
  */
-$.oDialog.prototype.confirm = function( title, labelText, okButtonText, cancelButtonText ){
-  if (this.$.batchMode || this.batchMode) {
+
+$.oDialog.prototype.confirm = function( labelText, title, okButtonText, cancelButtonText ){
+  if (this.$.batchMode) {
     this.$.debug("$.oDialog.confirm not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
   }
   
+  if (typeof labelText === 'undefined')        var labelText = false;
   if (typeof title === 'undefined')            var title = "Confirmation";
   if (typeof okButtonText === 'undefined')     var okButtonText = "Okay";
   if (typeof cancelButtonText === 'undefined') var cancelButtonText = "Cancel";
-  if (typeof labelText === 'undefined')        var labelText = false;
   
   var d = new Dialog();
       d.title            = title;
@@ -103,20 +104,21 @@ $.oDialog.prototype.confirm = function( title, labelText, okButtonText, cancelBu
 
 /**
  * Prompts with an alert dialog (informational).
- * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
+ * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * 
  */
-$.oDialog.prototype.alert = function( title, labelText, okButtonText ){ 
+$.oDialog.prototype.alert = function( labelText, title, okButtonText ){ 
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.alert not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
   }
   
+  if (typeof labelText === 'undefined')        var labelText = "Alert!";
   if (typeof title === 'undefined')            var title = "Alert";
   if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
-  if (typeof labelText === 'undefined')        var labelText = false;
+  
   
   var d = new QMessageBox( false, title, labelText, QMessageBox.Ok );
       d.setWindowTitle( title );
@@ -171,7 +173,7 @@ $.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptM
 
 
 /**
- * Prompts with a folder selector window.
+ * Prompts with a browse for folder dialog (informational).
  * @param   {string}           [text]                        The title of the confirmation dialog.
  * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
  * 
