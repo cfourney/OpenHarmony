@@ -139,7 +139,7 @@ Object.defineProperty($.oElement.prototype, 'format', {
  */
 $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
     if (typeof filename === 'undefined') var filename = false;
-    if (typeof name === 'undefined') var name = atFrame+''
+    if (typeof name === 'undefined') var name = atFrame+'';
    
     var fileExists = filename?true:false;
     // TODO deal with fileExists and storeInProjectFolder
@@ -148,16 +148,16 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
     if (filename){
         //copy the imported file at the newly created drawing place
         var _file = new this.$.oFile(Drawing.filename(this.id, name));
-        //MessageLog.trace(_file)
+        MessageLog.trace(_file.folder.path);
        
         var _frameFile = new this.$.oFile( filename );
-        _frameFile.move( _file.folder.path, true );
+        _frameFile.copy( _file.folder.path, _file.name, true );
        
     }
    
     // place drawing on the column at the provided frame
-    if (this.column != null || this.column != undefined)
-        column.setEntry(this.column.uniqueName, 1, atFrame, name)
+    if (this.column != null || this.column != undefined);
+        column.setEntry(this.column.uniqueName, 1, atFrame, name);
    
     return new this.$.oDrawing( name, this );
 }

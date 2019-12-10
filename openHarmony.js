@@ -69,7 +69,9 @@
  * @property {oScene}  scn                       - The harmony scene.
  * @property {oScene}  s                         - The harmony scene.
  * @example
- * // To access the functions, first call the $ object.
+ * // To access the functions, first call the $ object. It is made available after loading openHarmony like so:
+ *
+ * include ("openHarmony.js");
  * 
  * var doc = $.scn                    // grabbing the scene document
  * $.log("hello")                     // prints out a message to the MessageLog.
@@ -207,7 +209,7 @@ $.global  = this;
  * 
  * @return  {bool}       Result of the confirmation dialog.
  */
-$.confirm = $.dialog.confirm;
+$.confirm = function(title, labelText, okButtonText, cancelButtonText){$.dialog.confirmtitle, labelText, okButtonText, cancelButtonText};
 
 /**
  * Prompts with an alert dialog (informational).
@@ -218,7 +220,7 @@ $.confirm = $.dialog.confirm;
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * 
  */
-$.alert   = $.dialog.alert;
+$.alert = function(message){$.dialog.alert(message);}
 
 /**
  * Prompts with a file selector window
@@ -232,7 +234,7 @@ $.alert   = $.dialog.alert;
  * 
  * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
  */
-$.browseForFile = $.dialog.browseForFile;
+$.browseForFile = function(text, filter, getExisting, acceptMultiple, startDirectory){$.dialog.browseForFile(text, filter, getExisting, acceptMultiple, startDirectory);}
 
 /**
  * Prompts with a folder selector window.
@@ -243,7 +245,7 @@ $.browseForFile = $.dialog.browseForFile;
  * 
  * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled 
  */
-$.browseForFolder = $.dialog.browseForFolder;
+$.browseForFolder = function(text, startDirectory){$.dialog.browseForFolder(text, startDirectory);}
 
 
 //---- Cache Helpers ------

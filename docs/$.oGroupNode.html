@@ -353,10 +353,6 @@
             </span>
             <ul class="members itemMembers">
             
-            <span class="subtitle">Members</span>
-            
-                <li data-name="$.oDialog#confirm"><a href="$.oDialog.html#confirm">confirm</a></li>
-            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -373,6 +369,8 @@
                 <li data-name="$.oDialog#browseForFile"><a href="$.oDialog.html#browseForFile">browseForFile</a></li>
             
                 <li data-name="$.oDialog#browseForFolder"><a href="$.oDialog.html#browseForFolder">browseForFolder</a></li>
+            
+                <li data-name="$.oDialog#confirm"><a href="$.oDialog.html#confirm">confirm</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1493,11 +1491,17 @@
             
                 <li data-name="$.oScene#currentFrame"><a href="$.oScene.html#currentFrame">currentFrame</a></li>
             
+                <li data-name="$.oScene#defaultResolutionX"><a href="$.oScene.html#defaultResolutionX">defaultResolutionX</a></li>
+            
+                <li data-name="$.oScene#defaultResolutionY"><a href="$.oScene.html#defaultResolutionY">defaultResolutionY</a></li>
+            
                 <li data-name="$.oScene#fov"><a href="$.oScene.html#fov">fov</a></li>
             
                 <li data-name="$.oScene#framerate"><a href="$.oScene.html#framerate">framerate</a></li>
             
                 <li data-name="$.oScene#length"><a href="$.oScene.html#length">length</a></li>
+            
+                <li data-name="$.oScene#name"><a href="$.oScene.html#name">name</a></li>
             
                 <li data-name="$.oScene#nodes"><a href="$.oScene.html#nodes">nodes</a></li>
             
@@ -1506,10 +1510,6 @@
                 <li data-name="$.oScene#path"><a href="$.oScene.html#path">path</a></li>
             
                 <li data-name="$.oScene#resolutionX"><a href="$.oScene.html#resolutionX">resolutionX</a></li>
-            
-                <li data-name="$.oScene#resolutionX"><a href="$.oScene.html#resolutionX">resolutionX</a></li>
-            
-                <li data-name="$.oScene#resolutionY"><a href="$.oScene.html#resolutionY">resolutionY</a></li>
             
                 <li data-name="$.oScene#resolutionY"><a href="$.oScene.html#resolutionY">resolutionY</a></li>
             
@@ -1587,6 +1587,8 @@
                 <li data-name="$.oScene#importPSD"><a href="$.oScene.html#importPSD">importPSD</a></li>
             
                 <li data-name="$.oScene#importQT"><a href="$.oScene.html#importQT">importQT</a></li>
+            
+                <li data-name="$.oScene#importSound"><a href="$.oScene.html#importSound">importSound</a></li>
             
                 <li data-name="$.oScene#importTemplate"><a href="$.oScene.html#importTemplate">importTemplate</a></li>
             
@@ -1771,7 +1773,7 @@ It represents groups in the scene. From this class, it's possible to add nodes, 
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1426
+            openHarmony/openHarmony_node.js, line 1428
         </div>
         
     </div>
@@ -1961,6 +1963,32 @@ myGroup.centerAbove(sceneComposite);</code></pre>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -3198,7 +3226,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1737
+            openHarmony/openHarmony_node.js, line 1739
         </div>
         
     </div>
@@ -3574,7 +3602,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1819
+            openHarmony/openHarmony_node.js, line 1821
         </div>
         
     </div>
@@ -4013,7 +4041,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1605
+            openHarmony/openHarmony_node.js, line 1607
         </div>
         
     </div>
@@ -4307,7 +4335,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1634
+            openHarmony/openHarmony_node.js, line 1636
         </div>
         
     </div>
@@ -4605,7 +4633,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1553
+            openHarmony/openHarmony_node.js, line 1555
         </div>
         
     </div>
@@ -4863,7 +4891,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 908
+            openHarmony/openHarmony_node.js, line 910
         </div>
         
     </div>
@@ -5056,7 +5084,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 933
+            openHarmony/openHarmony_node.js, line 935
         </div>
         
     </div>
@@ -5247,7 +5275,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1492
+            openHarmony/openHarmony_node.js, line 1494
         </div>
         
     </div>
@@ -5409,7 +5437,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 983
+            openHarmony/openHarmony_node.js, line 985
         </div>
         
     </div>
@@ -5590,7 +5618,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1003
+            openHarmony/openHarmony_node.js, line 1005
         </div>
         
     </div>
@@ -5705,7 +5733,7 @@ peg.centerAbove(drawingNode);</code></pre>
     <dt class="tag-todo">TODO</dt>
     <dd class="tag-todo">
         <ul>
-            <li>Full implementation</li>
+            <li></li>
         </ul>
     </dd>
     
@@ -5738,7 +5766,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1077
+            openHarmony/openHarmony_node.js, line 1079
         </div>
         
     </div>
@@ -5885,7 +5913,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1041
+            openHarmony/openHarmony_node.js, line 1043
         </div>
         
     </div>
@@ -6032,7 +6060,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1122
+            openHarmony/openHarmony_node.js, line 1124
         </div>
         
     </div>
@@ -6132,7 +6160,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1876
+            openHarmony/openHarmony_node.js, line 1878
         </div>
         
     </div>
@@ -6487,12 +6515,12 @@ function importCustomPSD(){
     <div class="nameContainer">
         <h4 class="name" id="importQT">
             
-            importQT<span class="signature">(path, extendScene, alignment, nodePosition)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oNode.html">$.oNode</a>}</span>
+            importQT<span class="signature">(path, importSound, extendScene, alignment, nodePosition)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oNode.html">$.oNode</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2102
+            openHarmony/openHarmony_node.js, line 2140
         </div>
         
     </div>
@@ -6557,6 +6585,29 @@ function importCustomPSD(){
 	
         <tr>
             
+                <td class="name"><code>importSound</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                Whether to import the sound</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>extendScene</code></td>
             
             
@@ -6573,7 +6624,7 @@ function importCustomPSD(){
             
             <td class="description last">
                 
-                Whether to add a composite.</td>
+                Whether to extend the scene to the duration of the QT.</td>
         </tr>
 	
 	
@@ -6706,7 +6757,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1691
+            openHarmony/openHarmony_node.js, line 1693
         </div>
         
     </div>
@@ -7006,7 +7057,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 863
+            openHarmony/openHarmony_node.js, line 865
         </div>
         
     </div>
@@ -7222,7 +7273,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 724
+            openHarmony/openHarmony_node.js, line 726
         </div>
         
     </div>
@@ -7464,7 +7515,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 787
+            openHarmony/openHarmony_node.js, line 789
         </div>
         
     </div>
@@ -7704,7 +7755,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1501
+            openHarmony/openHarmony_node.js, line 1503
         </div>
         
     </div>
@@ -7837,7 +7888,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 959
+            openHarmony/openHarmony_node.js, line 961
         </div>
         
     </div>
@@ -8030,7 +8081,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1015
+            openHarmony/openHarmony_node.js, line 1017
         </div>
         
     </div>
@@ -8198,7 +8249,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1470
+            openHarmony/openHarmony_node.js, line 1472
         </div>
         
     </div>
@@ -8360,7 +8411,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 709
+            openHarmony/openHarmony_node.js, line 711
         </div>
         
     </div>
@@ -8507,7 +8558,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1067
+            openHarmony/openHarmony_node.js, line 1069
         </div>
         
     </div>
@@ -8609,7 +8660,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 752
+            openHarmony/openHarmony_node.js, line 754
         </div>
         
     </div>
@@ -8756,7 +8807,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 770
+            openHarmony/openHarmony_node.js, line 772
         </div>
         
     </div>
@@ -8903,7 +8954,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 816
+            openHarmony/openHarmony_node.js, line 818
         </div>
         
     </div>
@@ -9050,7 +9101,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 839
+            openHarmony/openHarmony_node.js, line 841
         </div>
         
     </div>
@@ -9218,7 +9269,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1967
+            openHarmony/openHarmony_node.js, line 1969
         </div>
         
     </div>
@@ -9389,7 +9440,7 @@ function importCustomPSD(){
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 09 2019 16:45:04 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 11 2019 00:42:38 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

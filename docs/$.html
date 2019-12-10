@@ -353,10 +353,6 @@
             </span>
             <ul class="members itemMembers">
             
-            <span class="subtitle">Members</span>
-            
-                <li data-name="$.oDialog#confirm"><a href="$.oDialog.html#confirm">confirm</a></li>
-            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -373,6 +369,8 @@
                 <li data-name="$.oDialog#browseForFile"><a href="$.oDialog.html#browseForFile">browseForFile</a></li>
             
                 <li data-name="$.oDialog#browseForFolder"><a href="$.oDialog.html#browseForFolder">browseForFolder</a></li>
+            
+                <li data-name="$.oDialog#confirm"><a href="$.oDialog.html#confirm">confirm</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1493,11 +1491,17 @@
             
                 <li data-name="$.oScene#currentFrame"><a href="$.oScene.html#currentFrame">currentFrame</a></li>
             
+                <li data-name="$.oScene#defaultResolutionX"><a href="$.oScene.html#defaultResolutionX">defaultResolutionX</a></li>
+            
+                <li data-name="$.oScene#defaultResolutionY"><a href="$.oScene.html#defaultResolutionY">defaultResolutionY</a></li>
+            
                 <li data-name="$.oScene#fov"><a href="$.oScene.html#fov">fov</a></li>
             
                 <li data-name="$.oScene#framerate"><a href="$.oScene.html#framerate">framerate</a></li>
             
                 <li data-name="$.oScene#length"><a href="$.oScene.html#length">length</a></li>
+            
+                <li data-name="$.oScene#name"><a href="$.oScene.html#name">name</a></li>
             
                 <li data-name="$.oScene#nodes"><a href="$.oScene.html#nodes">nodes</a></li>
             
@@ -1506,10 +1510,6 @@
                 <li data-name="$.oScene#path"><a href="$.oScene.html#path">path</a></li>
             
                 <li data-name="$.oScene#resolutionX"><a href="$.oScene.html#resolutionX">resolutionX</a></li>
-            
-                <li data-name="$.oScene#resolutionX"><a href="$.oScene.html#resolutionX">resolutionX</a></li>
-            
-                <li data-name="$.oScene#resolutionY"><a href="$.oScene.html#resolutionY">resolutionY</a></li>
             
                 <li data-name="$.oScene#resolutionY"><a href="$.oScene.html#resolutionY">resolutionY</a></li>
             
@@ -1587,6 +1587,8 @@
                 <li data-name="$.oScene#importPSD"><a href="$.oScene.html#importPSD">importPSD</a></li>
             
                 <li data-name="$.oScene#importQT"><a href="$.oScene.html#importQT">importQT</a></li>
+            
+                <li data-name="$.oScene#importSound"><a href="$.oScene.html#importSound">importSound</a></li>
             
                 <li data-name="$.oScene#importTemplate"><a href="$.oScene.html#importTemplate">importTemplate</a></li>
             
@@ -1962,7 +1964,9 @@
             
 
     
-    <pre class="prettyprint"><code>// To access the functions, first call the $ object.
+    <pre class="prettyprint"><code>// To access the functions, first call the $ object. It is made available after loading openHarmony like so:
+
+include ("openHarmony.js");
 
 var doc = $.scn                    // grabbing the scene document
 $.log("hello")                     // prints out a message to the MessageLog.
@@ -2244,7 +2248,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 287
+            openHarmony.js, line 289
         </div>
         
     </div>
@@ -2367,7 +2371,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 298
+            openHarmony.js, line 300
         </div>
         
     </div>
@@ -2445,7 +2449,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 142
+            openHarmony.js, line 144
         </div>
         
     </div>
@@ -2584,7 +2588,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 107
+            openHarmony.js, line 109
         </div>
         
     </div>
@@ -2729,7 +2733,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 306
+            openHarmony.js, line 308
         </div>
         
     </div>
@@ -2807,7 +2811,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 161
+            openHarmony.js, line 163
         </div>
         
     </div>
@@ -2923,7 +2927,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 171
+            openHarmony.js, line 173
         </div>
         
     </div>
@@ -3062,7 +3066,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 323
+            openHarmony.js, line 325
         </div>
         
     </div>
@@ -3178,7 +3182,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 314
+            openHarmony.js, line 316
         </div>
         
     </div>
@@ -3294,7 +3298,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 212
+            openHarmony.js, line 214
         </div>
         
     </div>
@@ -3477,7 +3481,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 223
+            openHarmony.js, line 225
         </div>
         
     </div>
@@ -3779,7 +3783,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 237
+            openHarmony.js, line 239
         </div>
         
     </div>
@@ -3961,7 +3965,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 199
+            openHarmony.js, line 201
         </div>
         
     </div>
@@ -4211,7 +4215,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 09 2019 16:45:04 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 11 2019 00:42:38 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

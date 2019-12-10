@@ -55,13 +55,14 @@
  * @classdesc  $.oDialog Base Class -- helper class for showing GUI content.
  */
 $.oDialog = function( ){
-
+    
 }
 
 
 /**
  * Prompts with a confirmation dialog (yes/no choice).
  * @name    $.oDialog#confirm
+ * @function
  * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
@@ -70,7 +71,7 @@ $.oDialog = function( ){
  * @return  {bool}       Result of the confirmation dialog.
  */
 $.oDialog.prototype.confirm = function( title, labelText, okButtonText, cancelButtonText ){
-  if (this.$.batchMode) {
+  if (this.$.batchMode || this.batchMode) {
     this.$.debug("$.oDialog.confirm not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
   }
@@ -170,7 +171,7 @@ $.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptM
 
 
 /**
- * Prompts with an alert dialog (informational).
+ * Prompts with a folder selector window.
  * @param   {string}           [text]                        The title of the confirmation dialog.
  * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
  * 

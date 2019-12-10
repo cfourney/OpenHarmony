@@ -353,10 +353,6 @@
             </span>
             <ul class="members itemMembers">
             
-            <span class="subtitle">Members</span>
-            
-                <li data-name="$.oDialog#confirm"><a href="$.oDialog.html#confirm">confirm</a></li>
-            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -373,6 +369,8 @@
                 <li data-name="$.oDialog#browseForFile"><a href="$.oDialog.html#browseForFile">browseForFile</a></li>
             
                 <li data-name="$.oDialog#browseForFolder"><a href="$.oDialog.html#browseForFolder">browseForFolder</a></li>
+            
+                <li data-name="$.oDialog#confirm"><a href="$.oDialog.html#confirm">confirm</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1493,11 +1491,17 @@
             
                 <li data-name="$.oScene#currentFrame"><a href="$.oScene.html#currentFrame">currentFrame</a></li>
             
+                <li data-name="$.oScene#defaultResolutionX"><a href="$.oScene.html#defaultResolutionX">defaultResolutionX</a></li>
+            
+                <li data-name="$.oScene#defaultResolutionY"><a href="$.oScene.html#defaultResolutionY">defaultResolutionY</a></li>
+            
                 <li data-name="$.oScene#fov"><a href="$.oScene.html#fov">fov</a></li>
             
                 <li data-name="$.oScene#framerate"><a href="$.oScene.html#framerate">framerate</a></li>
             
                 <li data-name="$.oScene#length"><a href="$.oScene.html#length">length</a></li>
+            
+                <li data-name="$.oScene#name"><a href="$.oScene.html#name">name</a></li>
             
                 <li data-name="$.oScene#nodes"><a href="$.oScene.html#nodes">nodes</a></li>
             
@@ -1506,10 +1510,6 @@
                 <li data-name="$.oScene#path"><a href="$.oScene.html#path">path</a></li>
             
                 <li data-name="$.oScene#resolutionX"><a href="$.oScene.html#resolutionX">resolutionX</a></li>
-            
-                <li data-name="$.oScene#resolutionX"><a href="$.oScene.html#resolutionX">resolutionX</a></li>
-            
-                <li data-name="$.oScene#resolutionY"><a href="$.oScene.html#resolutionY">resolutionY</a></li>
             
                 <li data-name="$.oScene#resolutionY"><a href="$.oScene.html#resolutionY">resolutionY</a></li>
             
@@ -1587,6 +1587,8 @@
                 <li data-name="$.oScene#importPSD"><a href="$.oScene.html#importPSD">importPSD</a></li>
             
                 <li data-name="$.oScene#importQT"><a href="$.oScene.html#importQT">importQT</a></li>
+            
+                <li data-name="$.oScene#importSound"><a href="$.oScene.html#importSound">importSound</a></li>
             
                 <li data-name="$.oScene#importTemplate"><a href="$.oScene.html#importTemplate">importTemplate</a></li>
             
@@ -1770,7 +1772,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1245
+            openHarmony/openHarmony_node.js, line 1247
         </div>
         
     </div>
@@ -1963,6 +1965,32 @@ var myOtherNode = sceneRoot.addDrawingNode("Drawing2");</code></pre>
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -3294,7 +3322,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 908
+            openHarmony/openHarmony_node.js, line 910
         </div>
         
     </div>
@@ -3487,7 +3515,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 933
+            openHarmony/openHarmony_node.js, line 935
         </div>
         
     </div>
@@ -3680,7 +3708,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 983
+            openHarmony/openHarmony_node.js, line 985
         </div>
         
     </div>
@@ -3861,7 +3889,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1003
+            openHarmony/openHarmony_node.js, line 1005
         </div>
         
     </div>
@@ -3976,7 +4004,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     <dt class="tag-todo">TODO</dt>
     <dd class="tag-todo">
         <ul>
-            <li>Full implementation</li>
+            <li></li>
         </ul>
     </dd>
     
@@ -4007,7 +4035,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1316
+            openHarmony/openHarmony_node.js, line 1318
         </div>
         
     </div>
@@ -4109,7 +4137,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1077
+            openHarmony/openHarmony_node.js, line 1079
         </div>
         
     </div>
@@ -4256,7 +4284,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1041
+            openHarmony/openHarmony_node.js, line 1043
         </div>
         
     </div>
@@ -4403,7 +4431,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1122
+            openHarmony/openHarmony_node.js, line 1124
         </div>
         
     </div>
@@ -4503,7 +4531,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1359
+            openHarmony/openHarmony_node.js, line 1361
         </div>
         
     </div>
@@ -4687,7 +4715,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 863
+            openHarmony/openHarmony_node.js, line 865
         </div>
         
     </div>
@@ -4903,7 +4931,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 724
+            openHarmony/openHarmony_node.js, line 726
         </div>
         
     </div>
@@ -5145,7 +5173,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 787
+            openHarmony/openHarmony_node.js, line 789
         </div>
         
     </div>
@@ -5387,7 +5415,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 959
+            openHarmony/openHarmony_node.js, line 961
         </div>
         
     </div>
@@ -5580,7 +5608,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1015
+            openHarmony/openHarmony_node.js, line 1017
         </div>
         
     </div>
@@ -5750,7 +5778,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 886
+            openHarmony/openHarmony_node.js, line 888
         </div>
         
     </div>
@@ -5899,7 +5927,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 709
+            openHarmony/openHarmony_node.js, line 711
         </div>
         
     </div>
@@ -6046,7 +6074,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1067
+            openHarmony/openHarmony_node.js, line 1069
         </div>
         
     </div>
@@ -6148,7 +6176,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 752
+            openHarmony/openHarmony_node.js, line 754
         </div>
         
     </div>
@@ -6295,7 +6323,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 770
+            openHarmony/openHarmony_node.js, line 772
         </div>
         
     </div>
@@ -6442,7 +6470,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 816
+            openHarmony/openHarmony_node.js, line 818
         </div>
         
     </div>
@@ -6589,7 +6617,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 839
+            openHarmony/openHarmony_node.js, line 841
         </div>
         
     </div>
@@ -6765,7 +6793,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 09 2019 16:45:04 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 11 2019 00:42:38 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

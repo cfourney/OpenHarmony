@@ -353,10 +353,6 @@
             </span>
             <ul class="members itemMembers">
             
-            <span class="subtitle">Members</span>
-            
-                <li data-name="$.oDialog#confirm"><a href="$.oDialog.html#confirm">confirm</a></li>
-            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -373,6 +369,8 @@
                 <li data-name="$.oDialog#browseForFile"><a href="$.oDialog.html#browseForFile">browseForFile</a></li>
             
                 <li data-name="$.oDialog#browseForFolder"><a href="$.oDialog.html#browseForFolder">browseForFolder</a></li>
+            
+                <li data-name="$.oDialog#confirm"><a href="$.oDialog.html#confirm">confirm</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1493,11 +1491,17 @@
             
                 <li data-name="$.oScene#currentFrame"><a href="$.oScene.html#currentFrame">currentFrame</a></li>
             
+                <li data-name="$.oScene#defaultResolutionX"><a href="$.oScene.html#defaultResolutionX">defaultResolutionX</a></li>
+            
+                <li data-name="$.oScene#defaultResolutionY"><a href="$.oScene.html#defaultResolutionY">defaultResolutionY</a></li>
+            
                 <li data-name="$.oScene#fov"><a href="$.oScene.html#fov">fov</a></li>
             
                 <li data-name="$.oScene#framerate"><a href="$.oScene.html#framerate">framerate</a></li>
             
                 <li data-name="$.oScene#length"><a href="$.oScene.html#length">length</a></li>
+            
+                <li data-name="$.oScene#name"><a href="$.oScene.html#name">name</a></li>
             
                 <li data-name="$.oScene#nodes"><a href="$.oScene.html#nodes">nodes</a></li>
             
@@ -1506,10 +1510,6 @@
                 <li data-name="$.oScene#path"><a href="$.oScene.html#path">path</a></li>
             
                 <li data-name="$.oScene#resolutionX"><a href="$.oScene.html#resolutionX">resolutionX</a></li>
-            
-                <li data-name="$.oScene#resolutionX"><a href="$.oScene.html#resolutionX">resolutionX</a></li>
-            
-                <li data-name="$.oScene#resolutionY"><a href="$.oScene.html#resolutionY">resolutionY</a></li>
             
                 <li data-name="$.oScene#resolutionY"><a href="$.oScene.html#resolutionY">resolutionY</a></li>
             
@@ -1587,6 +1587,8 @@
                 <li data-name="$.oScene#importPSD"><a href="$.oScene.html#importPSD">importPSD</a></li>
             
                 <li data-name="$.oScene#importQT"><a href="$.oScene.html#importQT">importQT</a></li>
+            
+                <li data-name="$.oScene#importSound"><a href="$.oScene.html#importSound">importSound</a></li>
             
                 <li data-name="$.oScene#importTemplate"><a href="$.oScene.html#importTemplate">importTemplate</a></li>
             
@@ -1851,55 +1853,6 @@
     
     
     
-        <h3 class="subsection-title">Members</h3>
-        
-        <dl>
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="confirm">confirm</h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Prompts with a confirmation dialog (yes/no choice).
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        </dl>
-    
     
     
         <h3 class="subsection-title">Methods</h3>
@@ -1915,7 +1868,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 110
+            openHarmony/openHarmony_dialog.js, line 111
         </div>
         
     </div>
@@ -2098,7 +2051,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 145
+            openHarmony/openHarmony_dialog.js, line 146
         </div>
         
     </div>
@@ -2400,7 +2353,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 179
+            openHarmony/openHarmony_dialog.js, line 180
         </div>
         
     </div>
@@ -2411,7 +2364,7 @@
     
     
     <div class="description">
-        Prompts with an alert dialog (informational).
+        Prompts with a folder selector window.
     </div>
     
 
@@ -2571,6 +2524,248 @@
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="confirm">
+            
+            confirm<span class="signature">(<span class="optional">title</span>, <span class="optional">labelText</span>, <span class="optional">okButtonText</span>, <span class="optional">cancelButtonText</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_dialog.js, line 62
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Prompts with a confirmation dialog (yes/no choice).
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The title of the confirmation dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>labelText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The label/internal text of the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>okButtonText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The text on the OK button of the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>cancelButtonText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The text on the CANCEL button of the dialog.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        bool
+                        
+                    
+            </td>
+            <td class="description last">Result of the confirmation dialog.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
         </dl>
     
     
@@ -2590,7 +2785,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 09 2019 16:45:04 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 11 2019 00:42:38 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

@@ -115,7 +115,23 @@ Object.defineProperty($.oScene.prototype, 'stage', {
 });
 
 /**
+ * The name of the scene.
+ * @name $.oScene#name
+ * @type {string}
+ */
+Object.defineProperty($.oScene.prototype, 'name', {
+    get : function(){
+        return scene.currentScene();
+    },
+    set : function(val){
+        throw "Not yet implemented";
+    }
+});
+
+
+/**
  * The sceneName file of the scene.
+ * @Deprecated
  * @name $.oScene#sceneName
  * @type {string}
  */
@@ -127,7 +143,6 @@ Object.defineProperty($.oScene.prototype, 'sceneName', {
         throw "Not yet implemented";
     }
 });
-
 
 
 
@@ -285,7 +300,7 @@ Object.defineProperty($.oScene.prototype, 'resolutionY', {
 
 /**
  * The default horizontal resolution.
- * @name $.oScene#resolutionX
+ * @name $.oScene#defaultResolutionX
  * @type {int}
  */
 Object.defineProperty($.oScene.prototype, 'defaultResolutionX', {
@@ -299,7 +314,7 @@ Object.defineProperty($.oScene.prototype, 'defaultResolutionX', {
 
 /**
  * The default vertical resolution.
- * @name $.oScene#resolutionY
+ * @name $.oScene#defaultResolutionY
  * @type {int}
  */
 Object.defineProperty($.oScene.prototype, 'defaultResolutionY', {
@@ -1320,12 +1335,32 @@ $.oScene.prototype.updatePSD = function( path, separateLayers ){
  
  
 /**
+ * Imports a sound into the scene
+ * @param   {string}         path                          The sound file to import.
+ * @param   {string}         layerName                     The name to give the layer created.
+ * 
+ * @return {$.oNode}        The imported Quicktime Node.
+ */
+ $.oScene.prototype.importSound = function(path, layerName){
+   var _audioFile = new this.$.oFile(path);
+   if (typeof layerName === 'undefined') var layerName = _audioFile.name;
+
+   // creating an audio column for the sound
+    var _soundColumn = this.scene.addColumn("SOUND", layerName);
+    column.importSound( _soundColumn.name, 1, path);
+    
+    return _soundColumn;
+ }
+
+
+ 
+/**
  * Imports a QT into the scene
  * @Deprecated
- * @param   {string}         path                          The palette file to import.
- * @param   {string}         group                         The group to import the PSD into.
+ * @param   {string}         path                          The quicktime file to import.
+ * @param   {string}         group                         The group to import the QT into.
  * @param   {$.oPoint}       nodePosition                  The position for the node to be placed in the network.
- * @param   {bool}           extendScene                   Whether to add a composite.
+ * @param   {bool}           extendScene                   Whether to extend the scene to the duration of the QT.
  * @param   {string}         alignment                     Alignment type.
  * 
  * @return {$.oNode}        The imported Quicktime Node.

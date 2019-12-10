@@ -569,21 +569,23 @@ $.oFile.prototype.move = function( folder, overwrite ){
  *  
  * @return: { bool }                           The result of the copy.     
  */
-$.oFile.prototype.copy = function( folder, copyName, overwrite){
+$.oFile.prototype.copy = function( destfolder, copyName, overwrite){
     if (typeof overwrite === 'undefined') var overwrite = false;
     if (typeof copyName === 'undefined') var copyName = this.name;
-    if (typeof folderPath === 'undefined') var folder = this.folder.path;
+    if (typeof destfolder === 'undefined') var destfolder = this.folder.path;
    
-    if(folder instanceof this.$.oFolder) folder = folder.path;
+    if(destfolder instanceof this.$.oFolder) destfolder = destfolder.path;
    
-    if (this.name == copyName && folder == this.folder.path) copyName += "_copy";
+    if (this.name == copyName && destfolder == this.folder.path) copyName += "_copy";
    
     var _file = new PermanentFile(this.path);
-    var _dest = new PermanentFile(folder+"/"+copyName+"."+this.extension);
+    var _dest = new PermanentFile(destfolder+"/"+copyName+"."+this.extension);
    
     if (_dest.exists && !overwrite)
-        throw new Error("destination file "+folder+"/"+copyName+"."+this.extension+" exists and will not be overwritten. Can't copy file.");
+        throw new Error("destination file "+destfolder+"/"+copyName+"."+this.extension+" exists and will not be overwritten. Can't copy file.");
    
+    MessageLog.trace("copying "+_file.path()+" to "+_dest.path())
+ 
     var success = _file.copy(_dest);
     if (success) return new this.$.oFile(_dest.path())
     return false;

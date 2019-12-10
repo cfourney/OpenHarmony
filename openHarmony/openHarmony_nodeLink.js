@@ -461,7 +461,7 @@ $.oNodeLink.prototype.applyLinks = function ( ) {
     this._newOutNode.linkOutNode( this._newInNode, this._newInPort, this._newOutPort );
   }else{
     //Crazy pathfinding.
-    System.println( "NEEDS PATHFINDING" );
+    
     
   }
   

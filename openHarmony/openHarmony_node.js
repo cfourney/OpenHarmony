@@ -149,10 +149,11 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
 
     var _keyword = attr.shortKeyword;
 
-    if( typeof( this[_keyword] ) !== 'undefined' ){
-      //Already exists in properties.
-      return;
-    }
+    // MC Note : this seems to break the subattributes getter setter ?
+    // if( typeof( this[_keyword] ) !== 'undefined' ){
+      // Already exists in properties.
+      // return;
+    // }
 
     Object.defineProperty( context, _keyword, {
         enumerable : false,
@@ -176,7 +177,7 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
         },
 
         set : function(newValue){
-            // MessageLog.trace("setting attribute "+attr.keyword+" to value: "+newValue)
+            this.$.debug("setting attribute through getter setter "+attr.keyword+" to value: "+newValue, this.$.DEBUG_LEVEL.LOG)
             // if attribute has animation, passed value must be a frame object
             var _subAttrs = attr.subAttributes;
 
@@ -636,6 +637,7 @@ Object.defineProperty($.oNode.prototype, 'outs', {
 /**
  * An object containing all attributes of this node.
  * @name $.oNode#attributes
+ * @Property
  * @type {oAttribute}
  * @example
  * // You can get access to the actual oAttribute object for a node parameter by using the dot notation:
@@ -996,7 +998,7 @@ $.oNode.prototype.clone = function( newName, newPosition, newGroup ){
 
  /**
  * WIP
- * @TODO Full implementation
+ * @TODO
  * @param   {string}    newName              The new name for the cloned module.
  * @param   {oPoint}    newPosition          The new position for the cloned module.
  */
@@ -2090,10 +2092,46 @@ $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
 }
 
 
+$.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
+  if (typeof alignment === 'undefined') var alignment = "ASIS" // create an enum for alignments?
+  if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+
+  var _imageFile = (path instanceof this.$.oFile)?path:new this.$.oFile( path );
+  var _elementName = _imageFile.name;
+
+  var _element = this.scene.addElement(_elementName, _imageFile.extension.toUpperCase());
+  var _column = this.scene.addColumn(_elementName, "DRAWING", _element);
+  _element.column = _column;
+
+  // scene.saveAll();
+  var _drawing = _element.addDrawing(1, 1, _imageFile.path);
+
+  var _imageNode = this.addDrawingNode(_elementName, nodePosition, _element)
+
+  _imageNode.can_animate = false; // use general pref?
+  _imageNode.apply_matte_to_color = "Straight";
+  _imageNode.alignment_rule = alignment;
+  
+  var _scale = CELIO.getInformation(_imageFile.path).height/this.scene.defaultResolutionY;
+  _imageNode.scale.x = _scale;
+  _imageNode.scale.y = _scale;
+
+  _imageNode.attributes.drawing.element.setValue(_drawing.name, 1);
+  _imageNode.attributes.drawing.element.column.extendExposures();
+
+  // TODO how to display only one node with the whole file
+
+  return _imageNode
+}
+
+
+
+
 /**
  * Imports a QT into the group
  * @param   {string}         path                          The palette file to import.
- * @param   {bool}           extendScene                   Whether to add a composite.
+ * @param   {bool}           importSound                   Whether to import the sound
+ * @param   {bool}           extendScene                   Whether to extend the scene to the duration of the QT.
  * @param   {string}         alignment                     Alignment type.
  * @param   {$.oPoint}       nodePosition                  The position for the node to be placed in the network.
  *
