@@ -516,22 +516,6 @@ $.oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
     }
 }
 
- 
-/**
- * Gets a palette by the path.
- * @param   {string}   name            The palette name to query and find.
- *  
- * @return  {$.oPalette}                 The oPalette found given the query.
- */
-$.oScene.prototype.getPaletteByName = function(name){
-    var _paletteList = PaletteObjectManager.getScenePaletteList();
-    for (var i=0; i<_paletteList.numPalettes; i++){
-        if (_paletteList.getPaletteByIndex(i).getName() == name)
-        return new this.$.oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
-    }
-    return null;
-}
-
 
 /**
  * Gets a node by the path.
@@ -1006,23 +990,22 @@ $.oScene.prototype.getTimeline = function(display){
 }
 
 
-
 /**
- * Finds a palette object based on name.
- * @param   {string}       name                The name of the palette to return, if available.
- * @return  {$.oPalette}   oPalette with provided name.
+ * Gets a palette by the name.
+ * @param   {string}   name            The palette name to query and find.
+ *  
+ * @return  {$.oPalette}                 The oPalette found given the query.
  */
-$.oScene.prototype.getPaletteByName = function( name ){
+$.oScene.prototype.getPaletteByName = function(name){
     var _paletteList = PaletteObjectManager.getScenePaletteList();
     for (var i=0; i<_paletteList.numPalettes; i++){
-        if (_paletteList.getPaletteByIndex(i).getName() == name)
-        return new this.$.oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
+        var _palette = _paletteList.getPaletteByIndex(i);
+        if (_palette.getName() == name) return new this.$.oPalette(_palette, _paletteList);
     }
     return null;
 }
- 
- 
- 
+
+
 /**
  * Grabs the selected palette.
  * @return {$.oPalette}   oPalette with provided name.
@@ -1030,10 +1013,9 @@ $.oScene.prototype.getPaletteByName = function( name ){
 $.oScene.prototype.getSelectedPalette = function(){
     var _paletteList = PaletteManager.getScenePaletteList();
     var _id = PaletteManager.getCurrentPaletteId()
-    var _palette = new this.$.oPalette(_paletteList.getPaletteById(_id), this, _paletteList);
+    var _palette = new this.$.oPalette(_paletteList.getPaletteById(_id), _paletteList);
     return _palette;
 }
-
 
 
 /**
@@ -1081,10 +1063,10 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
   }
   
   if (paletteStorage == "external"){
-    var _palette = new this.$.oPalette(_list.createPalette(storeInElement+"/"+name, insertAtIndex))
+    var _palette = new this.$.oPalette(_list.createPalette(storeInElement+"/"+name, insertAtIndex), _list)
   }
   
-  var _palette = new this.$.oPalette(_list.createPaletteAtLocation(_destination, storeInElement, name, insertAtIndex))
+  var _palette = new this.$.oPalette(_list.createPaletteAtLocation(_destination, storeInElement, name, insertAtIndex), _list)
 
   return _palette
 }    
@@ -1106,6 +1088,7 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
     // create a dummy palette to get the destination path
     var _newPalette = this.addPalette("_dummy_palette", index, paletteStorage, storeInElement);
     var _path = _newPalette.path
+    var _list = _newPalette._paletteList
    
     var _paletteFile = new this.$.oFile(filename)
     var _file = new this.$.oFile(_path)
@@ -1113,7 +1096,7 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
 
     // reload palette
     _newPalette.remove();
-    _newPalette = new this.$.oPalette(_list.insertPalette(copy.path.replace(".plt", ""), index), this, _list);
+    _newPalette = new this.$.oPalette(_list.insertPalette(copy.path.replace(".plt", ""), index), _list);
    
     return _newPalette;
 }

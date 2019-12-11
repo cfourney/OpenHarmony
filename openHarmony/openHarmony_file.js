@@ -584,10 +584,16 @@ $.oFile.prototype.copy = function( destfolder, copyName, overwrite){
     if (_dest.exists && !overwrite)
         throw new Error("destination file "+destfolder+"/"+copyName+"."+this.extension+" exists and will not be overwritten. Can't copy file.");
    
-    MessageLog.trace("copying "+_file.path()+" to "+_dest.path())
- 
-    var success = _file.copy(_dest);
+    this.$.debug("copying "+_file.path()+" to "+_dest.path(), this.$.DEBUG_LEVEL.LOG)
+    
+    try{
+      var success = _file.copy(_dest);
+    }catch(err){
+      this.$.debug("Couldn't copy "+_file.path()+" to "+_dest.path()+", ", this.$.DEBUG_LEVEL.ERROR)
+    }
+    
     if (success) return new this.$.oFile(_dest.path())
+      
     return false;
 }
 

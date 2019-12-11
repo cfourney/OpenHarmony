@@ -1574,8 +1574,6 @@
             
                 <li data-name="$.oScene#getPaletteByName"><a href="$.oScene.html#getPaletteByName">getPaletteByName</a></li>
             
-                <li data-name="$.oScene#getPaletteByName"><a href="$.oScene.html#getPaletteByName">getPaletteByName</a></li>
-            
                 <li data-name="$.oScene#getSelectedNodes"><a href="$.oScene.html#getSelectedNodes">getSelectedNodes</a></li>
             
                 <li data-name="$.oScene#getSelectedPalette"><a href="$.oScene.html#getSelectedPalette">getSelectedPalette</a></li>
@@ -1817,6 +1815,29 @@
 	
         <tr>
             
+                <td class="name"><code>batchMode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Deactivate all ui and incompatible functions to ensure scripts run in batch.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>file</code></td>
             
             
@@ -1964,19 +1985,7 @@
             
 
     
-    <pre class="prettyprint"><code>// To access the functions, first call the $ object. It is made available after loading openHarmony like so:
-
-include ("openHarmony.js");
-
-var doc = $.scn                    // grabbing the scene document
-$.log("hello")                     // prints out a message to the MessageLog.
-var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHarmony class.
-
-// members of the $ objects get published to the global scope, which means $ can be ommited
-
-var doc = scn
-log("hello)
-var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
+    <pre class="prettyprint"><code>// To access the functions, first call the $ object. It is made available after loading openHarmony like so:include ("openHarmony.js");var doc = $.scn;                    // grabbing the scene document$.log("hello");                     // prints out a message to the MessageLog.var myPoint = new $.oPoint(0,0,0);  // create a new class instance from an openHarmony class.// members of the $ objects get published to the global scope, which means $ can be ommitedvar doc = scn;log("hello");var myPoint = new oPoint(0,0,0);    // This is all valid</code></pre>
     
 
         
@@ -2248,7 +2257,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 289
+            openHarmony.js, line 290
         </div>
         
     </div>
@@ -2371,7 +2380,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 300
+            openHarmony.js, line 301
         </div>
         
     </div>
@@ -2449,7 +2458,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 144
+            openHarmony.js, line 145
         </div>
         
     </div>
@@ -2588,7 +2597,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 109
+            openHarmony.js, line 110
         </div>
         
     </div>
@@ -2733,7 +2742,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 308
+            openHarmony.js, line 309
         </div>
         
     </div>
@@ -2811,7 +2820,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 163
+            openHarmony.js, line 164
         </div>
         
     </div>
@@ -2927,7 +2936,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 173
+            openHarmony.js, line 174
         </div>
         
     </div>
@@ -3066,7 +3075,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 325
+            openHarmony.js, line 326
         </div>
         
     </div>
@@ -3182,7 +3191,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 316
+            openHarmony.js, line 317
         </div>
         
     </div>
@@ -3293,12 +3302,12 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     <div class="nameContainer">
         <h4 class="name" id="alert">
             
-            alert<span class="signature">(<span class="optional">title</span>, <span class="optional">labelText</span>, <span class="optional">okButtonText</span>)</span>
+            alert<span class="signature">(<span class="optional">labelText</span>, <span class="optional">title</span>, <span class="optional">okButtonText</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony.js, line 214
+            openHarmony.js, line 215
         </div>
         
     </div>
@@ -3340,36 +3349,6 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
 	
         <tr>
             
-                <td class="name"><code>title</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The title of the confirmation dialog.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
                 <td class="name"><code>labelText</code></td>
             
             
@@ -3394,6 +3373,36 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
                     
                 
                 The label/internal text of the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The title of the confirmation dialog.</td>
         </tr>
 	
 	
@@ -3481,7 +3490,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 225
+            openHarmony.js, line 226
         </div>
         
     </div>
@@ -3783,7 +3792,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     
         
         <div class="tag-source">
-            openHarmony.js, line 239
+            openHarmony.js, line 240
         </div>
         
     </div>
@@ -3960,12 +3969,12 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
     <div class="nameContainer">
         <h4 class="name" id="confirm">
             
-            confirm<span class="signature">(<span class="optional">title</span>, <span class="optional">labelText</span>, <span class="optional">okButtonText</span>, <span class="optional">cancelButtonText</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
+            confirm<span class="signature">(<span class="optional">labelText</span>, <span class="optional">title</span>, <span class="optional">okButtonText</span>, <span class="optional">cancelButtonText</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony.js, line 201
+            openHarmony.js, line 202
         </div>
         
     </div>
@@ -4007,36 +4016,6 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
 	
         <tr>
             
-                <td class="name"><code>title</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The title of the confirmation dialog.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
                 <td class="name"><code>labelText</code></td>
             
             
@@ -4061,6 +4040,36 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
                     
                 
                 The label/internal text of the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The title of the confirmation dialog.</td>
         </tr>
 	
 	
@@ -4215,7 +4224,7 @@ var myPoint = new oPoint(0,0,0)    // This is all valid</code></pre>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 11 2019 00:42:38 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 11 2019 15:22:35 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

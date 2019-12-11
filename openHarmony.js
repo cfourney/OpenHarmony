@@ -62,6 +62,7 @@
  * @classdesc All the classes can be accessed from it, and it can be passed to a different context.
  * @version   1.0
  * @property {int}     debug_level               - The debug level of the DOM.
+ * @property {bool}    batchMode                 - Deactivate all ui and incompatible functions to ensure scripts run in batch.
  * @property {string}  file                      - The openHarmony base file - THIS!
  *
  * @property {oScene}  getScene                  - The harmony scene.
@@ -73,15 +74,15 @@
  *
  * include ("openHarmony.js");
  * 
- * var doc = $.scn                    // grabbing the scene document
- * $.log("hello")                     // prints out a message to the MessageLog.
- * var myPoint = new $.oPoint(0,0,0)  // create a new class instance from an openHarmony class.
+ * var doc = $.scn;                    // grabbing the scene document
+ * $.log("hello");                     // prints out a message to the MessageLog.
+ * var myPoint = new $.oPoint(0,0,0);  // create a new class instance from an openHarmony class.
  *
  * // members of the $ objects get published to the global scope, which means $ can be ommited
  *
- * var doc = scn
- * log("hello)
- * var myPoint = new oPoint(0,0,0)    // This is all valid
+ * var doc = scn;
+ * log("hello");
+ * var myPoint = new oPoint(0,0,0);    // This is all valid
  * 
  */
 $ = {

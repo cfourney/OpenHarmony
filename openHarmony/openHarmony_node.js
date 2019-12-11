@@ -726,6 +726,10 @@ Object.defineProperty($.oNode.prototype, 'linkedColumns', {
 $.oNode.prototype.linkInNode = function( nodeToLink, inPort, outPort, createPorts ){
   // check param types
   if (!(nodeToLink instanceof this.$.oNode)) throw new Error("wrong parameter type in oNode.linkInNode: "+nodeToLink+" is not an oNode")
+  if (!nodeToLink.exists){
+    this.$.debug("Invalid node to link : "+nodeToLink+" doesn't exist.", this.$.DEBUG_LEVEL.ERROR)
+    return false;
+  }
 
   var _node = nodeToLink.path;
 
@@ -741,8 +745,14 @@ $.oNode.prototype.linkInNode = function( nodeToLink, inPort, outPort, createPort
               (this.type == "COMPOSITE")
   }
 
-  // MessageLog.trace("linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length);
-    return node.link(_node, outPort, this.path, inPort, createPorts, createPorts)
+  this.$.debug("linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length, this.$.DEBUG_LEVEL.LOG);
+  var success = false;
+  try{
+    success = node.link(_node, outPort, this.path, inPort, createPorts, createPorts)
+  }catch (err){
+    this.$.debug("Error linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length, this.$.DEBUG_LEVEL.ERROR);
+  }
+  return success
 };
 
 
@@ -789,6 +799,12 @@ $.oNode.prototype.unlinkInPort = function( inPort ){
 $.oNode.prototype.linkOutNode = function(nodeToLink, outPort, inPort, createPorts){
   // check param types
   if (!(nodeToLink instanceof this.$.oNode)) throw new Error("wrong parameter type in oNode.linkOutNode: "+nodeToLink+" is not an oNode")
+
+  if (!nodeToLink.exists){
+    this.$.debug("Invalid node to link : "+nodeToLink+" doesn't exist.", this.$.DEBUG_LEVEL.ERROR)
+    return false;
+  }
+  
   var _node = nodeToLink.path;
 
   // Default values for optional parameters
@@ -804,8 +820,14 @@ $.oNode.prototype.linkOutNode = function(nodeToLink, outPort, inPort, createPort
             (nodeToLink.type == "COMPOSITE")
   }
 
-  MessageLog.trace("linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length);
-  return node.link(this.fullPath, outPort, _node, inPort, createPorts, createPorts);
+  this.$.debug("linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.LOG);
+  var success = false;
+  try{
+    success = node.link(this.fullPath, outPort, _node, inPort, createPorts, createPorts);
+  }catch(err){
+    this.$.debug("Error linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.ERROR);
+  }
+  return success
 }
 
 
@@ -1413,8 +1435,8 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
  * var doc = $.scn
  * var sceneRoot = doc.root;                                              // grab the scene root group
  * 
- * var myGroup = sceneRoot.addNode("GROUP", "myGroup", false, false);     // create a group in the scene root
- * var MPO = myGroup.multiportOut;                                         // grab the multiport in of the group
+ * var myGroup = sceneRoot.addGrop("myGroup", false, false);              // create a group in the scene root, with a peg and composite but no nodes
+ * var MPO = myGroup.multiportOut;                                        // grab the multiport in of the group
  *
  * var myNode = myGroup.addDrawingNode("myDrawingNode");                  // add a drawing node inside the group
  * myNode.linkOutNode(MPO);                                               // link the newly created node to the multiport
@@ -1625,15 +1647,15 @@ $.oGroupNode.prototype.addDrawingNode = function( name, nodePosition, oElementOb
 
 /**
  * Adds a new group to the group, and optionally move the specified nodes into it.
- * @param   {string}     name                   The name of the newly created group.
- * @param   {string}     [includeNodes]           The nodes to add to the group.
+ * @param   {string}     name                           The name of the newly created group.
  * @param   {$.oPoint}   [addComposite=false]           Whether to add a composite.
  * @param   {bool}       [addPeg=false]                 Whether to add a peg.
- * @param   {$.oPoint}   [nodePosition={0,0,0}]           The position for the node to be placed in the network.
+ * @param   {string}     [includeNodes]                 The nodes to add to the group.
+ * @param   {$.oPoint}   [nodePosition={0,0,0}]         The position for the node to be placed in the network.
 
  * @return {$.oGroupNode}   The created node, or bool as false.
  */
-$.oGroupNode.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, nodePosition ){
+$.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeNodes, nodePosition ){
     // Defaults for optional parameters
     if (typeof addPeg === 'undefined') var addPeg = false;
     if (typeof addComposite === 'undefined') var addComposite = false;
@@ -2103,9 +2125,13 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
   var _column = this.scene.addColumn(_elementName, "DRAWING", _element);
   _element.column = _column;
 
-  // scene.saveAll();
-  var _drawing = _element.addDrawing(1, 1, _imageFile.path);
-
+  if (_imageFile.exists) {
+    // scene.saveAll();
+    var _drawing = _element.addDrawing(1, 1, _imageFile.path);
+  }else{
+    this.$.debug("Image file to import "+_imageFile.path+" could not be found.", this.$.DEBUG_LEVEL.ERROR)
+  }
+  
   var _imageNode = this.addDrawingNode(_elementName, nodePosition, _element)
 
   _imageNode.can_animate = false; // use general pref?

@@ -398,7 +398,8 @@ $.oAttribute.prototype.setValue = function (value, frame) {
     switch(_type){
         // TODO: sanitize input
         case "COLOR" :
-            value = new this.$.oColorValue(value)
+            // doesn't work for burnin because it has color.Red, color.green etc and not .r .g ...
+            value = (value instanceof this.$.oColorValue)?value: new this.$.oColorValue(value)
             value = ColorRGBA(value.r, value.g, value.b, value.a)
             _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
             break;
@@ -439,14 +440,13 @@ $.oAttribute.prototype.setValue = function (value, frame) {
             break;
            
         default :
-            MessageLog.trace(this.keyword+" "+(typeof value))
             try{
-                _animate ? _attr.setValueAt( value, frame ) : _attr.setValue( value );
+              _animate ? _attr.setValueAt( value, frame ) : _attr.setValue( value );
             }catch(err){
               this.$.debug("setting attr "+this._keyword+" value "+value+" as textAttr ", this.$.DEBUG_LEVEL.LOG)
-                node.setTextAttr( this.node.path, this._keyword, frame, value );
+              node.setTextAttr( this.node.path, this._keyword, frame, value );
                 
-                // throw new Error("Couldn't set attribute "+this.keyword+" to value "+value+". Incompatible type.")
+              // throw new Error("Couldn't set attribute "+this.keyword+" to value "+value+". Incompatible type.")
             }
     }
 }

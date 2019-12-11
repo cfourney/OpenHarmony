@@ -114,12 +114,13 @@ $.oDialog.prototype.alert = function( labelText, title, okButtonText ){
     this.$.debug("$.oDialog.alert not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
   }
-  
+   
   if (typeof labelText === 'undefined')        var labelText = "Alert!";
   if (typeof title === 'undefined')            var title = "Alert";
   if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
   
-  
+  this.$.debug(labelText, this.$.DEBUG_LEVEL.LOG)
+
   var d = new QMessageBox( false, title, labelText, QMessageBox.Ok );
       d.setWindowTitle( title );
     
