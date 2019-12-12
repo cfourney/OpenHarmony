@@ -115,7 +115,23 @@ Object.defineProperty($.oScene.prototype, 'stage', {
 });
 
 /**
+ * The name of the scene.
+ * @name $.oScene#name
+ * @type {string}
+ */
+Object.defineProperty($.oScene.prototype, 'name', {
+    get : function(){
+        return scene.currentScene();
+    },
+    set : function(val){
+        throw "Not yet implemented";
+    }
+});
+
+
+/**
  * The sceneName file of the scene.
+ * @Deprecated
  * @name $.oScene#sceneName
  * @type {string}
  */
@@ -127,7 +143,6 @@ Object.defineProperty($.oScene.prototype, 'sceneName', {
         throw "Not yet implemented";
     }
 });
-
 
 
 
@@ -285,7 +300,7 @@ Object.defineProperty($.oScene.prototype, 'resolutionY', {
 
 /**
  * The default horizontal resolution.
- * @name $.oScene#resolutionX
+ * @name $.oScene#defaultResolutionX
  * @type {int}
  */
 Object.defineProperty($.oScene.prototype, 'defaultResolutionX', {
@@ -299,7 +314,7 @@ Object.defineProperty($.oScene.prototype, 'defaultResolutionX', {
 
 /**
  * The default vertical resolution.
- * @name $.oScene#resolutionY
+ * @name $.oScene#defaultResolutionY
  * @type {int}
  */
 Object.defineProperty($.oScene.prototype, 'defaultResolutionY', {
@@ -499,22 +514,6 @@ $.oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
         default :
             return new this.$.oColumn(uniqueName, oAttributeObject);
     }
-}
-
- 
-/**
- * Gets a palette by the path.
- * @param   {string}   name            The palette name to query and find.
- *  
- * @return  {$.oPalette}                 The oPalette found given the query.
- */
-$.oScene.prototype.getPaletteByName = function(name){
-    var _paletteList = PaletteObjectManager.getScenePaletteList();
-    for (var i=0; i<_paletteList.numPalettes; i++){
-        if (_paletteList.getPaletteByIndex(i).getName() == name)
-        return new this.$.oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
-    }
-    return null;
 }
 
 
@@ -991,23 +990,22 @@ $.oScene.prototype.getTimeline = function(display){
 }
 
 
-
 /**
- * Finds a palette object based on name.
- * @param   {string}       name                The name of the palette to return, if available.
- * @return  {$.oPalette}   oPalette with provided name.
+ * Gets a palette by the name.
+ * @param   {string}   name            The palette name to query and find.
+ *  
+ * @return  {$.oPalette}                 The oPalette found given the query.
  */
-$.oScene.prototype.getPaletteByName = function( name ){
+$.oScene.prototype.getPaletteByName = function(name){
     var _paletteList = PaletteObjectManager.getScenePaletteList();
     for (var i=0; i<_paletteList.numPalettes; i++){
-        if (_paletteList.getPaletteByIndex(i).getName() == name)
-        return new this.$.oPalette(_paletteList.getPaletteByIndex(i), this, _paletteList);
+        var _palette = _paletteList.getPaletteByIndex(i);
+        if (_palette.getName() == name) return new this.$.oPalette(_palette, _paletteList);
     }
     return null;
 }
- 
- 
- 
+
+
 /**
  * Grabs the selected palette.
  * @return {$.oPalette}   oPalette with provided name.
@@ -1015,10 +1013,9 @@ $.oScene.prototype.getPaletteByName = function( name ){
 $.oScene.prototype.getSelectedPalette = function(){
     var _paletteList = PaletteManager.getScenePaletteList();
     var _id = PaletteManager.getCurrentPaletteId()
-    var _palette = new this.$.oPalette(_paletteList.getPaletteById(_id), this, _paletteList);
+    var _palette = new this.$.oPalette(_paletteList.getPaletteById(_id), _paletteList);
     return _palette;
 }
-
 
 
 /**
@@ -1066,10 +1063,10 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
   }
   
   if (paletteStorage == "external"){
-    var _palette = new this.$.oPalette(_list.createPalette(storeInElement+"/"+name, insertAtIndex))
+    var _palette = new this.$.oPalette(_list.createPalette(storeInElement+"/"+name, insertAtIndex), _list)
   }
   
-  var _palette = new this.$.oPalette(_list.createPaletteAtLocation(_destination, storeInElement, name, insertAtIndex))
+  var _palette = new this.$.oPalette(_list.createPaletteAtLocation(_destination, storeInElement, name, insertAtIndex), _list)
 
   return _palette
 }    
@@ -1091,6 +1088,7 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
     // create a dummy palette to get the destination path
     var _newPalette = this.addPalette("_dummy_palette", index, paletteStorage, storeInElement);
     var _path = _newPalette.path
+    var _list = _newPalette._paletteList
    
     var _paletteFile = new this.$.oFile(filename)
     var _file = new this.$.oFile(_path)
@@ -1098,7 +1096,7 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
 
     // reload palette
     _newPalette.remove();
-    _newPalette = new this.$.oPalette(_list.insertPalette(copy.path.replace(".plt", ""), index), this, _list);
+    _newPalette = new this.$.oPalette(_list.insertPalette(copy.path.replace(".plt", ""), index), _list);
    
     return _newPalette;
 }
@@ -1320,12 +1318,32 @@ $.oScene.prototype.updatePSD = function( path, separateLayers ){
  
  
 /**
+ * Imports a sound into the scene
+ * @param   {string}         path                          The sound file to import.
+ * @param   {string}         layerName                     The name to give the layer created.
+ * 
+ * @return {$.oNode}        The imported Quicktime Node.
+ */
+ $.oScene.prototype.importSound = function(path, layerName){
+   var _audioFile = new this.$.oFile(path);
+   if (typeof layerName === 'undefined') var layerName = _audioFile.name;
+
+   // creating an audio column for the sound
+    var _soundColumn = this.addColumn("SOUND", layerName);
+    column.importSound( _soundColumn.name, 1, path);
+    
+    return _soundColumn;
+ }
+
+
+ 
+/**
  * Imports a QT into the scene
  * @Deprecated
- * @param   {string}         path                          The palette file to import.
- * @param   {string}         group                         The group to import the PSD into.
+ * @param   {string}         path                          The quicktime file to import.
+ * @param   {string}         group                         The group to import the QT into.
  * @param   {$.oPoint}       nodePosition                  The position for the node to be placed in the network.
- * @param   {bool}           extendScene                   Whether to add a composite.
+ * @param   {bool}           extendScene                   Whether to extend the scene to the duration of the QT.
  * @param   {string}         alignment                     Alignment type.
  * 
  * @return {$.oNode}        The imported Quicktime Node.

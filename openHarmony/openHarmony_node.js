@@ -149,10 +149,11 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
 
     var _keyword = attr.shortKeyword;
 
-    if( typeof( this[_keyword] ) !== 'undefined' ){
-      //Already exists in properties.
-      return;
-    }
+    // MC Note : this seems to break the subattributes getter setter ?
+    // if( typeof( this[_keyword] ) !== 'undefined' ){
+      // Already exists in properties.
+      // return;
+    // }
 
     Object.defineProperty( context, _keyword, {
         enumerable : false,
@@ -176,7 +177,7 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
         },
 
         set : function(newValue){
-            // MessageLog.trace("setting attribute "+attr.keyword+" to value: "+newValue)
+            this.$.debug("setting attribute through getter setter "+attr.keyword+" to value: "+newValue, this.$.DEBUG_LEVEL.LOG)
             // if attribute has animation, passed value must be a frame object
             var _subAttrs = attr.subAttributes;
 
@@ -724,6 +725,10 @@ Object.defineProperty($.oNode.prototype, 'linkedColumns', {
 $.oNode.prototype.linkInNode = function( nodeToLink, ownPort, destPort, createPorts ){
   // check param types
   if (!(nodeToLink instanceof this.$.oNode)) throw new Error("wrong parameter type in oNode.linkInNode: "+nodeToLink+" is not an oNode")
+  if (!nodeToLink.exists){
+    this.$.debug("Invalid node to link : "+nodeToLink+" doesn't exist.", this.$.DEBUG_LEVEL.ERROR)
+    return false;
+  }
 
   var _node = nodeToLink.path;
 
@@ -739,8 +744,14 @@ $.oNode.prototype.linkInNode = function( nodeToLink, ownPort, destPort, createPo
               (this.type == "COMPOSITE")
   }
 
-  // MessageLog.trace("linking "+this.fullPath+" to "+_node+" "+destPort+" "+ownPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length);
-    return node.link(_node, destPort, this.path, ownPort, createPorts, createPorts)
+  this.$.debug("linking "+this.fullPath+" to "+_node+" "+destPort+" "+ownPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length, this.$.DEBUG_LEVEL.LOG);
+  var success = false;
+  try{
+    success = node.link(_node, destPort, this.path, ownPort, createPorts, createPorts)
+  }catch (err){
+    this.$.debug("Error linking "+this.fullPath+" to "+_node+" "+destPort+" "+ownPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length, this.$.DEBUG_LEVEL.ERROR);
+  }
+  return success
 };
 
 
@@ -788,6 +799,12 @@ $.oNode.prototype.linkOutNode = function(nodeToLink, ownPort, destPort, createPo
 
   // check param types
   if (!(nodeToLink instanceof this.$.oNode)) throw new Error("wrong parameter type in oNode.linkOutNode: "+nodeToLink+" is not an oNode")
+
+  if (!nodeToLink.exists){
+    this.$.debug("Invalid node to link : "+nodeToLink+" doesn't exist.", this.$.DEBUG_LEVEL.ERROR)
+    return false;
+  }
+  
   var _node = nodeToLink.path;
 
   // Default values for optional parameters
@@ -803,8 +820,14 @@ $.oNode.prototype.linkOutNode = function(nodeToLink, ownPort, destPort, createPo
             (nodeToLink.type == "COMPOSITE")
   }
 
-  MessageLog.trace("linking "+this.fullPath+" to "+_node+" "+ownPort+" "+destPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length);
-  return node.link(this.fullPath, ownPort, _node, destPort, createPorts, createPorts);
+  this.$.debug("linking "+this.fullPath+" to "+_node+" "+ownPort+" "+destPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.LOG);
+  var success = false;
+  try{
+    success = node.link(this.fullPath, ownPort, _node, destPort, createPorts, createPorts);
+  }catch(err){
+    this.$.debug("Error linking "+this.fullPath+" to "+_node+" "+ownPort+" "+destPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.ERROR);
+  }
+  return success
 }
 
 
@@ -997,7 +1020,7 @@ $.oNode.prototype.clone = function( newName, newPosition, newGroup ){
 
  /**
  * WIP
- * @TODO Full implementation
+ * @TODO Not yet implemented.
  * @param   {string}    newName              The new name for the cloned module.
  * @param   {oPoint}    newPosition          The new position for the cloned module.
  */
@@ -1412,8 +1435,8 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
  * var doc = $.scn
  * var sceneRoot = doc.root;                                              // grab the scene root group
  * 
- * var myGroup = sceneRoot.addNode("GROUP", "myGroup", false, false);     // create a group in the scene root
- * var MPO = myGroup.multiportOut;                                         // grab the multiport in of the group
+ * var myGroup = sceneRoot.addGrop("myGroup", false, false);              // create a group in the scene root, with a peg and composite but no nodes
+ * var MPO = myGroup.multiportOut;                                        // grab the multiport in of the group
  *
  * var myNode = myGroup.addDrawingNode("myDrawingNode");                  // add a drawing node inside the group
  * myNode.linkOutNode(MPO);                                               // link the newly created node to the multiport
@@ -1624,15 +1647,15 @@ $.oGroupNode.prototype.addDrawingNode = function( name, nodePosition, oElementOb
 
 /**
  * Adds a new group to the group, and optionally move the specified nodes into it.
- * @param   {string}     name                   The name of the newly created group.
- * @param   {string}     [includeNodes]           The nodes to add to the group.
+ * @param   {string}     name                           The name of the newly created group.
  * @param   {$.oPoint}   [addComposite=false]           Whether to add a composite.
  * @param   {bool}       [addPeg=false]                 Whether to add a peg.
- * @param   {$.oPoint}   [nodePosition={0,0,0}]           The position for the node to be placed in the network.
+ * @param   {string}     [includeNodes]                 The nodes to add to the group.
+ * @param   {$.oPoint}   [nodePosition={0,0,0}]         The position for the node to be placed in the network.
 
  * @return {$.oGroupNode}   The created node, or bool as false.
  */
-$.oGroupNode.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, nodePosition ){
+$.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeNodes, nodePosition ){
     // Defaults for optional parameters
     if (typeof addPeg === 'undefined') var addPeg = false;
     if (typeof addComposite === 'undefined') var addComposite = false;
@@ -2091,10 +2114,50 @@ $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
 }
 
 
+$.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
+  if (typeof alignment === 'undefined') var alignment = "ASIS" // create an enum for alignments?
+  if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+
+  var _imageFile = (path instanceof this.$.oFile)?path:new this.$.oFile( path );
+  var _elementName = _imageFile.name;
+
+  var _element = this.scene.addElement(_elementName, _imageFile.extension.toUpperCase());
+  var _column = this.scene.addColumn(_elementName, "DRAWING", _element);
+  _element.column = _column;
+
+  if (_imageFile.exists) {
+    // scene.saveAll();
+    var _drawing = _element.addDrawing(1, 1, _imageFile.path);
+  }else{
+    this.$.debug("Image file to import "+_imageFile.path+" could not be found.", this.$.DEBUG_LEVEL.ERROR)
+  }
+  
+  var _imageNode = this.addDrawingNode(_elementName, nodePosition, _element)
+
+  _imageNode.can_animate = false; // use general pref?
+  _imageNode.apply_matte_to_color = "Straight";
+  _imageNode.alignment_rule = alignment;
+  
+  var _scale = CELIO.getInformation(_imageFile.path).height/this.scene.defaultResolutionY;
+  _imageNode.scale.x = _scale;
+  _imageNode.scale.y = _scale;
+
+  _imageNode.attributes.drawing.element.setValue(_drawing.name, 1);
+  _imageNode.attributes.drawing.element.column.extendExposures();
+
+  // TODO how to display only one node with the whole file
+
+  return _imageNode
+}
+
+
+
+
 /**
  * Imports a QT into the group
  * @param   {string}         path                          The palette file to import.
- * @param   {bool}           extendScene                   Whether to add a composite.
+ * @param   {bool}           importSound                   Whether to import the sound
+ * @param   {bool}           extendScene                   Whether to extend the scene to the duration of the QT.
  * @param   {string}         alignment                     Alignment type.
  * @param   {$.oPoint}       nodePosition                  The position for the node to be placed in the network.
  *
@@ -2129,7 +2192,7 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
     MovieImport.setAudioFile(_audioPath);
     MovieImport.doImport();
 
-    if (extendScene && this.length < MovieImport.numberOfImages()) this.length = MovieImport.numberOfImages();
+    if (extendScene && this.scene.length < MovieImport.numberOfImages()) this.length = MovieImport.numberOfImages();
 
     // create expositions on the node
     for (var i = 1; i <= MovieImport.numberOfImages(); i++ ) {

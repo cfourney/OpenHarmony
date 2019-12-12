@@ -55,13 +55,14 @@
  * @classdesc  $.oDialog Base Class -- helper class for showing GUI content.
  */
 $.oDialog = function( ){
-
+    
 }
 
 
 /**
  * Prompts with a confirmation dialog (yes/no choice).
  * @name    $.oDialog#confirm
+ * @function
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
  * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
@@ -69,6 +70,7 @@ $.oDialog = function( ){
  * 
  * @return  {bool}       Result of the confirmation dialog.
  */
+
 $.oDialog.prototype.confirm = function( labelText, title, okButtonText, cancelButtonText ){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.confirm not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
@@ -112,12 +114,13 @@ $.oDialog.prototype.alert = function( labelText, title, okButtonText ){
     this.$.debug("$.oDialog.alert not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
   }
-  
+   
   if (typeof labelText === 'undefined')        var labelText = "Alert!";
   if (typeof title === 'undefined')            var title = "Alert";
   if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
   
-  
+  this.$.debug(labelText, this.$.DEBUG_LEVEL.LOG)
+
   var d = new QMessageBox( false, title, labelText, QMessageBox.Ok );
       d.setWindowTitle( title );
     

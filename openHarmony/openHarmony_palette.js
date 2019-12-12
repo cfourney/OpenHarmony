@@ -57,18 +57,17 @@
  * @constructor
  * @classdesc  $.oPalette Base Class
  * @param   {palette}                 paletteObject             The Harmony palette object.
- * @param   {oSceneObject}            oSceneObject              The DOM Scene object.
  * @param   {paletteList}             paletteListObject         The Harmony paletteListObject object.
  *                                                          
  * @property   {palette}                 paletteObject          The Harmony palette object.
  * @property   {oSceneObject}            scene                  The DOM Scene object.
  */
-$.oPalette = function( paletteObject, oSceneObject, paletteListObject ){
+$.oPalette = function( paletteObject, paletteListObject ){
   this._type = "palette";
 
   this.paletteObject = paletteObject;
   this._paletteList  = paletteListObject;
-  this.scene         = oSceneObject;
+  this.scene         = this.$.scn;
 }
  
  

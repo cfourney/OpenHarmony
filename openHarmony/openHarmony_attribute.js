@@ -50,9 +50,13 @@
 //////////////////////////////////////
 
 /**
- * The base class for the $.oAttribute.
+ * The constructor for the $.oAttribute class.
+ * @classdesc  
+ * The $.oAttribute class holds the smart version of the parameter you can find in layer property.<br>
+ * It is used internally to get and set values and link a oColumn to a parameter in order to animate it.<br>
+ * For a list of attributes existing in each node type and their type, as well as examples of the values they can hold, refer to this document:<br>
+ * {@link https://docs.google.com/document/d/1lmuGRYtGg-d7FhGHk1vsXkbuL4a7Tt1xJLc-xHbMTFc/ Node attributes list}.
  * @constructor
- * @classdesc  $.oAttribute Base Class
  * @param   {$.oNode}                  oNodeObject                The oNodeObject that the attribute is associated to.
  * @param   {attr}                     attributeObject            The internal harmony Attribute Object.
  * @param   {$.oAttribute}             parentAttribute            The parent attribute of the subattribute.
@@ -63,6 +67,10 @@
  * @property {string}                  shortKeyword               The element object associated to the element.
  * @property {$.oAttribute}            parentAttribute            The element object associated to the element.
  * @property {$.oAttribute[]}          subAttributes              The subattributes, if any exist, of this attribute.
+ * @example
+ * // oAttribute objects can be grabbed from the node .attributes object with dot notation, by calling the attribute keyword in lowercase.
+ *  
+ * 
  */
 $.oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
   this._type = "attribute";
@@ -368,6 +376,8 @@ $.oAttribute.prototype.setValue = function (value, frame) {
       frame     = 1;
       frame_set = false;
     }
+
+    this.$.debug("setting attr "+this._keyword+" value "+value+" at frame "+frame, this.$.DEBUG_LEVEL.LOG)
     
     var _attr = this.attributeObject;
     var _column = this.column;
@@ -388,7 +398,8 @@ $.oAttribute.prototype.setValue = function (value, frame) {
     switch(_type){
         // TODO: sanitize input
         case "COLOR" :
-            value = new this.$.oColorValue(value)
+            // doesn't work for burnin because it has color.Red, color.green etc and not .r .g ...
+            value = (value instanceof this.$.oColorValue)?value: new this.$.oColorValue(value)
             value = ColorRGBA(value.r, value.g, value.b, value.a)
             _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
             break;
@@ -429,13 +440,13 @@ $.oAttribute.prototype.setValue = function (value, frame) {
             break;
            
         default :
-            // MessageLog.trace(this.keyword+" "+(typeof value))
             try{
-                _animate ? _attr.setValueAt( value, frame ) : _attr.setValue( value );
+              _animate ? _attr.setValueAt( value, frame ) : _attr.setValue( value );
             }catch(err){
-                node.setTextAttr( this.node.path, this._keyword, frame, value );
+              this.$.debug("setting attr "+this._keyword+" value "+value+" as textAttr ", this.$.DEBUG_LEVEL.LOG)
+              node.setTextAttr( this.node.path, this._keyword, frame, value );
                 
-                // throw new Error("Couldn't set attribute "+this.keyword+" to value "+value+". Incompatible type.")
+              // throw new Error("Couldn't set attribute "+this.keyword+" to value "+value+". Incompatible type.")
             }
     }
 }
