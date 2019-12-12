@@ -1329,7 +1329,7 @@ $.oScene.prototype.updatePSD = function( path, separateLayers ){
    if (typeof layerName === 'undefined') var layerName = _audioFile.name;
 
    // creating an audio column for the sound
-    var _soundColumn = this.scene.addColumn("SOUND", layerName);
+    var _soundColumn = this.addColumn("SOUND", layerName);
     column.importSound( _soundColumn.name, 1, path);
     
     return _soundColumn;

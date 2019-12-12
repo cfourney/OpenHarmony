@@ -143,7 +143,6 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
    
     var _fileExists = !!filename; // convert to bool
     // TODO deal with fileExists and storeInProjectFolder
-    this.$.log(_fileExists)
     Drawing.create (this.id, name, _fileExists, true);
    
     if (filename){

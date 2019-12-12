@@ -2192,7 +2192,7 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
     MovieImport.setAudioFile(_audioPath);
     MovieImport.doImport();
 
-    if (extendScene && this.length < MovieImport.numberOfImages()) this.length = MovieImport.numberOfImages();
+    if (extendScene && this.scene.length < MovieImport.numberOfImages()) this.length = MovieImport.numberOfImages();
 
     // create expositions on the node
     for (var i = 1; i <= MovieImport.numberOfImages(); i++ ) {

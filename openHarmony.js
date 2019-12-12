@@ -57,9 +57,9 @@
 
 
 /**
- * The $ global object that holds all the functions of openHarmony.
+ * All the classes can be accessed from it, and it can be passed to a different context.
  * @namespace
- * @classdesc All the classes can be accessed from it, and it can be passed to a different context.
+ * @classdesc The $ global object that holds all the functions of openHarmony.
  * @version   1.0
  * @property {int}     debug_level               - The debug level of the DOM.
  * @property {bool}    batchMode                 - Deactivate all ui and incompatible functions to ensure scripts run in batch.
@@ -78,11 +78,11 @@
  * $.log("hello");                     // prints out a message to the MessageLog.
  * var myPoint = new $.oPoint(0,0,0);  // create a new class instance from an openHarmony class.
  *
- * // members of the $ objects get published to the global scope, which means $ can be ommited
+ * // function members of the $ objects get published to the global scope, which means $ can be ommited
  *
- * var doc = scn;
  * log("hello");
  * var myPoint = new oPoint(0,0,0);    // This is all valid
+ * var doc = scn;                      // "scn" isn't a function so this one isn't
  * 
  */
 $ = {
@@ -90,6 +90,7 @@ $ = {
 
  /**
  * Enum to set the debug level of debug statements.
+ * @name    $#DEBUG_LEVEL
  * @enum
  */
   DEBUG_LEVEL : {
@@ -104,6 +105,8 @@ $ = {
 
 /**
  * Helper function to split the filename, and get the directory name containing the file argument.
+ * @function
+ * @name    $#directoryGet
  * @param   {string}   file_path            The path for the file to derive a directory from.
  * @return  {string}                        The directory of the file.
  */
@@ -139,6 +142,8 @@ include(specialFolders.userScripts+"/TB_orderNetworkUp.js");       // for older 
 
 /**
  * The standard debug that uses logic and level to write to the messagelog. Everything should just call this to write internally to a log in OpenHarmony.
+ * @function
+ * @name    $#debug
  * @param   {obj}   obj            Description.
  * @param   {int}   level          The debug level of the incoming message to log.
  */
@@ -159,6 +164,8 @@ $.debug = function( obj, level ){
 
 /**
  * Log the string to the MessageLog.
+ * @function
+ * @name    $#log
  * @param {string}  str            Text to log.
  */
 $.log = function( str ){
@@ -168,6 +175,8 @@ $.log = function( str ){
 
 /**
  * Log the object and its contents.
+ * @function
+ * @name    $#logObj
  * @param   {object}   object            The object to log.
  * @param   {int}      debugLevel        The debug level.
  */
@@ -228,9 +237,9 @@ $.alert   = function(){ $.dialog.alert.apply( $.dialog, arguments ) };
  * @name    $#browseForFile
  * @function
  * @param   {string}           [text="Select a file:"]       The title of the confirmation dialog.
- * @param   {string}           [filter="*"]                  The filter for the file type and/or file name that can be selected. Accepts wildcard charater "*".
+ * @param   {string}           [filter="*"]                  The filter for the file type and/or file name that can be selected. Accepts wildcard character "*".
  * @param   {string}           [getExisting=true]            Whether to select an existing file or a save location
- * @param   {string}           [acceptMultiple=false]        Whether or not selecting more than one file is ok. Is ignored if getExisting is falses.
+ * @param   {string}           [acceptMultiple=false]        Whether or not selecting more than one file is ok. Is ignored if getExisting is false.
  * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
  * 
  * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
@@ -270,7 +279,7 @@ for( var classItem in $ ){
     try{
       addDOMAccess( $[classItem].prototype, $ );
     }catch(err){
-      System.println( "Error extending DOM access to : " + classItem );
+      $.debug( "Error extending DOM access to : " + classItem, $.DEBUG_LEVEL.ERROR );
     }
     
     //Also extend it to the global object.
@@ -285,6 +294,8 @@ for( var classItem in $ ){
 /**
  * Starts the tracking of the undo accumulation, all subsequent actions are done in a single undo operation.<br>Close the undo accum with $.endUndo().
  * @param   {string}           undoName                                       The name of the operation that is being done in the undo accum.
+ * @name $#beginUndo
+ * @function
  * @see $.endUndo
  */
 $.beginUndo = function( undoName ){
@@ -296,14 +307,18 @@ $.beginUndo = function( undoName ){
 
 /**
  * Cancels the tracking of the undo accumulation, everything between this and the start of the accumulation is undone.
- * @see $.beginUndo
+ * @name $#cancelUndo
+ * @function
  */
 $.cancelUndo = function( ){
+  
   scene.cancelUndoRedoAccum( );
 }
 
 /**
  * Stops the tracking of the undo accumulation, everything between this and the start of the accumulation behaves as a single undo operation.
+ * @name $#beginUndo
+ * @function
  * @see $.beginUndo
  */
 $.endUndo = function( ){
@@ -312,6 +327,8 @@ $.endUndo = function( ){
 
 /**
  * 	Undoes the last n operations. If n is not specified, it will be 1
+ * @name $#undo
+ * @function
  * @param   {int}           n                                       The amount of operations to undo.
  */
 $.undo = function( dist ){
@@ -321,6 +338,8 @@ $.undo = function( dist ){
 
 /**
  * 	Redoes the last n operations. If n is not specified, it will be 1
+ * @name $#redo
+ * @function
  * @param   {int}           n                                       The amount of operations to undo.
  */
 $.redo = function( dist ){
