@@ -54,50 +54,228 @@
  * @constructor
  * @classdesc  oTimeline Base Class
  * @param   {oNode}                   outNode                   The source oNode of the link.
+ * @param   {int}                     outPort                   The outport of the outNode that is connecting the link.
  * @param   {oNode}                   inNode                    The destination oNode of the link.
  * @param   {int}                     inPort                    The inport of the inNode that is connecting the link.
  *                                                          
- * @property   {bool}                    exists                 Whether the connection as-it-is exists.
  * @property   {bool}                    autoDisconnect         Whether to auto-disconnect links if they already exist. 
  
  */
-$.oNodeLink = function( outNode, inNode, inPort ){
-
-    var get_default_inport = false;
-    if (typeof inPort === 'undefined'){            
-      this._inPort = 0;
-      
-      //Depending on the node type, assume a different inport assumption.
-      
-    }
+$.oNodeLink = function( outNode, outPort, inNode, inPort, outlink ){
 
     //Public properties.
-    this.exists   = false;
     this.autoDisconnect = true;
+    this.path           = false;
 
     //Private properties.
     this._outNode = outNode;
-    this._outPort = 0;
-    this._outLink = 0;
+    this._outPort = outPort; //outPort ? outPort : 0;
+    this._outLink = outlink ? outlink : 0;
     
     this._realOutNode = outNode;
     this._realOutPort = 0;
     
     this._inNode  = inNode;
-    this._inPort  = inPort;
+    this._inPort  = inPort; //inPort ? inPort : 0;
     
     this._freeze        = false;
     this._newInNode     = null;
     this._newInPort     = null;
     this._newOutNode    = null;
     this._newOutPort    = null;
-        
+    this._exists        = false;
+    this._validated     = false;
+    
+    //Assume validation when providing all details. This is done to speed up subsequent lookups.
+    if( outNode && 
+        inNode  &&
+        typeof outPort === 'number' &&
+        typeof inPort  === 'number' &&
+        typeof outlink === 'number' 
+      ){
+      
+      //Skip validation in the event that we've beengiven all details -- this is to just speed up list generation.
+      return;
+    }
+    
     this.validate();
 }
 
+/**
+ * Validates the a node upwards until it hits the target. Given an inport argument to scan.
+ * @static
+ * @private
+ * @param   {int}                   inport                   The inport to scan.
+ * @param   {bool}                  outportProvided          Was an outport provided.
+ * @return {bool}      Whether the connection is a valid connection that exists currently in the node system.
+ */
+$.oNodeLink.prototype.validateUpwards = function( inport, outportProvided ) {  
+  //IN THE EVENT OUTNODE WASNT PROVIDED.
+  this.path = this.findInputPath( this._inNode, inport, [] );
+  if( !this.path || this.path.length == 0 ){
+    return false;
+  }
+
+  var valid = false;
+  for( var n=0;n<this.path.length;n++ ){
+    if( this.path[n].node.path == this._outNode.path ){
+      if( outportProvided ){
+        if( this.path[n].port == this._outPort ){
+          valid = this.path[n];
+          break;
+        }
+      }else{
+        valid = this.path[n];
+        break;
+      }
+    }
+  }
+  
+  if( !valid ){
+    return false;
+  }
+  
+  this._exists = true;
+  this._outLink = valid.link; 
+  this._realOutNode = this.path[ this.path.length-1 ].node;
+  this._realOutPort = this.path[ this.path.length-1 ].port;
+  this._realOutLink = this.path[ this.path.length-1 ].link;
+  
+  return true;
+}
 
 
+/**
+ * Validates the details of a given connection. Used internally when details change.
+ * @return {bool}      Whether the connection is a valid connection that exists currently in the node system.
+ */
+$.oNodeLink.prototype.validate = function ( ) {
+    //Initialize the connection and get the information.
+    //First check to see if the path is valid.
+    this._exists    = false;
+    this._validated = true;
+    
+    var inportProvided  = !(!this._inPort && this._inPort!== 0);
+    var outportProvided = !(!this._outPort && this._outPort!== 0);
+    
+    if( !inportProvided && !outportProvided ){
+      //inport is the safest to determine contextually.
+      //If either has 1 input.
+      if( this._inNode && this._inNode.inNodes.length == 1 ){
+        this._inPort = 0;
+        inportProvided = true;
+      }
+    }
+    
+    if( !this._outNode && !this._inNode ){
+      //Unable to comply, need at least the nodes.
+      this._exists = false;
+      return false;
+    }else if( !this._outNode ){
+      //No outnode. Just look for one above it given the inport.
+      //Lets derive up the chain.
+      if( inportProvided ){
+        this.validateUpwards( this._inPort );
+        
+        if( !this.path || this.path.length==0 ){
+          return false;
+        }
+        
+        this._realOutNode = this.path[ this.path.length-1 ].node;
+        this._realOutPort = this.path[ this.path.length-1 ].port;
+        this._realOutLink = this.path[ this.path.length-1 ].link;
+        
+        this._outNode = this.path[ 0 ].node;
+        this._outPort = this.path[ 0 ].port;
+        this._outLink = this.path[ 0 ].link;
+        
+        this._exists = true;
+        return true;
+      }
+    }else if( !this._inNode ){
+      //There can be multiple links. This is very difficult and only possible if theres only a singular path, we'll have to derive them all downwards.
+      //This is just hopeful thinking that there is only one valid path.
+      
+      var huntInNode = function( currentNode, port ){
+        try{
+          var on = currentNode.outNodes[port];
+          
+          if( on.length != 1 ){
+            return false;
+          }
+          
+          var dstNodeInfo = node.dstNodeInfo( on.path, port, 0 );
+          if( on[0].type == "MULTIPORT_OUT" ){
+            return huntInNode( src_node.grp, dstNodeInfo.port );
+          }else if( on[0].type == "GROUP" ){
+            return huntInNode( src_node.multiportIn, dstNodeInfo.port );
+          }else{
+            var ret = { "node": on[0], "port":dstNodeInfo.port };
+            return ret;
+          }
+        }catch(err){
+          return false;
+        }
+      }
+      
+      //Find the in node recursively.
+      var res = huntInNode();
+      if( !res ){
+        this._exists = false;
+        return false;
+      }
+      
+      if( inportProvided ){
+        if( res.port != this._inPort ){
+          this._exists = false;
+          return false;
+        }
+      }
+      
+      this._inNode = res.node;
+      this._inPort = res.port;
+      inportProvided = true;
+    }
+    
+    if( !this._outNode || !this._inNode ){
+        this._exists = false;
+        return false;
+    }
+    
+    if( !inportProvided && !outportProvided ){
+      //Still no ports provided.
+      //Just simply assume the 0 port on the input.
+      this._inPort = 0;
+      inportProvided = true;
+    }
+    
+    if( !inportProvided ){
+      //Derive upwards for each input, if its valid, keep it.
+      var inNodes = this._inNode.inNodes;
+      for( var n=0;n<inNodes.length;n++ ){
+        if( this.validateUpwards( n, outportProvided ) ){
+          return true;
+        }
+      }
+      return false;
+    }
+    
+    return this.validateUpwards( this._inPort, outportProvided );
+}
 
+/**
+ * Whether the nodeLink exists in the provided state.
+ * @name $.oNodeLink#exists
+ * @type {$.oNode}
+ */
+Object.defineProperty($.oNodeLink.prototype, 'exists', {
+    get : function(){
+      if( !this._validated ){
+        this.validate();
+      }
+      return this._exists;
+    }
+});
 
 /**
  * The node that is accepting this link on its outPort. It is outputting the link.
@@ -110,13 +288,14 @@ Object.defineProperty($.oNodeLink.prototype, 'outNode', {
       
     },
     set : function( val ){
+      this._validated = false;
       this._newOutNode = val;
       
       if( this.freeze ){
         return;
       }
       
-      this.applyLinks();
+      this.apply();
     }
 });
 
@@ -133,14 +312,14 @@ Object.defineProperty($.oNodeLink.prototype, 'inNode', {
     },
     set : function( val ){
       //PATH FIND UP TO THE INNODE.
-      
+      this._validated = false;
       this._newInNode = val;
       
       if( this.freeze ){
         return;
       }
       
-      this.applyLinks();
+      this.apply();
       
     }
 });
@@ -157,13 +336,14 @@ Object.defineProperty($.oNodeLink.prototype, 'outPort', {
       
     },
     set : function( val ){
+      this._validated  = false;
       this._newOutPort = val;
       
       if( this.freeze ){
         return;
       }
       
-      this.applyLinks();
+      this.apply();
     }
 });
 
@@ -189,13 +369,14 @@ Object.defineProperty($.oNodeLink.prototype, 'inPort', {
       return this._inPort;
     },
     set : function( val ){
+      this._validated = false;
       this._newInPort = val;
       
       if( this.freeze ){
         return;
       }
       
-      this.applyLinks();
+      this.apply();
     }
 });
 
@@ -213,103 +394,56 @@ Object.defineProperty($.oNodeLink.prototype, 'freeze', {
       this._freeze = val;
       
       if( !val ){
-        applyLinks();
+        this.apply();
       }
     }
 });
 
- 
-// $.oNodeLink Class methods
+
 /**
  * Dereferences up a node's chain, in order to find the exact node its actually attached to.
  * @param   {oNode}                   onode                   The node to dereference the groups for.
  * @param   {int}                     port                    The port to dereference.
+ * @param   {object[]}                path                    The array path to pass along recursively.<br>[ { "node": src_node, "port":srcNodeInfo.port, "link":srcNodeInfo.link } ]
  * @private 
  * @return {object}                   Object in form { "node":oNode, "port":int, "link": int }
  */
-$.oNodeLink.prototype.findInputNode = function( onode, port, depth ) {
+$.oNodeLink.prototype.findInputPath = function( onode, port, path ) {
   var srcNodeInfo = node.srcNodeInfo( onode.path, port );
-  
   if( !srcNodeInfo ){
-    return false;
+    return path;
   }
   
-  var src_node = $.scene.getNodeByPath( srcNodeInfo.node );
+  var src_node = this.$.scene.getNodeByPath( srcNodeInfo.node );
   if( !src_node ){
-    return false;
+    return path;
   }
-  
-  var orig_source = src_node;
   
   if( src_node.type == "MULTIPORT_IN" ){
     //Continue to dereference until we find something other than a group/multiport in.
+    var ret = { "node": src_node, "port":srcNodeInfo.port, "link":srcNodeInfo.link };
+    path.push( ret );
+    
     var src_node = src_node.group;
+    
+    var ret = { "node": src_node, "port":srcNodeInfo.port, "link":srcNodeInfo.link };
+    path.push( ret );
   }else if( src_node.type == "GROUP" ){
     //Continue to dereference until we find something other than a group/multiport out.
-    var src_node =  src_node.multiportOut
+    var ret = { "node": src_node, "port":srcNodeInfo.port, "link":srcNodeInfo.link };
+    path.push( ret );
+    
+    var src_node =  src_node.multiportOut;
+    
+    var ret = { "node": src_node, "port":srcNodeInfo.port, "link":srcNodeInfo.link };
+    path.push( ret );
   }else{
     var ret = { "node": src_node, "port":srcNodeInfo.port, "link":srcNodeInfo.link };
-    if( depth == 0){
-      ret["realNode"] = orig_source;
-      ret["realPort"] = srcNodeInfo.port;
-      ret["realLink"] = srcNodeInfo.link;
-    }
-    
-    return ret;
+    path.push( ret );
+    return path;
   }
   
-  var recurse = this.findInputNode( src_node, srcNodeInfo.port, depth+1 );
-  if( !recurse ){ //If no input node is found, just return this one, its the most valid.
-    var ret = { "node": src_node, "port":srcNodeInfo.port, "link":srcNodeInfo.link };
-    if( depth == 0){
-      ret["realNode"] = orig_source;
-      ret["realPort"] = srcNodeInfo.port;
-      ret["realLink"] = srcNodeInfo.link;
-    }
-    
-    return { "node": src_node, "port":srcNodeInfo.port, "link":srcNodeInfo.link };
-  }
-  
-  if( depth == 0){
-    recurse["realNode"] = orig_source;
-    recurse["realPort"] = srcNodeInfo.port;
-    recurse["realLink"] = srcNodeInfo.link;
-  }
-  
-  //Pass what was found up the chain.
-  return recurse;
-}
-
-
-/**
- * Validates the details of a given connection. Used internally when details change.
- * @return {bool}      Whether the connection is a valid connection that exists currently in the node system.
- */
-$.oNodeLink.prototype.validate = function ( ) {
-    //Initialize the connection and get the information.
-    //First check to see if the inport is valid.
-    
-    this._outNode = false;
-    this._outPort = 0;
-    this._outLink = 0; 
-
-    this._realOutNode = false;
-    this._realOutPort = 0;
-    this._realOutLink = 0;
-        
-    var res_node = this.findInputNode( this._inNode, this._inPort, 0 );
-    if( !res_node ){
-      return;
-    }
-    
-    this._outNode = res_node.node;
-    this._outPort = res_node.port;
-    this._outLink = res_node.link; 
-
-    this._realOutNode = res_node.realNode;
-    this._realOutPort = res_node.realPort;
-    this._realOutLink = res_node.realLink;
-    this.exists = true;
+  return this.findInputPath( src_node, srcNodeInfo.port, path );
 }
 
 
@@ -319,7 +453,14 @@ $.oNodeLink.prototype.validate = function ( ) {
  * @param   {int}                     port                    The port to link on the input.
  */
 $.oNodeLink.prototype.linkIn = function( onode, port ) {
+  this._validated = false;
+  var freeze_val = this.freeze;
+  this.freeze = true;
   
+  this.inNode = onode;
+  this.inPort = port;
+  
+  this.freeze = freeze_val;  
 }
 
 
@@ -329,79 +470,97 @@ $.oNodeLink.prototype.linkIn = function( onode, port ) {
  * @param   {int}                     port                    The port to link on the output.
  */
 $.oNodeLink.prototype.linkOut = function( onode, port ) {
+  this._validated = false;
   
+  var freeze_val = this.freeze;
+  this.freeze = true;
+  
+  this.outNode = onode;
+  this.outPort = port;
+  
+  this.freeze = freeze_val;  
 }
 
 
+/**
+ * Insert a node in the middle of the link chain.
+ * @param   {oNode}                   onode                   The node to link on the output.
+ * @param   {int}                     inPort                  The port to link on the output.
+ * @param   {int}                     outPort                 The port to link on the output.
+ */
+$.oNodeLink.prototype.insertNode = function( onode, inPort, outPort ) {
+  //-----
+  
+}
 
 /**
  * Apply the links as needed after unfreezing the oNodeLink
- * @private
+ * @param   {bool}                   force                   Forcefully reconnect/disconnect the note given the current settings of this nodelink.
  */
-$.oNodeLink.prototype.applyLinks = function ( ) {
+$.oNodeLink.prototype.apply = function( force ) {
   this._freeze = false;
+  this._validated = false;
   
-  //CHECK AND APPLY THESE AS NEEDED.
-  /*
-  this._freeze        = false;
-  this._newInNode     = false;
-  this._newInPort     = false;
-  this._newOutNode    = false;
-  this._newOutPort    = false;
-  */
-  
- 
-  //Force a reconnect -- track content as needed.
-  //Check and validate in ports.
-  
+  var disconnect_in = false;
+  var disconnect_out = false;
   var inports_removed  = {};
   var outports_removed = {};
   
-  
-  var target_port = this._inPort;
-  var disconnect_in = false;
-  if( this._newInPort !== null ){
-    if( this._newInPort != this._inPort ){
-      target_port = this._newInPort;
-      disconnect_in = true;
-    }
-  }
-  
-  var old_inPortCount = false;    //Used to track if the inport count has changed upon its removal.
-  if( this._newInNode !== null ){
-    if( this._newInNode ){
-      if( !this._inNode || ( this._inNode.path != this._newInNode.path ) ){
+  if( force || !this._exists ){    //Apply this.
+    this._newInNode     = this._inNode;
+    this._newInPort     = this._inPort;
+    this._newOutNode    = this._outNode;
+    this._newOutPort    = this._outPort;
+    var force = true;
+    
+    disconnect_in = true;
+    disconnect_out = true;
+  }else{
+    //Force a reconnect -- track content as needed.
+    //Check and validate in ports.
+    var target_port = this._inPort;
+    if( this._newInPort !== null ){
+      if( this._newInPort != this._inPort ){
+        target_port = this._newInPort;
         disconnect_in = true;
       }
-    }else if( this._inNode ){
-      disconnect_in = true;
     }
-  }
-  
-  //Check and validate out ports.
-  var disconnect_out = false;
-  if( this._newOutPort !== null ){
-    if( ( this._newOutPort !== this._outPort ) ){
-      disconnect_out = true;
+    
+    var old_inPortCount = false;    //Used to track if the inport count has changed upon its removal.
+    if( this._newInNode !== null ){
+      if( this._newInNode ){
+        if( !this._inNode || ( this._inNode.path != this._newInNode.path ) ){
+          disconnect_in = true;
+        }
+      }else if( this._inNode ){
+        disconnect_in = true;
+      }
     }
-  }
-  
-  if( this._newOutNode !== null ){
-    if( this._newOutNode ){
-      if( !this._outNode || ( this._outNode.path != this._newOutNode.path ) ){
+    
+    //Check and validate out ports.
+    if( this._newOutPort !== null ){
+      if( ( this._newOutPort !== this._outPort ) ){
         disconnect_out = true;
       }
-    }else if( this._outNode ){
-      disconnect_out = true;
+    }
+    
+    if( this._newOutNode !== null ){
+      if( this._newOutNode ){
+        if( !this._outNode || ( this._outNode.path != this._newOutNode.path ) ){
+          disconnect_out = true;
+        }
+      }else if( this._outNode ){
+        disconnect_out = true;
+      }
     }
   }
   
   if( !disconnect_in && !disconnect_out ){
     //Nothing happened.
-    System.println( "NOTHING TO DO\n" );
+    System.println( "NOTHING TO DO" );
     return;
   }
-    
+  
   if( this._newInNode ){
     if( this._newInNode.inNodes.length > target_port ){
       if( this._newInNode.inNodes[ target_port ] ){
@@ -419,11 +578,25 @@ $.oNodeLink.prototype.applyLinks = function ( ) {
   //We'll work with the new values -- pretend any new connection is a new one.
   this._newInNode  = this._newInNode ? this._newInNode : this._inNode;
   this._newOutNode = this._newOutNode ? this._newOutNode : this._outNode;
-  this._newOutPort = ( this._newOutPort === false ) ? this._outPort : this._newOutPort;
-  this._newInPort  = ( this._newInPort === false ) ? this._inPort : this._newInPort;
+  this._newOutPort = ( this._newOutPort === null ) ? this._outPort : this._newOutPort;
+  this._newInPort  = ( this._newInPort === null ) ? this._inPort : this._newInPort;
   
   if( !this._newInNode || !this._newOutNode ){
     //Nothing to attach.
+    this._inNode  = this._newInNode;
+    this._inPort  = this._newInPort;
+    this._outNode = this._newOutNode;
+    this._outPort = this._newOutPort;
+    
+    return;
+  }
+  
+  if( !this._newInNode.exists || !this._newOutNode.exists ){
+    this._inNode  = this._newInNode;
+    this._inPort  = this._newInPort;
+    this._outNode = this._newOutNode;
+    this._outPort = this._newOutPort;
+    
     return;
   }
   
@@ -440,12 +613,30 @@ $.oNodeLink.prototype.applyLinks = function ( ) {
     inports_removed[ this._inNode.path ] = this._inPort;
   }
   
+  //Cant connect without a valid port.
+  if( ( this._newOutPort === null ) || ( this._newOutPort === false ) ){
+    this._inNode  = this._newInNode;
+    this._inPort  = this._newInPort;
+    this._outNode = this._newOutNode;
+    this._outPort = this._newOutPort;
+    
+    return;
+  }
+  if( ( this._newInPort === null ) || ( this._newInPort === false ) ){
+    this._inNode  = this._newInNode;
+    this._inPort  = this._newInPort;
+    this._outNode = this._newOutNode;
+    this._outPort = this._newOutPort;
+    
+    return;
+  }
+  
   //Check to see if any of the port values have changed.
   var newInPortCount_result   = this._newInNode ? this._newInNode.inNodes.length : 0;
   var newOutPortCount_result  = this._newOutNode ? this._newOutNode.outNodes.length : 0;
     
   if( newOutPortCount_result != newOutPortCount ){
-    //Outport might have changed. React
+    //Outport might have changed. React appropriately.
     if( this._newOutNode.path in outports_removed ){
       if( this._newOutPort > outports_removed[ this._newOutNode.path ] ){
         this._newOutPort-=1;
@@ -453,8 +644,8 @@ $.oNodeLink.prototype.applyLinks = function ( ) {
     }
   }
   
-  if( newInPortCount_result != newOutPortCount ){
-    //Outport might have changed. React
+  if( newInPortCount_result != newInPortCount ){
+    //Outport might have changed. React appropriately.
     if( this._newInNode.path in inports_removed ){
       if( this._newInPort > inports_removed[ this._newInNode.path ] ){
         this._newInPort-=1;
@@ -462,15 +653,15 @@ $.oNodeLink.prototype.applyLinks = function ( ) {
     }
   }
   
+  System.println( newInPortCount_result + " " + newOutPortCount + " GHI " + this._newInPort );
+  
   var new_inGroup  = this._newInNode.group;
   var new_outGroup = this._newOutNode.group;
   if( new_inGroup.path == new_outGroup.path ){
     //Simple direct connection within the same group.
-    
     this._newOutNode.linkOutNode( this._newInNode, this._newInPort, this._newOutPort );
+    
   }else{
-    //Crazy pathfinding.
-    System.println( "NEEDS PATHFINDING" );
     //Look for an access route.
     
     var common_path = [];
@@ -491,48 +682,154 @@ $.oNodeLink.prototype.applyLinks = function ( ) {
     
     var common_path = common_path.join( "/" );
     
-    //Forward Path finding.
-    var find_forward = function( from, port, targ, path ){
-      if( from.group.path != targ ){
+    //Outward Path finding.
+    var find_outward = function( from_node, port, targ, path ){
+      if( from_node.group.path != targ ){
         //Attach to a group one higher.
         //multiportIn
-        var grp   = from.group;
+        var grp   = from_node.group;
         var mport = grp.multiportOut;
-        // var found_pt = mport.inNodes.length;
-        var follow_port = mport.inPorts.length;
+        var followPort = mport.inNodes.length;
         //Find if the outnodes of from, at the given outNode, connects to the multiPortOut already.
         try{
           var found_existing = false;
-          if( from.outNodes.lenth>port ){
-            for( var n=0;n<from.outNodes[port].length;n++ ){
-              if( from.outNodes[port].path == mport.path ){
+          if( from_node.outNodes.length>port ){
+            for( var n=0;n<from_node.outNodes[port].length;n++ ){
+              if( from_node.outNodes[port][n].path == mport.path ){
                 //Dont add it as a new connection, add it as an existing one.
-                var info = node.dstNodeInfo( from.path, port, n );
+                var info = node.dstNodeInfo( from_node.path, port, n );
                 if( info ){
                   found_existing = true;
-                  follow_port = info.port;
+                  followPort = info.port;
                   break;
                 }
               }
             }
           }
           
-          path.push( { "exists":found_existing, "from":from, "port":port, "to":mport, "port":follow_port  } );
-          find_forward( this.grp, follow_port, common_path, path );
+          path.push( { "end" : false, "exists":found_existing, "from":from_node, "fromport":port, "to":mport, "toport":followPort  } );
+          path = find_outward( grp, followPort, targ, path );
         }catch(err){
           System.println( "ERR: " + err.message + "  " + err.lineNumber + " : " + err.fileName );
         }
         
       }else{
-        path.push( from );
+        path.push( { "end": true, "exists":true, "from":from_node, "fromport":port, "to":false, "toport":false  } );
+      }
+      return path;
+    }
+    
+    var outward_path = find_outward( this._newOutNode, this._newOutPort, common_path, [] );
+    var common_from = outward_path[outward_path.length-1].from;
+    var common_port = outward_path[outward_path.length-1].fromport;
+    
+    var targ_path       = this._newInNode.path;
+        targ_path_split = targ_path.split( "/" );
+    
+    // Find forward from the common junction.
+    var find_inward = function( from_node, from_port, targ_node, targ_port, path, createPort ){
+
+      var length_parent = from_node.group.path.split("/").length;
+      var targ_grp = targ_path_split.slice( 0, length_parent+1 ).join("/");
+      
+      if( targ_grp == targ_path ){
+        //Should it create the port?
+        
+        path.push( { "end": true, "exists":false, "from":from_node, "fromport":from_port, "to":targ_node, "toport":targ_port, "createPort":createPort } );
+        return path;
+      }
+      
+      //Find a common link from this target to the next.
+      var grp                = this.$.scene.getNodeByPath( targ_grp );
+      var mport              = grp.multiportIn;
+      var followPort         = mport.outNodes.length;
+      
+      //Find if the outnodes of from, at the given outNode, connects to the multiPortOut already.
+      try{
+        var found_existing = false;
+        var createPortForward = true;
+        if( from_node.outNodes.length>from_port ){
+          var ops = from_node.outNodes[from_port];
+          for( var n=0;n<ops.length;n++ ){
+            if( ops[n].path == targ_grp ){
+              //Dont add it as a new connection, add it as an existing one.
+              var info = node.dstNodeInfo( from_node.path, from_port, n );
+              if( info ){
+                found_existing = true;
+                followPort = info.port;
+                createPortForward = false;
+                break;
+              }
+            }
+          }
+          if(!found_existing){
+            var grprIns = grp.inNodes;
+            var mpOuts  = mport.outNodes;
+            
+            //It can either be acceptable, if the connection is not connected at grpin and not connected at mpout,
+            //or if grpin is not connected, and mpout is connected where we want it to be.
+            var targ_internal = targ_path_split.slice( 0, length_parent+2 ).join("/");
+            for( var n=0;n<grprIns.length;n++ ){
+              if( !grprIns[n] ){
+                if( mpOuts[n].length == 0 ){
+                  //Its not being used.
+                  followPort = n;
+                  createPortForward = false;
+                  
+                  break;
+                }else if( mpOuts[n].length == 1 ){
+                  //Its being used, check if its just passing through to another group.
+                  if( mpOuts[n][0].path == targ_internal ){
+                    followPort = n;
+                    createPortForward = false;
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+        path.push( { "end" : false, "exists":found_existing, "from":from_node, "fromport":from_port, "to":grp, "toport":followPort, "createPort":createPort } );
+        path = find_inward( mport, followPort, targ_node, targ_port, path, createPortForward );
+      }catch(err){
+        System.println( "ERR: " + err.message + "  " + err.lineNumber + " : " + err.fileName );
       }
       
       return path;
     }
-    var res = find_forward( this._newOutNode, this._newOutPort, common_path, [] );
     
+    var inward_path = find_inward( common_from, common_port, this._newInNode, this._newInPort, [], true );
     
-    System.println( "COMMON PATH: "+ common_path );
+    var cleanPath = [];
+    for( var n=0;n<outward_path.length;n++ ){
+      var t_path = outward_path[n];
+      if( !t_path.exists && t_path.to ){
+        t_path.from.linkOutNode( t_path.to, t_path.fromport, t_path.toport, true );
+        // System.println( "RESULT OUT: " + t_path.from + " : " + t_path.fromport + " -- " + t_path.to + " : " + t_path.toport );
+      }
+    }
+    
+    for( var n=inward_path.length-1;n>=0;n-- ){
+      var t_path = inward_path[n];
+      if( !t_path.exists ){
+        t_path.from.linkOutNode( t_path.to, t_path.fromport, t_path.toport, t_path.createPort );
+        // System.println( "RESULT IN: " + t_path.from + " : " + t_path.fromport + " -- " + t_path.to + " : " + t_path.toport + "  " + t_path.createPort );
+      }
+    }
   }
   
+  this._inNode  = this._newInNode;
+  this._inPort  = this._newInPort;
+  this._outNode = this._newOutNode;
+  this._outPort = this._newOutPort;
+  
+  this._newInNode     = null;
+  this._newInPort     = null;
+  this._newOutNode    = null;
+  this._newOutPort    = null;
+
+  if( !this.validate() ){
+    throw ReferenceError( "Failed to connect the targets appropriately." );
+  }
 }

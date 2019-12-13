@@ -638,7 +638,6 @@ Object.defineProperty($.oNode.prototype, 'outs', {
 /**
  * An object containing all attributes of this node.
  * @name $.oNode#attributes
- * @Property
  * @type {oAttribute}
  * @example
  * // You can get access to the actual oAttribute object for a node parameter by using the dot notation:
@@ -718,13 +717,13 @@ Object.defineProperty($.oNode.prototype, 'linkedColumns', {
 /**
  * Links this node's inport to the given module, at the inport and outport indices.
  * @param   {$.oNode}   nodeToLink             The node to link this one's inport to.
- * @param   {int}       [inPort]               This node's inport to connect.
- * @param   {int}       [outPort]              The target node's outport to connect.
+ * @param   {int}       [ownPort]              This node's inport to connect.
+ * @param   {int}       [destPort]             The target node's outport to connect.
  * @param   {bool}      [createPorts]          Whether to create new ports on the nodes.
  *
  * @return  {bool}    The result of the link, if successful.
  */
-$.oNode.prototype.linkInNode = function( nodeToLink, inPort, outPort, createPorts ){
+$.oNode.prototype.linkInNode = function( nodeToLink, ownPort, destPort, createPorts ){
   // check param types
   if (!(nodeToLink instanceof this.$.oNode)) throw new Error("wrong parameter type in oNode.linkInNode: "+nodeToLink+" is not an oNode")
   if (!nodeToLink.exists){
@@ -735,8 +734,8 @@ $.oNode.prototype.linkInNode = function( nodeToLink, inPort, outPort, createPort
   var _node = nodeToLink.path;
 
   // Default values for optional parameters
-  if (typeof inPort === 'undefined') inPort = 0;
-  if (typeof outPort === 'undefined') outPort = 0//node.numberOfOutputPorts(_node);
+  if (typeof ownPort === 'undefined') ownPort = 0;
+  if (typeof destPort === 'undefined') destPort = 0//node.numberOfOutputPorts(_node);
   if (typeof createPorts === 'undefined'){
     // by default, only create a port if none exist
     var createPorts = (nodeToLink.type == "MULTIPORT_IN" && nodeToLink.outNodes.length == 0)||
@@ -746,12 +745,12 @@ $.oNode.prototype.linkInNode = function( nodeToLink, inPort, outPort, createPort
               (this.type == "COMPOSITE")
   }
 
-  this.$.debug("linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length, this.$.DEBUG_LEVEL.LOG);
+  this.$.debug("linking "+this.fullPath+" to "+_node+" "+destPort+" "+ownPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length, this.$.DEBUG_LEVEL.LOG);
   var success = false;
   try{
-    success = node.link(_node, outPort, this.path, inPort, createPorts, createPorts)
+    success = node.link(_node, destPort, this.path, ownPort, createPorts, createPorts)
   }catch (err){
-    this.$.debug("Error linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length, this.$.DEBUG_LEVEL.ERROR);
+    this.$.debug("Error linking "+this.fullPath+" to "+_node+" "+destPort+" "+ownPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length, this.$.DEBUG_LEVEL.ERROR);
   }
   return success
 };
@@ -791,13 +790,14 @@ $.oNode.prototype.unlinkInPort = function( inPort ){
 /**
  * Links this node's out-port to the given module, at the inport and outport indices.
  * @param   {$.oNode} nodeToLink             The node to link this one's outport to.
- * @param   {int}     [inPort]               The target node's inport to connect.
- * @param   {int}     [outPort]              This node's outport to connect.
+ * @param   {int}     [ownPort]              This node's outport to connect.
+ * @param   {int}     [destPort]             The target node's inport to connect.
  * @param   {bool}    [createPorts]          Whether to create new ports on the nodes.
  *
  * @return  {bool}    The result of the link, if successful.
  */
-$.oNode.prototype.linkOutNode = function(nodeToLink, outPort, inPort, createPorts){
+$.oNode.prototype.linkOutNode = function(nodeToLink, ownPort, destPort, createPorts){
+
   // check param types
   if (!(nodeToLink instanceof this.$.oNode)) throw new Error("wrong parameter type in oNode.linkOutNode: "+nodeToLink+" is not an oNode")
 
@@ -810,8 +810,8 @@ $.oNode.prototype.linkOutNode = function(nodeToLink, outPort, inPort, createPort
 
   // Default values for optional parameters
   // TODO: careful since now READ nodes have two ports but one only accepts drawing link
-  if (typeof inPort === 'undefined') var inPort = (nodeToLink.type == "COMPOSITE")?node.numberOfInputPorts(nodeToLink.path):0;
-  if (typeof outPort === 'undefined') var outPort = 0
+  if (typeof destPort === 'undefined') var destPort = (nodeToLink.type == "COMPOSITE")?node.numberOfInputPorts(nodeToLink.path):0;
+  if (typeof ownPort === 'undefined') var ownPort = 0
   if (typeof createPorts === 'undefined'){
   // by default, only create a port if none exist
   var createPorts = (nodeToLink.type == "MULTIPORT_OUT" && nodeToLink.inNodes.length == 0)||
@@ -821,12 +821,12 @@ $.oNode.prototype.linkOutNode = function(nodeToLink, outPort, inPort, createPort
             (nodeToLink.type == "COMPOSITE")
   }
 
-  this.$.debug("linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.LOG);
+  this.$.debug("linking "+this.fullPath+" to "+_node+" "+ownPort+" "+destPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.LOG);
   var success = false;
   try{
-    success = node.link(this.fullPath, outPort, _node, inPort, createPorts, createPorts);
+    success = node.link(this.fullPath, ownPort, _node, destPort, createPorts, createPorts);
   }catch(err){
-    this.$.debug("Error linking "+this.fullPath+" to "+_node+" "+outPort+" "+inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.ERROR);
+    this.$.debug("Error linking "+this.fullPath+" to "+_node+" "+ownPort+" "+destPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.ERROR);
   }
   return success
 }
@@ -1021,7 +1021,7 @@ $.oNode.prototype.clone = function( newName, newPosition, newGroup ){
 
  /**
  * WIP
- * @TODO
+ * @TODO Not yet implemented.
  * @param   {string}    newName              The new name for the cloned module.
  * @param   {oPoint}    newPosition          The new position for the cloned module.
  */

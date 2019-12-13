@@ -535,17 +535,11 @@
             
                 <li data-name="$.oColor#colorObject"><a href="$.oColor.html#colorObject">colorObject</a></li>
             
-                <li data-name="$.oColor#h"><a href="$.oColor.html#h">h</a></li>
-            
                 <li data-name="$.oColor#id"><a href="$.oColor.html#id">id</a></li>
             
                 <li data-name="$.oColor#index"><a href="$.oColor.html#index">index</a></li>
             
-                <li data-name="$.oColor#l"><a href="$.oColor.html#l">l</a></li>
-            
                 <li data-name="$.oColor#name"><a href="$.oColor.html#name">name</a></li>
-            
-                <li data-name="$.oColor#s"><a href="$.oColor.html#s">s</a></li>
             
                 <li data-name="$.oColor#selected"><a href="$.oColor.html#selected">selected</a></li>
             
@@ -586,6 +580,14 @@
                 
             </span>
             <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oColorValue#h"><a href="$.oColorValue.html#h">h</a></li>
+            
+                <li data-name="$.oColorValue#l"><a href="$.oColorValue.html#l">l</a></li>
+            
+                <li data-name="$.oColorValue#s"><a href="$.oColorValue.html#s">s</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -1505,6 +1507,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oNodeLink#exists"><a href="$.oNodeLink.html#exists">exists</a></li>
+            
                 <li data-name="$.oNodeLink#freeze"><a href="$.oNodeLink.html#freeze">freeze</a></li>
             
                 <li data-name="$.oNodeLink#inNode"><a href="$.oNodeLink.html#inNode">inNode</a></li>
@@ -1527,6 +1531,10 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oNodeLink#apply"><a href="$.oNodeLink.html#apply">apply</a></li>
+            
+                <li data-name="$.oNodeLink#insertNode"><a href="$.oNodeLink.html#insertNode">insertNode</a></li>
             
                 <li data-name="$.oNodeLink#linkIn"><a href="$.oNodeLink.html#linkIn">linkIn</a></li>
             
@@ -2079,7 +2087,7 @@
     <div class="nameContainer">
         <h4 class="name" id="oNodeLink">
             
-            new $.oNodeLink<span class="signature">(outNode, inNode, inPort)</span>
+            new $.oNodeLink<span class="signature">(outNode, outPort, inNode, inPort)</span>
         </h4>
     
         
@@ -2143,6 +2151,29 @@
             <td class="description last">
                 
                 The source oNode of the link.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>outPort</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The outport of the outNode that is connecting the link.</td>
         </tr>
 	
 	
@@ -2226,29 +2257,6 @@
 	
         <tr>
             
-                <td class="name"><code>exists</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Whether the connection as-it-is exists.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
                 <td class="name"><code>autoDisconnect</code></td>
             
             
@@ -2326,6 +2334,51 @@
         <h3 class="subsection-title">Members</h3>
         
         <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="exists">exists<span class="type-signature type $.onode"><a href="$.oNode.html">$.oNode</a></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Whether the nodeLink exists in the provided state.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
             
 <dt>
     <div class="nameContainer">
@@ -2605,6 +2658,284 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="apply">
+            
+            apply<span class="signature">(force)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_nodeLink.js, line 500
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Apply the links as needed after unfreezing the oNodeLink
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>force</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                Forcefully reconnect/disconnect the note given the current settings of this nodelink.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="insertNode">
+            
+            insertNode<span class="signature">(onode, inPort, outPort)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_nodeLink.js, line 491
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Insert a node in the middle of the link chain.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>onode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oNode</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The node to link on the output.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>inPort</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The port to link on the output.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>outPort</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The port to link on the output.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="linkIn">
             
             linkIn<span class="signature">(onode, port)</span>
@@ -2612,7 +2943,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_nodeLink.js, line 321
+            openHarmony/openHarmony_nodeLink.js, line 455
         </div>
         
     </div>
@@ -2751,7 +3082,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_nodeLink.js, line 331
+            openHarmony/openHarmony_nodeLink.js, line 472
         </div>
         
     </div>
@@ -2890,7 +3221,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_nodeLink.js, line 288
+            openHarmony/openHarmony_nodeLink.js, line 152
         </div>
         
     </div>
@@ -2998,7 +3329,9 @@
         
 
         <footer>
+
             Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Dec 13 2019 18:51:18 GMT+0100 (heure normale d’Europe centrale)
+
         </footer>
     </div>
 </div>
