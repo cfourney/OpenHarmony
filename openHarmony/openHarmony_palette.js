@@ -51,9 +51,9 @@
 //////////////////////////////////////
  
  
-// $.oPalette constructor
+// 
 /**
- * The base class for the $.oPalette.
+ * $.oPalette constructor.
  * @constructor
  * @classdesc  $.oPalette Base Class
  * @param   {palette}                 paletteObject             The Harmony palette object.

@@ -54,8 +54,8 @@
  * @classdesc  
  * The $.oAttribute class holds the smart version of the parameter you can find in layer property.<br>
  * It is used internally to get and set values and link a oColumn to a parameter in order to animate it.<br>
- * For a list of attributes existing in each node type and their type, as well as examples of the values they can hold, refer to this document:<br>
- * {@link https://docs.google.com/document/d/1lmuGRYtGg-d7FhGHk1vsXkbuL4a7Tt1xJLc-xHbMTFc/ Node attributes list}.
+ * For a list of attributes existing in each node type and their type, as well as examples of the values they can hold, refer to :<br>
+ * {@link NodeLink}.
  * @constructor
  * @param   {$.oNode}                  oNodeObject                The oNodeObject that the attribute is associated to.
  * @param   {attr}                     attributeObject            The internal harmony Attribute Object.
@@ -69,8 +69,14 @@
  * @property {$.oAttribute[]}          subAttributes              The subattributes, if any exist, of this attribute.
  * @example
  * // oAttribute objects can be grabbed from the node .attributes object with dot notation, by calling the attribute keyword in lowercase.
- *  
  * 
+ * var myNode = $.scn.getSelectedNodes()[0];          // grab the first selected node
+ * var Xattribute = myNode.attributes.position.x;     // gets the position.x attribute of the node if it has it (for example, PEG nodes have it)
+ *
+ * var Xcolumn = Xattribute.column;                   // retrieve the linked column to the element (The object that holds the animation)
+ * 
+ * Xattribute.setValue(5, 5);                         // sets the value to 5 at frame 5
+ *
  */
 $.oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
   this._type = "attribute";
@@ -178,7 +184,7 @@ Object.defineProperty($.oAttribute.prototype, 'keyword', {
 
 
 /**
- * The short keyword of the attribute.
+ * The part of the attribute's keyword that is after the "." for subAttributes.
  * @name $.oAttribute#shortKeyword
  * @type {string}
  */
@@ -295,9 +301,16 @@ Object.defineProperty($.oAttribute.prototype, "useSeparate", {
 
 
 /**
- * WIP.
+ * Returns the default value of the attribute for most keywords
  * @name $.oAttribute#defaultValue
  * @type {bool}
+ * @todo switch the implentation to types?
+ * @example
+ * // to reset an attribute to its default value:
+ * // (mostly used for position/angle/skew parameters of pegs and drawing nodes)
+ * var myAttribute = $.scn.nodes[0].attributes.position.x;
+ *
+ * myAttribute.setValue(myAttribute.defaultValue);
  */
 Object.defineProperty($.oAttribute.prototype, "defaultValue", {
     get : function(){
@@ -552,6 +565,8 @@ $.oAttribute.prototype.getValue = function (frame) {
     return _value;
 }
 
+// MCNote: I think it would be good practice if functions had verbs in their names and properties were noun. it makes it easier to remember if you need to pass parameters or even include empty brackets
+// for example: doc.selection   vs doc.getSelection();
 /**
  * Gets the value of the attribute at the given frame.
  * @param   {int}        frame                 The frame at which to set the value, if not set, assumes 1

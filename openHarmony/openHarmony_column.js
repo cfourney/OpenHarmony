@@ -51,14 +51,37 @@
  
 
 /**
- * The base class for the column.
+ * The constructor for the $.oColumn class. 
+ * @classdesc  Columns are the objects that hold all the animation information of an attribute. Any animated value in Harmony is so thanks to a column linked to the attribute representing the node parameter. Columns can be added from the scene class, or are directly created when giving a non 1 value when setting an attribute.
  * @constructor
- * @classdesc  $.oColumn Class
  * @param   {string}                   uniqueName                  The unique name of the column.
  * @param   {$.oAttribute}             oAttributeObject            The oAttribute thats connected to the column.
  *
  * @property {string}                  uniqueName                  The unique name of the column.
  * @property {$.oAttribute}            attributeObject             The attribute object that the column is attached to.
+ * @example
+ * // You can get the entirety of the columns in the scene by calling:
+ * var doc = $.scn;
+ * var allColumns = doc.columns;
+ *
+ * // However, to get a specific column, you can retrieve it from its linked attribute:
+ *
+ * var myAttribute = doc.nodes[0].attributes.position.x
+ * var mycolumn = myAttribute.column;
+ *
+ * // once you have the column, you can do things like remove duplicates keys to simplify an animation;
+ * myColumn.removeDuplicateKeys();
+ *
+ * // you can extract all the keys to be able to iterate over it:
+ * var keyFrames = myColumn.getKeyFrames();
+ * 
+ * for (var i in keyFrames){
+ *   $.log (keyFrames[i].frameNumber);
+ * }
+ *
+ * // you can also link a given column to more than one attribute so they share the same animated values:
+ *
+ * doc.nodes[0].attributes.position.y.column = myColumn;  // now position.x and position.y will share the same animation on the node.
  */
 $.oColumn = function( uniqueName, oAttributeObject ){
   this._type = "column";
@@ -100,7 +123,7 @@ Object.defineProperty( $.oColumn.prototype, 'name', {
 
 
 /**
- * The type of the column.
+ * The type of the column. There are nine column types: drawing (DRAWING), sound (SOUND), 3D Path (3DPATH), Bezier Curve (BEZIER), Ease Curve (EASE), Expression (EXPR), Timing (TIMING) for timing columns, Quaternion path (QUATERNIONPATH) for 3D rotation and Annotation (ANNOTATION) for annotation columns. 
  * @name $.oColumn#type
  * @type {string}
  */
@@ -131,7 +154,7 @@ Object.defineProperty($.oColumn.prototype, 'selected', {
         }
         
         //Also look through the timeline.
-        System.println( "TODO" );
+        System.println( "TODO: Also look through the timeline" );
         
         return false;
     },
@@ -240,7 +263,7 @@ Object.defineProperty($.oColumn.prototype, 'easeType', {
  
 /**
  * Extends the exposure of the drawing's keyframes given the provided arguments.
- * @deprecated
+ * @deprecated Use oDrawingColumn.extendExposures instead.
  * @param   {$.oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
  * @param   {int}         amount               The amount to extend.
  * @param   {bool}        replace              Setting this to false will insert frames as opposed to overwrite existing ones.
@@ -333,9 +356,9 @@ $.oColumn.prototype.getKeyFrames = function(){
  
 
 /**
- * The extension class for drawing columns.
+ * the $.oDrawingColumn constructor. Only called internally by the factory function [scene.getColumnByName()]{@link $.oScene#getColumnByName};
  * @constructor
- * @classdesc  $.oDrawingColumn Class
+ * @classdesc  oDrawingColumn is a special case of column which can be linked to an [oElement]{@link $.oElement}. This type of column is used to display drawings and always is visible in the Xsheet window.
  * @augments   $.oColumn
  * @param   {string}                   uniqueName                  The unique name of the column.
  * @param   {$.oAttribute}             oAttributeObject            The oAttribute thats connected to the column.
@@ -356,7 +379,7 @@ $.oDrawingColumn.prototype = Object.create($.oColumn.prototype);
 
 
 /**
- * Provides the drawing element attached to the column.
+ * Retrieve and set the drawing element attached to the column.
  * @name $.oDrawingColumn#element
  * @type {$.oElement}
  */
@@ -376,16 +399,14 @@ Object.defineProperty($.oDrawingColumn.prototype, 'element', {
  * Extends the exposure of the drawing's keyframes given the provided arguments.
  * @param   {$.oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
  * @param   {int}         amount               The amount to extend.
- * @param   {bool}        replace              Setting this to false will insert frames as opposed to overwrite existing ones.
+ * @param   {bool}        replace              Setting this to false will insert frames as opposed to overwrite existing ones.(currently unsupported))
  */
 $.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace){
     // if amount is undefined, extend function below will automatically fill empty frames
     if (typeof exposures === 'undefined') var exposures = this.getKeyFrames();
  
-    // MessageBox.information("extendingExposures "+exposures.map(function(x){return x.frameNumber}))
+    this.$.debug("extendingExposures "+exposures.map(function(x){return x.frameNumber}), this.$.DEBUG_LEVEL.LOG)
     for (var i in exposures) {
-        // MessageBox.information(i+" extending: "+exposures[i])
-        // MessageBox.information(exposures[i].isBlank)
         if (!exposures[i].isBlank) exposures[i].extend(amount, replace);
     }
 }

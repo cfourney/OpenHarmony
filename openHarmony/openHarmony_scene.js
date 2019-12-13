@@ -896,7 +896,7 @@ $.oScene.prototype.addColumn = function( type, name, oElementObject ){
         column.setElementIdOfDrawing(_column.uniqueName, oElementObject.id);
     }
  
-    column.update();
+    //column.update();
     return _column;
 }
  
@@ -1063,12 +1063,12 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
   }
   
   if (paletteStorage == "external"){
-    var _palette = new this.$.oPalette(_list.createPalette(storeInElement+"/"+name, insertAtIndex), _list)
+    var _palette = new this.$.oPalette(_list.createPalette(storeInElement+"/"+name, insertAtIndex), _list);
   }
   
-  var _palette = new this.$.oPalette(_list.createPaletteAtLocation(_destination, storeInElement, name, insertAtIndex), _list)
+  var _palette = new this.$.oPalette(_list.createPaletteAtLocation(_destination, storeInElement, name, insertAtIndex), _list);
 
-  return _palette
+  return _palette;
 }    
 
 
@@ -1084,20 +1084,18 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
  * @return {$.oPalette}   oPalette with provided name.
  */
 $.oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement){
-    
     // create a dummy palette to get the destination path
     var _newPalette = this.addPalette("_dummy_palette", index, paletteStorage, storeInElement);
-    var _path = _newPalette.path
-    var _list = _newPalette._paletteList
-   
-    var _paletteFile = new this.$.oFile(filename)
-    var _file = new this.$.oFile(_path)
-    var copy = _paletteFile.copy(_file.folder.path, _paletteFile.name, true)
-
+    var _path = _newPalette.path;
+    var _list = _newPalette._paletteList;
+    var _paletteFile = new this.$.oFile(filename);
+    var _file = new this.$.oFile(_path);
+    var copy = _paletteFile.copy(_file.folder.path, _paletteFile.name, true);
     // reload palette
     _newPalette.remove();
-    _newPalette = new this.$.oPalette(_list.insertPalette(copy.path.replace(".plt", ""), index), _list);
-   
+    
+    var _palette = _list.insertPalette(_path.replace(".plt", ""), index);
+    _newPalette = new this.$.oPalette(_palette, _list);
     return _newPalette;
 }
  

@@ -50,7 +50,7 @@
 
 
 /**
- * The base class for the $.oElement.
+ * The base class for the $.oElement.<br> Elements hold the drawings displayed by a "READ" Node or Drawing Node. They can be used to create new drawings, rename them, etc.
  * @constructor
  * @classdesc  $.oElement Class
  * @param   {int}                   id                          The element ID.
@@ -69,7 +69,7 @@ $.oElement = function( id, oColumnObject){
 // $.oElement Object Properties
 
 /**
- * The name of the column.
+ * The name of the element.
  * @name $.oElement#name
  * @type {string}
  */
