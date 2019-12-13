@@ -483,6 +483,17 @@ $.oNodeLink.prototype.linkOut = function( onode, port ) {
 
 
 /**
+ * Insert a node in the middle of the link chain.
+ * @param   {oNode}                   onode                   The node to link on the output.
+ * @param   {int}                     inPort                  The port to link on the output.
+ * @param   {int}                     outPort                 The port to link on the output.
+ */
+$.oNodeLink.prototype.insertNode = function( onode, inPort, outPort ) {
+  //-----
+  
+}
+
+/**
  * Apply the links as needed after unfreezing the oNodeLink
  * @param   {bool}                   force                   Forcefully reconnect/disconnect the note given the current settings of this nodelink.
  */

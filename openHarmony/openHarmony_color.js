@@ -160,7 +160,7 @@ $.oColorValue.prototype.parseColorFromInt = function(colorInt){
 
 /**
  * Gets the color's HUE value.
- * @name $.oColor#h
+ * @name $.oColorValue#h
  * @type {float}
  */
 Object.defineProperty($.oColorValue.prototype, 'h', {
@@ -242,7 +242,7 @@ Object.defineProperty($.oColorValue.prototype, 'h', {
 
 /**
  * Gets the color's SATURATION value.
- * @name $.oColor#s
+ * @name $.oColorValue#s
  * @type {float}
  */
 Object.defineProperty($.oColorValue.prototype, 's', {
@@ -301,7 +301,7 @@ Object.defineProperty($.oColorValue.prototype, 's', {
 
 /**
  * Gets the color's LIGHTNESS value.
- * @name $.oColor#l
+ * @name $.oColorValue#l
  * @type {float}
  */
 Object.defineProperty($.oColorValue.prototype, 'l', {
