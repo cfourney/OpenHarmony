@@ -2073,8 +2073,7 @@
     oNode
     </h2>
     
-        <div class="class-description">The oNode class represents a node in the Harmony scene. <br>
-It holds the value of its position in the node view, and functions to link to other nodes, as well as set the attributes of the node.<br></div>
+        <div class="class-description">The oNode class represents a node in the Harmony scene. <br>It holds the value of its position in the node view, and functions to link to other nodes, as well as set the attributes of the node.<br></div>
     
 </header>  
 
@@ -2093,7 +2092,7 @@ It holds the value of its position in the node view, and functions to link to ot
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 96
+            openHarmony/openHarmony_node.js, line 97
         </div>
         
     </div>
@@ -2203,6 +2202,13 @@ It holds the value of its position in the node view, and functions to link to ot
     
     
     
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>NodeType</li>
+        </ul>
+    </dd>
+    
     
     
 </dl>
@@ -2223,35 +2229,7 @@ It holds the value of its position in the node view, and functions to link to ot
         
 
     
-    <pre class="prettyprint"><code>// To grab a node object from the scene, it's possible to create a new node object by calling the constructor:
-var myNode = new $.oNode("Top/Drawing", $.scn) 
-
-// However, most nodes will be grabbed directly from the scene object.
-var doc = $.scn 
-var nodes = doc.nodes;                   // grabs the list of all the nodes in the scene
-
-// It's possible to grab a single node from the path in the scene
-var myNode = doc.getNodeByPath("Top/Drawing")
-var myNode = doc.$node("Top/Drawing")    // short synthax but same function
-
-// depending on the type of node, oNode objects returned by these functions can actually be an instance the subclasses
-// oDrawingNode, oGroupNode, oPegNode...
-
-$.log(myNode instanceof $.oNode)           // true
-$.log(myNode instanceof $.oDrawingNode)  // true
-
-// These other subclasses of nodes have other methods that are only shared by nodes of a certain type.
-
-// Not documented in this class, oNode objects have attributes which correspond to the values visible in the Layer Properties window.
-// The attributes values can be accessed and set by using the dot notation on the oNode object:
-
-myNode.can_animate = false;
-myNode.position.separate = true;
-myNode.position.x = 10;
-
-// To access the oAttribute objects in the node, call the oNode.attributes object that contains them
-
-var attributes = myNode.attributes;</code></pre>
+    <pre class="prettyprint"><code>// To grab a node object from the scene, it's possible to create a new node object by calling the constructor:var myNode = new $.oNode("Top/Drawing", $.scn) // However, most nodes will be grabbed directly from the scene object.var doc = $.scn var nodes = doc.nodes;                   // grabs the list of all the nodes in the scene// It's possible to grab a single node from the path in the scenevar myNode = doc.getNodeByPath("Top/Drawing")var myNode = doc.$node("Top/Drawing")    // short synthax but same function// depending on the type of node, oNode objects returned by these functions can actually be an instance the subclasses// oDrawingNode, oGroupNode, oPegNode...$.log(myNode instanceof $.oNode)           // true$.log(myNode instanceof $.oDrawingNode)  // true// These other subclasses of nodes have other methods that are only shared by nodes of a certain type.// Not documented in this class, oNode objects have attributes which correspond to the values visible in the Layer Properties window.// The attributes values can be accessed and set by using the dot notation on the oNode object:myNode.can_animate = false;myNode.position.separate = true;myNode.position.x = 10;// To access the oAttribute objects in the node, call the oNode.attributes object that contains themvar attributes = myNode.attributes;</code></pre>
     
 
     
@@ -2320,20 +2298,7 @@ var attributes = myNode.attributes;</code></pre>
         
 
     
-    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:
-
-var myNode = $.scn.$node("Top/Drawing")
-var drawingAttribute = myNode.attributes.drawing.element
-
-// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
-
-drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
-var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
-$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
-
-// for a more direct way to access an attribute, it's possible to also call:
-
-var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
+    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:var myNode = $.scn.$node("Top/Drawing")var drawingAttribute = myNode.attributes.drawing.element// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"// for a more direct way to access an attribute, it's possible to also call:var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
     
 
     
@@ -3485,7 +3450,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 932
+            openHarmony/openHarmony_node.js, line 933
         </div>
         
     </div>
@@ -3676,7 +3641,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 957
+            openHarmony/openHarmony_node.js, line 958
         </div>
         
     </div>
@@ -3867,7 +3832,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1007
+            openHarmony/openHarmony_node.js, line 1008
         </div>
         
     </div>
@@ -4046,7 +4011,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1027
+            openHarmony/openHarmony_node.js, line 1028
         </div>
         
     </div>
@@ -4192,7 +4157,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1101
+            openHarmony/openHarmony_node.js, line 1102
         </div>
         
     </div>
@@ -4337,7 +4302,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1065
+            openHarmony/openHarmony_node.js, line 1066
         </div>
         
     </div>
@@ -4482,7 +4447,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1146
+            openHarmony/openHarmony_node.js, line 1147
         </div>
         
     </div>
@@ -4582,7 +4547,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 887
+            openHarmony/openHarmony_node.js, line 888
         </div>
         
     </div>
@@ -4796,7 +4761,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 725
+            openHarmony/openHarmony_node.js, line 726
         </div>
         
     </div>
@@ -5036,7 +5001,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 798
+            openHarmony/openHarmony_node.js, line 799
         </div>
         
     </div>
@@ -5276,7 +5241,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 983
+            openHarmony/openHarmony_node.js, line 984
         </div>
         
     </div>
@@ -5467,7 +5432,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1039
+            openHarmony/openHarmony_node.js, line 1040
         </div>
         
     </div>
@@ -5635,7 +5600,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 910
+            openHarmony/openHarmony_node.js, line 911
         </div>
         
     </div>
@@ -5782,7 +5747,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 710
+            openHarmony/openHarmony_node.js, line 711
         </div>
         
     </div>
@@ -5927,7 +5892,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1091
+            openHarmony/openHarmony_node.js, line 1092
         </div>
         
     </div>
@@ -6027,7 +5992,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 763
+            openHarmony/openHarmony_node.js, line 764
         </div>
         
     </div>
@@ -6172,7 +6137,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 781
+            openHarmony/openHarmony_node.js, line 782
         </div>
         
     </div>
@@ -6317,7 +6282,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 840
+            openHarmony/openHarmony_node.js, line 841
         </div>
         
     </div>
@@ -6462,7 +6427,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 863
+            openHarmony/openHarmony_node.js, line 864
         </div>
         
     </div>
@@ -6638,9 +6603,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
         
 
         <footer>
-
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Dec 13 2019 18:51:18 GMT+0100 (heure normale d’Europe centrale)
-
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Dec 13 2019 20:57:34 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>
