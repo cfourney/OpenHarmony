@@ -565,7 +565,7 @@ $.oDynList = function( initArray, startIndex, length, getFunction, setFunction, 
     value: startIndex
   });
 
-  Object.defineProperty( this, 'startIndex', {
+  Object.defineProperty( this, '_startIndex', {
     enumerable : false, writable : true, configurable: false,
     value: startIndex
   });
@@ -668,8 +668,32 @@ Object.defineProperty($.oDynList.prototype, 'createGettersSetters', {
 });
 
 
+/**
+ * The startIndex of the list.
+ * @name $.oDynList#startIndex
+ * @type {int}
+ */
+Object.defineProperty( $.oDynList.prototype, 'startIndex', {
+  enumerable : false,
+  get: function(){
+    return this._startIndex;
+  },
+  
+  set: function( val ){
+    this._startIndex = val;
+    this.currentIndex = Math.max( this.currentIndex, val );
+    
+    this.createGettersSetters();
+  }
+});
 
 
+/**
+ * The length of the list.
+ * @name $.oDynList#length
+ * @function
+ * @return {int}   The length of the list, considering the startIndex.
+ */
 Object.defineProperty($.oDynList.prototype, 'length', {
   enumerable : false,
   get: function(){
@@ -688,7 +712,6 @@ Object.defineProperty($.oDynList.prototype, 'length', {
     this._sizeFunction( this, this._length );
   }
 });
-
 
 
 /**
@@ -789,8 +812,6 @@ Object.defineProperty($.oDynList.prototype, 'pop', {
     return cache.value;
   }
 });
-
-
 
 
 /**
