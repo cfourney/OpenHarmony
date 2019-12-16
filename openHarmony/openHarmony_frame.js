@@ -50,9 +50,9 @@
  
  
 /**
- * The base class for the $.oFrame.
+ * The constructor for the $.oFrame.
  * @constructor
- * @classdesc  $.oFrame Base Class
+ * @classdesc  Frames describe the frames of a oColumn, and allow to access the value, ease settings, as well as frameNumber.
  * @param   {int}                    frameNumber             The frame to which this references.
  * @param   {oColumn}                oColumnObject           The column to which this frame references.
  * @param   {int}                    subColumns              The subcolumn index.
@@ -61,6 +61,22 @@
  * @property {oColumn}                 column                The oColumnObject to which this frame references.
  * @property {oAttribute}              attributeObject       The oAttributeObject to which this frame references.
  * @property {int}                     subColumns            The subcolumn index.
+ * @example
+ * // to access the frames of a column, simply call oColumn.frames:
+ * var myColumn = $.scn.columns[O]      // access the first column of the list of columns present in the scene
+ * 
+ * var frames = myColumn.frames;
+ *
+ * // then you can iterate over them to check their properties:
+ *
+ * for (var i in frames){
+ *   $.log(frames[i].isKeyFrame);
+ *   $.log(frames[i].continuity);
+ * }
+ * 
+ * // you can get and set the value of the frame 
+ *
+ * frames[1].value = 5;   // frame array values and frameNumbers are matched, so this sets the value of frame 1
  */
 $.oFrame = function( frameNumber, oColumnObject, subColumns ){
   this._type = "frame";
@@ -86,6 +102,7 @@ $.oFrame = function( frameNumber, oColumnObject, subColumns ){
  * The value of the frame. Contextual to the attribute type.
  * @name $.oFrame#value
  * @type {object}
+ * @todo Include setting values on column that don't have attributes linked?
  */
 Object.defineProperty($.oFrame.prototype, 'value', {
     get : function(){

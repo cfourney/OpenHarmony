@@ -62,6 +62,7 @@
  * @constructor
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
+ * @see NodeType
  * @example
  * // To grab a node object from the scene, it's possible to create a new node object by calling the constructor:
  * var myNode = new $.oNode("Top/Drawing", $.scn) 

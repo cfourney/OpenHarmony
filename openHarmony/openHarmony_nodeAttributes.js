@@ -1,13 +1,26 @@
 /**
- * Attributes associated to Node types
- * @namespace NodeTypes 
+ * Attributes associated to Node types.<br>These are the types to specify when creating a node, and the corresponding usual node name when creating directly through Harmony's interface. The attributes displayed here can be set and manipulated by calling the displayed names.
+ * @class NodeTypes
+ * @hideconstructor 
+ * @namespace
+ * @example
+ * // This is how to use this page:
+ *
+ * var myNode = $.scn.root.addNode("READ");        // This is the node type visible here under NodeType
+ * $.log(myNode.type)                              // This is how to find out the type
+ *
+ * myNode.drawing.element = "1"                    // Sets the drawing.element attribute to display drawing "1"
+ * 
+ * myNode.drawing.element = {frameNumber: 5, "2"}  // If the attribute can be animated, pass a {frameNumber, value} object to set a specific frame;
+ * 
+ * myNode.attributes.drawing.element.setValue ("2", 5)   // also possible to set the attribute directly.
+ *
+ * // refer to the node type on this page to find out what properties can be set with what synthax for each Node Type.
  */
-
 
  /**
  * Attributes present in the node : MayaBatchRender
- * @name  SCRIPT_MODULE
- * @memberof NodeTypes
+ * @name  NodeTypes#SCRIPT_MODULE
  * @property {string}  specs_editor=
 <specs>
 __<ports>
@@ -15,7 +28,7 @@ ____<in_type="IMAGE"/>
 ____<out_type="IMAGE"/>
 __</ports>
 __<attributes>
-____<attr_type="string"_name="renderer"_value=""_tooltip="If_this_attribute_is_not_set,_then_the_MayaBatchRender_node_will_use_the_default_renderer_specified_in_the_Maya_file._If_this_attribute_is_set,_then_it_forces_the_use_of_a_specific_renderer_other_than_the_default._The_following_renderers_are_currently_supported:_'renderMan'_(or_'reyes'),_'renderManRIS'_(or_'RIS'),_'arnold',_'mentalRay',_'mayaSoftware'_(or_'maya')._falseote_that_those_values_are_case_insensitive."/>
+____<attr_type="string"_name="renderer"_value=""_tooltip="If_this_attribute_is_not_set,_then_the_MayaBatchRender_node_will_use_the_default_renderer_specified_in_the_Maya_file._If_this_attribute_is_set,_then_it_forces_the_use_of_a_specific_renderer_other_than_the_default._The_following_renderers_are_currently_supported:_'renderMan'_(or_'reyes'),_'renderManRIS'_(or_'RIS'),_'arnold',_'mentalRay',_'mayaSoftware'_(or_'maya')._Note_that_those_values_are_case_insensitive."/>
 __</attributes>
 </specs>
    - Specifications.
@@ -29,12 +42,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : ScriptModule
- * @name  SCRIPT_MODULE
- * @memberof NodeTypes
+ * @name  NodeTypes#SCRIPT_MODULE
  * @property {string}  specs_editor=<specs>
 __<ports>
 ____<in_type="IMAGE"/>
@@ -53,12 +63,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Transformation-Limit
- * @name  TransformLimit
- * @memberof NodeTypes
+ * @name  NodeTypes#TransformLimit
  * @property {double}  active=100   - Active.
  * @property {generic_enum}  switchtype=Active_Value   - Switch Effects.
  * @property {double}  tx=100   - Translate X.
@@ -83,15 +90,12 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Peg
- * @name  PEG
- * @memberof NodeTypes
+ * @name  NodeTypes#PEG
  * @property {bool}  enable_3d=false   - Enable 3D.
  * @property {bool}  face_camera=false   - Face Camera.
- * @property {generic_enum}  camera_alignment=falseone   - Camera Alignment.
+ * @property {generic_enum}  camera_alignment=None   - Camera Alignment.
  * @property {position_3d}  position   - Position.
  * @property {bool}  position.separate=On   - Separate.
  * @property {double}  position.x=0   - Pos x.
@@ -145,12 +149,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Static-Transformation
- * @name  StaticConstraint
- * @memberof NodeTypes
+ * @name  NodeTypes#StaticConstraint
  * @property {push_button}  bakeattr   - Bake Immediate Parent's Transformation.
  * @property {push_button}  bakeattr_all   - Bake All Incoming Transformations.
  * @property {bool}  active=false   - Active.
@@ -178,15 +179,12 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Field-Chart
- * @name  FIELD_CHART
- * @memberof NodeTypes
+ * @name  NodeTypes#FIELD_CHART
  * @property {bool}  enable_3d=false   - Enable 3D.
  * @property {bool}  face_camera=false   - Face Camera.
- * @property {generic_enum}  camera_alignment=falseone   - Camera Alignment.
+ * @property {generic_enum}  camera_alignment=None   - Camera Alignment.
  * @property {position_3d}  offset   - Position.
  * @property {bool}  offset.separate=On   - Separate.
  * @property {double}  offset.x=0   - Pos x.
@@ -264,7 +262,7 @@ __</attributes>
  * @property {generic_enum}  antialiasing_quality=Medium   - Antialiasing Quality.
  * @property {double}  antialiasing_exponent=1   - Antialiasing Exponent.
  * @property {double}  opacity=100   - Opacity.
- * @property {generic_enum}  texture_filter=falseearest_(Filtered)   - Texture Filter.
+ * @property {generic_enum}  texture_filter=Nearest_(Filtered)   - Texture Filter.
  * @property {bool}  adjust_pencil_thickness=false   - Adjust Pencil Lines Thickness.
  * @property {bool}  normal_line_art_thickness=true   - Normal Thickness.
  * @property {bool}  zoom_independent_line_art_thickness=true   - Zoom Independent Thickness.
@@ -289,12 +287,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Deformation-Switch
- * @name  DeformationSwitchModule
- * @memberof NodeTypes
+ * @name  NodeTypes#DeformationSwitchModule
  * @property {generic_enum}  vectorquality=Very_High   - Vector Quality.
  * @property {double}  fadeexponent=3   - Influence Fade Exponent.
  * @property {bool}  fadeinside=false   - Fade Inside Zones.
@@ -303,12 +298,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Deformation-Scale
- * @name  DeformationScaleModule
- * @memberof NodeTypes
+ * @name  NodeTypes#DeformationScaleModule
  * @property {bool}  enableleft=true   - Scale Left.
  * @property {double}  leftfadein=0   - Left Fade In.
  * @property {double}  leftfadeout=0   - Left Fade Out.
@@ -335,41 +327,29 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Deformation_Root
- * @name  DeformationRootModule
- * @memberof NodeTypes
+ * @name  NodeTypes#DeformationRootModule
  * @property {generic_enum}  deformationquality=Very_High   - Quality.
  */
 
 
-
-
  /**
  * Attributes present in the node : Display
- * @name  DISPLAY
- * @memberof NodeTypes
+ * @name  NodeTypes#DISPLAY
  */
-
-
 
 
  /**
  * Attributes present in the node : Cutter
- * @name  CUTTER
- * @memberof NodeTypes
+ * @name  NodeTypes#CUTTER
  * @property {bool}  inverted=false   - Inverted.
  */
 
 
-
-
  /**
  * Attributes present in the node : Composite-Generic
- * @name  COMPOSITE_GENERIC
- * @memberof NodeTypes
+ * @name  NodeTypes#COMPOSITE_GENERIC
  * @property {generic_enum}  color_operation=Apply_With_Alpha   - Colour Operation.
  * @property {double}  intensity_color_red=1   - Intensity Red.
  * @property {double}  intensity_color_blue=1   - Intensity Blue.
@@ -381,21 +361,15 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Colour-Override
- * @name  COLOR_OVERRIDE_TVG
- * @memberof NodeTypes
+ * @name  NodeTypes#COLOR_OVERRIDE_TVG
  */
-
-
 
 
  /**
  * Attributes present in the node : Colour-Art
- * @name  COLOR_ART
- * @memberof NodeTypes
+ * @name  NodeTypes#COLOR_ART
  * @property {bool}  flatten=false   - Flatten.
  * @property {bool}  apply_to_matte_ports=false   - Apply to Matte Ports on Input Effects.
  * @property {generic_enum}  antialiasing_quality=Ignore   - Antialiasing Quality.
@@ -403,23 +377,17 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Colour-Selector
- * @name  TbdColorSelector
- * @memberof NodeTypes
+ * @name  NodeTypes#TbdColorSelector
  * @property {string}  selectedcolors   - Selected Colours.
  * @property {bool}  applytomatte=false   - Apply to Matte Ports on Input Effects.
  */
 
 
-
-
  /**
  * Attributes present in the node : Colour-Banding
- * @name  FilterBanding
- * @memberof NodeTypes
+ * @name  NodeTypes#FilterBanding
  * @property {double}  threshold1=20   - Threshold 1.
  * @property {color}  colour1=ffffffff   - Colour 1.
  * @property {int}  colour1.red=255   - Red.
@@ -456,12 +424,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Channel-Swap
- * @name  CHANNEL_SWAP
- * @memberof NodeTypes
+ * @name  NodeTypes#CHANNEL_SWAP
  * @property {generic_enum}  redchannelselection=Red   - Red Channel From.
  * @property {generic_enum}  greenchannelselection=Green   - Green Channel From.
  * @property {generic_enum}  bluechannelselection=Blue   - Blue Channel From.
@@ -470,14 +435,11 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Particle-Baker
- * @name  ParticleBaker
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleBaker
  * @property {int}  maxnumparticles=10000   - Maximum Number of Particles.
- * @property {generic_enum}  simulationquality=falseormal   - Simulation Quality.
+ * @property {generic_enum}  simulationquality=Normal   - Simulation Quality.
  * @property {int}  seed=0   - Seed.
  * @property {int}  transientframes=0   - Number of Pre-roll Frames.
  * @property {bool}  moveage=false   - Age Particles.
@@ -487,21 +449,15 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Auto-Patch
- * @name  AutoPatchModule
- * @memberof NodeTypes
+ * @name  NodeTypes#AutoPatchModule
  */
-
-
 
 
  /**
  * Attributes present in the node : Auto-Muscle
- * @name  AutoMuscleModule
- * @memberof NodeTypes
+ * @name  NodeTypes#AutoMuscleModule
  * @property {bool}  enableleft=true   - Muscle Left.
  * @property {double}  leftstart=-3   - Left Start.
  * @property {double}  leftspan=1   - Left Span.
@@ -514,61 +470,43 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Deformation-AutoFold
- * @name  AutoFoldModule
- * @memberof NodeTypes
+ * @name  NodeTypes#AutoFoldModule
  * @property {int}  enable=1   - Enable AutoFold.
  * @property {double}  length=12   - Length.
  */
 
 
-
-
  /**
  * Attributes present in the node : Apply-Peg-Transformation
- * @name  PEG_APPLY3_V2
- * @memberof NodeTypes
+ * @name  NodeTypes#PEG_APPLY3_V2
  */
-
-
 
 
  /**
  * Attributes present in the node : Apply-Image-Transformation
- * @name  PEG_APPLY3
- * @memberof NodeTypes
+ * @name  NodeTypes#PEG_APPLY3
  */
-
-
 
 
  /**
  * Attributes present in the node : 3D-Kinematic-Output
- * @name  SubNodeAnimationFilter
- * @memberof NodeTypes
+ * @name  NodeTypes#SubNodeAnimationFilter
  * @property {string}  sub_node_name   - Subnode Name.
  */
 
 
-
-
  /**
  * Attributes present in the node : Anti-Flicker
- * @name  FLICKER_BLUR
- * @memberof NodeTypes
+ * @name  NodeTypes#FLICKER_BLUR
  * @property {double}  radius=0   - Radius.
  */
 
 
-
-
  /**
  * Attributes present in the node : Deformation-Wave
- * @name  DeformationWaveModule
- * @memberof NodeTypes
+ * @name  NodeTypes#DeformationWaveModule
  * @property {bool}  enableleft=true   - Wave Left.
  * @property {double}  leftstart=0   - Left Start.
  * @property {double}  leftspan=10   - Left Span.
@@ -587,31 +525,22 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Deformation-Uniform-Scale
- * @name  DeformationUniformScaleModule
- * @memberof NodeTypes
+ * @name  NodeTypes#DeformationUniformScaleModule
  * @property {double}  scale=1   - Scale.
  */
 
 
-
-
  /**
  * Attributes present in the node : Flatten
- * @name  FLATTEN
- * @memberof NodeTypes
+ * @name  NodeTypes#FLATTEN
  */
-
-
 
 
  /**
  * Attributes present in the node : Deformation-Fold
- * @name  FoldModule
- * @memberof NodeTypes
+ * @name  NodeTypes#FoldModule
  * @property {int}  enable=1   - Enable Fold.
  * @property {double}  t=1   - Where.
  * @property {double}  tbefore=1   - Span Before.
@@ -621,32 +550,23 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Focus-Multiplier
- * @name  FOCUS_APPLY
- * @memberof NodeTypes
+ * @name  NodeTypes#FOCUS_APPLY
  * @property {double}  multiplier=1   - Multiplier.
  */
 
 
-
-
  /**
  * Attributes present in the node : Matte-Resize
- * @name  MATTE_RESIZE
- * @memberof NodeTypes
+ * @name  NodeTypes#MATTE_RESIZE
  * @property {double}  radius=0   - Radius.
  */
 
 
-
-
  /**
  * Attributes present in the node : Line-Art
- * @name  LINE_ART
- * @memberof NodeTypes
+ * @name  NodeTypes#LINE_ART
  * @property {bool}  flatten=false   - Flatten.
  * @property {bool}  apply_to_matte_ports=false   - Apply to Matte Ports on Input Effects.
  * @property {generic_enum}  antialiasing_quality=Ignore   - Antialiasing Quality.
@@ -654,12 +574,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Luminance-Threshold
- * @name  LuminanceThreshold
- * @memberof NodeTypes
+ * @name  NodeTypes#LuminanceThreshold
  * @property {double}  luminancethresholdthresh=75   - Threshold.
  * @property {bool}  luminancethresholdsoften=true   - Soften Colours.
  * @property {double}  luminancethresholdgamma=1.5000   - Gamma Correction.
@@ -668,12 +585,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Light-Shader
- * @name  LightShader
- * @memberof NodeTypes
+ * @name  NodeTypes#LightShader
  * @property {generic_enum}  lighttype=Directional   - Light Type.
  * @property {double}  floodangle=90   - Cone Angle.
  * @property {double}  floodsharpness=0   - Diffusion.
@@ -698,12 +612,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Light-Position
- * @name  LightPosition
- * @memberof NodeTypes
+ * @name  NodeTypes#LightPosition
  * @property {position_3d}  position0   - Position.
  * @property {bool}  position0.separate=On   - Separate.
  * @property {double}  position0.x=0   - Pos x.
@@ -719,40 +630,28 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : KinematicOutput
- * @name  KinematicOutputModule
- * @memberof NodeTypes
+ * @name  NodeTypes#KinematicOutputModule
  */
-
-
 
 
  /**
  * Attributes present in the node : Note
- * @name  NOTE
- * @memberof NodeTypes
+ * @name  NodeTypes#NOTE
  * @property {string}  text   - Text.
  */
 
 
-
-
  /**
  * Attributes present in the node : OglBypass
- * @name  OGLBYPASS
- * @memberof NodeTypes
+ * @name  NodeTypes#OGLBYPASS
  */
-
-
 
 
  /**
  * Attributes present in the node : Overlay-Layer
- * @name  OVERLAY
- * @memberof NodeTypes
+ * @name  NodeTypes#OVERLAY
  * @property {bool}  flatten=false   - Flatten.
  * @property {bool}  apply_to_matte_ports=false   - Apply to Matte Ports on Input Effects.
  * @property {generic_enum}  antialiasing_quality=Ignore   - Antialiasing Quality.
@@ -760,23 +659,17 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Pixelate
- * @name  PIXELATE
- * @memberof NodeTypes
+ * @name  NodeTypes#PIXELATE
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {double}  factor=0.0125   - Factor.
  */
 
 
-
-
  /**
  * Attributes present in the node : RenderPreview
- * @name  OpenGLPreview
- * @memberof NodeTypes
+ * @name  NodeTypes#OpenGLPreview
  * @property {generic_enum}  refreshstrategy=Current_Frame_Only   - Render.
  * @property {generic_enum}  scaling=Use_Render_Preview_Setting   - Preview Resolution.
  * @property {generic_enum}  renderstrategy=Use_Previously_Rendered   - Outdated Images Mode.
@@ -784,22 +677,16 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Transparency
- * @name  FADE
- * @memberof NodeTypes
+ * @name  NodeTypes#FADE
  * @property {double}  transparency=50   - Transparency.
  */
 
 
-
-
  /**
  * Attributes present in the node : Underlay-Layer
- * @name  UNDERLAY
- * @memberof NodeTypes
+ * @name  NodeTypes#UNDERLAY
  * @property {bool}  flatten=false   - Flatten.
  * @property {bool}  apply_to_matte_ports=false   - Apply to Matte Ports on Input Effects.
  * @property {generic_enum}  antialiasing_quality=Ignore   - Antialiasing Quality.
@@ -807,12 +694,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Volume-Object
- * @name  ObjectDefinition
- * @memberof NodeTypes
+ * @name  NodeTypes#ObjectDefinition
  * @property {int}  objectid=1   - ID.
  * @property {bool}  cutvolumecues=false   - Cut Volume Cues with Geometry.
  * @property {bool}  usegeometry=true   - Use Drawing to Create Volume.
@@ -820,12 +704,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Particle-Visualizer
- * @name  ParticleVisualizer
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleVisualizer
  * @property {bool}  forcedots=false   - Force to Render as Dots.
  * @property {generic_enum}  sortingstrategy=Back_to_Front   - Rendering Order.
  * @property {bool}  fixalpha=true   - Fix Output Alpha.
@@ -834,12 +715,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Shake
- * @name  Shake
- * @memberof NodeTypes
+ * @name  NodeTypes#Shake
  * @property {double}  frequency=0.3000   - Frequency.
  * @property {int}  octaves=2   - Octaves.
  * @property {double}  multiplier=0.5000   - Multiplier.
@@ -857,19 +735,16 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Group
- * @name  GROUP
- * @memberof NodeTypes
+ * @name  NodeTypes#GROUP
  * @property {string}  editor=<editor_dockable="true"_title="Script"_winPreferred="640x460"_linuxPreferred="640x480">
 __<tab_title="Editor"_expand="true">
 ____<attr_name="EDITOR"/>
 __</tab>
 __<tab_title="Options">
 ____<attr_name="TARGET_COMPOSITE"/>
-____<attr_name="TIMELIfalseE_MODULE"/>
+____<attr_name="TIMELINE_MODULE"/>
 __</tab>
 __<tab_title="Extern_Attributes">
 ____<!--_<attr_name="GroupA/GroupB/Module:Attr1/SubAttr"/>_-->
@@ -885,12 +760,9 @@ __</tab>
  */
 
 
-
-
  /**
  * Attributes present in the node : Blur-Radial-Zoom
- * @name  RADIALBLUR-PLUGIN
- * @memberof NodeTypes
+ * @name  NodeTypes#RADIALBLUR-PLUGIN
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {bool}  bidirectional=true   - Bidirectional.
@@ -909,12 +781,9 @@ __</tab>
  */
 
 
-
-
  /**
  * Attributes present in the node : Grid
- * @name  Grid
- * @memberof NodeTypes
+ * @name  NodeTypes#Grid
  * @property {int}  size=12   - Size.
  * @property {double}  aspect=1.3333   - Aspect.
  * @property {bool}  showtext=true   - Display Text.
@@ -935,12 +804,9 @@ __</tab>
  */
 
 
-
-
  /**
  * Attributes present in the node : Camera
- * @name  CAMERA
- * @memberof NodeTypes
+ * @name  NodeTypes#CAMERA
  * @property {position_3d}  offset   - Offset.
  * @property {bool}  offset.separate=On   - Separate.
  * @property {double}  offset.x=0   - Pos x.
@@ -958,12 +824,9 @@ __</tab>
  */
 
 
-
-
  /**
  * Attributes present in the node : Multi-Points-Constraint
- * @name  PointConstraintMulti
- * @memberof NodeTypes
+ * @name  NodeTypes#PointConstraintMulti
  * @property {double}  active=100   - Active.
  * @property {generic_enum}  flattentype=Allow_3D_Transform   - Flatten Type.
  * @property {bool}  convexhull=false   - Ignore Internal Points.
@@ -971,12 +834,9 @@ __</tab>
  */
 
 
-
-
  /**
  * Attributes present in the node : Quadmap
- * @name  QUADMAP
- * @memberof NodeTypes
+ * @name  NodeTypes#QUADMAP
  * @property {position_2d}  src_point_1   - Source Point 1.
  * @property {bool}  src_point_1.separate=On   - Separate.
  * @property {double}  src_point_1.x=-12   - Pos x.
@@ -1024,12 +884,9 @@ __</tab>
  */
 
 
-
-
  /**
  * Attributes present in the node : Turbulence
- * @name  Turbulence
- * @memberof NodeTypes
+ * @name  NodeTypes#Turbulence
  * @property {generic_enum}  fractal_type=Fractional_Brownian   - Fractal Type.
  * @property {generic_enum}  noise_type=Perlin   - Noise Type.
  * @property {locked}  frequency   - Frequency.
@@ -1062,12 +919,9 @@ __</tab>
  */
 
 
-
-
  /**
  * Attributes present in the node : Composite_1
- * @name  COMPOSITE
- * @memberof NodeTypes
+ * @name  NodeTypes#COMPOSITE
  * @property {generic_enum}  composite_mode=As_Bitmap   - Mode.
  * @property {bool}  flatten_output=true   - Flatten Output.
  * @property {bool}  flatten_vector=false   - Vector Flatten Output.
@@ -1082,12 +936,9 @@ __</tab>
  */
 
 
-
-
  /**
  * Attributes present in the node : Normal-Map
- * @name  ComputeNormals
- * @memberof NodeTypes
+ * @name  NodeTypes#ComputeNormals
  * @property {string}  objectlist   - Volume Creation.
  * @property {bool}  depthinblue=false   - Output Elevation in Blue Channel.
  * @property {double}  blurscale=1   - Bevel Multiplier.
@@ -1101,12 +952,9 @@ __</tab>
  */
 
 
-
-
  /**
  * Attributes present in the node : Blur-Box
- * @name  BOXBLUR-PLUGIN
- * @memberof NodeTypes
+ * @name  NodeTypes#BOXBLUR-PLUGIN
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {bool}  bidirectional=true   - Bidirectional.
@@ -1122,12 +970,9 @@ __</tab>
  */
 
 
-
-
  /**
  * Attributes present in the node : MasterController
- * @name  MasterController
- * @memberof NodeTypes
+ * @name  NodeTypes#MasterController
  * @property {string}  specs_editor=<specs>
 __<ports>
 ____<in_type="IMAGE"/>
@@ -1146,12 +991,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Dynamic-Spring
- * @name  DynamicSpring
- * @memberof NodeTypes
+ * @name  NodeTypes#DynamicSpring
  * @property {double}  active=100   - Active.
  * @property {bool}  matchexposures=false   - Match Animation on Active Attribute.
  * @property {double}  tensionx=7   - Tension X.
@@ -1171,42 +1013,30 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Multi-Port-In
- * @name  MULTIPORT_IN
- * @memberof NodeTypes
+ * @name  NodeTypes#MULTIPORT_IN
  */
-
-
 
 
  /**
  * Attributes present in the node : Multi-Port-Out
- * @name  MULTIPORT_OUT
- * @memberof NodeTypes
+ * @name  NodeTypes#MULTIPORT_OUT
  */
-
-
 
 
  /**
  * Attributes present in the node : Median
- * @name  MedianFilter
- * @memberof NodeTypes
+ * @name  NodeTypes#MedianFilter
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {double}  radius=0   - Radius.
  * @property {int}  bitdepth=256   - Colour Depth.
  */
 
 
-
-
  /**
  * Attributes present in the node : Move-Particles
- * @name  ParticleMove
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleMove
  * @property {int}  trigger=1   - Trigger.
  * @property {bool}  moveage=false   - Age Particles.
  * @property {bool}  moveposition=true   - Move Position.
@@ -1216,12 +1046,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : 3D-Region
- * @name  Particle3dRegion
- * @memberof NodeTypes
+ * @name  NodeTypes#Particle3dRegion
  * @property {generic_enum}  shapetype=Sphere   - Type.
  * @property {double}  sizex=6   - Width.
  * @property {double}  sizey=6   - Height.
@@ -1231,12 +1058,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Animated-Matte-Generator
- * @name  AnimatedMatteGenerator
- * @memberof NodeTypes
+ * @name  NodeTypes#AnimatedMatteGenerator
  * @property {double}  snapradius=15   - Drag-to-Snap Distance.
  * @property {bool}  snapoutlinesonly=false   - Snap to Outlines Only.
  * @property {generic_enum}  outputtype=Feathered   - Type.
@@ -1279,32 +1103,23 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Baker-Composite
- * @name  ParticleBkerComposite
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleBkerComposite
  */
-
-
 
 
  /**
  * Attributes present in the node : Blending
- * @name  BLEND_MODE_MODULE
- * @memberof NodeTypes
- * @property {generic_enum}  blend_mode=falseormal   - Blend Mode.
- * @property {generic_enum}  flash_blend_mode=falseormal   - SWF Blend Mode.
+ * @name  NodeTypes#BLEND_MODE_MODULE
+ * @property {generic_enum}  blend_mode=Normal   - Blend Mode.
+ * @property {generic_enum}  flash_blend_mode=Normal   - SWF Blend Mode.
  */
-
-
 
 
  /**
  * Attributes present in the node : Bloom
- * @name  Bloom
- * @memberof NodeTypes
+ * @name  NodeTypes#Bloom
  * @property {double}  luminancethresholdthresh=75   - Threshold.
  * @property {bool}  luminancethresholdsoften=true   - Soften Colours.
  * @property {double}  luminancethresholdgamma=1.5000   - Gamma Correction.
@@ -1318,12 +1133,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Blur
- * @name  BLUR_RADIAL
- * @memberof NodeTypes
+ * @name  NodeTypes#BLUR_RADIAL
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {double}  radius=0   - Radius.
@@ -1331,12 +1143,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Contrast
- * @name  CONTRAST
- * @memberof NodeTypes
+ * @name  NodeTypes#CONTRAST
  * @property {double}  mid_point=0.5000   - Mid Point.
  * @property {double}  dark_pixel_adjustement=1   - Dark Pixel Adjustment.
  * @property {double}  bright_pixel_adjustement=1   - Bright Pixel Adjustment.
@@ -1344,12 +1153,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Bone
- * @name  BendyBoneModule
- * @memberof NodeTypes
+ * @name  NodeTypes#BendyBoneModule
  * @property {generic_enum}  influencetype=Infinite   - Influence Type.
  * @property {double}  influencefade=0.5000   - Influence Fade Radius.
  * @property {bool}  symmetric=true   - Symmetric Ellipse of Influence.
@@ -1377,12 +1183,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Glue
- * @name  GLUE
- * @memberof NodeTypes
+ * @name  NodeTypes#GLUE
  * @property {bool}  invert_matte_port=true   - Invert Matte.
  * @property {double}  bias=0.5000   - Bias.
  * @property {double}  tension=1   - Tension.
@@ -1393,12 +1196,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Curve
- * @name  CurveModule
- * @memberof NodeTypes
+ * @name  NodeTypes#CurveModule
  * @property {bool}  localreferential=true   - Apply Parent Transformation.
  * @property {generic_enum}  influencetype=Infinite   - Influence Type.
  * @property {double}  influencefade=0.5000   - Influence Fade Radius.
@@ -1428,12 +1228,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : GameBone
- * @name  GameBoneModule
- * @memberof NodeTypes
+ * @name  NodeTypes#GameBoneModule
  * @property {position_2d}  restoffset   - Rest Offset.
  * @property {bool}  restoffset.separate=On   - Separate.
  * @property {double}  restoffset.x=0   - Pos x.
@@ -1454,12 +1251,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Colour-Scale
- * @name  COLOR_SCALE
- * @memberof NodeTypes
+ * @name  NodeTypes#COLOR_SCALE
  * @property {double}  red=1   - Red.
  * @property {double}  green=1   - Green.
  * @property {double}  blue=1   - Blue.
@@ -1471,12 +1265,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Crop
- * @name  CROP
- * @memberof NodeTypes
+ * @name  NodeTypes#CROP
  * @property {int}  res_x=1920   - X Resolution.
  * @property {int}  res_y=1080   - Y Resolution.
  * @property {double}  offset_x=0   - X Offset.
@@ -1496,14 +1287,11 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : LensFlare
- * @name  LensFlare
- * @memberof NodeTypes
- * @property {generic_enum}  blend_mode=falseormal   - Blend Mode.
- * @property {generic_enum}  flash_blend_mode=falseormal   - SWF Blend Mode.
+ * @name  NodeTypes#LensFlare
+ * @property {generic_enum}  blend_mode=Normal   - Blend Mode.
+ * @property {generic_enum}  flash_blend_mode=Normal   - SWF Blend Mode.
  * @property {bool}  usergba=false   - Blend Mode: Normal/Screen.
  * @property {bool}  brightenable=true   - On/Off.
  * @property {double}  brightness=100   - Intensity.
@@ -1570,12 +1358,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Chroma-Keying
- * @name  CHROMA_KEYING
- * @memberof NodeTypes
+ * @name  NodeTypes#CHROMA_KEYING
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {color}  color=ffffffff   - Color.
  * @property {int}  color.red=255   - Red.
@@ -1593,12 +1378,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Constraint-Switch
- * @name  Switch
- * @memberof NodeTypes
+ * @name  NodeTypes#Switch
  * @property {double}  active=100   - ACTIVE.
  * @property {int}  gatenum=0   - TARGET GATE.
  * @property {position_2d}  uioffsetpos   - GUI OFFSET.
@@ -1609,12 +1391,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Focus
- * @name  FOCUS_SET
- * @memberof NodeTypes
+ * @name  NodeTypes#FOCUS_SET
  * @property {bool}  mirror=true   - Mirror.
  * @property {double}  ratio=2   - Mirror Front/Back Ratio.
  * @property {simple_bezier}  radius=(Curve)   - Radius.
@@ -1622,12 +1401,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Quake
- * @name  Quake
- * @memberof NodeTypes
+ * @name  NodeTypes#Quake
  * @property {int}  hold=1   - Hold Time.
  * @property {bool}  interpolate=false   - Interpolate.
  * @property {double}  moveamplitude=1   - Move Amplitude.
@@ -1639,12 +1415,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Gradient
- * @name  GRADIENT-PLUGIN
- * @memberof NodeTypes
+ * @name  NodeTypes#GRADIENT-PLUGIN
  * @property {int}  depth=0   - Depth.
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {generic_enum}  type=Linear   - Gradient Type.
@@ -1674,12 +1447,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Transformation-Switch
- * @name  TransformationSwitch
- * @memberof NodeTypes
+ * @name  NodeTypes#TransformationSwitch
  * @property {drawing}  drawing   - Drawing.
  * @property {bool}  drawing.element_mode=On   - Element Mode.
  * @property {element}  drawing.element=unknown   - Element.
@@ -1694,12 +1464,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Scale-Output
- * @name  SCALE
- * @memberof NodeTypes
+ * @name  NodeTypes#SCALE
  * @property {bool}  by_value=true   - Custom Resolution.
  * @property {string}  resolution_name   - Resolution Name.
  * @property {int}  res_x=720   - Width.
@@ -1707,12 +1474,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Motion-Blur
- * @name  MOTION_BLUR
- * @memberof NodeTypes
+ * @name  NodeTypes#MOTION_BLUR
  * @property {double}  nb_frames_trail=10   - Number of Frames in the Trail.
  * @property {double}  samples=200   - Number of Samples.
  * @property {double}  falloff=2   - Fall-off Rate.
@@ -1721,21 +1485,15 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Matte-Composite
- * @name  MATTE_COMPOSITE
- * @memberof NodeTypes
+ * @name  NodeTypes#MATTE_COMPOSITE
  */
-
-
 
 
  /**
  * Attributes present in the node : Layer-Selector
- * @name  LAYER_SELECTOR
- * @memberof NodeTypes
+ * @name  NodeTypes#LAYER_SELECTOR
  * @property {bool}  flatten=false   - Flatten.
  * @property {bool}  apply_to_matte_ports=false   - Apply to Matte Ports on Input Effects.
  * @property {generic_enum}  antialiasing_quality=Ignore   - Antialiasing Quality.
@@ -1747,12 +1505,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Grain
- * @name  GRAIN
- * @memberof NodeTypes
+ * @name  NodeTypes#GRAIN
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {double}  noise=0.3000   - Noise.
  * @property {double}  smooth=0   - Smooth.
@@ -1761,24 +1516,18 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Dither
- * @name  DITHER
- * @memberof NodeTypes
+ * @name  NodeTypes#DITHER
  * @property {double}  magnitude=1   - Magnitude.
  * @property {bool}  correlate=false   - Correlate.
  * @property {bool}  random=true   - Random.
  */
 
 
-
-
  /**
  * Attributes present in the node : Colour-Card
- * @name  COLOR_CARD
- * @memberof NodeTypes
+ * @name  NodeTypes#COLOR_CARD
  * @property {int}  depth=0   - Depth.
  * @property {double}  offset_z=-12   - Offset Z.
  * @property {color}  color=ffffffff   - Color.
@@ -1791,12 +1540,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Channel-Selector
- * @name  COLOR_MASK
- * @memberof NodeTypes
+ * @name  NodeTypes#COLOR_MASK
  * @property {bool}  red=true   - Red.
  * @property {bool}  green=true   - Green.
  * @property {bool}  blue=true   - Blue.
@@ -1805,12 +1551,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Blur-Variable
- * @name  BLUR_VARIABLE
- * @memberof NodeTypes
+ * @name  NodeTypes#BLUR_VARIABLE
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {double}  black_radius=0   - Black radius.
  * @property {double}  white_radius=0   - White radius.
@@ -1819,12 +1562,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Multi-Layer-Write
- * @name  MultiLayerWrite
- * @memberof NodeTypes
+ * @name  NodeTypes#MultiLayerWrite
  * @property {generic_enum}  export_to_movie=Output_Drawings   - Export to movie.
  * @property {string}  drawing_name=frames/final-   - Drawing name.
  * @property {string}  movie_path=frames/output   - Movie path.
@@ -1847,12 +1587,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Two-Points-Constraint
- * @name  PointConstraint2
- * @memberof NodeTypes
+ * @name  NodeTypes#PointConstraint2
  * @property {double}  active=100   - Active.
  * @property {double}  volumemod=75   - Volume Modifier.
  * @property {double}  volumemax=200   - Volume Max.
@@ -1868,12 +1605,9 @@ __</attributes>
  */
 
 
-
-
  /**
- * Attributes present in the node : Write_1
- * @name  WRITE
- * @memberof NodeTypes
+ * Attributes present in the node : Write
+ * @name  NodeTypes#WRITE
  * @property {generic_enum}  export_to_movie=Output_Drawings   - Export to movie.
  * @property {string}  drawing_name=frames/final-   - Drawing name.
  * @property {string}  movie_path=frames/output   - Movie path.
@@ -1895,12 +1629,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : External
- * @name  EXTERNAL
- * @memberof NodeTypes
+ * @name  NodeTypes#EXTERNAL
  * @property {string}  program_name   - External Program.
  * @property {string}  program_input   - Program First Input File ($IN1).
  * @property {string}  program_input2   - Program Second Input File ($IN2).
@@ -1915,12 +1646,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Blur-Directional
- * @name  BLUR_DIRECTIONAL
- * @memberof NodeTypes
+ * @name  NodeTypes#BLUR_DIRECTIONAL
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {double}  fallof_rate=0   - Falloff Rate.
@@ -1932,12 +1660,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Glow
- * @name  GLOW
- * @memberof NodeTypes
+ * @name  NodeTypes#GLOW
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {generic_enum}  blur_type=Radial   - Blur Type.
  * @property {double}  radius=0   - Radius.
@@ -1956,12 +1681,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Tone
- * @name  TONE
- * @memberof NodeTypes
+ * @name  NodeTypes#TONE
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {generic_enum}  blur_type=Radial   - Blur Type.
  * @property {double}  radius=2   - Radius.
@@ -1981,12 +1703,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Highlight
- * @name  HIGHLIGHT
- * @memberof NodeTypes
+ * @name  NodeTypes#HIGHLIGHT
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {generic_enum}  blur_type=Radial   - Blur Type.
  * @property {double}  radius=2   - Radius.
@@ -2006,12 +1725,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Blur-Gaussian
- * @name  GAUSSIANBLUR-PLUGIN
- * @memberof NodeTypes
+ * @name  NodeTypes#GAUSSIANBLUR-PLUGIN
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {bool}  bidirectional=true   - Bidirectional.
@@ -2026,12 +1742,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Matte-Blur
- * @name  MATTE_BLUR
- * @memberof NodeTypes
+ * @name  NodeTypes#MATTE_BLUR
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {generic_enum}  blur_type=Radial   - Blur Type.
  * @property {double}  radius=0   - Radius.
@@ -2050,24 +1763,18 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Transformation-Gate
- * @name  TransformGate
- * @memberof NodeTypes
+ * @name  NodeTypes#TransformGate
  * @property {double}  active=100   - ACTIVE.
  * @property {int}  target_gate=1   - LOCAL TARGET GATE.
  * @property {int}  default_gate=0   - DEFAULT GATE.
  */
 
 
-
-
  /**
  * Attributes present in the node : Shadow
- * @name  SHADOW
- * @memberof NodeTypes
+ * @name  NodeTypes#SHADOW
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {generic_enum}  blur_type=Radial   - Blur Type.
  * @property {double}  radius=2   - Radius.
@@ -2086,12 +1793,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : TurbulentNoise
- * @name  TurbulentNoise
- * @memberof NodeTypes
+ * @name  NodeTypes#TurbulentNoise
  * @property {int}  depth=0   - Depth.
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {generic_enum}  fractal_type=Fractional_Brownian   - Fractal Type.
@@ -2114,22 +1818,16 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : OpenGL-Cache-Lock
- * @name  GLCacheLock
- * @memberof NodeTypes
+ * @name  NodeTypes#GLCacheLock
  * @property {bool}  composite_3d=false   - 3D.
  */
 
 
-
-
  /**
  * Attributes present in the node : Articulation
- * @name  ArticulationModule
- * @memberof NodeTypes
+ * @name  NodeTypes#ArticulationModule
  * @property {generic_enum}  influencetype=Infinite   - Influence Type.
  * @property {double}  influencefade=0.5000   - Influence Fade Radius.
  * @property {bool}  symmetric=true   - Symmetric Ellipse of Influence.
@@ -2146,12 +1844,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Deformation_Composite
- * @name  DeformationCompositeModule
- * @memberof NodeTypes
+ * @name  NodeTypes#DeformationCompositeModule
  * @property {bool}  outputmatrixonly=false   - Output Kinematic Only.
  * @property {bool}  outputselectedonly=false   - Output Selected Port Only.
  * @property {generic_enum}  outputkinematicchainselector=Rightmost   - Output Kinematic Chain.
@@ -2159,12 +1854,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Explosion
- * @name  ParticleExplosion
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleExplosion
  * @property {int}  trigger=1   - Trigger.
  * @property {double}  explosionx=0   - X.
  * @property {double}  explosiony=0   - Y.
@@ -2176,12 +1868,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Gravity
- * @name  ParticleGravity
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleGravity
  * @property {int}  trigger=1   - Trigger.
  * @property {bool}  applygravity=true   - Apply Gravity.
  * @property {double}  directionx=0   - X Direction.
@@ -2194,24 +1883,18 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Greyscale
- * @name  COLOR2BW
- * @memberof NodeTypes
+ * @name  NodeTypes#COLOR2BW
  * @property {double}  percent=100   - Percent.
  * @property {bool}  matte_output=false   - Matte Output.
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  */
 
 
-
-
  /**
  * Attributes present in the node : Hue-Saturation
- * @name  HUE_SATURATION
- * @memberof NodeTypes
+ * @name  NodeTypes#HUE_SATURATION
  * @property {hue_range}  masterrangecolor   - Master.
  * @property {double}  masterrangecolor.hue_shift=0   - Hue.
  * @property {double}  masterrangecolor.saturation=0   - Saturation.
@@ -2279,22 +1962,19 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Image-Fracture
- * @name  ParticleImageEmitter
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleImageEmitter
  * @property {int}  trigger=0   - Trigger.
  * @property {double}  ageatbirth=0   - Age at Birth.
  * @property {double}  ageatbirthstd=0   - Age at Birth Standard Deviation.
  * @property {double}  mass=1   - Particles Mass.
- * @property {generic_enum}  typechoosingstrategy=Sequentially_Assign_Type_falseumber   - Type Generation Strategy.
+ * @property {generic_enum}  typechoosingstrategy=Sequentially_Assign_Type_Number   - Type Generation Strategy.
  * @property {int}  particletype0=1   - Particle Type 0.
  * @property {int}  particletype1=1   - Particle Type 1.
  * @property {double}  particlesize=1   - Size over Age.
  * @property {bool}  overridevelocity=false   - Align Initial Velocity.
- * @property {generic_enum}  blend_mode=falseormal   - Blend Mode.
+ * @property {generic_enum}  blend_mode=Normal   - Blend Mode.
  * @property {double}  blendintensity=100   - Blend Intensity.
  * @property {generic_enum}  colouringstrategy=Use_Drawing_Colour   - Colouring Strategy.
  * @property {color}  particlecolour=ffffffff   - Colour.
@@ -2308,7 +1988,7 @@ __</attributes>
  * @property {bool}  directionalscale=false   - Directional Scale.
  * @property {double}  directionalscalefactor=1   - Directional Scale Exponent Factor.
  * @property {bool}  keepvolume=true   - Keep Volume.
- * @property {generic_enum}  blur=falseo_Blur   - Blur.
+ * @property {generic_enum}  blur=No_Blur   - Blur.
  * @property {double}  blurintensity=1   - Blur Intensity.
  * @property {double}  blurfallof=0.5000   - Falloff Rate.
  * @property {bool}  flipwithdirectionx=false   - Flip X Axis to Match Direction.
@@ -2317,22 +1997,16 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Image-Switch
- * @name  ImageSwitch
- * @memberof NodeTypes
+ * @name  NodeTypes#ImageSwitch
  * @property {int}  port_index=0   - Port Index.
  */
 
 
-
-
  /**
  * Attributes present in the node : Kill
- * @name  ParticleKill
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleKill
  * @property {int}  trigger=1   - Trigger.
  * @property {bool}  handlenaturaldeth=true   - Use Maximum Lifespan.
  * @property {bool}  killyounger=false   - Kill Younger.
@@ -2342,12 +2016,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Negate
- * @name  NEGATE
- * @memberof NodeTypes
+ * @name  NodeTypes#NEGATE
  * @property {bool}  color=true   - Negate Colour.
  * @property {bool}  color_alpha=false   - Negate Alpha.
  * @property {bool}  color_clamp_to_alpha=true   - Negate Colour Clamp to Alpha.
@@ -2355,12 +2026,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Orbit
- * @name  ParticleOrbit
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleOrbit
  * @property {int}  trigger=1   - Trigger.
  * @property {generic_enum}  strategy=Around_Point   - Orbit Type.
  * @property {double}  magnitude=1   - Magnitude.
@@ -2373,23 +2041,17 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : OrthoLock
- * @name  ORTHOLOCK
- * @memberof NodeTypes
- * @property {generic_enum}  rotation_axis=X_and_true_Axes   - Rotation Axis.
+ * @name  NodeTypes#ORTHOLOCK
+ * @property {generic_enum}  rotation_axis=X_and_Y_Axes   - Rotation Axis.
  * @property {double}  max_angle=0   - Max Angle.
  */
 
 
-
-
  /**
  * Attributes present in the node : Planar-Region
- * @name  ParticlePlanarRegion
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticlePlanarRegion
  * @property {generic_enum}  shapetype=Rectangle   - Shape Type.
  * @property {double}  sizex=12   - Width.
  * @property {double}  sizey=12   - Height.
@@ -2405,56 +2067,41 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Random-Parameter
- * @name  ParticleRandom
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleRandom
  * @property {int}  trigger=1   - Trigger.
  * @property {generic_enum}  parametertorandomize=Speed   - Parameter.
  */
 
 
-
-
  /**
  * Attributes present in the node : Refract
- * @name  REFRACT
- * @memberof NodeTypes
+ * @name  NodeTypes#REFRACT
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {double}  intensity=10   - Intensity.
  * @property {double}  height=0   - Height.
  */
 
 
-
-
  /**
  * Attributes present in the node : Particle-Region-Composite
- * @name  ParticleRegionComposite
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleRegionComposite
  */
-
-
 
 
  /**
  * Attributes present in the node : Remove-Transparency
- * @name  REMOVE_TRANSPARENCY
- * @memberof NodeTypes
+ * @name  NodeTypes#REMOVE_TRANSPARENCY
  * @property {double}  threshold=50   - Threshold.
  * @property {bool}  remove_color_transparency=true   - Remove Colour Transparency.
  * @property {bool}  remove_alpha_transparency=true   - Remove Alpha Transparency.
  */
 
 
-
-
  /**
  * Attributes present in the node : Repulse
- * @name  ParticleRepulse
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleRepulse
  * @property {int}  trigger=1   - Trigger.
  * @property {double}  magnitude=1   - Magnitude.
  * @property {double}  lookahead=1   - Look Ahead.
@@ -2462,12 +2109,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Rotation-Velocity
- * @name  ParticleRotationVelocity
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleRotationVelocity
  * @property {int}  trigger=1   - Trigger.
  * @property {double}  w0=0   - Minimum.
  * @property {double}  w1=5   - Maximum.
@@ -2481,45 +2125,36 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Sink
- * @name  ParticleSink
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleSink
  * @property {int}  trigger=1   - Trigger.
  * @property {bool}  ifinside=false   - Invert.
  */
 
 
-
-
  /**
  * Attributes present in the node : Size
- * @name  ParticleSize
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleSize
  * @property {int}  trigger=1   - Trigger.
  * @property {generic_enum}  sizestrategy=Constant_Size   - Size Type.
  * @property {double}  particlesize=1   - Size.
  */
 
 
-
-
  /**
  * Attributes present in the node : Sprite-Emitter
- * @name  ParticleSprite
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleSprite
  * @property {int}  trigger=1   - Trigger.
  * @property {double}  ageatbirth=0   - Age at Birth.
  * @property {double}  ageatbirthstd=0   - Age at Birth Standard Deviation.
  * @property {double}  mass=1   - Particles Mass.
- * @property {generic_enum}  typechoosingstrategy=Sequentially_Assign_Type_falseumber   - Type Generation Strategy.
+ * @property {generic_enum}  typechoosingstrategy=Sequentially_Assign_Type_Number   - Type Generation Strategy.
  * @property {int}  particletype0=1   - Particle Type 0.
  * @property {int}  particletype1=1   - Particle Type 1.
  * @property {double}  particlesize=1   - Size over Age.
  * @property {bool}  overridevelocity=false   - Align Initial Velocity.
- * @property {generic_enum}  blend_mode=falseormal   - Blend Mode.
+ * @property {generic_enum}  blend_mode=Normal   - Blend Mode.
  * @property {double}  blendintensity=100   - Blend Intensity.
  * @property {generic_enum}  colouringstrategy=Use_Drawing_Colour   - Colouring Strategy.
  * @property {color}  particlecolour=ffffffff   - Colour.
@@ -2533,14 +2168,14 @@ __</attributes>
  * @property {bool}  directionalscale=false   - Directional Scale.
  * @property {double}  directionalscalefactor=1   - Directional Scale Exponent Factor.
  * @property {bool}  keepvolume=true   - Keep Volume.
- * @property {generic_enum}  blur=falseo_Blur   - Blur.
+ * @property {generic_enum}  blur=No_Blur   - Blur.
  * @property {double}  blurintensity=1   - Blur Intensity.
  * @property {double}  blurfallof=0.5000   - Falloff Rate.
  * @property {bool}  flipwithdirectionx=false   - Flip X Axis to Match Direction.
  * @property {bool}  flipwithdirectiony=false   - Flip Y Axis to Match Direction.
  * @property {generic_enum}  alignwithdirectionaxis=Positive_X   - Axis to Align.
  * @property {generic_enum}  renderingstrategy=Use_Particle_Type   - Rendering Strategy.
- * @property {generic_enum}  cycletype=falseo_Cycle   - Cycling.
+ * @property {generic_enum}  cycletype=No_Cycle   - Cycling.
  * @property {int}  cyclesize=5   - Number of Drawings in Cycle.
  * @property {int}  numberofparticles=100   - Number of Particles.
  * @property {double}  probabilityofgeneratingparticles=100   - Probability of Generating Any Particles.
@@ -2562,21 +2197,15 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Particle-System-Composite
- * @name  ParticleSystemComposite
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleSystemComposite
  */
-
-
 
 
  /**
  * Attributes present in the node : Tone-Shader
- * @name  ToneShader
- * @memberof NodeTypes
+ * @name  NodeTypes#ToneShader
  * @property {generic_enum}  lighttype=Directional   - Light Type.
  * @property {double}  floodangle=90   - Cone Angle.
  * @property {double}  floodsharpness=0   - Diffusion.
@@ -2601,12 +2230,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Velocity
- * @name  ParticleVelocity
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleVelocity
  * @property {int}  trigger=1   - Trigger.
  * @property {generic_enum}  velocitytype=Constant_Speed   - Velocity Type.
  * @property {double}  v0x=1   - X.
@@ -2620,23 +2246,17 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Visibility
- * @name  VISIBILITY
- * @memberof NodeTypes
+ * @name  NodeTypes#VISIBILITY
  * @property {bool}  oglrender=true   - Display in OpenGL View.
  * @property {bool}  softrender=true   - Soft Render.
  */
 
 
-
-
  /**
  * Attributes present in the node : Vortex
- * @name  ParticleVortex
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleVortex
  * @property {int}  trigger=1   - Trigger.
  * @property {double}  vortexx=0   - X Direction.
  * @property {double}  vortexy=12   - Y Direction.
@@ -2649,12 +2269,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Wind-Friction
- * @name  ParticleWindFriction
- * @memberof NodeTypes
+ * @name  NodeTypes#ParticleWindFriction
  * @property {int}  trigger=1   - Trigger.
  * @property {double}  windfrictionx=0   - Friction/Wind X.
  * @property {double}  windfrictiony=0   - Friction/Wind Y.
@@ -2664,26 +2281,20 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Z_Buffer_Smoothing
- * @name  DEPTHBLUR
- * @memberof NodeTypes
+ * @name  NodeTypes#DEPTHBLUR
  * @property {double}  histogram_range=80   - Histogram Range.
  * @property {int}  kernel_size=5   - Kernel Size.
  */
 
 
-
-
  /**
- * Attributes present in the node : Element
- * @name  READ
- * @memberof NodeTypes
+ * Attributes present in the node : Drawing
+ * @name  NodeTypes#READ
  * @property {bool}  enable_3d=false   - Enable 3D.
  * @property {bool}  face_camera=false   - Face Camera.
- * @property {generic_enum}  camera_alignment=falseone   - Camera Alignment.
+ * @property {generic_enum}  camera_alignment=None   - Camera Alignment.
  * @property {position_3d}  offset   - Position.
  * @property {bool}  offset.separate=On   - Separate.
  * @property {double}  offset.x=0   - Pos x.
@@ -2761,7 +2372,7 @@ __</attributes>
  * @property {generic_enum}  antialiasing_quality=High   - Antialiasing Quality.
  * @property {double}  antialiasing_exponent=1   - Antialiasing Exponent.
  * @property {double}  opacity=100   - Opacity.
- * @property {generic_enum}  texture_filter=falseearest_(Filtered)   - Texture Filter.
+ * @property {generic_enum}  texture_filter=Nearest_(Filtered)   - Texture Filter.
  * @property {bool}  adjust_pencil_thickness=false   - Adjust Pencil Lines Thickness.
  * @property {bool}  normal_line_art_thickness=true   - Normal Thickness.
  * @property {bool}  zoom_independent_line_art_thickness=true   - Zoom Independent Thickness.
@@ -2785,12 +2396,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Mesh-Warp
- * @name  BezierMesh
- * @memberof NodeTypes
+ * @name  NodeTypes#BezierMesh
  * @property {array_position_2d}  mesh   - Mesh.
  * @property {int}  mesh.size=105   - Size.
  * @property {position_2d}  mesh.meshpoint0x0   - MeshPoint0x0.
@@ -3331,12 +2939,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Offset
- * @name  OffsetModule
- * @memberof NodeTypes
+ * @name  NodeTypes#OffsetModule
  * @property {bool}  localreferential=true   - Apply Parent Transformation.
  * @property {position_2d}  restingoffset   - Resting Offset.
  * @property {bool}  restingoffset.separate=On   - Separate.
@@ -3352,12 +2957,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Normal-Map-Converter
- * @name  NormalFloat
- * @memberof NodeTypes
+ * @name  NodeTypes#NormalFloat
  * @property {generic_enum}  conversiontype=Genarts   - Conversion Type.
  * @property {double}  offset=0   - Offset.
  * @property {double}  length=1   - Length.
@@ -3367,12 +2969,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Stick
- * @name  BoneModule
- * @memberof NodeTypes
+ * @name  NodeTypes#BoneModule
  * @property {generic_enum}  influencetype=Infinite   - Influence Type.
  * @property {double}  influencefade=0.5000   - Influence Fade Radius.
  * @property {bool}  symmetric=true   - Symmetric Ellipse of Influence.
@@ -3385,12 +2984,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Three-Points-Constraints
- * @name  PointConstraint3
- * @memberof NodeTypes
+ * @name  NodeTypes#PointConstraint3
  * @property {double}  active=100   - Active.
  * @property {generic_enum}  flattentype=Allow_3D_Transform   - Flatten Type.
  * @property {generic_enum}  transformtype=Translate   - Transform Type.
@@ -3398,12 +2994,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Transform-Loop
- * @name  TransformLoop
- * @memberof NodeTypes
+ * @name  NodeTypes#TransformLoop
  * @property {bool}  autorange=true   - Automatic Range Detection.
  * @property {int}  rangestart=1   -     Start.
  * @property {int}  rangeend=1   -     End.
@@ -3411,21 +3004,15 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Subnode-Animation
- * @name  SubNodeAnimation
- * @memberof NodeTypes
+ * @name  NodeTypes#SubNodeAnimation
  */
-
-
 
 
  /**
  * Attributes present in the node : Composite
- * @name  COMPOSITE
- * @memberof NodeTypes
+ * @name  NodeTypes#COMPOSITE
  * @property {generic_enum}  composite_mode=As_Bitmap   - Mode.
  * @property {bool}  flatten_output=true   - Flatten Output.
  * @property {bool}  flatten_vector=false   - Vector Flatten Output.
@@ -3440,12 +3027,9 @@ __</attributes>
  */
 
 
-
-
  /**
  * Attributes present in the node : Sparkle
- * @name  PLUGIN
- * @memberof NodeTypes
+ * @name  NodeTypes#PLUGIN
  * @property {double}  angle=0   - Start angle.
  * @property {double}  scale=1   - Scale.
  * @property {double}  factor=0.7500   - Factor.
@@ -3465,4 +3049,3 @@ __</attributes>
  * @property {int}  sparkle_color.alpha=128   - Alpha.
  * @property {generic_enum}  sparkle_color.preferred_ui=Separate   - Preferred Editor.
  */
-
