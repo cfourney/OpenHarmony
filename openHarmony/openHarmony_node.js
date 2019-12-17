@@ -647,7 +647,6 @@ Object.defineProperty($.oNode.prototype, 'outLinks', {
 });
 
 
-
 /**
  * The list of nodes connected to the inport of this node, in order of inport.
  * @name $.oNode#ins
@@ -1211,6 +1210,34 @@ $.oNode.prototype.getAttributesColumnCache = function( obj_lut ){
 
   return obj_lut;
 }
+
+
+/**
+ * Creates an $.oNodeLink and connects this node to the target via this nodes outport.
+ * @param   {oNode}         nodeToLink                          The target node as an in node.
+ * @param   {int}           ownPort                             The out port on this node to connect to.
+ * @param   {int}           destPort                            The in port on the inNode to connect to.
+ *
+ * @return {$.oNodeLink}        The imported Quicktime Node.
+ * @example
+ *  var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ *  var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" );
+ *  var newLink  = peg1.addOutLink( peg2, 0, 0 );
+ */
+$.oNode.prototype.addOutLink = function( nodeToLink, ownPort, destPort ){
+  
+  var ownPort  = ownPort ? ownPort:0;
+  var destPort = destPort ? destPort:0;
+  
+  var newLink = new this.$.oNodeLink( this, ownPort, nodeToLink, destPort );
+  newLink.apply();
+  
+  return destPort;
+};
+
+
+
+
 
 
 //////////////////////////////////////
@@ -2248,3 +2275,4 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
 
     return _qtNode;
 }
+
