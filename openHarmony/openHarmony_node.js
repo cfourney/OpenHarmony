@@ -549,13 +549,19 @@ Object.defineProperty($.oNode.prototype, 'width', {
 
 
 /**
- * The height of the node in the node view.
- * @name $.oNode#height
- * @type {float}
+ * The list of nodes connected to the inport of this node, in order of inport.
+ * @name $.oNode#inLinks
+ * @type {oNodeLink[]}
  */
-Object.defineProperty($.oNode.prototype, 'height', {
+Object.defineProperty($.oNode.prototype, 'inLinks', {
     get : function(){
-         return node.height(this.path)
+        var nodeRef = this;
+        var newList = new this.$.oDynList( [], 0, node.numberOfInputPorts(this.path), 
+                                           function( listItem, index ){ return new this.$.oNodeLink( false, false, nodeRef, index, false ); }, 
+                                           function(){ throw new ReferenceError("Unable to set inLinks"); }, 
+                                           false 
+                                         );
+        return newList;
     }
 });
 
@@ -607,6 +613,36 @@ Object.defineProperty($.oNode.prototype, 'outNodes', {
             // }
         }
         return _outNodes;
+    }
+});
+
+
+/**
+ * The list of nodes connected to the inport of this node, in order of inport.
+ * @name $.oNode#inLinks
+ * @type {oNodeLink[]}
+ */
+Object.defineProperty($.oNode.prototype, 'outLinks', {
+    get : function(){
+        var nodeRef = this;
+        
+        var lookup_list = [];
+        for (var i = 0; i < node.numberOfOutputPorts(this.path); i++){
+          if( node.numberOfOutputLinks(this.path, i) > 0 ){
+            for (var j = 0; j < node.numberOfOutputLinks(this.path, i); j++){
+              lookup_list.push( [i,j] );
+            }
+          }else{
+            lookup_list.push( [i,0] );
+          }
+        }
+        
+        var newList = new this.$.oDynList( [], 0, lookup_list.length, 
+                                           function( listItem, index ){ return new this.$.oNodeLink( nodeRef, lookup_list[index][0], false, false, lookup_list[index][1] ); }, 
+                                           function(){ throw new ReferenceError("Unable to set inLinks"); }, 
+                                           false
+                                         );
+        return newList;
     }
 });
 
@@ -1174,6 +1210,34 @@ $.oNode.prototype.getAttributesColumnCache = function( obj_lut ){
 
   return obj_lut;
 }
+
+
+/**
+ * Creates an $.oNodeLink and connects this node to the target via this nodes outport.
+ * @param   {oNode}         nodeToLink                          The target node as an in node.
+ * @param   {int}           ownPort                             The out port on this node to connect to.
+ * @param   {int}           destPort                            The in port on the inNode to connect to.
+ *
+ * @return {$.oNodeLink}        The imported Quicktime Node.
+ * @example
+ *  var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ *  var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" );
+ *  var newLink  = peg1.addOutLink( peg2, 0, 0 );
+ */
+$.oNode.prototype.addOutLink = function( nodeToLink, ownPort, destPort ){
+  
+  var ownPort  = ownPort ? ownPort:0;
+  var destPort = destPort ? destPort:0;
+  
+  var newLink = new this.$.oNodeLink( this, ownPort, nodeToLink, destPort );
+  newLink.apply();
+  
+  return destPort;
+};
+
+
+
+
 
 
 //////////////////////////////////////
@@ -2228,3 +2292,4 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
 
     return _qtNode;
 }
+

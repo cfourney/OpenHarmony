@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Namespace: $</title>
+    <title>Class: oDynList</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -2121,7 +2121,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.html">Namespace: $</h1>
+        <h1 class="page-title" data-filename="$.oDynList.html">Class: oDynList</h1>
         
 
 
@@ -2130,10 +2130,14 @@
     
 <header>
     <h2>
-    $
+        <span class="ancestors"><a href="$.html">$</a>.</span>
+    
+    oDynList
     </h2>
     
-        <div class="class-description">The $ global object that holds all the functions of openHarmony.</div>
+        <div class="class-description">The base class for the $.oDynList.<br>
+Provides a list of values similar to an array, but with simpler filtering and sorting functions provided.<br>
+It can have any starting index and so can implement lists with a first index of 1 like the $.oColumn.frames returned value.</div>
     
 </header>  
 
@@ -2143,18 +2147,38 @@
     
     
         
-            <div class="description">All the classes can be accessed from it, and it can be passed to a different context.</div>
-        
-        
-        
-<dl class="details">
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="oDynList">
+            
+            new $.oDynList<span class="signature">(initArray, <span class="optional">startIndex</span>, <span class="optional">length</span>, <span class="optional">getFunction</span>, <span class="optional">setFunction</span>, <span class="optional">sizeFunction</span>)</span>
+        </h4>
     
         
-        <h5 class="subsection-title">Properties:</h5>
+        <div class="tag-source">
+            openHarmony/openHarmony_list.js, line 517
+        </div>
         
-        <dl>
+    </div>
 
-<table class="props">
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Constructor to generate an $.oDynList type object.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
     <thead>
 	<tr>
 		
@@ -2164,7 +2188,7 @@
 		<th>Type</th>
 		
 		
-		
+		<th>Default</th>
 		
 		
 		<th class="last">Description</th>
@@ -2176,7 +2200,39 @@
 	
         <tr>
             
-                <td class="name"><code>debug_level</code></td>
+                <td class="name"><code>initArray</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;object></span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                An array to initialize the list.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>startIndex</code></td>
             
             
             <td class="type">
@@ -2189,159 +2245,178 @@
             </td>
             
             
+                <td class="default">
+                
+                    0
+                
+                </td>
             
             
-            
-            <td class="description last">The debug level of the DOM.</td>
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The first index exposed in the list.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>batchMode</code></td>
+                <td class="name"><code>length</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">bool</span>
+<span class="param-type">int</span>
 
 
             
             </td>
             
             
+                <td class="default">
+                
+                    0
+                
+                </td>
             
             
-            
-            <td class="description last">Deactivate all ui and incompatible functions to ensure scripts run in batch.</td>
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The length of the list -- the max between this value and the initial array's length is used.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>file</code></td>
+                <td class="name"><code>getFunction</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">function</span>
 
 
             
             </td>
             
             
+                <td class="default">
+                
+                    null
+                
+                </td>
             
             
-            
-            <td class="description last">The openHarmony base file - THIS!</td>
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The function used to initialize the list when accessing an uninitiated element in the list.<br>In form <i>function( listItem, index ){ return value; }</i></td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>getScene</code></td>
+                <td class="name"><code>setFunction</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">oScene</span>
+<span class="param-type">function</span>
 
 
             
             </td>
             
             
+                <td class="default">
+                
+                    null
+                
+                </td>
             
             
-            
-            <td class="description last">The harmony scene.</td>
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The function run when setting an entry in the list.<br>In form <i>function( listItem, index, value ){ return resolvedValue; }</i> -- must return a resolved value.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>scene</code></td>
+                <td class="name"><code>sizeFunction</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">oScene</span>
+<span class="param-type">function</span>
 
 
             
             </td>
             
             
-            
-            
-            
-            <td class="description last">The harmony scene.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>scn</code></td>
-            
-            
-            <td class="type">
-            
+                <td class="default">
                 
-<span class="param-type">oScene</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The harmony scene.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>s</code></td>
-            
-            
-            <td class="type">
-            
+                    null
                 
-<span class="param-type">oScene</span>
-
-
-            
-            </td>
+                </td>
             
             
-            
-            
-            
-            <td class="description last">The harmony scene.</td>
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The function run when resizing the list.<br>In form <i>function( listItem, length ){ }</i></td>
         </tr>
 	
 	
 	</tbody>
-</table></dl>
-        
+</table>
+    
+    
+    
+<dl class="details">
     
         
-    
-    <dt class="tag-version">Version:</dt>
-    <dd class="tag-version"><ul class="dummy"><li>1.0</li></ul></dd>
     
     
     
@@ -2363,28 +2438,20 @@
     
 </dl>
 
-        
-        
-            <h3>Example</h3>
-            
-
     
-    <pre class="prettyprint"><code>// To access the functions, first call the $ object. It is made available after loading openHarmony like so:
-
-include ("openHarmony.js");
-
-var doc = $.scn;                    // grabbing the scene document
-$.log("hello");                     // prints out a message to the MessageLog.
-var myPoint = new $.oPoint(0,0,0);  // create a new class instance from an openHarmony class.
-
-// function members of the $ objects get published to the global scope, which means $ can be ommited
-
-log("hello");
-var myPoint = new oPoint(0,0,0);    // This is all valid
-var doc = scn;                      // "scn" isn't a function so this one isn't</code></pre>
     
 
-        
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
     
     </div>
     
@@ -2394,97 +2461,6 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
     
     
-    
-        <h3 class="subsection-title">Classes</h3>
-        
-        <dl>
-            <dt><a href="$.oAttribute.html">oAttribute</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oBackdrop.html">oBackdrop</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oBox.html">oBox</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oColor.html">oColor</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oColorValue.html">oColorValue</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oColumn.html">oColumn</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oDialog.html">oDialog</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oDrawing.html">oDrawing</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oDrawingColumn.html">oDrawingColumn</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oDrawingNode.html">oDrawingNode</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oDynList.html">oDynList</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oElement.html">oElement</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oFile.html">oFile</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oFolder.html">oFolder</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oFrame.html">oFrame</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oGroupNode.html">oGroupNode</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oList.html">oList</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oNetwork.html">oNetwork</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oNode.html">oNode</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oNodeLink.html">oNodeLink</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oPalette.html">oPalette</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oPathPoint.html">oPathPoint</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oPegNode.html">oPegNode</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oPoint.html">oPoint</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oScene.html">oScene</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oThread.html">oThread</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oTimeline.html">oTimeline</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oTimelineLayer.html">oTimelineLayer</a></dt>
-            <dd></dd>
-        
-            <dt><a href="$.oUtils.html">oUtils</a></dt>
-            <dd></dd>
-        </dl>
     
     
     
@@ -2496,7 +2472,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="DEBUG_LEVEL">DEBUG_LEVEL</h4>
+        <h4 class="name" id="lastIndex">lastIndex<span class="type-signature type int">int</span> </h4>
     </div>
     
     
@@ -2504,7 +2480,52 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
 <dd>
     
     <div class="description">
-        Enum to set the debug level of debug statements.
+        The index of the last valid element of the list
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="startIndex">startIndex<span class="type-signature type int">int</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The startIndex of the list.
     </div>
     
     
@@ -2547,14 +2568,14 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="alert">
+        <h4 class="name" id="extractProperty">
             
-            alert<span class="signature">(<span class="optional">labelText</span>, <span class="optional">title</span>, <span class="optional">okButtonText</span>)</span>
+            extractProperty<span class="signature">(property)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oDynList.html">$.oDynList</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony.js, line 224
+            openHarmony/openHarmony_list.js, line 874
         </div>
         
     </div>
@@ -2565,7 +2586,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
     
     <div class="description">
-        Prompts with an alert dialog (informational).
+        Returns an oDynList object containing only the values of the specified property.
     </div>
     
 
@@ -2596,7 +2617,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
 	
         <tr>
             
-                <td class="name"><code>labelText</code></td>
+                <td class="name"><code>property</code></td>
             
             
             <td class="type">
@@ -2612,74 +2633,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
             
             <td class="description last">
                 
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The label/internal text of the dialog.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>title</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The title of the confirmation dialog.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>okButtonText</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The text on the OK button of the dialog.</td>
+                The property to find.</td>
         </tr>
 	
 	
@@ -2722,6 +2676,35 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
     
     
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oDynList.html">$.oDynList</a>
+                        
+                    
+            </td>
+            <td class="description last">The newly created oDynList object containing the property values.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
     
     
 </dd>
@@ -2730,14 +2713,14 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="beginUndo">
+        <h4 class="name" id="filterByFunction">
             
-            beginUndo<span class="signature">(undoName)</span>
+            filterByFunction<span class="signature">(func)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oDynList.html">$.oDynList</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony.js, line 294
+            openHarmony/openHarmony_list.js, line 817
         </div>
         
     </div>
@@ -2748,7 +2731,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
     
     <div class="description">
-        Starts the tracking of the undo accumulation, all subsequent actions are done in a single undo operation.<br>Close the undo accum with $.endUndo().
+        Returns an oDynList object containing only the elements that passed the provided filter function.
     </div>
     
 
@@ -2779,13 +2762,13 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
 	
         <tr>
             
-                <td class="name"><code>undoName</code></td>
+                <td class="name"><code>func</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">function</span>
 
 
             
@@ -2795,7 +2778,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
             
             <td class="description last">
                 
-                The name of the operation that is being done in the undo accum.</td>
+                A function that is used to filter, returns true if it is to be kept in the list.</td>
         </tr>
 	
 	
@@ -2824,12 +2807,173 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
     
     
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>$.endUndo</li>
-        </ul>
-    </dd>
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oDynList.html">$.oDynList</a>
+                        
+                    
+            </td>
+            <td class="description last">The list represented as an array, filtered given the function.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="filterByProperty">
+            
+            filterByProperty<span class="signature">(property, search)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oDynList.html">$.oDynList</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_list.js, line 840
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns an oDynList object containing only the elements that have the same property value as provided.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>property</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The property to find.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The value to search for in the property.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -2845,7 +2989,51 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
     
     
+    <h5>Returns:</h5>
     
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oDynList.html">$.oDynList</a>
+                        
+                    
+            </td>
+            <td class="description last">The list represented as an array, filtered given its properties.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>var doc = $.s // grab the scene object
+var nodeList = new $.oDynList(doc.nodes, 1) // get a list of all the nodes, with a first index of 1
+
+$.log(nodeList) // outputs the list of all the node paths
+
+var readNodes = nodeList.filterByProperty("type", "READ") // get a new list of only the nodes of type 'READ'
+
+$.log(readNodes.extractProperty("name"))  // prints the names of the result</code></pre>
+    
+
     
 </dd>
 
@@ -2853,14 +3041,14 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="beginUndo">
+        <h4 class="name" id="first">
             
-            beginUndo<span class="signature">()</span>
+            first<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{object}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony.js, line 318
+            openHarmony/openHarmony_list.js, line 717
         </div>
         
     </div>
@@ -2871,7 +3059,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
     
     <div class="description">
-        Stops the tracking of the undo accumulation, everything between this and the start of the accumulation behaves as a single undo operation.
+        The first item in the list, resets the iterator to the first entry.
     </div>
     
 
@@ -2902,12 +3090,105 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
     
     
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>$.beginUndo</li>
-        </ul>
-    </dd>
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        object
+                        
+                    
+            </td>
+            <td class="description last">The first item in the list.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="length">
+            
+            length<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{int}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_list.js, line 691
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The length of the list.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -2923,6 +3204,35 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
     
     
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        int
+                        
+                    
+            </td>
+            <td class="description last">The length of the list, considering the startIndex.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
     
     
 </dd>
@@ -2931,14 +3241,14 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="browseForFile">
+        <h4 class="name" id="next">
             
-            browseForFile<span class="signature">(<span class="optional">text</span>, <span class="optional">filter</span>, <span class="optional">getExisting</span>, <span class="optional">acceptMultiple</span>, <span class="optional">startDirectory</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;string>}</span>
+            next<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{object}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony.js, line 235
+            openHarmony/openHarmony_list.js, line 731
         </div>
         
     </div>
@@ -2949,7 +3259,512 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
     
     <div class="description">
-        Prompts with a file selector window
+        The next item in the list, undefined if reaching the end of the list.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        object
+                        
+                    
+            </td>
+            <td class="description last">Grabs the next item using the property $.oList.currentIndex, and increase the iterator</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>var myList = new $.oList([1,2,3], 1)
+
+var item = myList.first();  // 1
+
+while( item != undefined ){
+  $.log(item)               // traces the whole array one item at a time : 1,2,3   
+  item = myList.next();   
+}</code></pre>
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="pop">
+            
+            pop<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{int}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_list.js, line 793
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Similar to Array.pop. Removes the last value from the array and returns it. It is then removed from the array.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        int
+                        
+                    
+            </td>
+            <td class="description last">The item popped from the back of the array.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="push">
+            
+            push<span class="signature">(newElement)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{int}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_list.js, line 774
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Similar to Array.push. Adds the value given as parameter to the end of the oList
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>newElement</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">various</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The value to add at the end of the oList</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        int
+                        
+                    
+            </td>
+            <td class="description last">Returns the new length of the oList.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="sortByFunction">
+            
+            sortByFunction<span class="signature">(func)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oDynList.html">$.oDynList</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_list.js, line 922
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns an oDynList object sorted according to the sorting function provided.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>func</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                A function that is used to sort, in form function (a,b){return a - b}. (A positive a-b value will put the element b before a)</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oDynList.html">$.oDynList</a>
+                        
+                    
+            </td>
+            <td class="description last">The sorted $oDynList.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="sortByProperty">
+            
+            sortByProperty<span class="signature">(property, <span class="optional">ascending</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oDynList.html">$.oDynList</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_list.js, line 895
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns an oDynList object sorted according to the values of the specified property.
     </div>
     
 
@@ -2982,7 +3797,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
 	
         <tr>
             
-                <td class="name"><code>text</code></td>
+                <td class="name"><code>property</code></td>
             
             
             <td class="type">
@@ -2997,70 +3812,30 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
             
                 <td class="default">
                 
-                    "Select a file:"
-                
                 </td>
             
             
             <td class="description last">
                 
                     
-                        <span class="optional">optional</span>
-                    
                     
                         
                     
                 
-                The title of the confirmation dialog.</td>
+                The property to find.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>filter</code></td>
+                <td class="name"><code>ascending</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    "*"
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The filter for the file type and/or file name that can be selected. Accepts wildcard character "*".</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>getExisting</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
+<span class="param-type">bool</span>
 
 
             
@@ -3083,77 +3858,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
                         
                     
                 
-                Whether to select an existing file or a save location</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>acceptMultiple</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether or not selecting more than one file is ok. Is ignored if getExisting is false.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>startDirectory</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The directory showed at the opening of the dialog.</td>
+                Whether the sort is ascending/descending.</td>
         </tr>
 	
 	
@@ -3214,11 +3919,11 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
             
             <td class="type">
             
-                        Array.&lt;string>
+                        <a href="$.oDynList.html">$.oDynList</a>
                         
                     
             </td>
-            <td class="description last">The list of selected Files, 'undefined' if the dialog is cancelled</td>
+            <td class="description last">The sorted $oDynList.</td>
         </tr>
     
     </tbody>
@@ -3233,14 +3938,14 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="browseForFolder">
+        <h4 class="name" id="toString">
             
-            browseForFolder<span class="signature">(<span class="optional">text</span>, <span class="optional">startDirectory</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;string>}</span>
+            toString<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony.js, line 249
+            openHarmony/openHarmony_list.js, line 964
         </div>
         
     </div>
@@ -3251,7 +3956,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
     
     <div class="description">
-        Prompts with a folder selector window.
+        outputs the list to a string for easy logging
     </div>
     
 
@@ -3259,685 +3964,6 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
     
     
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>text</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The title of the confirmation dialog.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>startDirectory</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The directory showed at the opening of the dialog.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        Array.&lt;string>
-                        
-                    
-            </td>
-            <td class="description last">The path of the selected folder, 'undefined' if the dialog is cancelled</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="cancelUndo">
-            
-            cancelUndo<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony.js, line 308
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Cancels the tracking of the undo accumulation, everything between this and the start of the accumulation is undone.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="confirm">
-            
-            confirm<span class="signature">(<span class="optional">labelText</span>, <span class="optional">title</span>, <span class="optional">okButtonText</span>, <span class="optional">cancelButtonText</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony.js, line 211
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Prompts with a confirmation dialog (yes/no choice).
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>labelText</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The label/internal text of the dialog.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>title</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The title of the confirmation dialog.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>okButtonText</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The text on the OK button of the dialog.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>cancelButtonText</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The text on the CANCEL button of the dialog.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        bool
-                        
-                    
-            </td>
-            <td class="description last">Result of the confirmation dialog.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="debug">
-            
-            debug<span class="signature">(obj, level)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony.js, line 143
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        The standard debug that uses logic and level to write to the messagelog. Everything should just call this to write internally to a log in OpenHarmony.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>obj</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">obj</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Description.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>level</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The debug level of the incoming message to log.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="directoryGet">
-            
-            directoryGet<span class="signature">(file_path)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony.js, line 106
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Helper function to split the filename, and get the directory name containing the file argument.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>file_path</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The path for the file to derive a directory from.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -3997,499 +4023,12 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
                         
                     
             </td>
-            <td class="description last">The directory of the file.</td>
+            <td class="description last"></td>
         </tr>
     
     </tbody>
 </table>
 
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="log">
-            
-            log<span class="signature">(str)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony.js, line 165
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Log the string to the MessageLog.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>str</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Text to log.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="logObj">
-            
-            logObj<span class="signature">(object, debugLevel)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony.js, line 176
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Log the object and its contents.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>object</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The object to log.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>debugLevel</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The debug level.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="redo">
-            
-            redo<span class="signature">(n)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony.js, line 339
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Redoes the last n operations. If n is not specified, it will be 1
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>n</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The amount of operations to undo.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="undo">
-            
-            undo<span class="signature">(n)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony.js, line 328
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Undoes the last n operations. If n is not specified, it will be 1
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>n</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The amount of operations to undo.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
     
     
     
