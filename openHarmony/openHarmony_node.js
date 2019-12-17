@@ -549,13 +549,19 @@ Object.defineProperty($.oNode.prototype, 'width', {
 
 
 /**
- * The height of the node in the node view.
- * @name $.oNode#height
- * @type {float}
+ * The list of nodes connected to the inport of this node, in order of inport.
+ * @name $.oNode#inLinks
+ * @type {oNodeLink[]}
  */
-Object.defineProperty($.oNode.prototype, 'height', {
+Object.defineProperty($.oNode.prototype, 'inLinks', {
     get : function(){
-         return node.height(this.path)
+        var nodeRef = this;
+        var newList = new this.$.oDynList( [], 0, node.numberOfInputPorts(this.path), 
+                                           function( listItem, index ){ return new this.$.oNodeLink( false, false, nodeRef, index, false ); }, 
+                                           function(){ throw new ReferenceError("Unable to set inLinks"); }, 
+                                           false 
+                                         );
+        return newList;
     }
 });
 
@@ -609,6 +615,37 @@ Object.defineProperty($.oNode.prototype, 'outNodes', {
         return _outNodes;
     }
 });
+
+
+/**
+ * The list of nodes connected to the inport of this node, in order of inport.
+ * @name $.oNode#inLinks
+ * @type {oNodeLink[]}
+ */
+Object.defineProperty($.oNode.prototype, 'outLinks', {
+    get : function(){
+        var nodeRef = this;
+        
+        var lookup_list = [];
+        for (var i = 0; i < node.numberOfOutputPorts(this.path); i++){
+          if( node.numberOfOutputLinks(this.path, i) > 0 ){
+            for (var j = 0; j < node.numberOfOutputLinks(this.path, i); j++){
+              lookup_list.push( [i,j] );
+            }
+          }else{
+            lookup_list.push( [i,0] );
+          }
+        }
+        
+        var newList = new this.$.oDynList( [], 0, lookup_list.length, 
+                                           function( listItem, index ){ return new this.$.oNodeLink( nodeRef, lookup_list[index][0], false, false, lookup_list[index][1] ); }, 
+                                           function(){ throw new ReferenceError("Unable to set inLinks"); }, 
+                                           false
+                                         );
+        return newList;
+    }
+});
+
 
 
 /**

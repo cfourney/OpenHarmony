@@ -69,14 +69,14 @@ $.oNodeLink = function( outNode, outPort, inNode, inPort, outlink ){
 
     //Private properties.
     this._outNode = outNode;
-    this._outPort = outPort; //outPort ? outPort : 0;
-    this._outLink = outlink ? outlink : 0;
+    this._outPort = outPort;
+    this._outLink = outlink;
     
     this._realOutNode = outNode;
     this._realOutPort = 0;
     
     this._inNode  = inNode;
-    this._inPort  = inPort; //inPort ? inPort : 0;
+    this._inPort  = inPort;
     
     this._freeze        = false;
     this._newInNode     = null;
@@ -137,9 +137,9 @@ $.oNodeLink.prototype.validateUpwards = function( inport, outportProvided ) {
   
   this._exists = true;
   this._outLink = valid.link; 
-  this._realOutNode = this.path[ this.path.length-1 ].node;
-  this._realOutPort = this.path[ this.path.length-1 ].port;
-  this._realOutLink = this.path[ this.path.length-1 ].link;
+  this._realOutNode = this.path[ 0 ].node;
+  this._realOutPort = this.path[ 0 ].port;
+  this._realOutLink = this.path[ 0 ].link;
   
   return true;
 }
@@ -181,13 +181,13 @@ $.oNodeLink.prototype.validate = function ( ) {
           return false;
         }
         
-        this._realOutNode = this.path[ this.path.length-1 ].node;
-        this._realOutPort = this.path[ this.path.length-1 ].port;
-        this._realOutLink = this.path[ this.path.length-1 ].link;
+        this._outNode     = this.path[ this.path.length-1 ].node;
+        this._outPort     = this.path[ this.path.length-1 ].port;
+        this._outLink     = this.path[ this.path.length-1 ].link;
         
-        this._outNode = this.path[ 0 ].node;
-        this._outPort = this.path[ 0 ].port;
-        this._outLink = this.path[ 0 ].link;
+        this._realOutNode = this.path[ 0 ].node;
+        this._realOutPort = this.path[ 0 ].port;
+        this._realOutLink = this.path[ 0 ].link;
         
         this._exists = true;
         return true;
@@ -196,7 +196,9 @@ $.oNodeLink.prototype.validate = function ( ) {
       //There can be multiple links. This is very difficult and only possible if theres only a singular path, we'll have to derive them all downwards.
       //This is just hopeful thinking that there is only one valid path.
       
-      var huntInNode = function( currentNode, port ){
+      this._outLink = this._outLink ? this._outLink : 0;  
+      
+      var huntInNode = function( currentNode, port, link ){
         try{
           var on = currentNode.outNodes[port];
           
@@ -204,27 +206,33 @@ $.oNodeLink.prototype.validate = function ( ) {
             return false;
           }
           
-          var dstNodeInfo = node.dstNodeInfo( on.path, port, 0 );
+          var dstNodeInfo = node.dstNodeInfo( currentNode.path, port, link );
+          if( !dstNodeInfo ){
+            System.println( "BAD" );
+            return false;
+          }
+          
           if( on[0].type == "MULTIPORT_OUT" ){
             return huntInNode( src_node.grp, dstNodeInfo.port );
           }else if( on[0].type == "GROUP" ){
-            return huntInNode( src_node.multiportIn, dstNodeInfo.port );
+            return huntInNode( src_node.multiportIn, dstNodeInfo.port, dstNodeInfo.link );
           }else{
             var ret = { "node": on[0], "port":dstNodeInfo.port };
             return ret;
           }
         }catch(err){
+          System.println( err );
           return false;
         }
       }
       
       //Find the in node recursively.
-      var res = huntInNode();
+      var res = huntInNode( this._outNode, this._outPort, this._outLink );
       if( !res ){
         this._exists = false;
         return false;
       }
-      
+         
       if( inportProvided ){
         if( res.port != this._inPort ){
           this._exists = false;
@@ -254,6 +262,7 @@ $.oNodeLink.prototype.validate = function ( ) {
       var inNodes = this._inNode.inNodes;
       for( var n=0;n<inNodes.length;n++ ){
         if( this.validateUpwards( n, outportProvided ) ){
+          this._inPort = n;
           return true;
         }
       }
@@ -489,8 +498,18 @@ $.oNodeLink.prototype.linkOut = function( onode, port ) {
  * @param   {int}                     outPort                 The port to link on the output.
  */
 $.oNodeLink.prototype.insertNode = function( onode, inPort, outPort ) {
-  //-----
+  this.freeze = true;
   
+  var inNode = this.inNode;
+  var inPort = this.inPort;
+  
+  this.inNode = onode;
+  this.inport = inPort;
+  
+  this.freeze = false;
+  
+  var new_link = new this.$.oNodeLink( onode, outPort, inNode, inPort, 0 );
+  new_link.apply( true );
 }
 
 /**
@@ -652,8 +671,6 @@ $.oNodeLink.prototype.apply = function( force ) {
       }
     }
   }
-  
-  System.println( newInPortCount_result + " " + newOutPortCount + " GHI " + this._newInPort );
   
   var new_inGroup  = this._newInNode.group;
   var new_outGroup = this._newOutNode.group;
@@ -832,4 +849,11 @@ $.oNodeLink.prototype.apply = function( force ) {
   if( !this.validate() ){
     throw ReferenceError( "Failed to connect the targets appropriately." );
   }
+}
+
+/**
+ * Converts the node link to a string.
+ */
+$.oNodeLink.prototype.toString = function( ) {
+  return '{"inNode":"'+this.inNode+'", "inPort":"'+this.inPort+'", "outNode":"'+this.outNode+'", "outPort":"'+this.outPort+'", "outLink":"'+this.outLink+'" }';
 }

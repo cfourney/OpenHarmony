@@ -938,6 +938,29 @@ Object.defineProperty($.oDynList.prototype, 'sortByFunction', {
   }
 });
 
+
+// Methods must be declared as unenumerable properties this way
+/**
+ * Converts the oList to an array
+ * @name $.oList#toArray
+ * @function
+ * @return  {object[]}   The list represented as an array.
+ */
+Object.defineProperty($.oDynList.prototype, 'toArray', {
+  enumerable : false,
+  value : function(){
+    var _array = [];
+    for (var i=0; i<this.startIndex+this.length; i++){
+      if( i<this.startIndex ){
+        _array.push( null );
+      }else{
+        _array.push( this[i] );
+      }
+    }
+    return _array;
+  }
+});
+
 /**
  * outputs the list to a string for easy logging
  * @name $.oDynList#toString
