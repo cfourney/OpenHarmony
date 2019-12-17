@@ -61,15 +61,7 @@
  * @property {backdropObject}        backdropObject              The harmony-internal backdrop object associated with this oBackdrop.
  */
 $.oBackdrop = function( groupPath, backdropObject ){
-  this.group = groupPath;
-  
-  try{
-    if( groupPath._type == "groupNode" ){
-      //Its an oNode objet type.
-      this.group = groupPath.path;
-    }
-  }catch(err){
-  }
+  this.group = ( groupPath instanceof this.$.oGroupNode )? groupPath.path: groupPath;
   
 	this.backdropObject = backdropObject;
 }

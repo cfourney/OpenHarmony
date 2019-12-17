@@ -102,7 +102,7 @@ Object.defineProperty($.oFolder.prototype, 'path', {
 Object.defineProperty($.oFolder.prototype, 'name', {
     get: function(){
         var _name = this.path.split("/");
-        _name = _name[_name.length-2];
+        _name = _name.pop();
         return _name;
     }
 });
@@ -550,10 +550,12 @@ $.oFile.prototype.move = function( folder, overwrite ){
     
     var _file = new PermanentFile(this.path);
     var _dest = new PermanentFile(folder+"/"+this.name+"."+this.extension);
-    MessageLog.trace("moving "+_file.path()+" to "+_dest.path())
+    // MessageLog.trace("moving "+_file.path()+" to "+_dest.path())
    
-    if (_dest.exists && !overwrite)
-        throw new Error("destination file "+folderPath+"/"+this.name+"."+this.extension+" exists and will not be overwritten. Can't move file.");
+    if (_dest.exists && !overwrite){
+        this.$.debug("destination file "+folderPath+"/"+this.name+"."+this.extension+" exists and will not be overwritten. Can't move file.", this.$.DEBUG_LEVEL.ERROR);
+        return false;
+    }
  
     var success = _file.move(_dest);
     if (success) return new this.$.oFile(_dest.path)
@@ -581,11 +583,13 @@ $.oFile.prototype.copy = function( destfolder, copyName, overwrite){
     var _file = new PermanentFile(this.path);
     var _dest = new PermanentFile(destfolder+"/"+copyName+"."+this.extension);
    
-    if (_dest.exists && !overwrite)
-        throw new Error("destination file "+destfolder+"/"+copyName+"."+this.extension+" exists and will not be overwritten. Can't copy file.");
+    if (_dest.exists && !overwrite){
+        this.$.debug("Destination file "+destfolder+"/"+copyName+"."+this.extension+" exists and will not be overwritten. Can't copy file.", this.DEBUG_LEVEL.ERROR);
+        return false;
+    }
    
-    this.$.debug("copying "+_file.path()+" to "+_dest.path(), this.$.DEBUG_LEVEL.LOGLOG)
-    this.$.log("copying "+_file.path()+" to "+_dest.path())
+    this.$.debug("copying "+_file.path()+" to "+_dest.path(), this.$.DEBUG_LEVEL.LOG)
+    // this.$.log("copying "+_file.path()+" to "+_dest.path())
     
     try{
       var success = _file.copy(_dest);
@@ -593,7 +597,7 @@ $.oFile.prototype.copy = function( destfolder, copyName, overwrite){
       this.$.debug("Couldn't copy "+_file.path()+" to "+_dest.path()+", ", this.$.DEBUG_LEVEL.ERROR)
     }
     
-    this.$.log(overwrite+" "+success)
+    // this.$.log(overwrite+" "+success)
     if (success) return new this.$.oFile(_dest.path())
       
     return false;

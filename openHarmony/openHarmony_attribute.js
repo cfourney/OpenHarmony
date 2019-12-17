@@ -54,7 +54,8 @@
  * @classdesc  
  * The $.oAttribute class holds the smart version of the parameter you can find in layer property.<br>
  * It is used internally to get and set values and link a oColumn to a parameter in order to animate it.<br>
- * For a list of attributes existing in each node type and their type, as well as examples of the values they can hold, refer to : {@link NodeTypes}.
+ * For a list of attributes existing in each node type and their type, as well as examples of the values they can hold, refer to :<br>
+ * {@link NodeType}.
  * @constructor
  * @param   {$.oNode}                  oNodeObject                The oNodeObject that the attribute is associated to.
  * @param   {attr}                     attributeObject            The internal harmony Attribute Object.

@@ -62,10 +62,35 @@
 $.oDrawing = function( name, oElementObject ){
   this._type = "drawing";
 
-  this.name = name;
+  this._name = name;
   this.element = oElementObject;
 }
- 
+
+
+/**
+ * The name of the drawing.
+ * @name $.oDrawing#name
+ * @type {string}
+ */
+Object.defineProperty( $.oDrawing.prototype, 'name', {
+    get : function(){
+       return this._name;
+    },
+    
+    set : function(newName){
+      if (this._name == newName) return;
+
+      var _column = this.element.column.uniqueName;
+      // this ripples recursively
+
+      if (Drawing.isExists(this.element.id, newName)) this.element.getDrawingByName(newName).name = newName+"_1";
+      column.renameDrawing(_column, this._name, newName);
+      this._name = newName;
+    }
+})
+
+
+
 /**
  * The folder path of the drawing on the filesystem.
  * @name $.oDrawing#path
@@ -73,12 +98,43 @@ $.oDrawing = function( name, oElementObject ){
  */
 Object.defineProperty( $.oDrawing.prototype, 'path', {
     get : function(){
-         return fileMapper.toNativePath(Drawing.filename(this.element.id, this.name))
+        return fileMapper.toNativePath(Drawing.filename(this.element.id, this.name))
     }
 })
 
 
 // $.oDrawing Class methods
+
+
+/**
+ * Converts the Drawing object to a string of the drawing name.
+ * @name $.oDrawing#remove
+ * @type {string}
+ */
+$.oDrawing.prototype.remove = function(){
+    var _element = this.element;
+    var _column = _element.column;
+    
+    var _frames = _column.frames;
+    
+    var _lastFrame = _frames.pop();
+    // this.$.log(_lastFrame.frameNumber+": "+_lastFrame.value)
+
+    var _thisDrawing = this;
+    
+    // we have to expose the drawing on the column to delete it. Exposing at the last frame...
+    this.$.debug("deleting drawing "+_thisDrawing+" from element "+_element.name, this.$.DEBUG_LEVEL.LOG)
+    var _lastDrawing = _lastFrame.value;
+    var _keyFrame = _lastFrame.isKeyFrame;
+    _lastFrame.value = _thisDrawing;
+    
+    column.deleteDrawingAt(_column.uniqueName, _lastFrame.frameNumber);
+    
+    // resetting the last frame
+    _lastFrame.value = _lastDrawing;
+    _lastFrame.isKeyFrame = _keyFrame;
+}
+
 
 
 /**

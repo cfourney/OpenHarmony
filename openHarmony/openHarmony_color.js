@@ -575,6 +575,7 @@ Object.defineProperty($.oColor.prototype, 'value', {
  * @return: {$.oColor}           The new resulting $.oColor object.
  */
 $.oColor.prototype.moveToPalette = function (oPaletteObject, index){
+    if (typeof index === 'undefined') var index = oPaletteObject.paletteObject.nColors;
     var duplicate = this.copyToPalette(oPaletteObject, index)
     this.remove()
     
@@ -590,6 +591,7 @@ $.oColor.prototype.moveToPalette = function (oPaletteObject, index){
  * @return: {$.oColor}           The new resulting $.oColor object.
  */
 $.oColor.prototype.copyToPalette = function (oPaletteObject, index){
+    if (typeof index === 'undefined') var index = oPaletteObject.paletteObject.nColors;
     var _color = this.colorObject;
    
     oPaletteObject.paletteObject.cloneColor(_color)
