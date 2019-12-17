@@ -841,7 +841,7 @@
             
                 <li data-name="$.oDrawingNode#group"><a href="$.oDrawingNode.html#group">group</a></li>
             
-                <li data-name="$.oDrawingNode#height"><a href="$.oDrawingNode.html#height">height</a></li>
+                <li data-name="$.oDrawingNode#inLinks"><a href="$.oDrawingNode.html#inLinks">inLinks</a></li>
             
                 <li data-name="$.oDrawingNode#inNodes"><a href="$.oDrawingNode.html#inNodes">inNodes</a></li>
             
@@ -935,6 +935,58 @@
                 <li data-name="$.oDrawingNode#unlinkOutNode"><a href="$.oDrawingNode.html#unlinkOutNode">unlinkOutNode</a></li>
             
                 <li data-name="$.oDrawingNode#unlinkOutPort"><a href="$.oDrawingNode.html#unlinkOutPort">unlinkOutPort</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="$.oDynList">
+            <span class="title">
+                <a href="$.oDynList.html">$.oDynList</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oDynList#lastIndex"><a href="$.oDynList.html#lastIndex">lastIndex</a></li>
+            
+                <li data-name="$.oDynList#startIndex"><a href="$.oDynList.html#startIndex">startIndex</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oDynList#extractProperty"><a href="$.oDynList.html#extractProperty">extractProperty</a></li>
+            
+                <li data-name="$.oDynList#filterByFunction"><a href="$.oDynList.html#filterByFunction">filterByFunction</a></li>
+            
+                <li data-name="$.oDynList#filterByProperty"><a href="$.oDynList.html#filterByProperty">filterByProperty</a></li>
+            
+                <li data-name="$.oDynList#first"><a href="$.oDynList.html#first">first</a></li>
+            
+                <li data-name="$.oDynList#length"><a href="$.oDynList.html#length">length</a></li>
+            
+                <li data-name="$.oDynList#next"><a href="$.oDynList.html#next">next</a></li>
+            
+                <li data-name="$.oDynList#pop"><a href="$.oDynList.html#pop">pop</a></li>
+            
+                <li data-name="$.oDynList#push"><a href="$.oDynList.html#push">push</a></li>
+            
+                <li data-name="$.oDynList#sortByFunction"><a href="$.oDynList.html#sortByFunction">sortByFunction</a></li>
+            
+                <li data-name="$.oDynList#sortByProperty"><a href="$.oDynList.html#sortByProperty">sortByProperty</a></li>
+            
+                <li data-name="$.oDynList#toString"><a href="$.oDynList.html#toString">toString</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1169,7 +1221,7 @@
             
                 <li data-name="$.oGroupNode#group"><a href="$.oGroupNode.html#group">group</a></li>
             
-                <li data-name="$.oGroupNode#height"><a href="$.oGroupNode.html#height">height</a></li>
+                <li data-name="$.oGroupNode#inLinks"><a href="$.oGroupNode.html#inLinks">inLinks</a></li>
             
                 <li data-name="$.oGroupNode#inNodes"><a href="$.oGroupNode.html#inNodes">inNodes</a></li>
             
@@ -1344,6 +1396,8 @@
             
                 <li data-name="$.oList#toArray"><a href="$.oList.html#toArray">toArray</a></li>
             
+                <li data-name="$.oList#toArray"><a href="$.oList.html#toArray">toArray</a></li>
+            
                 <li data-name="$.oList#toString"><a href="$.oList.html#toString">toString</a></li>
             
             </ul>
@@ -1405,7 +1459,9 @@
             
                 <li data-name="$.oNode#group"><a href="$.oNode.html#group">group</a></li>
             
-                <li data-name="$.oNode#height"><a href="$.oNode.html#height">height</a></li>
+                <li data-name="$.oNode#inLinks"><a href="$.oNode.html#inLinks">inLinks</a></li>
+            
+                <li data-name="$.oNode#inLinks"><a href="$.oNode.html#inLinks">inLinks</a></li>
             
                 <li data-name="$.oNode#inNodes"><a href="$.oNode.html#inNodes">inNodes</a></li>
             
@@ -1540,6 +1596,8 @@
             
                 <li data-name="$.oNodeLink#linkOut"><a href="$.oNodeLink.html#linkOut">linkOut</a></li>
             
+                <li data-name="$.oNodeLink#toString"><a href="$.oNodeLink.html#toString">toString</a></li>
+            
                 <li data-name="$.oNodeLink#validate"><a href="$.oNodeLink.html#validate">validate</a></li>
             
             </ul>
@@ -1661,7 +1719,7 @@
             
                 <li data-name="$.oPegNode#group"><a href="$.oPegNode.html#group">group</a></li>
             
-                <li data-name="$.oPegNode#height"><a href="$.oPegNode.html#height">height</a></li>
+                <li data-name="$.oPegNode#inLinks"><a href="$.oPegNode.html#inLinks">inLinks</a></li>
             
                 <li data-name="$.oPegNode#inNodes"><a href="$.oPegNode.html#inNodes">inNodes</a></li>
             
@@ -2113,7 +2171,18 @@
             
 
     
-    <pre class="prettyprint"><code>// This is how to use this page:var myNode = $.scn.root.addNode("READ");        // This is the node type visible here under NodeType$.log(myNode.type)                              // This is how to find out the typemyNode.drawing.element = "1"                    // Sets the drawing.element attribute to display drawing "1"myNode.drawing.element = {frameNumber: 5, "2"}  // If the attribute can be animated, pass a {frameNumber, value} object to set a specific frame;myNode.attributes.drawing.element.setValue ("2", 5)   // also possible to set the attribute directly.// refer to the node type on this page to find out what properties can be set with what synthax for each Node Type.</code></pre>
+    <pre class="prettyprint"><code>// This is how to use this page:
+
+var myNode = $.scn.root.addNode("READ");        // This is the node type visible here under NodeType
+$.log(myNode.type)                              // This is how to find out the type
+
+myNode.drawing.element = "1"                    // Sets the drawing.element attribute to display drawing "1"
+
+myNode.drawing.element = {frameNumber: 5, "2"}  // If the attribute can be animated, pass a {frameNumber, value} object to set a specific frame;
+
+myNode.attributes.drawing.element.setValue ("2", 5)   // also possible to set the attribute directly.
+
+// refer to the node type on this page to find out what properties can be set with what synthax for each Node Type.</code></pre>
     
 
         
@@ -78693,7 +78762,7 @@ __</attributes>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Dec 13 2019 20:57:35 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 16 2019 19:41:48 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>

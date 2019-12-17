@@ -841,7 +841,7 @@
             
                 <li data-name="$.oDrawingNode#group"><a href="$.oDrawingNode.html#group">group</a></li>
             
-                <li data-name="$.oDrawingNode#height"><a href="$.oDrawingNode.html#height">height</a></li>
+                <li data-name="$.oDrawingNode#inLinks"><a href="$.oDrawingNode.html#inLinks">inLinks</a></li>
             
                 <li data-name="$.oDrawingNode#inNodes"><a href="$.oDrawingNode.html#inNodes">inNodes</a></li>
             
@@ -935,6 +935,58 @@
                 <li data-name="$.oDrawingNode#unlinkOutNode"><a href="$.oDrawingNode.html#unlinkOutNode">unlinkOutNode</a></li>
             
                 <li data-name="$.oDrawingNode#unlinkOutPort"><a href="$.oDrawingNode.html#unlinkOutPort">unlinkOutPort</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="$.oDynList">
+            <span class="title">
+                <a href="$.oDynList.html">$.oDynList</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oDynList#lastIndex"><a href="$.oDynList.html#lastIndex">lastIndex</a></li>
+            
+                <li data-name="$.oDynList#startIndex"><a href="$.oDynList.html#startIndex">startIndex</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oDynList#extractProperty"><a href="$.oDynList.html#extractProperty">extractProperty</a></li>
+            
+                <li data-name="$.oDynList#filterByFunction"><a href="$.oDynList.html#filterByFunction">filterByFunction</a></li>
+            
+                <li data-name="$.oDynList#filterByProperty"><a href="$.oDynList.html#filterByProperty">filterByProperty</a></li>
+            
+                <li data-name="$.oDynList#first"><a href="$.oDynList.html#first">first</a></li>
+            
+                <li data-name="$.oDynList#length"><a href="$.oDynList.html#length">length</a></li>
+            
+                <li data-name="$.oDynList#next"><a href="$.oDynList.html#next">next</a></li>
+            
+                <li data-name="$.oDynList#pop"><a href="$.oDynList.html#pop">pop</a></li>
+            
+                <li data-name="$.oDynList#push"><a href="$.oDynList.html#push">push</a></li>
+            
+                <li data-name="$.oDynList#sortByFunction"><a href="$.oDynList.html#sortByFunction">sortByFunction</a></li>
+            
+                <li data-name="$.oDynList#sortByProperty"><a href="$.oDynList.html#sortByProperty">sortByProperty</a></li>
+            
+                <li data-name="$.oDynList#toString"><a href="$.oDynList.html#toString">toString</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1169,7 +1221,7 @@
             
                 <li data-name="$.oGroupNode#group"><a href="$.oGroupNode.html#group">group</a></li>
             
-                <li data-name="$.oGroupNode#height"><a href="$.oGroupNode.html#height">height</a></li>
+                <li data-name="$.oGroupNode#inLinks"><a href="$.oGroupNode.html#inLinks">inLinks</a></li>
             
                 <li data-name="$.oGroupNode#inNodes"><a href="$.oGroupNode.html#inNodes">inNodes</a></li>
             
@@ -1344,6 +1396,8 @@
             
                 <li data-name="$.oList#toArray"><a href="$.oList.html#toArray">toArray</a></li>
             
+                <li data-name="$.oList#toArray"><a href="$.oList.html#toArray">toArray</a></li>
+            
                 <li data-name="$.oList#toString"><a href="$.oList.html#toString">toString</a></li>
             
             </ul>
@@ -1405,7 +1459,9 @@
             
                 <li data-name="$.oNode#group"><a href="$.oNode.html#group">group</a></li>
             
-                <li data-name="$.oNode#height"><a href="$.oNode.html#height">height</a></li>
+                <li data-name="$.oNode#inLinks"><a href="$.oNode.html#inLinks">inLinks</a></li>
+            
+                <li data-name="$.oNode#inLinks"><a href="$.oNode.html#inLinks">inLinks</a></li>
             
                 <li data-name="$.oNode#inNodes"><a href="$.oNode.html#inNodes">inNodes</a></li>
             
@@ -1540,6 +1596,8 @@
             
                 <li data-name="$.oNodeLink#linkOut"><a href="$.oNodeLink.html#linkOut">linkOut</a></li>
             
+                <li data-name="$.oNodeLink#toString"><a href="$.oNodeLink.html#toString">toString</a></li>
+            
                 <li data-name="$.oNodeLink#validate"><a href="$.oNodeLink.html#validate">validate</a></li>
             
             </ul>
@@ -1661,7 +1719,7 @@
             
                 <li data-name="$.oPegNode#group"><a href="$.oPegNode.html#group">group</a></li>
             
-                <li data-name="$.oPegNode#height"><a href="$.oPegNode.html#height">height</a></li>
+                <li data-name="$.oPegNode#inLinks"><a href="$.oPegNode.html#inLinks">inLinks</a></li>
             
                 <li data-name="$.oPegNode#inNodes"><a href="$.oPegNode.html#inNodes">inNodes</a></li>
             
@@ -2092,7 +2150,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1270
+            openHarmony/openHarmony_node.js, line 1307
         </div>
         
     </div>
@@ -2222,7 +2280,24 @@
         
 
     
-    <pre class="prettyprint"><code>// Drawing Nodes are more than a node, as they do not work without an associated Drawing column and element.// adding a drawing node will automatically create a column and an element, unless they are provided as arguments.// Creating an element makes importing a drawing file possible.var doc = $.scn;var drawingName = "myDrawing";var myElement = doc.addElement(drawingName, "TVG");                      // add an element that holds TVG(Toonboom Vector Drawing) filesvar myDrawingColumn = doc.addColumn("DRAWING", drawingName, myElement);  // create a column and link the element created to itvar sceneRoot = doc.root;                                                // grab the scene root group// Creating the Drawing node and linking the previously created element and columnvar myDrawingNode = sceneRoot.addDrawingNode(drawingName, new $.oPoint(), myDrawingColumn, myElement);// This also works:var myOtherNode = sceneRoot.addDrawingNode("Drawing2");</code></pre>
+    <pre class="prettyprint"><code>// Drawing Nodes are more than a node, as they do not work without an associated Drawing column and element.
+// adding a drawing node will automatically create a column and an element, unless they are provided as arguments.
+// Creating an element makes importing a drawing file possible.
+
+var doc = $.scn;
+
+var drawingName = "myDrawing";
+var myElement = doc.addElement(drawingName, "TVG");                      // add an element that holds TVG(Toonboom Vector Drawing) files
+var myDrawingColumn = doc.addColumn("DRAWING", drawingName, myElement);  // create a column and link the element created to it
+
+var sceneRoot = doc.root;                                                // grab the scene root group
+
+// Creating the Drawing node and linking the previously created element and column
+var myDrawingNode = sceneRoot.addDrawingNode(drawingName, new $.oPoint(), myDrawingColumn, myElement);
+
+// This also works:
+
+var myOtherNode = sceneRoot.addDrawingNode("Drawing2");</code></pre>
     
 
     
@@ -2297,7 +2372,20 @@
         
 
     
-    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:var myNode = $.scn.$node("Top/Drawing")var drawingAttribute = myNode.attributes.drawing.element// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"// for a more direct way to access an attribute, it's possible to also call:var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
+    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:
+
+var myNode = $.scn.$node("Top/Drawing")
+var drawingAttribute = myNode.attributes.drawing.element
+
+// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
+
+drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
+var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
+$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
+
+// for a more direct way to access an attribute, it's possible to also call:
+
+var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
     
 
     
@@ -2626,7 +2714,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="height">height<span class="type-signature type float">float</span> </h4>
+        <h4 class="name" id="inLinks">inLinks<span class="type-signature type array.<onodelink>">Array.&lt;oNodeLink></span> </h4>
     </div>
     
     
@@ -2634,7 +2722,7 @@
 <dd>
     
     <div class="description">
-        The height of the node in the node view.
+        The list of nodes connected to the inport of this node, in order of inport.
     </div>
     
     
@@ -3586,7 +3674,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 933
+            openHarmony/openHarmony_node.js, line 970
         </div>
         
     </div>
@@ -3779,7 +3867,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 958
+            openHarmony/openHarmony_node.js, line 995
         </div>
         
     </div>
@@ -3972,7 +4060,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1008
+            openHarmony/openHarmony_node.js, line 1045
         </div>
         
     </div>
@@ -4153,7 +4241,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1028
+            openHarmony/openHarmony_node.js, line 1065
         </div>
         
     </div>
@@ -4299,7 +4387,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1341
+            openHarmony/openHarmony_node.js, line 1378
         </div>
         
     </div>
@@ -4401,7 +4489,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1102
+            openHarmony/openHarmony_node.js, line 1139
         </div>
         
     </div>
@@ -4548,7 +4636,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1066
+            openHarmony/openHarmony_node.js, line 1103
         </div>
         
     </div>
@@ -4695,7 +4783,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1147
+            openHarmony/openHarmony_node.js, line 1184
         </div>
         
     </div>
@@ -4795,7 +4883,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1384
+            openHarmony/openHarmony_node.js, line 1421
         </div>
         
     </div>
@@ -4979,7 +5067,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 888
+            openHarmony/openHarmony_node.js, line 925
         </div>
         
     </div>
@@ -5195,7 +5283,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 726
+            openHarmony/openHarmony_node.js, line 763
         </div>
         
     </div>
@@ -5437,7 +5525,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 799
+            openHarmony/openHarmony_node.js, line 836
         </div>
         
     </div>
@@ -5679,7 +5767,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 984
+            openHarmony/openHarmony_node.js, line 1021
         </div>
         
     </div>
@@ -5872,7 +5960,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1040
+            openHarmony/openHarmony_node.js, line 1077
         </div>
         
     </div>
@@ -6042,7 +6130,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 911
+            openHarmony/openHarmony_node.js, line 948
         </div>
         
     </div>
@@ -6191,7 +6279,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 711
+            openHarmony/openHarmony_node.js, line 748
         </div>
         
     </div>
@@ -6338,7 +6426,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1092
+            openHarmony/openHarmony_node.js, line 1129
         </div>
         
     </div>
@@ -6440,7 +6528,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 764
+            openHarmony/openHarmony_node.js, line 801
         </div>
         
     </div>
@@ -6587,7 +6675,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 782
+            openHarmony/openHarmony_node.js, line 819
         </div>
         
     </div>
@@ -6734,7 +6822,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 841
+            openHarmony/openHarmony_node.js, line 878
         </div>
         
     </div>
@@ -6881,7 +6969,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 864
+            openHarmony/openHarmony_node.js, line 901
         </div>
         
     </div>
@@ -7057,7 +7145,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Dec 13 2019 20:57:34 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 16 2019 19:41:47 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>
