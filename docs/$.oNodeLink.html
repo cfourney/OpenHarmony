@@ -62,8 +62,6 @@
             
                 <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
             
-                <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
-            
                 <li data-name="$#browseForFile"><a href="$.html#browseForFile">browseForFile</a></li>
             
                 <li data-name="$#browseForFolder"><a href="$.html#browseForFolder">browseForFolder</a></li>
@@ -75,6 +73,8 @@
                 <li data-name="$#debug"><a href="$.html#debug">debug</a></li>
             
                 <li data-name="$#directoryGet"><a href="$.html#directoryGet">directoryGet</a></li>
+            
+                <li data-name="$#endUndo"><a href="$.html#endUndo">endUndo</a></li>
             
                 <li data-name="$#log"><a href="$.html#log">log</a></li>
             
@@ -739,9 +739,13 @@
             
                 <li data-name="$.oDrawing#color"><a href="$.oDrawing.html#color">color</a></li>
             
+                <li data-name="$.oDrawing#name"><a href="$.oDrawing.html#name">name</a></li>
+            
                 <li data-name="$.oDrawing#path"><a href="$.oDrawing.html#path">path</a></li>
             
                 <li data-name="$.oDrawing#position"><a href="$.oDrawing.html#position">position</a></li>
+            
+                <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
             
                 <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
             
@@ -809,6 +813,10 @@
                 <li data-name="$.oDrawingColumn#getKeyFrames"><a href="$.oDrawingColumn.html#getKeyFrames">getKeyFrames</a></li>
             
                 <li data-name="$.oDrawingColumn#removeDuplicateKeys"><a href="$.oDrawingColumn.html#removeDuplicateKeys">removeDuplicateKeys</a></li>
+            
+                <li data-name="$.oDrawingColumn#removeUnexposedDrawings"><a href="$.oDrawingColumn.html#removeUnexposedDrawings">removeUnexposedDrawings</a></li>
+            
+                <li data-name="$.oDrawingColumn#renameAllByFrame"><a href="$.oDrawingColumn.html#renameAllByFrame">renameAllByFrame</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1287,6 +1295,8 @@
                 <li data-name="$.oGroupNode#addNode"><a href="$.oGroupNode.html#addNode">addNode</a></li>
             
                 <li data-name="$.oGroupNode#addOutLink"><a href="$.oGroupNode.html#addOutLink">addOutLink</a></li>
+            
+                <li data-name="$.oGroupNode#backdrops"><a href="$.oGroupNode.html#backdrops">backdrops</a></li>
             
                 <li data-name="$.oGroupNode#centerAbove"><a href="$.oGroupNode.html#centerAbove">centerAbove</a></li>
             
@@ -1903,9 +1913,9 @@
             
                 <li data-name="$.oScene#stage"><a href="$.oScene.html#stage">stage</a></li>
             
-                <li data-name="$.oScene#startFrame"><a href="$.oScene.html#startFrame">startFrame</a></li>
+                <li data-name="$.oScene#startPreview"><a href="$.oScene.html#startPreview">startPreview</a></li>
             
-                <li data-name="$.oScene#stopFrame"><a href="$.oScene.html#stopFrame">stopFrame</a></li>
+                <li data-name="$.oScene#stopPreview"><a href="$.oScene.html#stopPreview">stopPreview</a></li>
             
                 <li data-name="$.oScene#unitsX"><a href="$.oScene.html#unitsX">unitsX</a></li>
             
@@ -1949,6 +1959,8 @@
                 <li data-name="$.oScene#addPalette"><a href="$.oScene.html#addPalette">addPalette</a></li>
             
                 <li data-name="$.oScene#close"><a href="$.oScene.html#close">close</a></li>
+            
+                <li data-name="$.oScene#exportQT"><a href="$.oScene.html#exportQT">exportQT</a></li>
             
                 <li data-name="$.oScene#exportTemplate"><a href="$.oScene.html#exportTemplate">exportTemplate</a></li>
             
@@ -2381,36 +2393,7 @@
         
 
     
-    <pre class="prettyprint"><code>//Connect two pegs together.
- var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
- var peg2     = $.scene.getNodeByPath( "Top/Peg2" );
- 
- //Create a new $.oNodeLink -- We'll connect two pegs with this new nodeLink.
- var link = new $.oNodeLink( peg1,     //Out Node 
-                             0,        //Out Port
-                             peg2,     //In Node
-                             0 );      //In Port
-   
- //The node link doesn't exist yet, but lets apply it.
- link.apply(); 
- //This connection between peg1 and peg2 now exists.
- 
- //We can also get the outlinks for the entire node and all of its outputs.
- var outLinks = peg2.outLinks;
- 
- //Lets connect peg3 to the chain with this existing outLink. This will use an existing link if its already there, or create a new one if none exists.
- var peg3     = $.scene.getNodeByPath( "Top/Peg3" );
- outLinks[0].linkIn( peg3, 0 );
- 
- //Uh oh! We need to connect a peg between 1 and 2. 
- var peg4     = $.scene.getNodeByPath( "Top/Peg4" );
- 
- //The link we already created above can have a node inserted between it easily.
- link.insertNode(  peg4, 0, 0 ); //Peg to insert, in port, out port.
- 
- //Oh no! Peg 5 is in a group. Well, it still works!
- var peg5     = $.scene.getNodeByPath( "Top/Group/Peg5" );
- var newLink  = peg1.addOutLink( peg5 );</code></pre>
+    <pre class="prettyprint"><code>//Connect two pegs together. var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Peg2" );  //Create a new $.oNodeLink -- We'll connect two pegs with this new nodeLink. var link = new $.oNodeLink( peg1,     //Out Node                              0,        //Out Port                             peg2,     //In Node                             0 );      //In Port    //The node link doesn't exist yet, but lets apply it. link.apply();  //This connection between peg1 and peg2 now exists.  //We can also get the outlinks for the entire node and all of its outputs. var outLinks = peg2.outLinks;  //Lets connect peg3 to the chain with this existing outLink. This will use an existing link if its already there, or create a new one if none exists. var peg3     = $.scene.getNodeByPath( "Top/Peg3" ); outLinks[0].linkIn( peg3, 0 );  //Uh oh! We need to connect a peg between 1 and 2.  var peg4     = $.scene.getNodeByPath( "Top/Peg4" );  //The link we already created above can have a node inserted between it easily. link.insertNode(  peg4, 0, 0 ); //Peg to insert, in port, out port.  //Oh no! Peg 5 is in a group. Well, it still works! var peg5     = $.scene.getNodeByPath( "Top/Group/Peg5" ); var newLink  = peg1.addOutLink( peg5 );</code></pre>
     
 
     
@@ -2479,14 +2462,7 @@
         
 
     
-    <pre class="prettyprint"><code>//Connect two pegs together.
- var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
- var peg2     = $.scene.getNodeByPath( "Top/NodeDoesntExist" );
- var link = new $.oNodeLink( peg1,     //Out Node 
-                             0,        //Out Port
-                             peg2,     //In Node
-                             0 );      //In Port
- link.exists == false;   //FALSE, This link doesnt exist in this context, because the node doesnt exist.</code></pre>
+    <pre class="prettyprint"><code>//Connect two pegs together. var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/NodeDoesntExist" ); var link = new $.oNodeLink( peg1,     //Out Node                              0,        //Out Port                             peg2,     //In Node                             0 );      //In Port link.exists == false;   //FALSE, This link doesnt exist in this context, because the node doesnt exist.</code></pre>
     
 
     
@@ -2841,18 +2817,7 @@
         
 
     
-    <pre class="prettyprint"><code>//Connect two pegs together.
- var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
- var peg2     = $.scene.getNodeByPath( "Top/Peg2" );
- 
- //Create a new $.oNodeLink -- We'll connect two pegs with this new nodeLink.
- var link = new $.oNodeLink( peg1,     //Out Node 
-                             0,        //Out Port
-                             peg2,     //In Node
-                             0 );      //In Port
-   
- //The node link doesn't exist yet, but lets apply it.
- link.apply();  </code></pre>
+    <pre class="prettyprint"><code>//Connect two pegs together. var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Peg2" );  //Create a new $.oNodeLink -- We'll connect two pegs with this new nodeLink. var link = new $.oNodeLink( peg1,     //Out Node                              0,        //Out Port                             peg2,     //In Node                             0 );      //In Port    //The node link doesn't exist yet, but lets apply it. link.apply();  </code></pre>
     
 
     
@@ -3022,19 +2987,7 @@
         
 
     
-    <pre class="prettyprint"><code>//Connect two pegs together.
- var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
- var peg2     = $.scene.getNodeByPath( "Top/Peg2" );
- 
- //Create a new $.oNodeLink -- We'll connect two pegs with this new nodeLink.
- var link = new $.oNodeLink( peg1,     //Out Node 
-                             0,        //Out Port
-                             peg2,     //In Node
-                             0 );      //In Port
-   
- //The link we already created above can have a node inserted between it easily.
- var peg4     = $.scene.getNodeByPath( "Top/Peg4" );
- link.insertNode(  peg4, 0, 0 ); //Peg to insert, in port, out port.</code></pre>
+    <pre class="prettyprint"><code>//Connect two pegs together. var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Peg2" );  //Create a new $.oNodeLink -- We'll connect two pegs with this new nodeLink. var link = new $.oNodeLink( peg1,     //Out Node                              0,        //Out Port                             peg2,     //In Node                             0 );      //In Port    //The link we already created above can have a node inserted between it easily. var peg4     = $.scene.getNodeByPath( "Top/Peg4" ); link.insertNode(  peg4, 0, 0 ); //Peg to insert, in port, out port.</code></pre>
     
 
     
@@ -3181,12 +3134,7 @@
         
 
     
-    <pre class="prettyprint"><code>//Connect two pegs together.
- var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
- var peg2     = $.scene.getNodeByPath( "Top/Peg2" );
- 
- var outLinks  = peg1.outLinks;
- outLinks[0].linkIn( peg2, 0 ); //Links the input of peg2, port 0 -- to this link, connecting its outNode [peg1] and outPort [0] and outLink [arbitrary].</code></pre>
+    <pre class="prettyprint"><code>//Connect two pegs together. var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Peg2" );  var outLinks  = peg1.outLinks; outLinks[0].linkIn( peg2, 0 ); //Links the input of peg2, port 0 -- to this link, connecting its outNode [peg1] and outPort [0] and outLink [arbitrary].</code></pre>
     
 
     
@@ -3333,12 +3281,7 @@
         
 
     
-    <pre class="prettyprint"><code>//Connect two pegs together.
- var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
- var peg2     = $.scene.getNodeByPath( "Top/Peg2" );
- 
- var inLinks  = peg1.inLinks;
- inLinks[0].linkOut( peg2, 0 ); //Links the output of peg2, port 0 -- to this link, connecting its inNode [peg1] and inPort [0].</code></pre>
+    <pre class="prettyprint"><code>//Connect two pegs together. var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Peg2" );  var inLinks  = peg1.inLinks; inLinks[0].linkOut( peg2, 0 ); //Links the output of peg2, port 0 -- to this link, connecting its inNode [peg1] and inPort [0].</code></pre>
     
 
     
@@ -3434,7 +3377,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 16 2019 21:53:59 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Dec 17 2019 18:07:06 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

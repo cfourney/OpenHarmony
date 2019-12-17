@@ -62,8 +62,6 @@
             
                 <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
             
-                <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
-            
                 <li data-name="$#browseForFile"><a href="$.html#browseForFile">browseForFile</a></li>
             
                 <li data-name="$#browseForFolder"><a href="$.html#browseForFolder">browseForFolder</a></li>
@@ -75,6 +73,8 @@
                 <li data-name="$#debug"><a href="$.html#debug">debug</a></li>
             
                 <li data-name="$#directoryGet"><a href="$.html#directoryGet">directoryGet</a></li>
+            
+                <li data-name="$#endUndo"><a href="$.html#endUndo">endUndo</a></li>
             
                 <li data-name="$#log"><a href="$.html#log">log</a></li>
             
@@ -739,9 +739,13 @@
             
                 <li data-name="$.oDrawing#color"><a href="$.oDrawing.html#color">color</a></li>
             
+                <li data-name="$.oDrawing#name"><a href="$.oDrawing.html#name">name</a></li>
+            
                 <li data-name="$.oDrawing#path"><a href="$.oDrawing.html#path">path</a></li>
             
                 <li data-name="$.oDrawing#position"><a href="$.oDrawing.html#position">position</a></li>
+            
+                <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
             
                 <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
             
@@ -809,6 +813,10 @@
                 <li data-name="$.oDrawingColumn#getKeyFrames"><a href="$.oDrawingColumn.html#getKeyFrames">getKeyFrames</a></li>
             
                 <li data-name="$.oDrawingColumn#removeDuplicateKeys"><a href="$.oDrawingColumn.html#removeDuplicateKeys">removeDuplicateKeys</a></li>
+            
+                <li data-name="$.oDrawingColumn#removeUnexposedDrawings"><a href="$.oDrawingColumn.html#removeUnexposedDrawings">removeUnexposedDrawings</a></li>
+            
+                <li data-name="$.oDrawingColumn#renameAllByFrame"><a href="$.oDrawingColumn.html#renameAllByFrame">renameAllByFrame</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1287,6 +1295,8 @@
                 <li data-name="$.oGroupNode#addNode"><a href="$.oGroupNode.html#addNode">addNode</a></li>
             
                 <li data-name="$.oGroupNode#addOutLink"><a href="$.oGroupNode.html#addOutLink">addOutLink</a></li>
+            
+                <li data-name="$.oGroupNode#backdrops"><a href="$.oGroupNode.html#backdrops">backdrops</a></li>
             
                 <li data-name="$.oGroupNode#centerAbove"><a href="$.oGroupNode.html#centerAbove">centerAbove</a></li>
             
@@ -1903,9 +1913,9 @@
             
                 <li data-name="$.oScene#stage"><a href="$.oScene.html#stage">stage</a></li>
             
-                <li data-name="$.oScene#startFrame"><a href="$.oScene.html#startFrame">startFrame</a></li>
+                <li data-name="$.oScene#startPreview"><a href="$.oScene.html#startPreview">startPreview</a></li>
             
-                <li data-name="$.oScene#stopFrame"><a href="$.oScene.html#stopFrame">stopFrame</a></li>
+                <li data-name="$.oScene#stopPreview"><a href="$.oScene.html#stopPreview">stopPreview</a></li>
             
                 <li data-name="$.oScene#unitsX"><a href="$.oScene.html#unitsX">unitsX</a></li>
             
@@ -1949,6 +1959,8 @@
                 <li data-name="$.oScene#addPalette"><a href="$.oScene.html#addPalette">addPalette</a></li>
             
                 <li data-name="$.oScene#close"><a href="$.oScene.html#close">close</a></li>
+            
+                <li data-name="$.oScene#exportQT"><a href="$.oScene.html#exportQT">exportQT</a></li>
             
                 <li data-name="$.oScene#exportTemplate"><a href="$.oScene.html#exportTemplate">exportTemplate</a></li>
             
@@ -2135,8 +2147,7 @@
     oNode
     </h2>
     
-        <div class="class-description">The oNode class represents a node in the Harmony scene. <br>
-It holds the value of its position in the node view, and functions to link to other nodes, as well as set the attributes of the node.<br></div>
+        <div class="class-description">The oNode class represents a node in the Harmony scene. <br>It holds the value of its position in the node view, and functions to link to other nodes, as well as set the attributes of the node.<br></div>
     
 </header>  
 
@@ -2292,35 +2303,7 @@ It holds the value of its position in the node view, and functions to link to ot
         
 
     
-    <pre class="prettyprint"><code>// To grab a node object from the scene, it's possible to create a new node object by calling the constructor:
-var myNode = new $.oNode("Top/Drawing", $.scn) 
-
-// However, most nodes will be grabbed directly from the scene object.
-var doc = $.scn 
-var nodes = doc.nodes;                   // grabs the list of all the nodes in the scene
-
-// It's possible to grab a single node from the path in the scene
-var myNode = doc.getNodeByPath("Top/Drawing")
-var myNode = doc.$node("Top/Drawing")    // short synthax but same function
-
-// depending on the type of node, oNode objects returned by these functions can actually be an instance the subclasses
-// oDrawingNode, oGroupNode, oPegNode...
-
-$.log(myNode instanceof $.oNode)           // true
-$.log(myNode instanceof $.oDrawingNode)  // true
-
-// These other subclasses of nodes have other methods that are only shared by nodes of a certain type.
-
-// Not documented in this class, oNode objects have attributes which correspond to the values visible in the Layer Properties window.
-// The attributes values can be accessed and set by using the dot notation on the oNode object:
-
-myNode.can_animate = false;
-myNode.position.separate = true;
-myNode.position.x = 10;
-
-// To access the oAttribute objects in the node, call the oNode.attributes object that contains them
-
-var attributes = myNode.attributes;</code></pre>
+    <pre class="prettyprint"><code>// To grab a node object from the scene, it's possible to create a new node object by calling the constructor:var myNode = new $.oNode("Top/Drawing", $.scn) // However, most nodes will be grabbed directly from the scene object.var doc = $.scn var nodes = doc.nodes;                   // grabs the list of all the nodes in the scene// It's possible to grab a single node from the path in the scenevar myNode = doc.getNodeByPath("Top/Drawing")var myNode = doc.$node("Top/Drawing")    // short synthax but same function// depending on the type of node, oNode objects returned by these functions can actually be an instance the subclasses// oDrawingNode, oGroupNode, oPegNode...$.log(myNode instanceof $.oNode)           // true$.log(myNode instanceof $.oDrawingNode)  // true// These other subclasses of nodes have other methods that are only shared by nodes of a certain type.// Not documented in this class, oNode objects have attributes which correspond to the values visible in the Layer Properties window.// The attributes values can be accessed and set by using the dot notation on the oNode object:myNode.can_animate = false;myNode.position.separate = true;myNode.position.x = 10;// To access the oAttribute objects in the node, call the oNode.attributes object that contains themvar attributes = myNode.attributes;</code></pre>
     
 
     
@@ -2389,20 +2372,7 @@ var attributes = myNode.attributes;</code></pre>
         
 
     
-    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:
-
-var myNode = $.scn.$node("Top/Drawing")
-var drawingAttribute = myNode.attributes.drawing.element
-
-// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
-
-drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
-var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
-$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
-
-// for a more direct way to access an attribute, it's possible to also call:
-
-var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
+    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:var myNode = $.scn.$node("Top/Drawing")var drawingAttribute = myNode.attributes.drawing.element// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"// for a more direct way to access an attribute, it's possible to also call:var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
     
 
     
@@ -3781,9 +3751,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
         
 
     
-    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
- var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" );
- var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
+    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" ); var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
     
 
     
@@ -6953,7 +6921,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 16 2019 21:53:59 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Dec 17 2019 18:07:06 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

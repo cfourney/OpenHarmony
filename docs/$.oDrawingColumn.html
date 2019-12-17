@@ -62,8 +62,6 @@
             
                 <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
             
-                <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
-            
                 <li data-name="$#browseForFile"><a href="$.html#browseForFile">browseForFile</a></li>
             
                 <li data-name="$#browseForFolder"><a href="$.html#browseForFolder">browseForFolder</a></li>
@@ -75,6 +73,8 @@
                 <li data-name="$#debug"><a href="$.html#debug">debug</a></li>
             
                 <li data-name="$#directoryGet"><a href="$.html#directoryGet">directoryGet</a></li>
+            
+                <li data-name="$#endUndo"><a href="$.html#endUndo">endUndo</a></li>
             
                 <li data-name="$#log"><a href="$.html#log">log</a></li>
             
@@ -739,9 +739,13 @@
             
                 <li data-name="$.oDrawing#color"><a href="$.oDrawing.html#color">color</a></li>
             
+                <li data-name="$.oDrawing#name"><a href="$.oDrawing.html#name">name</a></li>
+            
                 <li data-name="$.oDrawing#path"><a href="$.oDrawing.html#path">path</a></li>
             
                 <li data-name="$.oDrawing#position"><a href="$.oDrawing.html#position">position</a></li>
+            
+                <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
             
                 <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
             
@@ -809,6 +813,10 @@
                 <li data-name="$.oDrawingColumn#getKeyFrames"><a href="$.oDrawingColumn.html#getKeyFrames">getKeyFrames</a></li>
             
                 <li data-name="$.oDrawingColumn#removeDuplicateKeys"><a href="$.oDrawingColumn.html#removeDuplicateKeys">removeDuplicateKeys</a></li>
+            
+                <li data-name="$.oDrawingColumn#removeUnexposedDrawings"><a href="$.oDrawingColumn.html#removeUnexposedDrawings">removeUnexposedDrawings</a></li>
+            
+                <li data-name="$.oDrawingColumn#renameAllByFrame"><a href="$.oDrawingColumn.html#renameAllByFrame">renameAllByFrame</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1287,6 +1295,8 @@
                 <li data-name="$.oGroupNode#addNode"><a href="$.oGroupNode.html#addNode">addNode</a></li>
             
                 <li data-name="$.oGroupNode#addOutLink"><a href="$.oGroupNode.html#addOutLink">addOutLink</a></li>
+            
+                <li data-name="$.oGroupNode#backdrops"><a href="$.oGroupNode.html#backdrops">backdrops</a></li>
             
                 <li data-name="$.oGroupNode#centerAbove"><a href="$.oGroupNode.html#centerAbove">centerAbove</a></li>
             
@@ -1903,9 +1913,9 @@
             
                 <li data-name="$.oScene#stage"><a href="$.oScene.html#stage">stage</a></li>
             
-                <li data-name="$.oScene#startFrame"><a href="$.oScene.html#startFrame">startFrame</a></li>
+                <li data-name="$.oScene#startPreview"><a href="$.oScene.html#startPreview">startPreview</a></li>
             
-                <li data-name="$.oScene#stopFrame"><a href="$.oScene.html#stopFrame">stopFrame</a></li>
+                <li data-name="$.oScene#stopPreview"><a href="$.oScene.html#stopPreview">stopPreview</a></li>
             
                 <li data-name="$.oScene#unitsX"><a href="$.oScene.html#unitsX">unitsX</a></li>
             
@@ -1949,6 +1959,8 @@
                 <li data-name="$.oScene#addPalette"><a href="$.oScene.html#addPalette">addPalette</a></li>
             
                 <li data-name="$.oScene#close"><a href="$.oScene.html#close">close</a></li>
+            
+                <li data-name="$.oScene#exportQT"><a href="$.oScene.html#exportQT">exportQT</a></li>
             
                 <li data-name="$.oScene#exportTemplate"><a href="$.oScene.html#exportTemplate">exportTemplate</a></li>
             
@@ -3109,6 +3121,275 @@
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="removeUnexposedDrawings">
+            
+            removeUnexposedDrawings<span class="signature">(exposures)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_column.js, line 454
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Extends the exposure of the drawing's keyframes given the provided arguments.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>exposures</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="$.oFrame.html">$.oFrame</a>></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The exposures to extend. If UNDEFINED, extends all keyframes.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="renameAllByFrame">
+            
+            renameAllByFrame<span class="signature">(<span class="optional">prefix</span>, <span class="optional">suffix</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_column.js, line 420
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Renames the column's exposed drawings according to the frame they are first displayed at.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>prefix</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                a prefix to add to all names.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>suffix</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                a suffix to add to all names.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
         </dl>
     
     
@@ -3128,7 +3409,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 16 2019 21:53:59 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Dec 17 2019 18:07:06 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

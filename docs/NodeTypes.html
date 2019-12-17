@@ -62,8 +62,6 @@
             
                 <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
             
-                <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
-            
                 <li data-name="$#browseForFile"><a href="$.html#browseForFile">browseForFile</a></li>
             
                 <li data-name="$#browseForFolder"><a href="$.html#browseForFolder">browseForFolder</a></li>
@@ -75,6 +73,8 @@
                 <li data-name="$#debug"><a href="$.html#debug">debug</a></li>
             
                 <li data-name="$#directoryGet"><a href="$.html#directoryGet">directoryGet</a></li>
+            
+                <li data-name="$#endUndo"><a href="$.html#endUndo">endUndo</a></li>
             
                 <li data-name="$#log"><a href="$.html#log">log</a></li>
             
@@ -739,9 +739,13 @@
             
                 <li data-name="$.oDrawing#color"><a href="$.oDrawing.html#color">color</a></li>
             
+                <li data-name="$.oDrawing#name"><a href="$.oDrawing.html#name">name</a></li>
+            
                 <li data-name="$.oDrawing#path"><a href="$.oDrawing.html#path">path</a></li>
             
                 <li data-name="$.oDrawing#position"><a href="$.oDrawing.html#position">position</a></li>
+            
+                <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
             
                 <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
             
@@ -809,6 +813,10 @@
                 <li data-name="$.oDrawingColumn#getKeyFrames"><a href="$.oDrawingColumn.html#getKeyFrames">getKeyFrames</a></li>
             
                 <li data-name="$.oDrawingColumn#removeDuplicateKeys"><a href="$.oDrawingColumn.html#removeDuplicateKeys">removeDuplicateKeys</a></li>
+            
+                <li data-name="$.oDrawingColumn#removeUnexposedDrawings"><a href="$.oDrawingColumn.html#removeUnexposedDrawings">removeUnexposedDrawings</a></li>
+            
+                <li data-name="$.oDrawingColumn#renameAllByFrame"><a href="$.oDrawingColumn.html#renameAllByFrame">renameAllByFrame</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1287,6 +1295,8 @@
                 <li data-name="$.oGroupNode#addNode"><a href="$.oGroupNode.html#addNode">addNode</a></li>
             
                 <li data-name="$.oGroupNode#addOutLink"><a href="$.oGroupNode.html#addOutLink">addOutLink</a></li>
+            
+                <li data-name="$.oGroupNode#backdrops"><a href="$.oGroupNode.html#backdrops">backdrops</a></li>
             
                 <li data-name="$.oGroupNode#centerAbove"><a href="$.oGroupNode.html#centerAbove">centerAbove</a></li>
             
@@ -1903,9 +1913,9 @@
             
                 <li data-name="$.oScene#stage"><a href="$.oScene.html#stage">stage</a></li>
             
-                <li data-name="$.oScene#startFrame"><a href="$.oScene.html#startFrame">startFrame</a></li>
+                <li data-name="$.oScene#startPreview"><a href="$.oScene.html#startPreview">startPreview</a></li>
             
-                <li data-name="$.oScene#stopFrame"><a href="$.oScene.html#stopFrame">stopFrame</a></li>
+                <li data-name="$.oScene#stopPreview"><a href="$.oScene.html#stopPreview">stopPreview</a></li>
             
                 <li data-name="$.oScene#unitsX"><a href="$.oScene.html#unitsX">unitsX</a></li>
             
@@ -1949,6 +1959,8 @@
                 <li data-name="$.oScene#addPalette"><a href="$.oScene.html#addPalette">addPalette</a></li>
             
                 <li data-name="$.oScene#close"><a href="$.oScene.html#close">close</a></li>
+            
+                <li data-name="$.oScene#exportQT"><a href="$.oScene.html#exportQT">exportQT</a></li>
             
                 <li data-name="$.oScene#exportTemplate"><a href="$.oScene.html#exportTemplate">exportTemplate</a></li>
             
@@ -2175,18 +2187,7 @@
             
 
     
-    <pre class="prettyprint"><code>// This is how to use this page:
-
-var myNode = $.scn.root.addNode("READ");        // This is the node type visible here under NodeType
-$.log(myNode.type)                              // This is how to find out the type
-
-myNode.drawing.element = "1"                    // Sets the drawing.element attribute to display drawing "1"
-
-myNode.drawing.element = {frameNumber: 5, "2"}  // If the attribute can be animated, pass a {frameNumber, value} object to set a specific frame;
-
-myNode.attributes.drawing.element.setValue ("2", 5)   // also possible to set the attribute directly.
-
-// refer to the node type on this page to find out what properties can be set with what synthax for each Node Type.</code></pre>
+    <pre class="prettyprint"><code>// This is how to use this page:var myNode = $.scn.root.addNode("READ");        // This is the node type visible here under NodeType$.log(myNode.type)                              // This is how to find out the typemyNode.drawing.element = "1"                    // Sets the drawing.element attribute to display drawing "1"myNode.drawing.element = {frameNumber: 5, "2"}  // If the attribute can be animated, pass a {frameNumber, value} object to set a specific frame;myNode.attributes.drawing.element.setValue ("2", 5)   // also possible to set the attribute directly.// refer to the node type on this page to find out what properties can be set with what synthax for each Node Type.</code></pre>
     
 
         
@@ -78766,7 +78767,7 @@ __</attributes>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 16 2019 21:53:59 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Dec 17 2019 18:07:07 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

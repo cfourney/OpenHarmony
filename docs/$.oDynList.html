@@ -62,8 +62,6 @@
             
                 <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
             
-                <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
-            
                 <li data-name="$#browseForFile"><a href="$.html#browseForFile">browseForFile</a></li>
             
                 <li data-name="$#browseForFolder"><a href="$.html#browseForFolder">browseForFolder</a></li>
@@ -75,6 +73,8 @@
                 <li data-name="$#debug"><a href="$.html#debug">debug</a></li>
             
                 <li data-name="$#directoryGet"><a href="$.html#directoryGet">directoryGet</a></li>
+            
+                <li data-name="$#endUndo"><a href="$.html#endUndo">endUndo</a></li>
             
                 <li data-name="$#log"><a href="$.html#log">log</a></li>
             
@@ -739,9 +739,13 @@
             
                 <li data-name="$.oDrawing#color"><a href="$.oDrawing.html#color">color</a></li>
             
+                <li data-name="$.oDrawing#name"><a href="$.oDrawing.html#name">name</a></li>
+            
                 <li data-name="$.oDrawing#path"><a href="$.oDrawing.html#path">path</a></li>
             
                 <li data-name="$.oDrawing#position"><a href="$.oDrawing.html#position">position</a></li>
+            
+                <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
             
                 <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
             
@@ -809,6 +813,10 @@
                 <li data-name="$.oDrawingColumn#getKeyFrames"><a href="$.oDrawingColumn.html#getKeyFrames">getKeyFrames</a></li>
             
                 <li data-name="$.oDrawingColumn#removeDuplicateKeys"><a href="$.oDrawingColumn.html#removeDuplicateKeys">removeDuplicateKeys</a></li>
+            
+                <li data-name="$.oDrawingColumn#removeUnexposedDrawings"><a href="$.oDrawingColumn.html#removeUnexposedDrawings">removeUnexposedDrawings</a></li>
+            
+                <li data-name="$.oDrawingColumn#renameAllByFrame"><a href="$.oDrawingColumn.html#renameAllByFrame">renameAllByFrame</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1287,6 +1295,8 @@
                 <li data-name="$.oGroupNode#addNode"><a href="$.oGroupNode.html#addNode">addNode</a></li>
             
                 <li data-name="$.oGroupNode#addOutLink"><a href="$.oGroupNode.html#addOutLink">addOutLink</a></li>
+            
+                <li data-name="$.oGroupNode#backdrops"><a href="$.oGroupNode.html#backdrops">backdrops</a></li>
             
                 <li data-name="$.oGroupNode#centerAbove"><a href="$.oGroupNode.html#centerAbove">centerAbove</a></li>
             
@@ -1903,9 +1913,9 @@
             
                 <li data-name="$.oScene#stage"><a href="$.oScene.html#stage">stage</a></li>
             
-                <li data-name="$.oScene#startFrame"><a href="$.oScene.html#startFrame">startFrame</a></li>
+                <li data-name="$.oScene#startPreview"><a href="$.oScene.html#startPreview">startPreview</a></li>
             
-                <li data-name="$.oScene#stopFrame"><a href="$.oScene.html#stopFrame">stopFrame</a></li>
+                <li data-name="$.oScene#stopPreview"><a href="$.oScene.html#stopPreview">stopPreview</a></li>
             
                 <li data-name="$.oScene#unitsX"><a href="$.oScene.html#unitsX">unitsX</a></li>
             
@@ -1949,6 +1959,8 @@
                 <li data-name="$.oScene#addPalette"><a href="$.oScene.html#addPalette">addPalette</a></li>
             
                 <li data-name="$.oScene#close"><a href="$.oScene.html#close">close</a></li>
+            
+                <li data-name="$.oScene#exportQT"><a href="$.oScene.html#exportQT">exportQT</a></li>
             
                 <li data-name="$.oScene#exportTemplate"><a href="$.oScene.html#exportTemplate">exportTemplate</a></li>
             
@@ -2135,9 +2147,7 @@
     oDynList
     </h2>
     
-        <div class="class-description">The base class for the $.oDynList.<br>
-Provides a list of values similar to an array, but with simpler filtering and sorting functions provided.<br>
-It can have any starting index and so can implement lists with a first index of 1 like the $.oColumn.frames returned value.</div>
+        <div class="class-description">The base class for the $.oDynList.<br>Provides a list of values similar to an array, but with simpler filtering and sorting functions provided.<br>It can have any starting index and so can implement lists with a first index of 1 like the $.oColumn.frames returned value.</div>
     
 </header>  
 
@@ -3024,14 +3034,7 @@ It can have any starting index and so can implement lists with a first index of 
         
 
     
-    <pre class="prettyprint"><code>var doc = $.s // grab the scene object
-var nodeList = new $.oDynList(doc.nodes, 1) // get a list of all the nodes, with a first index of 1
-
-$.log(nodeList) // outputs the list of all the node paths
-
-var readNodes = nodeList.filterByProperty("type", "READ") // get a new list of only the nodes of type 'READ'
-
-$.log(readNodes.extractProperty("name"))  // prints the names of the result</code></pre>
+    <pre class="prettyprint"><code>var doc = $.s // grab the scene objectvar nodeList = new $.oDynList(doc.nodes, 1) // get a list of all the nodes, with a first index of 1$.log(nodeList) // outputs the list of all the node pathsvar readNodes = nodeList.filterByProperty("type", "READ") // get a new list of only the nodes of type 'READ'$.log(readNodes.extractProperty("name"))  // prints the names of the result</code></pre>
     
 
     
@@ -3339,14 +3342,7 @@ $.log(readNodes.extractProperty("name"))  // prints the names of the result</cod
         
 
     
-    <pre class="prettyprint"><code>var myList = new $.oList([1,2,3], 1)
-
-var item = myList.first();  // 1
-
-while( item != undefined ){
-  $.log(item)               // traces the whole array one item at a time : 1,2,3   
-  item = myList.next();   
-}</code></pre>
+    <pre class="prettyprint"><code>var myList = new $.oList([1,2,3], 1)var item = myList.first();  // 1while( item != undefined ){  $.log(item)               // traces the whole array one item at a time : 1,2,3     item = myList.next();   }</code></pre>
     
 
     
@@ -4053,7 +4049,7 @@ while( item != undefined ){
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 16 2019 21:53:59 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Dec 17 2019 18:07:06 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>
