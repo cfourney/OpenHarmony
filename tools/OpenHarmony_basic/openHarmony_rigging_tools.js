@@ -391,3 +391,45 @@ function oh_rigging_addBackdropToSelected(){
   }
 }
 
+
+/**
+ *  Sets the peg's pivot based on a clicked position in the interface.
+ */
+function oh_rigging_setSelectedPegPivotWithClick(){
+  try{
+    oh_load();
+    
+    var nodes = $.scene.nodeSearch( "#PEG(SELECTED)" );
+    
+    if( nodes.length == 0 ){
+      $.dialog.alert( "No peg selected." );
+      return;
+    }
+    
+    Action.perform( "onActionChoosePencilTool()" );
+    var context = this;
+    
+      var setPiv = function( res ){
+        var $    = context.$;
+        var m    = context;
+            
+        $.beginUndo();
+        try{
+          for( var n=0;n<nodes.length;n++ ){
+            nodes[n].pivot = new $.oPoint( res[0][0], res[0][1], 0.0 );
+          }
+        }catch( err ){
+          System.println( err + " " + err.lineNumber + " " + err.fileName );
+        }
+        Action.perform( "onActionChooseSpTransformTool()" );
+        $.endUndo();
+      }
+    
+      //We're using the EnvelopeCreator interface for a click interface. This may have been removed in newer versions of Harmony.
+      var en  = new EnvelopeCreator();
+      en.drawPathOverlay( setPiv, 1 );
+      
+  }catch( err ){
+    $.debug( err + " ("+err.fileName+" "+err.lineNumber+")", $.DEBUG_LEVEL["ERROR"] );
+  }
+}

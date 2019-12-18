@@ -873,8 +873,16 @@ $.oScene.prototype.addNode = function( type, name, group, nodePosition ){
  
 $.oScene.prototype.addColumn = function( type, name, oElementObject ){
     // Defaults for optional parameters 
-    if (typeof name === 'undefined') var name = column.generateAnonymousName();
-   
+    if( !type ){ return; }
+    
+    if (typeof name === 'undefined'){
+      if( column.generateAnonymousName ){
+        var name = column.generateAnonymousName();
+      }else{
+        var name = "ATV"+(new Date()).getTime();
+      }
+    }
+
     var _increment = 1;
     var _columnName = name;
    
@@ -885,7 +893,7 @@ $.oScene.prototype.addColumn = function( type, name, oElementObject ){
     }
    
     this.$.debug( "CREATING THE COLUMN: " + name, this.$.DEBUG_LEVEL.LOG );
-   
+    System.println( "CREATING COLUMN: "+type );
     column.add(_columnName, type);
                
     var _column = new this.$.oColumn( _columnName );
@@ -1564,15 +1572,49 @@ $.oScene.prototype.$column = function( uniqueName, oAttributeObject ){
     return this.getColumnByName( uniqueName, oAttributeObject );
 }
 
+
 /**
- * Gets a palette by the path.
- * @param   {string}   name            The palette name to query and find.
+ * Gets a node by the path.
+ * @param   {string}   fullPath         The path of the node in question.
  *  
- * @return  {$.oPalette}               The oPalette found given the query.
+ * @return  {$.oNode}                     The node found given the query.
  */
-$.oScene.prototype.$palette = function( name ){
-    return this.getPaletteByName( name );
+$.oScene.prototype.$node = function( fullPath ){
+    return this.getNodeByPath( fullPath );
 }
 
+/**
+ * Gets the current camera matrix.
+ *  
+ * @return {Matrix4x4}          The matrix of the camera.
+ */
+$.oScene.prototype.getCameraMatrix = function( ){
+    return scene.getCameraMatrix();
+}
 
-
+/**
+ * Gets the current projection matrix.
+ *  
+ * @return {Matrix4x4}          The projection matrix of the camera/scene.
+ */
+$.oScene.prototype.getProjectionMatrix = function( ){
+  var fov = this.fov;
+  var f   = scene.toOGL( new Point3d( 0.0, 0.0, this.unitsZ ) ).z;
+  var n   = 0.00001;
+  
+  //Standard pprojection matrix derivation.
+  var S = 1.0 / Math.tan( ( fov/2.0 ) * ( $.pi/180.0 ) );
+  var projectionMatrix = [  S,          0.0,                  0.0,     0.0,
+                            0.0,          S,                  0.0,     0.0,
+                            0.0,        0.0,       -1.0*(f/(f-n)),    -1.0,
+                            0.0,        0.0,   -1.0*((f*n)/(f-n)),     0.0
+                         ];
+  
+  var newMatrix = new Matrix4x4();
+  for( var r=0;r<4;r++ ){
+    for( var c=0;c<4;c++ ){
+      newMatrix["m"+r+""+c] = projectionMatrix[ (c*4.0)+r ];
+    }
+  }
+  return newMatrix;
+}

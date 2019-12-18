@@ -1275,7 +1275,7 @@ $.oNode.prototype.addOutLink = function( nodeToLink, ownPort, destPort ){
  */
 $.oPegNode = function( path, oSceneObject ) {
     if (node.type(path) != 'PEG') throw "'path' parameter must point to a 'PEG' type node";
-    $.oNode.call( this, path, oSceneObject );
+    this.$.oNode.call( this, path, oSceneObject );
 
     this._type = 'pegNode';
 }
@@ -1348,7 +1348,7 @@ Object.defineProperty($.oPegNode.prototype, "useSeparate", {
 $.oDrawingNode = function(path, oSceneObject) {
     // $.oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'READ') throw "'path' parameter must point to a 'READ' type node";
-    $.oNode.call(this, path, oSceneObject);
+    this.$.oNode.call(this, path, oSceneObject);
 
     this._type = 'drawingNode';
 }
@@ -1530,7 +1530,7 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
 $.oGroupNode = function(path, oSceneObject) {
     // $.oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'GROUP') throw "'path' parameter must point to a 'GROUP' type node";
-    $.oNode.call(this, path, oSceneObject);
+    this.$.oNode.call(this, path, oSceneObject);
 
     this._type = 'groupNode';
 }

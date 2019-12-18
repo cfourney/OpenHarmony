@@ -152,7 +152,7 @@ $.oPoint.prototype.pointAverage = function( point_array ){
  */
 $.oPoint.convertToOpenGL = function(){
   
-  var qpt = scene.toOGL( new QPoint( this.x, this.y, this.z ) );
+  var qpt = scene.toOGL( new Point3d( this.x, this.y, this.z ) );
   
   this.x = qpt.x;
   this.y = qpt.y;
@@ -165,7 +165,7 @@ $.oPoint.convertToOpenGL = function(){
  */
 $.oPoint.convertToWorldspace = function(){
 
-  var qpt = scene.fromOGL( new QPoint( this.x, this.y, this.z ) );
+  var qpt = scene.fromOGL( new Point3d( this.x, this.y, this.z ) );
   
   this.x = qpt.x;
   this.y = qpt.y;

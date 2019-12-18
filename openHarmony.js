@@ -100,7 +100,9 @@ $ = {
                 },            
   file      : __file__,
   directory : false,
-  batchMode : false
+  batchMode : false,
+  
+  pi        : 3.14159265359
 };
 
 /**
