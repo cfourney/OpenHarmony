@@ -62,8 +62,6 @@
             
                 <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
             
-                <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
-            
                 <li data-name="$#browseForFile"><a href="$.html#browseForFile">browseForFile</a></li>
             
                 <li data-name="$#browseForFolder"><a href="$.html#browseForFolder">browseForFolder</a></li>
@@ -75,6 +73,8 @@
                 <li data-name="$#debug"><a href="$.html#debug">debug</a></li>
             
                 <li data-name="$#directoryGet"><a href="$.html#directoryGet">directoryGet</a></li>
+            
+                <li data-name="$#endUndo"><a href="$.html#endUndo">endUndo</a></li>
             
                 <li data-name="$#log"><a href="$.html#log">log</a></li>
             
@@ -739,9 +739,13 @@
             
                 <li data-name="$.oDrawing#color"><a href="$.oDrawing.html#color">color</a></li>
             
+                <li data-name="$.oDrawing#name"><a href="$.oDrawing.html#name">name</a></li>
+            
                 <li data-name="$.oDrawing#path"><a href="$.oDrawing.html#path">path</a></li>
             
                 <li data-name="$.oDrawing#position"><a href="$.oDrawing.html#position">position</a></li>
+            
+                <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
             
                 <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
             
@@ -810,6 +814,10 @@
             
                 <li data-name="$.oDrawingColumn#removeDuplicateKeys"><a href="$.oDrawingColumn.html#removeDuplicateKeys">removeDuplicateKeys</a></li>
             
+                <li data-name="$.oDrawingColumn#removeUnexposedDrawings"><a href="$.oDrawingColumn.html#removeUnexposedDrawings">removeUnexposedDrawings</a></li>
+            
+                <li data-name="$.oDrawingColumn#renameAllByFrame"><a href="$.oDrawingColumn.html#renameAllByFrame">renameAllByFrame</a></li>
+            
             </ul>
             <ul class="events itemMembers">
             
@@ -840,6 +848,8 @@
                 <li data-name="$.oDrawingNode#fullPath"><a href="$.oDrawingNode.html#fullPath">fullPath</a></li>
             
                 <li data-name="$.oDrawingNode#group"><a href="$.oDrawingNode.html#group">group</a></li>
+            
+                <li data-name="$.oDrawingNode#height"><a href="$.oDrawingNode.html#height">height</a></li>
             
                 <li data-name="$.oDrawingNode#inLinks"><a href="$.oDrawingNode.html#inLinks">inLinks</a></li>
             
@@ -1128,6 +1138,8 @@
             
                 <li data-name="$.oFolder#getFiles"><a href="$.oFolder.html#getFiles">getFiles</a></li>
             
+                <li data-name="$.oFolder#getFolders"><a href="$.oFolder.html#getFolders">getFolders</a></li>
+            
                 <li data-name="$.oFolder#listFiles"><a href="$.oFolder.html#listFiles">listFiles</a></li>
             
                 <li data-name="$.oFolder#listFolders"><a href="$.oFolder.html#listFolders">listFolders</a></li>
@@ -1213,6 +1225,8 @@
             
                 <li data-name="$.oGroupNode#attributes"><a href="$.oGroupNode.html#attributes">attributes</a></li>
             
+                <li data-name="$.oGroupNode#backdrops"><a href="$.oGroupNode.html#backdrops">backdrops</a></li>
+            
                 <li data-name="$.oGroupNode#bounds"><a href="$.oGroupNode.html#bounds">bounds</a></li>
             
                 <li data-name="$.oGroupNode#enabled"><a href="$.oGroupNode.html#enabled">enabled</a></li>
@@ -1222,6 +1236,8 @@
                 <li data-name="$.oGroupNode#fullPath"><a href="$.oGroupNode.html#fullPath">fullPath</a></li>
             
                 <li data-name="$.oGroupNode#group"><a href="$.oGroupNode.html#group">group</a></li>
+            
+                <li data-name="$.oGroupNode#height"><a href="$.oGroupNode.html#height">height</a></li>
             
                 <li data-name="$.oGroupNode#inLinks"><a href="$.oGroupNode.html#inLinks">inLinks</a></li>
             
@@ -1462,6 +1478,8 @@
                 <li data-name="$.oNode#fullPath"><a href="$.oNode.html#fullPath">fullPath</a></li>
             
                 <li data-name="$.oNode#group"><a href="$.oNode.html#group">group</a></li>
+            
+                <li data-name="$.oNode#height"><a href="$.oNode.html#height">height</a></li>
             
                 <li data-name="$.oNode#inLinks"><a href="$.oNode.html#inLinks">inLinks</a></li>
             
@@ -1721,6 +1739,8 @@
             
                 <li data-name="$.oPegNode#group"><a href="$.oPegNode.html#group">group</a></li>
             
+                <li data-name="$.oPegNode#height"><a href="$.oPegNode.html#height">height</a></li>
+            
                 <li data-name="$.oPegNode#inLinks"><a href="$.oPegNode.html#inLinks">inLinks</a></li>
             
                 <li data-name="$.oPegNode#inNodes"><a href="$.oPegNode.html#inNodes">inNodes</a></li>
@@ -1903,9 +1923,9 @@
             
                 <li data-name="$.oScene#stage"><a href="$.oScene.html#stage">stage</a></li>
             
-                <li data-name="$.oScene#startFrame"><a href="$.oScene.html#startFrame">startFrame</a></li>
+                <li data-name="$.oScene#startPreview"><a href="$.oScene.html#startPreview">startPreview</a></li>
             
-                <li data-name="$.oScene#stopFrame"><a href="$.oScene.html#stopFrame">stopFrame</a></li>
+                <li data-name="$.oScene#stopPreview"><a href="$.oScene.html#stopPreview">stopPreview</a></li>
             
                 <li data-name="$.oScene#unitsX"><a href="$.oScene.html#unitsX">unitsX</a></li>
             
@@ -1949,6 +1969,8 @@
                 <li data-name="$.oScene#addPalette"><a href="$.oScene.html#addPalette">addPalette</a></li>
             
                 <li data-name="$.oScene#close"><a href="$.oScene.html#close">close</a></li>
+            
+                <li data-name="$.oScene#exportQT"><a href="$.oScene.html#exportQT">exportQT</a></li>
             
                 <li data-name="$.oScene#exportTemplate"><a href="$.oScene.html#exportTemplate">exportTemplate</a></li>
             
@@ -2759,7 +2781,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Dec 16 2019 21:53:59 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 18 2019 15:45:12 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

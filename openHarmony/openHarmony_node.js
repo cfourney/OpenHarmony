@@ -146,7 +146,7 @@ $.oNode.prototype.attributesBuildCache = function (){
  */
 $.oNode.prototype.setAttrGetterSetter = function (attr, context){
     if (typeof context === 'undefined') context = this;
-    this.$.debug("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name, this.$.DEBUG_LEVEL.LOG)
+    // this.$.debug("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name, this.$.DEBUG_LEVEL.LOG)
 
     var _keyword = attr.shortKeyword;
 
@@ -178,7 +178,7 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
         },
 
         set : function(newValue){
-            this.$.debug("setting attribute through getter setter "+attr.keyword+" to value: "+newValue, this.$.DEBUG_LEVEL.LOG)
+            // this.$.debug("setting attribute through getter setter "+attr.keyword+" to value: "+newValue, this.$.DEBUG_LEVEL.LOG)
             // if attribute has animation, passed value must be a frame object
             var _subAttrs = attr.subAttributes;
 
@@ -546,6 +546,20 @@ Object.defineProperty($.oNode.prototype, 'width', {
          return node.width(this.path)
     }
 });
+
+
+
+/**
+ * The height of the node in the node view.
+ * @name $.oNode#height
+ * @type {float}
+ */
+Object.defineProperty($.oNode.prototype, 'height', {
+    get : function(){
+         return node.height(this.path)
+    }
+});
+
 
 
 /**
@@ -1367,12 +1381,13 @@ Object.defineProperty($.oDrawingNode.prototype, "element", {
  */
 Object.defineProperty($.oDrawingNode.prototype, "usedColorIds", {
   get : function(){
+    this.$.log("used colors in node : "+this.name)
     var _timings = this.timings;
     var _colors = [];
 
     for (var i in _timings){
-      var _drawingColors = DrawingTools.getDrawingUsedColors({node: this.fullPath, frame: _timings[i].frameNumber});
-
+      var _drawingColors = DrawingTools.getDrawingUsedColors({node: this.path, frame: _timings[i].frameNumber});
+      this.$.log(this.path+" frame: "+_timings[i].frameNumber+" has colors: "+_drawingColors)
       for (var c in _drawingColors){
         if (_colors.indexOf(_drawingColors[c]) == -1) _colors.push(_drawingColors[c]);
       }
@@ -1551,6 +1566,22 @@ Object.defineProperty($.oGroupNode.prototype, "multiportOut", {
 
 
  /**
+ * All the backdrops contained within the group.
+ * @name $.oGroupNode#backdrops
+ * @type {$.oBackdrop[]} 
+ */
+Object.defineProperty($.oGroupNode.prototype, "backdrops", {
+  get : function() {
+    var _path = this.path;
+    var _backdropObjects = Backdrop.backdrops(this.path);
+    var _backdrops = _backdropObjects.map(function(x){new this.$.oBackdrop(_path, x)});
+
+    return _backdrops;
+  }
+});
+
+
+ /**
  * Gets all the nodes contained within the group.
  * @param   {bool}    [recurse=false]             Whether to recurse the groups within the groups.
  *
@@ -1581,6 +1612,9 @@ $.oGroupNode.prototype.subNodes = function(recurse){
 $.oGroupNode.prototype.children = function(recurse){
   return this.subNodes(recurse);
 }
+
+
+
 
 
  /**

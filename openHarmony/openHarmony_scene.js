@@ -148,10 +148,10 @@ Object.defineProperty($.oScene.prototype, 'sceneName', {
 
 /**
  * The startframe to the playback of the scene.
- * @name $.oScene#startFrame
+ * @name $.oScene#startPreview
  * @type {int}
  */
-Object.defineProperty($.oScene.prototype, 'startFrame', {
+Object.defineProperty($.oScene.prototype, 'startPreview', {
     get : function(){
         return scene.getStartFrame();
     },
@@ -162,12 +162,12 @@ Object.defineProperty($.oScene.prototype, 'startFrame', {
 
 /**
  * The stopFrame to the playback of the scene.
- * @name $.oScene#stopFrame
+ * @name $.oScene#stopPreview
  * @type {int}
  */
-Object.defineProperty($.oScene.prototype, 'stopFrame', {
+Object.defineProperty($.oScene.prototype, 'stopPreview', {
     get : function(){
-        return scene.getStartFrame();
+        return scene.getStopFrame();
     },
     set : function(val){
         scene.setStopFrame( val );
@@ -1084,18 +1084,22 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
  * @return {$.oPalette}   oPalette with provided name.
  */
 $.oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement){
+    var _paletteFile = new this.$.oFile(filename);
+    
     // create a dummy palette to get the destination path
-    var _newPalette = this.addPalette("_dummy_palette", index, paletteStorage, storeInElement);
+    var _newPalette = this.addPalette(_paletteFile.name, index, paletteStorage, storeInElement);
     var _path = _newPalette.path;
     var _list = _newPalette._paletteList;
-    var _paletteFile = new this.$.oFile(filename);
+
     var _file = new this.$.oFile(_path);
-    var copy = _paletteFile.copy(_file.folder.path, _paletteFile.name, true);
-    // reload palette
+    var _copy = _paletteFile.copy(_file.folder.path, _paletteFile.name, true);
+
+    // load new palette
     _newPalette.remove();
-    
-    var _palette = _list.insertPalette(_path.replace(".plt", ""), index);
+
+    var _palette = _list.insertPalette(_file.folder.path+"/"+_paletteFile.name, index);
     _newPalette = new this.$.oPalette(_palette, _list);
+
     return _newPalette;
 }
  
@@ -1195,25 +1199,45 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
  * @param   {copyOptions}      [copyOptions]                                  An object containing paste options as per Harmony's standard paste options.
  * 
  * @return {bool}         The success of the export.
+ * @example
+ * // how to export a clean palette with no extra drawings and everything renamed by frame, and only the necessary colors gathered in one palette:
+ * 
+ * $.beginUndo();
+ * 
+ * var doc = $.scn;
+ * var nodes = doc.getSelectedNodes();
+ *
+ * for (var i in nodes){
+ *   if (nodes[i].type != "READ") continue;
+ *    
+ *   var myColumn = nodes[i].element.column;      // we grab the column directly from the element of the node
+ *   myColumn.removeUnexposedDrawings();          // remove extra unused drawings
+ *   myColumn.renameAllByFrame();                 // rename all drawings by frame
+ * }
+ *
+ * doc.exportTemplate(nodes, "C:/templateExample.tpl", "createPalette"); // "createPalette" value will create one palette for all colors
+ * 
+ * $.endUndo();
  */
-// exportPalettesMode 
-
 $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMode, copyOptions){
   if (typeof exportPalettesMode === 'undefined') var exportPalettesMode = "usedOnly";
   if (typeof copyOptions === 'undefined') var copyOptions = copyPaste.getCurrentCreateOptions();
   
+  if (!Array.isArray(nodes)) nodes = [nodes]
+  
   // add nodes included in groups as they'll get automatically exported
-  var _readNodes = [];
+  var _allNodes = nodes;
   for (var i in nodes){
-    if (nodes[i].type == "READ") _readNodes.push(nodes[i]);
-    if (nodes[i].type == "GROUP") _readNodes = _readNodes.concat(nodes[i].subNodes(true));
+    if (nodes[i].type == "GROUP") _allNodes = _allNodes.concat(nodes[i].subNodes(true));
   }
   
   // get used colors
   var _usedColorIds = [];
-  for (var i in _readNodes){
-    _usedColorIds = _usedColorIds.concat(nodes[i].usedColorIds)
+  for (var i in _allNodes){
+    if (_allNodes[i].type == "READ") _usedColorIds = _usedColorIds.concat(_allNodes[i].usedColorIds);
   }
+  
+  this.$.log(_usedColorIds)
   
   // find used Palettes and Colors
   if (exportPalettesMode != "all"){
@@ -1224,25 +1248,76 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
     
     for (var i in _usedColorIds){
       for (var j in _palettes){
-        _usedColors = _palettes[j].getColorById(_usedColorIds[i]);
+        var _color = _palettes[j].getColorById(_usedColorIds[i]);
         // color found
-        if (_usedColors[i] != null){
+        if (_color != null){
           if (_usedPalettes.indexOf(_palettes[j]) == -1) _usedPalettes.push(_palettes[j]);
+          _usedColors[i] = _color;
           break;
         }
       }
     }
   }
   
+  
+  var _templateFolder = new this.$.oFolder(exportPath);
+  var _name = _templateFolder.name.replace(".tpl", "");
+  var _folder = _templateFolder.folder.path;
+  
+  // this.$.log(_usedColorIds)
+  
+  // create the palette with only the colors contained in the layers
   if (exportPalettesMode == "createPalette"){
-    var exportFile = new oFolder(exportPath);
-    var paletteName = exportFile.name;
-    this.addPalette(paletteName);
+    var _paletteName = _name;
+    var templatePalette = this.addPalette(_paletteName);
+    templatePalette.colors[0].remove();
+    
+    // this.$.log("created temp palette : "+templatePalette.path)
+    
+    for (var i in _usedColors){
+      this.$.log("moving color "+_usedColors[i].name+" to palette : "+templatePalette.path)
+      _usedColors[i].copyToPalette(templatePalette)
+    }
+    _usedPalettes = [templatePalette];
   }
-      
-  if (exportPalettesMode != "all"){
+  
+  selection.clearSelection();
+  selection.addNodesToSelection (_allNodes.map(function(x){return x.path}))
+
+
+  this.$.debug(exportPath+" exporting template "+_name+" to folder: "+_folder, this.$.DEBUG_LEVEL.LOG)
+  var success = copyPaste.createTemplateFromSelection (_name, _folder)
+  
+  if (success && exportPalettesMode != "all"){
+    var _paletteFolder = new this.$.oFolder(_templateFolder.path+"/palette-library")      
+
+    // building the template palette list
+    var _listFile = ["ToonBoomAnimationInc PaletteList 1"];
+    for (var i in _usedPalettes){
+      _listFile.push("palette-library/"+_usedPalettes[i].name+' LINK "'+_paletteFolder+"/"+_usedPalettes[i].name+'.plt"')
+    }
+    
     // deleting the palettes from the exported template
+    var _paletteFiles = _paletteFolder.getFiles();
+    for (var i in _paletteFiles){
+      _paletteFiles[i].remove();
+    }
+    
+    for (var i in _usedPalettes){
+      var _paletteFile = new this.$.oFile(_usedPalettes[i].path);
+      _paletteFile.copy(_paletteFolder, _paletteFile.name, true);
+    }
+    
+    var _paletteListFile = new this.$.oFile(_templateFolder.path+"/PALETTE_LIST")   
+    _paletteListFile.write(_listFile.join("\n"))
+  } 
+  
+  // remove the palette created for the template
+  if (exportPalettesMode == "createPalette"){
+    templatePalette.remove(true);
   }
+  
+  return success;
 }
 
 
@@ -1332,7 +1407,32 @@ $.oScene.prototype.updatePSD = function( path, separateLayers ){
     
     return _soundColumn;
  }
-
+ 
+ 
+ /**
+ * Exports a QT of the scene
+ * @param   {string}         path                          The path to export the quicktime file to.
+ * @param   {string}         display                       The name of the display to use to export.
+ * @param   {double}         scale                         The scale of the export compared to the scene resolution.
+ * @param   {bool}           exportSound                   Whether to include the sound in the export.
+ * @param   {bool}           exportPreviewArea             Whether to only export the preview area of the timeline.
+ *
+ * @return {$.oNode}        The imported Quicktime Node.
+ */
+$.oScene.prototype.exportQT = function( path, display, scale, exportSound, exportPreviewArea){
+  if (typeof display === 'undefined') var display = node.getName(node.getNodes(["DISPLAY"])[0]);
+  if (typeof exportSound === 'undefined') var exportSound = true;
+  if (typeof exportPreviewArea === 'undefined') var exportPreviewArea = false;
+  if (typeof scale === 'undefined') var scale = 1;
+  
+  if (display instanceof oNode) display = display.name;
+  
+  var _startFrame = exportPreviewArea?scene.getStartFrame():1;
+  var _stopFrame = exportPreviewArea?scene.getStopFrame():this.length-1;
+  var _resX = this.defaultResolutionX*scale
+  var _resY= this.defaultResolutionY*scale
+  return exporter.exportToQuicktime ("", _startFrame, _stopFrame, exportSound, _resX, _resY, path, display, true, 1);
+}
 
  
 /**

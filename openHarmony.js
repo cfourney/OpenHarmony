@@ -318,7 +318,7 @@ $.cancelUndo = function( ){
 
 /**
  * Stops the tracking of the undo accumulation, everything between this and the start of the accumulation behaves as a single undo operation.
- * @name $#beginUndo
+ * @name $#endUndo
  * @function
  * @see $.beginUndo
  */

@@ -410,3 +410,53 @@ $.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replac
         if (!exposures[i].isBlank) exposures[i].extend(amount, replace);
     }
 }
+
+
+/**
+ * Renames the column's exposed drawings according to the frame they are first displayed at.
+ * @param   {string}  [prefix]            a prefix to add to all names.
+ * @param   {string}  [suffix]            a suffix to add to all names.
+ */
+$.oDrawingColumn.prototype.renameAllByFrame = function(prefix, suffix){
+  if (typeof prefix === 'undefined') var prefix = "";
+  if (typeof suffix === 'undefined') var suffix = "";
+  
+  var _displayedDrawings = this.getKeyFrames();
+  var _element = this.element;
+  var _drawings = _element.drawings;
+  
+  // remove duplicates
+  var _seen = [];
+  for (var i=0; i<_displayedDrawings.length; i++){
+    var _drawing = _displayedDrawings[i].value
+    if (_seen.indexOf(_drawing.name) == -1){
+      _seen.push(_drawing.name);
+    }else{
+      _displayedDrawings.splice(i,1);
+      i--;
+    }
+  }
+  
+  // rename
+  for (var i in _displayedDrawings){
+    var _frameNum = _displayedDrawings[i].frameNumber;
+    var _drawing = _displayedDrawings[i].value;
+    
+    _drawing.name = prefix+_frameNum+suffix;
+  }
+}
+
+
+/**
+ * Extends the exposure of the drawing's keyframes given the provided arguments.
+ * @param   {$.oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
+ */
+$.oDrawingColumn.prototype.removeUnexposedDrawings = function(){
+  var _displayedDrawings = this.getKeyFrames().map(function(x){return x.value.name});
+  var _element = this.element;
+  var _drawings = _element.drawings;
+
+  for (var i=_drawings.length-1; i>=0; i--){
+    if (_displayedDrawings.indexOf(_drawings[i].name) == -1) _drawings[i].remove();
+  }
+}
