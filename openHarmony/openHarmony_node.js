@@ -548,6 +548,20 @@ Object.defineProperty($.oNode.prototype, 'width', {
 });
 
 
+
+/**
+ * The height of the node in the node view.
+ * @name $.oNode#height
+ * @type {float}
+ */
+Object.defineProperty($.oNode.prototype, 'height', {
+    get : function(){
+         return node.height(this.path)
+    }
+});
+
+
+
 /**
  * The list of nodes connected to the inport of this node, in order of inport.
  * @name $.oNode#inLinks
@@ -1552,6 +1566,22 @@ Object.defineProperty($.oGroupNode.prototype, "multiportOut", {
 
 
  /**
+ * All the backdrops contained within the group.
+ * @name $.oGroupNode#backdrops
+ * @type {$.oBackdrop[]} 
+ */
+Object.defineProperty($.oGroupNode.prototype, "backdrops", {
+  get : function() {
+    var _path = this.path;
+    var _backdropObjects = Backdrop.backdrops(this.path);
+    var _backdrops = _backdropObjects.map(function(x){new this.$.oBackdrop(_path, x)});
+
+    return _backdrops;
+  }
+});
+
+
+ /**
  * Gets all the nodes contained within the group.
  * @param   {bool}    [recurse=false]             Whether to recurse the groups within the groups.
  *
@@ -1584,20 +1614,7 @@ $.oGroupNode.prototype.children = function(recurse){
 }
 
 
- /**
- * Gets all the backdrops contained within the group.
- *
- * @return  {$.oBackdrop[]}   The backdrops in the group
- */
-$.oGroupNode.prototype.backdrops = function(){
-    if (typeof recurse === 'undefined') recurse = false;
 
-    var _path = this.path;
-    var _backdropObjects = Backdrop.backdrops(this.path);
-    var _backdrops = _backdropObjects.map(function(x){new this.$.oBackdrop(_path, x)});
-
-    return _backdrops;
-}
 
 
  /**

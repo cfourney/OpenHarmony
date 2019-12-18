@@ -849,6 +849,8 @@
             
                 <li data-name="$.oDrawingNode#group"><a href="$.oDrawingNode.html#group">group</a></li>
             
+                <li data-name="$.oDrawingNode#height"><a href="$.oDrawingNode.html#height">height</a></li>
+            
                 <li data-name="$.oDrawingNode#inLinks"><a href="$.oDrawingNode.html#inLinks">inLinks</a></li>
             
                 <li data-name="$.oDrawingNode#inNodes"><a href="$.oDrawingNode.html#inNodes">inNodes</a></li>
@@ -1136,6 +1138,8 @@
             
                 <li data-name="$.oFolder#getFiles"><a href="$.oFolder.html#getFiles">getFiles</a></li>
             
+                <li data-name="$.oFolder#getFolders"><a href="$.oFolder.html#getFolders">getFolders</a></li>
+            
                 <li data-name="$.oFolder#listFiles"><a href="$.oFolder.html#listFiles">listFiles</a></li>
             
                 <li data-name="$.oFolder#listFolders"><a href="$.oFolder.html#listFolders">listFolders</a></li>
@@ -1221,6 +1225,8 @@
             
                 <li data-name="$.oGroupNode#attributes"><a href="$.oGroupNode.html#attributes">attributes</a></li>
             
+                <li data-name="$.oGroupNode#backdrops"><a href="$.oGroupNode.html#backdrops">backdrops</a></li>
+            
                 <li data-name="$.oGroupNode#bounds"><a href="$.oGroupNode.html#bounds">bounds</a></li>
             
                 <li data-name="$.oGroupNode#enabled"><a href="$.oGroupNode.html#enabled">enabled</a></li>
@@ -1230,6 +1236,8 @@
                 <li data-name="$.oGroupNode#fullPath"><a href="$.oGroupNode.html#fullPath">fullPath</a></li>
             
                 <li data-name="$.oGroupNode#group"><a href="$.oGroupNode.html#group">group</a></li>
+            
+                <li data-name="$.oGroupNode#height"><a href="$.oGroupNode.html#height">height</a></li>
             
                 <li data-name="$.oGroupNode#inLinks"><a href="$.oGroupNode.html#inLinks">inLinks</a></li>
             
@@ -1295,8 +1303,6 @@
                 <li data-name="$.oGroupNode#addNode"><a href="$.oGroupNode.html#addNode">addNode</a></li>
             
                 <li data-name="$.oGroupNode#addOutLink"><a href="$.oGroupNode.html#addOutLink">addOutLink</a></li>
-            
-                <li data-name="$.oGroupNode#backdrops"><a href="$.oGroupNode.html#backdrops">backdrops</a></li>
             
                 <li data-name="$.oGroupNode#centerAbove"><a href="$.oGroupNode.html#centerAbove">centerAbove</a></li>
             
@@ -1472,6 +1478,8 @@
                 <li data-name="$.oNode#fullPath"><a href="$.oNode.html#fullPath">fullPath</a></li>
             
                 <li data-name="$.oNode#group"><a href="$.oNode.html#group">group</a></li>
+            
+                <li data-name="$.oNode#height"><a href="$.oNode.html#height">height</a></li>
             
                 <li data-name="$.oNode#inLinks"><a href="$.oNode.html#inLinks">inLinks</a></li>
             
@@ -1730,6 +1738,8 @@
                 <li data-name="$.oPegNode#fullPath"><a href="$.oPegNode.html#fullPath">fullPath</a></li>
             
                 <li data-name="$.oPegNode#group"><a href="$.oPegNode.html#group">group</a></li>
+            
+                <li data-name="$.oPegNode#height"><a href="$.oPegNode.html#height">height</a></li>
             
                 <li data-name="$.oPegNode#inLinks"><a href="$.oPegNode.html#inLinks">inLinks</a></li>
             
@@ -2166,7 +2176,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1516
+            openHarmony/openHarmony_node.js, line 1530
         </div>
         
     </div>
@@ -2381,6 +2391,51 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="backdrops">backdrops<span class="type-signature type array.<$.obackdrop>">Array.&lt;<a href="$.oBackdrop.html">$.oBackdrop</a>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        All the backdrops contained within the group.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="bounds">bounds<span class="type-signature type obox">oBox</span> </h4>
     </div>
     
@@ -2572,6 +2627,51 @@
     
     <div class="description">
         The group containing the node, the parent path, not including this node specifically.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="height">height<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The height of the node in the node view.
     </div>
     
     
@@ -3566,7 +3666,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1843
+            openHarmony/openHarmony_node.js, line 1860
         </div>
         
     </div>
@@ -3942,7 +4042,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1925
+            openHarmony/openHarmony_node.js, line 1942
         </div>
         
     </div>
@@ -4358,7 +4458,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1711
+            openHarmony/openHarmony_node.js, line 1728
         </div>
         
     </div>
@@ -4652,7 +4752,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1740
+            openHarmony/openHarmony_node.js, line 1757
         </div>
         
     </div>
@@ -4950,7 +5050,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1659
+            openHarmony/openHarmony_node.js, line 1676
         </div>
         
     </div>
@@ -5188,7 +5288,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1227
+            openHarmony/openHarmony_node.js, line 1241
         </div>
         
     </div>
@@ -5379,106 +5479,6 @@
         
             
 <dt>
-    <div class="nameContainer">
-        <h4 class="name" id="backdrops">
-            
-            backdrops<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;<a href="$.oBackdrop.html">$.oBackdrop</a>>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1592
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Gets all the backdrops contained within the group.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        Array.&lt;<a href="$.oBackdrop.html">$.oBackdrop</a>>
-                        
-                    
-            </td>
-            <td class="description last">The backdrops in the group</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
     <div class="nameContainer inherited">
         <h4 class="name" id="centerAbove">
             
@@ -5489,7 +5489,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 969
+            openHarmony/openHarmony_node.js, line 983
         </div>
         
     </div>
@@ -5682,7 +5682,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 994
+            openHarmony/openHarmony_node.js, line 1008
         </div>
         
     </div>
@@ -5873,7 +5873,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1582
+            openHarmony/openHarmony_node.js, line 1612
         </div>
         
     </div>
@@ -6035,7 +6035,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1044
+            openHarmony/openHarmony_node.js, line 1058
         </div>
         
     </div>
@@ -6216,7 +6216,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1064
+            openHarmony/openHarmony_node.js, line 1078
         </div>
         
     </div>
@@ -6364,7 +6364,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1138
+            openHarmony/openHarmony_node.js, line 1152
         </div>
         
     </div>
@@ -6511,7 +6511,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1102
+            openHarmony/openHarmony_node.js, line 1116
         </div>
         
     </div>
@@ -6658,7 +6658,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1183
+            openHarmony/openHarmony_node.js, line 1197
         </div>
         
     </div>
@@ -6758,7 +6758,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1982
+            openHarmony/openHarmony_node.js, line 1999
         </div>
         
     </div>
@@ -7102,7 +7102,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2248
+            openHarmony/openHarmony_node.js, line 2265
         </div>
         
     </div>
@@ -7339,7 +7339,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1797
+            openHarmony/openHarmony_node.js, line 1814
         </div>
         
     </div>
@@ -7639,7 +7639,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 924
+            openHarmony/openHarmony_node.js, line 938
         </div>
         
     </div>
@@ -7855,7 +7855,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 762
+            openHarmony/openHarmony_node.js, line 776
         </div>
         
     </div>
@@ -8097,7 +8097,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 835
+            openHarmony/openHarmony_node.js, line 849
         </div>
         
     </div>
@@ -8337,7 +8337,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1607
+            openHarmony/openHarmony_node.js, line 1624
         </div>
         
     </div>
@@ -8470,7 +8470,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1020
+            openHarmony/openHarmony_node.js, line 1034
         </div>
         
     </div>
@@ -8663,7 +8663,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1076
+            openHarmony/openHarmony_node.js, line 1090
         </div>
         
     </div>
@@ -8831,7 +8831,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1560
+            openHarmony/openHarmony_node.js, line 1590
         </div>
         
     </div>
@@ -8993,7 +8993,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 747
+            openHarmony/openHarmony_node.js, line 761
         </div>
         
     </div>
@@ -9140,7 +9140,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1128
+            openHarmony/openHarmony_node.js, line 1142
         </div>
         
     </div>
@@ -9242,7 +9242,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 800
+            openHarmony/openHarmony_node.js, line 814
         </div>
         
     </div>
@@ -9389,7 +9389,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 818
+            openHarmony/openHarmony_node.js, line 832
         </div>
         
     </div>
@@ -9536,7 +9536,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 877
+            openHarmony/openHarmony_node.js, line 891
         </div>
         
     </div>
@@ -9683,7 +9683,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 900
+            openHarmony/openHarmony_node.js, line 914
         </div>
         
     </div>
@@ -9851,7 +9851,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2073
+            openHarmony/openHarmony_node.js, line 2090
         </div>
         
     </div>
@@ -10022,7 +10022,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Dec 17 2019 18:07:06 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 18 2019 15:45:12 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

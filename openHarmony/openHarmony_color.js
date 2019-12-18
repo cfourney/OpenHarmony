@@ -50,15 +50,24 @@
 //////////////////////////////////////
  
 /**
- * The base class for the $.oColorValue.
+ * This class holds a color value. It can be used to set color attributes to a specific value and to convert colors between different formats such as hex strings, RGBA decompositions, as well as HSL values.
  * @constructor
- * @classdesc  $.oColorValue Base Class
+ * @classdesc  Constructor for the $.oColorValue Class.
  * @param   {string/object}            colorValue            Hex string value, or object in form {rgba}
  *
  * @property {int}                    r                      The int value of the red component.
  * @property {int}                    g                      The int value of the green component.
  * @property {int}                    b                      The int value of the blue component.
  * @property {int}                    a                      The int value of the alpha component.
+ * @example
+ * // initialise the class to start setting up attributes and making conversions by creating a new instance
+ * 
+ * var myColor = new $.oColorValue("#336600ff");
+ * $.log(myColor.r+" "+mycolor.g+" "+myColor.b+" "+myColor+a) // you can then access each component of the color
+ * 
+ * var myBackdrop = $.scn.root.addBackdrop("Backdrop")
+ * var myBackdrop.color = myColor                             // can be used to set the color of a backdrop
+ * 
  */
 $.oColorValue = function( colorValue ){
     if (typeof colorValue === 'undefined') var colorValue = "#000000ff";
@@ -75,7 +84,6 @@ $.oColorValue = function( colorValue ){
         this.b = ( (typeof arguments[2]) == "number" ) ? arguments[2] : 0; 
         return;
       default:
-        break;
     }
     
     if (typeof colorValue === 'string'){

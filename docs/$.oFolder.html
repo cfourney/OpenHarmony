@@ -849,6 +849,8 @@
             
                 <li data-name="$.oDrawingNode#group"><a href="$.oDrawingNode.html#group">group</a></li>
             
+                <li data-name="$.oDrawingNode#height"><a href="$.oDrawingNode.html#height">height</a></li>
+            
                 <li data-name="$.oDrawingNode#inLinks"><a href="$.oDrawingNode.html#inLinks">inLinks</a></li>
             
                 <li data-name="$.oDrawingNode#inNodes"><a href="$.oDrawingNode.html#inNodes">inNodes</a></li>
@@ -1136,6 +1138,8 @@
             
                 <li data-name="$.oFolder#getFiles"><a href="$.oFolder.html#getFiles">getFiles</a></li>
             
+                <li data-name="$.oFolder#getFolders"><a href="$.oFolder.html#getFolders">getFolders</a></li>
+            
                 <li data-name="$.oFolder#listFiles"><a href="$.oFolder.html#listFiles">listFiles</a></li>
             
                 <li data-name="$.oFolder#listFolders"><a href="$.oFolder.html#listFolders">listFolders</a></li>
@@ -1221,6 +1225,8 @@
             
                 <li data-name="$.oGroupNode#attributes"><a href="$.oGroupNode.html#attributes">attributes</a></li>
             
+                <li data-name="$.oGroupNode#backdrops"><a href="$.oGroupNode.html#backdrops">backdrops</a></li>
+            
                 <li data-name="$.oGroupNode#bounds"><a href="$.oGroupNode.html#bounds">bounds</a></li>
             
                 <li data-name="$.oGroupNode#enabled"><a href="$.oGroupNode.html#enabled">enabled</a></li>
@@ -1230,6 +1236,8 @@
                 <li data-name="$.oGroupNode#fullPath"><a href="$.oGroupNode.html#fullPath">fullPath</a></li>
             
                 <li data-name="$.oGroupNode#group"><a href="$.oGroupNode.html#group">group</a></li>
+            
+                <li data-name="$.oGroupNode#height"><a href="$.oGroupNode.html#height">height</a></li>
             
                 <li data-name="$.oGroupNode#inLinks"><a href="$.oGroupNode.html#inLinks">inLinks</a></li>
             
@@ -1295,8 +1303,6 @@
                 <li data-name="$.oGroupNode#addNode"><a href="$.oGroupNode.html#addNode">addNode</a></li>
             
                 <li data-name="$.oGroupNode#addOutLink"><a href="$.oGroupNode.html#addOutLink">addOutLink</a></li>
-            
-                <li data-name="$.oGroupNode#backdrops"><a href="$.oGroupNode.html#backdrops">backdrops</a></li>
             
                 <li data-name="$.oGroupNode#centerAbove"><a href="$.oGroupNode.html#centerAbove">centerAbove</a></li>
             
@@ -1472,6 +1478,8 @@
                 <li data-name="$.oNode#fullPath"><a href="$.oNode.html#fullPath">fullPath</a></li>
             
                 <li data-name="$.oNode#group"><a href="$.oNode.html#group">group</a></li>
+            
+                <li data-name="$.oNode#height"><a href="$.oNode.html#height">height</a></li>
             
                 <li data-name="$.oNode#inLinks"><a href="$.oNode.html#inLinks">inLinks</a></li>
             
@@ -1730,6 +1738,8 @@
                 <li data-name="$.oPegNode#fullPath"><a href="$.oPegNode.html#fullPath">fullPath</a></li>
             
                 <li data-name="$.oPegNode#group"><a href="$.oPegNode.html#group">group</a></li>
+            
+                <li data-name="$.oPegNode#height"><a href="$.oPegNode.html#height">height</a></li>
             
                 <li data-name="$.oPegNode#inLinks"><a href="$.oPegNode.html#inLinks">inLinks</a></li>
             
@@ -2453,6 +2463,8 @@
     
 
     
+        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>use oFolder.getFiles() instead to specify filter</li><ul></dd>
+    
     
     
     
@@ -2542,6 +2554,8 @@
     
     
 
+    
+        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>oFolder.folder is the containing parent folder, it can't also mean the children folders</li><ul></dd>
     
     
     
@@ -2670,7 +2684,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 281
+            openHarmony/openHarmony_file.js, line 313
         </div>
         
     </div>
@@ -2853,7 +2867,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 262
+            openHarmony/openHarmony_file.js, line 294
         </div>
         
     </div>
@@ -2924,7 +2938,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 377
+            openHarmony/openHarmony_file.js, line 386
         </div>
         
     </div>
@@ -3040,7 +3054,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 217
+            openHarmony/openHarmony_file.js, line 221
         </div>
         
     </div>
@@ -3051,7 +3065,130 @@
     
     
     <div class="description">
-        Lists the directory files as an $.oFolder
+        get the files from the folder
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>filter</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Filter wildcards for the content of the folder.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getFolders">
+            
+            getFolders<span class="signature">(<span class="optional">filter</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_file.js, line 273
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        gets the folders inside the oFolder
     </div>
     
 
@@ -3163,7 +3300,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 198
+            openHarmony/openHarmony_file.js, line 201
         </div>
         
     </div>
@@ -3174,7 +3311,7 @@
     
     
     <div class="description">
-        Lists the directory files as a string.
+        Lists the file names contained inside the folder.
     </div>
     
 
@@ -3286,7 +3423,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 239
+            openHarmony/openHarmony_file.js, line 243
         </div>
         
     </div>
@@ -3297,7 +3434,7 @@
     
     
     <div class="description">
-        Adds the input box to the bounds of the current $.oBox.
+        lists the folder names contained inside the folder.
     </div>
     
 
@@ -3409,7 +3546,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 302
+            openHarmony/openHarmony_file.js, line 334
         </div>
         
     </div>
@@ -3420,7 +3557,7 @@
     
     
     <div class="description">
-        Move this folder to a different location.
+        Move this folder to the specified path.
     </div>
     
 
@@ -3440,6 +3577,8 @@
 		
 		<th>Type</th>
 		
+		
+		<th>Default</th>
 		
 		
 		<th class="last">Description</th>
@@ -3464,6 +3603,10 @@
             </td>
             
             
+                <td class="default">
+                
+                </td>
+            
             
             <td class="description last">
                 
@@ -3472,7 +3615,7 @@
                         
                     
                 
-                The path to the folder location to copy to (CFNote: Should this not be a $.oFolder?)</td>
+                The new complete path of the folder after the move (CFNote: Should this not be a $.oFolder?)</td>
         </tr>
 	
 	
@@ -3492,6 +3635,12 @@
             </td>
             
             
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
             
             <td class="description last">
                 
@@ -3502,7 +3651,7 @@
                         
                     
                 
-                Whether to overwrite the target. Default is false.</td>
+                Whether to overwrite the target.</td>
         </tr>
 	
 	
@@ -3560,7 +3709,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 340
+            openHarmony/openHarmony_file.js, line 371
         </div>
         
     </div>
@@ -3592,6 +3741,8 @@
 		<th>Type</th>
 		
 		
+		<th>Default</th>
+		
 		
 		<th class="last">Description</th>
 	</tr>
@@ -3615,6 +3766,10 @@
             </td>
             
             
+                <td class="default">
+                
+                </td>
+            
             
             <td class="description last">
                 
@@ -3623,7 +3778,7 @@
                         
                     
                 
-                The path to the folder location to copy to (CFNote: Should this not be a $.oFolder?)</td>
+                The path of the destination to copy the folder into.</td>
         </tr>
 	
 	
@@ -3642,6 +3797,12 @@
             
             </td>
             
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
             
             
             <td class="description last">
@@ -3711,7 +3872,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 398
+            openHarmony/openHarmony_file.js, line 406
         </div>
         
     </div>
@@ -3819,7 +3980,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Dec 17 2019 18:07:06 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 18 2019 15:45:12 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

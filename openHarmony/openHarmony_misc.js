@@ -288,7 +288,6 @@ $.oBox.prototype.includeNodes = function(oNodeArray){
   for (var i in oNodeArray){
      var _node = oNodeArray[i];
      var _nodeBox = _node.bounds;
-      
      this.include(_nodeBox);
   } 
 }
