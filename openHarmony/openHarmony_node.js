@@ -556,7 +556,7 @@ Object.defineProperty($.oNode.prototype, 'width', {
 Object.defineProperty($.oNode.prototype, 'inLinks', {
     get : function(){
         var nodeRef = this;
-        var newList = new this.$.oDynList( [], 0, node.numberOfInputPorts(this.path), 
+        var newList = new this.$.oList( [], 0, node.numberOfInputPorts(this.path), 
                                            function( listItem, index ){ return new this.$.oNodeLink( false, false, nodeRef, index, false ); }, 
                                            function(){ throw new ReferenceError("Unable to set inLinks"); }, 
                                            false 
@@ -637,7 +637,7 @@ Object.defineProperty($.oNode.prototype, 'outLinks', {
           }
         }
         
-        var newList = new this.$.oDynList( [], 0, lookup_list.length, 
+        var newList = new this.$.oList( [], 0, lookup_list.length, 
                                            function( listItem, index ){ return new this.$.oNodeLink( nodeRef, lookup_list[index][0], false, false, lookup_list[index][1] ); }, 
                                            function(){ throw new ReferenceError("Unable to set inLinks"); }, 
                                            false
