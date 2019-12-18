@@ -1549,40 +1549,6 @@ $.oScene.prototype.close = function( exit ){
   }
 }
 
-// Short Notations
-
-/**
- * Gets a node by the path.
- * @param   {string}   fullPath         The path of the node in question.
- *  
- * @return  {$.oNode}                     The node found given the query.
- */
-$.oScene.prototype.$node = function( fullPath ){
-    return this.getNodeByPath( fullPath );
-}
-
-/**
- * Gets a column by the name.
- * @param  {string}             uniqueName               The unique name of the column as a string.
- * @param  {$.oAttribute}       oAttributeObject         The oAttributeObject owning the column.
- *  
- * @return {$.oColumn}          The node found given the query.
- */
-$.oScene.prototype.$column = function( uniqueName, oAttributeObject ){
-    return this.getColumnByName( uniqueName, oAttributeObject );
-}
-
-
-/**
- * Gets a node by the path.
- * @param   {string}   fullPath         The path of the node in question.
- *  
- * @return  {$.oNode}                     The node found given the query.
- */
-$.oScene.prototype.$node = function( fullPath ){
-    return this.getNodeByPath( fullPath );
-}
-
 /**
  * Gets the current camera matrix.
  *  
@@ -1617,4 +1583,38 @@ $.oScene.prototype.getProjectionMatrix = function( ){
     }
   }
   return newMatrix;
+}
+
+// Short Notations
+
+/**
+ * Gets a node by the path.
+ * @param   {string}   fullPath         The path of the node in question.
+ *  
+ * @return  {$.oNode}                     The node found given the query.
+ */
+$.oScene.prototype.$node = function( fullPath ){
+    return this.getNodeByPath( fullPath );
+}
+
+/**
+ * Gets a column by the name.
+ * @param  {string}             uniqueName               The unique name of the column as a string.
+ * @param  {$.oAttribute}       oAttributeObject         The oAttributeObject owning the column.
+ *  
+ * @return {$.oColumn}          The node found given the query.
+ */
+$.oScene.prototype.$column = function( uniqueName, oAttributeObject ){
+    return this.getColumnByName( uniqueName, oAttributeObject );
+}
+
+
+/**
+ * Gets a palette by its name.
+ * @param   {string}   name            The name of the palette.
+ *  
+ * @return  {$.oPalette}               The node found given the query.
+ */
+$.oScene.prototype.$palette = function( name ){
+    return this.getPaletteByName( name );
 }
