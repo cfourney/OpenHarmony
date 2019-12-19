@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oFile</title>
+    <title>Class: oPreferences</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -2117,7 +2117,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oFile.html">Class: oFile</h1>
+        <h1 class="page-title" data-filename="$.oPreferences.html">Class: oPreferences</h1>
         
 
 
@@ -2128,10 +2128,11 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a>.</span>
     
-    oFile
+    oPreferences
     </h2>
     
-        <div class="class-description">$.oFile Base Class</div>
+        <div class="class-description">Provides access to getting/setting preferenes as an object interface.<br>All preferences that have been written to the file are accessible as properties of this class.<br>
+Alternatively, new preferences can be retrieved with the .get function.</div>
     
 </header>  
 
@@ -2143,14 +2144,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oFile">
+        <h4 class="name" id="oPreferences">
             
-            new $.oFile<span class="signature">(path)</span>
+            new $.oPreferences<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 430
+            openHarmony/openHarmony_preferences.js, line 64
         </div>
         
     </div>
@@ -2161,7 +2162,7 @@
     
     
     <div class="description">
-        The $.oFile helper class -- providing utilities for file manipulation and access.
+        The constructor for the $.preferences class.
     </div>
     
 
@@ -2170,105 +2171,9 @@
     
     
     
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The path to the file.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
     
     
 <dl class="details">
-    
-        
-        <h5 class="subsection-title">Properties:</h5>
-        
-        <dl>
-
-<table class="props">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The path to the file.</td>
-        </tr>
-	
-	
-	</tbody>
-</table></dl>
-        
     
         
     
@@ -2303,6 +2208,17 @@
     
     
     
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>var pref = $.getPreferences();
+pref.create( "MyNewPreferenceName", "MyPreferenceValue" );
+pref["MyNewPreferenceName"];     // Provides: MyPreferenceValue
+pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
+    
+
     
 </dd>
 
@@ -2326,7 +2242,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="exists">exists<span class="type-signature type bool">bool</span> </h4>
+        <h4 class="name" id="create">create</h4>
     </div>
     
     
@@ -2334,7 +2250,7 @@
 <dd>
     
     <div class="description">
-        Whether the file exists already.
+        Creates a new preferences based on name and value.<br><b>Note- A new preference isn't actively written into the Harmony's preference file until created and the application closed. Use preference.get for newly created preferences.</b>
     </div>
     
     
@@ -2371,7 +2287,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="extension">extension<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="get">get</h4>
     </div>
     
     
@@ -2379,7 +2295,7 @@
 <dd>
     
     <div class="description">
-        The extension of the file.
+        Retrieves a preference and attempts to identify its type automatically.<br>This is generally useful for accessing newly created preferences that have not been written to disk.
     </div>
     
     
@@ -2410,185 +2326,20 @@
 
     
     
-</dd>
-
+        <h5>Example</h5>
         
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="folder">folder<span class="type-signature type $.ofolder"><a href="$.oFolder.html">$.oFolder</a></span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The folder containing the file.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
 
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
+    <pre class="prettyprint"><code>var pref = $.getPreferences();
+pref.create( "MyNewPreferenceName", "MyPreferenceValue" );
+//This new preference won't be available in the file until Harmony closes.
+//So if preferences are reinstantiated, it won't be readily available -- but it can still be retrieved with get.
 
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="fullName">fullName<span class="type-signature type string">string</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The name of the file with extension.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
+var pref2 = $.getPreferences(); 
+pref["MyNewPreferenceName"];     // Provides: undefined -- its not in the Harmony preference file.
+pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue, its still available </code></pre>
     
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="name">name<span class="type-signature type string">string</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The name of the file without extenstion.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="path">path<span class="type-signature type string">string</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The path of the file.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
     
 </dd>
 
@@ -2602,14 +2353,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="copy">
+        <h4 class="name" id="refresh">
             
-            copy<span class="signature">(<span class="optional">folder</span>, <span class="optional">copyName</span>, <span class="optional">overwrite</span>)</span>
+            refresh<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 582
+            openHarmony/openHarmony_preferences.js, line 72
         </div>
         
     </div>
@@ -2620,7 +2371,8 @@
     
     
     <div class="description">
-        Copies the file to the folder.
+        Refreshes the preferences by re-reading the preference file and ingesting their values appropriately. They are then available as properties of this class.<br>
+<b>Note, any new preferences will not be available as properties until Harmony saves the preference file at exit. In order to reference new preferences, use the get function.
     </div>
     
 
@@ -2628,702 +2380,6 @@
     
     
     
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>folder</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Content to write to the file.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>copyName</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Name of the copied file. If not specified, the copy will keep its name unless another file is present in which case it will be called "_copy"</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>overwrite</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to overwrite the file.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="move">
-            
-            move<span class="signature">(folder, <span class="optional">overwrite</span>)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 554
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Moves the file to the folder.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>folder</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                Content to write to the file.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>overwrite</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to overwrite the file.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="read">
-            
-            read<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 509
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Reads the content of the file.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="remove">
-            
-            remove<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 619
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Removes the file.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="toString">
-            
-            toString<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 629
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Used in converting the file to a string value, provides the string-path.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        string
-                        
-                    
-            </td>
-            <td class="description last">The file path's as a string.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="write">
-            
-            write<span class="signature">(content, <span class="optional">append</span>)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 530
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Writes to the file.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>content</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                Content to write to the file.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>append</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to append to the file.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -3384,7 +2440,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 18 2019 21:36:44 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 18 2019 21:36:45 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>
