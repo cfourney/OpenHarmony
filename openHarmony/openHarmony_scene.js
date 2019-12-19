@@ -1585,6 +1585,18 @@ $.oScene.prototype.getProjectionMatrix = function( ){
   return newMatrix;
 }
 
+
+/**
+ * Gets the current scene's metadata.
+ *  
+ * @see $.oMetadata
+ * @return {$.oMetadata}          The metadata of the scene.
+ */
+$.oScene.prototype.getMetadata = function( ){
+  return new this.$.oMetadata( );
+}
+
+
 // Short Notations
 
 /**
