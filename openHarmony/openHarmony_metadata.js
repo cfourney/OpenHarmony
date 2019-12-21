@@ -117,7 +117,6 @@ $.oMetadata.prototype.refresh = function(){
     
     if( meta.source == "scene" ){
       var type = false;
-      
       scene.setMetadata( {
                            "name"       : name,
                            "type"       : valtype,
@@ -127,7 +126,10 @@ $.oMetadata.prototype.refresh = function(){
                          }
                        );
     }else{
-    
+      var metaAttr = this.source.attributes["meta"];
+      if( metaAttr ){
+        metaAttr[ name ] = val;
+      }
     }
     
     meta.refresh();
@@ -137,6 +139,7 @@ $.oMetadata.prototype.refresh = function(){
     return meta._metadatas[name].value;
   }
   
+  //Definition of properties.
   var getterSetter_create = function( targ, id, type, value ){
   
     if( type == "string" ){
@@ -145,7 +148,6 @@ $.oMetadata.prototype.refresh = function(){
           value = JSON.parse( obj );
       }
     }
-  
     targ._metadatas[ id ] = { "value": value, "type":type };
    
     //Create a getter/setter for it!
@@ -176,9 +178,20 @@ $.oMetadata.prototype.refresh = function(){
     
     for( var n=0;n<metadatas.length;n++ ){
       var metadata = metadatas[n];
-      getterSetter_create( this, metadata.name, metadata.type, metadata.value );
+      getterSetter_create( this, metadata.name.toLowerCase(), metadata.type, metadata.value );
     }
   }else{
+    //createDynamicAttr (String node, String type, String attrName, String displayName, bool linkable)
+    //var alist = node.getAttrList( this.source.name, 1, 'meta' );
+    var metaAttr = this.source.attributes["meta"];
+    if( metaAttr ){
+      var subAttrs = metaAttr.subAttributes;
+      if( subAttrs.length>0 ){
+        for( var i=0;i<subAttrs.length;i++ ){
+          getterSetter_create( this, subAttrs[i].shortKeyword.toLowerCase(), subAttrs[i].type, subAttrs[i].getValue(1) );
+        }
+      }
+    }
     
   }
 }
@@ -191,6 +204,8 @@ $.oMetadata.prototype.refresh = function(){
  * @param   {object}                 val             The value of the new metadata created.
  */
 $.oMetadata.prototype.create = function( name, val ){
+  var name = name.toLowerCase();
+
   if( this[ name ] ){
     throw ReferenceError( "Metadata already exists by name: " + name );
   }
@@ -225,8 +240,6 @@ $.oMetadata.prototype.create = function( name, val ){
   }
   
   if( this.source == "scene" ){
-    var type = false;
-      
     scene.setMetadata( {
                          "name"       : name,
                          "type"       : valtype,
@@ -235,6 +248,11 @@ $.oMetadata.prototype.create = function( name, val ){
                          "value"      : val
                        }
                      );
+  }else{
+    var attr = this.source.createAttribute( "meta."+name, valtype, valtype, false );
+    if( attr ){ 
+      attr.setValue( val, 1 ); 
+    }
   }
   this.refresh();
 }
@@ -245,20 +263,20 @@ $.oMetadata.prototype.create = function( name, val ){
  * @param   {string}                 name            The name of the metadata to remove.
  */
 $.oMetadata.prototype.remove = function( name ){
-  System.println( "removing : " + name );
+  var name = name.toLowerCase();
   if( !this.hasOwnProperty( name ) ){ return true; }
   
+  var res = false;
   if( this.source == "scene" ){
     if( !scene.removeMetadata ){
-      scene.removeMetadata( scene.metadata(name), this._metadatas[ name ].type );
+      res = scene.removeMetadata( scene.metadata(name), this._metadatas[ name ].type );
     }else{
       throw ReferenceError( "This is supposed to exist, but doesn't seem to be available." );
     }
-    
   }else{
-    
-  
+    res = this.source.removeAttribute( "meta."+name );
   }
   
   this.refresh();
+  return res;
 }

@@ -914,6 +914,8 @@
             
                 <li data-name="$.oDrawingNode#clone"><a href="$.oDrawingNode.html#clone">clone</a></li>
             
+                <li data-name="$.oDrawingNode#createAttribute"><a href="$.oDrawingNode.html#createAttribute">createAttribute</a></li>
+            
                 <li data-name="$.oDrawingNode#duplicate"><a href="$.oDrawingNode.html#duplicate">duplicate</a></li>
             
                 <li data-name="$.oDrawingNode#extractPeg"><a href="$.oDrawingNode.html#extractPeg">extractPeg</a></li>
@@ -934,7 +936,11 @@
             
                 <li data-name="$.oDrawingNode#placeAtCenter"><a href="$.oDrawingNode.html#placeAtCenter">placeAtCenter</a></li>
             
+                <li data-name="$.oDrawingNode#refreshAttributes"><a href="$.oDrawingNode.html#refreshAttributes">refreshAttributes</a></li>
+            
                 <li data-name="$.oDrawingNode#remove"><a href="$.oDrawingNode.html#remove">remove</a></li>
+            
+                <li data-name="$.oDrawingNode#removeAttribute"><a href="$.oDrawingNode.html#removeAttribute">removeAttribute</a></li>
             
                 <li data-name="$.oDrawingNode#subNodes"><a href="$.oDrawingNode.html#subNodes">subNodes</a></li>
             
@@ -1262,6 +1268,8 @@
             
                 <li data-name="$.oGroupNode#clone"><a href="$.oGroupNode.html#clone">clone</a></li>
             
+                <li data-name="$.oGroupNode#createAttribute"><a href="$.oGroupNode.html#createAttribute">createAttribute</a></li>
+            
                 <li data-name="$.oGroupNode#duplicate"><a href="$.oGroupNode.html#duplicate">duplicate</a></li>
             
                 <li data-name="$.oGroupNode#getAttributeByColumnName"><a href="$.oGroupNode.html#getAttributeByColumnName">getAttributeByColumnName</a></li>
@@ -1286,7 +1294,11 @@
             
                 <li data-name="$.oGroupNode#placeAtCenter"><a href="$.oGroupNode.html#placeAtCenter">placeAtCenter</a></li>
             
+                <li data-name="$.oGroupNode#refreshAttributes"><a href="$.oGroupNode.html#refreshAttributes">refreshAttributes</a></li>
+            
                 <li data-name="$.oGroupNode#remove"><a href="$.oGroupNode.html#remove">remove</a></li>
+            
+                <li data-name="$.oGroupNode#removeAttribute"><a href="$.oGroupNode.html#removeAttribute">removeAttribute</a></li>
             
                 <li data-name="$.oGroupNode#subNodes"><a href="$.oGroupNode.html#subNodes">subNodes</a></li>
             
@@ -1510,6 +1522,8 @@
             
                 <li data-name="$.oNode#clone"><a href="$.oNode.html#clone">clone</a></li>
             
+                <li data-name="$.oNode#createAttribute"><a href="$.oNode.html#createAttribute">createAttribute</a></li>
+            
                 <li data-name="$.oNode#duplicate"><a href="$.oNode.html#duplicate">duplicate</a></li>
             
                 <li data-name="$.oNode#getAttributeByColumnName"><a href="$.oNode.html#getAttributeByColumnName">getAttributeByColumnName</a></li>
@@ -1526,7 +1540,11 @@
             
                 <li data-name="$.oNode#placeAtCenter"><a href="$.oNode.html#placeAtCenter">placeAtCenter</a></li>
             
+                <li data-name="$.oNode#refreshAttributes"><a href="$.oNode.html#refreshAttributes">refreshAttributes</a></li>
+            
                 <li data-name="$.oNode#remove"><a href="$.oNode.html#remove">remove</a></li>
+            
+                <li data-name="$.oNode#removeAttribute"><a href="$.oNode.html#removeAttribute">removeAttribute</a></li>
             
                 <li data-name="$.oNode#subNodes"><a href="$.oNode.html#subNodes">subNodes</a></li>
             
@@ -1768,6 +1786,8 @@
             
                 <li data-name="$.oPegNode#clone"><a href="$.oPegNode.html#clone">clone</a></li>
             
+                <li data-name="$.oPegNode#createAttribute"><a href="$.oPegNode.html#createAttribute">createAttribute</a></li>
+            
                 <li data-name="$.oPegNode#duplicate"><a href="$.oPegNode.html#duplicate">duplicate</a></li>
             
                 <li data-name="$.oPegNode#getAttributeByColumnName"><a href="$.oPegNode.html#getAttributeByColumnName">getAttributeByColumnName</a></li>
@@ -1784,7 +1804,11 @@
             
                 <li data-name="$.oPegNode#placeAtCenter"><a href="$.oPegNode.html#placeAtCenter">placeAtCenter</a></li>
             
+                <li data-name="$.oPegNode#refreshAttributes"><a href="$.oPegNode.html#refreshAttributes">refreshAttributes</a></li>
+            
                 <li data-name="$.oPegNode#remove"><a href="$.oPegNode.html#remove">remove</a></li>
+            
+                <li data-name="$.oPegNode#removeAttribute"><a href="$.oPegNode.html#removeAttribute">removeAttribute</a></li>
             
                 <li data-name="$.oPegNode#subNodes"><a href="$.oPegNode.html#subNodes">subNodes</a></li>
             
@@ -2185,7 +2209,7 @@ It represents groups in the scene. From this class, it's possible to add nodes, 
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1530
+            openHarmony/openHarmony_node.js, line 1589
         </div>
         
     </div>
@@ -3702,7 +3726,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1860
+            openHarmony/openHarmony_node.js, line 1919
         </div>
         
     </div>
@@ -4078,7 +4102,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1942
+            openHarmony/openHarmony_node.js, line 2001
         </div>
         
     </div>
@@ -4517,7 +4541,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1728
+            openHarmony/openHarmony_node.js, line 1787
         </div>
         
     </div>
@@ -4811,7 +4835,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1757
+            openHarmony/openHarmony_node.js, line 1816
         </div>
         
     </div>
@@ -5109,7 +5133,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1676
+            openHarmony/openHarmony_node.js, line 1735
         </div>
         
     </div>
@@ -5367,7 +5391,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1241
+            openHarmony/openHarmony_node.js, line 1230
         </div>
         
     </div>
@@ -5570,7 +5594,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 983
+            openHarmony/openHarmony_node.js, line 972
         </div>
         
     </div>
@@ -5763,7 +5787,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1008
+            openHarmony/openHarmony_node.js, line 997
         </div>
         
     </div>
@@ -5954,7 +5978,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1612
+            openHarmony/openHarmony_node.js, line 1671
         </div>
         
     </div>
@@ -6116,7 +6140,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1058
+            openHarmony/openHarmony_node.js, line 1047
         </div>
         
     </div>
@@ -6288,6 +6312,272 @@ peg.centerAbove(drawingNode);</code></pre>
             
 <dt>
     <div class="nameContainer inherited">
+        <h4 class="name" id="createAttribute">
+            
+                <span class="inherited"><a href="$.oNode.html#createAttribute">inherited</a></span>
+            
+            createAttribute<span class="signature">(attrName, <span class="optional">type</span>, <span class="optional">displayName</span>, <span class="optional">linkable</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oAttribute.html">$.oAttribute</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_node.js, line 1250
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Creates a new dynamic attribute in the node.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attrName</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                The attribute name to create.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    "string"
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The type of the attribute ["string", "bool", "double", "int"]</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>displayName</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    attrName
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The visible attribute name to the GUI user.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>linkable</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether the attribute can be linked to a column.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oAttribute.html">$.oAttribute</a>
+                        
+                    
+            </td>
+            <td class="description last">The resulting attribute created.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
         <h4 class="name" id="duplicate">
             
                 <span class="inherited"><a href="$.oNode.html#duplicate">inherited</a></span>
@@ -6297,7 +6587,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1078
+            openHarmony/openHarmony_node.js, line 1067
         </div>
         
     </div>
@@ -6445,7 +6735,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1152
+            openHarmony/openHarmony_node.js, line 1141
         </div>
         
     </div>
@@ -6592,7 +6882,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1116
+            openHarmony/openHarmony_node.js, line 1105
         </div>
         
     </div>
@@ -6739,7 +7029,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1197
+            openHarmony/openHarmony_node.js, line 1186
         </div>
         
     </div>
@@ -6839,7 +7129,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1999
+            openHarmony/openHarmony_node.js, line 2058
         </div>
         
     </div>
@@ -7199,7 +7489,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2265
+            openHarmony/openHarmony_node.js, line 2324
         </div>
         
     </div>
@@ -7436,7 +7726,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1814
+            openHarmony/openHarmony_node.js, line 1873
         </div>
         
     </div>
@@ -7736,7 +8026,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 938
+            openHarmony/openHarmony_node.js, line 927
         </div>
         
     </div>
@@ -7952,7 +8242,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 776
+            openHarmony/openHarmony_node.js, line 765
         </div>
         
     </div>
@@ -8194,7 +8484,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 849
+            openHarmony/openHarmony_node.js, line 838
         </div>
         
     </div>
@@ -8434,7 +8724,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1624
+            openHarmony/openHarmony_node.js, line 1683
         </div>
         
     </div>
@@ -8567,7 +8857,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1034
+            openHarmony/openHarmony_node.js, line 1023
         </div>
         
     </div>
@@ -8751,6 +9041,153 @@ function importCustomPSD(){
             
 <dt>
     <div class="nameContainer inherited">
+        <h4 class="name" id="refreshAttributes">
+            
+                <span class="inherited"><a href="$.oNode.html#refreshAttributes">inherited</a></span>
+            
+            refreshAttributes<span class="signature">(oNodeObject)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_node.js, line 1300
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Refreshes/rebuilds the attributes and getter/setters.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>oNodeObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oNode.html">$.oNode</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The node to link this one's inport to.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        bool
+                        
+                    
+            </td>
+            <td class="description last">The result of the unlink.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
         <h4 class="name" id="remove">
             
                 <span class="inherited"><a href="$.oNode.html#remove">inherited</a></span>
@@ -8760,7 +9197,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1090
+            openHarmony/openHarmony_node.js, line 1079
         </div>
         
     </div>
@@ -8920,6 +9357,153 @@ function importCustomPSD(){
         
             
 <dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="removeAttribute">
+            
+                <span class="inherited"><a href="$.oNode.html#removeAttribute">inherited</a></span>
+            
+            removeAttribute<span class="signature">(attrName)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_node.js, line 1290
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Removes an existing dynamic attribute in the node.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>attrName</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The attribute name to remove.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        bool
+                        
+                    
+            </td>
+            <td class="description last">The result of the removal.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
     <div class="nameContainer">
         <h4 class="name" id="subNodes">
             
@@ -8928,7 +9512,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1590
+            openHarmony/openHarmony_node.js, line 1649
         </div>
         
     </div>
@@ -9090,7 +9674,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 761
+            openHarmony/openHarmony_node.js, line 750
         </div>
         
     </div>
@@ -9237,7 +9821,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1142
+            openHarmony/openHarmony_node.js, line 1131
         </div>
         
     </div>
@@ -9339,7 +9923,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 814
+            openHarmony/openHarmony_node.js, line 803
         </div>
         
     </div>
@@ -9486,7 +10070,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 832
+            openHarmony/openHarmony_node.js, line 821
         </div>
         
     </div>
@@ -9633,7 +10217,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 891
+            openHarmony/openHarmony_node.js, line 880
         </div>
         
     </div>
@@ -9780,7 +10364,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 914
+            openHarmony/openHarmony_node.js, line 903
         </div>
         
     </div>
@@ -9948,7 +10532,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2090
+            openHarmony/openHarmony_node.js, line 2149
         </div>
         
     </div>
@@ -10119,7 +10703,7 @@ function importCustomPSD(){
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 18 2019 23:31:00 GMT-0500 (Eastern Standard Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat Dec 21 2019 00:26:10 GMT-0500 (Eastern Standard Time)
         </footer>
     </div>
 </div>
