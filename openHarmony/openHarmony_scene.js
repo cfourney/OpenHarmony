@@ -117,31 +117,33 @@ Object.defineProperty($.oScene.prototype, 'stage', {
 /**
  * The name of the scene.
  * @name $.oScene#name
+ * @readonly
  * @type {string}
  */
 Object.defineProperty($.oScene.prototype, 'name', {
     get : function(){
         return scene.currentScene();
-    },
+    }/*,
     set : function(val){
         throw "Not yet implemented";
-    }
+    }*/
 });
 
 
 /**
  * The sceneName file of the scene.
  * @Deprecated
+ * @readonly
  * @name $.oScene#sceneName
  * @type {string}
  */
 Object.defineProperty($.oScene.prototype, 'sceneName', {
     get : function(){
         return scene.currentScene();
-    },
+    }/*,
     set : function(val){
         throw "Not yet implemented";
-    }
+    }*/
 });
 
 
@@ -279,12 +281,13 @@ Object.defineProperty($.oScene.prototype, 'center', {
 /**
  * The horizontal resolution.
  * @name $.oScene#resolutionX
+ * @readonly
  * @type {int}
  */
 Object.defineProperty($.oScene.prototype, 'resolutionX', {
     get : function(){
         return scene.currentResolutionX();
-    },
+    }
 });
 
 /**
@@ -295,7 +298,7 @@ Object.defineProperty($.oScene.prototype, 'resolutionX', {
 Object.defineProperty($.oScene.prototype, 'resolutionY', {
     get : function(){
         return scene.currentResolutionY();
-    },
+    }
 });
 
 /**
@@ -344,6 +347,7 @@ Object.defineProperty($.oScene.prototype, 'fov', {
 /**
  * Whether the scene contains unsaved changes.
  * @name $.oScene#unsaved
+ * @readonly
  * @type {bool}
  */
 Object.defineProperty($.oScene.prototype, 'unsaved', {
@@ -357,7 +361,8 @@ Object.defineProperty($.oScene.prototype, 'unsaved', {
 /**
  * The root group of the scene.
  * @name $.oScene#root
- * @type {$.oNode[]}
+ * @readonly 
+ * @type {$.oGroupNode}
  */
 Object.defineProperty($.oScene.prototype, 'root', {
     get : function(){
@@ -373,6 +378,7 @@ Object.defineProperty($.oScene.prototype, 'root', {
 /**
  * Contains the list of all the nodes present in the scene.
  * @name $.oScene#nodes
+ * @readonly 
  * @type {$.oNode[]}
  */
 Object.defineProperty($.oScene.prototype, 'nodes', {
@@ -385,6 +391,7 @@ Object.defineProperty($.oScene.prototype, 'nodes', {
 /**
  * Contains the list of columns present in the scene.
  * @name $.oScene#columns
+ * @readonly 
  * @type {$.oColumn[]}
  */
 Object.defineProperty($.oScene.prototype, 'columns', {
@@ -401,6 +408,7 @@ Object.defineProperty($.oScene.prototype, 'columns', {
 /**
  * Contains the list of scene palettes present in the scene.
  * @name $.oScene#palettes
+ * @readonly 
  * @type {$.oPalette[]}
  */
 Object.defineProperty($.oScene.prototype, 'palettes', {
@@ -1061,7 +1069,7 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
     default :
       break;
   }
-  
+
   if (paletteStorage == "external"){
     var _palette = new this.$.oPalette(_list.createPalette(storeInElement+"/"+name, insertAtIndex), _list);
   }
@@ -1103,6 +1111,108 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
     return _newPalette;
 }
  
+
+/**
+ * Returns all the links existing between an ensemble of nodes.
+ * @param   {$.oNode[]}    nodes               The nodes to look at.
+ * @param   {string}       [paletteName]       A custom name for the created palette.
+ * @param   {string}       [colorName]         A custom name to give to the gathered colors.
+ * 
+ * @return       {$.oLink[]}      An array of unique links existing between the nodes.
+ */
+$.oScene.prototype.createPaletteFromNodes = function(nodes, paletteName, colorName){
+  if (typeof paletteName === 'undefined') var paletteName = this.name;
+  if (typeof colorName ==='undefined') var colorName = false;
+  
+  // get unique Color Ids
+  var _usedColorIds = [];
+  for (var i in nodes){
+    var _ids = nodes[i].usedColorIds;
+    for (var j in _ids){
+      if (_usedColorIds.indexOf(_ids[j])) _usedColorIds.push(_ids[j]);
+    }
+  }
+  
+  // find used Palettes and Colors
+  // find RGB values
+  var _palettes = this.palettes;
+  var _usedColors = new Array(_usedColorIds.length);
+  var _usedPalettes = [];
+  
+  //var _paletteList = _palette._paletteList;
+  
+  for (var i in _usedColorIds){
+    for (var j in _palettes){
+      var _color = _palettes[j].getColorById(_usedColorIds[i]);
+      // color found
+      if (_color != null){
+        if (_usedPalettes.indexOf(_palettes[j]) == -1) _usedPalettes.push(_palettes[j]);
+        _usedColors[i] = _color;
+        break;
+      }
+    }
+  }
+
+  // create single palette
+  var _newPalette = this.addPalette(paletteName);
+  _newPalette.colors[0].remove();
+  
+  for (var i=0; i<_usedColors.length; i++){
+    var _colorCopy = _usedColors[i].copyToPalette(_newPalette);
+    if (colorName) _colorCopy.name = colorName+" "+(i+1);
+  }
+  
+  return _newPalette;
+}
+
+
+/**
+ * Returns all the links existing between an ensemble of nodes.
+ * @param   {$.oNode[]}      nodes                         The nodes to look at.
+ * 
+ * @return  {$.oLink[]}      An array of unique links existing between the nodes.
+ */
+$.oScene.prototype.getNodesLinks = function (nodes){
+  var _links = [];
+  var _linkStrings = [];
+  // var _nodePaths = nodes.map(function(x){return x.path});
+  var _nodePaths = {};
+  
+  for (var i in nodes){
+    _nodePaths[nodes[i].path] = nodes[i];  
+  }
+        
+  for (var i in nodes){
+    var _inLinks = nodes[i].getInLinks();
+    var _outLinks = nodes[i].getOutLinks();
+
+    // add link only once and replace the node object for one from the passed arguments
+    for (var j in _inLinks){
+      var _link = _inLinks[j];
+      var _path = _link.outNode.path;
+      if (_nodePaths.hasOwnProperty(_path) && _linkStrings.indexOf(_link.toString()) == -1){
+        _link.inNode = nodes[i];
+        _link.outNode = _nodePaths[_path];
+        _links.push(_link);
+        _linkStrings.push(_link.toString());
+      }
+    }
+
+    // add link only once and replace the inNode object for one from the passed arguments    
+    for (var j in _outLinks){
+      var _link = _outLinks[j];
+      var _path = _link.inNode.path;
+      if (_nodePaths.hasOwnProperty(_link.inNode.path) && _linkStrings.indexOf(_link.toString()) == -1){
+        _link.outNode = nodes[i];
+        _link.inNode = _nodePaths[_link.inNode.path];
+        _links.push(_link);
+        _linkStrings.push(_link.toString());
+      }
+    }
+  }
+  
+  return _links;
+}
 
 
 /**
@@ -1187,7 +1297,7 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
         }
 
     }
-    return _mergedNode
+    return _mergedNode;
 }
 
 
@@ -1196,9 +1306,11 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
  * @param   {$.oNodes[]}       nodes                                          The path of the TPL file to import. 
  * @param   {bool}             [exportPath]                                   Whether to extend the exposures of the content imported.
  * @param   {string}           [exportPalettesMode]                           can have the values : "usedOnly", "all", "createPalette"
+ * @param   {string}           [renameUsedColors]                             if creating a palette, optionally set here the name for the colors (they will have a number added to each)
  * @param   {copyOptions}      [copyOptions]                                  An object containing paste options as per Harmony's standard paste options.
  * 
  * @return {bool}         The success of the export.
+ * @todo turn exportPalettesMode into an enum?
  * @example
  * // how to export a clean palette with no extra drawings and everything renamed by frame, and only the necessary colors gathered in one palette:
  * 
@@ -1219,11 +1331,12 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
  * 
  * $.endUndo();
  */
-$.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMode, copyOptions){
+$.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMode, renameUsedColors, copyOptions){
   if (typeof exportPalettesMode === 'undefined') var exportPalettesMode = "usedOnly";
   if (typeof copyOptions === 'undefined') var copyOptions = copyPaste.getCurrentCreateOptions();
+  if (typeof renameUsedColors === 'undefined') var renameUsedColors = false;
   
-  if (!Array.isArray(nodes)) nodes = [nodes]
+  if (!Array.isArray(nodes)) nodes = [nodes];
   
   // add nodes included in groups as they'll get automatically exported
   var _allNodes = nodes;
@@ -1231,101 +1344,90 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
     if (nodes[i].type == "GROUP") _allNodes = _allNodes.concat(nodes[i].subNodes(true));
   }
   
-  // get used colors
-  var _usedColorIds = [];
-  for (var i in _allNodes){
-    if (_allNodes[i].type == "READ") _usedColorIds = _usedColorIds.concat(_allNodes[i].usedColorIds);
-  }
-  
-  this.$.log(_usedColorIds)
-  
-  // find used Palettes and Colors
-  if (exportPalettesMode != "all"){
-    // find RGB values
-    var _palettes = this.palettes;
-    var _usedColors = new Array(_usedColorIds.length);
-    var _usedPalettes = [];
-    
-    for (var i in _usedColorIds){
-      for (var j in _palettes){
-        var _color = _palettes[j].getColorById(_usedColorIds[i]);
-        // color found
-        if (_color != null){
-          if (_usedPalettes.indexOf(_palettes[j]) == -1) _usedPalettes.push(_palettes[j]);
-          _usedColors[i] = _color;
-          break;
-        }
-      }
-    }
-  }
-  
+  var _readNodes = _allNodes.filter(function (x){return x.type == "READ";});
   
   var _templateFolder = new this.$.oFolder(exportPath);
+  while (_templateFolder.exists) _templateFolder = new this.$.oFolder(_templateFolder.path.replace(".tpl", "_1.tpl"));
+  
   var _name = _templateFolder.name.replace(".tpl", "");
   var _folder = _templateFolder.folder.path;
   
-  // this.$.log(_usedColorIds)
-  
   // create the palette with only the colors contained in the layers
-  if (exportPalettesMode == "createPalette"){
-    var _paletteName = _name;
-    var templatePalette = this.addPalette(_paletteName);
-    templatePalette.colors[0].remove();
-    
-    // this.$.log("created temp palette : "+templatePalette.path)
-    
-    for (var i in _usedColors){
-      this.$.log("moving color "+_usedColors[i].name+" to palette : "+templatePalette.path)
-      _usedColors[i].copyToPalette(templatePalette)
+  if (_readNodes.length > 0 ){
+    if (exportPalettesMode == "usedOnly"){
+      var _usedPalettes = [];
+      var _usedPalettePaths = [];
+      for (var i in _allNodes){
+        var _palettes = _allNodes[i].getUsedPalettes();
+        for (var j in _palettes){
+          if (_usedPalettePaths.indexOf(_palettes[j].path) != -1){
+            _usedPalettes.push(_palettes[j]);
+            _usedPalettePaths.push(_palettes[j].path);
+          }
+        }
+      }
     }
-    _usedPalettes = [templatePalette];
+    
+    if (exportPalettesMode == "createPalette"){
+      var templatePalette = this.createPaletteFromNodes(_allNodes, _name, renameUsedColors);
+      _usedPalettes = [templatePalette];
+    }
   }
+
+  this.$.debug(" exporting template "+_name+" to folder: "+_folder, this.$.DEBUG_LEVEL.LOG)
   
   selection.clearSelection();
-  selection.addNodesToSelection (_allNodes.map(function(x){return x.path}))
-
-
-  this.$.debug(exportPath+" exporting template "+_name+" to folder: "+_folder, this.$.DEBUG_LEVEL.LOG)
-  var success = copyPaste.createTemplateFromSelection (_name, _folder)
+  selection.addNodesToSelection (_allNodes.map(function(x){return x.path}));
+  var success = copyPaste.createTemplateFromSelection (_name, _folder);
+  if (!success) return false;
   
-  if (success && exportPalettesMode != "all"){
-    var _paletteFolder = new this.$.oFolder(_templateFolder.path+"/palette-library")      
+  if (_readNodes.length > 0 && exportPalettesMode != "all"){
+
+    this.$.debug("export of template "+_name+" finished, cleaning palettes", this.$.DEBUG_LEVEL.LOG);
+  
+    // deleting the extra palettes from the exported template
+    var _paletteFolder = new this.$.oFolder(_templateFolder.path+"/palette-library");
+    var _paletteFiles = _paletteFolder.getFiles();
+    var _paletteNames = _usedPalettes.map(function(x){return x.name});
+    
+    for (var i in _paletteFiles){
+      var _paletteName = _paletteFiles[i].name;
+      if (_paletteNames.indexOf(_paletteName) == -1) _paletteFiles[i].remove();
+    }
 
     // building the template palette list
     var _listFile = ["ToonBoomAnimationInc PaletteList 1"];
-    for (var i in _usedPalettes){
-      _listFile.push("palette-library/"+_usedPalettes[i].name+' LINK "'+_paletteFolder+"/"+_usedPalettes[i].name+'.plt"')
-    }
+    var _errors = [];
     
-    // deleting the palettes from the exported template
-    var _paletteFiles = _paletteFolder.getFiles();
-    for (var i in _paletteFiles){
-      _paletteFiles[i].remove();
+    if (exportPalettesMode == "createPalette"){
+      _listFile.push("palette-library/"+_name+' LINK "'+_paletteFolder+"/"+_name+'.plt"');
+    }else if (exportPalettesMode == "usedOnly"){
+      for (var i in _usedPalettes){
+        _listFile.push("palette-library/"+_usedPalettes[i].name+' LINK "'+_paletteFolder+"/"+_usedPalettes[i].name+'.plt"');
+      }
     }
-    
-    for (var i in _usedPalettes){
-      var _paletteFile = new this.$.oFile(_usedPalettes[i].path);
-      _paletteFile.copy(_paletteFolder, _paletteFile.name, true);
-    }
-    
-    var _paletteListFile = new this.$.oFile(_templateFolder.path+"/PALETTE_LIST")   
-    _paletteListFile.write(_listFile.join("\n"))
+        
+    var _paletteListFile = new this.$.oFile(_templateFolder.path+"/PALETTE_LIST"); 
+    _paletteListFile.write(_listFile.join("\n"));
   } 
   
   // remove the palette created for the template
   if (exportPalettesMode == "createPalette"){
+    var _paletteFile = _paletteFolder.getFiles()[0];
+    _paletteFile.rename(_name)
     templatePalette.remove(true);
   }
   
-  return success;
+  selection.clearSelection();
+  return true;
 }
 
 
 /**
  * Imports the specified template into the scene.
  * @deprecated
- * @param   {string}           tplPath                                       The path of the TPL file to import. 
- * @param   {string}           [group]                                        The target group to which the TPL is imported.
+ * @param   {string}           tplPath                                        The path of the TPL file to import. 
+ * @param   {string}           [group]                                        The path of the existing target group to which the TPL is imported.
  * @param   {$.oNode[]}        [destinationNodes]                             The nodes affected by the template.
  * @param   {bool}             [extendScene]                                  Whether to extend the exposures of the content imported.
  * @param   {$.oPoint}         [nodePosition]                                 The position to offset imported new nodes.
@@ -1334,6 +1436,7 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
  * @return {$.oNode[]}         The resulting pasted nodes.
  */
 $.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, extendScene, nodePosition, pasteOptions ){
+  if (typeof group === 'undefined') var group = this.root;
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
   
   if (_group != null && _group instanceof this.$.oGroupNode){
@@ -1348,9 +1451,9 @@ $.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, 
 
 /**
  * Imports a PSD to the scene.
- * @Deprecated
+ * @Deprecated use oGroupNode.importPSD instead
  * @param   {string}         path                          The palette file to import.
- * @param   {string}         [group]                       The group to import the PSD into.
+ * @param   {string}         [group]                       The path of the existing group to import the PSD into.
  * @param   {$.oPoint}       [nodePosition]                The position for the node to be placed in the network.
  * @param   {bool}           [separateLayers]              Separate the layers of the PSD.
  * @param   {bool}           [addPeg]                      Whether to add a peg.
@@ -1360,6 +1463,7 @@ $.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, 
  * @return {$.oNode[]}     The nodes being created as part of the PSD import.
  */
 $.oScene.prototype.importPSD = function( path, group, nodePosition, separateLayers, addPeg, addComposite, alignment ){
+  if (typeof group === 'undefined') var group = this.root;
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
   
   if (_group != null && _group instanceof this.$.oGroupNode){
@@ -1373,12 +1477,14 @@ $.oScene.prototype.importPSD = function( path, group, nodePosition, separateLaye
  
  
 /**
- * Updates a PSD to the node view.
- * @param   {string}       path                          The palette file to import.
- * @param   {bool}         [separateLayers]              Separate the layers of the PSD.
+ * Updates a previously imported PSD by matching layer names.
+ * @deprecated
+ * @param   {string}       path                          The PSD file to update.
+ * @param   {bool}         [separateLayers]              Whether the PSD was imported as separate layers.
  */
-$.oScene.prototype.updatePSD = function( path, separateLayers ){
-  var _group = this.root;
+$.oScene.prototype.updatePSD = function( path, group, separateLayers ){
+  if (typeof group === 'undefined') var group = this.root;
+  var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
   
   if (_group != null && _group instanceof this.$.oGroupNode){
     this.$.log("oScene.updatePSD is deprecated. Use oGroupNode.updatePSD instead")
@@ -1447,6 +1553,7 @@ $.oScene.prototype.exportQT = function( path, display, scale, exportSound, expor
  * @return {$.oNode}        The imported Quicktime Node.
  */
 $.oScene.prototype.importQT = function( path, group, importSound, nodePosition, extendScene, alignment ){
+  if (typeof group === 'undefined') var group = this.root;
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
   
   if (_group != null && _group instanceof this.$.oGroupNode){
@@ -1474,6 +1581,7 @@ $.oScene.prototype.importQT = function( path, group, importSound, nodePosition, 
  * @return {$.oBackdrop}       The created backdrop.
  */
 $.oScene.prototype.addBackdrop = function( groupPath, title, body, color, x, y, width, height ){
+  if (typeof group === 'undefined') var group = this.root;
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
   
   if (_group != null && _group instanceof this.$.oGroupNode){
@@ -1502,6 +1610,7 @@ $.oScene.prototype.addBackdrop = function( groupPath, title, body, color, x, y, 
  * @return {$.oBackdrop}       The created backdrop.
  */
 $.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body, color, x, y, width, height ){
+  if (typeof group === 'undefined') var group = this.root;
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
   
   if (_group != null && _group instanceof this.$.oGroupNode) {

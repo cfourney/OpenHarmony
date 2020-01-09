@@ -106,18 +106,18 @@ $.oTimelineLayer = function( nodeName, columnName, oTimelineObject ){
 /**
  * The base class for the $.oTimeline.
  * @constructor
- * @classdesc  $.oTimeline Base Class
+ * @classdesc  The $.oTimeline class represents a timeline corresponding to a specific display.
+ 
  * @param   {string}                   display               The display node's path.
- * @param   {oScene}                   oSceneObject          The scene object of the DOM.
  *
  * @property {int}                     display               The display node's path.
  * @property {string[]}                composition           The composition order of the scene.
  * @property {oScene}                  scene                 The scene object of the DOM.
  */
-$.oTimeline = function( display, oSceneObject ){
+$.oTimeline = function( display){
   this.display = display
   this.composition = ''
-  this.scene = oSceneObject;
+  this.scene = this.$.scene;
  
   //Build the initial composition.
   this.refresh();
@@ -140,7 +140,32 @@ Object.defineProperty($.oTimeline.prototype, 'compositionLayers', {
     return _timeline;
   }
 });
+
+
+/**
+ * The nodes present in the timeline.
+ * @name $.oTimeline#nodes
+ * @type {oNode[]}
+ */
+Object.defineProperty($.oTimeline.prototype, 'nodes', {
+  get : function(){
+    return this.compositionLayers;
+  }
+});
+
  
+/**
+ * Gets the paths of the nodes displayed in the timeline.
+ * @name $.oTimeline#nodesList
+ * @type {string[]}
+ */
+Object.defineProperty($.oTimeline.prototype, 'nodesList', {
+  get : function(){
+    return this.compositionLayersList;
+  }
+});
+
+
 /**
  * Gets the paths of the layers in order, given the specific display's timeline.
  * @name $.oTimeline#compositionLayersList

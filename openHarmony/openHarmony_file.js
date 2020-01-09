@@ -453,8 +453,11 @@ Object.defineProperty($.oFile.prototype, 'fullName', {
  */
 Object.defineProperty($.oFile.prototype, 'name', {
     get: function(){
-        var _name = this.path.slice(this.path.lastIndexOf("/")+1, this.path.lastIndexOf("."));
-        return _name;
+      var _fullName = this.fullName;
+      if (_fullName.indexOf(".") == -1) return _fullName;
+      
+      var _name = _fullName.slice(0, _fullName.lastIndexOf("."));
+      return _name;
     }
 });
 
@@ -466,8 +469,11 @@ Object.defineProperty($.oFile.prototype, 'name', {
  */
 Object.defineProperty($.oFile.prototype, 'extension', {
     get: function(){
-        var _extension = this.path.slice(this.path.lastIndexOf(".")+1);
-        return _extension;
+      var _fullName = this.fullName;
+      if (_fullName.indexOf(".") == -1) return "";
+      
+      var _extension = _fullName.slice(_fullName.lastIndexOf(".")+1);
+      return _extension;
     }
 });
 
@@ -545,30 +551,61 @@ $.oFile.prototype.write = function(content, append){
 
 
 /**
- * Moves the file to the folder.
- * @param   {string}   folder                  Content to write to the file.
+ * Moves the file to the specified path.
+ * @param   {string}   folder                  destination folder for the file.
  * @param   {bool}     [overwrite=false]       Whether to overwrite the file.  
  *  
  * @return: { bool }                           The result of the move.     
  */
-$.oFile.prototype.move = function( folder, overwrite ){
+$.oFile.prototype.move = function( newPath, overwrite ){
     if (typeof overwrite === 'undefined') var overwrite = false;
     
-    if(folder instanceof this.$.oFolder) folder = folder.path;
+    if(newPath instanceof this.$.oFile) newPath = newPath.path;
     
     var _file = new PermanentFile(this.path);
-    var _dest = new PermanentFile(folder+"/"+this.name+"."+this.extension);
-    // MessageLog.trace("moving "+_file.path()+" to "+_dest.path())
+    var _dest = new PermanentFile(newPath);
+    // this.$.alert("moving "+_file.path()+" to "+_dest.path()+" exists?"+_dest.exists())
    
-    if (_dest.exists && !overwrite){
-        this.$.debug("destination file "+folderPath+"/"+this.name+"."+this.extension+" exists and will not be overwritten. Can't move file.", this.$.DEBUG_LEVEL.ERROR);
+    if (_dest.exists() && !overwrite){
+        this.$.debug("destination file "+newPath+" exists and will not be overwritten. Can't move file.", this.$.DEBUG_LEVEL.ERROR);
         return false;
     }
  
     var success = _file.move(_dest);
+    // this.$.alert(success)
     if (success) return new this.$.oFile(_dest.path)
     return false;
 }
+ 
+ 
+ /**
+ * Moves the file to the folder.
+ * @param   {string}   folder                  destination folder for the file.
+ * @param   {bool}     [overwrite=false]       Whether to overwrite the file.  
+ *  
+ * @return: { bool }                           The result of the move.     
+ */
+$.oFile.prototype.moveToFolder = function( folder, overwrite ){  
+  if (folder instanceof this.$.oFolder) folder = folder.path;
+  var _fileName = this.fullName;
+  
+  return this.move(folder+"/"+_fileName, overwrite)
+}
+ 
+ 
+ /**
+ * Renames the file.
+ * @param   {string}   newName                 the new name for the file, without the extension.
+ * @param   {bool}     [overwrite=false]       Whether to replace a file of the same name if it exists in the folder.
+ *  
+ * @return: { bool }                           The result of the renaming.     
+ */
+$.oFile.prototype.rename = function( newName, overwrite){
+  if (newName == this.name) return true;
+  if (this.extension != "") newName += "."+this.extension;
+  return this.move(this.folder.path+"/"+newName, overwrite);
+}
+  
  
  
 /**
@@ -584,20 +621,24 @@ $.oFile.prototype.copy = function( destfolder, copyName, overwrite){
     if (typeof copyName === 'undefined') var copyName = this.name;
     if (typeof destfolder === 'undefined') var destfolder = this.folder.path;
    
+    var _fileName = this.fullName;
     if(destfolder instanceof this.$.oFolder) destfolder = destfolder.path;
    
+    // remove extension from name in case user added it to the param
+    copyName.replace ("."+this.extension, "");
     if (this.name == copyName && destfolder == this.folder.path) copyName += "_copy";
    
-    var _file = new PermanentFile(this.path);
-    var _dest = new PermanentFile(destfolder+"/"+copyName+"."+this.extension);
+    var _fileName = copyName+((this.extension.length>0)?"."+this.extension:"");
    
-    if (_dest.exists && !overwrite){
-        this.$.debug("Destination file "+destfolder+"/"+copyName+"."+this.extension+" exists and will not be overwritten. Can't copy file.", this.DEBUG_LEVEL.ERROR);
+    var _file = new PermanentFile(this.path);
+    var _dest = new PermanentFile(destfolder+"/"+_fileName);
+   
+    if (_dest.exists() && !overwrite){
+        this.$.debug("Destination file "+destfolder+"/"+_fileName+" exists and will not be overwritten. Can't copy file.", this.DEBUG_LEVEL.ERROR);
         return false;
     }
    
     this.$.debug("copying "+_file.path()+" to "+_dest.path(), this.$.DEBUG_LEVEL.LOG)
-    // this.$.log("copying "+_file.path()+" to "+_dest.path())
     
     try{
       var success = _file.copy(_dest);
@@ -618,7 +659,7 @@ $.oFile.prototype.copy = function( destfolder, copyName, overwrite){
  */
 $.oFile.prototype.remove = function(){
     var _file = new PermanentFile(this.path)
-    if (_file.exists) return _file.remove()
+    if (_file.exists()) return _file.remove()
 }
 
 

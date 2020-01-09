@@ -406,10 +406,6 @@ $.oColor = function( oPaletteObject, index ){
 Object.defineProperty($.oColor.prototype, 'colorObject', {
     get : function(){
         return this.palette.paletteObject.getColorByIndex(this._index);
-    }, 
-    
-    set : function(){
-      throw "Not yet implemented";
     }
 });
 
@@ -446,7 +442,7 @@ Object.defineProperty($.oColor.prototype, 'id', {
  
     set : function(newId){
         // TODO: figure out a way to change id? Create a new color with specific id in the palette?
-        throw "Not yet implemented";
+        throw new Error("setting oColor.id Not yet implemented");
     }
 });
 
@@ -475,7 +471,7 @@ Object.defineProperty($.oColor.prototype, 'index', {
  */
 Object.defineProperty($.oColor.prototype, 'type', {
     set : function(){
-      throw "Not yet implemented.";
+      throw new Error("setting oColor.type Not yet implemented.");
     },
     
     get : function(){
@@ -584,7 +580,7 @@ Object.defineProperty($.oColor.prototype, 'value', {
  */
 $.oColor.prototype.moveToPalette = function (oPaletteObject, index){
     if (typeof index === 'undefined') var index = oPaletteObject.paletteObject.nColors;
-    var duplicate = this.copyToPalette(oPaletteObject, index)
+    var _duplicate = this.copyToPalette(oPaletteObject, index)
     this.remove()
     
     return _duplicate;
@@ -599,15 +595,13 @@ $.oColor.prototype.moveToPalette = function (oPaletteObject, index){
  * @return: {$.oColor}           The new resulting $.oColor object.
  */
 $.oColor.prototype.copyToPalette = function (oPaletteObject, index){
-    if (typeof index === 'undefined') var index = oPaletteObject.paletteObject.nColors;
     var _color = this.colorObject;
    
-    oPaletteObject.paletteObject.cloneColor(_color)
- 
-    var _colors = oPaletteObject.colors
-    var _duplicate = _colors.pop()
-   
-    if (typeof index !== 'undefined') _duplicate.index = index;
+    oPaletteObject.paletteObject.cloneColor(_color);
+    var _colors = oPaletteObject.colors;
+    var _duplicate = _colors.pop();
+    
+    if (typeof index !== 'undefined')  _duplicate.index = index;
  
     return _duplicate;
 }

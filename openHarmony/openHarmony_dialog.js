@@ -188,9 +188,10 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
 
   if (typeof title === 'undefined') var title = "Select a folder:";
   
-  var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory)
+  var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory)+"";
   
-  this.$.debug(_folder)
+  _folder = _folder.split("\\").join("/");
+  // this.$.alert(_folder)
   return _folder;
 }
  

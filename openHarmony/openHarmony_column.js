@@ -448,7 +448,7 @@ $.oDrawingColumn.prototype.renameAllByFrame = function(prefix, suffix){
 
 
 /**
- * Extends the exposure of the drawing's keyframes given the provided arguments.
+ * Removes unused drawings from the column.
  * @param   {$.oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
  */
 $.oDrawingColumn.prototype.removeUnexposedDrawings = function(){

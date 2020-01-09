@@ -427,8 +427,6 @@
             
                 <li data-name="$.oAttribute#type"><a href="$.oAttribute.html#type">type</a></li>
             
-                <li data-name="$.oAttribute#useSeparate"><a href="$.oAttribute.html#useSeparate">useSeparate</a></li>
-            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -837,6 +835,10 @@
             
                 <li data-name="$.oDrawingNode#bounds"><a href="$.oDrawingNode.html#bounds">bounds</a></li>
             
+                <li data-name="$.oDrawingNode#canCreateInPorts"><a href="$.oDrawingNode.html#canCreateInPorts">canCreateInPorts</a></li>
+            
+                <li data-name="$.oDrawingNode#canCreateOutPorts"><a href="$.oDrawingNode.html#canCreateOutPorts">canCreateOutPorts</a></li>
+            
                 <li data-name="$.oDrawingNode#children"><a href="$.oDrawingNode.html#children">children</a></li>
             
                 <li data-name="$.oDrawingNode#element"><a href="$.oDrawingNode.html#element">element</a></li>
@@ -855,6 +857,8 @@
             
                 <li data-name="$.oDrawingNode#inNodes"><a href="$.oDrawingNode.html#inNodes">inNodes</a></li>
             
+                <li data-name="$.oDrawingNode#inPorts"><a href="$.oDrawingNode.html#inPorts">inPorts</a></li>
+            
                 <li data-name="$.oDrawingNode#ins"><a href="$.oDrawingNode.html#ins">ins</a></li>
             
                 <li data-name="$.oDrawingNode#isGroup"><a href="$.oDrawingNode.html#isGroup">isGroup</a></li>
@@ -871,7 +875,11 @@
             
                 <li data-name="$.oDrawingNode#outNodes"><a href="$.oDrawingNode.html#outNodes">outNodes</a></li>
             
+                <li data-name="$.oDrawingNode#outPorts"><a href="$.oDrawingNode.html#outPorts">outPorts</a></li>
+            
                 <li data-name="$.oDrawingNode#outs"><a href="$.oDrawingNode.html#outs">outs</a></li>
+            
+                <li data-name="$.oDrawingNode#palettes"><a href="$.oDrawingNode.html#palettes">palettes</a></li>
             
                 <li data-name="$.oDrawingNode#parent"><a href="$.oDrawingNode.html#parent">parent</a></li>
             
@@ -920,15 +928,39 @@
             
                 <li data-name="$.oDrawingNode#getAttributeByName"><a href="$.oDrawingNode.html#getAttributeByName">getAttributeByName</a></li>
             
-                <li data-name="$.oDrawingNode#getAttributesColumnCache"><a href="$.oDrawingNode.html#getAttributesColumnCache">getAttributesColumnCache</a></li>
-            
                 <li data-name="$.oDrawingNode#getContourCurves"><a href="$.oDrawingNode.html#getContourCurves">getContourCurves</a></li>
+            
+                <li data-name="$.oDrawingNode#getFreeInPort"><a href="$.oDrawingNode.html#getFreeInPort">getFreeInPort</a></li>
+            
+                <li data-name="$.oDrawingNode#getFreeOutPort"><a href="$.oDrawingNode.html#getFreeOutPort">getFreeOutPort</a></li>
+            
+                <li data-name="$.oDrawingNode#getInLink"><a href="$.oDrawingNode.html#getInLink">getInLink</a></li>
+            
+                <li data-name="$.oDrawingNode#getInLinks"><a href="$.oDrawingNode.html#getInLinks">getInLinks</a></li>
+            
+                <li data-name="$.oDrawingNode#getInLinksNumber"><a href="$.oDrawingNode.html#getInLinksNumber">getInLinksNumber</a></li>
+            
+                <li data-name="$.oDrawingNode#getLinkedInNode"><a href="$.oDrawingNode.html#getLinkedInNode">getLinkedInNode</a></li>
+            
+                <li data-name="$.oDrawingNode#getLinkedOutNode"><a href="$.oDrawingNode.html#getLinkedOutNode">getLinkedOutNode</a></li>
+            
+                <li data-name="$.oDrawingNode#getOutLink"><a href="$.oDrawingNode.html#getOutLink">getOutLink</a></li>
+            
+                <li data-name="$.oDrawingNode#getOutLinks"><a href="$.oDrawingNode.html#getOutLinks">getOutLinks</a></li>
+            
+                <li data-name="$.oDrawingNode#getOutLinksNumber"><a href="$.oDrawingNode.html#getOutLinksNumber">getOutLinksNumber</a></li>
+            
+                <li data-name="$.oDrawingNode#getUsedPalettes"><a href="$.oDrawingNode.html#getUsedPalettes">getUsedPalettes</a></li>
             
                 <li data-name="$.oDrawingNode#insertInNode"><a href="$.oDrawingNode.html#insertInNode">insertInNode</a></li>
             
                 <li data-name="$.oDrawingNode#linkInNode"><a href="$.oDrawingNode.html#linkInNode">linkInNode</a></li>
             
                 <li data-name="$.oDrawingNode#linkOutNode"><a href="$.oDrawingNode.html#linkOutNode">linkOutNode</a></li>
+            
+                <li data-name="$.oDrawingNode#linkPalette"><a href="$.oDrawingNode.html#linkPalette">linkPalette</a></li>
+            
+                <li data-name="$.oDrawingNode#moveToGroup"><a href="$.oDrawingNode.html#moveToGroup">moveToGroup</a></li>
             
                 <li data-name="$.oDrawingNode#placeAtCenter"><a href="$.oDrawingNode.html#placeAtCenter">placeAtCenter</a></li>
             
@@ -1082,9 +1114,13 @@
             
                 <li data-name="$.oFile#move"><a href="$.oFile.html#move">move</a></li>
             
+                <li data-name="$.oFile#moveToFolder"><a href="$.oFile.html#moveToFolder">moveToFolder</a></li>
+            
                 <li data-name="$.oFile#read"><a href="$.oFile.html#read">read</a></li>
             
                 <li data-name="$.oFile#remove"><a href="$.oFile.html#remove">remove</a></li>
+            
+                <li data-name="$.oFile#rename"><a href="$.oFile.html#rename">rename</a></li>
             
                 <li data-name="$.oFile#toString"><a href="$.oFile.html#toString">toString</a></li>
             
@@ -1229,6 +1265,10 @@
             
                 <li data-name="$.oGroupNode#bounds"><a href="$.oGroupNode.html#bounds">bounds</a></li>
             
+                <li data-name="$.oGroupNode#canCreateInPorts"><a href="$.oGroupNode.html#canCreateInPorts">canCreateInPorts</a></li>
+            
+                <li data-name="$.oGroupNode#canCreateOutPorts"><a href="$.oGroupNode.html#canCreateOutPorts">canCreateOutPorts</a></li>
+            
                 <li data-name="$.oGroupNode#enabled"><a href="$.oGroupNode.html#enabled">enabled</a></li>
             
                 <li data-name="$.oGroupNode#exists"><a href="$.oGroupNode.html#exists">exists</a></li>
@@ -1242,6 +1282,8 @@
                 <li data-name="$.oGroupNode#inLinks"><a href="$.oGroupNode.html#inLinks">inLinks</a></li>
             
                 <li data-name="$.oGroupNode#inNodes"><a href="$.oGroupNode.html#inNodes">inNodes</a></li>
+            
+                <li data-name="$.oGroupNode#inPorts"><a href="$.oGroupNode.html#inPorts">inPorts</a></li>
             
                 <li data-name="$.oGroupNode#ins"><a href="$.oGroupNode.html#ins">ins</a></li>
             
@@ -1262,6 +1304,8 @@
                 <li data-name="$.oGroupNode#nodePosition"><a href="$.oGroupNode.html#nodePosition">nodePosition</a></li>
             
                 <li data-name="$.oGroupNode#outNodes"><a href="$.oGroupNode.html#outNodes">outNodes</a></li>
+            
+                <li data-name="$.oGroupNode#outPorts"><a href="$.oGroupNode.html#outPorts">outPorts</a></li>
             
                 <li data-name="$.oGroupNode#outs"><a href="$.oGroupNode.html#outs">outs</a></li>
             
@@ -1300,13 +1344,19 @@
             
                 <li data-name="$.oGroupNode#addGroup"><a href="$.oGroupNode.html#addGroup">addGroup</a></li>
             
+                <li data-name="$.oGroupNode#addInPort"><a href="$.oGroupNode.html#addInPort">addInPort</a></li>
+            
                 <li data-name="$.oGroupNode#addNode"><a href="$.oGroupNode.html#addNode">addNode</a></li>
             
                 <li data-name="$.oGroupNode#addOutLink"><a href="$.oGroupNode.html#addOutLink">addOutLink</a></li>
             
+                <li data-name="$.oGroupNode#addOutPort"><a href="$.oGroupNode.html#addOutPort">addOutPort</a></li>
+            
                 <li data-name="$.oGroupNode#centerAbove"><a href="$.oGroupNode.html#centerAbove">centerAbove</a></li>
             
                 <li data-name="$.oGroupNode#centerBelow"><a href="$.oGroupNode.html#centerBelow">centerBelow</a></li>
+            
+                <li data-name="$.oGroupNode#children"><a href="$.oGroupNode.html#children">children</a></li>
             
                 <li data-name="$.oGroupNode#children"><a href="$.oGroupNode.html#children">children</a></li>
             
@@ -1318,7 +1368,27 @@
             
                 <li data-name="$.oGroupNode#getAttributeByName"><a href="$.oGroupNode.html#getAttributeByName">getAttributeByName</a></li>
             
-                <li data-name="$.oGroupNode#getAttributesColumnCache"><a href="$.oGroupNode.html#getAttributesColumnCache">getAttributesColumnCache</a></li>
+                <li data-name="$.oGroupNode#getFreeInPort"><a href="$.oGroupNode.html#getFreeInPort">getFreeInPort</a></li>
+            
+                <li data-name="$.oGroupNode#getFreeOutPort"><a href="$.oGroupNode.html#getFreeOutPort">getFreeOutPort</a></li>
+            
+                <li data-name="$.oGroupNode#getInLink"><a href="$.oGroupNode.html#getInLink">getInLink</a></li>
+            
+                <li data-name="$.oGroupNode#getInLinks"><a href="$.oGroupNode.html#getInLinks">getInLinks</a></li>
+            
+                <li data-name="$.oGroupNode#getInLinksNumber"><a href="$.oGroupNode.html#getInLinksNumber">getInLinksNumber</a></li>
+            
+                <li data-name="$.oGroupNode#getLinkedInNode"><a href="$.oGroupNode.html#getLinkedInNode">getLinkedInNode</a></li>
+            
+                <li data-name="$.oGroupNode#getLinkedOutNode"><a href="$.oGroupNode.html#getLinkedOutNode">getLinkedOutNode</a></li>
+            
+                <li data-name="$.oGroupNode#getNodeByName"><a href="$.oGroupNode.html#getNodeByName">getNodeByName</a></li>
+            
+                <li data-name="$.oGroupNode#getOutLink"><a href="$.oGroupNode.html#getOutLink">getOutLink</a></li>
+            
+                <li data-name="$.oGroupNode#getOutLinks"><a href="$.oGroupNode.html#getOutLinks">getOutLinks</a></li>
+            
+                <li data-name="$.oGroupNode#getOutLinksNumber"><a href="$.oGroupNode.html#getOutLinksNumber">getOutLinksNumber</a></li>
             
                 <li data-name="$.oGroupNode#importPSD"><a href="$.oGroupNode.html#importPSD">importPSD</a></li>
             
@@ -1331,6 +1401,8 @@
                 <li data-name="$.oGroupNode#linkInNode"><a href="$.oGroupNode.html#linkInNode">linkInNode</a></li>
             
                 <li data-name="$.oGroupNode#linkOutNode"><a href="$.oGroupNode.html#linkOutNode">linkOutNode</a></li>
+            
+                <li data-name="$.oGroupNode#moveToGroup"><a href="$.oGroupNode.html#moveToGroup">moveToGroup</a></li>
             
                 <li data-name="$.oGroupNode#orderNodeView"><a href="$.oGroupNode.html#orderNodeView">orderNodeView</a></li>
             
@@ -1353,6 +1425,90 @@
                 <li data-name="$.oGroupNode#unlinkOutPort"><a href="$.oGroupNode.html#unlinkOutPort">unlinkOutPort</a></li>
             
                 <li data-name="$.oGroupNode#updatePSD"><a href="$.oGroupNode.html#updatePSD">updatePSD</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="$.oLink">
+            <span class="title">
+                <a href="$.oLink.html">$.oLink</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oLink#inNode"><a href="$.oLink.html#inNode">inNode</a></li>
+            
+                <li data-name="$.oLink#inPort"><a href="$.oLink.html#inPort">inPort</a></li>
+            
+                <li data-name="$.oLink#isMultiLevel"><a href="$.oLink.html#isMultiLevel">isMultiLevel</a></li>
+            
+                <li data-name="$.oLink#isMultiLevel"><a href="$.oLink.html#isMultiLevel">isMultiLevel</a></li>
+            
+                <li data-name="$.oLink#isMultiLevel"><a href="$.oLink.html#isMultiLevel">isMultiLevel</a></li>
+            
+                <li data-name="$.oLink#linked"><a href="$.oLink.html#linked">linked</a></li>
+            
+                <li data-name="$.oLink#lowestCommonGroup"><a href="$.oLink.html#lowestCommonGroup">lowestCommonGroup</a></li>
+            
+                <li data-name="$.oLink#outNode"><a href="$.oLink.html#outNode">outNode</a></li>
+            
+                <li data-name="$.oLink#outPort"><a href="$.oLink.html#outPort">outPort</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oLink#connect"><a href="$.oLink.html#connect">connect</a></li>
+            
+                <li data-name="$.oLink#disconnect"><a href="$.oLink.html#disconnect">disconnect</a></li>
+            
+                <li data-name="$.oLink#getValidLink"><a href="$.oLink.html#getValidLink">getValidLink</a></li>
+            
+                <li data-name="$.oLink#toString"><a href="$.oLink.html#toString">toString</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="$.oLinkPath">
+            <span class="title">
+                <a href="$.oLinkPath.html">$.oLinkPath</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oLinkPath#connectPath"><a href="$.oLinkPath.html#connectPath">connectPath</a></li>
+            
+                <li data-name="$.oLinkPath#findExistingPath"><a href="$.oLinkPath.html#findExistingPath">findExistingPath</a></li>
+            
+                <li data-name="$.oLinkPath#findNewPath"><a href="$.oLinkPath.html#findNewPath">findNewPath</a></li>
+            
+                <li data-name="$.oLinkPath#getValidLink"><a href="$.oLinkPath.html#getValidLink">getValidLink</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1469,6 +1625,10 @@
             
                 <li data-name="$.oNode#bounds"><a href="$.oNode.html#bounds">bounds</a></li>
             
+                <li data-name="$.oNode#canCreateInPorts"><a href="$.oNode.html#canCreateInPorts">canCreateInPorts</a></li>
+            
+                <li data-name="$.oNode#canCreateOutPorts"><a href="$.oNode.html#canCreateOutPorts">canCreateOutPorts</a></li>
+            
                 <li data-name="$.oNode#children"><a href="$.oNode.html#children">children</a></li>
             
                 <li data-name="$.oNode#enabled"><a href="$.oNode.html#enabled">enabled</a></li>
@@ -1487,6 +1647,8 @@
             
                 <li data-name="$.oNode#inNodes"><a href="$.oNode.html#inNodes">inNodes</a></li>
             
+                <li data-name="$.oNode#inPorts"><a href="$.oNode.html#inPorts">inPorts</a></li>
+            
                 <li data-name="$.oNode#ins"><a href="$.oNode.html#ins">ins</a></li>
             
                 <li data-name="$.oNode#isGroup"><a href="$.oNode.html#isGroup">isGroup</a></li>
@@ -1502,6 +1664,8 @@
                 <li data-name="$.oNode#nodePosition"><a href="$.oNode.html#nodePosition">nodePosition</a></li>
             
                 <li data-name="$.oNode#outNodes"><a href="$.oNode.html#outNodes">outNodes</a></li>
+            
+                <li data-name="$.oNode#outPorts"><a href="$.oNode.html#outPorts">outPorts</a></li>
             
                 <li data-name="$.oNode#outs"><a href="$.oNode.html#outs">outs</a></li>
             
@@ -1546,13 +1710,33 @@
             
                 <li data-name="$.oNode#getAttributeByName"><a href="$.oNode.html#getAttributeByName">getAttributeByName</a></li>
             
-                <li data-name="$.oNode#getAttributesColumnCache"><a href="$.oNode.html#getAttributesColumnCache">getAttributesColumnCache</a></li>
+                <li data-name="$.oNode#getFreeInPort"><a href="$.oNode.html#getFreeInPort">getFreeInPort</a></li>
+            
+                <li data-name="$.oNode#getFreeOutPort"><a href="$.oNode.html#getFreeOutPort">getFreeOutPort</a></li>
+            
+                <li data-name="$.oNode#getInLink"><a href="$.oNode.html#getInLink">getInLink</a></li>
+            
+                <li data-name="$.oNode#getInLinks"><a href="$.oNode.html#getInLinks">getInLinks</a></li>
+            
+                <li data-name="$.oNode#getInLinksNumber"><a href="$.oNode.html#getInLinksNumber">getInLinksNumber</a></li>
+            
+                <li data-name="$.oNode#getLinkedInNode"><a href="$.oNode.html#getLinkedInNode">getLinkedInNode</a></li>
+            
+                <li data-name="$.oNode#getLinkedOutNode"><a href="$.oNode.html#getLinkedOutNode">getLinkedOutNode</a></li>
+            
+                <li data-name="$.oNode#getOutLink"><a href="$.oNode.html#getOutLink">getOutLink</a></li>
+            
+                <li data-name="$.oNode#getOutLinks"><a href="$.oNode.html#getOutLinks">getOutLinks</a></li>
+            
+                <li data-name="$.oNode#getOutLinksNumber"><a href="$.oNode.html#getOutLinksNumber">getOutLinksNumber</a></li>
             
                 <li data-name="$.oNode#insertInNode"><a href="$.oNode.html#insertInNode">insertInNode</a></li>
             
                 <li data-name="$.oNode#linkInNode"><a href="$.oNode.html#linkInNode">linkInNode</a></li>
             
                 <li data-name="$.oNode#linkOutNode"><a href="$.oNode.html#linkOutNode">linkOutNode</a></li>
+            
+                <li data-name="$.oNode#moveToGroup"><a href="$.oNode.html#moveToGroup">moveToGroup</a></li>
             
                 <li data-name="$.oNode#placeAtCenter"><a href="$.oNode.html#placeAtCenter">placeAtCenter</a></li>
             
@@ -1640,6 +1824,8 @@
                 <li data-name="$.oPalette#id"><a href="$.oPalette.html#id">id</a></li>
             
                 <li data-name="$.oPalette#name"><a href="$.oPalette.html#name">name</a></li>
+            
+                <li data-name="$.oPalette#paletteStorage"><a href="$.oPalette.html#paletteStorage">paletteStorage</a></li>
             
                 <li data-name="$.oPalette#path"><a href="$.oPalette.html#path">path</a></li>
             
@@ -1729,6 +1915,10 @@
             
                 <li data-name="$.oPegNode#bounds"><a href="$.oPegNode.html#bounds">bounds</a></li>
             
+                <li data-name="$.oPegNode#canCreateInPorts"><a href="$.oPegNode.html#canCreateInPorts">canCreateInPorts</a></li>
+            
+                <li data-name="$.oPegNode#canCreateOutPorts"><a href="$.oPegNode.html#canCreateOutPorts">canCreateOutPorts</a></li>
+            
                 <li data-name="$.oPegNode#children"><a href="$.oPegNode.html#children">children</a></li>
             
                 <li data-name="$.oPegNode#enabled"><a href="$.oPegNode.html#enabled">enabled</a></li>
@@ -1745,6 +1935,8 @@
             
                 <li data-name="$.oPegNode#inNodes"><a href="$.oPegNode.html#inNodes">inNodes</a></li>
             
+                <li data-name="$.oPegNode#inPorts"><a href="$.oPegNode.html#inPorts">inPorts</a></li>
+            
                 <li data-name="$.oPegNode#ins"><a href="$.oPegNode.html#ins">ins</a></li>
             
                 <li data-name="$.oPegNode#isGroup"><a href="$.oPegNode.html#isGroup">isGroup</a></li>
@@ -1760,6 +1952,8 @@
                 <li data-name="$.oPegNode#nodePosition"><a href="$.oPegNode.html#nodePosition">nodePosition</a></li>
             
                 <li data-name="$.oPegNode#outNodes"><a href="$.oPegNode.html#outNodes">outNodes</a></li>
+            
+                <li data-name="$.oPegNode#outPorts"><a href="$.oPegNode.html#outPorts">outPorts</a></li>
             
                 <li data-name="$.oPegNode#outs"><a href="$.oPegNode.html#outs">outs</a></li>
             
@@ -1804,13 +1998,33 @@
             
                 <li data-name="$.oPegNode#getAttributeByName"><a href="$.oPegNode.html#getAttributeByName">getAttributeByName</a></li>
             
-                <li data-name="$.oPegNode#getAttributesColumnCache"><a href="$.oPegNode.html#getAttributesColumnCache">getAttributesColumnCache</a></li>
+                <li data-name="$.oPegNode#getFreeInPort"><a href="$.oPegNode.html#getFreeInPort">getFreeInPort</a></li>
+            
+                <li data-name="$.oPegNode#getFreeOutPort"><a href="$.oPegNode.html#getFreeOutPort">getFreeOutPort</a></li>
+            
+                <li data-name="$.oPegNode#getInLink"><a href="$.oPegNode.html#getInLink">getInLink</a></li>
+            
+                <li data-name="$.oPegNode#getInLinks"><a href="$.oPegNode.html#getInLinks">getInLinks</a></li>
+            
+                <li data-name="$.oPegNode#getInLinksNumber"><a href="$.oPegNode.html#getInLinksNumber">getInLinksNumber</a></li>
+            
+                <li data-name="$.oPegNode#getLinkedInNode"><a href="$.oPegNode.html#getLinkedInNode">getLinkedInNode</a></li>
+            
+                <li data-name="$.oPegNode#getLinkedOutNode"><a href="$.oPegNode.html#getLinkedOutNode">getLinkedOutNode</a></li>
+            
+                <li data-name="$.oPegNode#getOutLink"><a href="$.oPegNode.html#getOutLink">getOutLink</a></li>
+            
+                <li data-name="$.oPegNode#getOutLinks"><a href="$.oPegNode.html#getOutLinks">getOutLinks</a></li>
+            
+                <li data-name="$.oPegNode#getOutLinksNumber"><a href="$.oPegNode.html#getOutLinksNumber">getOutLinksNumber</a></li>
             
                 <li data-name="$.oPegNode#insertInNode"><a href="$.oPegNode.html#insertInNode">insertInNode</a></li>
             
                 <li data-name="$.oPegNode#linkInNode"><a href="$.oPegNode.html#linkInNode">linkInNode</a></li>
             
                 <li data-name="$.oPegNode#linkOutNode"><a href="$.oPegNode.html#linkOutNode">linkOutNode</a></li>
+            
+                <li data-name="$.oPegNode#moveToGroup"><a href="$.oPegNode.html#moveToGroup">moveToGroup</a></li>
             
                 <li data-name="$.oPegNode#placeAtCenter"><a href="$.oPegNode.html#placeAtCenter">placeAtCenter</a></li>
             
@@ -1970,6 +2184,8 @@
             
                 <li data-name="$.oScene#close"><a href="$.oScene.html#close">close</a></li>
             
+                <li data-name="$.oScene#createPaletteFromNodes"><a href="$.oScene.html#createPaletteFromNodes">createPaletteFromNodes</a></li>
+            
                 <li data-name="$.oScene#exportQT"><a href="$.oScene.html#exportQT">exportQT</a></li>
             
                 <li data-name="$.oScene#exportTemplate"><a href="$.oScene.html#exportTemplate">exportTemplate</a></li>
@@ -1977,6 +2193,8 @@
                 <li data-name="$.oScene#getColumnByName"><a href="$.oScene.html#getColumnByName">getColumnByName</a></li>
             
                 <li data-name="$.oScene#getNodeByPath"><a href="$.oScene.html#getNodeByPath">getNodeByPath</a></li>
+            
+                <li data-name="$.oScene#getNodesLinks"><a href="$.oScene.html#getNodesLinks">getNodesLinks</a></li>
             
                 <li data-name="$.oScene#getPaletteByName"><a href="$.oScene.html#getPaletteByName">getPaletteByName</a></li>
             
@@ -2064,6 +2282,10 @@
                 <li data-name="$.oTimeline#errorsWithIndex"><a href="$.oTimeline.html#errorsWithIndex">errorsWithIndex</a></li>
             
                 <li data-name="$.oTimeline#layers"><a href="$.oTimeline.html#layers">layers</a></li>
+            
+                <li data-name="$.oTimeline#nodes"><a href="$.oTimeline.html#nodes">nodes</a></li>
+            
+                <li data-name="$.oTimeline#nodesList"><a href="$.oTimeline.html#nodesList">nodesList</a></li>
             
                 <li data-name="$.oTimeline#results"><a href="$.oTimeline.html#results">results</a></li>
             
@@ -2454,6 +2676,12 @@
             <dd></dd>
         
             <dt><a href="$.oGroupNode.html">oGroupNode</a></dt>
+            <dd></dd>
+        
+            <dt><a href="$.oLink.html">oLink</a></dt>
+            <dd></dd>
+        
+            <dt><a href="$.oLinkPath.html">oLinkPath</a></dt>
             <dd></dd>
         
             <dt><a href="$.oList.html">oList</a></dt>
@@ -4524,7 +4752,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 18 2019 15:45:12 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Jan 09 2020 22:13:34 GMT+0100 (heure normale d’Europe centrale)
         </footer>
     </div>
 </div>

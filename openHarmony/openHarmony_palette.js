@@ -101,8 +101,23 @@ Object.defineProperty($.oPalette.prototype, 'name', {
     },
  
     set : function(newName){
-        // TODO: Rename palette file then unlink and relink the palette
-        throw "Not yet implemented.";
+        // Rename palette file then unlink and relink the palette
+        this.$.debug("renaming palette "+this.name+" to "+ newName,  this.$.DEBUG_LEVEL.LOG)
+        var _paletteFile = new this.$.oFile(this.path);
+        var _newPath = _paletteFile.folder+"/"+newName;
+        var _move = _paletteFile.move(_newPath+".plt", true);
+        if (!_move){
+          this.$.debug("couldn't rename palette "+this.path+" to "+newName, this.$.DEBUG_LEVEL.ERROR)
+          return;
+        }
+        
+        var _list = this._paletteList;
+        var _name = this.name
+        _list.removePaletteById( this.id );
+s
+        var _paletteObject = _list.insertPalette(_newPath, this.index);
+        this.paletteObject = _paletteObject;
+
     }
 })
  
@@ -121,7 +136,34 @@ Object.defineProperty($.oPalette.prototype, 'path', {
  
     set : function(newPath){
         // TODO: move palette file then unlink and relink the palette ? Or provide a move() method
-        throw "Not yet implemented.";
+        throw new ReferenceError("setting oPalette.path not yet implemented.");
+    }
+})
+
+
+/**
+ * The storage place for the palette (environment, scene, job, element or external)
+ * @name $.oPalette#paletteStorage
+ * @type {$.oFile}
+ */
+Object.defineProperty($.oPalette.prototype, 'paletteStorage', {
+    get : function(){
+      var _storage = {
+        environment : PaletteObjectManager.Locator.folderForLocation(PaletteObjectManager.Constants.Location.ENVIRONMENT,1),
+        job :         PaletteObjectManager.Locator.folderForLocation(PaletteObjectManager.Constants.Location.JOB,1),
+        scene :       PaletteObjectManager.Locator.folderForLocation(PaletteObjectManager.Constants.Location.SCENE,1)
+      }
+      
+      var _path = this.path;
+      if (path.indexOf("/elements/") != -1){
+        // find out which element?
+        return "element";
+      }
+      for (var i in _storage){
+        if (_storage[i] == _path) return i;
+      }
+      
+      return "external";
     }
 })
 
@@ -170,7 +212,7 @@ Object.defineProperty($.oPalette.prototype, 'colors', {
  * Not yet implemented.
  */
 $.oPalette.prototype.addColor = function (name, type, colorData){
-  throw "Not yet implemented.";
+  throw new ReferenceError("oPalette.addColor not yet implemented.");
 }
 
 
@@ -181,7 +223,6 @@ $.oPalette.prototype.addColor = function (name, type, colorData){
  *  
  * @return: {oColor}     the found oColor object.
  */
-// getColorById(id)
 $.oPalette.prototype.getColorById = function (id){
   var _colors = this.colors;
   var _ids = _colors.map(function(x){return x.id})
@@ -200,14 +241,21 @@ $.oPalette.prototype.getColorById = function (id){
 $.oPalette.prototype.remove = function ( removeFile ){
   if (typeof removeFile === 'undefined') var removeFile = false;
   
-  this._paletteList.removePaletteById( this.id );
+  var success = false;
   
   if( removeFile ){
-    var _paletteFile = new this.$.oFile(this.path)
-    _paletteFile.remove();
+    try{
+      success = PaletteObjectManager.removePaletteReferencesAndDeleteOnDisk(this.id) 	
+    }catch(err){
+      success = false; 
+    }
+    //var _paletteFile = new this.$.oFile(this.path)
+    //_paletteFile.remove();
+  }else{
+    success = this._paletteList.removePaletteById( this.id );
   }
   
   //Todo: should actually check for its removal.
-  return true;
+  return success;
 }
 

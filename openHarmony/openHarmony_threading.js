@@ -109,21 +109,21 @@ $.oThread = function( kernel, list, threadCount, start, timeout, reserveThread )
                 };
                     
   this.kernel = function( thread, from, to ){
-                                      var local_context = context;
-                                      for( var n=from;n<to;n++ ){
-                                        try{
-                                            var result = local_context["kernel"]( local_context["list"][n] );
-                                            local_context["results"][n]   = result;
-                                            local_context["complete"][n]  = true;
-                                            local_context["error"][n]     = true;
-                                        }catch( err ){
-                                            System.println( err + " (" +err.lineNumber+ " " + err.fileName + ")" );
-                                            local_context["results"][n]   = false;
-                                            local_context["complete"][n]  = true;
-                                            local_context["error"][n]     = ( err + " (" +err.lineNumber+ " " + err.fileName + ")" );
-                                        }
-                                      }
-                                    };
+    var local_context = context;
+    for( var n=from;n<to;n++ ){
+      try{
+        var result = local_context["kernel"]( local_context["list"][n] );
+        local_context["results"][n]   = result;
+        local_context["complete"][n]  = true;
+        local_context["error"][n]     = true;
+      }catch( err ){
+        System.println( err + " (" +err.lineNumber+ " " + err.fileName + ")" );
+        local_context["results"][n]   = false;
+        local_context["complete"][n]  = true;
+        local_context["error"][n]     = ( err + " (" +err.lineNumber+ " " + err.fileName + ")" );
+      }
+    }
+  };
 
 }
 
@@ -340,3 +340,16 @@ $.oThread.prototype.runSingleThreaded = function( ){
     this.kernel( 0, n, n+1 );
   }
 }
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//         $.oProcess class         //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+

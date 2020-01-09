@@ -52,7 +52,16 @@ $.oList = function(array, startIndex){
   if(typeof startIndex == 'undefined') var startIndex = 0;
   if(typeof array == 'undefined') var array = [];
   
-  this.startIndex = startIndex;
+  // this.startIndex = startIndex;
+  Object.defineProperty(this, 'startIndex', {
+    enumerable : false,
+    value: startIndex
+  });
+
+  Object.defineProperty(this, 'currentIndex', {
+    enumerable : false,
+    value: startIndex
+  });
   
   for (var i=0; i<array.length; i++){
     this[i+startIndex] = array[i];
@@ -81,6 +90,7 @@ Object.defineProperty($.oList.prototype, '_type', {
 Object.defineProperty($.oList.prototype, 'currentIndex', {
   enumerable : false,
   writable : true,
+  configuratble: false,
   value: this.startIndex
 });
 

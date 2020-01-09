@@ -238,7 +238,7 @@ Object.defineProperty($.oAttribute.prototype, 'column', {
  
  
  /**
- * The oFrames of attached to the column..
+ * The frames array holding the values of the animation. Starts at 1, as array indexes correspond to frame numbers.
  * @name $.oAttribute#frames
  * @type {$.oFrame[]}
  */
@@ -260,10 +260,11 @@ Object.defineProperty($.oAttribute.prototype, 'frames', {
 
 
 /**
- * Returns the filtered keyframes of the attached to the column.
+ * An array of only the keyframes (frames with a set value) of the animation.
  * @name $.oAttribute#keyframes
  * @type {$.oFrame[]}
  */
+// MCNote: I would prefer if this could remain getKeyFrames() 
 Object.defineProperty($.oAttribute.prototype, 'keyframes', {
     get : function(){
       var col     = this.column;
@@ -285,6 +286,7 @@ Object.defineProperty($.oAttribute.prototype, 'keyframes', {
  * WIP.
  * @name $.oAttribute#useSeparate
  * @type {bool}
+ * @private
  */
 //CF Note: Not sure if this should be a general attribute, or a subattribute.
 Object.defineProperty($.oAttribute.prototype, "useSeparate", {
@@ -357,6 +359,9 @@ Object.defineProperty($.oAttribute.prototype, "defaultValue", {
             case "OFFSET.3DPATH":
                 // pseudo oPathPoint
                 // CFNote: is this supposed to be an object?
+                // this is a fake object value that can be easily checked with a "==" operator. 
+                // oPathPoint will be converted to string for checking, and have the same format.
+                // I made this to check if the value is default but I guess it's not ideal for assigning a default value, so maybe we should change it.
                 return "{x:0, y:0, z:0}";
                
             default:

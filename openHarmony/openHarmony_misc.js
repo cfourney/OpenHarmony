@@ -218,10 +218,10 @@ $.oPoint.prototype.lerp = function( point, perc ){
 $.oBox = function( left, top, right, bottom ){
   this._type = "box";
 
-  if (typeof top === 'undefined') var top = Infinity
-  if (typeof left === 'undefined') var left = Infinity
-  if (typeof right === 'undefined') var right = -Infinity
-  if (typeof bottom === 'undefined') var bottom = -Infinity
+  if (typeof top === 'undefined') var top = Infinity;
+  if (typeof left === 'undefined') var left = Infinity;
+  if (typeof right === 'undefined') var right = -Infinity;
+  if (typeof bottom === 'undefined') var bottom = -Infinity;
 
   this.top = top;
   this.left = left;
@@ -233,6 +233,7 @@ $.oBox = function( left, top, right, bottom ){
 /**
  * The width of the box.
  * @name $.oBox#width
+ * @readonly
  * @type {float}
  */
 Object.defineProperty($.oBox.prototype, 'width', {
@@ -245,6 +246,7 @@ Object.defineProperty($.oBox.prototype, 'width', {
 /**
  * The height of the box.
  * @name $.oBox#height
+ * @readonly
  * @type {float}
  */
 Object.defineProperty($.oBox.prototype, 'height', {
@@ -257,6 +259,7 @@ Object.defineProperty($.oBox.prototype, 'height', {
 /**
  * The center of the box.
  * @name $.oBox#center
+ * @readonly
  * @type {$.oPoint}
  */
 Object.defineProperty($.oBox.prototype, 'center', {
@@ -275,6 +278,8 @@ $.oBox.prototype.include = function(box){
   if (box.top < this.top) this.top = box.top;
   if (box.right > this.right) this.right = box.right;
   if (box.bottom > this.bottom) this.bottom = box.bottom;
+  
+  return this;
 }
 
 /**
@@ -290,6 +295,13 @@ $.oBox.prototype.includeNodes = function(oNodeArray){
      var _nodeBox = _node.bounds;
      this.include(_nodeBox);
   } 
+  
+  return this;
+}
+
+
+$.oBox.prototype.toString = function(){
+  return "{top:"+this.top+", right:"+this.right+", bottom:"+this.bottom+", left:"+this.left+"}"
 }
 
 
