@@ -101,18 +101,7 @@ $.oNode = function( path, oSceneObject ){
 
     this._type = 'node';
 
-    // generate properties from node attributes to allow for dot notation access
-    this.attributesBuildCache();
-    var _attributes = this.attributes
-
-    // for each attribute, create a getter setter as a property of the node object
-    // that handles the animated/not animated duality
-
-    for (var i in _attributes){
-        var _attr = _attributes[i]
-        this.setAttrGetterSetter(_attr)
-    }
-
+    this.refreshAttributes();
 }
 
 
@@ -215,7 +204,7 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
                 }
             }
         }
-    })
+    });
 };
 
 
@@ -577,7 +566,7 @@ Object.defineProperty($.oNode.prototype, 'height', {
 Object.defineProperty($.oNode.prototype, 'inLinks', {
     get : function(){
         var nodeRef = this;
-        var newList = new this.$.oDynList( [], 0, node.numberOfInputPorts(this.path), 
+        var newList = new this.$.oList( [], 0, node.numberOfInputPorts(this.path), 
                                            function( listItem, index ){ return new this.$.oNodeLink( false, false, nodeRef, index, false ); }, 
                                            function(){ throw new ReferenceError("Unable to set inLinks"); }, 
                                            false 
@@ -692,7 +681,7 @@ Object.defineProperty($.oNode.prototype, 'outLinks', {
           }
         }
         
-        var newList = new this.$.oDynList( [], 0, lookup_list.length, 
+        var newList = new this.$.oList( [], 0, lookup_list.length, 
                                            function( listItem, index ){ return new this.$.oNodeLink( nodeRef, lookup_list[index][0], false, false, lookup_list[index][1] ); }, 
                                            function(){ throw new ReferenceError("Unable to set inLinks"); }, 
                                            false
@@ -1541,6 +1530,81 @@ $.oNode.prototype.addOutLink = function( nodeToLink, ownPort, destPort ){
   return newLink;
 };
 
+/**
+ * Creates a new dynamic attribute in the node.
+ * @param   {string}   attrName                   The attribute name to create.
+ * @param   {string}   [type="string"]            The type of the attribute ["string", "bool", "double", "int"]
+ * @param   {string}   [displayName=attrName]     The visible attribute name to the GUI user.
+ * @param   {bool}     [linkable=false]           Whether the attribute can be linked to a column.
+ *
+ * @return  {$.oAttribute}     The resulting attribute created.
+ */
+$.oNode.prototype.createAttribute = function( attrName, type, displayName, linkable ){
+  if( !attrName ){ return false; }
+  attrName = attrName.toLowerCase();
+  
+  if (typeof type === 'undefined') type = 'string';
+  if (typeof displayName === 'undefined') displayName = attrName;
+  if (typeof linkable === 'undefined') linkable = false;
+  
+  var res = node.createDynamicAttr( this.path, type.toUpperCase(), attrName, displayName, linkable );
+  if( !res ){
+    return false;
+  }
+  
+  this.refreshAttributes();
+  
+  var res_split = attrName.split(".");
+  if( res_split.length>0 ){
+    //Its a sub attribute created.
+    try{
+      var sub_attr = this.attributes[ res_split[0] ];
+      for( x = 1; x<res_split.length;x++ ){
+        sub_attr = sub_attr[ res_split[x] ];
+      }
+      return sub_attr;
+      
+    }catch( err ){
+      return false;
+    }
+  }
+  
+  var res = this.attributes[ attrName ];
+  return this.attributes[ attrName ];
+}
+
+/**
+ * Removes an existing dynamic attribute in the node.
+ * @param   {string}   attrName                   The attribute name to remove.
+ *
+ * @return  {bool}     The result of the removal.
+ */
+$.oNode.prototype.removeAttribute = function( attrName ){
+  attrName = attrName.toLowerCase();
+  return node.removeDynamicAttr( this.path, attrName );
+}
+
+
+/**
+ * Refreshes/rebuilds the attributes and getter/setters.
+ * @param   {$.oNode}   oNodeObject            The node to link this one's inport to.
+ * @return  {bool}    The result of the unlink.
+ */
+$.oNode.prototype.refreshAttributes = function( ){
+    // generate properties from node attributes to allow for dot notation access
+    this.attributesBuildCache();
+    
+    // for each attribute, create a getter setter as a property of the node object
+    // that handles the animated/not animated duality
+    var _attributes = this.attributes
+    for (var i in _attributes){
+      var _attr = _attributes[i];
+      if( !this.hasOwnProperty( _attr.shortKeyword ) ){
+        this.setAttrGetterSetter(_attr);
+      }
+    }
+}
+
 
 
 //////////////////////////////////////
@@ -1564,7 +1628,7 @@ $.oNode.prototype.addOutLink = function( nodeToLink, ownPort, destPort ){
  */
 $.oPegNode = function( path, oSceneObject ) {
     if (node.type(path) != 'PEG') throw "'path' parameter must point to a 'PEG' type node";
-    $.oNode.call( this, path, oSceneObject );
+    this.$.oNode.call( this, path, oSceneObject );
 
     this._type = 'pegNode';
 }
@@ -1637,7 +1701,7 @@ Object.defineProperty($.oPegNode.prototype, "useSeparate", {
 $.oDrawingNode = function(path, oSceneObject) {
     // $.oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'READ') throw "'path' parameter must point to a 'READ' type node";
-    $.oNode.call(this, path, oSceneObject);
+    this.$.oNode.call(this, path, oSceneObject);
 
     this._type = 'drawingNode';
 }
@@ -1902,7 +1966,7 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
 $.oGroupNode = function(path, oSceneObject) {
     // $.oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'GROUP') throw "'path' parameter must point to a 'GROUP' type node";
-    $.oNode.call(this, path, oSceneObject);
+    this.$.oNode.call(this, path, oSceneObject);
 
     this._type = 'groupNode';
 }

@@ -100,7 +100,9 @@ $ = {
                 },            
   file      : __file__,
   directory : false,
-  batchMode : false
+  batchMode : false,
+  
+  pi        : 3.14159265359
 };
 
 /**
@@ -118,26 +120,29 @@ $.directoryGet = function( file_path ){
 $.directory = $.directoryGet( __file__ );
 
 // The included files should be relative to the path of THIS file!
-include( $.directory + "/openHarmony/openHarmony_misc.js"      );
-include( $.directory + "/openHarmony/openHarmony_dialog.js"    );
-include( $.directory + "/openHarmony/openHarmony_file.js"      );
-include( $.directory + "/openHarmony/openHarmony_threading.js" );
-include( $.directory + "/openHarmony/openHarmony_network.js"   );   
-include( $.directory + "/openHarmony/openHarmony_path.js"      );   
-include( $.directory + "/openHarmony/openHarmony_list.js"      );
-include( $.directory + "/openHarmony/openHarmony_backdrop.js"  );      
-include( $.directory + "/openHarmony/openHarmony_timeline.js"  );  
-include( $.directory + "/openHarmony/openHarmony_attribute.js" );   
-include( $.directory + "/openHarmony/openHarmony_frame.js"     );       
-include( $.directory + "/openHarmony/openHarmony_element.js"   );     
-include( $.directory + "/openHarmony/openHarmony_color.js"     );       
-include( $.directory + "/openHarmony/openHarmony_palette.js"   );     
-include( $.directory + "/openHarmony/openHarmony_nodeLink.js"  );    
-include( $.directory + "/openHarmony/openHarmony_node.js"      );        
-include( $.directory + "/openHarmony/openHarmony_column.js"    );      
-include( $.directory + "/openHarmony/openHarmony_drawing.js"   );     
-include( $.directory + "/openHarmony/openHarmony_scene.js"     );
-include(specialFolders.resource+"/scripts/TB_orderNetworkUp.js");
+include( $.directory + "/openHarmony/openHarmony_misc.js"        );
+include( $.directory + "/openHarmony/openHarmony_preferences.js" );
+include( $.directory + "/openHarmony/openHarmony_metadata.js"    );
+include( $.directory + "/openHarmony/openHarmony_math.js"        );
+include( $.directory + "/openHarmony/openHarmony_dialog.js"      );
+include( $.directory + "/openHarmony/openHarmony_file.js"        );
+include( $.directory + "/openHarmony/openHarmony_threading.js"   );
+include( $.directory + "/openHarmony/openHarmony_network.js"     );   
+include( $.directory + "/openHarmony/openHarmony_path.js"        );   
+include( $.directory + "/openHarmony/openHarmony_list.js"        );
+include( $.directory + "/openHarmony/openHarmony_backdrop.js"    );      
+include( $.directory + "/openHarmony/openHarmony_timeline.js"    );  
+include( $.directory + "/openHarmony/openHarmony_attribute.js"   );   
+include( $.directory + "/openHarmony/openHarmony_frame.js"       );       
+include( $.directory + "/openHarmony/openHarmony_element.js"     );     
+include( $.directory + "/openHarmony/openHarmony_color.js"       );       
+include( $.directory + "/openHarmony/openHarmony_palette.js"     );     
+include( $.directory + "/openHarmony/openHarmony_nodeLink.js"    );    
+include( $.directory + "/openHarmony/openHarmony_node.js"        );        
+include( $.directory + "/openHarmony/openHarmony_column.js"      );      
+include( $.directory + "/openHarmony/openHarmony_drawing.js"     );     
+include( $.directory + "/openHarmony/openHarmony_scene.js"       );
+include(specialFolders.resource+"/scripts/TB_orderNetworkUp.js"  );
 include(specialFolders.userScripts+"/TB_orderNetworkUp.js");       // for older versions of harmony
 
 /**
@@ -200,13 +205,6 @@ $.s     = new $.oScene( );
 $.scn   = $.s;
 $.scene = $.s;
 $.getScene = $.s;
-
-
-//---- Attach Helpers ------
-$.network = new $.oNetwork( );
-$.utils   = new $.oUtils( );
-$.dialog  = new $.oDialog( );
-$.global  = this;
 
 /**
  * Prompts with a confirmation dialog (yes/no choice).
@@ -346,3 +344,19 @@ $.redo = function( dist ){
   if (typeof dist === 'undefined'){ var dist = 1; }
   scene.redo( dist );
 }
+
+
+/**
+ * 	Gets the preferences from the Harmony stage.
+ * @name $#getPreferences
+ * @function
+ */
+$.getPreferences = function( ){
+  return new $.oPreferences();
+}
+
+//---- Attach Helpers ------
+$.network     = new $.oNetwork( );
+$.utils       = new $.oUtils( );
+$.dialog      = new $.oDialog( );
+$.global      = this;

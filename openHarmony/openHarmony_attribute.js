@@ -108,10 +108,15 @@ $.oAttribute.prototype.createSubAttributes = function (attributeObject){
   var _subAttributes = [];
   
   // if harmony version supports getSubAttributes
+  var _subAttributesList = [];
   if (attributeObject.getSubAttributes){
-    var _subAttributesList = attributeObject.getSubAttributes();
+    _subAttributesList = attributeObject.getSubAttributes();
   }else{
-    var _subAttributesList = this.getSubAttributes_oldVersion();
+    var sub_attrs = node.getAttrList( this.node.path, 1, this._keyword );
+    
+    if( sub_attrs && sub_attrs.length>0 ){
+      _subAttributesList = sub_attrs;
+    }
   }
   
   for (var i in _subAttributesList){ 
@@ -131,6 +136,7 @@ $.oAttribute.prototype.createSubAttributes = function (attributeObject){
 /**
  * Private function to add utility to subattributes on older versions of Harmony.
  * @private 
+ * @deprecated
  * @return  {void}   Nothing returned.
  */
 $.oAttribute.prototype.getSubAttributes_oldVersion = function (){
@@ -412,7 +418,7 @@ $.oAttribute.prototype.setValue = function (value, frame) {
     if( _column ){
       _animate = true;
     }
-    
+     
     switch(_type){
         // TODO: sanitize input
         case "COLOR" :
@@ -563,6 +569,12 @@ $.oAttribute.prototype.getValue = function (frame) {
             if ( _attr.hasSubAttributes && _attr.hasSubAttributes() ){
                 _value = { value:_value };
                 _value.toString = function(){ return _value }
+            }else{
+              var sub_attrs = node.getAttrList( this.node.path, 1, this._keyword );
+              if( sub_attrs && sub_attrs.length>0 ){
+                _value = { value:_value };
+                _value.toString = function(){ return _value }
+              }
             }
             
     }
