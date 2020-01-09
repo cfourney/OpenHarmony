@@ -28,4 +28,6 @@ $.oThread.html merge=ours
 $.oTimeline.html merge=ours
 $.oTimelineLayer.html merge=ours
 $.oUtils.html merge=ours
+$.index.html merge=ours
+$.global.html merge=ours
 NodeTypes.html merge=ours

@@ -293,3 +293,8 @@ $.oBox.prototype.includeNodes = function(oNodeArray){
      this.include(_nodeBox);
   } 
 }
+
+
+$.oBox.prototype.toString = function(){
+  return "{top:"+this.top+", right:"+this.right+", bottom:"+this.bottom+", left:"+this.left+"}"
+}
