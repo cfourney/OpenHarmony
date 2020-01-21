@@ -206,6 +206,7 @@ $.scn   = $.s;
 $.scene = $.s;
 $.getScene = $.s;
 
+
 /**
  * Prompts with a confirmation dialog (yes/no choice).
  * @function
@@ -217,7 +218,8 @@ $.getScene = $.s;
  * 
  * @return  {bool}       Result of the confirmation dialog.
  */
-$.confirm = function(){ $.dialog.confirm.apply( $.dialog, arguments ) };
+$.confirm = function(){ return $.dialog.confirm.apply( $.dialog, arguments ) };
+
 
 /**
  * Prompts with an alert dialog (informational).
@@ -228,7 +230,18 @@ $.confirm = function(){ $.dialog.confirm.apply( $.dialog, arguments ) };
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * 
  */
-$.alert   = function(){ $.dialog.alert.apply( $.dialog, arguments ) };
+$.alert = function(){ return $.dialog.alert.apply( $.dialog, arguments ) };
+
+
+/**
+ * Prompts for a user input.
+ * @param   {string}           [labelText]                    The label/internal text of the dialog.
+ * @param   {string}           [title]                        The title of the confirmation dialog.
+ * @param   {string}           [prefilledText]                The text to display in the input area.
+ * 
+ */
+$.prompt = function(){ return $.dialog.prompt.apply( $.dialog, arguments ) };
+
 
 /**
  * Prompts with a file selector window
@@ -242,7 +255,8 @@ $.alert   = function(){ $.dialog.alert.apply( $.dialog, arguments ) };
  * 
  * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
  */
-$.browseForFile = function(){ $.dialog.browseForFile.apply( $.dialog, arguments ) };
+$.browseForFile = function(){ return $.dialog.browseForFile.apply( $.dialog, arguments ) };
+
 
 /**
  * Prompts with a folder selector window.
@@ -253,7 +267,7 @@ $.browseForFile = function(){ $.dialog.browseForFile.apply( $.dialog, arguments 
  * 
  * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled 
  */
-$.browseForFolder = function(){ $.dialog.browseForFolder.apply( $.dialog, arguments ) };
+$.browseForFolder = function(){ return $.dialog.browseForFolder.apply( $.dialog, arguments ) };
 
 
 //---- Cache Helpers ------
@@ -309,7 +323,6 @@ $.beginUndo = function( undoName ){
  * @function
  */
 $.cancelUndo = function( ){
-  
   scene.cancelUndoRedoAccum( );
 }
 

@@ -70,7 +70,7 @@
  * // then you can iterate over them to check their properties:
  *
  * for (var i in frames){
- *   $.log(frames[i].isKeyFrame);
+ *   $.log(frames[i].isKeyframe);
  *   $.log(frames[i].continuity);
  * }
  * 
@@ -80,16 +80,21 @@
  */
 $.oFrame = function( frameNumber, oColumnObject, subColumns ){
   this._type = "frame";
-  
-  if (typeof subColumns === 'undefined') var subColumns = 0;
 
   this.frameNumber = frameNumber;
   
-  if( oColumnObject._type == "attribute" ){  //Direct access to an attribute, when not keyable. We still provide a frame access for consistency.
+  if( oColumnObject instanceof $.oAttribute ){  //Direct access to an attribute, when not keyable. We still provide a frame access for consistency.  > MCNote ?????
     this.column = false;
-    this.attributeObject = oColumnObject;
-  }else{
+    this.attributeObject = oColumnObject;  
+  }else if( oColumnObject instanceof $.oColumn ){
     this.column = oColumnObject;
+    
+    if (this.column && typeof subColumns === 'undefined'){
+      var subColumns = this.column.subColumns;
+    }else{
+      var subColumns = { a : 1 };
+    }
+    
     this.attributeObject = this.column.attributeObject;
   }
   
@@ -105,33 +110,59 @@ $.oFrame = function( frameNumber, oColumnObject, subColumns ){
  * @todo Include setting values on column that don't have attributes linked?
  */
 Object.defineProperty($.oFrame.prototype, 'value', {
-    get : function(){
-        // this.$.log("Getting value of frame "+this.frameNumber+" of column "+this.column.name) 
-      return this.attributeObject.getValue( this.frameNumber );
-    },
- 
-    set : function(newValue){
-        // this.$.log("Setting frame "+this.frameNumber+" of column "+this.column.name+" to value: "+newValue)
-        this.attributeObject.setValue( newValue, this.frameNumber );   
+  get : function(){
+    if (this.attributeObject){
+      this.$.log("getting value of frame "+this.frameNumber+" through attribute object : "+this.attributeObject.keyword);
+      return this.attributeObject.getValue(this.frameNumber);
+    }else{
+      this.$.log("getting value of frame "+this.frameNumber+" through column object : "+this.column.name);
+      return this.column.getValue(this.frameNumber);
     }
+    /*
+      // this.$.log("Getting value of frame "+this.frameNumber+" of column "+this.column.name) 
+    if (this.attributeObject){
+      return this.attributeObject.getValue(this.frameNumber);
+    }else{
+      this.$.debug("getting unlinked column "+this.name+" value at frame "+this.frameNumber, this.$.DEBUG_LEVEL.ERROR);
+      this.$.debug("warning : getting a value from a column without attribute destroys value fidelity", this.$.DEBUG_LEVEL.ERROR);
+      if (this.
+      return column.getEntry (this.name, 1, this.frameNumber);
+    }*/
+  },
+
+  set : function(newValue){
+    if (this.attributeObject){
+      return this.attributeObject.setValue(newValue, this.frameNumber);
+    }else{
+      return this.column.setValue(newValue, this.frameNumber);
+    }
+
+    /*// this.$.log("Setting frame "+this.frameNumber+" of column "+this.column.name+" to value: "+newValue)
+    if (this.attributeObject){
+      this.attributeObject.setValue( newValue, this.frameNumber );   
+    }else{
+      this.$.debug("setting unlinked column "+this.name+" value to "+newValue+" at frame "+this.frameNumber, this.$.DEBUG_LEVEL.ERROR);
+      this.$.debug("warning : setting a value on a column without attribute destroys value fidelity", this.$.DEBUG_LEVEL.ERROR);
+      
+      var _subColumns = this.subColumns;
+      for (var i in _subColumns){
+        column.setEntry (this.name, _subColumns[i], this.frameNumber, newValue);
+      }
+    }*/
+  }
 });
  
 
 /**
- * Set or identify whether the frame is a keyframe.
- * @return: {bool}   
- */
- 
-/**
  * Whether the frame is a keyframe.
- * @name $.oFrame#isKeyFrame
+ * @name $.oFrame#isKeyframe
  * @type {bool}
  */
-Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
+Object.defineProperty($.oFrame.prototype, 'isKeyframe', {
     get : function(){
       if( !this.column ) return true;
     
-      var _column = this.column.uniqueName
+      var _column = this.column.uniqueName;
       if (this.column.type == 'DRAWING' || this.column.type == 'TIMING'){
         if( column.getTimesheetEntry){
           return !column.getTimesheetEntry(_column, 1, this.frameNumber).heldFrame;
@@ -139,12 +170,13 @@ Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
           return false;   //No valid way to check for keys on a drawing without getTimesheetEntry
         }
       }else if (['BEZIER', '3DPATH', 'EASE', 'QUATERNION'].indexOf(this.column.type) != -1){
-          return column.isKeyFrame(_column, 1, this.frameNumber);
+        return column.isKeyFrame(_column, 1, this.frameNumber);
       }
-      return false
+      return false;
     },
  
     set : function(keyFrame){
+      this.$.log("setting keyframe for frame "+this.frameNumber);
       var col = this.column;
       if( !col ) return;
       
@@ -158,26 +190,44 @@ Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
         }
       }else{
         if (keyFrame){
-            //Sanity check, in certain situations, the setKeyframe resets to 0 (specifically if there is no pre-existing key elsewhere.)
-            //This will check the value prior to the key, set the key, and enforce the value after.
-            
-            var val = 0.0;
-            // try{
-              var val = this.value;
-            // }catch(err){}
+          //Sanity check, in certain situations, the setKeyframe resets to 0 (specifically if there is no pre-existing key elsewhere.)
+          //This will check the value prior to the key, set the key, and enforce the value after.
           
-            column.setKeyFrame( _column, this.frameNumber );
-            
-            // try{
-              var post_val = this.value;
-              if( val != post_val ){
-                this.value = val
-              }
-            // }catch(err){}         
+          var val = 0.0;
+          // try{
+          var val = this.value;
+          // }catch(err){}
+          this.$.log("setting keyframe for frame "+this.frameNumber);
+          column.setKeyFrame( _column, this.frameNumber );
+          
+          // try{
+          var post_val = this.value;
+          if (val != post_val) {
+            this.value = val;
+          }
+          // }catch(err){}         
         }else{
-            column.clearKeyFrame( _column, this.frameNumber );
+          column.clearKeyFrame( _column, this.frameNumber );
         }
       }
+    }
+});
+ 
+
+/**
+ * Whether the frame is a keyframe.
+ * @name $.oFrame#isKeyFrame
+ * @deprecated For case consistency, keyframe will never have a capital F
+ * @type {bool}
+ */
+Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
+    get : function(){
+      return this.isKeyframe;
+    },
+ 
+    set : function(keyframe){
+      this.$.debug("oFrame.isKeyFrame is deprecated. Use oFrame.isKeyframe instead.", this.$.DEBUG_LEVEL.ERROR);
+      this.isKeyframe = keyframe;
     }
 });
  
@@ -189,11 +239,11 @@ Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
  */
 Object.defineProperty($.oFrame.prototype, 'isKey', {
     get : function(){
-      return this.isKeyFrame;
+      return this.isKeyframe;
     },
  
     set : function(keyFrame){
-      this.isKeyFrame = keyFrame;
+      this.isKeyframe = keyFrame;
     }
 });
  
@@ -215,7 +265,7 @@ Object.defineProperty($.oFrame.prototype, 'duration', {
         // walk up the frames of the scene to the next keyFrame to determin duration
         var _frames = this.column.frames
         for (var i=this.frameNumber+1; i<_sceneLength; i++){
-            if (_frames[i].isKeyFrame) return _frames[i].frameNumber - _startFrame;
+            if (_frames[i].isKeyframe) return _frames[i].frameNumber - _startFrame;
         }
         return _sceneLength - _startFrame;
     },
@@ -264,12 +314,12 @@ Object.defineProperty($.oFrame.prototype, 'startFrame', {
         return 1;
       }
     
-      if (this.isKeyFrame) return this.frameNumber
+      if (this.isKeyframe) return this.frameNumber;
       if (this.isBlank) return -1;
      
       var _frames = this.column.frames
       for (var i=this.frameNumber-1; i>=1; i--){
-          if (_frames[i].isKeyFrame) return _frames[i].frameNumber;
+          if (_frames[i].isKeyframe) return _frames[i].frameNumber;
       }
       return -1;
     },
@@ -315,7 +365,7 @@ Object.defineProperty($.oFrame.prototype, 'marker', {
  */
 Object.defineProperty($.oFrame.prototype, 'keyframeIndex', {
     get : function(){
-        var _kf = this.column.getKeyFrames().map(function(x){return x.frameNumber});
+        var _kf = this.column.getKeyframes().map(function(x){return x.frameNumber});
         var _kfIndex = _kf.indexOf(this.frameNumber);
         return _kfIndex;
     }
@@ -329,7 +379,7 @@ Object.defineProperty($.oFrame.prototype, 'keyframeIndex', {
  */
 Object.defineProperty($.oFrame.prototype, 'keyframeLeft', {
     get : function(){
-        var kfs = this.column.getKeyFrames();
+        var kfs = this.column.getKeyframes();
         var lkf = false;
         
         for( var n=0;n<kfs.length;n++ ){
@@ -351,7 +401,7 @@ Object.defineProperty($.oFrame.prototype, 'keyframeLeft', {
  */
 Object.defineProperty($.oFrame.prototype, 'keyframeRight', {
     get : function(){
-        var kfs = this.column.getKeyFrames();       
+        var kfs = this.column.getKeyframes();       
         for( var n=0;n<kfs.length;n++ ){
           if( kfs[n].frameNumber > this.frameNumber ){
             return kfs[n];

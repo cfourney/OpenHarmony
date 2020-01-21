@@ -770,7 +770,8 @@ Object.defineProperty($.oNode.prototype, 'linkedColumns', {
     var _columns = [];
 
     for (var i in _attributes){
-      var _column = _attributes[i].column;
+      _columns = _columns.concat(_attributes[i].getLinkedColumns());
+      /*var _column = _attributes[i].column;
       if (_column != null) _columns.push(_column);
 
       // look also at subAttributes
@@ -780,7 +781,7 @@ Object.defineProperty($.oNode.prototype, 'linkedColumns', {
           _column = _subAttributes[j].column;
           if (_column != null) _columns.push(_column);
         }
-      }
+      }*/
     }
     return _columns;
   }
@@ -921,7 +922,7 @@ $.oNode.prototype.linkInNode = function( nodeToLink, ownPort, destPort, createPo
   
   var link = (new this.$.oLink(nodeToLink, this, destPort, ownPort)).getValidLink(createPorts, createPorts);
   if (link == null) return;
-  this.$.log("linking "+this.path+" to "+nodeToLink+" "+link._outPort+" "+link._inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.LOG);
+  this.$.debug("linking "+this.path+" to "+nodeToLink+" "+link._outPort+" "+link._inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.LOG);
 
   return link.connect();
 };
@@ -1085,7 +1086,7 @@ $.oNode.prototype.linkOutNode = function(nodeToLink, ownPort, destPort, createPo
   var link = (new this.$.oLink(this, nodeToLink, ownPort, destPort)).getValidLink(createPorts, createPorts);
   if (link == null) return;
   
-  this.$.log("linking "+this.path+" to "+nodeToLink+" "+link._outPort+" "+link._inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.LOG);
+  this.$.debug("linking "+this.path+" to "+nodeToLink+" "+link._outPort+" "+link._inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.LOG);
 
   return link.connect();
   
@@ -1332,31 +1333,42 @@ $.oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
  * Create a clone of the node.
  * @param   {string}    newName              The new name for the cloned module.
  * @param   {oPoint}    newPosition          The new position for the cloned module.
- * @param   {string}    [newGroup]           The group in which to place the cloned module.
  */
-$.oNode.prototype.clone = function( newName, newPosition, newGroup ){
-    // Defaults for optional parameters
-    if (typeof newGroup === 'undefined') var newGroup = this.group;
-
-    // TODO implement cloning through column linking as opposed to copy paste logic
-
-    var _node = this.path;
-    var _copyOptions = copyPaste.getCurrentCreateOptions();
-    var _copy = copyPaste.copy([_node], 1, frame.numberOf(), _copyOptions);
-    var _pasteOptions = copyPaste.getCurrentPasteOptions();
-    copyPaste.pasteNewNodes(_copy, newGroup, _pasteOptions);
+$.oNode.prototype.clone = function( newName, newPosition ){
+  // Defaults for optional parameters
+  if (typeof newPosition === 'undefined') var newPosition = this.nodePosition;
+  if (typeof newName === 'undefined') var newName = this.name+"_1";
+    
+  var _clonedNode = this.group.addNode(this.type, newName, newPosition);
+  var _attributes = this.attributes;
+  
+  for (var i in _attributes){
+    var _clonedAttribute = _duplicateNode.getAttributeByName(_attributes[i].keyword);
+    _clonedAttribute.setToAttributeValue(_attributes[i]);
+  }
+  
+  return _clonedNode;
 };
 
 
  /**
- * WIP
- * @TODO Not yet implemented.
- * @param   {string}    newName              The new name for the cloned module.
- * @param   {oPoint}    newPosition          The new position for the cloned module.
+ * Duplicates a node by creating an independent copy.
+ * @param   {string}    [newName]              The new name for the duplicated node.
+ * @param   {oPoint}    [newPosition]          The new position for the duplicated node.
  */
-$.oNode.prototype.duplicate= function( oNodeObject, newName, newPosition ){
-  throw new Error("oNode.duplicate not yet implemented");
-    // TODO
+$.oNode.prototype.duplicate = function(newName, newPosition){
+  if (typeof newPosition === 'undefined') var newPosition = this.nodePosition;
+  if (typeof newName === 'undefined') var newName = this.name+"_1";
+  
+  var _duplicateNode = this.group.addNode(this.type, newName, newPosition);
+  var _attributes = this.attributes;
+
+  for (var i in _attributes){
+    var _duplicateAttribute = _duplicateNode.getAttributeByName(_attributes[i].keyword);
+    _duplicateAttribute.setToAttributeValue(_attributes[i], true);
+  }
+  
+  return _duplicateNode;
 };
 
 
@@ -1835,17 +1847,40 @@ $.oDrawingNode.prototype.getUsedPalettes = function(){
  /**
  * Links a palette to a drawing node as Element Palette.
  * @param {oPaletteObject}   $.oPalette        the palette to link to the node
- * @param {index}        [int]             The index of the list at which the palette should appear once linked
+ * @param {index}           [int]             The index of the list at which the palette should appear once linked
  *
- * @return  {$.oPegNode}   The created peg.
+ * @return  {$.oPalette}   The linked element Palette.
  */
 $.oDrawingNode.prototype.linkPalette = function(oPaletteObject, index){
-  var _paletteList = PaletteObjectManager.getPaletteListByElementId(this.element.id);
-  
-  if (typeof listIndex === 'undefined') var listIndex = _paletteList.numPalettes;
-  var _palette = _paletteList.insertPalette (oPaletteObject.path, index);
-  
+  return this.element.linkPalette(oPaletteObject, index);
 }
+
+
+
+ /**
+ * Duplicates a node by creating an independent copy.
+ * @param   {string}    [newName]              The new name for the duplicated node.
+ * @param   {oPoint}    [newPosition]          The new position for the duplicated node.
+ * @param   {bool}      [duplicateElement]     Wether to also duplicate the element.
+ */
+$.oDrawingNode.prototype.duplicate = function(newName, newPosition, duplicateElement){
+  if (typeof newPosition === 'undefined') var newPosition = this.nodePosition;
+  if (typeof newName === 'undefined') var newName = this.name+"_1";
+  
+  var _duplicateNode = this.group.addNode(this.type, newName, newPosition);
+  var _attributes = this.attributes;
+
+  for (var i in _attributes){
+    var _duplicateAttribute = _duplicateNode.getAttributeByName(_attributes[i].keyword);
+    _duplicateAttribute.setToAttributeValue(_attributes[i], true);
+  }
+
+  var _duplicateAttribute = _duplicateNode.getAttributeByName(_attributes[i].keyword);
+  _duplicateAttribute.setToAttributeValue(_attributes[i], true);  
+  
+  return _duplicateNode;
+};
+
 
 
  /**
@@ -2269,7 +2304,8 @@ $.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeN
     if (typeof includeNodes === 'undefined') var includeNodes = [];
     
     var nodeBox = new this.$.oBox();
-    if (includeNodes.length) nodeBox.includeNodes(includeNodes);
+    includeNodes = includeNodes.filter(function(x){return !!x}) // filter out all invalid types    
+    if (includeNodes.length > 0) nodeBox.includeNodes(includeNodes);
     
     if (typeof nodePosition === 'undefined') var nodePosition = includeNodes.length?nodeBox.center:new this.$.oPoint(0,0,0);
 

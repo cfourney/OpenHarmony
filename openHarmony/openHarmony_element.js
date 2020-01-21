@@ -103,7 +103,7 @@ Object.defineProperty($.oElement.prototype, 'path', {
  */
 Object.defineProperty($.oElement.prototype, 'drawings', {
     get : function(){
-        var _drawingsNumber = Drawing.numberOf(this.id)
+        var _drawingsNumber = Drawing.numberOf(this.id);
         var _drawings = [];
         for (var i=0; i<_drawingsNumber; i++){
             _drawings.push( new this.$.oDrawing(Drawing.name(this.id, i), this) );
@@ -115,17 +115,17 @@ Object.defineProperty($.oElement.prototype, 'drawings', {
 
 /**
  * The file format of the element.
- * @name $.oElement#drawings
- * @type {$.oDrawing[]}
+ * @name $.oElement#format
+ * @type {string}
  */
 Object.defineProperty($.oElement.prototype, 'format', {
     get : function(){
         var _type = element.pixmapFormat(this.id);
-        if (_type == "SCAN") _type = "TVG"
-        return _type
+        if (_type == "SCAN") _type = "TVG";
+        return _type;
     }
 })
- 
+
  
 // $.oElement Class methods
 
@@ -166,16 +166,52 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
  * Gets a drawing object by the name.
  * @param   {string}     name              The name of the drawing to get.
  * 
- * @return { $.oDrawing }      The added drawing
+ * @return { $.oDrawing }      The drawing found by the search
  */
 $.oElement.prototype.getDrawingByName = function ( name ){
     return new this.$.oDrawing( name, this );
 }
+
  
 /**
- * Not yet implemented.
- * @param   {string}        paletteFile              The path to the palette file to link.
+ * Link a provided palette to an element as an Element palette.
+ * @param   {$.oPalette}    oPaletteObject              The oPalette object to link
+ * @param   {int}           [listIndex]              The index in the element palette list at which to add the newly linked palette
+ * @return  {$.oPalette}    The linked element palette.
  */
-$.oElement.prototype.linkPalette = function ( paletteFile ){
-  throw "Not yet implemented";
+$.oElement.prototype.linkPalette = function ( oPaletteObject , listIndex){
+  var _paletteList = PaletteObjectManager.getPaletteListByElementId(this.id);
+  
+  if (typeof listIndex === 'undefined') var listIndex = _paletteList.numPalettes;
+  var _palette = _paletteList.insertPalette (oPaletteObject.path, index);
+  return _palette;
+}
+
+
+/**
+ * Duplicate an element.
+ * @param   {string}     [name]              The new name for the duplicated element.
+ * @return  {$.oElement}      The duplicate element
+ */
+$.oElement.prototype.duplicate = function(name){
+  if (typeof name === 'undefined') var name = this.name;
+
+  var _fieldGuide = element.fieldChart(this.id);
+  var _scanType = element.scanType(this.id);
+
+  var _duplicateElement = this.$.scene.addElement(name, this.format, _fieldGuide, _scanType);
+  
+  var _drawings = this.drawings;
+  var _elementFolder = new this.$.oFolder(_duplicateElement.path.slice(0,-1)+"d");
+  
+  for (var i in _drawings){
+    var _drawingFile = new this.$.oFile(_drawings[i].path);
+    try{
+      _duplicateElement.addDrawing(i, _drawings[i].name, _drawingFile);
+      //_drawingFile.copy(_elementFolder, _drawingFile.name.replace(this.name, "d"));
+    }catch(err){
+      this.debug("could not copy drawing file "+drawingFile.name+" into element "+_duplicateElement.name, this.DEBUG_LEVEL.ERROR);
+    }
+  }
+  return _duplicateElement;
 }

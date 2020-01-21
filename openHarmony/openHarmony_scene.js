@@ -393,12 +393,13 @@ Object.defineProperty($.oScene.prototype, 'nodes', {
  * @name $.oScene#columns
  * @readonly 
  * @type {$.oColumn[]}
+ * @todo add attribute finding to get complete column objects
  */
 Object.defineProperty($.oScene.prototype, 'columns', {
     get : function(){
         var _columns = [];
         for (var i=0; i<columns.numberOf(); i++){
-            _columns.push( new this.$.oColumn( this, column.getName(i)) );
+            _columns.push( this.$column(column.getName(i)) );
         }
         return _columns;
     }
@@ -420,6 +421,37 @@ Object.defineProperty($.oScene.prototype, 'palettes', {
         }
         return _palettes;
     }
+});
+
+
+/**
+ * Contains the list of elements present in the scene. Element ids can appear more than once if they are used by more than one Drawing column
+ * @name $.oScene#elements
+ * @readonly 
+ * @type {$.oElement[]}
+ */
+Object.defineProperty($.oScene.prototype, 'elements', {
+  get : function(){
+    var _elements = [];
+    var _columns = this.columns;
+    var _ids = [];
+    for (var i in _columns){
+      if (_columns.type != "DRAWING") continue;
+      var _element = _columns[i].element
+      _elements.push(_element);
+      if (_ids.indexOf(_element.id) == -1) _ids.push (_element.id);
+    }
+    
+    // adding the elements not linked to columns
+    var _elementNum = element.numberOf();
+    for (var i = 0; i<_elementNum; i++){
+      var _id = element.id(i);
+      if (_ids.indexOf(_id) == -1) {
+        _elements.push(new this.$.oElement(_id));
+        _ids.push (_id)
+      }
+    }
+  }
 });
 
 
@@ -508,6 +540,7 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
  * Gets a column by the name.
  * @param  {string}             uniqueName               The unique name of the column as a string.
  * @param  {$.oAttribute}       oAttributeObject         The oAttributeObject owning the column.
+ * @todo   cache and find attribute if it is missing
  *  
  * @return {$.oColumn}                    The node found given the query.
  */
@@ -855,7 +888,7 @@ $.oScene.prototype.nodeSearch = function( query, sort_result ){
  * @param   {string}   group           The groupname to add the node.
  * @param   {$.oPoint} nodePosition    The position for the node to be placed in the network.
  * 
- * @return {$.oNode}   The created node, or bool as false.
+ * @return {$.oNode}   The created node
  */
 $.oScene.prototype.addNode = function( type, name, group, nodePosition ){
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
@@ -865,6 +898,7 @@ $.oScene.prototype.addNode = function( type, name, group, nodePosition ){
     var _node = _group.addNode(type, name, nodePosition)
     return _node;
   }else{
+    if (group == undefined) throw new Error ("Group path not specified for adding node. Use oGroupNode.addNode() instead.") 
     throw new Error (group+" is an invalid group to add the Node to.") 
   }
 }
@@ -874,9 +908,9 @@ $.oScene.prototype.addNode = function( type, name, group, nodePosition ){
  * Adds a column to the scene.
  * @param   {string}   type                           The type of the column.
  * @param   {string}   name                           The name of the column.
- * @param   {$.oElement}   oElementObject         The elementObject to link, if a drawing, and wanting to share an element
+ * @param   {$.oElement}   oElementObject             For Drawing column, the element that will be represented by the column.
  *  
- * @return {$.oColumn}  The created column, or bool as false.
+ * @return {$.oColumn}  The created column
  */
  
 $.oScene.prototype.addColumn = function( type, name, oElementObject ){
@@ -919,12 +953,12 @@ $.oScene.prototype.addColumn = function( type, name, oElementObject ){
  
 /**
  * Adds an element to the scene.
- * @param   {string}   name            The name of the 
- * @param   {string}   imageFormat            The object to log.
- * @param   {string}   fieldGuide         The debug level.
- * @param   {string}   scanType         The debug level. 
+ * @param   {string}     name                    The name of the element 
+ * @param   {string}     [imageFormat="TVG"]     The image format in capital letters (ex: "TVG", "PNG"...)
+ * @param   {int}        [fieldGuide=12]         The field guide .
+ * @param   {string}     [scanType="COLOR"]      can have the values "COLOR", "GRAY_SCALE" or "BW". 
  *  
- * @return {$.oColumn}  The created column, or bool as false.
+ * @return {$.oElement}  The created element
  */
 $.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
     // Defaults for optional parameters
@@ -1303,7 +1337,6 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
         for (var i in nodes){
             nodes[i].remove();
         }
-
     }
     return _mergedNode;
 }
@@ -1721,7 +1754,7 @@ $.oScene.prototype.$node = function( fullPath ){
 /**
  * Gets a column by the name.
  * @param  {string}             uniqueName               The unique name of the column as a string.
- * @param  {$.oAttribute}       oAttributeObject         The oAttributeObject owning the column.
+ * @param  {$.oAttribute}       oAttributeObject         The oAttribute object the column is linked to.
  *  
  * @return {$.oColumn}          The node found given the query.
  */

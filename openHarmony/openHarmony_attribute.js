@@ -237,7 +237,8 @@ Object.defineProperty($.oAttribute.prototype, 'column', {
             node.unlinkAttr(this.node.path, this._keyword);
         }else{
             node.linkAttr(this.node.path, this._keyword, columnObject.uniqueName);
-            // TODO: transfer current value of attribute to a first key on the column
+            columnObject.attributeObject = this;
+            // TODO: transfer current value of attribute to a first key on the column if column is empty
         }
     }
 });
@@ -376,105 +377,77 @@ Object.defineProperty($.oAttribute.prototype, "defaultValue", {
     }
 });
  
-// $.oAttribute Class methods
 
+// $.oAttribute Class methods
 
 /**
  * Provides the keyframes of the attribute.
  * @return {$.oFrame[]}   The filtered keyframes.
  */
-$.oAttribute.prototype.getKeyFrames = function(){
+$.oAttribute.prototype.getKeyframes = function(){
     var _frames = this.frames;
-    _frames = _frames.filter(function(x){return x.isKeyFrame});
+    _frames = _frames.filter(function(x){return x.isKeyframe});
     return _frames;
 }
 
+
 /**
- * Sets the value of the attribute at the given frame.
- * @param   {string}     value                 The value to set on the attribute.
- * @param   {int}        [frame]               The frame at which to set the value, if not set, assumes 1
+ * Provides the keyframes of the attribute.
+ * @return {$.oFrame[]}   The filtered keyframes.
+ * @deprecated For case consistency, keyframe will never have a capital F
  */
-$.oAttribute.prototype.setValue = function (value, frame) {
-    var frame_set = true;
-    if (typeof frame === 'undefined'){
-      frame     = 1;
-      frame_set = false;
-    }
-
-    this.$.debug("setting attr "+this._keyword+" value "+value+" at frame "+frame, this.$.DEBUG_LEVEL.LOG)
-    
-    var _attr = this.attributeObject;
-    var _column = this.column;
-    var _type = this.type;
-    var _animate = false;
-
-    if ( frame_set && _column == null ){
-        // generate a new column to be able to animate
-        var _doc = new this.$.oScene();
-        _column = _doc.addColumn()
-        this.column = _column;
-    }
-    
-    if( _column ){
-      _animate = true;
-    }
-     
-    switch(_type){
-        // TODO: sanitize input
-        case "COLOR" :
-            // doesn't work for burnin because it has color.Red, color.green etc and not .r .g ...
-            value = (value instanceof this.$.oColorValue)?value: new this.$.oColorValue(value)
-            value = ColorRGBA(value.r, value.g, value.b, value.a)
-            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
-            break;
-           
-        case "GENERIC_ENUM" :
-            node.setTextAttr(this.node.path, this._keyword, frame, value)
-            break;
-           
-        case "PATH_3D" :
-            var _frame = new this.$.oFrame(frame, this.column, this.column.subColumns);
-            if (_frame.isKeyFrame){
-                var _point = new this.$.oPathPoint (this.column, _frame);
-                _point.set(value);
-            }else{
-                // TODO: create keyframe?
-                this.parentAttribute.attributeObject.setValueAt(value, frame);
-            }
-            break;
-            
-        case 'POSITION_2D':
-            value = Point2d(value.x, value.y)
-            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
-            break;
-            
-        case 'POSITION_2D':
-            value = Point2d(value.x, value.y)
-            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
-            break;
-
-        case 'POSITION_3D':
-            value = Point3d(value.x, value.y, value.z)
-            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
-            break;
-           
-        case "ELEMENT" :
-            _column = this.column;
-            column.setEntry(_column.uniqueName, 1, frame, value+"");
-            break;
-           
-        default :
-            try{
-              _animate ? _attr.setValueAt( value, frame ) : _attr.setValue( value );
-            }catch(err){
-              this.$.debug("setting attr "+this._keyword+" value "+value+" as textAttr ", this.$.DEBUG_LEVEL.LOG)
-              node.setTextAttr( this.node.path, this._keyword, frame, value );
-                
-              // throw new Error("Couldn't set attribute "+this.keyword+" to value "+value+". Incompatible type.")
-            }
-    }
+$.oAttribute.prototype.getKeyFrames = function(){
+    this.$.debug("oAttribute.getKeyFrames is deprecated. Use oAttribute.getKeyframes instead.", this.$.DEBUG_LEVEL.ERROR);
+    var _frames = this.frames;
+    _frames = _frames.filter(function(x){return x.isKeyframe});
+    return _frames;
 }
- 
+
+
+/**
+ * Recursively get all the columns linked to the attribute and its subattributes
+ * @return {$.oColumn[]}    the list of columns linked to the subattributes
+ */
+$.oAttribute.prototype.getLinkedColumns = function(){
+  var _columns = [];
+  var _subAttributes = this.subAttributes;
+  var _ownColumn = this.column;
+  if (_ownColumn != null) _columns.push(_ownColumn);
+  
+  for (var i=0; i<_subAttributes.length; i++) {
+    _columns = _column.concat(_subAttributes[i].getLinkedColumns());
+  }
+  
+  return _columns;
+}
+
+
+/**
+ * Recursively sets an attribute to the same value as another. Both must have the same keyword. 
+ * @param {bool}    [duplicateColumns=false]      In the case that the attribute has a column, wether to duplicate the column before linking
+ * @private
+ */
+$.oAttribute.prototype.setToAttributeValue = function(attributeToCopy, duplicateColumns){
+  if (typeof duplicateColumns === 'undefined') var duplicateColumns = false;
+
+  if (this.keyword !== attributeToCopy.keyword) return;
+  var _subAttributes = this.subAttributes;
+
+  var _column = attributeToCopy.column;
+  if (_column == null) {
+    var value = attributeToCopy.getValue();
+    this.setValue(value);
+  }else{
+    if (duplicateColumns) var _column = _column.duplicate(this);  
+    this.column = _column;
+  }
+
+  var _subAttributesToCopy = attributeToCopy.subAttributes;
+  for (var i=0; i<_subAttributes.length; i++){
+    _subAttributes[i].setToAttributeValue(_subAttributesToCopy[i], duplicateColumns);
+  }
+}
+
 
 //CFNote: Is it worth having a getValueType?
 /**
@@ -484,17 +457,13 @@ $.oAttribute.prototype.setValue = function (value, frame) {
  * @return {object}      The value of the attribute in the native format of that attribute (contextual to the attribute).
  */
 $.oAttribute.prototype.getValue = function (frame) {
-    // MessageLog.trace('getting value of frame :'+frame+' of attribute: '+this._keyword)
-    
     if (typeof frame === 'undefined') var frame = 1;
+    this.$.debug('getting value of frame :'+frame+' of attribute: '+this._keyword+' of type '+this.type, this.$.DEBUG_LEVEL.LOG)
  
     var _attr = this.attributeObject;
     var _type = this.type;
     var _value;
     var _column = this.column;
-
-    //MessageBox.information("getting "+this.keyword)
-    //MessageBox.information(_type)
     
     // handling conversion of all return types into our own types
     switch (_type){
@@ -536,26 +505,26 @@ $.oAttribute.prototype.getValue = function (frame) {
            
         case 'PATH_3D':
             _attr = this.parentAttribute.attributeObject;
-              var _frame = new this.$.oFrame(frame, _column, _column.subColumns);
-            if(_frame.isKeyFrame){
+            var _frame = _column?(new this.$.oFrame(frame, _column)):(new this.$.oFrame(frame, _attr));
+            if(_column && _frame.isKeyframe){
                 _value = new this.$.oPathPoint(_column, _frame);
-            } else{
+            }else{
                 _value = _attr.pos3dValueAt(frame);
             }
             break;
             
-        case 'DRAWING':
+        /*case 'DRAWING':
             // override with returning an oElement object
-            System.println( "DRAWING: " + this.keyword );
+            this.$.debug( "DRAWING: " + this.keyword , this.$.DEBUG_LEVEL.LOG);
             
             value = _column.element;
-            break;
+            break;*/
            
         case 'ELEMENT':
             // an element always has a column, so we'll fetch it from there
-            _value = column.getEntry(_column.uniqueName, 1, frame)
+            _value = column.getEntry(_column.uniqueName, 1, frame);
             // Convert to an instance of oDrawing
-            _value = _column.element.getDrawingByName(_value)
+            _value = _column.element.getDrawingByName(_value);
             break;
        
         // TODO: How does QUATERNION_PATH work? subcolumns I imagine
@@ -563,24 +532,117 @@ $.oAttribute.prototype.getValue = function (frame) {
            
         default:
             // enums, etc
-            _value = _attr.textValueAt(frame)
+            _value = _attr.textValueAt(frame);
            
-            // in case of subattributes, create a fake string that can have properties
+            // in case of subattributes, create a fake string that can have properties so we can create getter setters on it for its subattrs
             if ( _attr.hasSubAttributes && _attr.hasSubAttributes() ){
                 _value = { value:_value };
-                _value.toString = function(){ return _value }
+                _value.toString = function(){ return this.value };
             }else{
               var sub_attrs = node.getAttrList( this.node.path, 1, this._keyword );
               if( sub_attrs && sub_attrs.length>0 ){
                 _value = { value:_value };
-                _value.toString = function(){ return _value }
+                _value.toString = function(){ return this.value };
               }
             }
-            
     }
        
     return _value;
 }
+
+
+/**
+ * Sets the value of the attribute at the given frame.
+ * @param   {string}     value                 The value to set on the attribute.
+ * @param   {int}        [frame]               The frame at which to set the value, if not set, assumes 1
+ */
+$.oAttribute.prototype.setValue = function (value, frame) {
+    var frame_set = true;
+    if (typeof frame === 'undefined'){
+      frame     = 1;
+      frame_set = false;
+    }
+
+    try{
+      this.$.debug("setting attr "+this._keyword+" value "+JSON.stringify(value)+" at frame "+frame, this.$.DEBUG_LEVEL.LOG)
+    }catch(err){    this.$.debug("setting attr "+this._keyword+" at frame "+frame, this.$.DEBUG_LEVEL.LOG)
+    };
+    
+    var _attr = this.attributeObject;
+    var _column = this.column;
+    var _type = this.type;
+    var _animate = false;
+
+    if ( frame_set && _column == null ){
+        // generate a new column to be able to animate
+        var _doc = new this.$.oScene();
+        _column = _doc.addColumn();         //this might fail if the type is wrong (by default addColumn creates BEZIER columns)
+        this.column = _column;
+    }
+    
+    if( _column ){
+      _animate = true;
+    }
+     
+    switch(_type){
+        // TODO: sanitize input
+        case "COLOR" :
+            // doesn't work for burnin because it has color.Red, color.green etc and not .r .g ...
+            value = (value instanceof this.$.oColorValue)?value: new this.$.oColorValue(value);
+            value = ColorRGBA(value.r, value.g, value.b, value.a);
+            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+            break;
+           
+        case "GENERIC_ENUM" :
+            node.setTextAttr(this.node.path, this._keyword, frame, value);
+            break;
+           
+        case "PATH_3D" :
+            var _frame = _column?(new this.$.oFrame(frame, this.column)):(new this.$.oFrame(frame, _attr));
+            if (_column && _frame.isKeyframe){
+                var _point = new this.$.oPathPoint (this.column, _frame);
+                _point.set(value);
+            }else{
+                // TODO: create keyframe?
+                this.parentAttribute.attributeObject.setValueAt(value, frame);
+            }
+            break;
+            
+        case 'POSITION_2D':
+            value = Point2d(value.x, value.y);
+            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+            break;
+            
+        case 'POSITION_2D':
+            value = Point2d(value.x, value.y);
+            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+            break;
+
+        case 'POSITION_3D':
+            value = Point3d(value.x, value.y, value.z);
+            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
+            break;
+           
+        case "ELEMENT" :
+            _column = this.column;
+            column.setEntry(_column.uniqueName, 1, frame, value+"");
+            break;
+            
+        case "QUATERNIONPATH" :
+            break;
+           
+        default :
+            try{
+              _animate ? _attr.setValueAt( value, frame ) : _attr.setValue( value );
+            }catch(err){
+              // this.$.debug("setting attr "+this._keyword+" value "+value+" as textAttr ", this.$.DEBUG_LEVEL.LOG)
+              node.setTextAttr( this.node.path, this._keyword, frame, value );
+                
+              // throw new Error("Couldn't set attribute "+this.keyword+" to value "+value+". Incompatible type.")
+            }
+    }
+}
+
 
 // MCNote: I think it would be good practice if functions had verbs in their names and properties were noun. it makes it easier to remember if you need to pass parameters or even include empty brackets
 // for example: doc.selection   vs doc.getSelection();

@@ -1149,7 +1149,7 @@ Object.defineProperty($.oLink.prototype, 'outPort', {
 /**
  * The index of the link comming out of the out-port.
  * <br>In the event this value wasn't known by the link object but the link is actually connected, the correct value will be found.
- * @name $.oLink#isMultiLevel
+ * @name $.oLink#outLink
  * @readonly
  * @type {int}
  */
@@ -1176,7 +1176,7 @@ Object.defineProperty($.oLink.prototype, 'linked', {
     if (this._linked) return this._linked;
     
     if (this.outNode === undefined || this.inNode === undefined){
-      this.$.log("checking 'linked' for invalid link: "+this.outNode+">"+this.inNode)
+      this.$.debug("checking 'linked' for invalid link: "+this.outNode+">"+this.inNode, this.$.DEBUG_LEVEL.ERROR)
       return false;
     }
     
@@ -1387,6 +1387,7 @@ $.oLink.prototype.findPorts = function(){
 
 /**
  * Converts the node link to a string.
+ * @private
  */
 $.oLink.prototype.toString = function( ) {
   return ('link: {"'+this._outNode+'" ['+this._outPort+', '+this._outLink+'] -> "'+this._inNode+'" ['+this._inPort+']} linked:'+this._linked);

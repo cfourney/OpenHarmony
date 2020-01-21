@@ -122,10 +122,10 @@ $.oDialog.prototype.alert = function( labelText, title, okButtonText ){
   this.$.debug(labelText, this.$.DEBUG_LEVEL.LOG)
 
   var d = new QMessageBox( false, title, labelText, QMessageBox.Ok );
-      d.setWindowTitle( title );
-    
-      d.buttons()[0].text = okButtonText;
-    
+  d.setWindowTitle( title );
+
+  d.buttons()[0].text = okButtonText;
+
   if( labelText ){
     d.text = labelText;
   }
@@ -133,6 +133,21 @@ $.oDialog.prototype.alert = function( labelText, title, okButtonText ){
   if ( !d.exec() ){
     return;
   }
+}
+
+
+/**
+ * Prompts for a user input.
+ * @param   {string}           [labelText]                    The label/internal text of the dialog.
+ * @param   {string}           [title]                        The title of the confirmation dialog.
+ * @param   {string}           [prefilledText]                The text to display in the input area.
+ * 
+ */
+$.oDialog.prototype.prompt = function( labelText, title, prefilledText){ 
+  if (typeof labelText === 'undefined') var labelText = "enter value :";
+  if (typeof title === 'undefined') var title = "Prompt";
+  if (typeof prefilledText === 'undefined') var prefilledText = "";
+  return Input.getText(labelText, prefilledText, title);
 }
 
 
@@ -188,8 +203,7 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
 
   if (typeof title === 'undefined') var title = "Select a folder:";
   
-  var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory)+"";
-  
+  var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory);
   _folder = _folder.split("\\").join("/");
   // this.$.alert(_folder)
   return _folder;

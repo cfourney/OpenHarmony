@@ -40,6 +40,8 @@ rem copy scriptfiles into destination
 (echo .bat 
 echo .json
 echo .txt
+echo .gitignore
+echo .gitattributes
 echo .md)> exclude.txt
 
 xcopy "%dlPath%*" "%installDir%" /y /s /i /e /q /exclude:exclude.txt

@@ -353,3 +353,51 @@ $.oThread.prototype.runSingleThreaded = function( ){
 //////////////////////////////////////
 
 
+/**
+ *
+ *
+ */
+$.oProcess = function(bin, queryArgs){
+  this.bin = bin;
+  this.queryArgs = queryArgs;
+}
+
+
+/**
+ * 
+ *
+ */
+$.oProcess.prototype.launchAndRead = function(channel){
+  if (typeof channel === 'undefined') var channel = "Standard";
+  
+  var bin = this.bin.split("/")
+	var app = bin.pop()
+	var directory = bin.join("\\")
+
+	var p = new QProcess();
+	p.setWorkingDirectory(directory) 
+	p.start(app, this.queryArgs, QIODevice.ReadOnly );  
+	p.waitForReadyRead(10000);
+	
+  if (channel == "Output"){
+    var readOut = new QTextStream(p.readAllStandardOutput()).readAll();
+  }else if (channel == "Error"){
+    var readOut = new QTextStream(p.readAllStandardError()).readAll();
+  }else if (channel == "All"){
+    p.setProcessChannelMode(QProcess.MergedChannels);
+    var readOut = new QTextStream(p.readAllStandardOutput()).readAll();
+  }
+  
+  return readOut;
+}
+
+
+/**
+ *
+ *
+ */
+$.oProcess.prototype.launchAndDetach = function(callBack){
+  if (typeof channel === 'undefined') var channel = "Standard";
+  
+	QProcess.startDetached(this.bin, this.queryArgs);  
+}
