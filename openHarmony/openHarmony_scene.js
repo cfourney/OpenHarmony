@@ -417,7 +417,7 @@ Object.defineProperty($.oScene.prototype, 'palettes', {
         var _paletteList = PaletteObjectManager.getScenePaletteList();
         var _palettes = [];
         for (var i=0; i<_paletteList.numPalettes; i++){
-            _palettes.push( new this.$.oPalette( _paletteList.getPaletteByIndex(i), this, _paletteList ) );
+            _palettes.push( new this.$.oPalette( _paletteList.getPaletteByIndex(i), _paletteList ) );
         }
         return _palettes;
     }
@@ -1135,6 +1135,11 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
  */
 $.oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement){
     var _paletteFile = new this.$.oFile(filename);
+    
+    if (!_paletteFile.exists){
+      this.$.debug("Error: cannot import palette from file "+filename+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
+      return null;
+    }
     
     // create a dummy palette to get the destination path
     var _newPalette = this.addPalette(_paletteFile.name, index, paletteStorage, storeInElement);

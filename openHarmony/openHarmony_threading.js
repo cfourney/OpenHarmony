@@ -364,19 +364,22 @@ $.oProcess = function(bin, queryArgs){
 
 
 /**
- * 
- *
+ * Execute a process and read the result as a string. 
+ * @param {string}  [channel="All"]        The Channel to read from, "Output" or "Error", or "All"
  */
 $.oProcess.prototype.launchAndRead = function(channel){
-  if (typeof channel === 'undefined') var channel = "Standard";
+  if (typeof channel === 'undefined') var channel = "All";
   
-  var bin = this.bin.split("/")
-	var app = bin.pop()
-	var directory = bin.join("\\")
+  var bin = this.bin.split("/");
+	var app = bin.pop();
+	var directory = bin.join("\\");
 
 	var p = new QProcess();
-	p.setWorkingDirectory(directory) 
-	p.start(app, this.queryArgs, QIODevice.ReadOnly );  
+	p.setWorkingDirectory(directory);
+  
+  this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.ERROR);
+	
+  p.start(app, this.queryArgs, QIODevice.ReadOnly );  
 	p.waitForReadyRead(10000);
 	
   if (channel == "Output"){
@@ -393,11 +396,9 @@ $.oProcess.prototype.launchAndRead = function(channel){
 
 
 /**
- *
- *
+ * Execute a process as a separate task, which doesn't block the script execution. Possibility to provide a callBack function that runs when the process is finished.
+ * @param {function}       [callback]
  */
-$.oProcess.prototype.launchAndDetach = function(callBack){
-  if (typeof channel === 'undefined') var channel = "Standard";
-  
+$.oProcess.prototype.launchAndDetach = function(callBack){ 
 	QProcess.startDetached(this.bin, this.queryArgs);  
 }

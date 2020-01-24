@@ -250,14 +250,12 @@ Object.defineProperty($.oNode.prototype, 'path', {
 /**
  * The type of the node.
  * @name $.oNode#type
+ * @readonly
  * @type {string}
  */
 Object.defineProperty( $.oNode.prototype, 'type', {
     get : function( ){
       return node.type( this.path );
-    },
-
-    set : function( bool_exist ){
     }
 });
 
@@ -358,16 +356,15 @@ Object.defineProperty($.oNode.prototype, 'selected', {
  * @type {string}
  */
 Object.defineProperty($.oNode.prototype, 'name', {
-    get : function(){
-         return node.getName(this.path)
-    },
+  get : function(){
+     return node.getName(this.path);
+  },
 
-    set : function(newName){
-        var _parent = node.parentNode(this.path)
-        var _node = node.rename(this.path, newName)
-        this.path = _parent+'/'+newName;
-    }
-
+  set : function(newName){
+    var _parent = node.parentNode(this.path);
+    var _node = node.rename(this.path, newName);
+    this._path = _parent+'/'+newName;
+  }
 });
 
 
@@ -1323,7 +1320,7 @@ $.oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
     _box.includeNodes(oNodeArray);
 
     this.x = _box.center.x - this.width/2 + xOffset;
-    this.y = _box.center.y - this.height/2 + yOffset;
+    this.y = _box.center.y - this.height + yOffset;
 
     return new this.$.oPoint(this.x, this.y, this.z);
 }
@@ -2579,6 +2576,11 @@ $.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addCo
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
 
   var _psdFile = (path instanceof this.$.oFile)?path:new this.$.oFile( path );
+  if (!_psdFile.exists){
+    this.$.debug("Error: can't import PSD file "+_psdFile.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
+    return null; 
+  }  
+  
   var _elementName = _psdFile.name;
 
   var _xSpacing = 45;
@@ -2661,11 +2663,17 @@ $.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addCo
  * Updates a PSD previously imported into the group
  * @param   {string}       path                          The updated psd file to import.
  * @param   {bool}         [separateLayers=true]         Separate the layers of the PSD.
+ *
+ * @return  {$.oNode[]}    The nodes that have been updated/created
  */
 $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
   if (typeof separateLayers === 'undefined') var separateLayers = true;
 
   var _psdFile = (path instanceof this.$.oFile)?path:new this.$.oFile(path);
+  if (!_psdFile.exists){
+    this.$.debug("Error: can't import PSD file "+_psdFile.path+" for update because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
+    return null; 
+  }
 
   // get info from the PSD
   var _info = CELIO.getInformation(_psdFile.path);
@@ -2722,7 +2730,7 @@ $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
     if (_psdNodes.length == 0){
       // PSD was never imported, use import instead?
       this.$.debug("can't find a PSD element to update", this.$.DEBUG_LEVEL.ERROR);
-      return;
+      return null;
     }
 
     // pasting updated PSD into element
@@ -2781,6 +2789,8 @@ $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
 
       _nodes.push(_node);
     }
+    
+    return nodes;
   } else{
       throw new Error("updating a PSD imported as a flattened layer not yet implemented");
   }
@@ -2844,6 +2854,11 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
     // MessageLog.trace("importing QT file :"+filename)
 
     var _QTFile = (path instanceof this.$.oFile)?path:new this.$.oFile(path);
+    if (!_QTFile.exists){
+      this.$.debug("Error: can't import Quicktime file "+_QTFile.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
+      return null; 
+    }
+      
     var _elementName = _QTFile.name;
 
     var _element = this.scene.addElement(_elementName, "PNG");
@@ -2865,7 +2880,9 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
     MovieImport.setAudioFile(_audioPath);
     MovieImport.doImport();
 
-    if (extendScene && this.scene.length < MovieImport.numberOfImages()) this.length = MovieImport.numberOfImages();
+    this.$.debug("number of images imported : "+MovieImport.numberOfImages(), this.$.DEBUG_LEVEL.ERROR);
+
+    if (extendScene /*&& this.scene.length < MovieImport.numberOfImages()*/) this.scene.length = MovieImport.numberOfImages();
 
     // create expositions on the node
     for (var i = 1; i <= MovieImport.numberOfImages(); i++ ) {
