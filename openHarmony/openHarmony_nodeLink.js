@@ -1212,7 +1212,7 @@ Object.defineProperty($.oLink.prototype, 'linked', {
  */
 Object.defineProperty($.oLink.prototype, 'isMultiLevel', {
   get : function(){
-    this.$.debug("isMultiLevel? "+this.outNode +" "+this.inNode, this.$.DEBUG_LEVEL.ERROR);
+    this.$.debug("isMultiLevel? "+this.outNode +" "+this.inNode, this.$.DEBUG_LEVEL.LOG);
     if (!this.outNode || !this.outNode.group || !this.inNode || !this.inNode.group) return false;
     return this.outNode.group.path != this.inNode.group.path;
   }

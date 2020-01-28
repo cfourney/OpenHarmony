@@ -2847,57 +2847,61 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
  * @return {$.oNode}        The imported Quicktime Node.
  */
 $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alignment, nodePosition){
-    if (typeof alignment === 'undefined') var alignment = "ASIS";
-    if (typeof extendScene === 'undefined') var extendScene = true;
-    if (typeof importSound === 'undefined') var importSound = true;
-    if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
-    // MessageLog.trace("importing QT file :"+filename)
+  if (typeof alignment === 'undefined') var alignment = "ASIS";
+  if (typeof extendScene === 'undefined') var extendScene = true;
+  if (typeof importSound === 'undefined') var importSound = true;
+  if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+  // MessageLog.trace("importing QT file :"+filename)
 
-    var _QTFile = (path instanceof this.$.oFile)?path:new this.$.oFile(path);
-    if (!_QTFile.exists){
-      this.$.debug("Error: can't import Quicktime file "+_QTFile.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
-      return null; 
-    }
-      
-    var _elementName = _QTFile.name;
+  var _QTFile = (path instanceof this.$.oFile)?path:new this.$.oFile(path);
+  if (!_QTFile.exists){
+    this.$.debug("Error: can't import Quicktime file "+_QTFile.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
+    return null; 
+  }
+    
+  var _elementName = _QTFile.name;
 
-    var _element = this.scene.addElement(_elementName, "PNG");
-    var _qtNode = this.addDrawingNode(_elementName, nodePosition, _element);
-    var _column = _qtNode.attributes.drawing.element.column;
-    _element.column = _column;
+  var _element = this.scene.addElement(_elementName, "PNG");
+  var _qtNode = this.addDrawingNode(_elementName, nodePosition, _element);
+  var _column = _qtNode.attributes.drawing.element.column;
+  _element.column = _column;
 
-    // setup the node
-    _qtNode.can_animate = false;
-    _qtNode.alignment_rule = alignment;
+  // setup the node
+  _qtNode.can_animate = false;
+  _qtNode.alignment_rule = alignment;
 
-    var _tempFolder = scene.tempProjectPathRemapped () + "/movImport/" + _elementName
-    var _audioPath = _tempFolder + "/" + _elementName + ".wav"
+  var _tempFolder = scene.tempProjectPathRemapped () + "/movImport/" + _elementName;
+  var _audioPath = _tempFolder + "/" + _elementName + ".wav"
 
-    // setup import
-    MovieImport.setMovieFilename(_QTFile.path);
-    MovieImport.setImageFolder(_tempFolder);
-    MovieImport.setImagePrefix(_elementName);
-    MovieImport.setAudioFile(_audioPath);
-    MovieImport.doImport();
+  // setup import
 
-    this.$.debug("number of images imported : "+MovieImport.numberOfImages(), this.$.DEBUG_LEVEL.ERROR);
+  MovieImport.setMovieFilename(_QTFile.path);
+  MovieImport.setImageFolder(_tempFolder);
+  MovieImport.setImagePrefix(_elementName);
+  MovieImport.setAudioFile(_audioPath);
+  this.$.log("doing import");
+  MovieImport.doImport();
+  this.$.log("import finished");
+  var QTlength = MovieImport.numberOfImages()-1;
 
-    if (extendScene /*&& this.scene.length < MovieImport.numberOfImages()*/) this.scene.length = MovieImport.numberOfImages();
+  this.$.debug("number of images imported : "+QTlength, this.$.DEBUG_LEVEL.ERROR);
 
-    // create expositions on the node
-    for (var i = 1; i <= MovieImport.numberOfImages(); i++ ) {
-        // move the frame into the drawing
-        var _framePath = _tempFolder + '/'+_elementName+'-' + i + '.png';
-        var _drawing = _element.addDrawing(i, i, _framePath)
-    }
+  if (extendScene) this.scene.length = QTlength;
 
-    // creating an audio column for the sound
-    if (importSound && MovieImport.isAudioFileCreated() ){
-        var _soundName = _elementName + "_sound";
-        var _soundColumn = this.scene.addColumn("SOUND", _soundName);
-        column.importSound( _soundColumn.name, 1, _audioPath);
-    }
+  // create expositions on the node
+  for (var i = 1; i <= QTlength; i++ ) {
+    // move the frame into the drawing
+    var _framePath = _tempFolder + '/'+_elementName+'-' + i + '.png';
+    var _drawing = _element.addDrawing(i, i, _framePath);
+  }
 
-    return _qtNode;
+  // creating an audio column for the sound
+  if (importSound && MovieImport.isAudioFileCreated() ){
+    var _soundName = _elementName + "_sound";
+    var _soundColumn = this.scene.addColumn("SOUND", _soundName);
+    column.importSound( _soundColumn.name, 1, _audioPath);
+  }
+
+  return _qtNode;
 }
 

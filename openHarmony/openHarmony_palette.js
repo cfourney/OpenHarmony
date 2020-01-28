@@ -69,6 +69,16 @@ $.oPalette = function( paletteObject, paletteListObject ){
   this._paletteList  = paletteListObject;
   this.scene         = this.$.scn;
 }
+
+
+// Class properties
+$.oPalette.location = {
+  "environnement" : PaletteObjectManager.Constants.Location.ENVIRONMENT,
+  "job" : PaletteObjectManager.Constants.Location.JOB,
+  "scene" : PaletteObjectManager.Constants.Location.SCENE,
+  "element" : PaletteObjectManager.Constants.Location.ELEMENT,
+  "external" : PaletteObjectManager.Constants.Location.EXTERNAL
+}
  
  
 // $.oPalette Object Properties
@@ -114,7 +124,7 @@ Object.defineProperty($.oPalette.prototype, 'name', {
         var _list = this._paletteList;
         var _name = this.name
         _list.removePaletteById( this.id );
-s
+
         var _paletteObject = _list.insertPalette(_newPath, this.index);
         this.paletteObject = _paletteObject;
 
@@ -130,7 +140,8 @@ s
 Object.defineProperty($.oPalette.prototype, 'path', {
     get : function(){
          var _path = this.paletteObject.getPath()
-         _path = fileMapper.toNativePath(_path)
+         // _path = fileMapper.toNativePath(_path)
+         _path = _path;
          return new this.$.oFile( _path+"/"+this.name+".plt" );
     },
  
@@ -245,12 +256,15 @@ $.oPalette.prototype.remove = function ( removeFile ){
   
   if( removeFile ){
     try{
-      success = PaletteObjectManager.removePaletteReferencesAndDeleteOnDisk(this.id) 	
+      if (this.$.batchMode){
+        this.path.remove();
+        success = this._paletteList.removePaletteById( this.id );
+      }else{
+        success = PaletteObjectManager.removePaletteReferencesAndDeleteOnDisk(this.id)
+      }
     }catch(err){
       success = false; 
     }
-    //var _paletteFile = new this.$.oFile(this.path)
-    //_paletteFile.remove();
   }else{
     success = this._paletteList.removePaletteById( this.id );
   }

@@ -367,8 +367,9 @@ $.oProcess = function(bin, queryArgs){
  * Execute a process and read the result as a string. 
  * @param {string}  [channel="All"]        The Channel to read from, "Output" or "Error", or "All"
  */
-$.oProcess.prototype.launchAndRead = function(channel){
+$.oProcess.prototype.launchAndRead = function(channel, timeOut){
   if (typeof channel === 'undefined') var channel = "All";
+  if (typeof timeOut === 'undefined') var timeOut = -1;
   
   var bin = this.bin.split("/");
 	var app = bin.pop();
@@ -380,7 +381,7 @@ $.oProcess.prototype.launchAndRead = function(channel){
   this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.ERROR);
 	
   p.start(app, this.queryArgs, QIODevice.ReadOnly );  
-	p.waitForReadyRead(10000);
+	p.waitForFinished(timeOut);
 	
   if (channel == "Output"){
     var readOut = new QTextStream(p.readAllStandardOutput()).readAll();
@@ -393,6 +394,20 @@ $.oProcess.prototype.launchAndRead = function(channel){
   
   return readOut;
 }
+
+
+
+/**
+ * Execute a process and waits for the end of the execution. 
+ */
+$.oProcess.prototype.execute = function(){
+  
+  this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.ERROR);
+	
+  var args = [this.bin].concat(this.queryArgs);  
+  Process.execute(args);  
+}
+
 
 
 /**

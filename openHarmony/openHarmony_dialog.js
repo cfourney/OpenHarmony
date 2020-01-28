@@ -223,79 +223,76 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
  
 /**
  * The $.dialog.Progress constructor.
- * @name        $.oDialog.Progress
+ * @name        $.oProgressDialog
  * @constructor
  * @classdesc   An simple progress dialog to
  * @param       {string}              labelText                  The path to the folder.
- * @param       {string}              range                      The path to the folder.
- * @param       {bool}                show                       Whether to immediately show the dialog.
+ * @param       {string}              [range=100]                The path to the folder.
+ * @param       {bool}                [show=false]               Whether to immediately show the dialog.
+ * @param       {string}              [title]                    The title of the dialog
  *
  * @property    {bool}                cancelled                  Whether the progress bar was cancelled.
  */
-$.oDialog.prototype.Progress  = function( labelText, range, show ){
-    if (this.$.batchMode) {
-      this.$.debug("$.oDialog.Progress not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
-      return;
-    }
+$.oProgressDialog = function( labelText, range, title, show ){  
+  if (typeof title === 'undefined') var title = "Progress";  
+  if (typeof range === 'undefined') var range = 100;
+  if (typeof labelText === 'undefined') var labelText = "";
+
+  this._value = 0;
+  this._range = range;
+  this._title = title;
+  this._labelText = labelText;
   
+  if (show) this.show();
   
-    if (typeof title === 'undefined')            var title = "Progress";  
-    if (typeof range === 'undefined')            var range = 100;
-    if (typeof labelText === 'undefined')        var labelText = "";
-    
-    this.progress = new QProgressDialog();
-    
-    this.progress.setLabelText( labelText );
-    this.progress.setRange( 0, range );
-  
-    this._value     = 0;
-    this._range     = range;
-    this._labelText = labelText;
-    
-    if ( show ){
-      this.progress.show();
-    }
-    
-    this.cancelled = false;
-    
-    {
-      //CANCEL EVENT.
-      var prog = this;
-      var canceled = function(){
-        prog.cancelled = true;
-      }
-      this.progress["canceled()"].connect( this, canceled );
-    }
+  this.cancelled = false;
 }
+
+// legacy compatibility
+$.oDialog.Progress = $.oProgressDialog;
 
 
 /**
  * Shows the dialog.
  * @name    $.oDialog.Progress#show
- * @param   {string}   title 
- * @param   {string}   labelText
- * @param   {string}   okButtonText
  */
-$.oDialog.prototype.Progress.prototype.show = function( title, labelText, okButtonText ){
+$.oProgressDialog.prototype.show = function(){
   if (this.$.batchMode) {
-    this.$.debug("$.oDialog.Progress not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
+    this.$.debug("$.oDialog.Progress not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
     return;
   }
   
+  this.progress = new QProgressDialog();
+  this.progress.title = this.title;
+  this.progress.setLabelText( labelText );
+  this.progress.setRange( 0, range );
+  
   this.progress.show();
+  
+  {
+    //CANCEL EVENT.
+    var prog = this;
+    var canceled = function(){
+      prog.cancelled = true;
+    }
+    this.progress["canceled()"].connect( this, canceled );
+  }
+  
 }
 
 /**
  * Closes the dialog.
  * 
  */
-$.oDialog.prototype.Progress.prototype.close = function( title, labelText, okButtonText ){
+$.oProgressDialog.prototype.close = function(){
+  this.value = this.range;
+  this.$.log("Progress : "+value+"/"+this._range)
+
   if (this.$.batchMode) {
-    this.$.debug("$.oDialog.Progress not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
+    this.$.debug("$.oDialog.Progress not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
     return;
   }
 
-  this.value = this.range;
   this.progress.hide();
   this.progress = false;
 }
@@ -306,15 +303,15 @@ $.oDialog.prototype.Progress.prototype.close = function( title, labelText, okBut
  * @name $.oDialog.Progress#text
  * @type {string}
  */
-Object.defineProperty( $.oDialog.prototype.Progress.prototype, 'text', {
-  
-    get: function(){
-      return this._labelText;
-    },
-    set: function( val ){
-      this._labelText = val;
-      this.progress.setLabelText( val );
-    }
+Object.defineProperty( $.oProgressDialog.prototype, 'label', { 
+  get: function(){
+    return this._labelText;
+  },
+  set: function( val ){
+    this.$.log("Progress : "+val+"/"+this._range)
+    this._labelText = val;
+    if (!this.$.batchMode) this.progress.setLabelText( val );
+  }
 });
 
 
@@ -323,14 +320,14 @@ Object.defineProperty( $.oDialog.prototype.Progress.prototype, 'text', {
  * @name $.oDialog.Progress#range
  * @type {int}
  */
-Object.defineProperty( $.oDialog.prototype.Progress.prototype, 'range', {
+Object.defineProperty( $.oProgressDialog.prototype, 'range', {
     get: function(){
       return this._range;
     },
     set: function( val ){
       this._range = val;
-      this.progress.setRange( 0, val );
-      QCoreApplication.processEvents();
+      if (!this.$.batchMode) this.progress.setRange( 0, val );
+      //QCoreApplication.processEvents();
     }
 });
 
@@ -340,12 +337,13 @@ Object.defineProperty( $.oDialog.prototype.Progress.prototype, 'range', {
  * @name $.oDialog.Progress#value
  * @type {int}
  */
-Object.defineProperty( $.oDialog.prototype.Progress.prototype, 'value', {
+Object.defineProperty( $.oProgressDialog.prototype, 'value', {
     get: function(){
       return this._value;
     },
     set: function( val ){
-      this.progress.setValue( val );
-      QCoreApplication.processEvents();
+      this._value = val;
+      if (!this.$.batchMode) this.progress.setValue( val );
+      //QCoreApplication.processEvents();
     }
 });

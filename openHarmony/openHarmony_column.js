@@ -116,7 +116,7 @@ Object.defineProperty( $.oColumn.prototype, 'name', {
         if (_success){ 
           this.uniqueName = newName;
         }else{
-          throw "Failed to rename the column."
+          throw new Error("Failed to rename column "+this.uniqueName+" to "+newName+".")
         }
     }
 });
@@ -125,15 +125,12 @@ Object.defineProperty( $.oColumn.prototype, 'name', {
 /**
  * The type of the column. There are nine column types: drawing (DRAWING), sound (SOUND), 3D Path (3DPATH), Bezier Curve (BEZIER), Ease Curve (EASE), Expression (EXPR), Timing (TIMING) for timing columns, Quaternion path (QUATERNIONPATH) for 3D rotation and Annotation (ANNOTATION) for annotation columns. 
  * @name $.oColumn#type
+ * @readonly
  * @type {string}
  */
 Object.defineProperty( $.oColumn.prototype, 'type', {
     get : function(){
         return column.type(this.uniqueName)
-    },
-    
-    set : function(){
-      throw "Not yet implemented."
     }
 });
  
@@ -220,7 +217,12 @@ Object.defineProperty($.oColumn.prototype, 'subColumns', {
     }
 });
  
-
+/**
+ * The type of easing used by the column
+ * @name $.oColumn#subColumns
+ * @readonly
+ * @type {object}
+ */
 Object.defineProperty($.oColumn.prototype, 'easeType', {
     get : function(){
         switch(this.type){
