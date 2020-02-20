@@ -1164,7 +1164,11 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
   this.$.log (_path);
 
   var _file = new this.$.oFile(_path);
-  var _copy = _paletteFile.copy(_file.folder.path, _paletteFile.name, true);
+  
+  var paletteFolder = _file.folder;
+  if (!paletteFolder.exists) paletteFolder.create();
+  
+  var _copy = _paletteFile.copy(paletteFolder.path, _paletteFile.name, true);
 
   this.$.log("copy: "+_copy);
   
@@ -1175,7 +1179,6 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
 
   _newPalette = new this.$.oPalette(_palette, _list);
   //_newPalette.name = _paletteFile.name;
-  
 
   return _newPalette;
 }
