@@ -458,7 +458,7 @@ $.oAttribute.prototype.setToAttributeValue = function(attributeToCopy, duplicate
  */
 $.oAttribute.prototype.getValue = function (frame) {
     if (typeof frame === 'undefined') var frame = 1;
-    this.$.debug('getting value of frame :'+frame+' of attribute: '+this._keyword+' of type '+this.type, this.$.DEBUG_LEVEL.LOG)
+    this.$.debug('getting value of frame :'+frame+' of attribute: '+this._keyword+' of node '+this.node+' - type '+this.type, this.$.DEBUG_LEVEL.LOG)
  
     var _attr = this.attributeObject;
     var _type = this.type;
@@ -564,7 +564,7 @@ $.oAttribute.prototype.setValue = function (value, frame) {
     }
 
     try{
-      this.$.debug("setting attr "+this._keyword+" value "+JSON.stringify(value)+" at frame "+frame, this.$.DEBUG_LEVEL.LOG)
+      this.$.debug("setting attr "+this._keyword+" (type : "+this.type+") on node "+this.node+" to value "+JSON.stringify(value)+" at frame "+frame, this.$.DEBUG_LEVEL.LOG)
     }catch(err){    this.$.debug("setting attr "+this._keyword+" at frame "+frame, this.$.DEBUG_LEVEL.LOG)
     };
     
@@ -608,17 +608,12 @@ $.oAttribute.prototype.setValue = function (value, frame) {
             }
             break;
             
-        case 'POSITION_2D':
-            value = Point2d(value.x, value.y);
-            _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
-            break;
-            
-        case 'POSITION_2D':
+        case "POSITION_2D":
             value = Point2d(value.x, value.y);
             _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
             break;
 
-        case 'POSITION_3D':
+        case "POSITION_3D":
             value = Point3d(value.x, value.y, value.z);
             _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
             break;
@@ -630,12 +625,15 @@ $.oAttribute.prototype.setValue = function (value, frame) {
             
         case "QUATERNIONPATH" :
             break;
+            
+        //case "STRING" :
+        //  node.setTextAttr( this.node.path, this._keyword, frame, value);
            
         default :
             try{
               _animate ? _attr.setValueAt( value, frame ) : _attr.setValue( value );
             }catch(err){
-              // this.$.debug("setting attr "+this._keyword+" value "+value+" as textAttr ", this.$.DEBUG_LEVEL.LOG)
+              this.$.debug("setting text attr "+this._keyword+" value "+value+" as textAttr ", this.$.DEBUG_LEVEL.LOG)
               node.setTextAttr( this.node.path, this._keyword, frame, value );
                 
               // throw new Error("Couldn't set attribute "+this.keyword+" to value "+value+". Incompatible type.")

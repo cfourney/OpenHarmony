@@ -484,7 +484,7 @@ Object.defineProperty($.oNode.prototype, 'x', {
 
     set : function(x){
         var _pos = this.nodePosition;
-        node.setCoord(this.path, x, _pos.y, _pos.z)
+        node.setCoord(this.path, x, _pos.y)
     }
 });
 
@@ -501,7 +501,7 @@ Object.defineProperty($.oNode.prototype, 'y', {
 
     set : function(y){
         var _pos = this.nodePosition;
-        node.setCoord(this.path, _pos.x, y, _pos.z)
+        node.setCoord(this.path, _pos.x, y)
     }
 });
 
@@ -1320,7 +1320,7 @@ $.oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
     _box.includeNodes(oNodeArray);
 
     this.x = _box.center.x - this.width/2 + xOffset;
-    this.y = _box.center.y - this.height + yOffset;
+    this.y = _box.center.y - this.height/2 + yOffset;
 
     return new this.$.oPoint(this.x, this.y, this.z);
 }

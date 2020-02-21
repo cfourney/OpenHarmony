@@ -47,8 +47,8 @@
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
- 
- 
+
+
 /**
  * The $.oFolder helper class -- providing utilities for folder manipulation and access.
  * @constructor
@@ -61,7 +61,7 @@ $.oFolder = function(path){
     this._type = "folder";
     this._path = fileMapper.toNativePath(path).split("\\").join("/");
     // if (this.path.slice(-1) == "/") this.path += this.path.slice(0, -1);
-    
+
 }
 
 
@@ -79,17 +79,17 @@ Object.defineProperty($.oFolder.prototype, 'path', {
         this._path = fileMapper.toNativePath( newPath ).split("\\").join("/");
         return;
       }
-      
+
       var folder = new this.$.oFolder( newPath );
       if( folder.exists ){
         throw "Target path already exists. No default replace.";
       }
-      
+
       var parent_folder = folder.folder;
       if( !parent_folder.exists ){
         throw "Target path's parent folder must already exist.";
       }
-      
+
       this.move( newPath, false );
     }
 });
@@ -112,7 +112,7 @@ Object.defineProperty($.oFolder.prototype, 'name', {
 /**
  * The parent folder.
  * @name $.oFolder#folder
- * @type {string}
+ * @type {$.oFolder}
  */
 Object.defineProperty($.oFolder.prototype, 'folder', {
     get: function(){
@@ -147,9 +147,9 @@ Object.defineProperty($.oFolder.prototype, 'files', {
       var dir = new QDir;
       dir.setPath(this.path);
       dir.setFilter( QDir.Files );
-   
+
       if (!dir.exists) throw new Error("can't get files from folder "+this.path+" because it doesn't exist");
-   
+
       return dir.entryList().map(function(x){return new this.$.oFile(dir.path()+"/"+x)});
     }
 });
@@ -168,11 +168,11 @@ Object.defineProperty($.oFolder.prototype, 'folders', {
       if (!_dir.exists) throw new Error("can't get files from folder "+this.path+" because it doesn't exist");
       _dir.setFilter(QDir.Dirs);
       var _folders = _dir.entryList();
-     
+
       for (var i = _folders.length-1; i>=0; i--){
           if (_folders[i] == "." || _folders[i] == "..") _folders.splice(i,1);
       }
-      
+
       return _folders.map(function(x){return new this.$.oFolder( dir.path() + "/" + x )});
     }
 });
@@ -195,8 +195,8 @@ Object.defineProperty($.oFolder.prototype, 'content', {
 /**
  * Lists the file names contained inside the folder.
  * @param   {string}   [filter]               Filter wildcards for the content of the folder.
- *  
- * @return: { string[] }                      The file content of folder.                     
+ *
+ * @return: { string[] }                      The file content of folder.
  */
 $.oFolder.prototype.listFiles = function(filter){
     if (typeof filter === 'undefined') var filter = "*";
@@ -207,7 +207,7 @@ $.oFolder.prototype.listFiles = function(filter){
     _dir.setNameFilters([filter]);
     _dir.setFilter( QDir.Files);
     var _files = _dir.entryList();
-   
+
     return _files;
 }
 
@@ -215,7 +215,7 @@ $.oFolder.prototype.listFiles = function(filter){
 /**
  * get the files from the folder
  * @param   {string}   [filter]                Filter wildcards for the content of the folder.
- *  
+ *
  * @return: { $.oFile[] }                      The file content of the folder.
  */
 $.oFolder.prototype.getFiles = function( filter ){
@@ -223,13 +223,13 @@ $.oFolder.prototype.getFiles = function( filter ){
     // returns the list of $.oFile in a directory that match a filter
 
     var _path = this.path;
-    
+
     var _files = [];
     var _file_list = this.listFiles(filter);
     for( var i in _file_list){
       _files.push( new this.$.oFile( _path+'/'+_file_list[i] ) );
     }
-    
+
     return _files;
 }
 
@@ -237,29 +237,29 @@ $.oFolder.prototype.getFiles = function( filter ){
 /**
  * lists the folder names contained inside the folder.
  * @param   {string}   [filter]               Filter wildcards for the content of the folder.
- *  
- * @return: { string[] }                      The file content of folder.                     
+ *
+ * @return: { string[] }                      The file content of folder.
  */
 $.oFolder.prototype.listFolders = function(filter){
-   
+
     if (typeof filter === 'undefined') var filter = "*";
-   
+
     var _dir = new QDir;
     _dir.setPath(this.path);
-    
+
     if (!_dir.exists){
       this.$.debug("can't get files from folder "+this.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
       return [];
     }
-    
+
     _dir.setNameFilters([filter]);
     _dir.setFilter(QDir.Dirs); //QDir.NoDotAndDotDot not supported?
     var _folders = _dir.entryList();
-   
+
     for (var i in _folders){
         if (_folders[i] == "." || _folders[i] == "..") _folders.splice(i,1);
     }
-   
+
     return _folders;
 }
 
@@ -267,7 +267,7 @@ $.oFolder.prototype.listFolders = function(filter){
 /**
  * gets the folders inside the oFolder
  * @param   {string}   [filter]              Filter wildcards for the content of the folder.
- *  
+ *
  * @return: { $.oFolder[] }                  The folder contents of the folder.
  */
 $.oFolder.prototype.getFolders = function( filter ){
@@ -275,35 +275,35 @@ $.oFolder.prototype.getFolders = function( filter ){
     // returns the list of $.oFile in a directory that match a filter
 
     var _path = this.path;
-    
+
     var _folders = [];
     var _folders_list = this.listFolders(filter);
     for( var i in _folders_list){
       _folders.push( new this.$.oFolder(_path+'/'+_folders_list[i]));
     }
-    
+
     return _folders;
 }
 
- 
+
  /**
  * Creates the folder, if it doesn't already exist.
- *  
- * @return: { bool }                         The existence of the newly created folder.                 
+ *
+ * @return: { bool }                         The existence of the newly created folder.
  */
 $.oFolder.prototype.create = function(){
     if( this.exists ){
       this.$.debug("folder "+this.path+" already exists and will not be created", this.$.DEBUG_LEVEL.WARNING)
       return true;
     }
-    
+
     var dir = new Dir;
     dir.path = this.path;
     dir.mkdirs();
     return dir.exists;
 }
- 
- 
+
+
 /**
  * Copy the folder and its contents to another path. WIP
  * @param   {string}   [folderPath]          The path to the folder location to copy to (CFNote: Should this not be a $.oFolder?)
@@ -314,13 +314,13 @@ $.oFolder.prototype.copy = function( folderPath, copyName, overwrite ){
     if (typeof overwrite === 'undefined') var overwrite = false;
     if (typeof copyName === 'undefined') var copyName = this.name;
     if (typeof folderPath === 'undefined') var folderPath = this.folder.path;
-    
+
     if (this.name == copyName && folderPath == this.folder.path) copyName += "_copy";
-    
+
     var copyPath = folderPath+copyName;
-    
+
     // TODO: deep recursive copy file by file of the contents
-    
+
 }
 
 
@@ -328,8 +328,8 @@ $.oFolder.prototype.copy = function( folderPath, copyName, overwrite ){
  * Move this folder to the specified path.
  * @param   {string}   destFolderPath           The new complete path of the folder after the move (CFNote: Should this not be a $.oFolder?)
  * @param   {bool}     [overwrite=false]        Whether to overwrite the target.
- *  
- * @return: { bool }                            The result of the move.                    
+ *
+ * @return: { bool }                            The result of the move.
  */
 $.oFolder.prototype.move = function( destFolderPath, overwrite ){
     if (typeof overwrite === 'undefined') var overwrite = false;
@@ -338,21 +338,21 @@ $.oFolder.prototype.move = function( destFolderPath, overwrite ){
 
     var _folder = destFolder.folder;
     var _name = destFolder.name;
-    
+
     var dir = new Dir;
     dir.path = destFolderPath;
-       
+
     if (dir.exists && !overwrite)
         throw new Error("destination file "+dir.path+" exists and will not be overwritten. Can't move folder.");
-    
+
     var path = fileMapper.toNativePath(this.path);
     var destPath = fileMapper.toNativePath(dir.path+"/");
- 
+
     var destDir = new Dir;
     try {
         destDir.rename( path, destPath );
         this._path = destPath;
-        
+
         return true;
     }catch (err){
         throw new Error ("Couldn't move folder "+this.path+" to new address "+destPath);
@@ -365,7 +365,7 @@ $.oFolder.prototype.move = function( destFolderPath, overwrite ){
  * Move this folder to a different parent folder, while retaining its content and base name.
  * @param   {string}   destFolderPath           The path of the destination to copy the folder into.
  * @param   {bool}     [overwrite=false]        Whether to overwrite the target. Default is false.
- *  
+ *
  * @return: { bool }                            The result of the move.
  */
 $.oFolder.prototype.moveToFolder = function( destFolderPath, overwrite ){
@@ -373,15 +373,15 @@ $.oFolder.prototype.moveToFolder = function( destFolderPath, overwrite ){
 
   var folder = destFolderPath.path;
   var name = this.name;
-  
+
   destFolderPath.move(folder+"/"+name, overwrite);
 }
- 
+
 
 /**
  * Get the sub folder or file by name.
- * @param   {string}   name                     The sub name of a folder or file within a directory.  
- * @return: {$.oFolder/$.oFile}                 The resulting oFile or oFolder.            
+ * @param   {string}   name                     The sub name of a folder or file within a directory.
+ * @return: {$.oFolder/$.oFile}                 The resulting oFile or oFolder.
  */
 $.oFolder.prototype.get = function( destName ){
   var new_path = this.path + "/" + destName;
@@ -391,14 +391,14 @@ $.oFolder.prototype.get = function( destName ){
   }
 
   var new_file = new $.oFile( new_path );
-  if( new_file.exists ){  
+  if( new_file.exists ){
     return new_file;
   }
-  
+
   return false;
 }
- 
-  
+
+
  /**
  * Used in converting the folder to a string value, provides the string-path.
  * @return  {string}   The folder path's as a string.
@@ -417,7 +417,7 @@ $.oFolder.prototype.toString = function(){
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
- 
+
 
 /**
  * The $.oFile helper class -- providing utilities for file manipulation and access.
@@ -455,7 +455,7 @@ Object.defineProperty($.oFile.prototype, 'name', {
     get: function(){
       var _fullName = this.fullName;
       if (_fullName.indexOf(".") == -1) return _fullName;
-      
+
       var _name = _fullName.slice(0, _fullName.lastIndexOf("."));
       return _name;
     }
@@ -471,7 +471,7 @@ Object.defineProperty($.oFile.prototype, 'extension', {
     get: function(){
       var _fullName = this.fullName;
       if (_fullName.indexOf(".") == -1) return "";
-      
+
       var _extension = _fullName.slice(_fullName.lastIndexOf(".")+1);
       return _extension;
     }
@@ -489,7 +489,7 @@ Object.defineProperty($.oFile.prototype, 'folder', {
         return new this.$.oFolder(_folder);
     }
 });
- 
+
 
 /**
  * Whether the file exists already.
@@ -502,19 +502,19 @@ Object.defineProperty($.oFile.prototype, 'exists', {
         return _file.exists;
     }
 })
- 
+
 
 //Todo, Size, Date Created, Date Modified
- 
- 
+
+
 /**
  * Reads the content of the file.
- *  
- * @return: { string }                      The contents of the file.                     
+ *
+ * @return: { string }                      The contents of the file.
  */
 $.oFile.prototype.read = function() {
     var file = new File(this.path);
- 
+
     try {
         if (file.exists) {
             file.open(FileAccess.ReadOnly);
@@ -531,11 +531,11 @@ $.oFile.prototype.read = function() {
 /**
  * Writes to the file.
  * @param   {string}   content               Content to write to the file.
- * @param   {bool}     [append=false]        Whether to append to the file.   
+ * @param   {bool}     [append=false]        Whether to append to the file.
  */
 $.oFile.prototype.write = function(content, append){
     if (typeof append === 'undefined') var append = false
-   
+
     var file = new File(this.path);
     try {
         if (append){
@@ -553,109 +553,109 @@ $.oFile.prototype.write = function(content, append){
 /**
  * Moves the file to the specified path.
  * @param   {string}   folder                  destination folder for the file.
- * @param   {bool}     [overwrite=false]       Whether to overwrite the file.  
- *  
- * @return: { bool }                           The result of the move.     
+ * @param   {bool}     [overwrite=false]       Whether to overwrite the file.
+ *
+ * @return: { bool }                           The result of the move.
  */
 $.oFile.prototype.move = function( newPath, overwrite ){
     if (typeof overwrite === 'undefined') var overwrite = false;
-    
+
     if(newPath instanceof this.$.oFile) newPath = newPath.path;
-    
+
     var _file = new PermanentFile(this.path);
     var _dest = new PermanentFile(newPath);
     // this.$.alert("moving "+_file.path()+" to "+_dest.path()+" exists?"+_dest.exists())
-   
+
     if (_dest.exists() && !overwrite){
         this.$.debug("destination file "+newPath+" exists and will not be overwritten. Can't move file.", this.$.DEBUG_LEVEL.ERROR);
         return false;
     }
- 
+
     var success = _file.move(_dest);
     // this.$.alert(success)
     if (success) return new this.$.oFile(_dest.path)
     return false;
 }
- 
- 
+
+
  /**
  * Moves the file to the folder.
  * @param   {string}   folder                  destination folder for the file.
- * @param   {bool}     [overwrite=false]       Whether to overwrite the file.  
- *  
- * @return: { bool }                           The result of the move.     
+ * @param   {bool}     [overwrite=false]       Whether to overwrite the file.
+ *
+ * @return: { bool }                           The result of the move.
  */
-$.oFile.prototype.moveToFolder = function( folder, overwrite ){  
+$.oFile.prototype.moveToFolder = function( folder, overwrite ){
   if (folder instanceof this.$.oFolder) folder = folder.path;
   var _fileName = this.fullName;
-  
+
   return this.move(folder+"/"+_fileName, overwrite)
 }
- 
- 
+
+
  /**
  * Renames the file.
  * @param   {string}   newName                 the new name for the file, without the extension.
  * @param   {bool}     [overwrite=false]       Whether to replace a file of the same name if it exists in the folder.
- *  
- * @return: { bool }                           The result of the renaming.     
+ *
+ * @return: { bool }                           The result of the renaming.
  */
 $.oFile.prototype.rename = function( newName, overwrite){
   if (newName == this.name) return true;
   if (this.extension != "") newName += "."+this.extension;
   return this.move(this.folder.path+"/"+newName, overwrite);
 }
-  
- 
- 
+
+
+
 /**
  * Copies the file to the folder.
  * @param   {string}   [folder]                Content to write to the file.
  * @param   {string}   [copyName]              Name of the copied file. If not specified, the copy will keep its name unless another file is present in which case it will be called "_copy"
- * @param   {bool}     [overwrite=false]       Whether to overwrite the file.   
- *  
- * @return: { bool }                           The result of the copy.     
+ * @param   {bool}     [overwrite=false]       Whether to overwrite the file.
+ *
+ * @return: { bool }                           The result of the copy.
  */
 $.oFile.prototype.copy = function( destfolder, copyName, overwrite){
     if (typeof overwrite === 'undefined') var overwrite = false;
     if (typeof copyName === 'undefined') var copyName = this.name;
     if (typeof destfolder === 'undefined') var destfolder = this.folder.path;
-   
+
     var _fileName = this.fullName;
     if(destfolder instanceof this.$.oFolder) destfolder = destfolder.path;
-   
+
     // remove extension from name in case user added it to the param
     copyName.replace ("."+this.extension, "");
     if (this.name == copyName && destfolder == this.folder.path) copyName += "_copy";
-   
+
     var _fileName = copyName+((this.extension.length>0)?"."+this.extension:"");
-   
+
     var _file = new PermanentFile(this.path);
     var _dest = new PermanentFile(destfolder+"/"+_fileName);
-   
+
     if (_dest.exists() && !overwrite){
         this.$.debug("Destination file "+destfolder+"/"+_fileName+" exists and will not be overwritten. Can't copy file.", this.DEBUG_LEVEL.ERROR);
         return false;
     }
-   
+
     this.$.debug("copying "+_file.path()+" to "+_dest.path(), this.$.DEBUG_LEVEL.LOG)
-    
+
     try{
       var success = _file.copy(_dest);
     }catch(err){
       this.$.debug("Couldn't copy "+_file.path()+" to "+_dest.path()+", ", this.$.DEBUG_LEVEL.ERROR)
     }
-    
+
     // this.$.log(overwrite+" "+success)
     if (success) return new this.$.oFile(_dest.path())
-      
+
     return false;
 }
 
 
 /**
  * Removes the file.
- * @return: { bool }                           The result of the removal.     
+ * @return: { bool }                           The result of the removal.
  */
 $.oFile.prototype.remove = function(){
     var _file = new PermanentFile(this.path)
@@ -681,23 +681,23 @@ Object.defineProperty( $.oFile.prototype, 'path', {
     get: function(){
         return this._path;
     },
-    
+
     set: function( newPath ){
         if( !this.exists ){
           this._path = fileMapper.toNativePath( newPath ).split("\\").join("/");
           return;
         }
-        
+
         var file = new this.$.oFile( newPath );
         if( file.exists ){
           throw "Target path already exists. No default replace.";
         }
-        
+
         var parent_folder = file.folder;
         if( !parent_folder.exists ){
           throw "Target path's parent folder must already exist.";
         }
-        
+
         this.move( newPath, false );
     }
 });
