@@ -413,16 +413,15 @@ Object.defineProperty($.oScene.prototype, 'columns', {
  * @type {$.oPalette[]}
  */
 Object.defineProperty($.oScene.prototype, 'palettes', {
-    get : function(){
-      this.$.log("getting palettes")
-        var _paletteList = PaletteObjectManager.getScenePaletteList();
-        this.$.log("palette list acquired")
-        var _palettes = [];
-        for (var i=0; i<_paletteList.numPalettes; i++){
-            _palettes.push( new this.$.oPalette( _paletteList.getPaletteByIndex(i), _paletteList ) );
-        }
-        return _palettes;
+  get : function(){
+    var _paletteList = PaletteObjectManager.getScenePaletteList();
+    
+    var _palettes = [];
+    for (var i=0; i<_paletteList.numPalettes; i++){
+        _palettes.push( new this.$.oPalette( _paletteList.getPaletteByIndex(i), _paletteList ) );
     }
+    return _palettes;
+  }
 });
 
 
@@ -1217,7 +1216,7 @@ $.oScene.prototype.createPaletteFromNodes = function(nodes, paletteName, colorNa
   for (var i in nodes){
     var _ids = nodes[i].usedColorIds;
     for (var j in _ids){
-      if (_usedColorIds.indexOf(_ids[j])) _usedColorIds.push(_ids[j]);
+      if (_usedColorIds.indexOf(_ids[j]) == -1) _usedColorIds.push(_ids[j]);
     }
   }
 
@@ -1225,16 +1224,12 @@ $.oScene.prototype.createPaletteFromNodes = function(nodes, paletteName, colorNa
   // find RGB values
   var _palettes = this.palettes;
   var _usedColors = new Array(_usedColorIds.length);
-  var _usedPalettes = [];
-
-  //var _paletteList = _palette._paletteList;
 
   for (var i in _usedColorIds){
     for (var j in _palettes){
       var _color = _palettes[j].getColorById(_usedColorIds[i]);
       // color found
       if (_color != null){
-        if (_usedPalettes.indexOf(_palettes[j]) == -1) _usedPalettes.push(_palettes[j]);
         _usedColors[i] = _color;
         break;
       }
@@ -1440,12 +1435,12 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
   var _folder = _templateFolder.folder.path;
 
   // create the palette with only the colors contained in the layers
-  if (_readNodes.length > 0 ){
-    if (exportPalettesMode == "usedOnly"){
+  if (_readNodes.length > 0){
+    if(exportPalettesMode == "usedOnly"){
       var _usedPalettes = [];
       var _usedPalettePaths = [];
-      for (var i in _allNodes){
-        var _palettes = _allNodes[i].getUsedPalettes();
+      for (var i in _readNodes){
+        var _palettes = _readNodes[i].getUsedPalettes();
         for (var j in _palettes){
           if (_usedPalettePaths.indexOf(_palettes[j].path) != -1){
             _usedPalettes.push(_palettes[j]);
@@ -1456,8 +1451,9 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
     }
 
     if (exportPalettesMode == "createPalette"){
-      var templatePalette = this.createPaletteFromNodes(_allNodes, _name, renameUsedColors);
-      _usedPalettes = [templatePalette];
+      var templatePalette = this.createPaletteFromNodes(_readNodes, _name, renameUsedColors);
+      var _usedPalettes = [templatePalette];
+      this.$.alert(templatePalette.name)
     }
   }
 
@@ -1465,8 +1461,11 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
 
   selection.clearSelection();
   selection.addNodesToSelection (_allNodes.map(function(x){return x.path}));
+  selection.setSelectionFrameRange(this.startPreview, this.stopPreview);
   var success = copyPaste.createTemplateFromSelection (_name, _folder);
   if (!success) return false;
+  
+  // this.$.alert ("export done")
 
   if (_readNodes.length > 0 && exportPalettesMode != "all"){
 
@@ -1484,26 +1483,30 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
 
     // building the template palette list
     var _listFile = ["ToonBoomAnimationInc PaletteList 1"];
-    var _errors = [];
 
     if (exportPalettesMode == "createPalette"){
       _listFile.push("palette-library/"+_name+' LINK "'+_paletteFolder+"/"+_name+'.plt"');
     }else if (exportPalettesMode == "usedOnly"){
       for (var i in _usedPalettes){
+        this.$.debug("palette "+_usedPalettes[i].name+" to be included in template", this.$.DEBUG_LEVEL.LOG);
         _listFile.push("palette-library/"+_usedPalettes[i].name+' LINK "'+_paletteFolder+"/"+_usedPalettes[i].name+'.plt"');
       }
     }
 
     var _paletteListFile = new this.$.oFile(_templateFolder.path+"/PALETTE_LIST");
     _paletteListFile.write(_listFile.join("\n"));
+
+    // remove the palette created for the template
+    if (exportPalettesMode == "createPalette"){
+      var _paletteFile = _paletteFolder.getFiles()[0];
+      if (_paletteFile){
+        _paletteFile.rename(_name);
+        if (templatePalette) templatePalette.remove(true);
+      }
+    }
   }
 
-  // remove the palette created for the template
-  if (exportPalettesMode == "createPalette"){
-    var _paletteFile = _paletteFolder.getFiles()[0];
-    _paletteFile.rename(_name)
-    templatePalette.remove(true);
-  }
+  // alert ("cleaned palettes")
 
   selection.clearSelection();
   return true;

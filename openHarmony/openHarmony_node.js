@@ -1783,7 +1783,7 @@ Object.defineProperty($.oDrawingNode.prototype, "usedColorIds", {
  */
 Object.defineProperty($.oDrawingNode.prototype, "timings", {
     get : function(){
-        return this.attributes.drawing.element.getKeyFrames();
+        return this.attributes.drawing.element.getKeyframes();
     }
 })
 
@@ -1813,30 +1813,21 @@ Object.defineProperty($.oDrawingNode.prototype, "palettes", {
  * @return  {$.oPalette[]}   The palettes that contain the color IDs used by the drawings of the node.
  */
 $.oDrawingNode.prototype.getUsedPalettes = function(){
-  // get used colors
-  var _ids = this.usedColorIds;
+  var _palettes = this.scene.palettes;
+  var _usedPalettes = [];
   
-  // find used Palettes and Colors
-    // find RGB values
-    var _palettes = this.scene.palettes;
-    var _usedColors = new Array(_usedColorIds.length);
-    var _usedPalettes = [];
-    
-    var _paletteList = _palette._paletteList;
-    
-    for (var i in _usedColorIds){
-      var _palette = _paletteList.findPaletteOfColor (_usedColorIds[i]);
-      for (var j in _palettes){
-        var _color = _palettes[j].getColorById(_usedColorIds[i]);
-        // color found
-        if (_color != null){
-          if (_usedPalettes.indexOf(_palettes[j]) == -1) _usedPalettes.push(_palettes[j]);
-          // _usedColors[i] = _color;
-          break;
-        }
+  var _usedColorIds = this.usedColorIds;  
+  for (var i in _usedColorIds){
+    for (var j in _palettes){
+      var _color = _palettes[j].getColorById(_usedColorIds[i]);
+      // color found
+      if (_color != null){
+        if (_usedPalettes.indexOf(_palettes[j]) == -1) _usedPalettes.push(_palettes[j]);
+        break;
       }
     }
-  
+  }
+
   return _usedPalettes;
 }
 

@@ -112,10 +112,10 @@ $.oFrame = function( frameNumber, oColumnObject, subColumns ){
 Object.defineProperty($.oFrame.prototype, 'value', {
   get : function(){
     if (this.attributeObject){
-      this.$.log("getting value of frame "+this.frameNumber+" through attribute object : "+this.attributeObject.keyword);
+      this.$.debug("getting value of frame "+this.frameNumber+" through attribute object : "+this.attributeObject.keyword, this.$.DEBUG_LEVEL.LOG);
       return this.attributeObject.getValue(this.frameNumber);
     }else{
-      this.$.log("getting value of frame "+this.frameNumber+" through column object : "+this.column.name);
+      this.$.debug("getting value of frame "+this.frameNumber+" through column object : "+this.column.name, this.$.DEBUG_LEVEL.LOG);
       return this.column.getValue(this.frameNumber);
     }
     /*

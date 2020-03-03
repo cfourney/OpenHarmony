@@ -565,7 +565,8 @@ $.oAttribute.prototype.setValue = function (value, frame) {
 
     try{
       this.$.debug("setting attr "+this._keyword+" (type : "+this.type+") on node "+this.node+" to value "+JSON.stringify(value)+" at frame "+frame, this.$.DEBUG_LEVEL.LOG)
-    }catch(err){    this.$.debug("setting attr "+this._keyword+" at frame "+frame, this.$.DEBUG_LEVEL.LOG)
+    }catch(err){
+      this.$.debug("setting attr "+this._keyword+" at frame "+frame, this.$.DEBUG_LEVEL.LOG)
     };
     
     var _attr = this.attributeObject;
