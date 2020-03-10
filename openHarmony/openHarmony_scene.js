@@ -90,13 +90,11 @@ $.oScene = function( ){
  * The folder that contains this scene.
  * @name $.oScene#path
  * @type {$.oFolder}
+ * @readonly
  */
 Object.defineProperty($.oScene.prototype, 'path', {
     get : function(){
         return new this.$.oFolder( scene.currentProjectPath() );
-    },
-    set : function(val){
-        throw "Not yet implemented"; //Perhaps a save as/save new version?
     }
 });
 
@@ -104,14 +102,24 @@ Object.defineProperty($.oScene.prototype, 'path', {
  * The stage file of the scene.
  * @name $.oScene#stage
  * @type {$.oFile}
+ * @readonly
  */
 Object.defineProperty($.oScene.prototype, 'stage', {
     get : function(){
         return this.path + "/" + scene.currentVersionName() + ".xstage";
-    },
-    set : function(val){
-        throw "Not yet implemented"; //Perhaps a save as/save new version?
     }
+});
+
+/**
+ * The folder that contains this scene.
+ * @name $.oScene#paletteFolder
+ * @type {$.oFolder}
+ * @readonly
+ */
+Object.defineProperty($.oScene.prototype, 'paletteFolder', {
+  get : function(){
+      return new this.$.oFolder( scene.currentProjectPath()+"/palette-library" );
+  }
 });
 
 /**
@@ -1200,7 +1208,7 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
 
 
 /**
- * Returns all the links existing between an ensemble of nodes.
+ * Creates a single palette containing all the individual colors used by an ensemble of nodes.
  * @param   {$.oNode[]}    nodes               The nodes to look at.
  * @param   {string}       [paletteName]       A custom name for the created palette.
  * @param   {string}       [colorName]         A custom name to give to the gathered colors.

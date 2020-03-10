@@ -611,7 +611,7 @@ $.oFile.prototype.rename = function( newName, overwrite){
 /**
  * Copies the file to the folder.
  * @param   {string}   [folder]                Content to write to the file.
- * @param   {string}   [copyName]              Name of the copied file. If not specified, the copy will keep its name unless another file is present in which case it will be called "_copy"
+ * @param   {string}   [copyName]              Name of the copied file without the extension. If not specified, the copy will keep its name unless another file is present in which case it will be called "_copy"
  * @param   {bool}     [overwrite=false]       Whether to overwrite the file.
  *
  * @return: { bool }                           The result of the copy.

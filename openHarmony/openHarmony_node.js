@@ -1834,8 +1834,8 @@ $.oDrawingNode.prototype.getUsedPalettes = function(){
 
  /**
  * Links a palette to a drawing node as Element Palette.
- * @param {oPaletteObject}   $.oPalette        the palette to link to the node
- * @param {index}           [int]             The index of the list at which the palette should appear once linked
+ * @param {$.oPalette}     oPaletteObject      the palette to link to the node
+ * @param {int}            [index]             The index of the list at which the palette should appear once linked
  *
  * @return  {$.oPalette}   The linked element Palette.
  */
@@ -1869,6 +1869,21 @@ $.oDrawingNode.prototype.duplicate = function(newName, newPosition, duplicateEle
   return _duplicateNode;
 };
 
+
+ /**
+ * Updates the imported drawings in the node.
+ * @param {$.oFile}   sourcePath        the oFile object pointing to the source to update from
+ * @param {string}    [drawingName]       the drawing to import the updated bitmap into
+ * @todo implement a memory of the source through metadata
+ */
+$.oDrawingNode.prototype.update = function(sourcePath, drawingName){
+  if (!this.element) return; // no element means nothing to update, import instead.
+  if (typeof drawingName === 'undefined') var drawingName = this.element.drawings[0].name;
+
+  var _drawing = this.element.getDrawingByName(drawingName);
+
+  _drawing.importBitmap(sourcePath);
+}
 
 
  /**
@@ -2806,7 +2821,7 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
     this.$.debug("Image file to import "+_imageFile.path+" could not be found.", this.$.DEBUG_LEVEL.ERROR)
   }
   
-  var _imageNode = this.addDrawingNode(_elementName, nodePosition, _element)
+  var _imageNode = this.addDrawingNode(_elementName, nodePosition, _element);
 
   _imageNode.can_animate = false; // use general pref?
   _imageNode.apply_matte_to_color = "Straight";

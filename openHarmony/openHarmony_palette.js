@@ -113,7 +113,7 @@ Object.defineProperty($.oPalette.prototype, 'name', {
     set : function(newName){
         // Rename palette file then unlink and relink the palette
         this.$.debug("renaming palette "+this.name+" to "+ newName,  this.$.DEBUG_LEVEL.LOG)
-        var _paletteFile = new this.$.oFile(this.path);
+        var _paletteFile = this.path;
         var _newPath = _paletteFile.folder+"/"+newName;
         var _move = _paletteFile.move(_newPath+".plt", true);
         if (!_move){
@@ -122,16 +122,56 @@ Object.defineProperty($.oPalette.prototype, 'name', {
         }
         
         var _list = this._paletteList;
-        var _name = this.name
+        var _name = this.name;
         _list.removePaletteById( this.id );
 
-        var _paletteObject = _list.insertPalette(_newPath, this.index);
+        var _paletteObject = _list.insertPalette(_newPath.replace(".plt", ""), this.index);
         this.paletteObject = _paletteObject;
 
     }
 })
  
- 
+
+/**
+ * The palette index in the palette list.
+ * @name $.oPalette#index
+ * @type {int}
+ */
+Object.defineProperty($.oPalette.prototype, 'index', {
+  get : function(){
+    var _list = this._paletteList;
+    var _n = _list.numPalettes;
+    for (var i=0; i<_n; i++){
+      var _paletteId = _list.getPaletteByIndex(i).id;
+      if (_paletteId == this.id) return i;
+    }
+  },
+
+  set : function(newIndex){
+    var _list = this._paletteList;
+    var _path = this.path.path.replace(".plt", "");
+    _list.removePaletteById(this.id);
+    _list.insertPalette(_path, newIndex);
+  }
+})
+
+
+/**
+ * The element containing the palette if stored in element folder.
+ * @name $.oPalette#element
+ * @type {$.oElement}
+ * @readonly
+ */
+Object.defineProperty($.oPalette.prototype, 'element', {
+  get : function(){
+    var _storage = this.paletteStorage;
+    var _paletteObject = this._paletteObject;
+    if (_storage != "element") return null;
+    return new this.$.oElement(_paletteObject.elementId);
+  }
+})
+
+
 /**
  * The palette path on disk.
  * @name $.oPalette#path
@@ -139,7 +179,7 @@ Object.defineProperty($.oPalette.prototype, 'name', {
  */
 Object.defineProperty($.oPalette.prototype, 'path', {
     get : function(){
-         var _path = this.paletteObject.getPath()
+         var _path = this.paletteObject.getPath();
          // _path = fileMapper.toNativePath(_path)
          _path = _path;
          return new this.$.oFile( _path+"/"+this.name+".plt" );
@@ -159,14 +199,16 @@ Object.defineProperty($.oPalette.prototype, 'path', {
  */
 Object.defineProperty($.oPalette.prototype, 'paletteStorage', {
     get : function(){
+      var _location = this.$.oPalette.location;
       var _storage = {
-        environment : PaletteObjectManager.Locator.folderForLocation(PaletteObjectManager.Constants.Location.ENVIRONMENT,1),
-        job :         PaletteObjectManager.Locator.folderForLocation(PaletteObjectManager.Constants.Location.JOB,1),
-        scene :       PaletteObjectManager.Locator.folderForLocation(PaletteObjectManager.Constants.Location.SCENE,1)
+        environment : PaletteObjectManager.Locator.folderForLocation(_location.environnement,1),
+        job :         PaletteObjectManager.Locator.folderForLocation(_location.job,1),
+        scene :       PaletteObjectManager.Locator.folderForLocation(_location.scene,1)
       }
       
-      var _path = this.path;
-      if (path.indexOf("/elements/") != -1){
+      var _path = this.path+"";
+      this.$.log(this.path+" "+this.name+" "+this.paletteObject.getPath())
+      if (_path.indexOf("/elements/") != -1){
         // find out which element?
         return "element";
       }

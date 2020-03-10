@@ -131,34 +131,33 @@ Object.defineProperty($.oElement.prototype, 'format', {
 
 /**
  * Adds a drawing to the element. Provide a filename to import an external file as a drawing.
- * @param   {int}        atFrame              The exposures to extend. If UNDEFINED, extends all keyframes.
- * @param   {name}       name                 The name of the drawing to add.
- * @param   {bool}       filename             The filename for the drawing to add.
+ * @param   {int}        [atFrame]              The frame at which to add the drawing on the $.oDrawingColumn.
+ * @param   {name}       [name]                 The name of the drawing to add.
+ * @param   {string}       [filename]             The filename for the drawing to add.
  *  
  * @return {$.oDrawing}      The added drawing
  */
 $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
-    if (typeof filename === 'undefined') var filename = false;
-    if (typeof name === 'undefined') var name = atFrame+'';
+  if (typeof atFrame === 'undefined') var atFrame = 1;
+  if (typeof filename === 'undefined') var filename = null;
+  if (typeof name === 'undefined') var name = atFrame+'';
    
-    var _fileExists = !!filename; // convert to bool
-    // TODO deal with fileExists and storeInProjectFolder
-    Drawing.create (this.id, name, _fileExists, true);
-   
-    if (filename){
-        //copy the imported file at the newly created drawing place
-        var _file = new this.$.oFile(Drawing.filename(this.id, name));
-       
-        var _frameFile = new this.$.oFile( filename );
-        _frameFile.copy( _file.folder.path, _file.name, true );
-    }
-   
-    // place drawing on the column at the provided frame
-    if (this.column != null || this.column != undefined){
-      column.setEntry(this.column.uniqueName, 1, atFrame, name);
-    }
-   
-    return new this.$.oDrawing( name, this );
+  if (!(filename instanceof this.$.oFile)) filename = new this.$.oFile(filename);
+
+  var _fileExists = filename.exists; 
+  // TODO deal with fileExists and storeInProjectFolder
+  Drawing.create (this.id, name, _fileExists, true);
+  
+  var _drawing = new this.$.oDrawing( name, this );
+
+  if (filename.exists) _drawing.importBitmap(filename);
+  
+  // place drawing on the column at the provided frame
+  if (this.column != null || this.column != undefined){
+    column.setEntry(this.column.uniqueName, 1, atFrame, name);
+  }
+  
+  return _drawing;
 }
  
 

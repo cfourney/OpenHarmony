@@ -105,11 +105,23 @@ Object.defineProperty( $.oDrawing.prototype, 'path', {
 
 // $.oDrawing Class methods
 
+/**
+ * Import a given file into an existing drawing.
+ * @param   {string}     file              The path to the file
+ * 
+ * @return { $.oDrawing }      The drawing found by the search
+ */
+$.oDrawing.prototype.importBitmap = function(file){
+  var _path = new this.$.oFile(this.path);
+  if (!(file instanceof this.$.oFile)) file = new this.$.oFile(file);
+
+  if (!file.exists) return false;
+  file.copy(_path.folder, _path.name, true);
+}
+
 
 /**
- * Converts the Drawing object to a string of the drawing name.
- * @name $.oDrawing#remove
- * @type {string}
+ * Remove the drawing from the element.
  */
 $.oDrawing.prototype.remove = function(){
     var _element = this.element;
@@ -136,11 +148,9 @@ $.oDrawing.prototype.remove = function(){
 }
 
 
-
-/**
+ /**
  * Converts the Drawing object to a string of the drawing name.
- * @name $.oDrawing#toString
- * @type {string}
+ * @return: { string }                 The name of the drawing.
  */
 $.oDrawing.prototype.toString = function(){
     return this.name;

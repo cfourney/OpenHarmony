@@ -214,7 +214,7 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
 //////////////////////////////////////
 //                                  //
 //                                  //
-//    $.oDialog.Progress class      //
+//    $.oProgressDialog class      //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -254,7 +254,7 @@ $.oDialog.Progress = $.oProgressDialog;
 
 /**
  * Shows the dialog.
- * @name    $.oDialog.Progress#show
+ * @name    $.oProgressDialog#show
  */
 $.oProgressDialog.prototype.show = function(){
   if (this.$.batchMode) {
@@ -263,9 +263,9 @@ $.oProgressDialog.prototype.show = function(){
   }
   
   this.progress = new QProgressDialog();
-  this.progress.title = this.title;
-  this.progress.setLabelText( labelText );
-  this.progress.setRange( 0, range );
+  this.progress.title = this._title;
+  this.progress.setLabelText( this._labelText );
+  this.progress.setRange( 0, this._range );
   
   this.progress.show();
   
@@ -300,7 +300,7 @@ $.oProgressDialog.prototype.close = function(){
 
 /**
  * The text of the window.
- * @name $.oDialog.Progress#text
+ * @name $.oProgressDialog#text
  * @type {string}
  */
 Object.defineProperty( $.oProgressDialog.prototype, 'label', { 
@@ -317,7 +317,7 @@ Object.defineProperty( $.oProgressDialog.prototype, 'label', {
 
 /**
  * The range of the window.
- * @name $.oDialog.Progress#range
+ * @name $.oProgressDialog#range
  * @type {int}
  */
 Object.defineProperty( $.oProgressDialog.prototype, 'range', {
@@ -334,7 +334,7 @@ Object.defineProperty( $.oProgressDialog.prototype, 'range', {
 
 /**
  * The current value of the window.
- * @name $.oDialog.Progress#value
+ * @name $.oProgressDialog#value
  * @type {int}
  */
 Object.defineProperty( $.oProgressDialog.prototype, 'value', {
@@ -343,7 +343,7 @@ Object.defineProperty( $.oProgressDialog.prototype, 'value', {
     },
     set: function( val ){
       this._value = val;
-      if (!this.$.batchMode) this.progress.setValue( val );
+      if (!this.$.batchMode) this.progress.value = val;
       //QCoreApplication.processEvents();
     }
 });
