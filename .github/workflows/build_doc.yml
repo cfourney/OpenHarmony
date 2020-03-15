@@ -1,0 +1,17 @@
+name: Build documentation with JSCode
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build_doc:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build_doc
+      uses: andstor/jsdoc-action@v1
+      with:
+        recurse: true
+        output_dir: ./docs
+        config_file: ./documentation.json
+        template_name: jaguarjs-jsdoc
