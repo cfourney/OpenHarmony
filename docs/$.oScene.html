@@ -731,10 +731,6 @@
             
                 <li data-name="$.oDrawing#position"><a href="$.oDrawing.html#position">position</a></li>
             
-                <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
-            
-                <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
-            
                 <li data-name="$.oDrawing#width"><a href="$.oDrawing.html#width">width</a></li>
             
                 <li data-name="$.oDrawing#width"><a href="$.oDrawing.html#width">width</a></li>
@@ -751,6 +747,16 @@
             
             </ul>
             <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oDrawing#importBitmap"><a href="$.oDrawing.html#importBitmap">importBitmap</a></li>
+            
+                <li data-name="$.oDrawing#refreshPreview"><a href="$.oDrawing.html#refreshPreview">refreshPreview</a></li>
+            
+                <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
+            
+                <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -979,6 +985,8 @@
                 <li data-name="$.oDrawingNode#unlinkOutNode"><a href="$.oDrawingNode.html#unlinkOutNode">unlinkOutNode</a></li>
             
                 <li data-name="$.oDrawingNode#unlinkOutPort"><a href="$.oDrawingNode.html#unlinkOutPort">unlinkOutPort</a></li>
+            
+                <li data-name="$.oDrawingNode#update"><a href="$.oDrawingNode.html#update">update</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1343,6 +1351,8 @@
                 <li data-name="$.oGroupNode#getOutLinks"><a href="$.oGroupNode.html#getOutLinks">getOutLinks</a></li>
             
                 <li data-name="$.oGroupNode#getOutLinksNumber"><a href="$.oGroupNode.html#getOutLinksNumber">getOutLinksNumber</a></li>
+            
+                <li data-name="$.oGroupNode#importImage"><a href="$.oGroupNode.html#importImage">importImage</a></li>
             
                 <li data-name="$.oGroupNode#importPSD"><a href="$.oGroupNode.html#importPSD">importPSD</a></li>
             
@@ -1803,7 +1813,11 @@
             
                 <li data-name="$.oPalette#colors"><a href="$.oPalette.html#colors">colors</a></li>
             
+                <li data-name="$.oPalette#element"><a href="$.oPalette.html#element">element</a></li>
+            
                 <li data-name="$.oPalette#id"><a href="$.oPalette.html#id">id</a></li>
+            
+                <li data-name="$.oPalette#index"><a href="$.oPalette.html#index">index</a></li>
             
                 <li data-name="$.oPalette#name"><a href="$.oPalette.html#name">name</a></li>
             
@@ -2117,6 +2131,16 @@
             </span>
             <ul class="members itemMembers">
             
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oProgressDialog#range"><a href="$.oProgressDialog.html#range">range</a></li>
+            
+                <li data-name="$.oProgressDialog#show"><a href="$.oProgressDialog.html#show">show</a></li>
+            
+                <li data-name="$.oProgressDialog#text"><a href="$.oProgressDialog.html#text">text</a></li>
+            
+                <li data-name="$.oProgressDialog#value"><a href="$.oProgressDialog.html#value">value</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -2155,6 +2179,8 @@
             
                 <li data-name="$.oScene#currentFrame"><a href="$.oScene.html#currentFrame">currentFrame</a></li>
             
+                <li data-name="$.oScene#defaultDisplay"><a href="$.oScene.html#defaultDisplay">defaultDisplay</a></li>
+            
                 <li data-name="$.oScene#defaultResolutionX"><a href="$.oScene.html#defaultResolutionX">defaultResolutionX</a></li>
             
                 <li data-name="$.oScene#defaultResolutionY"><a href="$.oScene.html#defaultResolutionY">defaultResolutionY</a></li>
@@ -2170,6 +2196,8 @@
                 <li data-name="$.oScene#name"><a href="$.oScene.html#name">name</a></li>
             
                 <li data-name="$.oScene#nodes"><a href="$.oScene.html#nodes">nodes</a></li>
+            
+                <li data-name="$.oScene#paletteFolder"><a href="$.oScene.html#paletteFolder">paletteFolder</a></li>
             
                 <li data-name="$.oScene#palettes"><a href="$.oScene.html#palettes">palettes</a></li>
             
@@ -2514,7 +2542,17 @@
         
 
     
-    <pre class="prettyprint"><code>// Access to the direct dom object. Available and automatically instantiated as $.getScene, $.scene, $.scn, $.svar doc = $.getScene ;var doc = $.scn ;ver doc = $.s ;         // all these are equivalents// To grab the scene from a QWidget Dialog callback, store the $ object in a local variable to access all the fonctions from the library.function myCallBackFunction(){  var this.$ = $;  var doc = this.$.scn;}</code></pre>
+    <pre class="prettyprint"><code>// Access to the direct dom object. Available and automatically instantiated as $.getScene, $.scene, $.scn, $.s
+var doc = $.getScene ;
+var doc = $.scn ;
+ver doc = $.s ;         // all these are equivalents
+
+// To grab the scene from a QWidget Dialog callback, store the $ object in a local variable to access all the fonctions from the library.
+function myCallBackFunction(){
+  var this.$ = $;
+
+  var doc = this.$.scn;
+}</code></pre>
     
 
     
@@ -2728,6 +2766,51 @@
 <dt>
     <div class="nameContainer">
         <h4 class="name" id="currentFrame">currentFrame<span class="type-signature type int">int</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The current frame of the scene.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="defaultDisplay">defaultDisplay<span class="type-signature type onode">oNode</span> </h4>
     </div>
     
     
@@ -3132,6 +3215,51 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="paletteFolder"><span class="type-signature ">readonly</span>paletteFolder<span class="type-signature type $.ofolder"><a href="$.oFolder.html">$.oFolder</a></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The folder that contains this scene.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="palettes"><span class="type-signature ">readonly</span>palettes<span class="type-signature type array.<$.opalette>">Array.&lt;<a href="$.oPalette.html">$.oPalette</a>></span> </h4>
     </div>
     
@@ -3177,7 +3305,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="path">path<span class="type-signature type $.ofolder"><a href="$.oFolder.html">$.oFolder</a></span> </h4>
+        <h4 class="name" id="path"><span class="type-signature ">readonly</span>path<span class="type-signature type $.ofolder"><a href="$.oFolder.html">$.oFolder</a></span> </h4>
     </div>
     
     
@@ -3404,7 +3532,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="stage">stage<span class="type-signature type $.ofile"><a href="$.oFile.html">$.oFile</a></span> </h4>
+        <h4 class="name" id="stage"><span class="type-signature ">readonly</span>stage<span class="type-signature type $.ofile"><a href="$.oFile.html">$.oFile</a></span> </h4>
     </div>
     
     
@@ -3732,7 +3860,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1788
+            openHarmony/openHarmony_scene.js, line 1818
         </div>
         
     </div>
@@ -3900,7 +4028,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1777
+            openHarmony/openHarmony_scene.js, line 1807
         </div>
         
     </div>
@@ -4045,7 +4173,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1799
+            openHarmony/openHarmony_scene.js, line 1829
         </div>
         
     </div>
@@ -4190,7 +4318,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1651
+            openHarmony/openHarmony_scene.js, line 1681
         </div>
         
     </div>
@@ -4498,7 +4626,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1680
+            openHarmony/openHarmony_scene.js, line 1710
         </div>
         
     </div>
@@ -4829,7 +4957,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 918
+            openHarmony/openHarmony_scene.js, line 941
         </div>
         
     </div>
@@ -5020,7 +5148,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 995
+            openHarmony/openHarmony_scene.js, line 1018
         </div>
         
     </div>
@@ -5282,7 +5410,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 965
+            openHarmony/openHarmony_scene.js, line 988
         </div>
         
     </div>
@@ -5546,7 +5674,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1020
+            openHarmony/openHarmony_scene.js, line 1043
         </div>
         
     </div>
@@ -5808,7 +5936,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 895
+            openHarmony/openHarmony_scene.js, line 918
         </div>
         
     </div>
@@ -6024,7 +6152,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1082
+            openHarmony/openHarmony_scene.js, line 1105
         </div>
         
     </div>
@@ -6238,7 +6366,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1711
+            openHarmony/openHarmony_scene.js, line 1741
         </div>
         
     </div>
@@ -6361,7 +6489,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1192
+            openHarmony/openHarmony_scene.js, line 1218
         </div>
         
     </div>
@@ -6372,7 +6500,7 @@
     
     
     <div class="description">
-        Returns all the links existing between an ensemble of nodes.
+        Creates a single palette containing all the individual colors used by an ensemble of nodes.
     </div>
     
 
@@ -6571,7 +6699,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1596
+            openHarmony/openHarmony_scene.js, line 1626
         </div>
         
     </div>
@@ -6808,7 +6936,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1402
+            openHarmony/openHarmony_scene.js, line 1424
         </div>
         
     </div>
@@ -7076,7 +7204,24 @@
         
 
     
-    <pre class="prettyprint"><code>// how to export a clean palette with no extra drawings and everything renamed by frame, and only the necessary colors gathered in one palette:$.beginUndo();var doc = $.scn;var nodes = doc.getSelectedNodes();for (var i in nodes){  if (nodes[i].type != "READ") continue;     var myColumn = nodes[i].element.column;      // we grab the column directly from the element of the node  myColumn.removeUnexposedDrawings();          // remove extra unused drawings  myColumn.renameAllByFrame();                 // rename all drawings by frame}doc.exportTemplate(nodes, "C:/templateExample.tpl", "createPalette"); // "createPalette" value will create one palette for all colors$.endUndo();</code></pre>
+    <pre class="prettyprint"><code>// how to export a clean palette with no extra drawings and everything renamed by frame, and only the necessary colors gathered in one palette:
+
+$.beginUndo();
+
+var doc = $.scn;
+var nodes = doc.getSelectedNodes();
+
+for (var i in nodes){
+  if (nodes[i].type != "READ") continue;
+
+  var myColumn = nodes[i].element.column;      // we grab the column directly from the element of the node
+  myColumn.removeUnexposedDrawings();          // remove extra unused drawings
+  myColumn.renameAllByFrame();                 // rename all drawings by frame
+}
+
+doc.exportTemplate(nodes, "C:/templateExample.tpl", "createPalette"); // "createPalette" value will create one palette for all colors
+
+$.endUndo();</code></pre>
     
 
     
@@ -7093,7 +7238,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1726
+            openHarmony/openHarmony_scene.js, line 1756
         </div>
         
     </div>
@@ -7193,7 +7338,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 549
+            openHarmony/openHarmony_scene.js, line 572
         </div>
         
     </div>
@@ -7368,7 +7513,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1764
+            openHarmony/openHarmony_scene.js, line 1794
         </div>
         
     </div>
@@ -7475,7 +7620,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 511
+            openHarmony/openHarmony_scene.js, line 534
         </div>
         
     </div>
@@ -7620,7 +7765,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1244
+            openHarmony/openHarmony_scene.js, line 1266
         </div>
         
     </div>
@@ -7765,7 +7910,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1051
+            openHarmony/openHarmony_scene.js, line 1074
         </div>
         
     </div>
@@ -7910,7 +8055,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1735
+            openHarmony/openHarmony_scene.js, line 1765
         </div>
         
     </div>
@@ -8010,7 +8155,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 569
+            openHarmony/openHarmony_scene.js, line 592
         </div>
         
     </div>
@@ -8155,7 +8300,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1065
+            openHarmony/openHarmony_scene.js, line 1088
         </div>
         
     </div>
@@ -8255,7 +8400,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1039
+            openHarmony/openHarmony_scene.js, line 1062
         </div>
         
     </div>
@@ -8407,7 +8552,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1140
+            openHarmony/openHarmony_scene.js, line 1163
         </div>
         
     </div>
@@ -8644,7 +8789,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1533
+            openHarmony/openHarmony_scene.js, line 1563
         </div>
         
     </div>
@@ -8976,7 +9121,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1623
+            openHarmony/openHarmony_scene.js, line 1653
         </div>
         
     </div>
@@ -9215,7 +9360,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1574
+            openHarmony/openHarmony_scene.js, line 1604
         </div>
         
     </div>
@@ -9383,7 +9528,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1506
+            openHarmony/openHarmony_scene.js, line 1536
         </div>
         
     </div>
@@ -9685,7 +9830,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1295
+            openHarmony/openHarmony_scene.js, line 1317
         </div>
         
     </div>
@@ -9876,7 +10021,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 602
+            openHarmony/openHarmony_scene.js, line 625
         </div>
         
     </div>
@@ -10021,7 +10166,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1702
+            openHarmony/openHarmony_scene.js, line 1732
         </div>
         
     </div>
@@ -10092,7 +10237,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1553
+            openHarmony/openHarmony_scene.js, line 1583
         </div>
         
     </div>
@@ -10253,7 +10398,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Jan 28 2020 22:35:21 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Mar 15 2020 17:10:34 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

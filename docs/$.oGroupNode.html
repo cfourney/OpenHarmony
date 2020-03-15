@@ -731,10 +731,6 @@
             
                 <li data-name="$.oDrawing#position"><a href="$.oDrawing.html#position">position</a></li>
             
-                <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
-            
-                <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
-            
                 <li data-name="$.oDrawing#width"><a href="$.oDrawing.html#width">width</a></li>
             
                 <li data-name="$.oDrawing#width"><a href="$.oDrawing.html#width">width</a></li>
@@ -751,6 +747,16 @@
             
             </ul>
             <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oDrawing#importBitmap"><a href="$.oDrawing.html#importBitmap">importBitmap</a></li>
+            
+                <li data-name="$.oDrawing#refreshPreview"><a href="$.oDrawing.html#refreshPreview">refreshPreview</a></li>
+            
+                <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
+            
+                <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -979,6 +985,8 @@
                 <li data-name="$.oDrawingNode#unlinkOutNode"><a href="$.oDrawingNode.html#unlinkOutNode">unlinkOutNode</a></li>
             
                 <li data-name="$.oDrawingNode#unlinkOutPort"><a href="$.oDrawingNode.html#unlinkOutPort">unlinkOutPort</a></li>
+            
+                <li data-name="$.oDrawingNode#update"><a href="$.oDrawingNode.html#update">update</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1343,6 +1351,8 @@
                 <li data-name="$.oGroupNode#getOutLinks"><a href="$.oGroupNode.html#getOutLinks">getOutLinks</a></li>
             
                 <li data-name="$.oGroupNode#getOutLinksNumber"><a href="$.oGroupNode.html#getOutLinksNumber">getOutLinksNumber</a></li>
+            
+                <li data-name="$.oGroupNode#importImage"><a href="$.oGroupNode.html#importImage">importImage</a></li>
             
                 <li data-name="$.oGroupNode#importPSD"><a href="$.oGroupNode.html#importPSD">importPSD</a></li>
             
@@ -1803,7 +1813,11 @@
             
                 <li data-name="$.oPalette#colors"><a href="$.oPalette.html#colors">colors</a></li>
             
+                <li data-name="$.oPalette#element"><a href="$.oPalette.html#element">element</a></li>
+            
                 <li data-name="$.oPalette#id"><a href="$.oPalette.html#id">id</a></li>
+            
+                <li data-name="$.oPalette#index"><a href="$.oPalette.html#index">index</a></li>
             
                 <li data-name="$.oPalette#name"><a href="$.oPalette.html#name">name</a></li>
             
@@ -2117,6 +2131,16 @@
             </span>
             <ul class="members itemMembers">
             
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oProgressDialog#range"><a href="$.oProgressDialog.html#range">range</a></li>
+            
+                <li data-name="$.oProgressDialog#show"><a href="$.oProgressDialog.html#show">show</a></li>
+            
+                <li data-name="$.oProgressDialog#text"><a href="$.oProgressDialog.html#text">text</a></li>
+            
+                <li data-name="$.oProgressDialog#value"><a href="$.oProgressDialog.html#value">value</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -2155,6 +2179,8 @@
             
                 <li data-name="$.oScene#currentFrame"><a href="$.oScene.html#currentFrame">currentFrame</a></li>
             
+                <li data-name="$.oScene#defaultDisplay"><a href="$.oScene.html#defaultDisplay">defaultDisplay</a></li>
+            
                 <li data-name="$.oScene#defaultResolutionX"><a href="$.oScene.html#defaultResolutionX">defaultResolutionX</a></li>
             
                 <li data-name="$.oScene#defaultResolutionY"><a href="$.oScene.html#defaultResolutionY">defaultResolutionY</a></li>
@@ -2170,6 +2196,8 @@
                 <li data-name="$.oScene#name"><a href="$.oScene.html#name">name</a></li>
             
                 <li data-name="$.oScene#nodes"><a href="$.oScene.html#nodes">nodes</a></li>
+            
+                <li data-name="$.oScene#paletteFolder"><a href="$.oScene.html#paletteFolder">paletteFolder</a></li>
             
                 <li data-name="$.oScene#palettes"><a href="$.oScene.html#palettes">palettes</a></li>
             
@@ -2433,7 +2461,8 @@
     oGroupNode
     </h2>
     
-        <div class="class-description">$.oGroupNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>It represents groups in the scene. From this class, it's possible to add nodes, and backdrops, import files and templates into the group.</div>
+        <div class="class-description">$.oGroupNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>
+It represents groups in the scene. From this class, it's possible to add nodes, and backdrops, import files and templates into the group.</div>
     
 </header>  
 
@@ -2452,7 +2481,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1998
+            openHarmony/openHarmony_node.js, line 2005
         </div>
         
     </div>
@@ -2582,7 +2611,21 @@
         
 
     
-    <pre class="prettyprint"><code>// to add a new node, grab the group it'll be created in firstvar doc = $.scnvar sceneRoot = doc.root;                                              // grab the scene root groupvar myGroup = sceneRoot.addGrop("myGroup", false, false);              // create a group in the scene root, with a peg and composite but no nodesvar MPO = myGroup.multiportOut;                                        // grab the multiport in of the groupvar myNode = myGroup.addDrawingNode("myDrawingNode");                  // add a drawing node inside the groupmyNode.linkOutNode(MPO);                                               // link the newly created node to the multiportmyNode.centerAbove(MPO);var sceneComposite = doc.$node("Top/Composite");                       // grab the scene composite nodemyGroup.linkOutNode(sceneComposite);                                   // link the group to itmyGroup.centerAbove(sceneComposite);</code></pre>
+    <pre class="prettyprint"><code>// to add a new node, grab the group it'll be created in first
+var doc = $.scn
+var sceneRoot = doc.root;                                              // grab the scene root group
+
+var myGroup = sceneRoot.addGrop("myGroup", false, false);              // create a group in the scene root, with a peg and composite but no nodes
+var MPO = myGroup.multiportOut;                                        // grab the multiport in of the group
+
+var myNode = myGroup.addDrawingNode("myDrawingNode");                  // add a drawing node inside the group
+myNode.linkOutNode(MPO);                                               // link the newly created node to the multiport
+myNode.centerAbove(MPO);
+
+var sceneComposite = doc.$node("Top/Composite");                       // grab the scene composite node
+myGroup.linkOutNode(sceneComposite);                                   // link the group to it
+
+myGroup.centerAbove(sceneComposite);</code></pre>
     
 
     
@@ -2657,7 +2700,20 @@
         
 
     
-    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:var myNode = $.scn.$node("Top/Drawing")var drawingAttribute = myNode.attributes.drawing.element// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"// for a more direct way to access an attribute, it's possible to also call:var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
+    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:
+
+var myNode = $.scn.$node("Top/Drawing")
+var drawingAttribute = myNode.attributes.drawing.element
+
+// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
+
+drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
+var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
+$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
+
+// for a more direct way to access an attribute, it's possible to also call:
+
+var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
     
 
     
@@ -4122,7 +4178,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2432
+            openHarmony/openHarmony_node.js, line 2439
         </div>
         
     </div>
@@ -4498,7 +4554,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2514
+            openHarmony/openHarmony_node.js, line 2521
         </div>
         
     </div>
@@ -4897,7 +4953,30 @@
         
 
     
-    <pre class="prettyprint"><code>function createColoredBackdrop(){ // This script will prompt for a color and create a backdrop around the selection $.beginUndo() var doc = $.scn; // grab the scene var nodes = doc.getSelectedNodes(); // grab the selection if(!nodes) return    // exit the function if no nodes are selected var color = pickColor(); // prompt for color var group = doc.$node("Top") // get the group to add the backdrop to var backdrop = group.addBackdropToNodes(nodes, "BackDrop", "", color) $.endUndo(); // function to get the color chosen by the user function pickColor(){   var d = new QColorDialog;   d.exec();   var color = d.selectedColor();   return new $.oColorValue({r:color.red(), g:color.green(), b:color.blue(), a:color.alpha()}) }}</code></pre>
+    <pre class="prettyprint"><code>function createColoredBackdrop(){
+ // This script will prompt for a color and create a backdrop around the selection
+ $.beginUndo()
+
+ var doc = $.scn; // grab the scene
+ var nodes = doc.getSelectedNodes(); // grab the selection
+
+ if(!nodes) return    // exit the function if no nodes are selected
+
+ var color = pickColor(); // prompt for color
+
+ var group = doc.$node("Top") // get the group to add the backdrop to
+ var backdrop = group.addBackdropToNodes(nodes, "BackDrop", "", color)
+
+ $.endUndo();
+
+ // function to get the color chosen by the user
+ function pickColor(){
+   var d = new QColorDialog;
+   d.exec();
+   var color = d.selectedColor();
+   return new $.oColorValue({r:color.red(), g:color.green(), b:color.blue(), a:color.alpha()})
+ }
+}</code></pre>
     
 
     
@@ -4914,7 +4993,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2268
+            openHarmony/openHarmony_node.js, line 2275
         </div>
         
     </div>
@@ -5174,7 +5253,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2297
+            openHarmony/openHarmony_node.js, line 2304
         </div>
         
     </div>
@@ -5472,7 +5551,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2108
+            openHarmony/openHarmony_node.js, line 2115
         </div>
         
     </div>
@@ -5617,7 +5696,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2217
+            openHarmony/openHarmony_node.js, line 2224
         </div>
         
     </div>
@@ -5836,7 +5915,27 @@
         
 
     
-    <pre class="prettyprint"><code>// to add a node, simply call addNode on the group you want the node to be added to.var sceneRoot = $.scn.root; // grab the scene root group ("Top")var peg = sceneRoot.addNode("PEG", "MyNewlyCreatedPeg");           // adding a peg// Now we'll also create a drawing node to connect under the pegvar sceneComposite = $.scn.getNodeByPath("Top/Composite");         // can also use $.scn.$node("Top/Composite") for shorter synthaxvar drawingNode = sceneRoot.addDrawingNode("myNewDrawingNode");drawingNode.linkOutNode(sceneComposite);drawingNode.can_animate = false                // setting some attributes on the newly created Nodepeg.linkOutNode(drawingNode);//through all this we didn't specify nodePosition parameters so we'll sort evertything at oncesceneRoot.orderNodeView();// we can also do:peg.centerAbove(drawingNode);</code></pre>
+    <pre class="prettyprint"><code>// to add a node, simply call addNode on the group you want the node to be added to.
+var sceneRoot = $.scn.root; // grab the scene root group ("Top")
+
+var peg = sceneRoot.addNode("PEG", "MyNewlyCreatedPeg");           // adding a peg
+
+// Now we'll also create a drawing node to connect under the peg
+var sceneComposite = $.scn.getNodeByPath("Top/Composite");         // can also use $.scn.$node("Top/Composite") for shorter synthax
+
+var drawingNode = sceneRoot.addDrawingNode("myNewDrawingNode");
+drawingNode.linkOutNode(sceneComposite);
+drawingNode.can_animate = false                // setting some attributes on the newly created Node
+
+peg.linkOutNode(drawingNode);
+
+//through all this we didn't specify nodePosition parameters so we'll sort evertything at once
+
+sceneRoot.orderNodeView();
+
+// we can also do:
+
+peg.centerAbove(drawingNode);</code></pre>
     
 
     
@@ -6037,7 +6136,9 @@
         
 
     
-    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" ); var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
+    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" );
+ var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
     
 
     
@@ -6054,7 +6155,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2132
+            openHarmony/openHarmony_node.js, line 2139
         </div>
         
     </div>
@@ -6592,7 +6693,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2095
+            openHarmony/openHarmony_node.js, line 2102
         </div>
         
     </div>
@@ -6752,7 +6853,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2155
+            openHarmony/openHarmony_node.js, line 2162
         </div>
         
     </div>
@@ -8684,7 +8785,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2061
+            openHarmony/openHarmony_node.js, line 2068
         </div>
         
     </div>
@@ -9166,6 +9267,234 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="importImage">
+            
+            importImage<span class="signature">(path, <span class="optional">alignment</span>, <span class="optional">nodePosition</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;<a href="$.oNode.html">$.oNode</a>>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_node.js, line 2815
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Import a generic image format (PNG, JPG, TGA etc) as a read node.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                The image file to import.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>alignment</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    "ASIS"
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Alignment type.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>nodePosition</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oPoint.html">$.oPoint</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    {0,0,0}
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The position for the node to be placed in the node view.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Array.&lt;<a href="$.oNode.html">$.oNode</a>>
+                        
+                    
+            </td>
+            <td class="description last">The nodes that have been updated/created</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="importPSD">
             
             importPSD<span class="signature">(path, <span class="optional">separateLayers</span>, <span class="optional">addPeg</span>, <span class="optional">addComposite</span>, <span class="optional">alignment</span>, <span class="optional">nodePosition</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;<a href="$.oNode.html">$.oNode</a>>}</span>
@@ -9173,7 +9502,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2571
+            openHarmony/openHarmony_node.js, line 2578
         </div>
         
     </div>
@@ -9500,7 +9829,23 @@
         
 
     
-    <pre class="prettyprint"><code>// This example browses for a PSD file then import it in the root of the scene, then connects it to the main composite.function importCustomPSD(){  $.beginUndo("importCustomPSD");  var psd = $.dialog.browseForFile("get PSD", "*.psd");       // prompt for a PSD file  if (!psd) return;                                           // dialog was cancelled, exit the function  var doc = $.scn;                                            // get the scene object  var sceneRoot = doc.root                                    // grab the scene root group  var psdNodes = sceneRoot.importPSD(psd);                    // import the psd with default settings  var psdComp = psdNodes.pop()                                // get the composite node at the end of the psdNodes array  var sceneComp = doc.$node("Top/Composite")                  // get the scene main composite  psdComp.linkOutNode(sceneComp);                             // ... and link the two.  sceneRoot.orderNodeView();                                  // orders the node view inside the group  $.endUndo();}</code></pre>
+    <pre class="prettyprint"><code>// This example browses for a PSD file then import it in the root of the scene, then connects it to the main composite.
+
+function importCustomPSD(){
+  $.beginUndo("importCustomPSD");
+  var psd = $.dialog.browseForFile("get PSD", "*.psd");       // prompt for a PSD file
+
+  if (!psd) return;                                           // dialog was cancelled, exit the function
+
+  var doc = $.scn;                                            // get the scene object
+  var sceneRoot = doc.root                                    // grab the scene root group
+  var psdNodes = sceneRoot.importPSD(psd);                    // import the psd with default settings
+  var psdComp = psdNodes.pop()                                // get the composite node at the end of the psdNodes array
+  var sceneComp = doc.$node("Top/Composite")                  // get the scene main composite
+  psdComp.linkOutNode(sceneComp);                             // ... and link the two.
+  sceneRoot.orderNodeView();                                  // orders the node view inside the group
+  $.endUndo();
+}</code></pre>
     
 
     
@@ -9517,7 +9862,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2849
+            openHarmony/openHarmony_node.js, line 2864
         </div>
         
     </div>
@@ -9754,7 +10099,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2385
+            openHarmony/openHarmony_node.js, line 2392
         </div>
         
     </div>
@@ -10870,7 +11215,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2165
+            openHarmony/openHarmony_node.js, line 2172
         </div>
         
     </div>
@@ -11658,7 +12003,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2073
+            openHarmony/openHarmony_node.js, line 2080
         </div>
         
     </div>
@@ -12678,7 +13023,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2669
+            openHarmony/openHarmony_node.js, line 2676
         </div>
         
     </div>
@@ -12878,7 +13223,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Jan 28 2020 22:35:21 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Mar 15 2020 17:10:34 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

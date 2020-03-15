@@ -731,10 +731,6 @@
             
                 <li data-name="$.oDrawing#position"><a href="$.oDrawing.html#position">position</a></li>
             
-                <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
-            
-                <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
-            
                 <li data-name="$.oDrawing#width"><a href="$.oDrawing.html#width">width</a></li>
             
                 <li data-name="$.oDrawing#width"><a href="$.oDrawing.html#width">width</a></li>
@@ -751,6 +747,16 @@
             
             </ul>
             <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oDrawing#importBitmap"><a href="$.oDrawing.html#importBitmap">importBitmap</a></li>
+            
+                <li data-name="$.oDrawing#refreshPreview"><a href="$.oDrawing.html#refreshPreview">refreshPreview</a></li>
+            
+                <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
+            
+                <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -979,6 +985,8 @@
                 <li data-name="$.oDrawingNode#unlinkOutNode"><a href="$.oDrawingNode.html#unlinkOutNode">unlinkOutNode</a></li>
             
                 <li data-name="$.oDrawingNode#unlinkOutPort"><a href="$.oDrawingNode.html#unlinkOutPort">unlinkOutPort</a></li>
+            
+                <li data-name="$.oDrawingNode#update"><a href="$.oDrawingNode.html#update">update</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1343,6 +1351,8 @@
                 <li data-name="$.oGroupNode#getOutLinks"><a href="$.oGroupNode.html#getOutLinks">getOutLinks</a></li>
             
                 <li data-name="$.oGroupNode#getOutLinksNumber"><a href="$.oGroupNode.html#getOutLinksNumber">getOutLinksNumber</a></li>
+            
+                <li data-name="$.oGroupNode#importImage"><a href="$.oGroupNode.html#importImage">importImage</a></li>
             
                 <li data-name="$.oGroupNode#importPSD"><a href="$.oGroupNode.html#importPSD">importPSD</a></li>
             
@@ -1803,7 +1813,11 @@
             
                 <li data-name="$.oPalette#colors"><a href="$.oPalette.html#colors">colors</a></li>
             
+                <li data-name="$.oPalette#element"><a href="$.oPalette.html#element">element</a></li>
+            
                 <li data-name="$.oPalette#id"><a href="$.oPalette.html#id">id</a></li>
+            
+                <li data-name="$.oPalette#index"><a href="$.oPalette.html#index">index</a></li>
             
                 <li data-name="$.oPalette#name"><a href="$.oPalette.html#name">name</a></li>
             
@@ -2117,6 +2131,16 @@
             </span>
             <ul class="members itemMembers">
             
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oProgressDialog#range"><a href="$.oProgressDialog.html#range">range</a></li>
+            
+                <li data-name="$.oProgressDialog#show"><a href="$.oProgressDialog.html#show">show</a></li>
+            
+                <li data-name="$.oProgressDialog#text"><a href="$.oProgressDialog.html#text">text</a></li>
+            
+                <li data-name="$.oProgressDialog#value"><a href="$.oProgressDialog.html#value">value</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -2155,6 +2179,8 @@
             
                 <li data-name="$.oScene#currentFrame"><a href="$.oScene.html#currentFrame">currentFrame</a></li>
             
+                <li data-name="$.oScene#defaultDisplay"><a href="$.oScene.html#defaultDisplay">defaultDisplay</a></li>
+            
                 <li data-name="$.oScene#defaultResolutionX"><a href="$.oScene.html#defaultResolutionX">defaultResolutionX</a></li>
             
                 <li data-name="$.oScene#defaultResolutionY"><a href="$.oScene.html#defaultResolutionY">defaultResolutionY</a></li>
@@ -2170,6 +2196,8 @@
                 <li data-name="$.oScene#name"><a href="$.oScene.html#name">name</a></li>
             
                 <li data-name="$.oScene#nodes"><a href="$.oScene.html#nodes">nodes</a></li>
+            
+                <li data-name="$.oScene#paletteFolder"><a href="$.oScene.html#paletteFolder">paletteFolder</a></li>
             
                 <li data-name="$.oScene#palettes"><a href="$.oScene.html#palettes">palettes</a></li>
             
@@ -2433,7 +2461,10 @@
     oAttribute
     </h2>
     
-        <div class="class-description">The $.oAttribute class holds the smart version of the parameter you can find in layer property.<br>It is used internally to get and set values and link a oColumn to a parameter in order to animate it.<br>For a list of attributes existing in each node type and their type, as well as examples of the values they can hold, refer to :<br>NodeType.</div>
+        <div class="class-description">The $.oAttribute class holds the smart version of the parameter you can find in layer property.<br>
+It is used internally to get and set values and link a oColumn to a parameter in order to animate it.<br>
+For a list of attributes existing in each node type and their type, as well as examples of the values they can hold, refer to :<br>
+NodeType.</div>
     
 </header>  
 
@@ -2771,7 +2802,14 @@
         
 
     
-    <pre class="prettyprint"><code>// oAttribute objects can be grabbed from the node .attributes object with dot notation, by calling the attribute keyword in lowercase.var myNode = $.scn.getSelectedNodes()[0];          // grab the first selected nodevar Xattribute = myNode.attributes.position.x;     // gets the position.x attribute of the node if it has it (for example, PEG nodes have it)var Xcolumn = Xattribute.column;                   // retrieve the linked column to the element (The object that holds the animation)Xattribute.setValue(5, 5);                         // sets the value to 5 at frame 5</code></pre>
+    <pre class="prettyprint"><code>// oAttribute objects can be grabbed from the node .attributes object with dot notation, by calling the attribute keyword in lowercase.
+
+var myNode = $.scn.getSelectedNodes()[0];          // grab the first selected node
+var Xattribute = myNode.attributes.position.x;     // gets the position.x attribute of the node if it has it (for example, PEG nodes have it)
+
+var Xcolumn = Xattribute.column;                   // retrieve the linked column to the element (The object that holds the animation)
+
+Xattribute.setValue(5, 5);                         // sets the value to 5 at frame 5</code></pre>
     
 
     
@@ -2892,7 +2930,11 @@
         
 
     
-    <pre class="prettyprint"><code>// to reset an attribute to its default value:// (mostly used for position/angle/skew parameters of pegs and drawing nodes)var myAttribute = $.scn.nodes[0].attributes.position.x;myAttribute.setValue(myAttribute.defaultValue);</code></pre>
+    <pre class="prettyprint"><code>// to reset an attribute to its default value:
+// (mostly used for position/angle/skew parameters of pegs and drawing nodes)
+var myAttribute = $.scn.nodes[0].attributes.position.x;
+
+myAttribute.setValue(myAttribute.defaultValue);</code></pre>
     
 
     
@@ -3738,7 +3780,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_attribute.js, line 655
+            openHarmony/openHarmony_attribute.js, line 654
         </div>
         
     </div>
@@ -3891,7 +3933,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Jan 28 2020 22:35:20 GMT+0100 (heure normale d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Mar 15 2020 17:10:34 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
