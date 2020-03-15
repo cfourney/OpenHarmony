@@ -1883,6 +1883,7 @@ $.oDrawingNode.prototype.update = function(sourcePath, drawingName){
   var _drawing = this.element.getDrawingByName(drawingName);
 
   _drawing.importBitmap(sourcePath);
+  _drawing.refreshPreview();
 }
 
 
@@ -2803,8 +2804,16 @@ $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
 }
 
 
+/**
+ * Import a generic image format (PNG, JPG, TGA etc) as a read node.
+ * @param   {string}       path                          The image file to import.
+ * @param   {string}         [alignment="ASIS"]            Alignment type.
+ * @param   {$.oPoint}       [nodePosition={0,0,0}]        The position for the node to be placed in the node view.
+ * 
+ * @return  {$.oNode[]}    The nodes that have been updated/created
+ */
 $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
-  if (typeof alignment === 'undefined') var alignment = "ASIS" // create an enum for alignments?
+  if (typeof alignment === 'undefined') var alignment = "ASIS"; // create an enum for alignments?
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
 
   var _imageFile = (path instanceof this.$.oFile)?path:new this.$.oFile( path );
@@ -2818,7 +2827,7 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
     // scene.saveAll();
     var _drawing = _element.addDrawing(1, 1, _imageFile.path);
   }else{
-    this.$.debug("Image file to import "+_imageFile.path+" could not be found.", this.$.DEBUG_LEVEL.ERROR)
+    this.$.debug("Image file to import "+_imageFile.path+" could not be found.", this.$.DEBUG_LEVEL.ERROR);
   }
   
   var _imageNode = this.addDrawingNode(_elementName, nodePosition, _element);
@@ -2836,7 +2845,7 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
 
   // TODO how to display only one node with the whole file
 
-  return _imageNode
+  return _imageNode;
 }
 
 

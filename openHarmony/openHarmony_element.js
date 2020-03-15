@@ -150,7 +150,7 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
   
   var _drawing = new this.$.oDrawing( name, this );
 
-  if (filename.exists) _drawing.importBitmap(filename);
+  if (_fileExists) _drawing.importBitmap(filename);
   
   // place drawing on the column at the provided frame
   if (this.column != null || this.column != undefined){

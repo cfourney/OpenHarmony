@@ -148,6 +148,23 @@ $.oDrawing.prototype.remove = function(){
 }
 
 
+
+/**
+ * refresh the preview of the drawing.
+ */
+$.oDrawing.prototype.refreshPreview = function(){
+  if (this.element.format == "TVG") return;
+
+  var _path = new this.$.oFile(this.path);
+  var _elementFolder = _path.folder;
+  var _previewFiles = _elementFolder.getFiles(_path.name+"-*.tga");
+
+  for (var i in _previewFiles){
+    _previewFiles[i].remove();
+  }
+}
+
+
  /**
  * Converts the Drawing object to a string of the drawing name.
  * @return: { string }                 The name of the drawing.
