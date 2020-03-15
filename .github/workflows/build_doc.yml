@@ -6,9 +6,10 @@ on:
 jobs:
   build_doc:
     runs-on: ubuntu-latest
-    - uses: actions/checkout@v2
 
     steps:
+      - uses: actions/checkout@v2
+        
     - name: Build_doc
       uses: andstor/jsdoc-action@v1
       with:
