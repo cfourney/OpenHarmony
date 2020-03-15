@@ -10,10 +10,21 @@ jobs:
     steps:
     - uses: actions/checkout@v2
         
-    - name: Build_doc
+    - name: Build doc
       uses: andstor/jsdoc-action@v1.1.0
       with:
         recurse: true
         output_dir: ./docs
         config_file: documentation.json
         template_name: jaguarjs-jsdoc
+        
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m "rebuilt doc" -a
+        
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
