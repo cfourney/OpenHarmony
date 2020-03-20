@@ -199,6 +199,21 @@ $.logObj = function( object ){
   }
 }
 
+/**
+ * Gets access to a widget from the Harmony Interface.
+ * @function
+ * @name    $#getHarmonyUIWidget
+ * @param   {string}   parentName        The parent of the widget.
+ * @param   {string}   name              The name of the widget to look for.
+ */
+$.getHarmonyUIWidget = function(parentName, name){
+  var windows = QApplication.allWidgets();
+  for( var i in windows){
+    if (windows[i].objectName == name && windows[i].parentWidget().objectName == parentName ) return windows[i];
+  }
+  return null
+}
+
 
 //---- Scene  --------------
 $.s     = new $.oScene( );

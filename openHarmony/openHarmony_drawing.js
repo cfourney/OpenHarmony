@@ -68,6 +68,31 @@ $.oDrawing = function( name, oElementObject ){
 
 
 /**
+ * The different types of lines ends.
+ * @name $.oDrawing#LINE_END_TYPE
+ * @enum
+ */
+$.oDrawing.LINE_END_TYPE = {
+  ROUND : 1,
+  FLAT : 2,
+  BEVEL : 3
+};
+
+
+/**
+ * The different types of lines ends.
+ * @name $.oDrawing#ART_LAYER
+ * @enum
+ */
+$.oDrawing.ART_LAYER = {
+  OVERLAY : 8,
+  LINEART : 4,
+  COLORART : 2,
+  UNDERLAY : 1
+};
+
+
+/**
  * The name of the drawing.
  * @name $.oDrawing#name
  * @type {string}
@@ -88,7 +113,6 @@ Object.defineProperty( $.oDrawing.prototype, 'name', {
       this._name = newName;
     }
 })
-
 
 
 /**
@@ -121,14 +145,40 @@ $.oDrawing.prototype.importBitmap = function(file){
 
 
 /**
+ * @returns {int[]}  The frame numbers at which this drawing appears.
+ */
+$.oDrawing.prototype.getVisibleFrames = function(){
+  var _element = this.element;
+  var _column = _element.column;
+  
+  if (!_column){
+    this.$.log("Column missing: can't get visible frames for  drawing "+this.name+" of element "+_element.name);
+    return null; 
+  } 
+
+  var _frames = [];
+  var _keys = _column.keyframes;
+  for (var i in _keys){
+    if ( _keys[i].value == this.name) _frames.push(_keys[i].frameNumber);
+  }
+
+  return _frames;
+}
+
+
+/**
  * Remove the drawing from the element.
  */
 $.oDrawing.prototype.remove = function(){
     var _element = this.element;
     var _column = _element.column;
     
+    if (!_column){
+      this.$.log("Column missing: impossible to delete drawing "+this.name+" of element "+_element.name);
+      return; 
+    } 
+
     var _frames = _column.frames;
-    
     var _lastFrame = _frames.pop();
     // this.$.log(_lastFrame.frameNumber+": "+_lastFrame.value)
 
@@ -164,6 +214,72 @@ $.oDrawing.prototype.refreshPreview = function(){
   }
 }
 
+
+ /**
+ * Change the currently active drawing. Can specify an art Layer
+ * Doesn't work in batch mode.
+ * @param {oDrawing.ART_LAYER}   [artLayer]      activate the given art layer 
+ * @return {bool}   success of setting the drawing as current
+ */
+$.oDrawing.prototype.setAsActiveDrawing = function(artLayer){
+  if (this.$.batchMode){
+    this.$.debug("Setting as active drawing not available in batch mode", this.$.DEBUG_LEVEL.ERROR);
+    return false;
+  }
+
+  var _column = this.element.column;
+  if (!_column){
+    this.$.debug("Column missing: impossible to set as active drawing "+this.name+" of element "+_element.name, this.$.DEBUG_LEVEL.ERROR);
+    return false;
+  }
+
+  var _frame = this.getVisibleFrames();
+  if (_frame.length == 0){
+    this.$.debug("Column missing: impossible to set as active drawing "+this.name+" of element "+_element.name, this.$.DEBUG_LEVEL.ERROR);
+    return false;
+  }
+
+  DrawingTools.setCurrentDrawingFromColumnName( _column.uniqueName, _frame[0] );
+
+  if (artLayer) DrawingTools.setCurrentArt( artLayer );
+
+  return true;
+}
+
+
+ /**
+ * Converts the line ends of the Drawing object to the defined type.
+ * Doesn't work in batch mode. This function modifies the selection.
+ * 
+ * @param {oDrawing.LINE_END_TYPE}     endType        the type of line ends to set.
+ * @param {oDrawing.ART_LAYER}        [artLayer]     only apply to provided art Layer.
+ */
+$.oDrawing.prototype.setLineEnds = function(endType, artLayer){
+  if (this.$.batchMode){
+    this.$.debug("setting line ends not available in batch mode", this.DEBUG_LEVEL.ERROR);
+    return;
+  }
+
+  var _current = this.setAsActiveDrawing( artLayer );
+  if (!_current) {
+    this.$.debug("Impossible to change line ends on drawing "+this.name+" of element "+_element.name, this.DEBUG_LEVEL.ERROR);
+    return;
+  }
+
+  // apply to all arts only if art layer not specified
+  ToolProperties.setApplyAllArts( !artLayer );
+  Action.perform( "deselect()", "cameraView" );
+  Action.perform( "onActionChooseSelectTool()" );	
+  Action.perform( "selectAll()", "cameraView" );
+
+  var widget = $.getHarmonyUIWidget("frameBrushParameters", "pencilShape");
+  if (widget){
+    widget.onChangeTipStart( endType );
+    widget.onChangeTipEnd( endType );
+    widget.onChangeJoin( endType );
+  }
+  Action.perform("deselect()", "cameraView");
+}
 
  /**
  * Converts the Drawing object to a string of the drawing name.

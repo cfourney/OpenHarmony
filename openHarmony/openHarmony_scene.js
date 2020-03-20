@@ -504,7 +504,67 @@ Object.defineProperty($.oScene.prototype, 'currentFrame', {
 
 
 /**
- * The current frame of the scene.
+ * Retrieve and change the selected frames. This is an array with the start frame and the end frame (non included)
+ * @name $.oScene#selectedNodes
+ * @type {$.oNode[]}
+ */
+Object.defineProperty($.oScene.prototype, 'selectedNodes', {
+  get : function(){
+    return this.getSelectedNodes();
+  },
+
+  set : function(nodesToSelect){
+    selection.clearSelection ();
+    selection.addNodesToSelection(nodesToSelect.map(function(x){return x.path}));
+  }
+});
+
+
+
+/**
+ * Retrieve and change the selected nodes. Use to retrieve and set Selection. Doesn't work recursively, use scene.getSelectedNodes(true) to get the content of selected groups as well.
+ * @name $.oScene#selectedNodes
+ * @type {int[]}
+ */
+Object.defineProperty($.oScene.prototype, 'selectedFrames', {
+  get : function(){
+    var _selectedFrames = [selection.startFrame(), selection.startFrame()+selection.numberOfFrames()];
+    return _selectedFrames;
+  },
+
+  set : function(frameRange){
+    selection.setSelectionFrameRange(frameRange[0], frameRange[1]-frameRange[0]);
+  }
+});
+
+
+
+/**
+ * The current drawing of the scene.
+ * @name $.oScene#activeDrawing
+ * @type {int}
+ */
+Object.defineProperty($.oScene.prototype, 'activeDrawing', {
+  get : function(){
+    var _currentNode = this.getSelectedNodes();
+    var _currentFrame = this.currentFrame;
+    
+    if (_currentNode.length == 0) return null;
+    
+    _currentNode = _currentNode[0];
+    if (_currentNode.type != "READ") return null;
+
+    return _currentNode.attributes.drawing.element.getValue(_currentFrame);
+  },
+
+  set : function( newCurrentDrawing ){
+    newCurrentDrawing.setAsActiveDrawing();
+  }
+});
+
+
+/**
+ * The default Display of the scene.
  * @name $.oScene#defaultDisplay
  * @type {oNode}
  */
@@ -584,7 +644,7 @@ $.oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
 
 
 /**
- * Gets a node by the path.
+ * Gets the selected Nodes.
  * @param  {bool}   recurse            Whether to recurse into groups.
  *
  * @return {$.oNode[]}                 The selected nodes.
