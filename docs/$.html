@@ -80,6 +80,8 @@
             
                 <li data-name="$#endUndo"><a href="$.html#endUndo">endUndo</a></li>
             
+                <li data-name="$#getHarmonyUIWidget"><a href="$.html#getHarmonyUIWidget">getHarmonyUIWidget</a></li>
+            
                 <li data-name="$#getPreferences"><a href="$.html#getPreferences">getPreferences</a></li>
             
                 <li data-name="$#log"><a href="$.html#log">log</a></li>
@@ -721,9 +723,13 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oDrawing#ART_LAYER"><a href="$.oDrawing.html#ART_LAYER">ART_LAYER</a></li>
+            
                 <li data-name="$.oDrawing#bounds"><a href="$.oDrawing.html#bounds">bounds</a></li>
             
                 <li data-name="$.oDrawing#color"><a href="$.oDrawing.html#color">color</a></li>
+            
+                <li data-name="$.oDrawing#LINE_END_TYPE"><a href="$.oDrawing.html#LINE_END_TYPE">LINE_END_TYPE</a></li>
             
                 <li data-name="$.oDrawing#name"><a href="$.oDrawing.html#name">name</a></li>
             
@@ -750,11 +756,17 @@
             
             <span class="subtitle">Methods</span>
             
+                <li data-name="$.oDrawing#getVisibleFrames"><a href="$.oDrawing.html#getVisibleFrames">getVisibleFrames</a></li>
+            
                 <li data-name="$.oDrawing#importBitmap"><a href="$.oDrawing.html#importBitmap">importBitmap</a></li>
             
                 <li data-name="$.oDrawing#refreshPreview"><a href="$.oDrawing.html#refreshPreview">refreshPreview</a></li>
             
                 <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
+            
+                <li data-name="$.oDrawing#setAsActiveDrawing"><a href="$.oDrawing.html#setAsActiveDrawing">setAsActiveDrawing</a></li>
+            
+                <li data-name="$.oDrawing#setLineEnds"><a href="$.oDrawing.html#setLineEnds">setLineEnds</a></li>
             
                 <li data-name="$.oDrawing#toString"><a href="$.oDrawing.html#toString">toString</a></li>
             
@@ -2169,6 +2181,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oScene#activeDrawing"><a href="$.oScene.html#activeDrawing">activeDrawing</a></li>
+            
                 <li data-name="$.oScene#aspectRatioX"><a href="$.oScene.html#aspectRatioX">aspectRatioX</a></li>
             
                 <li data-name="$.oScene#aspectRatioY"><a href="$.oScene.html#aspectRatioY">aspectRatioY</a></li>
@@ -2210,6 +2224,10 @@
                 <li data-name="$.oScene#root"><a href="$.oScene.html#root">root</a></li>
             
                 <li data-name="$.oScene#sceneName"><a href="$.oScene.html#sceneName">sceneName</a></li>
+            
+                <li data-name="$.oScene#selectedNodes"><a href="$.oScene.html#selectedNodes">selectedNodes</a></li>
+            
+                <li data-name="$.oScene#selectedNodes"><a href="$.oScene.html#selectedNodes">selectedNodes</a></li>
             
                 <li data-name="$.oScene#stage"><a href="$.oScene.html#stage">stage</a></li>
             
@@ -2959,7 +2977,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 243
+            openHarmony.js, line 258
         </div>
         
     </div>
@@ -3142,7 +3160,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 224
+            openHarmony.js, line 239
         </div>
         
     </div>
@@ -3325,7 +3343,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 306
+            openHarmony.js, line 321
         </div>
         
     </div>
@@ -3448,7 +3466,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 246
+            openHarmony.js, line 261
         </div>
         
     </div>
@@ -3750,7 +3768,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 261
+            openHarmony.js, line 276
         </div>
         
     </div>
@@ -3932,7 +3950,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 320
+            openHarmony.js, line 335
         </div>
         
     </div>
@@ -4003,7 +4021,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 210
+            openHarmony.js, line 225
         </div>
         
     </div>
@@ -4529,7 +4547,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 329
+            openHarmony.js, line 344
         </div>
         
     </div>
@@ -4600,6 +4618,145 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="getHarmonyUIWidget">
+            
+            getHarmonyUIWidget<span class="signature">(parentName, name)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony.js, line 202
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Gets access to a widget from the Harmony Interface.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>parentName</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The parent of the widget.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The name of the widget to look for.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="getPreferences">
             
             getPreferences<span class="signature">()</span>
@@ -4607,7 +4764,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 362
+            openHarmony.js, line 377
         </div>
         
     </div>
@@ -4933,7 +5090,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 350
+            openHarmony.js, line 365
         </div>
         
     </div>
@@ -5049,7 +5206,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 339
+            openHarmony.js, line 354
         </div>
         
     </div>
@@ -5173,7 +5330,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Mar 15 2020 17:10:34 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Mar 20 2020 12:04:44 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
