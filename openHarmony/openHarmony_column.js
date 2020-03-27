@@ -227,7 +227,7 @@ Object.defineProperty($.oColumn.prototype, 'easeType', {
             case "BEZIER":
                 return "BEZIER";
             case "3DPATH":
-                return column.getVelocityType( this.uniqueName );
+                return column.velocityType( this.uniqueName );
             default:
                 return null;
         }
@@ -321,7 +321,7 @@ $.oColumn.prototype.duplicate = function(newAttribute) {
   
   for (var i in _keyframes){
     var _duplicateFrame = _duplicateColumn.frames[_keyframes[i].frameNumber];
-    
+    // _duplicateFrame.isKeyframe = _keyframes[i].isKeyframe;
     _duplicateFrame.value = _keyframes[i].value;
     _duplicateFrame.easeType = _keyframes[i].easeType;
     _duplicateFrame.easeIn = _keyframes[i].easeIn;

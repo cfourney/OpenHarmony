@@ -599,15 +599,18 @@ $.oAttribute.prototype.setValue = function (value, frame) {
             break;
            
         case "PATH_3D" :
-            var _frame = _column?(new this.$.oFrame(frame, this.column)):(new this.$.oFrame(frame, _attr));
-            if (_column && _frame.isKeyframe){
-                var _point = new this.$.oPathPoint (this.column, _frame);
-                _point.set(value);
-            }else{
-                // TODO: create keyframe?
-                this.parentAttribute.attributeObject.setValueAt(value, frame);
-            }
-            break;
+          // check if frame is tied to a column or an attribute
+          var _frame = _column?(new this.$.oFrame(frame, this.column)):(new this.$.oFrame(frame, _attr));
+          this.$.log(_column.name+" "+_frame.frameNumber+" "+_frame.isKeyframe)
+          if (_column){
+            if (!_frame.isKeyframe) _frame.isKeyframe = true;
+            var _point = new this.$.oPathPoint (this.column, _frame);
+            _point.set(value);
+          }else{
+            // TODO: create keyframe?
+            this.parentAttribute.attributeObject.setValueAt(value, frame);
+          }
+          break;
             
         case "POSITION_2D":
             value = Point2d(value.x, value.y);

@@ -176,7 +176,7 @@ Object.defineProperty($.oFrame.prototype, 'isKeyframe', {
       return false;
     },
  
-    set : function(keyFrame){
+    set : function(keyframe){
       this.$.log("setting keyframe for frame "+this.frameNumber);
       var col = this.column;
       if( !col ) return;
@@ -184,28 +184,28 @@ Object.defineProperty($.oFrame.prototype, 'isKeyframe', {
       var _column = col.uniqueName;
       
       if( col.type == "DRAWING" ){
-        if (keyFrame){
+        if (keyframe){
           column.addKeyDrawingExposureAt( _column, this.frameNumber );
         }else{
           column.removeKeyDrawingExposureAt( _column, this.frameNumber );
         }
       }else{
-        if (keyFrame){
+        if (keyframe){
           //Sanity check, in certain situations, the setKeyframe resets to 0 (specifically if there is no pre-existing key elsewhere.)
           //This will check the value prior to the key, set the key, and enforce the value after.
           
-          var val = 0.0;
+          //var val = 0.0;
           // try{
           var val = this.value;
           // }catch(err){}
-          this.$.log("setting keyframe for frame "+this.frameNumber);
+          //this.$.log("setting keyframe for frame "+this.frameNumber);
           column.setKeyFrame( _column, this.frameNumber );
           
           // try{
-          var post_val = this.value;
-          if (val != post_val) {
+          //var post_val = this.value;
+          //if (val != post_val) {
             this.value = val;
-          }
+          //}
           // }catch(err){}         
         }else{
           column.clearKeyFrame( _column, this.frameNumber );
