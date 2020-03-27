@@ -161,7 +161,8 @@ Object.defineProperty($.oFrame.prototype, 'value', {
 Object.defineProperty($.oFrame.prototype, 'isKeyframe', {
     get : function(){
       if( !this.column ) return true;
-    
+      if( this.frameNumber == 0 ) return false;  // frames array start at 0 but first index is not a real frame
+     
       var _column = this.column.uniqueName;
       if (this.column.type == 'DRAWING' || this.column.type == 'TIMING'){
         if( column.getTimesheetEntry){

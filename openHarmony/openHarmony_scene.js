@@ -177,10 +177,10 @@ Object.defineProperty($.oScene.prototype, 'startPreview', {
  */
 Object.defineProperty($.oScene.prototype, 'stopPreview', {
     get : function(){
-        return scene.getStopFrame();
+        return scene.getStopFrame()+1;
     },
     set : function(val){
-        scene.setStopFrame( val );
+        scene.setStopFrame( val-1 );
     }
 });
 
@@ -1510,35 +1510,42 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
       for (var i in _readNodes){
         var _palettes = _readNodes[i].getUsedPalettes();
         for (var j in _palettes){
-          if (_usedPalettePaths.indexOf(_palettes[j].path) != -1){
+          if (_usedPalettePaths.indexOf(_palettes[j].path.path) == -1){
             _usedPalettes.push(_palettes[j]);
-            _usedPalettePaths.push(_palettes[j].path);
+            _usedPalettePaths.push(_palettes[j].path.path);
           }
         }
       }
     }
+    this.$.debug("found palettes : "+_usedPalettes.map(function(x){return x.name}), this.$.DEBUG_LEVEL.LOG)
 
     if (exportPalettesMode == "createPalette"){
       var templatePalette = this.createPaletteFromNodes(_readNodes, _name, renameUsedColors);
       var _usedPalettes = [templatePalette];
-      this.$.alert(templatePalette.name)
     }
   }
 
-  this.$.debug(" exporting template "+_name+" to folder: "+_folder, this.$.DEBUG_LEVEL.LOG)
-
-  selection.clearSelection();
-  selection.addNodesToSelection (_allNodes.map(function(x){return x.path}));
-  selection.setSelectionFrameRange(this.startPreview, this.stopPreview);
-  var success = copyPaste.createTemplateFromSelection (_name, _folder);
-  if (!success) return false;
   
-  // this.$.alert ("export done")
+  this.selectedNodes = _allNodes;
+  this.selectedFrames = [this.startPreview, this.stopPreview];
+
+  this.$.debug("exporting selection :"+this.selectedFrames+"\n\n"+this.selectedNodes.join("\n")+"\n\n to folder : "+_folder+"/"+_name, this.$.DEBUG_LEVEL.LOG)
+
+  // this.$.alert ("exporting now selection :"+this.selectedFrames+"\n\n"+this.selectedNodes.join("\n")+"\n\n to folder : "+_folder+"/"+_name)
+
+  try{
+  // THIS CRASHES OCCASIONALLY AND I DONT KNOW WHY :(
+    var success = copyPaste.createTemplateFromSelection (_name, _folder);
+    if (success == "") throw new Error("export failed")
+  }catch(error){
+    this.$.debug("Export of template "+_name+" failed. Error: "+error, this.$.DEBUG_LEVEL.ERROR);
+    return false;
+  }
+
+  this.$.debug("export of template "+_name+" finished, cleaning palettes", this.$.DEBUG_LEVEL.LOG);
+  // this.$.alert ("export done - cleaning palettes")
 
   if (_readNodes.length > 0 && exportPalettesMode != "all"){
-
-    this.$.debug("export of template "+_name+" finished, cleaning palettes", this.$.DEBUG_LEVEL.LOG);
-
     // deleting the extra palettes from the exported template
     var _paletteFolder = new this.$.oFolder(_templateFolder.path+"/palette-library");
     var _paletteFiles = _paletteFolder.getFiles();
@@ -1562,7 +1569,11 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
     }
 
     var _paletteListFile = new this.$.oFile(_templateFolder.path+"/PALETTE_LIST");
-    _paletteListFile.write(_listFile.join("\n"));
+    try{
+      _paletteListFile.write(_listFile.join("\n"));
+    }catch(err){
+      this.$.debug(err, this.$.DEBUG_LEVEL.ERROR)
+    }
 
     // remove the palette created for the template
     if (exportPalettesMode == "createPalette"){

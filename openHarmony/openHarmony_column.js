@@ -169,8 +169,6 @@ Object.defineProperty($.oColumn.prototype, 'selected', {
  */
 Object.defineProperty($.oColumn.prototype, 'frames', {
     get : function(){
-        var frm_cnt = frame.numberOf();
-        
         while( this._cacheFrames.length < frame.numberOf()+1 ){
           this._cacheFrames.push( new this.$.oFrame( this._cacheFrames.length, this ) );
         }
@@ -539,9 +537,9 @@ $.oDrawingColumn.prototype.renameAllByFrame = function(prefix, suffix){
   if (typeof prefix === 'undefined') var prefix = "";
   if (typeof suffix === 'undefined') var suffix = "";
   
+  // get exposed drawings
   var _displayedDrawings = this.getKeyframes();
-  var _element = this.element;
-  var _drawings = _element.drawings;
+  this.$.debug("Column "+this.name+" has drawings : "+_displayedDrawings.map(function(x){return x.value}), this.$.DEBUG_LEVEL.LOG);
   
   // remove duplicates
   var _seen = [];
