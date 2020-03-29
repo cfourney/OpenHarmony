@@ -680,6 +680,36 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oDatabase">
+            <span class="title">
+                <a href="$.oDatabase.html">$.oDatabase</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oDatabase#getEnvironments"><a href="$.oDatabase.html#getEnvironments">getEnvironments</a></li>
+            
+                <li data-name="$.oDatabase#getJobs"><a href="$.oDatabase.html#getJobs">getJobs</a></li>
+            
+                <li data-name="$.oDatabase#getScenes"><a href="$.oDatabase.html#getScenes">getScenes</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oDialog">
             <span class="title">
                 <a href="$.oDialog.html">$.oDialog</a>
@@ -2201,15 +2231,21 @@
             
                 <li data-name="$.oScene#elements"><a href="$.oScene.html#elements">elements</a></li>
             
+                <li data-name="$.oScene#environnement"><a href="$.oScene.html#environnement">environnement</a></li>
+            
                 <li data-name="$.oScene#fov"><a href="$.oScene.html#fov">fov</a></li>
             
                 <li data-name="$.oScene#framerate"><a href="$.oScene.html#framerate">framerate</a></li>
+            
+                <li data-name="$.oScene#job"><a href="$.oScene.html#job">job</a></li>
             
                 <li data-name="$.oScene#length"><a href="$.oScene.html#length">length</a></li>
             
                 <li data-name="$.oScene#name"><a href="$.oScene.html#name">name</a></li>
             
                 <li data-name="$.oScene#nodes"><a href="$.oScene.html#nodes">nodes</a></li>
+            
+                <li data-name="$.oScene#online"><a href="$.oScene.html#online">online</a></li>
             
                 <li data-name="$.oScene#paletteFolder"><a href="$.oScene.html#paletteFolder">paletteFolder</a></li>
             
@@ -2242,6 +2278,8 @@
                 <li data-name="$.oScene#unitsZ"><a href="$.oScene.html#unitsZ">unitsZ</a></li>
             
                 <li data-name="$.oScene#unsaved"><a href="$.oScene.html#unsaved">unsaved</a></li>
+            
+                <li data-name="$.oScene#version"><a href="$.oScene.html#version">version</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -2317,6 +2355,8 @@
                 <li data-name="$.oScene#mergeNodes"><a href="$.oScene.html#mergeNodes">mergeNodes</a></li>
             
                 <li data-name="$.oScene#nodeSearch"><a href="$.oScene.html#nodeSearch">nodeSearch</a></li>
+            
+                <li data-name="$.oScene#renderWriteNodes"><a href="$.oScene.html#renderWriteNodes">renderWriteNodes</a></li>
             
                 <li data-name="$.oScene#save"><a href="$.oScene.html#save">save</a></li>
             
@@ -3053,6 +3093,51 @@ function myCallBackFunction(){
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="environnement"><span class="type-signature ">readonly</span>environnement<span class="type-signature type string">string</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The name of the scene.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="fov">fov<span class="type-signature type double">double</span> </h4>
     </div>
     
@@ -3107,6 +3192,51 @@ function myCallBackFunction(){
     
     <div class="description">
         The frame rate of the scene.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="job"><span class="type-signature ">readonly</span>job<span class="type-signature type string">string</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The name of the scene.
     </div>
     
     
@@ -3242,6 +3372,51 @@ function myCallBackFunction(){
     
     <div class="description">
         Contains the list of all the nodes present in the scene.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="online"><span class="type-signature ">readonly</span>online<span class="type-signature type bool">bool</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Wether the scene is hosted on a Toonboom database.
     </div>
     
     
@@ -3996,6 +4171,51 @@ function myCallBackFunction(){
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="version"><span class="type-signature ">readonly</span>version<span class="type-signature type string">string</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The name of the scene.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
         </dl>
     
     
@@ -4013,7 +4233,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1889
+            openHarmony/openHarmony_scene.js, line 2010
         </div>
         
     </div>
@@ -4181,7 +4401,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1878
+            openHarmony/openHarmony_scene.js, line 1999
         </div>
         
     </div>
@@ -4326,7 +4546,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1900
+            openHarmony/openHarmony_scene.js, line 2021
         </div>
         
     </div>
@@ -4471,7 +4691,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1752
+            openHarmony/openHarmony_scene.js, line 1800
         </div>
         
     </div>
@@ -4779,7 +4999,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1781
+            openHarmony/openHarmony_scene.js, line 1829
         </div>
         
     </div>
@@ -5110,7 +5330,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1001
+            openHarmony/openHarmony_scene.js, line 1049
         </div>
         
     </div>
@@ -5301,7 +5521,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1078
+            openHarmony/openHarmony_scene.js, line 1126
         </div>
         
     </div>
@@ -5563,7 +5783,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1048
+            openHarmony/openHarmony_scene.js, line 1096
         </div>
         
     </div>
@@ -5827,7 +6047,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1103
+            openHarmony/openHarmony_scene.js, line 1151
         </div>
         
     </div>
@@ -6089,7 +6309,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 978
+            openHarmony/openHarmony_scene.js, line 1026
         </div>
         
     </div>
@@ -6305,7 +6525,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1165
+            openHarmony/openHarmony_scene.js, line 1213
         </div>
         
     </div>
@@ -6519,7 +6739,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1812
+            openHarmony/openHarmony_scene.js, line 1933
         </div>
         
     </div>
@@ -6642,7 +6862,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1278
+            openHarmony/openHarmony_scene.js, line 1326
         </div>
         
     </div>
@@ -6852,7 +7072,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1697
+            openHarmony/openHarmony_scene.js, line 1745
         </div>
         
     </div>
@@ -7089,7 +7309,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1484
+            openHarmony/openHarmony_scene.js, line 1532
         </div>
         
     </div>
@@ -7391,7 +7611,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1827
+            openHarmony/openHarmony_scene.js, line 1948
         </div>
         
     </div>
@@ -7491,7 +7711,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 632
+            openHarmony/openHarmony_scene.js, line 680
         </div>
         
     </div>
@@ -7666,7 +7886,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1865
+            openHarmony/openHarmony_scene.js, line 1986
         </div>
         
     </div>
@@ -7773,7 +7993,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 594
+            openHarmony/openHarmony_scene.js, line 642
         </div>
         
     </div>
@@ -7918,7 +8138,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1326
+            openHarmony/openHarmony_scene.js, line 1374
         </div>
         
     </div>
@@ -8063,7 +8283,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1134
+            openHarmony/openHarmony_scene.js, line 1182
         </div>
         
     </div>
@@ -8208,7 +8428,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1836
+            openHarmony/openHarmony_scene.js, line 1957
         </div>
         
     </div>
@@ -8308,7 +8528,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 652
+            openHarmony/openHarmony_scene.js, line 700
         </div>
         
     </div>
@@ -8453,7 +8673,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1148
+            openHarmony/openHarmony_scene.js, line 1196
         </div>
         
     </div>
@@ -8553,7 +8773,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1122
+            openHarmony/openHarmony_scene.js, line 1170
         </div>
         
     </div>
@@ -8705,7 +8925,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1223
+            openHarmony/openHarmony_scene.js, line 1271
         </div>
         
     </div>
@@ -8942,7 +9162,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1634
+            openHarmony/openHarmony_scene.js, line 1682
         </div>
         
     </div>
@@ -9274,7 +9494,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1724
+            openHarmony/openHarmony_scene.js, line 1772
         </div>
         
     </div>
@@ -9513,7 +9733,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1675
+            openHarmony/openHarmony_scene.js, line 1723
         </div>
         
     </div>
@@ -9681,7 +9901,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1607
+            openHarmony/openHarmony_scene.js, line 1655
         </div>
         
     </div>
@@ -9983,7 +10203,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1377
+            openHarmony/openHarmony_scene.js, line 1425
         </div>
         
     </div>
@@ -10174,7 +10394,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 685
+            openHarmony/openHarmony_scene.js, line 733
         </div>
         
     </div>
@@ -10312,6 +10532,122 @@ $.endUndo();</code></pre>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="renderWriteNodes">
+            
+            renderWriteNodes<span class="signature">(renderInBackground)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_scene.js, line 1860
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        renders the write nodes of the scene
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>renderInBackground</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="save">
             
             save<span class="signature">()</span>
@@ -10319,7 +10655,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1803
+            openHarmony/openHarmony_scene.js, line 1851
         </div>
         
     </div>
@@ -10390,7 +10726,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1654
+            openHarmony/openHarmony_scene.js, line 1702
         </div>
         
     </div>
@@ -10551,7 +10887,7 @@ $.endUndo();</code></pre>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Mar 27 2020 17:25:22 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Mar 29 2020 22:06:42 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
