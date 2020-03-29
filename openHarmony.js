@@ -120,6 +120,7 @@ $.directoryGet = function( file_path ){
 $.directory = $.directoryGet( __file__ );
 
 // The included files should be relative to the path of THIS file!
+include( $.directory + "/openHarmony/openHarmony_database.js"    );
 include( $.directory + "/openHarmony/openHarmony_misc.js"        );
 include( $.directory + "/openHarmony/openHarmony_preferences.js" );
 include( $.directory + "/openHarmony/openHarmony_metadata.js"    );
@@ -155,15 +156,13 @@ include(specialFolders.userScripts+"/TB_orderNetworkUp.js");       // for older 
 $.debug = function( obj, level ){
   if( level <= this.debug_level ){
     //We log it.
-    
-    
+
     //Identify the types.
     if( (typeof obj) == "string" ){
       this.log( obj );
     }else{
       this.log( JSON.stringify( obj ) );
     }
-    
   }
 }
 

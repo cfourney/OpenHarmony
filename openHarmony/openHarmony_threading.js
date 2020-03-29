@@ -354,66 +354,188 @@ $.oThread.prototype.runSingleThreaded = function( ){
 
 
 /**
- *
+ * Process class that allows user to launch executables outside harmony and get feedback from them.
  *
  */
 $.oProcess = function(bin, queryArgs){
   this.bin = bin;
   this.queryArgs = queryArgs;
+  this.process = new QProcess();
+  this.readChannel = "All";
 }
 
 
 /**
- * Execute a process and read the result as a string. 
- * @param {string}  [channel="All"]        The Channel to read from, "Output" or "Error", or "All"
+ * Which channel will the process read from. Set before launching the process. can take the values "All", "Output" and "Error".
+ * @name $.oProcess#readChannel
+ * @type {string}
  */
-$.oProcess.prototype.launchAndRead = function(channel, timeOut){
-  if (typeof channel === 'undefined') var channel = "All";
+Object.defineProperty($.oProcess.prototype, 'readChannel', {
+  get : function(){
+    var merged = (this.process.processChannelMode() == QProcess.MergedChannels);
+    if (merged) return "All";
+    if (this.process.readChannel == QProcess.StandardOutput) return "Output";
+    if (this.process.readChannel == QProcess.StandardError) return "Error";
+  },
+
+  set : function(channel){
+    if (channel == "All") {
+      this.process.setProcessChannelMode(QProcess.MergedChannels);
+      this.process.readChannel = QProcess.StandardOutput;
+    }else if (channel == "Output"){
+      this.process.setProcessChannelMode(QProcess.SeparateChannels);
+      this.process.readChannel = QProcess.StandardOutput;
+    }else if (channel == "Error"){
+      this.process.setProcessChannelMode(QProcess.SeparateChannels);
+      this.process.readChannel = QProcess.StandardError;
+    }
+  }
+});
+
+
+/**
+ * Execute a process and read the result as a string. 
+ * @param {string}   [channel="All"]        The Channel to read from, "Output" or "Error", or "All"
+ * @param {bool}     [async=false]          Wether to wait for the end of the process or carry on with script execution
+ * @param {function} [readCallback]         User can provide a function to execute when new info can be read. This function's first argument will contain the available output from the process.
+ * @param {function} [finishedCallback]     User can provide a function to execute when new process has finished
+ * @example
+ * // This example from the openHarmony oScene.renderWriteNodes() function code 
+ * // uses the oProcess class to launch an async process and print its progress
+ * // to the MessageLog.
+ * 
+ * // declaring the binary called by the process
+ * var harmonyBin = specialFolders.bin+"/HarmonyPremium";
+ * 
+ * // building the list of arguments based on user provided input
+ * var args = ["-batch", "-frames", startFrame, endFrame, "-res", resX, resY];
+ *
+ * // different arguments depending on wether the scene is stored on the database or offline
+ * if (this.online){
+ *   args.push("-env");
+ *   args.push(this.environnement);
+ *   args.push("-job");
+ *   args.push(this.job);
+ *   args.push("-scene");
+ *   args.push(this.name);
+ * }else{
+ *   args.push(this.stage);
+ * }
+ *
+ * // Create the process with the arguments above
+ * var p = new this.$.oProcess(harmonyBin, args);
+ * p.readChannel = "All"; // specifying which channel of the process we will listen to: here we listen to both stdout and error.
+ * 
+ * // creating an async process
+ * if (renderInBackground){
+ *   var length = endFrame - startFrame;
+ *
+ *   // Creating a function to respond to new readable information on the output channel.
+ *   // This function takes a "message" argument which will contain the returned output of the process.
+ * 
+ *   var renderProgress = function(message){
+ *     // parsing the message to find a Rendered frame number.
+ *     var progressRegex = /Rendered Frame ([0-9]+)/igm;
+ *     var matches = [];
+ *     while (match = progressRegex.exec(message)) {
+ *       matches.push(match[1]);
+ *     }
+ *     if (matches.length!=0){
+ *       // if a number is found, we compare it to the total frames in the render to deduce a completion percentage.
+ *       var percentage = Math.round(parseInt(matches.pop(),10)/length*100);
+ *       this.$.log("render : "+percentage+"% complete");
+ *     }
+ *   }
+ * 
+ *   // Creating a function that will trigger when process exits. 
+ *   // This function can take an "exit code" argument that will tell if the process terminated without problem.
+ * 
+ *   var renderFinished = function(exitCode){
+ *     // here we simply output that the render completed successfully.
+ *     this.$.log(exitCode+" : render finished");
+ *   }
+ *
+ *   // launching the process in async mode by providing true as first argument, and then the functions created above.
+ * 
+ *   p.launchAndRead(renderProgress, renderFinished);
+ *   this.$.log("Starting render of scene "+this.name);
+
+ * }else{
+ * 
+ *   // if we don't want to use an async process and prefer to freeze the execution while waiting, we can simply call:
+ *   var readout  = p.execute();
+ * }
+ * 
+ * // we return the output of the process in case we didn't use async.
+ * return readout
+ * 
+ */
+$.oProcess.prototype.launchAndRead = function(async, readCallback, finishedCallback){
+  if (typeof async === 'undefined') var async = false;
   if (typeof timeOut === 'undefined') var timeOut = -1;
   
   var bin = this.bin.split("/");
 	var app = bin.pop();
 	var directory = bin.join("\\");
 
-	var p = new QProcess();
+  var p = this.process;
 	p.setWorkingDirectory(directory);
   
-  this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.ERROR);
-	
-  p.start(app, this.queryArgs, QIODevice.ReadOnly );  
-	p.waitForFinished(timeOut);
-	
-  if (channel == "Output"){
-    var readOut = new QTextStream(p.readAllStandardOutput()).readAll();
-  }else if (channel == "Error"){
-    var readOut = new QTextStream(p.readAllStandardError()).readAll();
-  }else if (channel == "All"){
-    p.setProcessChannelMode(QProcess.MergedChannels);
-    var readOut = new QTextStream(p.readAllStandardOutput()).readAll();
+  this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.LOG);
+
+  p.start(app, this.queryArgs);  
+
+  // start process and attach functions to "readyRead" and "finished" signals 
+  var self = this;
+  if (typeof readCallback !== 'undefined'){
+    var onRead = function(){
+      var stdout = self.read();
+      readCallback(stdout);
+    }
+    p.readyRead.connect(onRead);
   }
-  
-  return readOut;
+  if (typeof finishedCallback !== 'undefined') p["finished(int)"].connect(finishedCallback);
+
 }
 
 
+/**
+ * read the output of a process. 
+ */
+$.oProcess.prototype.read = function (){
+  var p = this.process;
+  if (p.readChannel == QProcess.StandardOutput){
+    var readOut = p.readAllStandardOutput();
+  }else {
+    var readOut = p.readAllStandardError();
+  }
+
+  var output = new QTextStream(readOut).readAll();
+  while(output.slice(-1)== "\n" || output.slice(-1)== "\r"){
+    output = output.slice (0, -1);
+  }
+
+  return output;
+}
 
 /**
  * Execute a process and waits for the end of the execution. 
  */
 $.oProcess.prototype.execute = function(){
-  
-  this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.ERROR);
-	
-  var args = [this.bin].concat(this.queryArgs);  
-  Process.execute(args);  
+  this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.LOG);
+
+  var p = this.process;
+	p.start( this.bin, this.queryArgs );
+	p.waitForFinished(-1);
+  var result = this.read();
+  return result;
 }
 
 
 
 /**
- * Execute a process as a separate task, which doesn't block the script execution. Possibility to provide a callBack function that runs when the process is finished.
- * @param {function}       [callback]
+ * Execute a process as a separate application, which doesn't block the script execution and stops the script from interacting with it further.
  */
-$.oProcess.prototype.launchAndDetach = function(callBack){ 
-	QProcess.startDetached(this.bin, this.queryArgs);  
+$.oProcess.prototype.launchAndDetach = function(){ 
+  QProcess.startDetached(this.bin, this.queryArgs);
 }

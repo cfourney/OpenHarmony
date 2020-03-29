@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library v0.01
+//                            openHarmony Library 
 //
 //
-//         Developped by Mathieu Chaptel, Chris Fourney...
+//         Developped by Mathieu Chaptel, Chris Fourney
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -23,8 +23,8 @@
 //   This library doesn't overwrite any of the objects and classes of the official
 //   Toonboom API which must remains available.
 //
-//   This library is made available under the MIT license.
-//   https://opensource.org/licenses/mit
+//   This library is made available under the Mozilla Public license 2.0.
+//   https://www.mozilla.org/en-US/MPL/2.0/
 //
 //   The repository for this library is available at the address:
 //   https://github.com/cfourney/OpenHarmony/
@@ -93,9 +93,9 @@ $.oScene = function( ){
  * @readonly
  */
 Object.defineProperty($.oScene.prototype, 'path', {
-    get : function(){
-        return new this.$.oFolder( scene.currentProjectPath() );
-    }
+  get : function(){
+    return new this.$.oFolder( scene.currentProjectPath() );
+  }
 });
 
 /**
@@ -105,9 +105,10 @@ Object.defineProperty($.oScene.prototype, 'path', {
  * @readonly
  */
 Object.defineProperty($.oScene.prototype, 'stage', {
-    get : function(){
-        return this.path + "/" + scene.currentVersionName() + ".xstage";
-    }
+  get : function(){
+    if (this.online) return this.path + "/stage/" + scene.currentVersionName() + ".stage";
+    return this.path + "/" + scene.currentVersionName() + ".xstage";
+  }
 });
 
 /**
@@ -118,7 +119,7 @@ Object.defineProperty($.oScene.prototype, 'stage', {
  */
 Object.defineProperty($.oScene.prototype, 'paletteFolder', {
   get : function(){
-      return new this.$.oFolder( scene.currentProjectPath()+"/palette-library" );
+    return new this.$.oFolder( scene.currentProjectPath()+"/palette-library" );
   }
 });
 
@@ -129,12 +130,62 @@ Object.defineProperty($.oScene.prototype, 'paletteFolder', {
  * @type {string}
  */
 Object.defineProperty($.oScene.prototype, 'name', {
-    get : function(){
-        return scene.currentScene();
-    }/*,
-    set : function(val){
-        throw "Not yet implemented";
-    }*/
+  get : function(){
+    return scene.currentScene();
+  }
+});
+
+
+/**
+ * Wether the scene is hosted on a Toonboom database.
+ * @name $.oScene#online
+ * @readonly
+ * @type {bool}
+ */
+Object.defineProperty($.oScene.prototype, 'online', {
+  get : function(){
+    return scene.currentJob() != "Digital";
+  }
+});
+
+/**
+ * The name of the scene.
+ * @name $.oScene#environnement
+ * @readonly
+ * @type {string}
+ */
+Object.defineProperty($.oScene.prototype, 'environnement', {
+  get : function(){
+    if (!this.online) return null;
+    return scene.currentScene();
+  }
+});
+
+
+/**
+ * The name of the scene.
+ * @name $.oScene#job
+ * @readonly
+ * @type {string}
+ */
+Object.defineProperty($.oScene.prototype, 'job', {
+  get : function(){
+    if (!this.online) return null;
+    return scene.currentJob();
+  }
+});
+
+
+/**
+ * The name of the scene.
+ * @name $.oScene#version
+ * @readonly
+ * @type {string}
+ */
+Object.defineProperty($.oScene.prototype, 'version', {
+  get : function(){
+    return scene.currentVersionName();
+  }
 });
 
 
@@ -146,12 +197,9 @@ Object.defineProperty($.oScene.prototype, 'name', {
  * @type {string}
  */
 Object.defineProperty($.oScene.prototype, 'sceneName', {
-    get : function(){
-        return scene.currentScene();
-    }/*,
-    set : function(val){
-        throw "Not yet implemented";
-    }*/
+  get : function(){
+    return scene.currentScene();
+  }
 });
 
 
@@ -162,12 +210,12 @@ Object.defineProperty($.oScene.prototype, 'sceneName', {
  * @type {int}
  */
 Object.defineProperty($.oScene.prototype, 'startPreview', {
-    get : function(){
-        return scene.getStartFrame();
-    },
-    set : function(val){
-        scene.setStartFrame( val );
-    }
+  get : function(){
+    return scene.getStartFrame();
+  },
+  set : function(val){
+    scene.setStartFrame( val );
+  }
 });
 
 /**
@@ -176,12 +224,12 @@ Object.defineProperty($.oScene.prototype, 'startPreview', {
  * @type {int}
  */
 Object.defineProperty($.oScene.prototype, 'stopPreview', {
-    get : function(){
-        return scene.getStopFrame()+1;
-    },
-    set : function(val){
-        scene.setStopFrame( val-1 );
-    }
+  get : function(){
+    return scene.getStopFrame()+1;
+  },
+  set : function(val){
+    scene.setStopFrame( val-1 );
+  }
 });
 
 /**
@@ -190,12 +238,12 @@ Object.defineProperty($.oScene.prototype, 'stopPreview', {
  * @type {float}
  */
 Object.defineProperty($.oScene.prototype, 'framerate', {
-    get : function(){
-        return scene.getFrameRate();
-    },
-    set : function(val){
-        return scene.setFrameRate( val );
-    }
+  get : function(){
+    return scene.getFrameRate();
+  },
+  set : function(val){
+    return scene.setFrameRate( val );
+  }
 });
 
 
@@ -205,12 +253,12 @@ Object.defineProperty($.oScene.prototype, 'framerate', {
  * @type {double}
  */
 Object.defineProperty($.oScene.prototype, 'aspectRatioX', {
-    get : function(){
-        return scene.unitsAspectRatioX();
-    },
-    set : function(val){
-        scene.setUnitsAspectRatio( val, this.aspectRatioY );
-    }
+  get : function(){
+    return scene.unitsAspectRatioX();
+  },
+  set : function(val){
+    scene.setUnitsAspectRatio( val, this.aspectRatioY );
+  }
 });
 
 /**
@@ -1802,7 +1850,80 @@ $.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body,
  */
 $.oScene.prototype.save = function( ){
   scene.saveAll();
+}
 
+
+/**
+ * renders the write nodes of the scene
+ * @param {bool}renderInBackground
+ */
+$.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, endFrame, resX, resY, preRenderScript, postRenderScript){
+  if (typeof renderInBackground === 'undefined') var renderInBackground = true;
+  if (typeof startFrame === 'undefined') var startFrame = 0;
+  if (typeof endFrame === 'undefined') var endFrame = this.length;
+  if (typeof resX === 'undefined') var resX = this.resolutionX;
+  if (typeof resY === 'undefined') var resY = this.resolutionY;
+
+  this.save();
+  var harmonyBin = specialFolders.bin+"/HarmonyPremium.exe";
+  
+  var args = ["-batch", "-frames", startFrame, endFrame, "-res", resX, resY];
+
+  if (typeof preRenderScript !== 'undefined'){
+    args.push("-preRenderScript");
+    args.push(preRenderScript);
+  } 
+
+  if (typeof postRenderScript !== 'undefined'){
+    args.push("-postRenderScript");
+    args.push(postRenderScript);
+  }
+
+  if (this.online){
+    args.push("-env");
+    args.push(this.environnement);
+    args.push("-job");
+    args.push(this.job);
+    args.push("-scene");
+    args.push(this.name);
+  }else{
+    args.push(this.stage);
+  }
+
+  var p = new this.$.oProcess(harmonyBin, args);
+  p.readChannel = "All";
+
+  this.$.log("Starting render of scene "+this.name);
+  if (renderInBackground){
+    var length = endFrame - startFrame;
+
+    var progressDialogue = new this.$.oProgressDialog("Rendering : ",length,"Render Write Nodes", true);
+
+    var renderProgress = function(message){
+      // reporting progress to log window
+      var progressRegex = /Rendered Frame ([0-9]+)/igm;
+      var matches = [];
+      while (match = progressRegex.exec(message)) {
+        matches.push(match[1]);
+      }
+      if (matches.length!=0){
+        var progress = parseInt(matches.pop(),10)
+        progressDialogue.value = progress;
+        var percentage = Math.round(progress/length*100);
+        this.$.log("render : "+percentage+"% complete");
+      }
+    }
+
+    var renderFinished = function(exitCode){
+      this.$.log(exitCode+" : render finished");
+    }
+
+    p.launchAndRead(true, renderProgress, renderFinished);
+  }else{
+    var readout  = p.execute();
+    this.$.log(readout);
+    this.$.log("render finished");
+  }
 }
 
 /**

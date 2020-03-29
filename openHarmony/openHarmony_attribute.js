@@ -601,8 +601,8 @@ $.oAttribute.prototype.setValue = function (value, frame) {
         case "PATH_3D" :
           // check if frame is tied to a column or an attribute
           var _frame = _column?(new this.$.oFrame(frame, this.column)):(new this.$.oFrame(frame, _attr));
-          this.$.log(_column.name+" "+_frame.frameNumber+" "+_frame.isKeyframe)
           if (_column){
+            //this.$.log(_column.name+" "+_frame.frameNumber+" "+_frame.isKeyframe)
             if (!_frame.isKeyframe) _frame.isKeyframe = true;
             var _point = new this.$.oPathPoint (this.column, _frame);
             _point.set(value);

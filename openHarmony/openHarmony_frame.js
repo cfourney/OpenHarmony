@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library v0.01
+//                            openHarmony Library
 //
 //
-//         Developped by Mathieu Chaptel, Chris Fourney...
+//         Developped by Mathieu Chaptel, Chris Fourney
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -23,8 +23,8 @@
 //   This library doesn't overwrite any of the objects and classes of the official
 //   Toonboom API which must remains available.
 //
-//   This library is made available under the MIT license.
-//   https://opensource.org/licenses/mit
+//   This library is made available under the Mozilla Public license 2.0.
+//   https://www.mozilla.org/en-US/MPL/2.0/
 //
 //   The repository for this library is available at the address:
 //   https://github.com/cfourney/OpenHarmony/
@@ -508,9 +508,17 @@ Object.defineProperty($.oFrame.prototype, 'easeIn', {
 
         var _column = this.column.uniqueName;
 
+        if (this.column.type == "3DPATH"){
+          var _tension = func.pointTensionPath3d (_column, _kfIndex);
+          var _continuity = func.pointContinuityPath3d (_column, _kfIndex);
+          var _bias = func.pointBiasPath3d (_column, _kfIndex);
+          return {tension : _tension, continuity : _continuity, bias:_bias};
+        }
+
         if(this.column.easeType == "BEZIER"){
             var _leftHandleX = func.pointHandleLeftX (_column, _kfIndex);
             var _leftHandleY = func.pointHandleLeftY (_column, _kfIndex);
+            //this.$.log(this.column.uniqueName+" ease in for kf "+this.frameNumber+" "+_leftHandleX+" "+_leftHandleY)
             return new this.$.oPoint (_leftHandleX, _leftHandleY, 0);
         }
 
@@ -523,26 +531,38 @@ Object.defineProperty($.oFrame.prototype, 'easeIn', {
     },
 
     set : function(newEaseIn){
-        // Not a valid property for non keyframes and blank frames
-        var _kfIndex = this.keyframeIndex;
-        if (_kfIndex == -1) throw new Error("can't set ease on a non keyframe");
-        if (this.isBlank) throw new Error("can't set ease on an empty frame");
+      // Not a valid property for non keyframes and blank frames
+      var _kfIndex = this.keyframeIndex;
+      if (_kfIndex == -1) throw new Error("can't set ease on a non keyframe");
+      if (this.isBlank) throw new Error("can't set ease on an empty frame");
 
-        var _column = this.column.uniqueName;
+      var _column = this.column.uniqueName;
 
-        if(this.column.easeType == "BEZIER"){
-            // Provided easeIn parameter must be a point object representing the left bezier
-            var _rightHandle = this.easeOut;
-            
-            func.setBezierPoint (_column, this.frameNumber, this.value, newEaseIn.x, newEaseIn.y, _rightHandle.x, _rightHandle.y, this.continuity == "CONSTANT", this.continuity)
+      if (this.column.type == "3DPATH"){
+        var _point = this.value;
+        func.setPointPath3d (_column, _kfIndex, _point.x, _point.y, _point.z, newEaseIn.tension, newEaseIn.continuity, newEaseIn.bias)
+        return;
+      }
+
+      if(this.column.easeType == "BEZIER"){
+        // Provided easeIn parameter must be a point object representing the left bezier
+        var _rightHandle = this.easeOut;
+        try{
+          func.setBezierPoint (_column, this.frameNumber, this.value, newEaseIn.x, newEaseIn.y, _rightHandle.x, _rightHandle.y, this.continuity == "CONSTANT", this.continuity)
+        }catch(err){
+          this.$.debug("wrong easeIn format for BEZIER column");
         }
+      }
 
-        if(this.column.easeType == "EASE"){
-            // Provided easeIn parameter must be an object with a 'frame' and 'angle' property
-            var _easeOut = this.easeOut;
-
-            func.setEasePoint (_column, this.frameNumber, this.value, newEaseIn.frame, newEaseIn.angle, _easeOut.frame, _easeOut.angle, this.continuity== "CONSTANT", this.continuity)
+      if(this.column.easeType == "EASE"){
+        // Provided easeIn parameter must be an object with a 'frame' and 'angle' property
+        var _easeOut = this.easeOut;
+        try{
+          func.setEasePoint(_column, this.frameNumber, this.value, newEaseIn.frame, newEaseIn.angle, _easeOut.frame, _easeOut.angle, this.continuity== "CONSTANT", this.continuity)
+        }catch(err){
+          this.$.debug("wrong easeIn format for EASE column");
         }
+      }
     }
 });
 
@@ -560,10 +580,19 @@ Object.defineProperty($.oFrame.prototype, 'easeOut', {
         if (this.isBlank) return null;
 
         var _column = this.column.uniqueName;
+        //this.$.log(this.column.easeType)
+
+        if (this.column.type == "3DPATH"){
+          var _tension = func.pointTensionPath3d (_column, _kfIndex);
+          var _continuity = func.pointContinuityPath3d (_column, _kfIndex);
+          var _bias = func.pointBiasPath3d (_column, _kfIndex);
+          return {tension : _tension, continuity: _continuity, bias:_bias};
+        }
 
         if(this.column.easeType == "BEZIER"){
             var _rightHandleX = func.pointHandleRightX (_column, _kfIndex);
             var _rightHandleY = func.pointHandleRightY (_column, _kfIndex);
+            //this.$.log(this.column.uniqueName+" ease out for kf "+this.frameNumber+" "+_rightHandleX+" "+_rightHandleY)
             return new this.$.oPoint (_rightHandleX, _rightHandleY, 0);
         }
 
@@ -581,6 +610,13 @@ Object.defineProperty($.oFrame.prototype, 'easeOut', {
         if (this.isBlank) throw new Error("can't set ease on an empty frame");
 
         var _column = this.column.uniqueName;
+        //this.$.log(this.column.easeType)
+
+        if (this.column.type == "3DPATH"){
+          var _point = this.value;
+          func.setPointPath3d (_column, _kfIndex, _point.x, _point.y, _point.z, newEaseOut.tension, newEaseOut.continuity, newEaseOut.bias)
+          return;
+        }  
 
         if(this.column.easeType == "BEZIER"){
             // Provided newEaseOut parameter must be a point object representing the left bezier
