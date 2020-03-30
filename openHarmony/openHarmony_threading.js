@@ -354,8 +354,17 @@ $.oThread.prototype.runSingleThreaded = function( ){
 
 
 /**
+ * The constructor for $.oProcess.
+ * @name        $.oProcess
+ * @classdesc   
  * Process class that allows user to launch executables outside harmony and get feedback from them.
- *
+ * @constructor
+ * @param    {string}    bin          The path to the binary executable that will be launched.
+ * @param    {string[]}  queryArgs    A string array of the different arguments given to the command.
+ * 
+ * @property {QProcess}  process      the QProcess object wrapped by the $.oProcess object.
+ * @property {string}    bin          The path to the binary executable that will be launched.
+ * @property    {string[]}  queryArgs    A string array of the different arguments given to the command.
  */
 $.oProcess = function(bin, queryArgs){
   this.bin = bin;
@@ -395,6 +404,7 @@ Object.defineProperty($.oProcess.prototype, 'readChannel', {
 
 /**
  * Execute a process and read the result as a string. 
+ * 
  * @param {string}   [channel="All"]        The Channel to read from, "Output" or "Error", or "All"
  * @param {bool}     [async=false]          Wether to wait for the end of the process or carry on with script execution
  * @param {function} [readCallback]         User can provide a function to execute when new info can be read. This function's first argument will contain the available output from the process.
@@ -501,6 +511,7 @@ $.oProcess.prototype.launchAndRead = function(async, readCallback, finishedCallb
 
 /**
  * read the output of a process. 
+ * @return {string}   The lines as returned by the process since the last "read" instruction 
  */
 $.oProcess.prototype.read = function (){
   var p = this.process;
@@ -520,6 +531,7 @@ $.oProcess.prototype.read = function (){
 
 /**
  * Execute a process and waits for the end of the execution. 
+ * @return {string}   The lines as returned by the process. 
  */
 $.oProcess.prototype.execute = function(){
   this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.LOG);

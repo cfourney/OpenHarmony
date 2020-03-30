@@ -51,8 +51,9 @@
 
 /**
  * The base class for the $.oDialog.
+ * @classdesc
+ * $.oDialog Base Class -- helper class for showing GUI content.
  * @constructor
- * @classdesc  $.oDialog Base Class -- helper class for showing GUI content.
  */
 $.oDialog = function( ){
     
@@ -225,7 +226,7 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
  * The $.dialog.Progress constructor.
  * @name        $.oProgressDialog
  * @constructor
- * @classdesc   An simple progress dialog to
+ * @classdesc   An simple progress dialog to display the progress of a task.
  * @param       {string}              labelText                  The path to the folder.
  * @param       {string}              [range=100]                The path to the folder.
  * @param       {bool}                [show=false]               Whether to immediately show the dialog.

@@ -52,7 +52,8 @@
 /**
  * The constructor for the $.oDataBase.
  * @constructor
- * @classdesc  A class to access the contents of the Harmony database from a scene.
+ * A class to access the contents of the Harmony database from a scene.
+ * @classdesc  
  */
 $.oDatabase = function(){
 }
