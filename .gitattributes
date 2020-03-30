@@ -30,4 +30,7 @@ $.oTimelineLayer.html merge=ours
 $.oUtils.html merge=ours
 $.index.html merge=ours
 $.global.html merge=ours
+$.oDatabase.html merge=ours
+$.oProgressDialog.html merge=ours
+$.oProcess.html merge=ours
 NodeTypes.html merge=ours
