@@ -454,7 +454,7 @@ Object.defineProperty($.oScene.prototype, 'nodes', {
 Object.defineProperty($.oScene.prototype, 'columns', {
     get : function(){
         var _columns = [];
-        for (var i=0; i<columns.numberOf(); i++){
+        for (var i=0; i<column.numberOf(); i++){
             _columns.push( this.$column(column.getName(i)) );
         }
         return _columns;
@@ -1840,11 +1840,6 @@ $.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body,
 };
 
 
-
-
-//SAVING FUNCTIONS--
-//-- TODO:  saveAs, saveAsNewVersion
-
 /**
  * Saves the scene.
  */
@@ -1854,12 +1849,45 @@ $.oScene.prototype.save = function( ){
 
 
 /**
- * renders the write nodes of the scene
- * @param {bool}renderInBackground
+ * Saves the scene in a different location (only available on offline scenes).
+ * @param {string} newPath    the new location for the scene (must be a folder path and not a .xstage)
+ */
+$.oScene.prototype.saveAs = function(newPath){
+  if (!this.online) {
+    this.$.debug("Can't use saveAs() in database mode.", this.$.DEBUG_LEVEL.ERROR);
+    return;
+  }
+
+  if (newPath instanceof this.$.oFile) newPath = newPath.path;
+  return scene.saveAs(newPath);
+}
+
+
+/**
+ * Saves the scene as new version.
+ * @param {string}      newVersionName      The name for the new version
+ * @param {bool}        markAsDefault       Wether to make this new version the default version that will be opened from the database.   
+ */
+$.oScene.prototype.saveNewVersion = function(newVersionName, markAsDefault){
+  if (typeof markAsDefault === 'undefined') var markAsDefault = true;
+
+  return scene.saveAsNewVersion (newVersionName, markAsDefault);
+}
+
+
+/**
+ * Renders the write nodes of the scene
+ * @param {bool}   [renderInBackground=true]    Whether to do the render on the main thread and block script execution
+ * @param {int}    [startFrame=1]               The first frame to render
+ * @param {int}    [endFrame=oScene.length]     The end of the render (non included)
+ * @param {int}    [resX]                       The horizontal resolution of the render. Uses the scene resolution by default.
+ * @param {int}    [resY]                       The vertical resolution of the render. Uses the scene resolution by default.
+ * @param {string} [preRenderScript]            The path to the script to execute on the scene before doing the render
+ * @param {string} [postRenderScript]           The path to the script to execute on the scene after the render is finished
  */
 $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, endFrame, resX, resY, preRenderScript, postRenderScript){
   if (typeof renderInBackground === 'undefined') var renderInBackground = true;
-  if (typeof startFrame === 'undefined') var startFrame = 0;
+  if (typeof startFrame === 'undefined') var startFrame = 1;
   if (typeof endFrame === 'undefined') var endFrame = this.length;
   if (typeof resX === 'undefined') var resX = this.resolutionX;
   if (typeof resY === 'undefined') var resY = this.resolutionY;

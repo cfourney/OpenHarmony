@@ -157,7 +157,7 @@ Object.defineProperty($.oColumn.prototype, 'selected', {
     },
     
     set : function(){
-      throw "Not yet implemented."
+      throw "Setting oColumn.selected is not yet implemented."
     }
 });
 
@@ -166,6 +166,7 @@ Object.defineProperty($.oColumn.prototype, 'selected', {
  * An array of the oFrame objects provided by the column.
  * @name $.oColumn#frames
  * @type {$.oFrame[]}
+ * @readonly
  */
 Object.defineProperty($.oColumn.prototype, 'frames', {
     get : function(){
@@ -174,10 +175,6 @@ Object.defineProperty($.oColumn.prototype, 'frames', {
         }
         
         return this._cacheFrames;
-    },
-    
-    set : function(){
-      throw "Not yet implemented."
     }
 });
  
@@ -231,13 +228,33 @@ Object.defineProperty($.oColumn.prototype, 'easeType', {
             default:
                 return null;
         }
-    },
-
-    set : function (){
-        //TODO
-        throw new Error("oColumn.easeType (set) - not yet implemented");
     }
 })
+
+
+/**
+ * An object with three int values : start, end and step, representing the value of the stepped section parameter (interpolation with non linear "step" parameter).
+ * @name $.oColumn#stepSection
+ * @type {object}
+ */
+Object.defineProperty($.oColumn.prototype, 'stepSection', {
+  get : function(){
+    var _columnName = this.uniqueName;
+    var _section = {
+      start: func.holdStartFrame (_columnName),
+      end : func.holdStopFrame (_columnName),
+      step : func.holdStep (_columnName)
+    }
+    return _section;
+  },
+
+  set : function(newSection){
+    var _columnName = this.uniqueName;
+    func.setHoldStartFrame (_columnName, newSection.start)
+    func.setHoldStopFrame (_columnName, newSection.end)
+    func.setHoldStep (_columnName, newSection.step)
+  }
+});
  
  
 // $.oColumn Class methods
@@ -316,18 +333,24 @@ $.oColumn.prototype.duplicate = function(newAttribute) {
     newAttribute.column = _duplicateColumn;
     _duplicateColumn.attributeObject = newAttribute;
   }
-  
+
+  var _duplicatedFrames = _duplicateColumn.frames;
   var _keyframes = this.keyframes;
   
+  // we set the ease twice to avoid incompatibilities between ease parameters and yet unchanged points
   for (var i in _keyframes){
-    var _duplicateFrame = _duplicateColumn.frames[_keyframes[i].frameNumber];
-    // _duplicateFrame.isKeyframe = _keyframes[i].isKeyframe;
+    var _duplicateFrame = _duplicatedFrames[_keyframes[i].frameNumber];
     _duplicateFrame.value = _keyframes[i].value;
-    _duplicateFrame.easeType = _keyframes[i].easeType;
-    _duplicateFrame.easeIn = _keyframes[i].easeIn;
-    _duplicateFrame.easeOut = _keyframes[i].easeOut;
+    _duplicateFrame.ease = _keyframes[i].ease;
   }
-  
+
+  for (var i in _keyframes){
+    var _duplicateFrame = _duplicatedFrames[_keyframes[i].frameNumber];
+    _duplicateFrame.ease = _keyframes[i].ease;
+  }
+
+  _duplicateColumn.stepSection = this.stepSection;
+
   return _duplicateColumn;
 }
 
@@ -396,9 +419,9 @@ $.oColumn.prototype.getValue = function(frame){
 
 
 /**
- * Gets the value of the column at the given frame.
- * @param {int}  [frame=1]       The frame at which to get the value
- * @return  {various}            The value of the column, can be different types depending on column type.
+ * Sets the value of the column at the given frame.
+ * @param {various}   newValue        The new value to set the column to
+ * @param {int}       [frame=1]       The frame at which to get the value
  */
 $.oColumn.prototype.setValue = function(newValue, frame){
   if (typeof frame === 'undefined') var frame = 1;
