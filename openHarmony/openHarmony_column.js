@@ -341,6 +341,10 @@ $.oColumn.prototype.duplicate = function(newAttribute) {
   for (var i in _keyframes){
     var _duplicateFrame = _duplicatedFrames[_keyframes[i].frameNumber];
     _duplicateFrame.value = _keyframes[i].value;
+  }
+
+  for (var i in _keyframes){
+    var _duplicateFrame = _duplicatedFrames[_keyframes[i].frameNumber];
     _duplicateFrame.ease = _keyframes[i].ease;
   }
 
