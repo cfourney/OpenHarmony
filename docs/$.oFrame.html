@@ -641,6 +641,8 @@
             
                 <li data-name="$.oColumn#selected"><a href="$.oColumn.html#selected">selected</a></li>
             
+                <li data-name="$.oColumn#stepSection"><a href="$.oColumn.html#stepSection">stepSection</a></li>
+            
                 <li data-name="$.oColumn#subColumns"><a href="$.oColumn.html#subColumns">subColumns</a></li>
             
                 <li data-name="$.oColumn#subColumns"><a href="$.oColumn.html#subColumns">subColumns</a></li>
@@ -822,6 +824,8 @@
                 <li data-name="$.oDrawingColumn#name"><a href="$.oDrawingColumn.html#name">name</a></li>
             
                 <li data-name="$.oDrawingColumn#selected"><a href="$.oDrawingColumn.html#selected">selected</a></li>
+            
+                <li data-name="$.oDrawingColumn#stepSection"><a href="$.oDrawingColumn.html#stepSection">stepSection</a></li>
             
                 <li data-name="$.oDrawingColumn#subColumns"><a href="$.oDrawingColumn.html#subColumns">subColumns</a></li>
             
@@ -1205,6 +1209,8 @@
             
                 <li data-name="$.oFrame#duration"><a href="$.oFrame.html#duration">duration</a></li>
             
+                <li data-name="$.oFrame#ease"><a href="$.oFrame.html#ease">ease</a></li>
+            
                 <li data-name="$.oFrame#easeIn"><a href="$.oFrame.html#easeIn">easeIn</a></li>
             
                 <li data-name="$.oFrame#easeOut"><a href="$.oFrame.html#easeOut">easeOut</a></li>
@@ -1230,6 +1236,8 @@
                 <li data-name="$.oFrame#tween"><a href="$.oFrame.html#tween">tween</a></li>
             
                 <li data-name="$.oFrame#value"><a href="$.oFrame.html#value">value</a></li>
+            
+                <li data-name="$.oFrame#velocity"><a href="$.oFrame.html#velocity">velocity</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -2394,6 +2402,10 @@
             
                 <li data-name="$.oScene#save"><a href="$.oScene.html#save">save</a></li>
             
+                <li data-name="$.oScene#saveAs"><a href="$.oScene.html#saveAs">saveAs</a></li>
+            
+                <li data-name="$.oScene#saveNewVersion"><a href="$.oScene.html#saveNewVersion">saveNewVersion</a></li>
+            
                 <li data-name="$.oScene#updatePSD"><a href="$.oScene.html#updatePSD">updatePSD</a></li>
             
             </ul>
@@ -2938,7 +2950,7 @@ frames[1].value = 5;   // frame array values and frameNumbers are matched, so th
 <dd>
     
     <div class="description">
-        Determines the frame's continuity, smooth or otherwise.
+        Determines the frame's continuity setting. Can take the values "CORNER", (two independant bezier handles on each side), "SMOOTH"(handles are aligned) or "STRAIGHT" (no handles and in straight lines).
     </div>
     
     
@@ -2984,6 +2996,51 @@ frames[1].value = 5;   // frame array values and frameNumbers are matched, so th
     
     <div class="description">
         The duration of the keyframe exposure of the frame.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="ease">ease<span class="type-signature type opoint/object">oPoint/object</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Gets a general ease object for the frame, which can be used to set frames to the same ease values.
     </div>
     
     
@@ -3472,7 +3529,7 @@ frames[1].value = 5;   // frame array values and frameNumbers are matched, so th
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="startFrame">startFrame<span class="type-signature type int">int</span> </h4>
+        <h4 class="name" id="startFrame"><span class="type-signature ">readonly</span>startFrame<span class="type-signature type int">int</span> </h4>
     </div>
     
     
@@ -3610,6 +3667,51 @@ frames[1].value = 5;   // frame array values and frameNumbers are matched, so th
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="velocity">velocity<span class="type-signature type oframe">oFrame</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Access the velocity value of a keyframe from a 3DPATH column.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
         </dl>
     
     
@@ -3627,7 +3729,7 @@ frames[1].value = 5;   // frame array values and frameNumbers are matched, so th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_frame.js, line 645
+            openHarmony/openHarmony_frame.js, line 703
         </div>
         
     </div>
@@ -3774,7 +3876,7 @@ frames[1].value = 5;   // frame array values and frameNumbers are matched, so th
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Mar 30 2020 09:48:55 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Mar 31 2020 11:49:05 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

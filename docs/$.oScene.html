@@ -641,6 +641,8 @@
             
                 <li data-name="$.oColumn#selected"><a href="$.oColumn.html#selected">selected</a></li>
             
+                <li data-name="$.oColumn#stepSection"><a href="$.oColumn.html#stepSection">stepSection</a></li>
+            
                 <li data-name="$.oColumn#subColumns"><a href="$.oColumn.html#subColumns">subColumns</a></li>
             
                 <li data-name="$.oColumn#subColumns"><a href="$.oColumn.html#subColumns">subColumns</a></li>
@@ -822,6 +824,8 @@
                 <li data-name="$.oDrawingColumn#name"><a href="$.oDrawingColumn.html#name">name</a></li>
             
                 <li data-name="$.oDrawingColumn#selected"><a href="$.oDrawingColumn.html#selected">selected</a></li>
+            
+                <li data-name="$.oDrawingColumn#stepSection"><a href="$.oDrawingColumn.html#stepSection">stepSection</a></li>
             
                 <li data-name="$.oDrawingColumn#subColumns"><a href="$.oDrawingColumn.html#subColumns">subColumns</a></li>
             
@@ -1205,6 +1209,8 @@
             
                 <li data-name="$.oFrame#duration"><a href="$.oFrame.html#duration">duration</a></li>
             
+                <li data-name="$.oFrame#ease"><a href="$.oFrame.html#ease">ease</a></li>
+            
                 <li data-name="$.oFrame#easeIn"><a href="$.oFrame.html#easeIn">easeIn</a></li>
             
                 <li data-name="$.oFrame#easeOut"><a href="$.oFrame.html#easeOut">easeOut</a></li>
@@ -1230,6 +1236,8 @@
                 <li data-name="$.oFrame#tween"><a href="$.oFrame.html#tween">tween</a></li>
             
                 <li data-name="$.oFrame#value"><a href="$.oFrame.html#value">value</a></li>
+            
+                <li data-name="$.oFrame#velocity"><a href="$.oFrame.html#velocity">velocity</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -2393,6 +2401,10 @@
                 <li data-name="$.oScene#renderWriteNodes"><a href="$.oScene.html#renderWriteNodes">renderWriteNodes</a></li>
             
                 <li data-name="$.oScene#save"><a href="$.oScene.html#save">save</a></li>
+            
+                <li data-name="$.oScene#saveAs"><a href="$.oScene.html#saveAs">saveAs</a></li>
+            
+                <li data-name="$.oScene#saveNewVersion"><a href="$.oScene.html#saveNewVersion">saveNewVersion</a></li>
             
                 <li data-name="$.oScene#updatePSD"><a href="$.oScene.html#updatePSD">updatePSD</a></li>
             
@@ -4267,7 +4279,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2010
+            openHarmony/openHarmony_scene.js, line 2038
         </div>
         
     </div>
@@ -4435,7 +4447,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1999
+            openHarmony/openHarmony_scene.js, line 2027
         </div>
         
     </div>
@@ -4580,7 +4592,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2021
+            openHarmony/openHarmony_scene.js, line 2049
         </div>
         
     </div>
@@ -6773,7 +6785,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1933
+            openHarmony/openHarmony_scene.js, line 1961
         </div>
         
     </div>
@@ -7645,7 +7657,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1948
+            openHarmony/openHarmony_scene.js, line 1976
         </div>
         
     </div>
@@ -7920,7 +7932,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1986
+            openHarmony/openHarmony_scene.js, line 2014
         </div>
         
     </div>
@@ -8462,7 +8474,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1957
+            openHarmony/openHarmony_scene.js, line 1985
         </div>
         
     </div>
@@ -10568,12 +10580,12 @@ $.endUndo();</code></pre>
     <div class="nameContainer">
         <h4 class="name" id="renderWriteNodes">
             
-            renderWriteNodes<span class="signature">(renderInBackground)</span>
+            renderWriteNodes<span class="signature">(<span class="optional">renderInBackground</span>, <span class="optional">startFrame</span>, <span class="optional">endFrame</span>, <span class="optional">resX</span>, <span class="optional">resY</span>, <span class="optional">preRenderScript</span>, <span class="optional">postRenderScript</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1860
+            openHarmony/openHarmony_scene.js, line 1888
         </div>
         
     </div>
@@ -10584,7 +10596,7 @@ $.endUndo();</code></pre>
     
     
     <div class="description">
-        renders the write nodes of the scene
+        Renders the write nodes of the scene
     </div>
     
 
@@ -10604,6 +10616,8 @@ $.endUndo();</code></pre>
 		
 		<th>Type</th>
 		
+		
+		<th>Default</th>
 		
 		
 		<th class="last">Description</th>
@@ -10628,10 +10642,231 @@ $.endUndo();</code></pre>
             </td>
             
             
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
             
             <td class="description last">
                 
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether to do the render on the main thread and block script execution</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>startFrame</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    1
+                
                 </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The first frame to render</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>endFrame</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    oScene.length
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The end of the render (non included)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>resX</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The horizontal resolution of the render. Uses the scene resolution by default.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>resY</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The vertical resolution of the render. Uses the scene resolution by default.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>preRenderScript</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The path to the script to execute on the scene before doing the render</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>postRenderScript</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The path to the script to execute on the scene after the render is finished</td>
         </tr>
 	
 	
@@ -10689,7 +10924,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1851
+            openHarmony/openHarmony_scene.js, line 1846
         </div>
         
     </div>
@@ -10708,6 +10943,261 @@ $.endUndo();</code></pre>
     
     
     
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="saveAs">
+            
+            saveAs<span class="signature">(newPath)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_scene.js, line 1855
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Saves the scene in a different location (only available on offline scenes).
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>newPath</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                the new location for the scene (must be a folder path and not a .xstage)</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="saveNewVersion">
+            
+            saveNewVersion<span class="signature">(newVersionName, markAsDefault)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_scene.js, line 1871
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Saves the scene as new version.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>newVersionName</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The name for the new version</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>markAsDefault</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                Wether to make this new version the default version that will be opened from the database.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -10921,7 +11411,7 @@ $.endUndo();</code></pre>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Mar 30 2020 09:48:55 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Mar 31 2020 11:49:06 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
