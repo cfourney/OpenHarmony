@@ -1564,8 +1564,8 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
           }
         }
       }
+      this.$.debug("found palettes : "+_usedPalettes.map(function(x){return x.name}), this.$.DEBUG_LEVEL.LOG);
     }
-    this.$.debug("found palettes : "+_usedPalettes.map(function(x){return x.name}), this.$.DEBUG_LEVEL.LOG)
 
     if (exportPalettesMode == "createPalette"){
       var templatePalette = this.createPaletteFromNodes(_readNodes, _name, renameUsedColors);
