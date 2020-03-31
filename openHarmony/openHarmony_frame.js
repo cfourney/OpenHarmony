@@ -378,17 +378,6 @@ Object.defineProperty($.oFrame.prototype, 'keyframeIndex', {
 Object.defineProperty($.oFrame.prototype, 'keyframeLeft', {
     get : function(){
       return (new this.$.oFrame(this.startFrame, this.column));
-      /*  var kfs = this.column.getKeyframes();
-        var lkf = false;
-        
-        for( var n=0;n<kfs.length;n++ ){
-          if( kfs[n].frameNumber <= this.frameNumber ){
-            lkf = kfs[n];
-          }else{
-            return lkf;
-          }
-        }
-        return lkf;*/
     }
 });
  
@@ -401,13 +390,6 @@ Object.defineProperty($.oFrame.prototype, 'keyframeLeft', {
 Object.defineProperty($.oFrame.prototype, 'keyframeRight', {
     get : function(){
       return (new this.$.oFrame(this.startFrame+this.duration, this.column));
-      /*  var kfs = this.column.getKeyframes();       
-        for( var n=0;n<kfs.length;n++ ){
-          if( kfs[n].frameNumber > this.frameNumber ){
-            return kfs[n];
-          }
-        }
-        return false;*/
     }
 });
  
@@ -438,53 +420,150 @@ Object.defineProperty($.oFrame.prototype, 'velocity', {
 
  
 /**
+ * Gets a general ease object for the frame, which can be used to set frames to the same ease values. ease Objects contain the following properties:
+ * x : frame number
+ * y : position of the value of the column or velocity for 3dpath
+ * easeIn : a $.oPoint object representing the left handle for bezier columns, or a {point, ease} object for ease columns.
+ * easeOut : a $.oPoint object representing the left handle for bezier columns, or a {point, ease} object for ease columns.
+ * continuity : the type of bezier used by the point.
+ * constant : wether the frame is interpolated or a held value.
+ * @name $.oFrame#ease
+ * @type {oPoint/object}
+ */
+Object.defineProperty($.oFrame.prototype, 'ease', {
+  get : function(){
+    var _column = this.column;
+    if (!_column) return null;
+    if ( !this.isKeyFrame ) return null;
+    if ( this.isBlank ) return null;
+
+    var _columnName = _column.uniqueName;
+    var _index = this.keyframeIndex;
+
+    var ease = {
+      x : func.pointX(_columnName, _index),
+      y : func.pointY(_columnName, _index),
+      constant : func.pointConstSeg(_columnName, _index),
+      continuity : func.pointContinuity(_columnName, _index)
+    }
+  
+    if( _column.easeType == "BEZIER" ){
+      ease.easeIn = new this.$.oPoint(func.pointHandleLeftX(_columnName, _index), func.pointHandleLeftY(_columnName, _index),0);
+      ease.easeOut = new this.$.oPoint(func.pointHandleRightX(_columnName, _index), func.pointHandleRightY(_columnName, _index),0);
+    }
+
+    if( _column.easeType == "EASE" ){
+      ease.easeIn = {point:func.pointEaseIn(_columnName, _index), angle:func.angleEaseIn(_columnName, _index)};
+      ease.easeOut = {point:func.pointEaseOut(_columnName, _index), angle:func.angleEaseOut(_columnName, _index)};
+    }
+
+    return ease;
+  },
+
+  set : function(newEase){
+    if ( !this.isKeyFrame ) throw new Error("can't set ease on a non keyframe");;
+    if (this.isBlank) throw new Error("can't set ease on an empty frame");
+
+    var _column = this.column;
+    if (!_column) throw new Error ("Can't set ease on a frame without a column");
+    var _columnName = _column.uniqueName;
+
+    if( _column.easeType == "BEZIER" ){
+      if (!newEase.hasOwnProperty("x")) throw new Error("Incorrect ease type for a BEZIER column");
+      func.setBezierPoint (_columnName, newEase.x, newEase.y, newEase.easeIn.x, newEase.easeIn.y, newEase.easeOut.x, newEase.easeOut.y, newEase.constant, newEase.continuity)
+    }
+
+    if (_column.easeType == "EASE" ){
+      if (!newEase.hasOwnProperty("point")) throw new Error("Incorrect ease type for a EASE column");
+      func.setEasePoint(_columnName, newEase.x, newEase.y, newEase.easeIn.point, newEase.easeIn.angle, newEase.easeOut.point, newEase.easeOut.angle, newEase.constant, newEase.continuity)
+    }
+  }
+});
+
+
+/**
+ * Gets the ease parameter of the segment, easing into this frame.
+ * @name $.oFrame#easeIn
+ * @type {oPoint/object}
+ */
+Object.defineProperty($.oFrame.prototype, 'easeIn', {
+  get : function(){
+    return this.ease.easeIn;
+  },
+
+  set : function(newEaseIn){
+    var _ease = this.ease;
+    _ease.easeIn = newEaseIn;
+
+    this.ease = ease;
+  }
+});
+
+
+/**
+ * Gets the ease parameter of the segment, easing out of this frame.
+ * @name $.oFrame#easeOut
+ * @type {oPoint/object}
+ */
+Object.defineProperty($.oFrame.prototype, 'easeOut', {
+  get : function(){
+    return this.ease.easeOut;
+  },
+
+  set : function(newEaseOut){
+    var _ease = this.ease;
+    _ease.easeOut = newEaseOut;
+
+    this.ease = _ease;
+  }
+});
+
+
+/**
+ * Determines the frame's continuity setting. Can take the values "CORNER", (two independant bezier handles on each side), "SMOOTH"(handles are aligned) or "STRAIGHT" (no handles and in straight lines).
+ * @name $.oFrame#continuity
+ * @type {string}
+ */
+Object.defineProperty($.oFrame.prototype, 'continuity', {
+  get : function(){
+    var _frame = this.keyframeLeft;    //Works on the left keyframe, in the event that this is not a keyframe itself.
+
+    return _frame.ease.continuity;
+  }, 
+
+  set : function( newContinuity ){
+    var _frame = this.keyframeLeft;    //Works on the left keyframe, in the event that this is not a keyframe itself.
+    var _ease = _frame.ease;
+    _ease.continuity = newContinuity;
+
+    _frame.ease = ease;
+  }
+});
+
+
+/**
  * Whether the frame is tweened or constant. Uses nearest keyframe if this frame isnt.
  * @name $.oFrame#constant
  * @type {string}
  */
 Object.defineProperty($.oFrame.prototype, 'constant', {
   get : function(){
-    if(!this.column){
-      return false;
-    }
-    
-    var _column = this.column.uniqueName;
-    var idx_pt  = 0;
-    
-    for( var np=0; np<func.numberOfPoints(_column);np++ ){
-      if( func.pointX( _column, np ) <= this.frameNumber ){
-        idx_pt = np;
-      }else{
-        break;
-      }
-    }
-    
-    return func.pointConstSeg( _column, idx_pt );
+    var _frame = this.keyframeLeft;    //Works on the left keyframe, in the event that this is not a keyframe itself.
+
+    return _frame.ease.constant;
   }, 
   
-  set : function( new_constant ){
+  set : function( newConstant ){
     if( this.column ){
-      var _column = this.column;
-      if (!_column) throw new Error ("Can't set ease on a frame without a column");
-  
-      var _columnName = _column.uniqueName;
-      
-      var frame = this.keyframeLeft;    //Works on the left keyframe, in the event that this is not a keyframe itself.
-      if( !frame ){ return; }
+      var _frame = this.keyframeLeft;    //Works on the left keyframe, in the event that this is not a keyframe itself.
 
-      var _easeIn  = frame.easeIn;
-      var _easeOut = frame.easeOut;
-      var _y = (_column.type == "3DPATH")?this.velocity:this.value;
-
-      if( _column.easeType == "BEZIER" ){
-        func.setBezierPoint( _columnName, frame.frameNumber, _y, _easeIn.x, _easeIn.y, _easeOut.x, _easeOut.y, new_constant, frame.continuity ); 
-      }
-      if( _column.easeType == "EASE" ){
-        func.setEasePoint( _columnName, frame.frameNumber, _y, _easeIn.point, _easeIn.angle, _easeOut.point, _easeOut.angle, new_constant, frame.continuity );
-      }
+      var _ease = _frame.ease;
+      _ease.constant = newConstant;
+      _frame.ease = _ease;
     }
   }
 });
+
 
 /**
  * Identifies or sets whether there is a tween. Inverse of constant.
@@ -499,200 +578,10 @@ Object.defineProperty($.oFrame.prototype, 'tween', {
     this.constant = !new_tween;
   }
 });
-/**
- * Determines the frame's continuity setting. Can take the values "CORNER", (two independant bezier handles on each side), "SMOOTH"(handles are aligned) or "STRAIGHT" (no handles and in straight lines).
- * @name $.oFrame#continuity
- * @type {string}
- */
-Object.defineProperty($.oFrame.prototype, 'continuity', {
-  get : function(){
-    // Not a valid property for non keyframes and blank frames
-    var _kfIndex = this.keyframeIndex;
-    if ( _kfIndex == -1 ) return null;
-    if ( this.isBlank ) return null;
-
-    var _column = this.column.uniqueName;
-    var _smooth = func.pointContinuity( _column, _kfIndex );
-
-    return _smooth;
-  }, 
-
-  set : function( newContinuity ){
-    var _column = this.column;
-    if (!_column) throw new Error ("Can't set ease on a frame without a column");
-
-    var _columnName = _column.uniqueName;
-    
-    var _y = (_column.type == "3DPATH")?this.velocity:this.value;
-    var _easeIn = this.easeIn;
-    var _easeOut = this.easeOut;
-      
-    if(_column.easeType == "BEZIER"){
-      func.setBezierPoint(_columnName, this.frameNumber, _y, _easeIn.x, _easeIn.y, _easeOut.x, _easeOut.y, this.constant, newContinuity);
-    }
-
-    if(_column.easeType == "EASE"){
-      func.setEasePoint(_columnName, this.frameNumber, _y, _easeIn.point, _easeIn.angle, _easeOut.point, _easeOut.angle, this.constant, newContinuity);
-    }
-  }
-});
 
 
-/**
- * Gets a general ease object for the frame, which can be used to set frames to the same ease values.
- * @name $.oFrame#ease
- * @type {oPoint/object}
- */
-Object.defineProperty($.oFrame.prototype, 'ease', {
-  get : function(){
-    var _column = this.column;
-    if (!_column) return null;
-    var _columnName = _column.uniqueName;
-    var _index = this.keyframeIndex;
 
-    var ease = {
-      x : func.pointX(_columnName, _index),
-      y : func.pointY(_columnName, _index),
-      constant : func.pointConstSeg(_columnName, _index),
-      continuity : func.pointContinuity(_columnName, _index)
-    }
-  
-    if( _column.easeType == "BEZIER" ){
-      ease.easeIn = {x:func.pointHandleLeftX(_columnName, _index), y:func.pointHandleLeftY(_columnName, _index)};
-      ease.easeOut = {x: func.pointHandleRightX(_columnName, _index), y: func.pointHandleRightY(_columnName, _index)};
-    }
-
-    if( _column.easeType == "EASE" ){
-      ease.easeIn = {point:func.pointEaseIn(_columnName, _index), angle:func.angleEaseIn(_columnName, _index)};
-      ease.easeOut = {point:func.pointEaseOut(_columnName, _index), angle:func.angleEaseOut(_columnName, _index)};
-    }
-
-    return ease;
-  },
-
-  set : function(newEase){
-    var _column = this.column;
-    if (!_column) throw new Error ("Can't set ease on a frame without a column");
-    var _columnName = _column.uniqueName;
-
-    if( _column.easeType == "BEZIER" ){
-      func.setBezierPoint (_columnName, newEase.x, newEase.y, newEase.easeIn.x, newEase.easeIn.y, newEase.easeOut.x, newEase.easeOut.y, newEase.constant, newEase.continuity)
-    }
-
-    if (_column.easeType == "EASE" ){
-      func.setEasePoint(_columnName, newEase.x, newEase.y, newEase.easeIn.point, newEase.easeIn.angle, newEase.easeOut.point, newEase.easeOut.angle, newEase.constant, newEase.continuity)
-    }
-  }
-});
-
-
-/**
- * Gets the ease parameter of the segment, easing into this frame.
- * @name $.oFrame#easeIn
- * @type {oPoint/object}
- */
-Object.defineProperty($.oFrame.prototype, 'easeIn', {
-  get : function(){
-    // Not a valid property for non keyframes and blank frames
-    var _kfIndex = this.keyframeIndex;
-    if (_kfIndex == -1) return null;
-    if (this.isBlank) return null;
-
-
-    var _column = this.column.uniqueName;
-
-    if(this.column.easeType == "BEZIER"){
-      var _leftHandleX = func.pointHandleLeftX (_column, _kfIndex);
-      var _leftHandleY = func.pointHandleLeftY (_column, _kfIndex);
-      return new this.$.oPoint (_leftHandleX, _leftHandleY, 0);
-    }
-
-    if(this.column.easeType == "EASE"){
-      var _point = func.pointEaseIn(_column, _kfIndex);
-      var _angle = func.angleEaseIn(_column, _kfIndex);
-      return {point: _point, angle: _angle}
-    }
-
-  },
-
-  set : function(newEaseIn){
-    // Not a valid property for non keyframes and blank frames
-    var _kfIndex = this.keyframeIndex;
-    if (_kfIndex == -1) throw new Error("can't set ease on a non keyframe");
-    if (this.isBlank) throw new Error("can't set ease on an empty frame");
-
-    var _column = this.column
-    var _columnName = _column.uniqueName;
-    var _easeOut = this.easeOut;
-    var _y = (_column.type == "3DPATH")?this.velocity:this.value;
-
-    if(_column.easeType == "BEZIER"){
-      // Provided easeIn parameter must be a point object representing the left bezier
-      if (!newEaseIn.hasOwnProperty("x")) throw new Error("Incorrect ease type for a BEZIER column");
-      func.setBezierPoint (_columnName, this.frameNumber, _y, newEaseIn.x, newEaseIn.y, _easeOut.x, _easeOut.y, this.constant, this.continuity)
-    }
-
-    if(_column.easeType == "EASE"){
-      // Provided easeIn parameter must be an object with a 'frame' and 'angle' property
-      if (!_easeIn.hasOwnProperty("angle")) throw new Error("Incorrect ease type for a EASE column");
-      func.setEasePoint(_columnName, this.frameNumber, _y, newEaseIn.point, newEaseIn.angle, _easeOut.point, _easeOut.angle, this.constant, this.continuity)
-    }
-  }
-});
-
-
-/**
- * Gets the ease parameter of the segment, easing out of this frame.
- * @name $.oFrame#easeOut
- * @type {oPoint/object}
- */
-Object.defineProperty($.oFrame.prototype, 'easeOut', {
-    get : function(){
-        // Not a valid property for non keyframes and blank frames
-        var _kfIndex = this.keyframeIndex;
-        if (_kfIndex == -1) return null;
-        if (this.isBlank) return null;
-
-        var _column = this.column
-        var _columnName = _column.uniqueName;
-
-        if(_column.easeType == "BEZIER"){
-            var _rightHandleX = func.pointHandleRightX (_columnName, _kfIndex);
-            var _rightHandleY = func.pointHandleRightY (_columnName, _kfIndex);
-            return new this.$.oPoint (_rightHandleX, _rightHandleY, 0);
-        }
-
-        if(_column.easeType == "EASE"){
-            var _point = func.pointEaseOut(_columnName, _kfIndex);
-            var _angle = func.angleEaseOut(_columnName, _kfIndex);
-            return {point: _point, angle: _angle}
-        }
-    },
-
-    set : function(newEaseOut){
-        // Not a valid property for non keyframes and blank frames
-        var _kfIndex = this.keyframeIndex;
-        if (_kfIndex == -1) throw new Error("can't set ease on a non keyframe");
-        if (this.isBlank) throw new Error("can't set ease on an empty frame");
-
-        var _column = this.column
-        var _columnName = _column.uniqueName;
-        var _easeIn = this.easeIn;
-        var _y = (_column.type == "3DPATH")?this.velocity:this.value;
-
-        if(_column.easeType == "BEZIER"){
-            // Provided newEaseOut parameter must be a point object representing the left bezier
-            if (!_easeIn.hasOwnProperty("x")) throw new Error("Incorrect ease type for a BEZIER column");
-            func.setBezierPoint( _columnName, this.frameNumber, _y, _easeIn.x, _easeIn.y, newEaseOut.x, newEaseOut.y, this.constant, this.continuity)
-        }
-
-        if(_column.easeType == "EASE"){
-            // Provided easeIn parameter must be an object with a 'frame' and 'angle' property
-            if (!_easeIn.hasOwnProperty("angle")) throw new Error("Incorrect ease type for a EASE column");
-            func.setEasePoint( _columnName, this.frameNumber, _y, _easeIn.point, _easeIn.angle, newEaseOut.point, newEaseOut.angle, this.constant, this.continuity)
-        }
-    }
-});
+// oFrame Class Methods
 
 
 /**
