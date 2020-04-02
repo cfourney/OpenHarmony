@@ -8,10 +8,10 @@ Toonboom Harmony is a very powerful software, with hundreds of functions and too
 
 We are users at heart, animators and riggers, who just want to interact with the software as simply as possible. Simplicity is at the heart of the design of openHarmony. But we also are developpers, and we made the library for people like us who can't resist tweaking the software and bend it in all possible ways, and are looking for powerful functions to help them do it.
 
-This library's aim is to create a more direct way to interact with Toonboom through scripts, by providing a more intuitive way to access its elements, and help with the cumbersome and repetitive tasks as well as help unlock untapped potential in its many available systems. So we can go from doing things like this:
+This library's aim is to create a more direct way to interact with Toonboom through scripts, by providing a more intuitive way to access its elements, and help with the cumbersome and repetitive tasks as well as help unlock untapped potential in its many available systems. So we can go from having to do things like this:
 
 ```javascript
-  // adding a Drawing to the scene
+  // adding a Drawing to the scene with the official API
   var myNodeName = "Drawing";
   var myColumnName = myNodeName;
   var myNode = node.add("Top", myNodeName, "READ",0,0,0);
@@ -23,9 +23,10 @@ This library's aim is to create a more direct way to interact with Toonboom thro
   column.setEntry (myColumnName, 0, 1, "1");
 ```
 
-to simply : 
+to simply writing : 
 
 ```javascript
+  // with openHarmony
   var myNode = $.scene.root.addDrawingNode("Drawing");
   myNode.element.addDrawing(1);
 ```
@@ -38,6 +39,8 @@ Less time spent coding, more time spent having ideas!
 OpenHarmony is based around the four principles of Object Oriented Programming: *Abstraction*, *Encapsulation*, *Inheritance*, *Polymorphism*.
 
 This means every element of the Harmony scene has a corresponding abstraction existing in the code as a class. We have oNode, oScene, oColumn, etc. Unlike in the official API, each class creates objects that are instances of these classes and encapsulate them and all their actions. It means no more storing the path of nodes, column abstract names and element ids to interact with them; if you can create or call it, you can access all of its functionalities. Nodes are declined as DrawingNodes and PegNodes, which inherint from the Node Class, and so on.
+
+![The Document ObjectModel](oH_DOM.jpg)
 
 The *Document Object Model* is a way to organise the elements of the Toonboom scene by highlighting the way they interact with each other. The Scene object has a root group, which contains Nodes, which have Attributes which can be linked to Columns which contain Frames, etc. This way it's always easy to find and access the content you are looking for. The attribute system has also been streamlined and you can now set values of node properties with a simple attribution synthax. 
 

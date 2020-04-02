@@ -404,8 +404,6 @@ Object.defineProperty($.oProcess.prototype, 'readChannel', {
 
 /**
  * Execute a process and read the result as a string. 
- * 
- * @param {string}   [channel="All"]        The Channel to read from, "Output" or "Error", or "All"
  * @param {bool}     [async=false]          Wether to wait for the end of the process or carry on with script execution
  * @param {function} [readCallback]         User can provide a function to execute when new info can be read. This function's first argument will contain the available output from the process.
  * @param {function} [finishedCallback]     User can provide a function to execute when new process has finished

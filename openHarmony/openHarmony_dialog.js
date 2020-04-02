@@ -309,7 +309,6 @@ Object.defineProperty( $.oProgressDialog.prototype, 'label', {
     return this._labelText;
   },
   set: function( val ){
-    this.$.log("Progress : "+val+"/"+this._range)
     this._labelText = val;
     if (!this.$.batchMode) this.progress.setLabelText( val );
   }
@@ -343,8 +342,13 @@ Object.defineProperty( $.oProgressDialog.prototype, 'value', {
       return this._value;
     },
     set: function( val ){
+      if (val > this.range) val = this.range;
       this._value = val;
-      if (!this.$.batchMode) this.progress.value = val;
+      if (this.$.batchMode) {
+        this.$.log("Progress : "+val+"/"+this._range)
+      }else {
+        this.progress.value = val;
+      }
       //QCoreApplication.processEvents();
     }
 });

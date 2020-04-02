@@ -299,8 +299,13 @@ $.oFolder.prototype.create = function(){
 
     var dir = new Dir;
     dir.path = this.path;
-    dir.mkdirs();
-    return dir.exists;
+    try{
+      dir.mkdirs();
+      return this.exists;  
+    }catch(err){
+      this.$.debug(err, this.$.DEBUG_LEVEL.ERROR)
+      return false;
+    }
 }
 
 

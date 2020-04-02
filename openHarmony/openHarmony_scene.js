@@ -1888,7 +1888,7 @@ $.oScene.prototype.saveNewVersion = function(newVersionName, markAsDefault){
 $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, endFrame, resX, resY, preRenderScript, postRenderScript){
   if (typeof renderInBackground === 'undefined') var renderInBackground = true;
   if (typeof startFrame === 'undefined') var startFrame = 1;
-  if (typeof endFrame === 'undefined') var endFrame = this.length;
+  if (typeof endFrame === 'undefined') var endFrame = this.length+1;
   if (typeof resX === 'undefined') var resX = this.resolutionX;
   if (typeof resY === 'undefined') var resY = this.resolutionY;
 
@@ -1926,6 +1926,7 @@ $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, e
     var length = endFrame - startFrame;
 
     var progressDialogue = new this.$.oProgressDialog("Rendering : ",length,"Render Write Nodes", true);
+    var self = this;
 
     var renderProgress = function(message){
       // reporting progress to log window
@@ -1936,20 +1937,22 @@ $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, e
       }
       if (matches.length!=0){
         var progress = parseInt(matches.pop(),10)
+        progressDialogue.label = "Rendering Frame: "+progress+"/"+length
         progressDialogue.value = progress;
         var percentage = Math.round(progress/length*100);
-        this.$.log("render : "+percentage+"% complete");
+        self.$.log("render : "+percentage+"% complete");
       }
     }
 
     var renderFinished = function(exitCode){
-      this.$.log(exitCode+" : render finished");
+      progressDialogue.label = "Rendering Finished"
+      progressDialogue.value = length;
+      self.$.log(exitCode+" : render finished");
     }
 
     p.launchAndRead(true, renderProgress, renderFinished);
   }else{
     var readout  = p.execute();
-    this.$.log(readout);
     this.$.log("render finished");
   }
 }

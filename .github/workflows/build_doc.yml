@@ -17,6 +17,7 @@ jobs:
         output_dir: ./docs
         config_file: documentation.json
         template_name: jaguarjs-jsdoc
+        front_page: README.md
         
     - name: Commit files
       run: |
