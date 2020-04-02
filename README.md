@@ -40,7 +40,7 @@ OpenHarmony is based around the four principles of Object Oriented Programming: 
 
 This means every element of the Harmony scene has a corresponding abstraction existing in the code as a class. We have oNode, oScene, oColumn, etc. Unlike in the official API, each class creates objects that are instances of these classes and encapsulate them and all their actions. It means no more storing the path of nodes, column abstract names and element ids to interact with them; if you can create or call it, you can access all of its functionalities. Nodes are declined as DrawingNodes and PegNodes, which inherint from the Node Class, and so on.
 
-![The Document ObjectModel](oH_DOM.jpg)
+![The Document ObjectModel](https://raw.githubusercontent.com/cfourney/OpenHarmony/master/oH_DOM.jpg)
 
 The *Document Object Model* is a way to organise the elements of the Toonboom scene by highlighting the way they interact with each other. The Scene object has a root group, which contains Nodes, which have Attributes which can be linked to Columns which contain Frames, etc. This way it's always easy to find and access the content you are looking for. The attribute system has also been streamlined and you can now set values of node properties with a simple attribution synthax. 
 
