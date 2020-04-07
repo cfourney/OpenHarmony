@@ -94,7 +94,7 @@ $.oScene = function( ){
  */
 Object.defineProperty($.oScene.prototype, 'path', {
   get : function(){
-    return new this.$.oFolder( scene.currentProjectPath() );
+    return new this.$.oFolder( scene.currentProjectPathRemapped() );
   }
 });
 
@@ -106,8 +106,8 @@ Object.defineProperty($.oScene.prototype, 'path', {
  */
 Object.defineProperty($.oScene.prototype, 'stage', {
   get : function(){
-    if (this.online) return this.path + "/stage/" + scene.currentVersionName() + ".stage";
-    return this.path + "/" + scene.currentVersionName() + ".xstage";
+    if (this.online) return this.path + "/stage/" + this.name + ".stage";
+    return this.path + "/" + this.version + ".xstage";
   }
 });
 
@@ -119,7 +119,7 @@ Object.defineProperty($.oScene.prototype, 'stage', {
  */
 Object.defineProperty($.oScene.prototype, 'paletteFolder', {
   get : function(){
-    return new this.$.oFolder( scene.currentProjectPath()+"/palette-library" );
+    return new this.$.oFolder( this.path+"/palette-library" );
   }
 });
 
@@ -198,7 +198,7 @@ Object.defineProperty($.oScene.prototype, 'version', {
  */
 Object.defineProperty($.oScene.prototype, 'sceneName', {
   get : function(){
-    return scene.currentScene();
+    return this.name;
   }
 });
 
@@ -1269,9 +1269,7 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
  * @return {$.oPalette}   oPalette with provided name.
  */
 $.oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement){
-  this.$.log("importPalette");
   var _list = PaletteObjectManager.getScenePaletteList();
-  this.$.log("_list acquired");
   if  (typeof index === 'undefined') var index = _list.numPalettes;
   if  (typeof paletteStorage === 'undefined') var paletteStorage = "scene";
 
@@ -1292,7 +1290,7 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
   var _newPalette = this.addPalette("dummy_palette", index, paletteStorage, storeInElement);
   var _path = _newPalette.path;
   var _list = _newPalette._paletteList;
-  this.$.log (_path);
+  _newPalette.remove(true);
 
   var _file = new this.$.oFile(_path);
 
@@ -1301,12 +1299,13 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
 
   var _copy = _paletteFile.copy(paletteFolder.path, _paletteFile.name, true);
 
-  this.$.log("copy: "+_copy);
+  if (!_copy) {
+    this.$.debug("Error: couldn't copy palette "+filename+" ", this.$.DEBUG_LEVEL.ERROR);
+    return null;
+  }
 
-  // load new palette
-  _newPalette.remove(true);
+  // remove dummy palette and load new palette
   var _palette = _list.insertPalette(_copy.path.replace(".plt",""), index);
-  this.$.log(_palette.getPath());
 
   _newPalette = new this.$.oPalette(_palette, _list);
   //_newPalette.name = _paletteFile.name;

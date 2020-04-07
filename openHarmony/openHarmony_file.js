@@ -647,13 +647,12 @@ $.oFile.prototype.copy = function( destfolder, copyName, overwrite){
 
     try{
       var success = _file.copy(_dest);
+      if (!success) throw new Error ();
     }catch(err){
-      this.$.debug("Couldn't copy "+_file.path()+" to "+_dest.path()+", ", this.$.DEBUG_LEVEL.ERROR)
+      this.$.debug("Copy of file "+file.path()+" to location "+_dest.path()+" has failed.", this.$.DEBUG_LEVEL.ERROR)
     }
 
-    // this.$.log(overwrite+" "+success)
-    if (success) return new this.$.oFile(_dest.path())
-
+    if (success) return new this.$.oFile(_dest.path());
     return false;
 }
 
