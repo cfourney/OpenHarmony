@@ -23,14 +23,15 @@ for /d %%D in ("%harmonyPrefsDir%\*Harmony*") do (
     echo Found Toonboom Harmony !harmonyFolder! !harmonyVersions! - installing openHarmony for this version.
     set "installDir=!harmonyPrefsDir!\Toon Boom Harmony !harmonyFolder!\!harmonyVersions!00-scripts\"
 
-    REM create script folder if missing
-    if not exist "!installDir!" mkdir "!installDir!"
+    if not "!installDir!" == "!dlPath!" (
+      REM creating a "openHarmony.js" file in script folders
+      if not exist "!installDir!" mkdir "!installDir!"
 
-    cd !installDir!
-    
-    set "script=include(System.getenv('LIB_OPENHARMONY_PATH')+'openHarmony.js');" 
-    
-    echo !script!> openHarmony.js
+      cd !installDir!
+      
+      set "script=include(System.getenv('LIB_OPENHARMONY_PATH')+'openHarmony.js');" 
+      echo !script!> openHarmony.js
+    )
     echo ---- done. ----
   )
 )
