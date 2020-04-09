@@ -508,6 +508,7 @@ Object.defineProperty($.oScene.prototype, 'elements', {
         _ids.push (_id)
       }
     }
+    return _elements;
   }
 });
 
@@ -568,7 +569,6 @@ Object.defineProperty($.oScene.prototype, 'selectedNodes', {
 });
 
 
-
 /**
  * Retrieve and change the selected nodes. Use to retrieve and set Selection. Doesn't work recursively, use scene.getSelectedNodes(true) to get the content of selected groups as well.
  * @name $.oScene#selectedNodes
@@ -586,7 +586,6 @@ Object.defineProperty($.oScene.prototype, 'selectedFrames', {
 });
 
 
-
 /**
  * The current drawing of the scene.
  * @name $.oScene#activeDrawing
@@ -594,15 +593,16 @@ Object.defineProperty($.oScene.prototype, 'selectedFrames', {
  */
 Object.defineProperty($.oScene.prototype, 'activeDrawing', {
   get : function(){
-    var _currentNode = this.getSelectedNodes();
-    var _currentFrame = this.currentFrame;
-    
-    if (_currentNode.length == 0) return null;
-    
-    _currentNode = _currentNode[0];
-    if (_currentNode.type != "READ") return null;
+    var _curDrawing = Tools.getToolSettings().currentDrawing;
+    if (!_curDrawing) return null;
 
-    return _currentNode.attributes.drawing.element.getValue(_currentFrame);
+    var _element = this.getElementById(_curDrawing.elementId);
+    var _drawings = _element.drawings;
+    for (var i in _drawings){
+      if (_drawings[i].id == _curDrawing.drawingId) return _drawings[i];
+    }
+
+    return null
   },
 
   set : function( newCurrentDrawing ){
@@ -675,7 +675,7 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
  * @param  {$.oAttribute}       oAttributeObject         The oAttributeObject owning the column.
  * @todo   cache and find attribute if it is missing
  *
- * @return {$.oColumn}                    The node found given the query.
+ * @return {$.oColumn}                    The column found given the query.
  */
 $.oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
     var _type = column.type(uniqueName);
@@ -688,6 +688,24 @@ $.oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
         default :
             return new this.$.oColumn(uniqueName, oAttributeObject);
     }
+}
+
+
+/**
+ * Gets an element by Id.
+ * @param  {string}        id                         The unique name of the column as a string.
+ * @param  {$.oColumn}     [oColumnObject]            The oColumn object linked to the element in case of duplicate.
+ *
+ * @return {$.oElement}                               The element found given the query. In case of an element linked to several column, only the first one will be returned, unless the column is specified
+ */
+$.oScene.prototype.getElementById = function( id, oColumnObject ){
+  if (element.getNameById(id) == "") return null;
+
+  var _sceneElements = this.elements.filter(function(x){return x.id == id});
+  if (typeof oColumnObject !== 'undefined') _sceneElements = _sceneElements.filter(function(x){return x.column.uniqueName == oColumnObject.uniqueName});
+
+  if (_sceneElements.length > 0) return _sceneElements[0];
+  return null;
 }
 
 

@@ -50,9 +50,9 @@
 
 
 /**
- * The base class for the $.oDrawing.
+ * The $.oDrawing constructor.
  * @constructor
- * @classdesc  $.oDrawing Base Class
+ * @classdesc The $.oDrawing Class represents a single drawing from an element.
  * @param   {int}                    name                       The name of the drawing.
  * @param   {$.oElement}             oElementObject             The element object associated to the element.
  *
@@ -61,9 +61,12 @@
  */
 $.oDrawing = function( name, oElementObject ){
   this._type = "drawing";
-
   this._name = name;
   this.element = oElementObject;
+  this._key = Drawing.Key({
+    elementId : oElementObject.id,
+    exposure : name
+  });
 }
 
 
@@ -80,7 +83,7 @@ $.oDrawing.LINE_END_TYPE = {
 
 
 /**
- * The different types of lines ends.
+ * The reference to the art layers to use with oDrawing.setAsActiveDrawing()
  * @name $.oDrawing#ART_LAYER
  * @enum
  */
@@ -116,6 +119,18 @@ Object.defineProperty( $.oDrawing.prototype, 'name', {
 
 
 /**
+ * The internal Id used to identify drawings.
+ * @name $.oDrawing#id
+ * @type {int}
+ */
+Object.defineProperty( $.oDrawing.prototype, 'id', {
+  get : function(){
+    return this._key.drawingId;
+  }
+})
+
+
+/**
  * The folder path of the drawing on the filesystem.
  * @name $.oDrawing#path
  * @type {string}
@@ -125,6 +140,76 @@ Object.defineProperty( $.oDrawing.prototype, 'path', {
         return fileMapper.toNativePath(Drawing.filename(this.element.id, this.name))
     }
 })
+
+
+/**
+ * The drawing pivot of the drawing.
+ * @name $.oDrawing#pivot
+ * @type {$.oPoint}
+ */
+Object.defineProperty( $.oDrawing.prototype, 'pivot', {
+  get : function(){
+    var _pivot = Drawing.getPivot(this._key);
+    return new this.$.oPoint(_pivot.x, _pivot.y, 0);
+  },
+
+  set : function(newPivot){
+    var _pivot = {x: newPivot.x, y: newPivot.y};
+    Drawing.setPivot({drawing:this._key, pivot:_pivot});
+  }
+})
+
+
+
+/**
+ * Access the underlay art layer's content through this object.
+ * @name $.oDrawing#underlay
+ * @type {$.oDrawingLayer}
+ */
+Object.defineProperty( $.oDrawing.prototype, 'underlay', {
+  get : function(){
+    return new this.$.oDrawingLayer(0, this);
+  }
+})
+
+
+/**
+ * Access the color art layer's content through this object.
+ * @name $.oDrawing#colorArt
+ * @type {$.oDrawingLayer}
+ */
+Object.defineProperty( $.oDrawing.prototype, 'colorArt', {
+  get : function(){
+    return new this.$.oDrawingLayer(1, this);
+  }
+})
+
+
+/**
+ * Access the line art layer's content through this object.
+ * @name $.oDrawing#lineArt
+ * @type {$.oDrawingLayer}
+ */
+Object.defineProperty( $.oDrawing.prototype, 'lineArt', {
+  get : function(){
+    return new this.$.oDrawingLayer(2, this);
+  }
+})
+
+
+/**
+ * Access the overlay art layer's content through this object.
+ * @name $.oDrawing#overlay
+ * @type {$.oDrawingLayer}
+ */
+Object.defineProperty( $.oDrawing.prototype, 'overlay', {
+  get : function(){
+    return new this.$.oDrawingLayer(3, this);
+  }
+})
+
+
+
 
 
 // $.oDrawing Class methods
@@ -235,7 +320,7 @@ $.oDrawing.prototype.setAsActiveDrawing = function(artLayer){
 
   var _frame = this.getVisibleFrames();
   if (_frame.length == 0){
-    this.$.debug("Column missing: impossible to set as active drawing "+this.name+" of element "+_element.name, this.$.DEBUG_LEVEL.ERROR);
+    this.$.debug("Drawing not exposed: impossible to set as active drawing "+this.name+" of element "+_element.name, this.$.DEBUG_LEVEL.ERROR);
     return false;
   }
 
@@ -288,3 +373,109 @@ $.oDrawing.prototype.setLineEnds = function(endType, artLayer){
 $.oDrawing.prototype.toString = function(){
     return this.name;
 }
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//         $.oArtLayer class        //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for the $.oArtLayer class.
+ * @constructor
+ * @classdesc  $.oArtLayer represents art layers, as described by the artlayer toolbar. Access the drawing contents of the layers through this class.
+ * @param   {int}                    index                      The artLayerIndex (0: underlay, 1: line art, 2: color art, 3:overlay).
+ * @param   {$.oDrawing}             oDrawingObject             The oDrawing this layer belongs to.
+ */
+$.oArtLayer = function( index , oDrawingObject ){
+  this._layerIndex = index;
+  this._drawing = oDrawingObject;
+  this._key = {drawing: oDrawingObject._key, art:index}
+}
+
+
+/**
+ * The shapes contained on the drawing.
+ * @name $.oArtLayer#shapes
+ * @type {$.oShape[]}
+ */
+Object.defineProperty( $.oArtLayer.prototype, 'shapes', {
+  get : function(){
+    var _shapesNum = Drawing.query.getNumberOfLayers(this._key);
+    var _shapes = [];
+    for (var i=0;i<_shapesNum; i++){
+      _shapes.push(new this.$.oShape(i, this));
+    }
+    return _shapes;
+  }
+})
+
+
+/**
+ * Removes the contents of the art layer.
+ */
+$.oArtLayer.prototype.clear = function(){
+  return this.name;
+}
+
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//          $.oShape class          //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for the $.oShape class.
+ * @constructor
+ * @classdesc  $.oShape represents shapes drawn on the art layer. Strokes, colors, line styles, can be accessed through this class.<br>Warning, Toonboom stores strokes by index, so stroke objects may become obsolete when modifying the contents of the drawing.
+ * @param   {int}                    index                      The artLayerIndex (0: underlay, 1: line art, 2: color art, 3:overlay).
+ * @param   {$.oArtLayer}            oArtLayerObject            The oArtLayer this layer belongs to.
+ */
+$.oShape = function( index , oArtLayerObject ){
+  this._shapeIndex = index;
+  this._drawingLayer = oArtLayerObject;
+  var _key = oArtLayerObject._key;
+  this._key = {drawing:_key.drawing, art:_key.art, layers:[index]}
+}
+
+
+/**
+ * The strokes making up the shape.
+ * @name $.oShape#strokes
+ * @type {$.oShape[]}
+ */
+Object.defineProperty( $.oShape.prototype, 'strokes', {
+  get : function(){
+    var _strokes = Drawing.query.getLayerStrokes(this._key).layers[0].strokes;
+    return _strokes;
+  }
+})
+
+
+/**
+ * WIP Set and retrieve the selected status of each shape.
+ * @name $.oShape#selected
+ * @type {$.oShape[]}
+ */
+Object.defineProperty( $.oShape.prototype, 'selected', {
+  get : function(){
+  },
+
+  set : function(){
+  }
+})
