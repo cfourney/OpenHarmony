@@ -34,13 +34,26 @@ to simply writing :
 Less time spent coding, more time spent having ideas!
 
 -----
+## Do I need any knowledge of toonboom scripting to use openHarmony?
+
+OpenHarmony aims to be self contained and to reimplement all the basic functions of the Harmony API. So, while it might help to have prior experience to understand what goes on under the hood, knowledge of the official API is not required. 
+
+However, should you reach the limits of what openHarmony can offer at this time, you can always access the official API at any moment. Maybe you can submit a request and the missing parts will be added eventually, or you can even delve into the code and add the necessary functions yourself if you feel like it!
+
+You can access a list of all the functions, how to use them, as well as examples, from the online documentation:
+
+https://cfourney.github.io/OpenHarmony/$.html
+
+-----
 ## The OpenHarmony Document Object Model or DOM
 
 OpenHarmony is based around the four principles of Object Oriented Programming: *Abstraction*, *Encapsulation*, *Inheritance*, *Polymorphism*.
 
-This means every element of the Harmony scene has a corresponding abstraction existing in the code as a class. We have oNode, oScene, oColumn, etc. Unlike in the official API, each class creates objects that are instances of these classes and encapsulate them and all their actions. It means no more storing the path of nodes, column abstract names and element ids to interact with them; if you can create or call it, you can access all of its functionalities. Nodes are declined as DrawingNodes and PegNodes, which inherint from the Node Class, and so on.
+This means every element of the Harmony scene has a corresponding abstraction existing in the code as a class. We have oNode, oScene, oColumn, etc. Unlike in the official API, each class is designed to create objects that are instances of these classes and encapsulate them and all their actions. It means no more storing the path of nodes, column abstract names and element ids to interact with them; if you can create or call it, you can access all of its functionalities. Nodes are declined as DrawingNodes and PegNodes, which inherint from the Node Class, and so on.
 
-![The Document ObjectModel](https://raw.githubusercontent.com/cfourney/OpenHarmony/master/oH_DOM.jpg)
+The openHarmony library doesn't merely provide *access* to the elements of a Toonboom Harmony file, it *models* them and their relationship to each others.
+
+<img src="https://raw.githubusercontent.com/cfourney/OpenHarmony/master/oH_DOM.jpg" alt="The Document ObjectModel" width="1600">
 
 The *Document Object Model* is a way to organise the elements of the Toonboom scene by highlighting the way they interact with each other. The Scene object has a root group, which contains Nodes, which have Attributes which can be linked to Columns which contain Frames, etc. This way it's always easy to find and access the content you are looking for. The attribute system has also been streamlined and you can now set values of node properties with a simple attribution synthax. 
 
@@ -55,7 +68,7 @@ On the other hand, the "o" naming scheme allows us to retain full access to the 
 
 This library is made available under the [Mozilla Public license 2.0](https://www.mozilla.org/en-US/MPL/2.0/).
 
-OpenHarmony can be downloaded from [this repository](https://github.com/cfourney/OpenHarmony/) directly. In order to make use of its functions, it needs to be unzipped next to the scripts you will be writing. 
+OpenHarmony can be downloaded from [this repository](https://github.com/cfourney/OpenHarmony/releases/) directly. In order to make use of its functions, it needs to be unzipped next to the scripts you will be writing. 
 
 All you have to do is call :
 ```javascript
@@ -76,14 +89,55 @@ As time goes by, more functions will be added and the documentation will also ge
 -----
 ## Installation
 
-To install, download a copy of the files from the repository from Github, then unzip the contents anywhere, and run `install.bat`. This will prompt you to ask which installation of Harmony you want to use with it. 
+To install:
+- download the zip from [the releases page](https://github.com/cfourney/OpenHarmony/releases/),
+- unzip the contents where you want to store the library,
+- run `install.bat`.
 
-This will copy the files into the user's script folder where scripts can make direct use of it.
+This last step will tell Harmony where to look to load the library, by setting the environment variable `LIB_OPENHARMONY_PATH` to the current folder. 
 
-In the future, we have plans to allow storage of the files in any folder on the computer or remote server through an environment variable.
+It will then create a `openHarmony.js` file into the user scripts folder which calls the files from the folder from the `LIB_OPENHARMONY_PATH` variable, so that scripts can make direct use of it without having to worry about where openHarmony is stored.
+
+If you don't need a remote location for the library, you can also unzip the entire download into your user script folder.
 
 -----
-## Contributing to openHarmony
+## Let's get technical. I can code, and want to contribute, where do I start?
+
+Reading and understanding the existing code, or at least the structure of the lib, is a great start, but not a requirement. You can simply start adding your classes to the $ object that is the root of the harmony lib, and start implementing. However, try to follow these guidelines as they are the underlying principles that make the library consistent:
+
+  * There is a $ global object, which contains all the class declarations, and can be passed from one context to another to access the functions.
+  
+  * Each class is an abstract representation of a core concept of Harmony, so naming and consistency (within the lib) is essential. But we are not bound by the structure or naming of Harmony if we find a better way, for example to make nomenclatures more consistent between the scripting interface and the UI.
+  
+  * Each class defines a bunch of class properties with getter/setters for the values that are directly related to an entity of the scene. If you're thinking of making a getter function that doesn't require arguments, use a getter setter instead!
+  
+  * Each class also defines methods which can be called on the class instances to affect its contents, or its children's contents. For example, you'd go to the scene class to add the things that live in the scene, such as elements, columns and palettes. You wouldn't go to the column class or palette class to add one, because then what are you adding it *to*?
+  
+  * We use encapsulation over having to pass a function arguments every time we can. Instead of adding a node to the scene, and having to pass a group as argument, adding a node is done directly by calling a method of the parent group. This way the parent/child relationship is always clear and the arguments list kept to a minimum.
+
+  * The goal is to make the most useful set of functions we can. Instead of making a large function that does a lot, consider extracting the small useful subroutines you need in your function into the existing classes directly.
+  
+  * Each method argument besides the core one (for example, for adding nodes, we have to specify the type of the new node we create) must have a default fallback to make the argument optional. 
+
+  * Don't use globals ever, but maybe use a class property if you need an enum for example. 
+
+  * Don't use the official API namespace, any function that exists in the official API must remain accessible otherwise things will break. Prefix your class names with "o" to avoid this and to signify this function is part of openHarmony.
+
+  * We use the official API as little as we can in the code, so that if the implementation changes, we can easily fix it in a minimal amount of places. Wrap it, then use the wrapper. (ex: oScene.name)
+  
+  * Users of the lib should almost never have to use "new" to create instances of their classes. Create accessors/factories that will do that for them. For example, $.scn creates and return a oScene instance, and $.scn.nodes returns new oNodes instances, but users don't have to create them themselves, so it's like they were always there, contained within. It also lets you create different subclasses for one factory. For example, $.scn.$node("Top/myNode") will either return a oNode, oDrawingNode, oPegNode or oGroupNode object depending on the node type of the node represented by the object.   
+  Exceptions are small useful value containing objects that don't belong to the Harmony hierarchy like oPoint, oBox, oColorValue, etc.
+
+  * It's a JS Library, so use camelCase naming and try to follow the google style guide for JS :
+  https://google.github.io/styleguide/jsguide.html
+
+  * Document your new functions using the JSDocs synthax : https://devdocs.io/jsdoc/howto-es2015-classes
+  
+  * Make a branch, create a merge request when you're done, and we'll add the new stuff you added to the lib :)
+
+
+-----
+## Credits
 
 This library was created by Mathieu Chaptel and Chris Fourney.
 
