@@ -38,6 +38,8 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
+include(specialFolders.resource+"/scripts/TB_orderNetworkUp.js"  );
+include(specialFolders.userScripts+"/TB_orderNetworkUp.js");       // for older versions of harmony
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -659,7 +661,7 @@ Object.defineProperty($.oNode.prototype, 'outPorts', {
 
 /**
  * The list of nodes connected to the inport of this node, in order of inport.
- * @name $.oNode#inLinks
+ * @name $.oNode#outLinks
  * @readonly 
  * @type {oNodeLink[]}
  */
@@ -794,7 +796,10 @@ Object.defineProperty($.oNode.prototype, 'linkedColumns', {
 */
 Object.defineProperty($.oNode.prototype, 'canCreateInPorts', {
   get : function(){
-    return ["COMPOSITE", "GROUP", "MULTIPORT_OUT"].indexOf(this.type) != -1;
+    return ["COMPOSITE", 
+            "GROUP", 
+            "MULTIPORT_OUT"]
+            .indexOf(this.type) != -1;
   }
 })
 
@@ -807,7 +812,9 @@ Object.defineProperty($.oNode.prototype, 'canCreateInPorts', {
 */
 Object.defineProperty($.oNode.prototype, 'canCreateOutPorts', {
   get : function(){
-    return ["GROUP", "MULTIPORT_IN"].indexOf(this.type) != -1;
+    return ["GROUP", 
+            "MULTIPORT_IN"]
+            .indexOf(this.type) != -1;
   }
 })
 
@@ -825,6 +832,7 @@ $.oNode.prototype.getInLinksNumber = function(inPort){
 /**
  * Returns the nodeLink representing the connection of a specific inPort
  * @param   {int}      inPort      the number of the port to get links from.
+ * @return  {$.oLink}  the oLink Object representing the link connected to the inport
  */
 $.oNode.prototype.getInLink = function(inPort){
   if (this.inPorts < inPort) return null;
@@ -842,9 +850,10 @@ $.oNode.prototype.getInLink = function(inPort){
 
 
 /**
- * Returns all the valid node links connected into this node.
+ * Returns all the valid node links that are connected into this node.
+ * @return {$.oLink[]}  An array of $.oLink objects.
  */
-$.oNode.prototype.getInLinks = function(inPort){
+$.oNode.prototype.getInLinks = function(){
   var _inPorts = this.inPorts;
   var _inLinks = [];
   
@@ -959,6 +968,7 @@ $.oNode.prototype.unlinkInPort = function( inPort ){
 /**
  * Returns the node connected to a specific in-port
  * @param   {int}      inPort      the number of the port to get the linked Node from.
+ * @return  {int}    the number of links
  */
 $.oNode.prototype.getLinkedInNode = function(inPort){
   if (this.inPorts < inPort) return null;
@@ -969,6 +979,7 @@ $.oNode.prototype.getLinkedInNode = function(inPort){
 /**
  * Returns the number of links connected to an outPort
  * @param   {int}      outPort      the number of the port to get links from.
+ * @return  {int}    the number of links
  */
 $.oNode.prototype.getOutLinksNumber = function(outPort){
   if (this.outPorts < outPort) return null;
@@ -980,6 +991,7 @@ $.oNode.prototype.getOutLinksNumber = function(outPort){
  * Returns the $.oLink object representing the connection of a specific outPort / link
  * @param   {int}      outPort      the number of the port to get the link from.
  * @param   {int}      [outLink]    the index of the link.
+ * @return {$.oLink}   The link object describing the connection
  */
 $.oNode.prototype.getOutLink = function(outPort, outLink){
   if (typeof outLink === 'undefined') var outLink = 0;
@@ -999,6 +1011,7 @@ $.oNode.prototype.getOutLink = function(outPort, outLink){
 
 /**
  * Returns all the valid node links that are coming out of this node.
+ * @return {$.oLink[]}  An array of $.oLink objects.
  */
 $.oNode.prototype.getOutLinks = function(){
   var _outPorts = this.outPorts;
@@ -2041,6 +2054,23 @@ Object.defineProperty($.oGroupNode.prototype, "multiportOut", {
     }
 });
 
+ /**
+ * All the nodes contained within the group, one level deep.
+ * @name $.oGroupNode#nodes
+ * @readonly
+ * @type {$.oNode[]} 
+ */
+Object.defineProperty($.oGroupNode.prototype, "nodes", {
+  get : function() {
+    var _path = this.path;  
+    var _nodes = node.subNodes(_path);
+
+    var self = this;
+    return _nodes.map(function(x){return self.scene.getNodeByPath(x)});
+  }
+});
+
+
 
  /**
  * All the backdrops contained within the group.
@@ -2070,6 +2100,7 @@ $.oGroupNode.prototype.getNodeByName = function(name){
   
   return this.scene.getNodeByPath(_path);
 }
+
 
  /**
  * Gets all the nodes contained within the group.

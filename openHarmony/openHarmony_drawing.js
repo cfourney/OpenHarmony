@@ -357,7 +357,7 @@ $.oDrawing.prototype.setLineEnds = function(endType, artLayer){
   Action.perform( "onActionChooseSelectTool()" );	
   Action.perform( "selectAll()", "cameraView" );
 
-  var widget = $.getHarmonyUIWidget("frameBrushParameters", "pencilShape");
+  var widget = $.getHarmonyUIWidget("pencilShape", "frameBrushParameters");
   if (widget){
     widget.onChangeTipStart( endType );
     widget.onChangeTipEnd( endType );

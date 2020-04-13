@@ -51,24 +51,22 @@
 
 
 /**
- * The base class for the $.oBackdrop.
+ * The constructor for  the $.oBackdrop class.
  * @constructor
- * @classdesc  $.oBackdrop Base Class
+ * @classdesc  The $.oBackdrop Class represents a backdrop in the node view, and 
  * @param   {string}                 groupPath                   The path to the object in which this backdrop is placed.
  * @param   {backdropObject}         backdropObject              The harmony-internal backdrop object associated with this oBackdrop.
- *
- * @property {string}                groupPath                   The path to the object in which this backdrop is placed.
- * @property {backdropObject}        backdropObject              The harmony-internal backdrop object associated with this oBackdrop.
+ * 
+ * 
  */
 $.oBackdrop = function( groupPath, backdropObject ){
   this.group = ( groupPath instanceof this.$.oGroupNode )? groupPath.path: groupPath;
-  
 	this.backdropObject = backdropObject;
 }
 
 
 /**
- * The index of this backdrop in the internal of Harmony's backdrops.
+ * The index of this backdrop in the current group.
  * @name $.oBackdrop#index
  * @type {int}
  */
@@ -79,38 +77,39 @@ Object.defineProperty($.oBackdrop.prototype, 'index', {
     }
 })
 
+
 /**
  * The title of the backdrop.
  * @name $.oBackdrop#title
  * @type {string}
  */
 Object.defineProperty($.oBackdrop.prototype, 'title', {
-    get : function(){
-         var _title = this.backdropObject.title.text;
-         return _title;
-    },
- 
-    set : function(newTitle){
-        var _backdrops = Backdrop.backdrops(this.group);
-		
-		// incrementing to prevent two backdrops to have the same title
-		var names = _backdrops.map(function(x){return x.title.text})
-		var count = 0;
-		var title = newTitle
-		
-		while (names.indexOf(title) != -1){
-			count++;
-			title = newTitle+"_"+count;
-		}
-		newTitle = title;
+  get : function(){
+    var _title = this.backdropObject.title.text;
+    return _title;
+  },
 
-		var _index = this.index;
-		
-        _backdrops[_index].title.text = newTitle;
-
-		this.backdropObject = _backdrops[_index];
-        Backdrop.setBackdrops(this.group, _backdrops);
+  set : function(newTitle){
+    var _backdrops = Backdrop.backdrops(this.group);
+  
+    // incrementing to prevent two backdrops to have the same title
+    var names = _backdrops.map(function(x){return x.title.text})
+    var count = 0;
+    var title = newTitle
+    
+    while (names.indexOf(title) != -1){
+      count++;
+      title = newTitle+"_"+count;
     }
+    newTitle = title;
+
+    var _index = this.index;
+    
+    _backdrops[_index].title.text = newTitle;
+
+    this.backdropObject = _backdrops[_index];
+    Backdrop.setBackdrops(this.group, _backdrops);
+  }
 })
 
 
@@ -158,7 +157,7 @@ Object.defineProperty($.oBackdrop.prototype, 'titleFont', {
         _backdrops[_index].title.size = newFont.size;
         _backdrops[_index].title.color = newFont.color.toInt();
 
-		this.backdropObject = _backdrops[_index];
+        this.backdropObject = _backdrops[_index];
         Backdrop.setBackdrops(this.group, _backdrops);
     }
 })
@@ -193,22 +192,22 @@ Object.defineProperty($.oBackdrop.prototype, 'bodyFont', {
 
 /**
  * The position of the backdrop on the horizontal axis.
- * @name $.oDrawing#x
+ * @name $.oBackdrop#x
  * @type {float}
  */
 Object.defineProperty($.oBackdrop.prototype, 'x', {
-    get : function(){
-         var _x = this.backdropObject.position.x;
-         return _x;
-    },
+  get : function(){
+    var _x = this.backdropObject.position.x;
+    return _x;
+  },
  
-    set : function(newX){
-        var _backdrops = Backdrop.backdrops(this.group);
-		var _index = this.index;
+  set : function(newX){
+    var _backdrops = Backdrop.backdrops(this.group);
+    var _index = this.index;
 
-        _backdrops[_index].position.x = newX;
+    _backdrops[_index].position.x = newX;
 
-		this.backdropObject = _backdrops[_index];
+    this.backdropObject = _backdrops[_index];
         Backdrop.setBackdrops(this.group, _backdrops);
     }
 })
@@ -216,7 +215,7 @@ Object.defineProperty($.oBackdrop.prototype, 'x', {
 
 /**
  * The position of the backdrop on the vertical axis.
- * @name $.oDrawing#y
+ * @name $.oBackdrop#y
  * @type {float}
  */
 Object.defineProperty($.oBackdrop.prototype, 'y', {
@@ -239,7 +238,7 @@ Object.defineProperty($.oBackdrop.prototype, 'y', {
 
 /**
  * The width of the backdrop.
- * @name $.oDrawing#width
+ * @name $.oBackdrop#width
  * @type {float}
  */
 Object.defineProperty($.oBackdrop.prototype, 'width', {
@@ -262,7 +261,8 @@ Object.defineProperty($.oBackdrop.prototype, 'width', {
 
 /**
  * The height of the backdrop.
- * @name $.oDrawing#width
+ * @name $.oBackdrop#height
+ * @memberof $.oBackdrop#
  * @type {float}
  */
 Object.defineProperty($.oBackdrop.prototype, 'height', {
@@ -285,7 +285,7 @@ Object.defineProperty($.oBackdrop.prototype, 'height', {
 
 /**
  * The position of the backdrop.
- * @name $.oDrawing#position
+ * @name $.oBackdrop#position
  * @type {oPoint}
  */
 Object.defineProperty($.oBackdrop.prototype, 'position', {
@@ -309,7 +309,7 @@ Object.defineProperty($.oBackdrop.prototype, 'position', {
 
 /**
  * The bounds of the backdrop.
- * @name $.oDrawing#bounds
+ * @name $.oBackdrop#bounds
  * @type {oBox}
  */
 Object.defineProperty($.oBackdrop.prototype, 'bounds', {
@@ -335,7 +335,7 @@ Object.defineProperty($.oBackdrop.prototype, 'bounds', {
 
 /**
  * The color of the backdrop.
- * @name $.oDrawing#color
+ * @name $.oBackdrop#color
  * @type {oColorValue}
  */
 Object.defineProperty($.oBackdrop.prototype, 'color', {

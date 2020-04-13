@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oDatabase</title>
+    <title>Class: oApp</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -2685,7 +2685,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oDatabase.html">Class: oDatabase</h1>
+        <h1 class="page-title" data-filename="$.oApp.html">Class: oApp</h1>
         
 
 
@@ -2694,10 +2694,10 @@
     
 <header>
     <h2>
-    oDatabase
+    oApp
     </h2>
     
-        <div class="class-description">A class to access the contents of the Harmony database from a scene.</div>
+        <div class="class-description">The $.oApp class provides access to the Harmony application and its widgets.</div>
     
 </header>  
 
@@ -2709,14 +2709,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oDatabase">
+        <h4 class="name" id="oApp">
             
-            new $.oDatabase<span class="signature">()</span>
+            new $.oApp<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_database.js, line 58
+            openHarmony/openHarmony_application.js, line 58
         </div>
         
     </div>
@@ -2727,7 +2727,7 @@
     
     
     <div class="description">
-        The constructor for the $.oDataBase.
+        The constructor for the $.oApp class
     </div>
     
 
@@ -2789,6 +2789,145 @@
     
     
     
+    
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="mainWindow">mainWindow<span class="type-signature type qwidget">QWidget</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The Harmony Main Window.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="mousePosition">mousePosition<span class="type-signature type $.opoint"><a href="$.oPoint.html">$.oPoint</a></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The Position of the mouse cursor in the screen coordinates.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="toolbars">toolbars<span class="type-signature type qtoolbar">QToolbar</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The Harmony UI Toolbars.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
     
     
     
@@ -2798,14 +2937,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="getEnvironments">
+        <h4 class="name" id="getWidgetByName">
             
-            getEnvironments<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;string>}</span>
+            getWidgetByName<span class="signature">(name, <span class="optional">parentName</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{QWidget}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_database.js, line 80
+            openHarmony/openHarmony_application.js, line 113
         </div>
         
     </div>
@@ -2816,107 +2955,7 @@
     
     
     <div class="description">
-        Lists the environments existing on the local database
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        Array.&lt;string>
-                        
-                    
-            </td>
-            <td class="description last">The list of names of environments</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getJobs">
-            
-            getJobs<span class="signature">(<span class="optional">environment</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;string>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_database.js, line 97
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Lists the jobs in the given environment in the local database
+        Gets access to a widget from the Harmony Interface.
     </div>
     
 
@@ -2947,7 +2986,35 @@
 	
         <tr>
             
-                <td class="name"><code>environment</code></td>
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                The name of the widget to look for.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>parentName</code></td>
             
             
             <td class="type">
@@ -2970,7 +3037,7 @@
                         
                     
                 
-                The name of the environment to return the jobs from. Returns the jobs from the current environment by default.</td>
+                The name of the parent widget to look into, in case of duplicates.</td>
         </tr>
 	
 	
@@ -3031,163 +3098,11 @@
             
             <td class="type">
             
-                        Array.&lt;string>
+                        QWidget
                         
                     
             </td>
-            <td class="description last">The list of job names in the environment.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getScenes">
-            
-            getScenes<span class="signature">(<span class="optional">job</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;string>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_database.js, line 120
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Lists the scenes in the given environment in the local database
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>job</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The name of the jobs to return the scenes from. Returns the scenes from the current job by default.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        Array.&lt;string>
-                        
-                    
-            </td>
-            <td class="description last">The list of scene names in the job.</td>
+            <td class="description last">The widget if found, or null if it doesn't exist.</td>
         </tr>
     
     </tbody>

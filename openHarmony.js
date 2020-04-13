@@ -1,12 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
+//                            openHarmony Library 
 //
 //
-//                            openHarmony Library v0.01
-//
-//
-//         Developped by Mathieu Chaptel, Chris Fourney...
+//         Developped by Mathieu Chaptel, Chris Fourney
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -25,13 +23,8 @@
 //   This library doesn't overwrite any of the objects and classes of the official
 //   Toonboom API which must remains available.
 //
-//
-//   To use, add the line 'include("openHarmony.js")' at the start of your script
-//   and include this file in the same folder.
-//
-//
-//   This library is made available under the MIT license.
-//   https://opensource.org/licenses/mit
+//   This library is made available under the Mozilla Public license 2.0.
+//   https://www.mozilla.org/en-US/MPL/2.0/
 //
 //   The repository for this library is available at the address:
 //   https://github.com/cfourney/OpenHarmony/
@@ -105,46 +98,34 @@ $ = {
   pi        : 3.14159265359
 };
 
+
 /**
- * Helper function to split the filename, and get the directory name containing the file argument.
- * @function
- * @name    $#directoryGet
- * @param   {string}   file_path            The path for the file to derive a directory from.
- * @return  {string}                        The directory of the file.
+ * The openHarmony main Install directory
+ * @name $#directory
+ * @type {string}
  */
-$.directoryGet = function( file_path ){
-  return file_path.split("\\").join("/").split( "/" ).slice(0, -1).join('/');
-};
+Object.defineProperty( $, "directory", {
+  get : function(){
+    var currentFile = __file__
+    return currentFile.split("\\").join("/").split( "/" ).slice(0, -1).join('/');
+  }
+});
 
 
-$.directory = $.directoryGet( __file__ );
+$.loadOpenHarmonyFiles = function (){
+  var _ohDirectory = $.directory+"/openHarmony/";
+  var _dir = new QDir(_ohDirectory);
+  _dir.setNameFilters(["openHarmony*.js"]);
+  _dir.setFilter( QDir.Files);
+  var _files = _dir.entryList();
+  
+  for (var i in _files){
+    include( _ohDirectory + "/" + _files[i]);
+  }
+}
 
-// The included files should be relative to the path of THIS file!
-include( $.directory + "/openHarmony/openHarmony_database.js"    );
-include( $.directory + "/openHarmony/openHarmony_misc.js"        );
-include( $.directory + "/openHarmony/openHarmony_preferences.js" );
-include( $.directory + "/openHarmony/openHarmony_metadata.js"    );
-include( $.directory + "/openHarmony/openHarmony_math.js"        );
-include( $.directory + "/openHarmony/openHarmony_dialog.js"      );
-include( $.directory + "/openHarmony/openHarmony_file.js"        );
-include( $.directory + "/openHarmony/openHarmony_threading.js"   );
-include( $.directory + "/openHarmony/openHarmony_network.js"     );   
-include( $.directory + "/openHarmony/openHarmony_path.js"        );   
-include( $.directory + "/openHarmony/openHarmony_list.js"        );
-include( $.directory + "/openHarmony/openHarmony_backdrop.js"    );      
-include( $.directory + "/openHarmony/openHarmony_timeline.js"    );  
-include( $.directory + "/openHarmony/openHarmony_attribute.js"   );   
-include( $.directory + "/openHarmony/openHarmony_frame.js"       );       
-include( $.directory + "/openHarmony/openHarmony_element.js"     );     
-include( $.directory + "/openHarmony/openHarmony_color.js"       );       
-include( $.directory + "/openHarmony/openHarmony_palette.js"     );     
-include( $.directory + "/openHarmony/openHarmony_nodeLink.js"    );    
-include( $.directory + "/openHarmony/openHarmony_node.js"        );        
-include( $.directory + "/openHarmony/openHarmony_column.js"      );      
-include( $.directory + "/openHarmony/openHarmony_drawing.js"     );     
-include( $.directory + "/openHarmony/openHarmony_scene.js"       );
-include(specialFolders.resource+"/scripts/TB_orderNetworkUp.js"  );
-include(specialFolders.userScripts+"/TB_orderNetworkUp.js");       // for older versions of harmony
+$.loadOpenHarmonyFiles();
+
 
 /**
  * The standard debug that uses logic and level to write to the messagelog. Everything should just call this to write internally to a log in OpenHarmony.
@@ -154,17 +135,15 @@ include(specialFolders.userScripts+"/TB_orderNetworkUp.js");       // for older 
  * @param   {int}   level          The debug level of the incoming message to log.
  */
 $.debug = function( obj, level ){
-  if( level <= this.debug_level ){
-    //We log it.
+  if( level > this.debug_level ) continue;
 
-    //Identify the types.
-    if( (typeof obj) == "string" ){
-      this.log( obj );
-    }else{
-      this.log( JSON.stringify( obj ) );
-    }
+  try{ 
+    this.log(JSON.stringify(obj));
+  }catch(err){
+    this.log(obj)
   }
 }
+
 
 /**
  * Log the string to the MessageLog.
@@ -176,6 +155,7 @@ $.log = function( str ){
   MessageLog.trace( str );
   System.println( str );
 }
+
 
 /**
  * Log the object and its contents.
@@ -198,24 +178,15 @@ $.logObj = function( object ){
   }
 }
 
-/**
- * Gets access to a widget from the Harmony Interface.
- * @function
- * @name    $#getHarmonyUIWidget
- * @param   {string}   parentName        The parent of the widget.
- * @param   {string}   name              The name of the widget to look for.
- */
-$.getHarmonyUIWidget = function(parentName, name){
-  var windows = QApplication.allWidgets();
-  for( var i in windows){
-    if (windows[i].objectName == name && windows[i].parentWidget().objectName == parentName ) return windows[i];
-  }
-  return null
-}
+
+//---- App  --------------
+$.app = new $.oApp();
+$.application = $.app;
+$.getApplication = $.app;
 
 
 //---- Scene  --------------
-$.s     = new $.oScene( );
+$.s     = new $.oScene();
 $.scn   = $.s;
 $.scene = $.s;
 $.getScene = $.s;
@@ -284,34 +255,20 @@ $.browseForFile = function(){ return $.dialog.browseForFile.apply( $.dialog, arg
 $.browseForFolder = function(){ return $.dialog.browseForFolder.apply( $.dialog, arguments ) };
 
 
+/**
+ * Gets access to a widget from the Harmony Interface.
+ * @function
+ * @name    $#getHarmonyUIWidget
+ * @param   {string}   name              The name of the widget to look for.
+ * @param   {string}   [parentName]      The name of the parent widget to look into, in case of duplicates.
+ */
+$.getHarmonyUIWidget = function(){ return $.app.getWidgetByName.apply( $.app, arguments ) }
+
+
 //---- Cache Helpers ------
 $.cache_columnToNodeAttribute = {};
 $.cache_columnToNodeAttribute_date = (new Date()).getTime();
 $.cache_oNode = {};
-
-
-//---- Instantiate Class $ DOM Access ------
-function addDOMAccess( target, item ){
-  Object.defineProperty( target, '$', {
-    configurable: false,
-    enumerable: false,
-    value: item
-  });
-}
-
-//Add the context as a local member of the classes.
-for( var classItem in $ ){
-  if( ( typeof $[classItem] ) == "function" ){
-    try{
-      addDOMAccess( $[classItem].prototype, $ );
-    }catch(err){
-      $.debug( "Error extending DOM access to : " + classItem, $.DEBUG_LEVEL.ERROR );
-    }
-    
-    //Also extend it to the global object.
-    this[classItem] = $[classItem];
-  }
-}
 
 
 //------------------------------------------------
@@ -387,3 +344,27 @@ $.network     = new $.oNetwork( );
 $.utils       = new $.oUtils( );
 $.dialog      = new $.oDialog( );
 $.global      = this;
+
+
+//---- Instantiate Class $ DOM Access ------
+function addDOMAccess( target, item ){
+  Object.defineProperty( target, '$', {
+    configurable: false,
+    enumerable: false,
+    value: item
+  });
+}
+
+//Add the context as a local member of the classes.
+for( var classItem in $ ){
+  if( ( typeof $[classItem] ) == "function" ){
+    try{
+      addDOMAccess( $[classItem].prototype, $ );
+    }catch(err){
+      $.debug( "Error extending DOM access to : " + classItem, $.DEBUG_LEVEL.ERROR );
+    }
+    
+    //Also extend it to the global object.
+    this[classItem] = $[classItem];
+  }
+}

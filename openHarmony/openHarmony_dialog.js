@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library v0.01
+//                            openHarmony Library 
 //
 //
-//         Developped by Mathieu Chaptel, Chris Fourney...
+//         Developped by Mathieu Chaptel, Chris Fourney
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -23,8 +23,8 @@
 //   This library doesn't overwrite any of the objects and classes of the official
 //   Toonboom API which must remains available.
 //
-//   This library is made available under the MIT license.
-//   https://opensource.org/licenses/mit
+//   This library is made available under the Mozilla Public license 2.0.
+//   https://www.mozilla.org/en-US/MPL/2.0/
 //
 //   The repository for this library is available at the address:
 //   https://github.com/cfourney/OpenHarmony/
@@ -42,7 +42,7 @@
 //////////////////////////////////////
 //                                  //
 //                                  //
-//          $.dialog class          //
+//         $.oDialog class          //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -56,7 +56,6 @@
  * @constructor
  */
 $.oDialog = function( ){
-    
 }
 
 
@@ -215,7 +214,7 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
 //////////////////////////////////////
 //                                  //
 //                                  //
-//    $.oProgressDialog class      //
+//     $.oProgressDialog class      //
 //                                  //
 //                                  //
 //////////////////////////////////////
@@ -223,7 +222,7 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
 
  
 /**
- * The $.dialog.Progress constructor.
+ * The $.oProgressDialog constructor.
  * @name        $.oProgressDialog
  * @constructor
  * @classdesc   An simple progress dialog to display the progress of a task.
@@ -251,52 +250,6 @@ $.oProgressDialog = function( labelText, range, title, show ){
 
 // legacy compatibility
 $.oDialog.Progress = $.oProgressDialog;
-
-
-/**
- * Shows the dialog.
- * @name    $.oProgressDialog#show
- */
-$.oProgressDialog.prototype.show = function(){
-  if (this.$.batchMode) {
-    this.$.debug("$.oDialog.Progress not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
-    return;
-  }
-  
-  this.progress = new QProgressDialog();
-  this.progress.title = this._title;
-  this.progress.setLabelText( this._labelText );
-  this.progress.setRange( 0, this._range );
-  
-  this.progress.show();
-  
-  {
-    //CANCEL EVENT.
-    var prog = this;
-    var canceled = function(){
-      prog.cancelled = true;
-    }
-    this.progress["canceled()"].connect( this, canceled );
-  }
-  
-}
-
-/**
- * Closes the dialog.
- * 
- */
-$.oProgressDialog.prototype.close = function(){
-  this.value = this.range;
-  this.$.log("Progress : "+value+"/"+this._range)
-
-  if (this.$.batchMode) {
-    this.$.debug("$.oDialog.Progress not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
-    return;
-  }
-
-  this.progress.hide();
-  this.progress = false;
-}
 
 
 /**
@@ -352,3 +305,339 @@ Object.defineProperty( $.oProgressDialog.prototype, 'value', {
       //QCoreApplication.processEvents();
     }
 });
+
+
+// oProgressDialog Class Methods
+
+/**
+ * Shows the dialog.
+ */
+$.oProgressDialog.prototype.show = function(){
+  if (this.$.batchMode) {
+    this.$.debug("$.oProgressDialog not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
+    return;
+  }
+  
+  this.progress = new QProgressDialog();
+  this.progress.title = this._title;
+  this.progress.setLabelText( this._labelText );
+  this.progress.setRange( 0, this._range );
+  
+  this.progress.show();
+  
+  {
+    //CANCEL EVENT.
+    var prog = this;
+    var canceled = function(){
+      prog.cancelled = true;
+    }
+    this.progress["canceled()"].connect( this, canceled );
+  }
+  
+}
+
+/**
+ * Closes the dialog.
+ */
+$.oProgressDialog.prototype.close = function(){
+  this.value = this.range;
+  this.$.log("Progress : "+value+"/"+this._range)
+
+  if (this.$.batchMode) {
+    this.$.debug("$.oProgressDialog not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
+    return;
+  }
+
+  this.progress.hide();
+  this.progress = false;
+}
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//        $.oPieMenu class          //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The $.oPieMenu constructor.
+ * @name        $.oPieMenu
+ * @constructor
+ * @classdesc   A type of menu with nested levels that appear around the mouse
+ * @param       {string}              name                    The name for this pie Menu.
+ * @param       {QWidget[]}           [widgets]               The widgets to display in the menu.
+ * @param       {float}               [minAngle]              The low limit of the range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)
+ * @param       {float}               [maxAngle]              The high limit of the  range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)
+ * @param       {float}               [radius]                The radius of the menu.
+ * @param       {$.oPoint}            [position]              The central position of the menu.
+ * @param       {bool}                [show=false]             Whether to immediately show the dialog.
+ */
+$.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show ){
+  if (typeof minAngle === 'undefined') var minAngle = 0;
+  if (typeof maxAngle === 'undefined') var maxAngle = 1;
+  if (typeof radius === 'undefined') var radius = this.getMenuRadius(widgets.length);;
+  if (typeof position === 'undefined') var position = this.$.app.mousePosition;
+  if (typeof show === 'undefined') var show = false;
+
+  this._name = name;
+  this._widgets = widgets;
+  this.radius = radius;
+  this.minAngle = minAngle;
+  this.maxAngle = maxAngle;
+  this.position = position;
+
+  if (show) this.show();
+}
+
+
+/**
+ * Build and show the pie menu.
+ */
+$.oPieMenu.prototype.show = function(parent){
+  // menu geometry
+  this._x = this.position.x-this.radius*2;
+  this._y = this.position.y-this.radius*2;
+  this._height = 4*this.radius;
+  this._width = 4*this.radius;
+
+  var _pieMenu = new QWidget;
+  var flags = Qt.FramelessWindowHint;
+  _pieMenu.setWindowFlags(flags);
+  _pieMenu.setAttribute(Qt.WA_TranslucentBackground);
+
+  var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
+  var closeButtonPosition = menuWidgetCenter;
+
+  // set position/dimensions to parent if present
+  if (typeof parent !== 'undefined'){
+    this._x = 0;
+    this._y = 0;
+    this._height = parent._height;
+    this._width = parent._width;
+
+    closeButtonPosition = this.position;
+    _pieMenu.setParent(parent.menuWidget);
+  } 
+  
+  _pieMenu.move(this._x, this._y);
+  _pieMenu.minimumHeight = this._height;
+  _pieMenu.minimumWidth = this._width;
+
+  // arrange widgets into half a circle around the center
+  var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
+
+  for (var i=0; i < this._widgets.length; i++){
+    var widget = this._widgets[i];
+    var _itemPosition = this.getItemPosition(i, this.radius, this.minAngle, this.maxAngle);
+    var _widgetPosition = new this.$.oPoint(menuWidgetCenter.x+_itemPosition.x, menuWidgetCenter.y+_itemPosition.y);
+
+    if (widget instanceof oPieSubMenu) widget = widget.init(i, _widgetPosition, this);
+    
+    widget.setParent(_pieMenu);
+    widget.show();
+
+    widget.move(_widgetPosition.x-widget.width/2 ,_widgetPosition.y-widget.height/2);
+  }
+
+  // add close button
+  var closeButton = new QPushButton("close", _pieMenu);
+  closeButton.objectName = this.name+"_closeButton";
+  closeButton.show();
+
+  log(closeButtonPosition.x+" "+closeButtonPosition.y)
+  closeButton.move(closeButtonPosition.x-(closeButton.width/2), closeButtonPosition.y-(closeButton.height/2));
+
+  if (parent){  
+    var self = this;
+    var closeCallback = function(){
+      _pieMenu.close();
+      self.button.show();
+    }
+    closeButton.clicked.connect(closeCallback);
+  }else{
+    closeButton.clicked.connect(_pieMenu.close);
+  }
+
+  _pieMenu.show();
+  this.menuWidget = _pieMenu;
+
+  return _pieMenu;
+}
+
+
+/**
+ * Get the angle for the item based on index.
+ * @param {int}     index         the index of the widget 
+ * @return {$.oPoint}
+ */
+$.oPieMenu.prototype.getItemAngle = function(index){
+  var length = this._widgets.length-1;
+  var angle = this.minAngle+((length-index)/length)*(this.maxAngle-this.minAngle);
+  
+  return angle;
+}
+
+
+/**
+ * Get the position from the center for the item based on index.
+ * @param {int}     index         the index of the widget 
+ * @param {int}     radius        the radius of the menu
+ * @return {$.oPoint}
+ */
+$.oPieMenu.prototype.getItemPosition = function(index, radius){
+  var angle = this.getItemAngle(index, this.minAngle, this.maxAngle);
+  var pi = Math.PI;
+  var _x = Math.cos(angle*pi)*radius;
+  var _y = Math.sin(angle*pi+pi)*radius;
+  
+  return new this.$.oPoint(_x, _y, 0);
+}
+
+
+/**
+ * Get a pie menu radius setting for a given amount of items.
+ * @param {int}     itemsNumber         the ammount of items to display 
+ * @return {float}
+ */
+$.oPieMenu.prototype.getMenuRadius = function(itemsNumber){
+  var _maxRadius = 200;
+  var _minRadius = 30;
+  var _speed = 10; // the higher the value, the slower the progression
+
+  // hyperbolic tangent function to determin the radius
+  var exp = Math.exp(2*itemsNumber/_speed);
+  var _radius = ((exp-1)/(exp+1))*_maxRadius+_minRadius;
+
+  return _radius;
+}
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//       $.oPieSubMenu class        //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The $.oPieMenu constructor.
+ * @name        $.oPieSubMenu
+ * @constructor
+ * @classdesc   A type of menu with nested levels that appear around the mouse
+ * @param       {string}              name                     The name for this pie Menu.
+ * @param       {QWidget[]}           [widgets]                The widgets to display in the menu.
+ * @param       {float}               [index]                  The index in parent widgets at which the widget is loaded.
+ * @param       {$.oPieMenu}          [parentMenu]             Whether to immediately show the dialog.
+ * 
+ * @property    {string}              name                     The oPieMenu Object containing the widgets for the submenu
+ * @property    {$.oPieMenu}          menu                     The oPieMenu Object containing the widgets for the submenu
+ * @property    {int}                 radius                   The oPieMenu Object containing the widgets for the submenu
+ */
+$.oPieSubMenu = function(name, widgets) {
+  this.name = name;
+  this.widgets = widgets;
+}
+
+
+/**
+ * 
+ */
+$.oPieSubMenu.prototype.init = function(index, position, parent){
+  var parentMenu = parent;
+
+  var name = this.name;
+  var angle = parent.getItemAngle(index);
+  var itemAngle = 0.06;
+  var widgetNum = this.widgets.length/2;
+  var minAngle = angle-widgetNum*itemAngle;
+  var maxAngle = angle+widgetNum*itemAngle;
+  var radius = parentMenu.radius+40;
+
+  this.menu = new this.$.oPieMenu(name, this.widgets, minAngle, maxAngle, radius, position, false)
+
+  // initialise the button to open the menu
+  this.menu.button = new QPushButton;
+  this.menu.button.text = name;
+
+  var self = this;
+  this.showCallback = function(){
+    self.menuWidget = self.menu.show(parentMenu);
+    self.menu.button.hide();
+  }
+  this.menu.button.clicked.connect(self.showCallback);
+
+  return this.menu.button;
+}
+
+// /**
+//  * Adds the button opening the menu to its parent widget
+//  */
+// $.oPieSubMenu.prototype.setParent = function(parent) {
+//   /*this.button.text = this.name;
+//   this.button.setParent(parent);
+//   var self = this;
+//   this.button.clicked.connect(self.showMenu);*/
+// }
+
+
+// /**
+//  * Shows the button for the submenu
+//  */
+// $.oPieSubMenu.prototype.show = function() {
+//   this.button.show();
+// }
+
+
+// /**
+//  * Shows the button for the submenu
+//  * @param
+//  */
+// $.oPieSubMenu.prototype.move = function(x, y) {
+//   log(x+" "+y)
+//   this.button.move(x, y);
+// }
+
+
+// /**
+//  * Shows the submenu
+//  */
+// $.oPieSubMenu.prototype.showMenu = function() {
+//   this.toggle = true;
+//   this.menuWidget = this.menu.show();
+
+//   var closeButton = this.menuWidget[this.name+"_closeButton"];
+//   log(closeButton)
+//   //closeButton.move(this.button.pos);
+//   //closeButton.clicked.connect(this.closeMenu);
+//   this.button.hide();
+// }
+
+
+// /**
+//  * Collapses the submenu and restore the button.
+//  */
+// $.oPieSubMenu.prototype.closeMenu = function() {
+//   this.menu.close();
+//   this.button.show();
+// }
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//      $.oScriptButton class       //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
