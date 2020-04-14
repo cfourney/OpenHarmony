@@ -135,12 +135,12 @@ $.loadOpenHarmonyFiles();
  * @param   {int}   level          The debug level of the incoming message to log.
  */
 $.debug = function( obj, level ){
-  if( level > this.debug_level ) continue;
+  if( level > this.debug_level ) return;
 
   try{ 
     this.log(JSON.stringify(obj));
   }catch(err){
-    this.log(obj)
+    this.log(obj);
   }
 }
 
