@@ -225,26 +225,25 @@ $.confirm = function(){ return $.dialog.confirm.apply( $.dialog, arguments ) };
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
  * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
- * 
  */
 $.alert = function(){ return $.dialog.alert.apply( $.dialog, arguments ) };
 
 
 /**
  * Prompts for a user input.
+ * @function
  * @name    $#prompt
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
  * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [prefilledText]                The text to display in the input area.
- * 
  */
 $.prompt = function(){ return $.dialog.prompt.apply( $.dialog, arguments ) };
 
 
 /**
  * Prompts with a file selector window
- * @name    $#browseForFile
  * @function
+ * @name    $#browseForFile
  * @param   {string}           [text="Select a file:"]       The title of the confirmation dialog.
  * @param   {string}           [filter="*"]                  The filter for the file type and/or file name that can be selected. Accepts wildcard character "*".
  * @param   {string}           [getExisting=true]            Whether to select an existing file or a save location
@@ -258,8 +257,8 @@ $.browseForFile = function(){ return $.dialog.browseForFile.apply( $.dialog, arg
 
 /**
  * Prompts with a folder selector window.
- * @name    $#browseForFolder
  * @function
+ * @name    $#browseForFolder
  * @param   {string}           [text]                        The title of the confirmation dialog.
  * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
  * 
