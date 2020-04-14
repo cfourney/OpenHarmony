@@ -68,7 +68,7 @@ Object.defineProperty($.oApp.prototype, 'mainWindow', {
   get : function(){
     var windows = QApplication.topLevelWidgets();
     for ( var i in windows) {
-      if (windows[i] instanceof QMainWindow) return windows[i];
+      if (windows[i] instanceof QMainWindow && !x.parentWidget()}) return windows[i];
     }
   }
 });
@@ -83,7 +83,7 @@ Object.defineProperty($.oApp.prototype, 'toolbars', {
   get : function(){
     var widgets = QApplication.allWidgets();
     var _toolbars = widgets.filter(function(x){return x instanceof QToolBar})
-    
+
     return _toolbars
   }
 });
@@ -165,7 +165,7 @@ $.oToolbar.prototype.show = function(){
     this.$.debug("$.oToolbar not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
     return;
   }
-  
+
   var _parent = this._parent;
   var _toolbar = new QToolbar();
   _toolbar.objectName = this.name;
@@ -173,7 +173,7 @@ $.oToolbar.prototype.show = function(){
   for (var i in this.widgets){
     _toolbar.addWidget(this.widgets[i]);
   }
-  
+
   _parent.addToolbar(_toolbar);
   this.toolbar = _toolbar;
 
