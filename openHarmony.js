@@ -53,15 +53,22 @@
  * All the classes can be accessed from it, and it can be passed to a different context.
  * @namespace
  * @classdesc The $ global object that holds all the functions of openHarmony.
- * @version   1.0
- * @property {int}     debug_level               - The debug level of the DOM.
- * @property {bool}    batchMode                 - Deactivate all ui and incompatible functions to ensure scripts run in batch.
- * @property {string}  file                      - The openHarmony base file - THIS!
+ * @property {int}     debug_level               The debug level of the DOM.
+ * @property {bool}    batchMode                 Deactivate all ui and incompatible functions to ensure scripts run in batch.
+ * @property {string}  file                      The openHarmony base file - THIS!
  *
- * @property {oScene}  getScene                  - The harmony scene.
- * @property {oScene}  scene                     - The harmony scene.
- * @property {oScene}  scn                       - The harmony scene.
- * @property {oScene}  s                         - The harmony scene.
+ * @property {$.oScene}    getScene                  The harmony scene.
+ * @property {$.oScene}    scene                     The harmony scene.
+ * @property {$.oScene}    scn                       The harmony scene.
+ * @property {$.oScene}    s                         The harmony scene.
+ * @property {$.oApp}      getApplication            The Harmony Application Object.
+ * @property {$.oApp}      application               The Harmony Application Object.
+ * @property {$.oApp}      app                       The Harmony Application Object.
+ * @property {$.oNetwork}  network                   Access point for all the functions of the $.oNetwork class
+ * @property {$.oUtils}    utils                     Access point for all the functions of the $.oUtils class
+ * @property {$.oDialog}   dialog                    Access point for all the functions of the $.oDialog class
+ * @property {Object}      global                    The global scope.
+ * 
  * @example
  * // To access the functions, first call the $ object. It is made available after loading openHarmony like so:
  *
@@ -112,6 +119,11 @@ Object.defineProperty( $, "directory", {
 });
 
 
+/**
+ * Function to load openHarmony files from the %installdir%/openHarmony/ folder.
+ * @name $#loadOpenHarmonyFiles
+ * @private
+ */
 $.loadOpenHarmonyFiles = function (){
   var _ohDirectory = $.directory+"/openHarmony/";
   var _dir = new QDir(_ohDirectory);
@@ -220,6 +232,7 @@ $.alert = function(){ return $.dialog.alert.apply( $.dialog, arguments ) };
 
 /**
  * Prompts for a user input.
+ * @name    $#prompt
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
  * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [prefilledText]                The text to display in the input area.
