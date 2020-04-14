@@ -68,8 +68,9 @@ Object.defineProperty($.oApp.prototype, 'mainWindow', {
   get : function(){
     var windows = QApplication.topLevelWidgets();
     for ( var i in windows) {
-      if (windows[i] instanceof QMainWindow && !x.parentWidget()}) return windows[i];
+      if (windows[i] instanceof QMainWindow && !x.parentWidget()) return windows[i];
     }
+    return null
   }
 });
 
