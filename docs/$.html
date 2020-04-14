@@ -49,8 +49,6 @@
             
                 <li data-name="$#directory"><a href="$.html#directory">directory</a></li>
             
-                <li data-name="$#prompt"><a href="$.html#prompt">prompt</a></li>
-            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -85,6 +83,8 @@
                 <li data-name="$#log"><a href="$.html#log">log</a></li>
             
                 <li data-name="$#logObj"><a href="$.html#logObj">logObj</a></li>
+            
+                <li data-name="$#prompt"><a href="$.html#prompt">prompt</a></li>
             
                 <li data-name="$#redo"><a href="$.html#redo">redo</a></li>
             
@@ -3402,51 +3402,6 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
 </dd>
 
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="prompt">prompt</h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Prompts for a user input.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
         </dl>
     
     
@@ -3647,7 +3602,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 290
+            openHarmony.js, line 289
         </div>
         
     </div>
@@ -3770,7 +3725,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 244
+            openHarmony.js, line 243
         </div>
         
     </div>
@@ -4072,7 +4027,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 259
+            openHarmony.js, line 258
         </div>
         
     </div>
@@ -4254,7 +4209,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 304
+            openHarmony.js, line 303
         </div>
         
     </div>
@@ -4706,7 +4661,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 313
+            openHarmony.js, line 312
         </div>
         
     </div>
@@ -4784,7 +4739,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 271
+            openHarmony.js, line 270
         </div>
         
     </div>
@@ -4935,7 +4890,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 346
+            openHarmony.js, line 345
         </div>
         
     </div>
@@ -5254,6 +5209,189 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="prompt">
+            
+            prompt<span class="signature">(<span class="optional">labelText</span>, <span class="optional">title</span>, <span class="optional">prefilledText</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony.js, line 232
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Prompts for a user input.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>labelText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The label/internal text of the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The title of the confirmation dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>prefilledText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The text to display in the input area.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="redo">
             
             redo<span class="signature">(n)</span>
@@ -5261,7 +5399,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 334
+            openHarmony.js, line 333
         </div>
         
     </div>
@@ -5377,7 +5515,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 323
+            openHarmony.js, line 322
         </div>
         
     </div>
@@ -5501,7 +5639,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 09:15:05 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 09:48:53 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
