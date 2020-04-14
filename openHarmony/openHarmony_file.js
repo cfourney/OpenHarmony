@@ -129,9 +129,9 @@ Object.defineProperty($.oFolder.prototype, 'folder', {
  */
 Object.defineProperty($.oFolder.prototype, 'exists', {
     get: function(){
-        var dir = new Dir;
-        dir.path = this.path
-        return dir.exists;
+        var dir = new QDir;
+        dir.setPath(this.path)
+        return dir.exists();
     }
 });
 
@@ -297,20 +297,20 @@ $.oFolder.prototype.create = function(){
       return true;
     }
 
-    var dir = new Dir;
-    dir.path = this.path;
+    var dir = new QDir(this.path);
+    //dir.path = this.path;
     try{
-      dir.mkdirs();
+      dir.mkdir(this.path);
       return this.exists;  
     }catch(err){
-      this.$.debug(err, this.$.DEBUG_LEVEL.ERROR)
+      this.$.debug(err+" ", this.$.DEBUG_LEVEL.ERROR)
       return false;
     }
 }
 
 
 /**
- * Copy the folder and its contents to another path. WIP
+ * WIP Copy the folder and its contents to another path. WIP
  * @param   {string}   [folderPath]          The path to the folder location to copy to (CFNote: Should this not be a $.oFolder?)
  * @param   {string}   [copyName]            The name of the folder to copy (CFNote: Should this be avoided and the folderPath be the full path?)
  * @param   {bool}     [overwrite]           Whether to overwrite the target.
@@ -649,7 +649,7 @@ $.oFile.prototype.copy = function( destfolder, copyName, overwrite){
       var success = _file.copy(_dest);
       if (!success) throw new Error ();
     }catch(err){
-      this.$.debug("Copy of file "+file.path()+" to location "+_dest.path()+" has failed.", this.$.DEBUG_LEVEL.ERROR)
+      this.$.debug("Copy of file "+_file.path()+" to location "+_dest.path()+" has failed.", this.$.DEBUG_LEVEL.ERROR)
     }
 
     if (success) return new this.$.oFile(_dest.path());
