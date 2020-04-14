@@ -1265,10 +1265,9 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
       break;
   }*/
 
-  if (paletteStorage == "external"){
-    var _palette = new this.$.oPalette(_list.createPalette(storeInElement+"/"+name, insertAtIndex), _list);
-  }
+  if (paletteStorage == "external") var _palette = new this.$.oPalette(_list.createPalette(storeInElement+"/"+name, insertAtIndex), _list);
 
+  // can fail if database lock wasn't released
   var _palette = new this.$.oPalette(_list.createPaletteAtLocation(_destination, storeInElement, name, insertAtIndex), _list);
 
   return _palette;

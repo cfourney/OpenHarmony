@@ -377,7 +377,6 @@ $.oProgressDialog.prototype.close = function(){
  * @param       {$.oPoint}            [position]              The central position of the menu.
  * @param       {bool}                [show=false]            Whether to immediately show the dialog.
  * 
- * @property  
  * @property    {string}              name                    The name for this pie Menu.
  * @property    {QWidget[]}           widgets                 The widgets to display in the menu.
  * @property    {float}               minAngle                The low limit of the range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)
