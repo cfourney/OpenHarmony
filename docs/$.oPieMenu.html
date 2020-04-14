@@ -2230,10 +2230,6 @@
             </ul>
             <ul class="methods itemMembers">
             
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="$.oPieSubMenu#init"><a href="$.oPieSubMenu.html#init">init</a></li>
-            
             </ul>
             <ul class="events itemMembers">
             
@@ -3067,6 +3063,195 @@
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The name for this pie Menu.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>widgets</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;QWidget></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The widgets to display in the menu.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>minAngle</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The low limit of the range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>maxAngle</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The high limit of the  range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>radius</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The radius of the menu.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oPoint.html">$.oPoint</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The central position of the menu or button position for imbricated menus.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>menuWidget</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">QWidget</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The central position of the menu or button position for imbricated menus.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -3131,7 +3316,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 478
+            openHarmony/openHarmony_dialog.js, line 488
         </div>
         
     </div>
@@ -3276,7 +3461,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 492
+            openHarmony/openHarmony_dialog.js, line 502
         </div>
         
     </div>
@@ -3444,7 +3629,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 507
+            openHarmony/openHarmony_dialog.js, line 517
         </div>
         
     </div>
@@ -3584,12 +3769,12 @@
     <div class="nameContainer">
         <h4 class="name" id="show">
             
-            show<span class="signature">()</span>
+            show<span class="signature">(<span class="optional">parent</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 401
+            openHarmony/openHarmony_dialog.js, line 411
         </div>
         
     </div>
@@ -3608,6 +3793,58 @@
     
     
     
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oPieMenu.html">$.oPieMenu</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                specify a parent oPieMenu for imbricated submenus</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -3668,7 +3905,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 09:48:54 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 17:32:58 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

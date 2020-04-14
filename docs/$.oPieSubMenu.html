@@ -2230,10 +2230,6 @@
             </ul>
             <ul class="methods itemMembers">
             
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="$.oPieSubMenu#init"><a href="$.oPieSubMenu.html#init">init</a></li>
-            
             </ul>
             <ul class="events itemMembers">
             
@@ -2775,12 +2771,12 @@
     <div class="nameContainer">
         <h4 class="name" id="oPieSubMenu">
             
-            new $.oPieSubMenu<span class="signature">(name, <span class="optional">widgets</span>, <span class="optional">index</span>, <span class="optional">parentMenu</span>)</span>
+            new $.oPieSubMenu<span class="signature">(name, <span class="optional">widgets</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 532
+            openHarmony/openHarmony_dialog.js, line 543
         </div>
         
     </div>
@@ -2877,66 +2873,6 @@
         </tr>
 	
 	
-	
-        <tr>
-            
-                <td class="name"><code>index</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">float</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The index in parent widgets at which the widget is loaded.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>parentMenu</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="$.oPieMenu.html">$.oPieMenu</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to immediately show the dialog.</td>
-        </tr>
-	
-	
 	</tbody>
 </table>
     
@@ -2987,7 +2923,30 @@
             
             
             
-            <td class="description last">The oPieMenu Object containing the widgets for the submenu</td>
+            <td class="description last">The name for this pie Menu.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>widgets</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The widgets to display in the menu.</td>
         </tr>
 	
 	
@@ -3000,7 +2959,7 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="$.oPieMenu.html">$.oPieMenu</a></span>
+<span class="param-type">string</span>
 
 
             
@@ -3017,13 +2976,13 @@
 	
         <tr>
             
-                <td class="name"><code>radius</code></td>
+                <td class="name"><code>itemAngle</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">string</span>
 
 
             
@@ -3033,7 +2992,30 @@
             
             
             
-            <td class="description last">The oPieMenu Object containing the widgets for the submenu</td>
+            <td class="description last">a set angle for each items instead of spreading them across the entire circle</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>extraRadius</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">using a set radius between each submenu levels</td>
         </tr>
 	
 	
@@ -3093,77 +3075,6 @@
     
     
     
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl>
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="init">
-            
-            init<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 555
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        </dl>
-    
     
     
     
@@ -3181,7 +3092,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 09:48:54 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 17:32:58 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
