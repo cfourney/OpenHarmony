@@ -34,6 +34,68 @@
     </div>
     <ul class="list">
     
+        <li class="item" data-name="$">
+            <span class="title">
+                <a href="$.html">$</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$#DEBUG_LEVEL"><a href="$.html#DEBUG_LEVEL">DEBUG_LEVEL</a></li>
+            
+                <li data-name="$#directory"><a href="$.html#directory">directory</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.prompt"><a href="$.html#.prompt">prompt</a></li>
+            
+                <li data-name="$#alert"><a href="$.html#alert">alert</a></li>
+            
+                <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
+            
+                <li data-name="$#browseForFile"><a href="$.html#browseForFile">browseForFile</a></li>
+            
+                <li data-name="$#browseForFolder"><a href="$.html#browseForFolder">browseForFolder</a></li>
+            
+                <li data-name="$#cancelUndo"><a href="$.html#cancelUndo">cancelUndo</a></li>
+            
+                <li data-name="$#confirm"><a href="$.html#confirm">confirm</a></li>
+            
+                <li data-name="$#debug"><a href="$.html#debug">debug</a></li>
+            
+                <li data-name="$#endUndo"><a href="$.html#endUndo">endUndo</a></li>
+            
+                <li data-name="$#getHarmonyUIWidget"><a href="$.html#getHarmonyUIWidget">getHarmonyUIWidget</a></li>
+            
+                <li data-name="$#getPreferences"><a href="$.html#getPreferences">getPreferences</a></li>
+            
+                <li data-name="$#log"><a href="$.html#log">log</a></li>
+            
+                <li data-name="$#logObj"><a href="$.html#logObj">logObj</a></li>
+            
+                <li data-name="$#redo"><a href="$.html#redo">redo</a></li>
+            
+                <li data-name="$#undo"><a href="$.html#undo">undo</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="NodeTypes">
             <span class="title">
                 <a href="NodeTypes.html">NodeTypes</a>
@@ -2694,10 +2756,14 @@
     
 <header>
     <h2>
+        <span class="ancestors"><a href="$.html">$</a>.</span>
+    
     oList
     </h2>
     
-        <div class="class-description">The base class for the $.oList.<br>Provides a list of values similar to an array, but with simpler filtering and sorting functions provided.<br>It can have any starting index and so can implement lists with a first index of 1 like the $.oColumn.frames returned value.</div>
+        <div class="class-description">The base class for the $.oList.<br>
+Provides a list of values similar to an array, but with simpler filtering and sorting functions provided.<br>
+It can have any starting index and so can implement lists with a first index of 1 like the $.oColumn.frames returned value.</div>
     
 </header>  
 
@@ -3584,7 +3650,14 @@
         
 
     
-    <pre class="prettyprint"><code>var doc = $.s // grab the scene objectvar nodeList = new $.oList(doc.nodes, 1) // get a list of all the nodes, with a first index of 1$.log(nodeList) // outputs the list of all the node pathsvar readNodes = nodeList.filterByProperty("type", "READ") // get a new list of only the nodes of type 'READ'$.log(readNodes.extractProperty("name"))  // prints the names of the result</code></pre>
+    <pre class="prettyprint"><code>var doc = $.s // grab the scene object
+var nodeList = new $.oList(doc.nodes, 1) // get a list of all the nodes, with a first index of 1
+
+$.log(nodeList) // outputs the list of all the node paths
+
+var readNodes = nodeList.filterByProperty("type", "READ") // get a new list of only the nodes of type 'READ'
+
+$.log(readNodes.extractProperty("name"))  // prints the names of the result</code></pre>
     
 
     
@@ -3892,7 +3965,14 @@
         
 
     
-    <pre class="prettyprint"><code>var myList = new $.oList([1,2,3], 1)var item = myList.first();  // 1while( item != undefined ){  $.log(item)               // traces the whole array one item at a time : 1,2,3     item = myList.next();   }</code></pre>
+    <pre class="prettyprint"><code>var myList = new $.oList([1,2,3], 1)
+
+var item = myList.first();  // 1
+
+while( item != undefined ){
+  $.log(item)               // traces the whole array one item at a time : 1,2,3   
+  item = myList.next();   
+}</code></pre>
     
 
     
@@ -4699,7 +4779,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 00:18:26 GMT+0200 (heure d’été d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 08:41:40 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

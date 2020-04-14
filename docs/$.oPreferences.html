@@ -34,6 +34,68 @@
     </div>
     <ul class="list">
     
+        <li class="item" data-name="$">
+            <span class="title">
+                <a href="$.html">$</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$#DEBUG_LEVEL"><a href="$.html#DEBUG_LEVEL">DEBUG_LEVEL</a></li>
+            
+                <li data-name="$#directory"><a href="$.html#directory">directory</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.prompt"><a href="$.html#.prompt">prompt</a></li>
+            
+                <li data-name="$#alert"><a href="$.html#alert">alert</a></li>
+            
+                <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
+            
+                <li data-name="$#browseForFile"><a href="$.html#browseForFile">browseForFile</a></li>
+            
+                <li data-name="$#browseForFolder"><a href="$.html#browseForFolder">browseForFolder</a></li>
+            
+                <li data-name="$#cancelUndo"><a href="$.html#cancelUndo">cancelUndo</a></li>
+            
+                <li data-name="$#confirm"><a href="$.html#confirm">confirm</a></li>
+            
+                <li data-name="$#debug"><a href="$.html#debug">debug</a></li>
+            
+                <li data-name="$#endUndo"><a href="$.html#endUndo">endUndo</a></li>
+            
+                <li data-name="$#getHarmonyUIWidget"><a href="$.html#getHarmonyUIWidget">getHarmonyUIWidget</a></li>
+            
+                <li data-name="$#getPreferences"><a href="$.html#getPreferences">getPreferences</a></li>
+            
+                <li data-name="$#log"><a href="$.html#log">log</a></li>
+            
+                <li data-name="$#logObj"><a href="$.html#logObj">logObj</a></li>
+            
+                <li data-name="$#redo"><a href="$.html#redo">redo</a></li>
+            
+                <li data-name="$#undo"><a href="$.html#undo">undo</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="NodeTypes">
             <span class="title">
                 <a href="NodeTypes.html">NodeTypes</a>
@@ -2694,10 +2756,13 @@
     
 <header>
     <h2>
+        <span class="ancestors"><a href="$.html">$</a>.</span>
+    
     oPreferences
     </h2>
     
-        <div class="class-description">Provides access to getting/setting preferenes as an object interface.<br>All preferences that have been written to the file are accessible as properties of this class.<br>Alternatively, new preferences can be retrieved with the .get function.</div>
+        <div class="class-description">Provides access to getting/setting preferenes as an object interface.<br>All preferences that have been written to the file are accessible as properties of this class.<br>
+Alternatively, new preferences can be retrieved with the .get function.</div>
     
 </header>  
 
@@ -2778,7 +2843,10 @@
         
 
     
-    <pre class="prettyprint"><code>var pref = $.getPreferences();pref.create( "MyNewPreferenceName", "MyPreferenceValue" );pref["MyNewPreferenceName"];     // Provides: MyPreferenceValuepref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
+    <pre class="prettyprint"><code>var pref = $.getPreferences();
+pref.create( "MyNewPreferenceName", "MyPreferenceValue" );
+pref["MyNewPreferenceName"];     // Provides: MyPreferenceValue
+pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
     
 
     
@@ -2892,7 +2960,14 @@
         
 
     
-    <pre class="prettyprint"><code>var pref = $.getPreferences();pref.create( "MyNewPreferenceName", "MyPreferenceValue" );//This new preference won't be available in the file until Harmony closes.//So if preferences are reinstantiated, it won't be readily available -- but it can still be retrieved with get.var pref2 = $.getPreferences(); pref["MyNewPreferenceName"];     // Provides: undefined -- its not in the Harmony preference file.pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue, its still available </code></pre>
+    <pre class="prettyprint"><code>var pref = $.getPreferences();
+pref.create( "MyNewPreferenceName", "MyPreferenceValue" );
+//This new preference won't be available in the file until Harmony closes.
+//So if preferences are reinstantiated, it won't be readily available -- but it can still be retrieved with get.
+
+var pref2 = $.getPreferences(); 
+pref["MyNewPreferenceName"];     // Provides: undefined -- its not in the Harmony preference file.
+pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue, its still available </code></pre>
     
 
     
@@ -2926,7 +3001,8 @@
     
     
     <div class="description">
-        Refreshes the preferences by re-reading the preference file and ingesting their values appropriately. They are then available as properties of this class.<br><b>Note, any new preferences will not be available as properties until Harmony saves the preference file at exit. In order to reference new preferences, use the get function.
+        Refreshes the preferences by re-reading the preference file and ingesting their values appropriately. They are then available as properties of this class.<br>
+<b>Note, any new preferences will not be available as properties until Harmony saves the preference file at exit. In order to reference new preferences, use the get function.
     </div>
     
 
@@ -2994,7 +3070,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 00:18:26 GMT+0200 (heure d’été d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 08:41:41 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

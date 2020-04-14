@@ -34,6 +34,68 @@
     </div>
     <ul class="list">
     
+        <li class="item" data-name="$">
+            <span class="title">
+                <a href="$.html">$</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$#DEBUG_LEVEL"><a href="$.html#DEBUG_LEVEL">DEBUG_LEVEL</a></li>
+            
+                <li data-name="$#directory"><a href="$.html#directory">directory</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.prompt"><a href="$.html#.prompt">prompt</a></li>
+            
+                <li data-name="$#alert"><a href="$.html#alert">alert</a></li>
+            
+                <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
+            
+                <li data-name="$#browseForFile"><a href="$.html#browseForFile">browseForFile</a></li>
+            
+                <li data-name="$#browseForFolder"><a href="$.html#browseForFolder">browseForFolder</a></li>
+            
+                <li data-name="$#cancelUndo"><a href="$.html#cancelUndo">cancelUndo</a></li>
+            
+                <li data-name="$#confirm"><a href="$.html#confirm">confirm</a></li>
+            
+                <li data-name="$#debug"><a href="$.html#debug">debug</a></li>
+            
+                <li data-name="$#endUndo"><a href="$.html#endUndo">endUndo</a></li>
+            
+                <li data-name="$#getHarmonyUIWidget"><a href="$.html#getHarmonyUIWidget">getHarmonyUIWidget</a></li>
+            
+                <li data-name="$#getPreferences"><a href="$.html#getPreferences">getPreferences</a></li>
+            
+                <li data-name="$#log"><a href="$.html#log">log</a></li>
+            
+                <li data-name="$#logObj"><a href="$.html#logObj">logObj</a></li>
+            
+                <li data-name="$#redo"><a href="$.html#redo">redo</a></li>
+            
+                <li data-name="$#undo"><a href="$.html#undo">undo</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="NodeTypes">
             <span class="title">
                 <a href="NodeTypes.html">NodeTypes</a>
@@ -2694,6 +2756,8 @@
     
 <header>
     <h2>
+        <span class="ancestors"><a href="$.html">$</a>.</span>
+    
     oPegNode
     </h2>
     
@@ -2797,7 +2861,8 @@
             
             <td class="description last">
                 
-                Access to the oScene object of the DOM.<br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.</td>
+                Access to the oScene object of the DOM.
+<br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.</td>
         </tr>
 	
 	
@@ -2913,7 +2978,20 @@
         
 
     
-    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:var myNode = $.scn.$node("Top/Drawing")var drawingAttribute = myNode.attributes.drawing.element// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"// for a more direct way to access an attribute, it's possible to also call:var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
+    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:
+
+var myNode = $.scn.$node("Top/Drawing")
+var drawingAttribute = myNode.attributes.drawing.element
+
+// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
+
+drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
+var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
+$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
+
+// for a more direct way to access an attribute, it's possible to also call:
+
+var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
     
 
     
@@ -4519,7 +4597,9 @@
         
 
     
-    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" ); var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
+    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" );
+ var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
     
 
     
@@ -9704,7 +9784,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 00:18:26 GMT+0200 (heure d’été d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 08:41:41 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

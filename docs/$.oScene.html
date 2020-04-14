@@ -34,6 +34,68 @@
     </div>
     <ul class="list">
     
+        <li class="item" data-name="$">
+            <span class="title">
+                <a href="$.html">$</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$#DEBUG_LEVEL"><a href="$.html#DEBUG_LEVEL">DEBUG_LEVEL</a></li>
+            
+                <li data-name="$#directory"><a href="$.html#directory">directory</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.prompt"><a href="$.html#.prompt">prompt</a></li>
+            
+                <li data-name="$#alert"><a href="$.html#alert">alert</a></li>
+            
+                <li data-name="$#beginUndo"><a href="$.html#beginUndo">beginUndo</a></li>
+            
+                <li data-name="$#browseForFile"><a href="$.html#browseForFile">browseForFile</a></li>
+            
+                <li data-name="$#browseForFolder"><a href="$.html#browseForFolder">browseForFolder</a></li>
+            
+                <li data-name="$#cancelUndo"><a href="$.html#cancelUndo">cancelUndo</a></li>
+            
+                <li data-name="$#confirm"><a href="$.html#confirm">confirm</a></li>
+            
+                <li data-name="$#debug"><a href="$.html#debug">debug</a></li>
+            
+                <li data-name="$#endUndo"><a href="$.html#endUndo">endUndo</a></li>
+            
+                <li data-name="$#getHarmonyUIWidget"><a href="$.html#getHarmonyUIWidget">getHarmonyUIWidget</a></li>
+            
+                <li data-name="$#getPreferences"><a href="$.html#getPreferences">getPreferences</a></li>
+            
+                <li data-name="$#log"><a href="$.html#log">log</a></li>
+            
+                <li data-name="$#logObj"><a href="$.html#logObj">logObj</a></li>
+            
+                <li data-name="$#redo"><a href="$.html#redo">redo</a></li>
+            
+                <li data-name="$#undo"><a href="$.html#undo">undo</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="NodeTypes">
             <span class="title">
                 <a href="NodeTypes.html">NodeTypes</a>
@@ -2694,6 +2756,8 @@
     
 <header>
     <h2>
+        <span class="ancestors"><a href="$.html">$</a>.</span>
+    
     oScene
     </h2>
     
@@ -2778,7 +2842,17 @@
         
 
     
-    <pre class="prettyprint"><code>// Access to the direct dom object. Available and automatically instantiated as $.getScene, $.scene, $.scn, $.svar doc = $.getScene ;var doc = $.scn ;ver doc = $.s ;         // all these are equivalents// To grab the scene from a QWidget Dialog callback, store the $ object in a local variable to access all the fonctions from the library.function myCallBackFunction(){  var this.$ = $;  var doc = this.$.scn;}</code></pre>
+    <pre class="prettyprint"><code>// Access to the direct dom object. Available and automatically instantiated as $.getScene, $.scene, $.scn, $.s
+var doc = $.getScene ;
+var doc = $.scn ;
+ver doc = $.s ;         // all these are equivalents
+
+// To grab the scene from a QWidget Dialog callback, store the $ object in a local variable to access all the fonctions from the library.
+function myCallBackFunction(){
+  var this.$ = $;
+
+  var doc = this.$.scn;
+}</code></pre>
     
 
     
@@ -7745,7 +7819,24 @@
         
 
     
-    <pre class="prettyprint"><code>// how to export a clean palette with no extra drawings and everything renamed by frame, and only the necessary colors gathered in one palette:$.beginUndo();var doc = $.scn;var nodes = doc.getSelectedNodes();for (var i in nodes){  if (nodes[i].type != "READ") continue;  var myColumn = nodes[i].element.column;      // we grab the column directly from the element of the node  myColumn.removeUnexposedDrawings();          // remove extra unused drawings  myColumn.renameAllByFrame();                 // rename all drawings by frame}doc.exportTemplate(nodes, "C:/templateExample.tpl", "createPalette"); // "createPalette" value will create one palette for all colors$.endUndo();</code></pre>
+    <pre class="prettyprint"><code>// how to export a clean palette with no extra drawings and everything renamed by frame, and only the necessary colors gathered in one palette:
+
+$.beginUndo();
+
+var doc = $.scn;
+var nodes = doc.getSelectedNodes();
+
+for (var i in nodes){
+  if (nodes[i].type != "READ") continue;
+
+  var myColumn = nodes[i].element.column;      // we grab the column directly from the element of the node
+  myColumn.removeUnexposedDrawings();          // remove extra unused drawings
+  myColumn.renameAllByFrame();                 // rename all drawings by frame
+}
+
+doc.exportTemplate(nodes, "C:/templateExample.tpl", "createPalette"); // "createPalette" value will create one palette for all colors
+
+$.endUndo();</code></pre>
     
 
     
@@ -11696,7 +11787,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 00:18:26 GMT+0200 (heure d’été d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 08:41:41 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
