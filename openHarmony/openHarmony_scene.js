@@ -1298,6 +1298,7 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
   }
 
   var _paletteFile = new this.$.oFile(filename);
+  if (typeof name === 'undefined') var name = _paletteFile.name;
 
   if (!_paletteFile.exists){
     this.$.debug("Error: cannot import palette from file "+filename+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
@@ -1311,14 +1312,18 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
   _newPalette.remove(true);
 
   var _file = new this.$.oFile(_path);
+  this.$.debug
 
   var paletteFolder = _file.folder;
-  if (!paletteFolder.exists) paletteFolder.create();
+  if (!paletteFolder.exists && !paletteFolder.create()) {
+    this.$.debug("Error: couldn't create missing palette folder "+paletteFolder, this.$.DEBUG_LEVEL.ERROR);
+    return null;
+  }
 
-  var _copy = _paletteFile.copy(paletteFolder.path, _paletteFile.name, true);
+  var _copy = _paletteFile.copy(paletteFolder.path, name, true);
 
   if (!_copy) {
-    this.$.debug("Error: couldn't copy palette "+filename+" ", this.$.DEBUG_LEVEL.ERROR);
+    this.$.debug("Error: couldn't copy palette "+filename, this.$.DEBUG_LEVEL.ERROR);
     return null;
   }
 
