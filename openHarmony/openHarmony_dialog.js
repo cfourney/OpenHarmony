@@ -375,17 +375,27 @@ $.oProgressDialog.prototype.close = function(){
  * @param       {float}               [maxAngle]              The high limit of the  range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)
  * @param       {float}               [radius]                The radius of the menu.
  * @param       {$.oPoint}            [position]              The central position of the menu.
- * @param       {bool}                [show=false]             Whether to immediately show the dialog.
+ * @param       {bool}                [show=false]            Whether to immediately show the dialog.
+ * 
+ * @property  
+ * @property    {string}              name                    The name for this pie Menu.
+ * @property    {QWidget[]}           widgets                 The widgets to display in the menu.
+ * @property    {float}               minAngle                The low limit of the range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)
+ * @property    {float}               maxAngle                The high limit of the  range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)
+ * @property    {float}               radius                  The radius of the menu.
+ * @property    {$.oPoint}            position                The central position of the menu or button position for imbricated menus.
+ * @property    {QWidget}             menuWidget              The central position of the menu or button position for imbricated menus.
  */
 $.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show ){
+  this.name = name;
+  this.widgets = widgets;
+
   if (typeof minAngle === 'undefined') var minAngle = 0;
   if (typeof maxAngle === 'undefined') var maxAngle = 1;
-  if (typeof radius === 'undefined') var radius = this.getMenuRadius(widgets.length);;
+  if (typeof radius === 'undefined') var radius = this.getMenuRadius();;
   if (typeof position === 'undefined') var position = this.$.app.mousePosition;
   if (typeof show === 'undefined') var show = false;
 
-  this._name = name;
-  this._widgets = widgets;
   this.radius = radius;
   this.minAngle = minAngle;
   this.maxAngle = maxAngle;
@@ -397,6 +407,7 @@ $.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show
 
 /**
  * Build and show the pie menu.
+ * @param {$.oPieMenu}   [parent]    specify a parent oPieMenu for imbricated submenus
  */
 $.oPieMenu.prototype.show = function(parent){
   // menu geometry
@@ -431,8 +442,8 @@ $.oPieMenu.prototype.show = function(parent){
   // arrange widgets into half a circle around the center
   var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
 
-  for (var i=0; i < this._widgets.length; i++){
-    var widget = this._widgets[i];
+  for (var i=0; i < this.widgets.length; i++){
+    var widget = this.widgets[i];
     var _itemPosition = this.getItemPosition(i, this.radius, this.minAngle, this.maxAngle);
     var _widgetPosition = new this.$.oPoint(menuWidgetCenter.x+_itemPosition.x, menuWidgetCenter.y+_itemPosition.y);
 
@@ -476,7 +487,7 @@ $.oPieMenu.prototype.show = function(parent){
  * @return {$.oPoint}
  */
 $.oPieMenu.prototype.getItemAngle = function(index){
-  var length = this._widgets.length-1;
+  var length = this.widgets.length-1;
   var angle = this.minAngle+((length-index)/length)*(this.maxAngle-this.minAngle);
   
   return angle;
@@ -504,7 +515,8 @@ $.oPieMenu.prototype.getItemPosition = function(index, radius){
  * @param {int}     itemsNumber         the ammount of items to display 
  * @return {float}
  */
-$.oPieMenu.prototype.getMenuRadius = function(itemsNumber){
+$.oPieMenu.prototype.getMenuRadius = function(){
+  var itemsNumber = this.widgets.length
   var _maxRadius = 200;
   var _minRadius = 30;
   var _speed = 10; // the higher the value, the slower the progression
@@ -536,33 +548,39 @@ $.oPieMenu.prototype.getMenuRadius = function(itemsNumber){
  * @classdesc   A type of menu with nested levels that appear around the mouse
  * @param       {string}              name                     The name for this pie Menu.
  * @param       {QWidget[]}           [widgets]                The widgets to display in the menu.
- * @param       {float}               [index]                  The index in parent widgets at which the widget is loaded.
- * @param       {$.oPieMenu}          [parentMenu]             Whether to immediately show the dialog.
  * 
- * @property    {string}              name                     The oPieMenu Object containing the widgets for the submenu
- * @property    {$.oPieMenu}          menu                     The oPieMenu Object containing the widgets for the submenu
- * @property    {int}                 radius                   The oPieMenu Object containing the widgets for the submenu
+ * @property    {string}              name                     The name for this pie Menu.
+ * @property    {string}              widgets                  The widgets to display in the menu.
+ * @property    {string}              menu                     The oPieMenu Object containing the widgets for the submenu
+ * @property    {string}              itemAngle                a set angle for each items instead of spreading them across the entire circle
+ * @property    {string}              extraRadius              using a set radius between each submenu levels
  */
 $.oPieSubMenu = function(name, widgets) {
   this.name = name;
   this.widgets = widgets;
+  this.menu = "";
+  this.itemAngle = 0.06;
+  this.extraRadius = 80;
 }
 
 
 /**
- * 
+ * Function to initialise the widgets for the submenu
+ * @param  {int}           index        The index of the menu amongst the parent's widgets
+ * @param  {$.oPoint}      position     The position for the button calling the menu
+ * @param  {$.oPieMenu}    parent       The menu parent
+ * @private
+ * @return {QPushButton}        The button that calls the menu.
  */
 $.oPieSubMenu.prototype.init = function(index, position, parent){
-  var parentMenu = parent;
-
   var name = this.name;
   var angle = parent.getItemAngle(index);
-  var itemAngle = 0.06;
   var widgetNum = this.widgets.length/2;
-  var minAngle = angle-widgetNum*itemAngle;
-  var maxAngle = angle+widgetNum*itemAngle;
-  var radius = parentMenu.radius+40;
+  var minAngle = angle-widgetNum*this.itemAngle;
+  var maxAngle = angle+widgetNum*this.itemAngle;
+  var radius = parent.radius+this.extraRadius;
 
+  // create the menu
   this.menu = new this.$.oPieMenu(name, this.widgets, minAngle, maxAngle, radius, position, false)
 
   // initialise the button to open the menu
@@ -571,7 +589,7 @@ $.oPieSubMenu.prototype.init = function(index, position, parent){
 
   var self = this;
   this.showCallback = function(){
-    self.menuWidget = self.menu.show(parentMenu);
+    self.menuWidget = self.menu.show(parent);
     self.menu.button.hide();
   }
   this.menu.button.clicked.connect(self.showCallback);
@@ -579,57 +597,6 @@ $.oPieSubMenu.prototype.init = function(index, position, parent){
   return this.menu.button;
 }
 
-// /**
-//  * Adds the button opening the menu to its parent widget
-//  */
-// $.oPieSubMenu.prototype.setParent = function(parent) {
-//   /*this.button.text = this.name;
-//   this.button.setParent(parent);
-//   var self = this;
-//   this.button.clicked.connect(self.showMenu);*/
-// }
-
-
-// /**
-//  * Shows the button for the submenu
-//  */
-// $.oPieSubMenu.prototype.show = function() {
-//   this.button.show();
-// }
-
-
-// /**
-//  * Shows the button for the submenu
-//  * @param
-//  */
-// $.oPieSubMenu.prototype.move = function(x, y) {
-//   log(x+" "+y)
-//   this.button.move(x, y);
-// }
-
-
-// /**
-//  * Shows the submenu
-//  */
-// $.oPieSubMenu.prototype.showMenu = function() {
-//   this.toggle = true;
-//   this.menuWidget = this.menu.show();
-
-//   var closeButton = this.menuWidget[this.name+"_closeButton"];
-//   log(closeButton)
-//   //closeButton.move(this.button.pos);
-//   //closeButton.clicked.connect(this.closeMenu);
-//   this.button.hide();
-// }
-
-
-// /**
-//  * Collapses the submenu and restore the button.
-//  */
-// $.oPieSubMenu.prototype.closeMenu = function() {
-//   this.menu.close();
-//   this.button.show();
-// }
 
 
 //////////////////////////////////////
