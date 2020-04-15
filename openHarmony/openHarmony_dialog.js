@@ -384,6 +384,61 @@ $.oProgressDialog.prototype.close = function(){
  * @property    {float}               radius                  The radius of the menu.
  * @property    {$.oPoint}            position                The central position of the menu or button position for imbricated menus.
  * @property    {QWidget}             menuWidget              The central position of the menu or button position for imbricated menus.
+ * @example
+// This example function creates a menu full of generated push buttons with callbacks, but any type of widget can be added.
+// Normally it doesn't make sense to create buttons this way, and they will be created one by one to cater to specific needs,
+// such as launching Harmony actions, or scripts, etc. Assign this function to a shortcut by creating a Harmony Package for it.
+
+function openMenu(){
+  
+  // make a callback factory for our buttons and provide access to the openHarmony object
+  var oh = $;
+  function getCallback(message){
+    var $ = oh;
+    var message = message;
+    return function(){
+      $.alert(message);
+    }
+  }
+
+  // we create a list of random widgets for our submenu
+  var subwidgets = [];
+  for (var i=0; i<5; i++){
+    var button = new QPushButton;
+    button.text = i;
+
+    var callback = getCallback("submenu button "+i);
+    button.clicked.connect(callback);
+
+    subwidgets.push(button);
+  }
+
+  // we initialise our submenu
+  var subMenu = new $.oPieSubMenu("more", subwidgets);
+
+  // we create a list of random widgets for our main menu
+  var widgets = [];
+  for (var i=0; i<8; i++){
+    var button = new QPushButton;
+    button.text = i;
+
+    var callback = getCallback("button "+i);
+    button.clicked.connect(callback);
+
+    widgets.push(button);
+  }
+
+  // we swap one of our widgets for the submenu
+  widgets[3] = subMenu;
+
+  // we initialise our main menu. The numerical values are for the minimum and maximum angle of the 
+  // circle in multiples of Pi. Going clockwise, 0 is left, 1 is right, -0.5 is the bottom from the left, 
+  // and 1.5 is the bottom from the right side. 0.5 is the top of the circle.
+  var menu = new $.oPieMenu("menu", widgets, -0.2, 1.2);
+
+  // we show it!
+  menu.show();
+}
  */
 $.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show ){
   this.name = name;
