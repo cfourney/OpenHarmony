@@ -1220,11 +1220,11 @@ $.oScene.prototype.getSelectedPalette = function(){
 
 
 /**
- * Add a palette object to the specified location.
+ * Add a palette object to the scene palette list and into the specified location.
  * @param   {string}         name                          The name for the palette.
  * @param   {string}         index                         Index at which to insert the palette.
  * @param   {string}         paletteStorage                Storage type: environment, job, scene, element, external.
- * @param   {$.oElement}     storeInElement                The name of the palette to return, if available.
+ * @param   {$.oElement}     storeInElement                The element to store the palette in. If paletteStorage is set to "external", provide a destination folder for the palette here.
  *
  * @return {$.oPalette}   newly created oPalette with provided name.
  */
@@ -1237,51 +1237,31 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
   if (typeof storeInElement === 'undefined'){
     if (paletteStorage == "external") throw new Error("Element parameter should point to storage path if palette destination is External")
     if (paletteStorage == "element") throw new Error("Element parameter cannot be omitted if palette destination is Element")
-    var _element = 1;
+    var storeInElement = 1;
   }
 
   var _destination = $.oPalette.location[paletteStorage]
-  if (paletteStorage == "element") var _element = storeInElement.id;
+  if (paletteStorage == "element") var storeInElement = storeInElement.id;
 
-
-  /*switch (paletteStorage) {
-    case "environnement" :
-      _destination = PaletteObjectManager.Constants.Location.ENVIRONMENT;
-      break;
-    case "job" :
-      _destination = PaletteObjectManager.Constants.Location.JOB;
-      break;
-    case "scene" :
-      _destination = PaletteObjectManager.Constants.Location.SCENE;
-      break;
-    case "element" :
-      _destination = PaletteObjectManager.Constants.Location.ELEMENT;
-      var _element = storeInElement.id;
-      break;
-    case "external" :
-      _destination = PaletteObjectManager.Constants.Location.EXTERNAL;
-      break;
-    default :
-      break;
-  }*/
+  this.$.log(paletteStorage+" "+_destination)
 
   if (paletteStorage == "external") var _palette = new this.$.oPalette(_list.createPalette(storeInElement+"/"+name, insertAtIndex), _list);
 
   // can fail if database lock wasn't released
   var _palette = new this.$.oPalette(_list.createPaletteAtLocation(_destination, storeInElement, name, insertAtIndex), _list);
-
+  log("created palette : "+_palette.path)
   return _palette;
 }
 
 
 
 /**
- * Imports a palette into the specified location.
+ * Imports a palette to the scene palette list and into the specified storage location.
  * @param   {string}         path                          The palette file to import.
  * @param   {string}         name                          The name for the palette.
  * @param   {string}         index                         Index at which to insert the palette.
  * @param   {string}         paletteStorage                Storage type: environment, job, scene, element, external.
- * @param   {$.oElement}     storeInElement                The name of the palette to return, if available.
+ * @param   {$.oElement}     storeInElement                The element to store the palette in. If paletteStorage is set to "external", provide a destination folder for the palette here.
  *
  * @return {$.oPalette}   oPalette with provided name.
  */
@@ -1293,7 +1273,7 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
   if (typeof storeInElement === 'undefined'){
     if (paletteStorage == "external") throw new Error("Element parameter should point to storage path if palette destination is External")
     if (paletteStorage == "element") throw new Error("Element parameter cannot be omitted if palette destination is Element")
-    var _element = 1;
+    var storeInElement = 1;
   }
 
   var _paletteFile = new this.$.oFile(filename);
@@ -1304,16 +1284,37 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
     return null;
   }
 
-  // create a dummy palette to get the destination path
+  /*// create a dummy palette to get the destination path
   var _newPalette = this.addPalette("dummy_palette", index, paletteStorage, storeInElement);
   var _path = _newPalette.path;
   var _list = _newPalette._paletteList;
   _newPalette.remove(true);
 
   var _file = new this.$.oFile(_path);
-  this.$.debug
 
-  var paletteFolder = _file.folder;
+  var paletteFolder = _file.folder;*/
+  var _location = this.$.oPalette.location;
+  switch (paletteStorage){
+    case 'environment' :
+      var paletteFolder = fileMapper.toNativePath(PaletteObjectManager.Locator.folderForLocation(_location.environment,1));
+      break;
+  
+    case 'job' :
+      var paletteFolder = fileMapper.toNativePath(PaletteObjectManager.Locator.folderForLocation(_location.job,1))
+      break;
+    
+    case 'scene' :
+      var paletteFolder = fileMapper.toNativePath(PaletteObjectManager.Locator.folderForLocation(_location.scene,1))
+      break;
+
+    case 'element' :
+      var paletteFolder = fileMapper.toNativePath(PaletteObjectManager.Locator.folderForLocation(_location.element, storeInElement.id))
+      break;
+  }
+
+  var paletteFolder = new this.$.oFolder(paletteFolder);
+  this.$.log("destination folder "+paletteFolder+" exists? "+paletteFolder.exists);
+
   if (!paletteFolder.exists && !paletteFolder.create()) {
     this.$.debug("Error: couldn't create missing palette folder "+paletteFolder, this.$.DEBUG_LEVEL.ERROR);
     return null;
@@ -1327,7 +1328,8 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
   }
 
   // remove dummy palette and load new palette
-  var _palette = _list.insertPalette(_copy.path.replace(".plt",""), index);
+  this.$.log("toonboom path : "+_copy.toonboomPath)
+  var _palette = _list.insertPalette(_copy.toonboomPath.replace(".plt", ""), index);
 
   _newPalette = new this.$.oPalette(_palette, _list);
   //_newPalette.name = _paletteFile.name;

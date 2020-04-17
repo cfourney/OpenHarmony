@@ -66,32 +66,49 @@ $.oFolder = function(path){
 
 
 /**
- * The path of the folder.
+ * The path of the folder.  Setting a path doesn't move the file, only changes where the file object is pointing.
  * @name $.oFolder#path
  * @type {string}
  */
 Object.defineProperty($.oFolder.prototype, 'path', {
     get: function(){
-        return this._path;
+      return this._path;
     },
     set: function( newPath ){
-      if( !this.exists ){
-        this._path = fileMapper.toNativePath( newPath ).split("\\").join("/");
-        return;
-      }
-
-      var folder = new this.$.oFolder( newPath );
-      if( folder.exists ){
-        throw "Target path already exists. No default replace.";
-      }
-
-      var parent_folder = folder.folder;
-      if( !parent_folder.exists ){
-        throw "Target path's parent folder must already exist.";
-      }
-
-      this.move( newPath, false );
+      this._path = fileMapper.toNativePath( newPath ).split("\\").join("/");
     }
+});
+
+
+/**
+ * The path of the file encoded as a toonboom relative path.
+ * @name $.oFile#toonboomPath
+ * @readonly
+ * @type {string}
+ */
+Object.defineProperty( $.oFolder.prototype, 'toonboomPath', {
+  get: function(){
+    var _path = this._path;
+    if (!this.$.scene.online) return _path;
+    if (_path.slice(0,2) != ("//")) return _path;
+
+    var _pathComponents = _path.replace("//", "").split("/");
+    var _drive = _pathComponents[1].toUpperCase();
+    var _path = _pathComponents.slice(2);
+
+    return ["",_drive].concat(_path).join("/");
+/*
+    _path = _path.slice(_path.indexOf(_path.indexOf("//"))
+    var _sceneIndex = _path.indexOf(this.$.scene.path);
+    var _dbindex = _path.toLowerCase().indexOf("/usa");
+
+    if (_sceneIndex != -1){
+      _path = _path.replace(this.$.scene.path, "")
+    }else if (_dbindex != -1){
+      _path = _path.slice(_dbindex).replace("/usa_db/", "/USA_DB/");
+    }
+    return _path;*/
+  }
 });
 
 
@@ -509,6 +526,43 @@ Object.defineProperty($.oFile.prototype, 'exists', {
 })
 
 
+/**
+ * The path of the file. Setting a path doesn't move the file, only changes where the file object is pointing.
+ * @name $.oFile#path
+ * @type {string}
+ */
+Object.defineProperty( $.oFile.prototype, 'path', {
+  get: function(){
+    return this._path;
+  },
+
+  set: function( newPath ){
+    this._path = fileMapper.toNativePath( newPath ).split("\\").join("/");
+  }
+});
+
+
+/**
+ * The path of the file encoded as a toonboom relative path.
+ * @name $.oFile#toonboomPath
+ * @readonly
+ * @type {string}
+ */
+Object.defineProperty( $.oFile.prototype, 'toonboomPath', {
+  get: function(){
+    var _path = this._path;
+    if (!this.$.scene.online) return _path;
+    if (_path.slice(0,2) != ("//")) return _path;
+
+    var _pathComponents = _path.replace("//", "").split("/");
+    var _drive = _pathComponents[1].toUpperCase();
+    var _path = _pathComponents.slice(2);
+
+    return ["",_drive].concat(_path).join("/");
+  }
+});
+
+
 //Todo, Size, Date Created, Date Modified
 
 
@@ -674,34 +728,3 @@ $.oFile.prototype.remove = function(){
 $.oFile.prototype.toString = function(){
     return this.path;
 }
-
-
-/**
- * The path of the file.
- * @name $.oFile#path
- * @type {string}
- */
-Object.defineProperty( $.oFile.prototype, 'path', {
-    get: function(){
-        return this._path;
-    },
-
-    set: function( newPath ){
-        if( !this.exists ){
-          this._path = fileMapper.toNativePath( newPath ).split("\\").join("/");
-          return;
-        }
-
-        var file = new this.$.oFile( newPath );
-        if( file.exists ){
-          throw "Target path already exists. No default replace.";
-        }
-
-        var parent_folder = file.folder;
-        if( !parent_folder.exists ){
-          throw "Target path's parent folder must already exist.";
-        }
-
-        this.move( newPath, false );
-    }
-});

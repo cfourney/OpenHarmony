@@ -1809,7 +1809,7 @@ Object.defineProperty($.oDrawingNode.prototype, "timings", {
 Object.defineProperty($.oDrawingNode.prototype, "palettes", {
     get : function(){
       var _element = this.element;
-      var _paletteList = paletteObjectManager.getPaletteListByElementId(_element.id);
+      var _paletteList = PaletteObjectManager.getPaletteListByElementId(_element.id);
       var _palettes = [];
       for (var i=0; i<_paletteList.numPalettes; i++){
         _palettes.push( new this.$.oPalette( _paletteList.getPaletteByIndex(i), this, _paletteList ) );

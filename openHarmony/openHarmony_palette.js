@@ -73,7 +73,7 @@ $.oPalette = function( paletteObject, paletteListObject ){
 
 // Class properties
 $.oPalette.location = {
-  "environnement" : PaletteObjectManager.Constants.Location.ENVIRONMENT,
+  "environment" : PaletteObjectManager.Constants.Location.ENVIRONMENT,
   "job" : PaletteObjectManager.Constants.Location.JOB,
   "scene" : PaletteObjectManager.Constants.Location.SCENE,
   "element" : PaletteObjectManager.Constants.Location.ELEMENT,
@@ -201,19 +201,20 @@ Object.defineProperty($.oPalette.prototype, 'paletteStorage', {
     get : function(){
       var _location = this.$.oPalette.location;
       var _storage = {
-        environment : PaletteObjectManager.Locator.folderForLocation(_location.environnement,1),
-        job :         PaletteObjectManager.Locator.folderForLocation(_location.job,1),
-        scene :       PaletteObjectManager.Locator.folderForLocation(_location.scene,1)
+        environment : fileMapper.toNativePath(PaletteObjectManager.Locator.folderForLocation(_location.environment,1)),
+        job :         fileMapper.toNativePath(PaletteObjectManager.Locator.folderForLocation(_location.job,1)),
+        scene :       fileMapper.toNativePath(PaletteObjectManager.Locator.folderForLocation(_location.scene,1))
       }
       
-      var _path = this.path+"";
-      this.$.log(this.path+" "+this.name+" "+this.paletteObject.getPath())
-      if (_path.indexOf("/elements/") != -1){
+      var _path = this.path.folder.path;
+
+      if (_path.indexOf("/elements") != -1){
         // find out which element?
         return "element";
       }
       for (var i in _storage){
-        if (_storage[i] == _path) return i;
+        this.$.log("comparing path :\n"+_path+"\nto storage path of : "+i+" :\n"+_storage[i].split("\\").join("/"))
+        if (_storage[i].split("\\").join("/") == _path) return i;
       }
       
       return "external";
