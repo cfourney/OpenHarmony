@@ -213,7 +213,6 @@ Object.defineProperty($.oPalette.prototype, 'paletteStorage', {
         return "element";
       }
       for (var i in _storage){
-        this.$.log("comparing path :\n"+_path+"\nto storage path of : "+i+" :\n"+_storage[i].split("\\").join("/"))
         if (_storage[i].split("\\").join("/") == _path) return i;
       }
       

@@ -1284,15 +1284,6 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
     return null;
   }
 
-  /*// create a dummy palette to get the destination path
-  var _newPalette = this.addPalette("dummy_palette", index, paletteStorage, storeInElement);
-  var _path = _newPalette.path;
-  var _list = _newPalette._paletteList;
-  _newPalette.remove(true);
-
-  var _file = new this.$.oFile(_path);
-
-  var paletteFolder = _file.folder;*/
   var _location = this.$.oPalette.location;
   switch (paletteStorage){
     case 'environment' :
@@ -1313,7 +1304,6 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
   }
 
   var paletteFolder = new this.$.oFolder(paletteFolder);
-  this.$.log("destination folder "+paletteFolder+" exists? "+paletteFolder.exists);
 
   if (!paletteFolder.exists && !paletteFolder.create()) {
     this.$.debug("Error: couldn't create missing palette folder "+paletteFolder, this.$.DEBUG_LEVEL.ERROR);
@@ -1327,12 +1317,9 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
     return null;
   }
 
-  // remove dummy palette and load new palette
-  this.$.log("toonboom path : "+_copy.toonboomPath)
   var _palette = _list.insertPalette(_copy.toonboomPath.replace(".plt", ""), index);
 
   _newPalette = new this.$.oPalette(_palette, _list);
-  //_newPalette.name = _paletteFile.name;
 
   return _newPalette;
 }

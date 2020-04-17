@@ -514,7 +514,6 @@ $.oPieMenu.prototype.show = function(parent){
   closeButton.objectName = this.name+"_closeButton";
   closeButton.show();
 
-  log(closeButtonPosition.x+" "+closeButtonPosition.y)
   closeButton.move(closeButtonPosition.x-(closeButton.width/2), closeButtonPosition.y-(closeButton.height/2));
 
   if (parent){  
