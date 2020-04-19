@@ -432,8 +432,8 @@ function openMenu(){
   widgets[3] = subMenu;
 
   // we initialise our main menu. The numerical values are for the minimum and maximum angle of the 
-  // circle in multiples of Pi. Going clockwise, 0 is left, 1 is right, -0.5 is the bottom from the left, 
-  // and 1.5 is the bottom from the right side. 0.5 is the top of the circle.
+  // circle in multiples of Pi. Going counter clockwise, 0 is right, 1 is left, 1.5 is the bottom from the left, 
+  // and -0.5 is the bottom from the right side. 0.5 is the top of the circle.
   var menu = new $.oPieMenu("menu", widgets, -0.2, 1.2);
 
   // we show it!
@@ -447,7 +447,7 @@ $.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show
   if (typeof minAngle === 'undefined') var minAngle = 0;
   if (typeof maxAngle === 'undefined') var maxAngle = 1;
   if (typeof radius === 'undefined') var radius = this.getMenuRadius();;
-  if (typeof position === 'undefined') var position = this.$.app.mousePosition;
+  if (typeof position === 'undefined') var position = this.$.app.globalMousePosition;
   if (typeof show === 'undefined') var show = false;
 
   this.radius = radius;
@@ -469,10 +469,14 @@ $.oPieMenu.prototype.show = function(parent){
   this._y = this.position.y-this.radius*2;
   this._height = 4*this.radius;
   this._width = 4*this.radius;
+  this.parent = parent;
 
-  var _pieMenu = new QWidget;
+  var _pieMenu = new QWidget();
+  this.menuWidget = _pieMenu;
+
   var flags = Qt.FramelessWindowHint;
   _pieMenu.setWindowFlags(flags);
+  _pieMenu.setStyleSheet("background-color: rgba(20, 20, 20, 85%);");
   _pieMenu.setAttribute(Qt.WA_TranslucentBackground);
 
   var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
@@ -509,62 +513,218 @@ $.oPieMenu.prototype.show = function(parent){
     widget.move(_widgetPosition.x-widget.width/2 ,_widgetPosition.y-widget.height/2);
   }
 
+  _pieMenu.focusPolicy = Qt.StrongFocus
+  _pieMenu.focusOutEvent = function(){
+    log("focus out")
+  }
+
   // add close button
   var closeButton = new QPushButton("close", _pieMenu);
   closeButton.objectName = this.name+"_closeButton";
   closeButton.show();
-
   closeButton.move(closeButtonPosition.x-(closeButton.width/2), closeButtonPosition.y-(closeButton.height/2));
 
-  if (parent){  
+  if (parent){
+    // this is a submenu, so we set up the close button differently as it will show the button to open it again
     var self = this;
-    var closeCallback = function(){
+    var closeCallBack = function(){
       _pieMenu.close();
-      self.button.show();
+      self.showButton(parent);
     }
-    closeButton.clicked.connect(closeCallback);
+    closeButton.mouseTracking = true;
+    closeButton.leaveEvent = function(){
+      closeButton.enterEvent = closeCallBack;
+    }
+    this.slice = this.drawSlice(parent.radius+30);
   }else{
-    closeButton.clicked.connect(_pieMenu.close);
+    var closeCallBack = function(){
+      _pieMenu.close();
+    }
+    this.slice = this.drawSlice();
   }
+  // add close button actions
+  closeButton.clicked.connect(closeCallBack)
 
   _pieMenu.show();
-  this.menuWidget = _pieMenu;
 
   return _pieMenu;
 }
 
 
 /**
- * Get the angle for the item based on index.
+ * draws a background transparent slice
+ * @param {$.oPieMenu}   [parent]    specify a parent oPieMenu for imbricated submenus
+ * @private
+ */
+$.oPieMenu.prototype.drawSlice = function(minRadius){
+  if (typeof minRadius === 'undefined') minRadius = 30;
+  var maxRadius = this.radius+30;
+  var index = 0;
+  var linesColor = new QColor(0,0,0,0)
+  var backgroundColor = new QColor(50, 50, 50, 50)
+  var sliceColor = new QColor(0, 200, 255, 200)
+
+  // get the slice and background geometry 
+  var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
+  var angleSlice = this.getItemAngleRange(index);
+  var slicePath = this.getSlicePath(menuWidgetCenter, angleSlice[0], angleSlice[1], minRadius, maxRadius);
+  var contactPath = this.getSlicePath(menuWidgetCenter, this.minAngle, this.maxAngle, minRadius, maxRadius);
+  
+  // create a widget to paint into
+  var _parent = this.menuWidget;
+  var sliceWidget = new QWidget(_parent);
+  sliceWidget.objectName = "slice";
+  sliceWidget.setStyleSheet("background-color: rgba(0, 0, 0, 0%);");
+  sliceWidget.move(0, 0);
+  sliceWidget.minimumHeight = this._height;
+  sliceWidget.minimumWidth = this._width;
+  sliceWidget.lower();
+
+  var sliceWidth = angleSlice[1]-angleSlice[0];
+
+  // painting the slice on sliceWidget.update()
+  sliceWidget.paintEvent = function(){
+    var painter = new QPainter();
+    painter.save();
+    painter.begin(sliceWidget);
+
+    // draw background
+    painter.setRenderHint(QPainter.Antialiasing);
+    painter.setPen(new QPen(linesColor));
+    painter.setBrush(new QBrush(backgroundColor));
+    painter.drawPath(contactPath);
+  
+    // draw slice and rotate around widget center
+    painter.translate(menuWidgetCenter.x, menuWidgetCenter.y);
+    painter.rotate(sliceWidth*index*(-180));
+    painter.translate(-menuWidgetCenter.x, -menuWidgetCenter.y);
+    painter.setPen(new QPen(linesColor));
+    painter.setBrush(new QBrush(sliceColor));
+    painter.drawPath(slicePath);
+    painter.end();
+    painter.restore();
+  }
+
+  //set up automatic following of the mouse
+  sliceWidget.mouseTracking = true;
+
+  var self = this;
+  sliceWidget.mouseMoveEvent = function(mousePos){
+    // work out the index based on relative position to the center
+    var position = new self.$.oPoint(mousePos.x(), mousePos.y());
+    var angle = -position.translate(-menuWidgetCenter.x, -menuWidgetCenter.y).polarCoordinates.angle/Math.PI;
+    if (angle < (-0.5)) angle += 2; // our coordinates system uses continuous angle values with cutoff at the bottom (1.5/-0.5)
+    var currentIndex = self.getIndexAtAngle(angle);
+
+    // change the slice rotation and update slicewidget, as well as focus the widget
+    if (index != currentIndex && currentIndex >= 0 && currentIndex < self.widgets.length){
+      index = currentIndex; // only update on value change
+      sliceWidget.update();
+      var indexWidget = self.widgets[index]
+      if (indexWidget instanceof self.$.oPieSubMenu){
+        indexWidget = indexWidget.menu.button;
+      }
+      self.widgets[index].setFocus(true);
+    }
+  }
+
+  return sliceWidget;
+}
+
+
+/**
+ * Generate a pie slice path to draw based on parameters
+ * @param {$.oPoint}    center      the center of the slice
+ * @param {float}       minAngle    a value between -0.5 and 1.5 for the lowest angle value for the pie slice  
+ * @param {float}       maxAngle    a value between -0.5 and 1.5 for the highest angle value for the pie slice  
+ * @param {float}       minRadius   the smallest circle radius  
+ * @param {float}       maxRadius   the largest circle radius  
+ * @private
+ */
+$.oPieMenu.prototype.getSlicePath = function(center, minAngle, maxAngle, minRadius, maxRadius){
+  // work out the geometry
+  var smallArcBoundingBox = new QRectF(center.x-minRadius, center.y-minRadius, minRadius*2, minRadius*2);
+  var smallArcStart = new this.$.oPoint();
+  smallArcStart.polarCoordinates = {radius: minRadius, angle:minAngle*(-Math.PI)}
+  smallArcStart.translate(center.x, center.y);
+  var smallArcAngleStart = minAngle*180;
+  var smallArcSweep = (maxAngle-minAngle)*180; // convert values from 0-2 (radiant angles in multiples of pi) to degrees 
+
+  var bigArcBoundingBox = new QRectF(center.x-maxRadius, center.y-maxRadius, maxRadius*2, maxRadius*2);
+  var bigArcAngleStart = maxAngle*180;
+  var bigArcSweep = -smallArcSweep;
+
+  // we draw the slice path
+  var slicePath = new QPainterPath;
+  slicePath.moveTo(new QPointF(smallArcStart.x, smallArcStart.y));
+  slicePath.arcTo(smallArcBoundingBox, smallArcAngleStart, smallArcSweep);
+  slicePath.arcTo(bigArcBoundingBox, bigArcAngleStart, bigArcSweep);
+
+  return slicePath;
+}
+
+
+/**
+ * Get the angle range for the item pie slice based on index.
+ * @private
  * @param {int}     index         the index of the widget 
- * @return {$.oPoint}
+ * @return {float[]}
+ */
+$.oPieMenu.prototype.getItemAngleRange = function(index){
+  var length = this.widgets.length;
+  var angleStart = this.minAngle+(index/length)*(this.maxAngle-this.minAngle);
+  var angleEnd = this.minAngle+((index+1)/length)*(this.maxAngle-this.minAngle);
+  
+  return [angleStart, angleEnd];
+}
+
+/**
+ * Get the angle for the item widget based on index.
+ * @private
+ * @param {int}     index         the index of the widget 
+ * @return {float}
  */
 $.oPieMenu.prototype.getItemAngle = function(index){
-  var length = this.widgets.length-1;
-  var angle = this.minAngle+((length-index)/length)*(this.maxAngle-this.minAngle);
+  var angleRange = this.getItemAngleRange(index, this.minAngle, this.maxAngle);
+  var angle = (angleRange[1] - angleRange[0])/2+angleRange[0]
   
   return angle;
 }
 
 
 /**
+ * Get the widget index for the angle value.
+ * @private
+ * @param {float}     angle         the index of the widget 
+ * @return {float}
+ */
+$.oPieMenu.prototype.getIndexAtAngle = function(angle){
+  var angleRange = (this.maxAngle-this.minAngle)/this.widgets.length
+  return Math.floor((angle-this.minAngle)/angleRange);
+}
+
+
+/**
  * Get the position from the center for the item based on index.
+ * @private
  * @param {int}     index         the index of the widget 
- * @param {int}     radius        the radius of the menu
+ * @param {float}     radius        the radius of the menu
  * @return {$.oPoint}
  */
 $.oPieMenu.prototype.getItemPosition = function(index, radius){
-  var angle = this.getItemAngle(index, this.minAngle, this.maxAngle);
+  // we add pi to the angle because of the inverted Y axis of widgets coordinates
   var pi = Math.PI;
-  var _x = Math.cos(angle*pi)*radius;
-  var _y = Math.sin(angle*pi+pi)*radius;
+  var angle = this.getItemAngle(index, this.minAngle, this.maxAngle)*(-pi);
+  var _point = new this.$.oPoint();
+  _point.polarCoordinates = {radius:radius, angle:angle}
   
-  return new this.$.oPoint(_x, _y, 0);
+  return _point;
 }
 
 
 /**
  * Get a pie menu radius setting for a given amount of items.
+ * @private
  * @param {int}     itemsNumber         the ammount of items to display 
  * @return {float}
  */
@@ -581,6 +741,44 @@ $.oPieMenu.prototype.getMenuRadius = function(){
   return _radius;
 }
 
+
+/**
+ * Show the button that brings up the submenu
+ * @param {$.oPieMenu}   parent
+ * @private
+ */
+$.oPieMenu.prototype.showButton = function(parent){
+  var _button = this.button;
+  var self = this;
+
+  var openMenuCallback = function(){
+    self.menuWidget = self.show(parent);
+    self.hideButton();
+  }
+
+  _button.mouseReleaseEvent = openMenuCallback;
+  _button.show();
+  if (_button.underMouse()){
+    _button.leaveEvent = function(){
+      _button.enterEvent = openMenuCallback;
+      _button.leaveEvent = null;
+    }
+  }else{
+    _button.enterEvent = openMenuCallback;    
+  }
+}
+
+
+/**
+ * Hide the button that brings up the submenu
+ * @private
+ */
+$.oPieMenu.prototype.hideButton = function(){
+  var _button = this.button;
+  _button.hide();
+  _button.enterEvent = null;
+  _button.mouseReleaseEvent = false;
+}
 
 
 //////////////////////////////////////
@@ -628,28 +826,25 @@ $.oPieSubMenu = function(name, widgets) {
 $.oPieSubMenu.prototype.init = function(index, position, parent){
   var name = this.name;
   var angle = parent.getItemAngle(index);
-  var widgetNum = this.widgets.length/2;
+
+  // submenu widgets calculate their range from to go on both sides of the button, at a fixed angle 
+  // (in order to keep the span of submenu options centered around the menu button)
+  var widgetNum = this.widgets.length/2; 
   var minAngle = angle-widgetNum*this.itemAngle;
   var maxAngle = angle+widgetNum*this.itemAngle;
   var radius = parent.radius+this.extraRadius;
 
   // create the menu
-  this.menu = new this.$.oPieMenu(name, this.widgets, minAngle, maxAngle, radius, position, false)
+  this.menu = new this.$.oPieMenu(name, this.widgets, minAngle, maxAngle, radius, position, false);
 
   // initialise the button to open the menu
-  this.menu.button = new QPushButton;
+  this.menu.button = new QPushButton(parent.menuWidget);
   this.menu.button.text = name;
-
-  var self = this;
-  this.showCallback = function(){
-    self.menuWidget = self.menu.show(parent);
-    self.menu.button.hide();
-  }
-  this.menu.button.clicked.connect(self.showCallback);
+  this.menu.button.mouseTracking = true;
+  this.menu.showButton(parent);
 
   return this.menu.button;
 }
-
 
 
 //////////////////////////////////////
@@ -661,3 +856,6 @@ $.oPieSubMenu.prototype.init = function(index, position, parent){
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
+
+
+
