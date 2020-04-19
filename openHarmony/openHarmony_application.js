@@ -68,7 +68,7 @@ Object.defineProperty($.oApp.prototype, 'mainWindow', {
   get : function(){
     var windows = QApplication.topLevelWidgets();
     for ( var i in windows) {
-      if (windows[i] instanceof QMainWindow && !x.parentWidget()) return windows[i];
+      if (windows[i] instanceof QMainWindow && !windows[i].parentWidget()) return windows[i];
     }
     return null
   }
@@ -92,11 +92,24 @@ Object.defineProperty($.oApp.prototype, 'toolbars', {
 
 
 /**
- * The Position of the mouse cursor in the screen coordinates.
+ * The Position of the mouse cursor in the toonboom window coordinates.
  * @name $.oApp#mousePosition
  * @type {$.oPoint}
  */
 Object.defineProperty($.oApp.prototype, 'mousePosition', {
+  get : function(){
+    var _position = this.$.app.mainWindow.mapFromGlobal(QCursor.pos());
+    return new this.$.oPoint(_position.x(), _position.y(), 0);
+  }
+});
+
+
+/**
+ * The Position of the mouse cursor in the screen coordinates.
+ * @name $.oApp#globalMousePosition
+ * @type {$.oPoint}
+ */
+Object.defineProperty($.oApp.prototype, 'globalMousePosition', {
   get : function(){
     var _position = QCursor.pos();
     return new this.$.oPoint(_position.x(), _position.y(), 0);
