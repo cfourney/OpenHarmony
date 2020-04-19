@@ -419,6 +419,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oApp#globalMousePosition"><a href="$.oApp.html#globalMousePosition">globalMousePosition</a></li>
+            
                 <li data-name="$.oApp#mainWindow"><a href="$.oApp.html#mainWindow">mainWindow</a></li>
             
                 <li data-name="$.oApp#mousePosition"><a href="$.oApp.html#mousePosition">mousePosition</a></li>
@@ -2204,12 +2206,6 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="$.oPieMenu#getItemAngle"><a href="$.oPieMenu.html#getItemAngle">getItemAngle</a></li>
-            
-                <li data-name="$.oPieMenu#getItemPosition"><a href="$.oPieMenu.html#getItemPosition">getItemPosition</a></li>
-            
-                <li data-name="$.oPieMenu#getMenuRadius"><a href="$.oPieMenu.html#getMenuRadius">getMenuRadius</a></li>
-            
                 <li data-name="$.oPieMenu#show"><a href="$.oPieMenu.html#show">show</a></li>
             
             </ul>
@@ -2273,6 +2269,8 @@
                 <li data-name="$.oPoint#pointAverage"><a href="$.oPoint.html#pointAverage">pointAverage</a></li>
             
                 <li data-name="$.oPoint#pointSubtract"><a href="$.oPoint.html#pointSubtract">pointSubtract</a></li>
+            
+                <li data-name="$.oPoint#translate"><a href="$.oPoint.html#translate">translate</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -3083,7 +3081,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_threading.js, line 534
+            openHarmony/openHarmony_threading.js, line 540
         </div>
         
     </div>
@@ -3183,7 +3181,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_threading.js, line 549
+            openHarmony/openHarmony_threading.js, line 555
         </div>
         
     </div>
@@ -3249,12 +3247,12 @@
     <div class="nameContainer">
         <h4 class="name" id="launchAndRead">
             
-            launchAndRead<span class="signature">(<span class="optional">async</span>, <span class="optional">readCallback</span>, <span class="optional">finishedCallback</span>)</span>
+            launchAndRead<span class="signature">(<span class="optional">readCallback</span>, <span class="optional">finishedCallback</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_threading.js, line 481
+            openHarmony/openHarmony_threading.js, line 488
         </div>
         
     </div>
@@ -3286,50 +3284,12 @@
 		<th>Type</th>
 		
 		
-		<th>Default</th>
-		
 		
 		<th class="last">Description</th>
 	</tr>
 	</thead>
 	
 	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>async</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Wether to wait for the end of the process or carry on with script execution</td>
-        </tr>
-	
 	
 	
         <tr>
@@ -3346,10 +3306,6 @@
             
             </td>
             
-            
-                <td class="default">
-                
-                </td>
             
             
             <td class="description last">
@@ -3380,10 +3336,6 @@
             
             </td>
             
-            
-                <td class="default">
-                
-                </td>
             
             
             <td class="description last">
@@ -3477,6 +3429,9 @@ if (renderInBackground){
   // Creating a function to respond to new readable information on the output channel.
   // This function takes a "message" argument which will contain the returned output of the process.
 
+  var progressDialogue = new this.$.oProgressDialog("Rendering : ",length,"Render Write Nodes", true);
+  var self = this;
+
   var renderProgress = function(message){
     // parsing the message to find a Rendered frame number.
     var progressRegex = /Rendered Frame ([0-9]+)/igm;
@@ -3486,8 +3441,11 @@ if (renderInBackground){
     }
     if (matches.length!=0){
       // if a number is found, we compare it to the total frames in the render to deduce a completion percentage.
-      var percentage = Math.round(parseInt(matches.pop(),10)/length*100);
-      this.$.log("render : "+percentage+"% complete");
+      var progress = parseInt(matches.pop(),10)
+      progressDialogue.label = "Rendering Frame: "+progress+"/"+length
+      progressDialogue.value = progress;
+      var percentage = Math.round(progress/length*100);
+      self.$.log("render : "+percentage+"% complete");
     }
   }
 
@@ -3496,7 +3454,9 @@ if (renderInBackground){
 
   var renderFinished = function(exitCode){
     // here we simply output that the render completed successfully.
-    this.$.log(exitCode+" : render finished");
+    progressDialogue.label = "Rendering Finished"
+       progressDialogue.value = length;
+    self.$.log(exitCode+" : render finished");
   }
 
   // launching the process in async mode by providing true as first argument, and then the functions created above.
@@ -3527,7 +3487,7 @@ return readout</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_threading.js, line 514
+            openHarmony/openHarmony_threading.js, line 520
         </div>
         
     </div>
@@ -3635,7 +3595,7 @@ return readout</code></pre>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Apr 17 2020 17:15:03 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Apr 19 2020 14:59:51 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
