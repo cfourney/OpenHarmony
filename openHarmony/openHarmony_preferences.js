@@ -364,3 +364,30 @@ $.oPreferences.prototype.get = function( name ){
   
   return preferences.getBool( name, false );
 }
+
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//       $.oPreference class        //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+/*
+$.oPreference = function(keyword, category){
+
+}
+
+
+
+Object.defineProperty ($.oPreference.prototype, 'value', {
+  get: function(){
+
+  }
+})
+*/

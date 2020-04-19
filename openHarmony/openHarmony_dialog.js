@@ -533,6 +533,7 @@ $.oPieMenu.prototype.show = function(parent){
     }
     closeButton.mouseTracking = true;
     closeButton.leaveEvent = function(){
+      // enterEvent will only fire after having left the widget
       closeButton.enterEvent = closeCallBack;
     }
     this.slice = this.drawSlice(parent.radius+30);
@@ -616,15 +617,13 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
     if (angle < (-0.5)) angle += 2; // our coordinates system uses continuous angle values with cutoff at the bottom (1.5/-0.5)
     var currentIndex = self.getIndexAtAngle(angle);
 
-    // change the slice rotation and update slicewidget, as well as focus the widget
+    // on index value change, change the slice rotation and update slicewidget, as well as focus the widget
     if (index != currentIndex && currentIndex >= 0 && currentIndex < self.widgets.length){
-      index = currentIndex; // only update on value change
+      index = currentIndex;  
       sliceWidget.update();
       var indexWidget = self.widgets[index]
-      if (indexWidget instanceof self.$.oPieSubMenu){
-        indexWidget = indexWidget.menu.button;
-      }
-      self.widgets[index].setFocus(true);
+      if (indexWidget instanceof self.$.oPieSubMenu) indexWidget = indexWidget.menu.button;
+      indexWidget.setFocus(true);
     }
   }
 
@@ -858,4 +857,99 @@ $.oPieSubMenu.prototype.init = function(index, position, parent){
 //////////////////////////////////////
 
 
+/**
+ * The constructor for $.oScriptButton
+ * @name          $#oScriptButton
+ * @constructor
+ * @classdescription This subclass of QPushButton provides an easy way to create a button for a widget that will launch a function from another script file.<br> 
+ * The buttons created this way automatically load the icon named after the script if it finds one named like the funtion in a script-icons folder next to the script file.<br>
+ * It will also automatically set the callback to lanch the function from the script.<br>
+ * This class is a subclass of QPushButton and all the methods from that class are available to modify this button.
+ * @param {string}   scriptFile               The path to the script file that will be launched
+ * @param {string}   scriptFunction           The function name to launch from the script
+ * @param {QWidget}  parent                   The parent QWidget for the button.     
+ * 
+ */
+$.oScriptButton = function(scriptFile, scriptFunction, parent) {
+  QPushButton.call(this, "", parent);
+  this.scriptFile = scriptFile;
+  this.scriptFunction = scriptFunction;
+
+  // find an icon for the function in the script-icons folder
+  var scriptFile = new this.$.oFile(scriptFile)
+  var scriptIconsFolder = new this.$.oFolder(scriptFile.folder.path+"/script-icons");
+  var iconFiles = scriptIconsFolder.getFiles(scriptFunction+".*");
+  if (iconFiles.length > 0){
+    var iconFile = iconFiles[0].path;
+  }else{
+    // choose default toonboom "missing icon" script icon
+    // currently svg icons seem unsupported?
+    var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
+  }
+
+  this.minimumHeight = 32;
+  this.minimumWidth = 32;
+
+  var icon = new QIcon(iconFile);
+  this.icon = icon;
+  this.setIconSize(new QSize(24, 24));
+
+  this.toolTip = this.scriptFunction;
+}
+$.oScriptButton.prototype = Object.create(QPushButton.prototype);
+
+
+
+/**
+ * Runs the script on mouse Click
+ * @private
+ */
+$.oScriptButton.prototype.mouseReleaseEvent = function(){
+  var _scriptFile = this.scriptFile;
+  var _scriptFunction = this.scriptFunction;
+  include(_scriptFile);
+  eval(_scriptFunction)();
+}
+
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//       $.oPrefButton class        //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+$.oPrefButton = function(preferenceString, parent) {
+  QPushButton.call(this, "", parent);
+  this.scriptFile = scriptFile;
+  this.scriptFunction = scriptFunction;
+
+  // find an icon for the function in the script-icons folder
+  var scriptFile = new this.$.oFile(scriptFile)
+  var scriptIconsFolder = new this.$.oFolder(scriptFile.folder.path+"/script-icons");
+  var iconFiles = scriptIconsFolder.getFiles(scriptFunction+".*");
+  if (iconFiles.length > 0){
+    var iconFile = iconFiles[0].path;
+  }else{
+    // choose default toonboom "missing icon" script icon
+    // currently svg icons seem unsupported?
+    var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
+  }
+
+  this.minimumHeight = 32;
+  this.minimumWidth = 32;
+
+  var icon = new QIcon(iconFile);
+  this.icon = icon;
+  this.setIconSize(new QSize(24, 24));
+
+  this.toolTip = this.scriptFunction;
+}
+$.oScriptButton.prototype = Object.create(QPushButton.prototype);
 
