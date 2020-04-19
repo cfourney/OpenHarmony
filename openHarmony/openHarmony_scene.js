@@ -1960,10 +1960,11 @@ $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, e
       self.$.log(exitCode+" : render finished");
     }
 
-    p.launchAndRead(true, renderProgress, renderFinished);
+    p.launchAndRead(renderProgress, renderFinished);
   }else{
     var readout  = p.execute();
     this.$.log("render finished");
+    return readout;
   }
 }
 
