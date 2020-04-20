@@ -725,13 +725,13 @@ $.oFile.prototype.remove = function(){
 /**
  * Parses Files as XML
  * @private
- * @todo
+ * @todo implement
  */
 $.oFile.prototype.parseAsXml = function(){
   // build an object model representation of the contents of the XML by parsing it character by character
   var xml = this.read();
 
-  var objectRE = /<(\w+) ?(.*)>([\S\s]+)<\/\1><(\w+) ?(.*)>([\S\s]+)<\/\1>/igm    // matches an entire group of format <name properties>content</name>
+  var objectRE = /<(\w+) ?(.*)>([\S\s]+)<\/\1>/igm    // matches an entire group of format <name properties>content</name>
   var propertyRE = /(\w+)=(".+")/igm                                              // finds properties by matching name="value"
   var typeRE = /<(\w+)/igm                                                        // matches a type by matching formats <typename 
   var nameRE = /id="(\w+)"/igm                                                    // matches a name for an object by matching id="name"
