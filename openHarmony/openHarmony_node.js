@@ -1043,7 +1043,7 @@ $.oNode.prototype.linkOutNode = function(nodeToLink, ownPort, destPort, createPo
 
 /**
  * Links this node's out-port to the given module, at the inport and outport indices.
- * @param   {$.oNode}   $.oNodeObject            The node to unlink from this node's outports.
+ * @param   {$.oNode}   oNodeObject            The node to unlink from this node's outports.
  *
  * @return  {bool}    The result of the link, if successful.
  */
@@ -1053,7 +1053,8 @@ $.oNode.prototype.unlinkOutNode = function( oNodeObject ){
   var _outPorts = oNodeObject.outPorts;
 
   for (var i=0; i<_outPorts; i++){
-    for (var j=0; j<_inPorts; j++){
+    var _outLinks = oNodeObject.getOutLinksNumber(i);
+    for (var j=0; j<_outLinks; j++){
       if (node.dstNode(this.path, i, j) == _node){
         return this.unlinkOutPort(i, j);
       }
