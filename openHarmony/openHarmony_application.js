@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library 
+//                            openHarmony Library
 //
 //
 //         Developped by Mathieu Chaptel, Chris Fourney
@@ -68,7 +68,7 @@ Object.defineProperty($.oApp.prototype, 'mainWindow', {
   get : function(){
     var windows = QApplication.topLevelWidgets();
     for ( var i in windows) {
-      if (windows[i] instanceof QMainWindow && !x.parentWidget()}) return windows[i];
+      if(windows[i] instanceof QMainWindow && !(windows[i].parentWidget())) return windows[i];
     }
   }
 });
