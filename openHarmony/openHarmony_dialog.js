@@ -859,7 +859,7 @@ $.oPieSubMenu.prototype.init = function(index, position, parent){
 
 /**
  * The constructor for $.oScriptButton
- * @name          $#oScriptButton
+ * @name          $.oScriptButton
  * @constructor
  * @classdescription This subclass of QPushButton provides an easy way to create a button for a widget that will launch a function from another script file.<br> 
  * The buttons created this way automatically load the icon named after the script if it finds one named like the funtion in a script-icons folder next to the script file.<br>
@@ -951,5 +951,5 @@ $.oPrefButton = function(preferenceString, parent) {
 
   this.toolTip = this.scriptFunction;
 }
-$.oScriptButton.prototype = Object.create(QPushButton.prototype);
+$.oPrefButton.prototype = Object.create(QPushButton.prototype);
 

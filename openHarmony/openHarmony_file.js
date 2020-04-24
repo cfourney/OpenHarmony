@@ -93,21 +93,10 @@ Object.defineProperty( $.oFolder.prototype, 'toonboomPath', {
     if (_path.slice(0,2) != ("//")) return _path;
 
     var _pathComponents = _path.replace("//", "").split("/");
-    var _drive = _pathComponents[1].toUpperCase();
+    var _drive = (_pathComponents[1]=="usadata000")?_pathComponents[1]:_pathComponents[1].toUpperCase();
     var _path = _pathComponents.slice(2);
 
     return ["",_drive].concat(_path).join("/");
-/*
-    _path = _path.slice(_path.indexOf(_path.indexOf("//"))
-    var _sceneIndex = _path.indexOf(this.$.scene.path);
-    var _dbindex = _path.toLowerCase().indexOf("/usa");
-
-    if (_sceneIndex != -1){
-      _path = _path.replace(this.$.scene.path, "")
-    }else if (_dbindex != -1){
-      _path = _path.slice(_dbindex).replace("/usa_db/", "/USA_DB/");
-    }
-    return _path;*/
   }
 });
 
@@ -351,15 +340,13 @@ $.oFolder.prototype.copy = function( folderPath, copyName, overwrite ){
  * @param   {string}   destFolderPath           The new complete path of the folder after the move (CFNote: Should this not be a $.oFolder?)
  * @param   {bool}     [overwrite=false]        Whether to overwrite the target.
  *
- * @return: { bool }                            The result of the move.
+ * @return { bool }                            The result of the move.
+ * @todo implement with Robocopy
  */
 $.oFolder.prototype.move = function( destFolderPath, overwrite ){
     if (typeof overwrite === 'undefined') var overwrite = false;
 
     if (destFolderPath instanceof this.$.oFolder) destFolderPath = destFolderPath.path;
-
-    var _folder = destFolder.folder;
-    var _name = destFolder.name;
 
     var dir = new Dir;
     dir.path = destFolderPath;
@@ -378,7 +365,6 @@ $.oFolder.prototype.move = function( destFolderPath, overwrite ){
         return true;
     }catch (err){
         throw new Error ("Couldn't move folder "+this.path+" to new address "+destPath);
-        return false;
     }
 }
 
@@ -555,7 +541,7 @@ Object.defineProperty( $.oFile.prototype, 'toonboomPath', {
     if (_path.slice(0,2) != ("//")) return _path;
 
     var _pathComponents = _path.replace("//", "").split("/");
-    var _drive = _pathComponents[1].toUpperCase();
+    var _drive = (_pathComponents[1]=="usadata000")?_pathComponents[1]:_pathComponents[1].toUpperCase();
     var _path = _pathComponents.slice(2);
 
     return ["",_drive].concat(_path).join("/");
@@ -728,17 +714,55 @@ $.oFile.prototype.remove = function(){
  * @todo implement
  */
 $.oFile.prototype.parseAsXml = function(){
+
+  function setProperties(xmlString, object){
+    var propertyRE = /(\w+)="([^\=\<\>]+)"/igm            // matches a line with name="property"
+    var match;
+    while (match = propertyRE.exec(xmlString)){
+      var propName = match[1];
+      var propValue = match[2];
+      try{
+        propValue = JSON.parse(propValue)
+      }catch(err){
+        log("couldn't parse as JSON "+propValue)
+      }
+      object[propName] = propValue;
+    }
+    return object;
+  }
+
+  function getChildObjectsFromXML(xmlString){
+    var objectRE = /<(\w+) ?([^\s\>]*)\>?([\S\s]+)<\/\1>/igm           // matches an entire group of format <type header>properties</type>
+    var lineObjectRE = /<(\w+) ?([^\>]+)\/>/igm           // matches an entire group of format <type properties/>
+
+    var objects = [];
+    var match;
+    while (match = objectRE.exec(xmlString)){
+      //multiline objects can contain more objects
+      xmlString.replace(match[0], "");                // remove the matches from the string so they're not parsed twice for properties
+      
+      var domNode = {objectName: match[1]};
+      domNode = setProperties(match[2], domNode);
+      domNode.children = getChildObjectsFromXML(match[3]);
+
+      objects.push(domNode);
+    }
+
+    while (match = lineObjectRE.exec(xmlString)){
+      var domNode = {objectName: match[1]};
+      domNode = setProperties(match[2], domNode);
+
+      objects.push(domNode);
+    }
+
+    return objects;
+  }
+
   // build an object model representation of the contents of the XML by parsing it character by character
   var xml = this.read();
-
-  var objectRE = /<(\w+) ?(.*)>([\S\s]+)<\/\1>/igm    // matches an entire group of format <name properties>content</name>
-  var propertyRE = /(\w+)=(".+")/igm                                              // finds properties by matching name="value"
-  var typeRE = /<(\w+)/igm                                                        // matches a type by matching formats <typename 
-  var nameRE = /id="(\w+)"/igm                                                    // matches a name for an object by matching id="name"
-
-  var getObjectFromXML = function(string){
-    var objects = [];
-  }
+  log (typeof xml)                  // finds properties by matching name="value"
+  var xmlDocument = {children:getChildObjectsFromXML(xml)};
+  return xmlDocument;
 }
 
 
