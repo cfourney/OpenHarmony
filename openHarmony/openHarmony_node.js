@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library v0.01
+//                            openHarmony Library 
 //
 //
-//         Developped by Mathieu Chaptel, Chris Fourney...
+//         Developped by Mathieu Chaptel, Chris Fourney
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -23,8 +23,8 @@
 //   This library doesn't overwrite any of the objects and classes of the official
 //   Toonboom API which must remains available.
 //
-//   This library is made available under the MIT license.
-//   https://opensource.org/licenses/mit
+//   This library is made available under the Mozilla Public license 2.0.
+//   https://www.mozilla.org/en-US/MPL/2.0/
 //
 //   The repository for this library is available at the address:
 //   https://github.com/cfourney/OpenHarmony/
@@ -896,36 +896,7 @@ $.oNode.prototype.getFreeInPort = function(createNew){
  * @return  {bool}    The result of the link, if successful.
  */
 $.oNode.prototype.linkInNode = function( nodeToLink, ownPort, destPort, createPorts){
-  /*// check param types
-  if (!(nodeToLink instanceof this.$.oNode)) throw new Error("wrong parameter type in oNode.linkInNode: "+nodeToLink+" is not an oNode")
-  if (!nodeToLink.exists){
-    this.$.debug("Invalid node to link : "+nodeToLink+" doesn't exist.", this.$.DEBUG_LEVEL.ERROR)
-    return false;
-  }
 
-  var _node = nodeToLink.path;
-
-  // Default values for optional parameters
-  if (typeof ownPort === 'undefined') ownPort = 0;
-  if (typeof destPort === 'undefined') destPort = 0//node.numberOfOutputPorts(_node);
-  if (typeof createPorts === 'undefined'){
-    // by default, only create a port if none exist
-    var createPorts = (nodeToLink.type == "MULTIPORT_IN" && nodeToLink.outNodes.length == 0)||
-              (nodeToLink.type == "GROUP" && nodeToLink.outNodes.length == 0)||
-              (this.type == "GROUP" && this.inNodes.length == 0)||
-              (this.type == "MULTIPORT_OUT" && this.outNodes.length == 0)||
-              (this.type == "COMPOSITE")
-  }
-
-  this.$.debug("linking "+this.fullPath+" to "+_node+" "+destPort+" "+ownPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length, this.$.DEBUG_LEVEL.LOG);
-  var success = false;
-  try{
-    success = node.link(_node, destPort, this.path, ownPort, createPorts, createPorts)
-  }catch (err){
-    this.$.debug("Error linking "+this.fullPath+" to "+_node+" "+destPort+" "+ownPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.outNodes.length, this.$.DEBUG_LEVEL.ERROR);
-  }
-  return success*/
-  
   var link = (new this.$.oLink(nodeToLink, this, destPort, ownPort)).getValidLink(createPorts, createPorts);
   if (link == null) return;
   this.$.debug("linking "+this.path+" to "+nodeToLink+" "+link._outPort+" "+link._inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.LOG);
@@ -1060,39 +1031,6 @@ $.oNode.prototype.getFreeOutPort = function(createNew){
  * @return  {bool}    The result of the link, if successful.
  */
 $.oNode.prototype.linkOutNode = function(nodeToLink, ownPort, destPort, createPorts){
-/*
-  // check param types
-  if (!(nodeToLink instanceof this.$.oNode)) throw new Error("wrong parameter type in oNode.linkOutNode: "+nodeToLink+" is not an oNode")
-
-  if (!nodeToLink.exists){
-    this.$.debug("Invalid node to link : "+nodeToLink+" doesn't exist.", this.$.DEBUG_LEVEL.ERROR)
-    return false;
-  }
-  
-  var _node = nodeToLink.path;
-
-  // Default values for optional parameters
-  // TODO: careful since now READ nodes have two ports but one only accepts drawing link
-  if (typeof destPort === 'undefined') var destPort = (nodeToLink.type == "COMPOSITE")?node.numberOfInputPorts(nodeToLink.path):0;
-  if (typeof ownPort === 'undefined') var ownPort = 0
-  if (typeof createPorts === 'undefined'){
-  // by default, only create a port if none exist
-  var createPorts = (nodeToLink.type == "MULTIPORT_OUT" && nodeToLink.inNodes.length == 0)||
-            (nodeToLink.type == "GROUP" && nodeToLink.inNodes.length == 0)||
-            (this.type == "GROUP" && this.outNodes.length == 0)||
-            (this.type == "MULTIPORT_IN" && this.inNodes.length == 0)||
-            (nodeToLink.type == "COMPOSITE")
-  }
-
-  this.$.debug("linking "+this.fullPath+" to "+_node+" "+ownPort+" "+destPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.LOG);
-  var success = false;
-  try{
-    success = node.link(this.fullPath, ownPort, _node, destPort, createPorts, createPorts);
-  }catch(err){
-    this.$.debug("Error linking "+this.fullPath+" to "+_node+" "+ownPort+" "+destPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.ERROR);
-  }
-  return success*/
-  
   var link = (new this.$.oLink(this, nodeToLink, ownPort, destPort)).getValidLink(createPorts, createPorts);
   if (link == null) return;
   
@@ -1105,7 +1043,7 @@ $.oNode.prototype.linkOutNode = function(nodeToLink, ownPort, destPort, createPo
 
 /**
  * Links this node's out-port to the given module, at the inport and outport indices.
- * @param   {$.oNode}   $.oNodeObject            The node to unlink from this node's outports.
+ * @param   {$.oNode}   oNodeObject            The node to unlink from this node's outports.
  *
  * @return  {bool}    The result of the link, if successful.
  */
@@ -1115,8 +1053,8 @@ $.oNode.prototype.unlinkOutNode = function( oNodeObject ){
   var _outPorts = oNodeObject.outPorts;
 
   for (var i=0; i<_outPorts; i++){
-    var _outLinks = this.getOutLinksNumber(i)
-    for (var j=0; j<_inPorts; j++){
+    var _outLinks = oNodeObject.getOutLinksNumber(i);
+    for (var j=0; j<_outLinks; j++){
       if (node.dstNode(this.path, i, j) == _node){
         return this.unlinkOutPort(i, j);
       }
@@ -1194,6 +1132,8 @@ $.oNode.prototype.moveToGroup = function(group){
   if (group instanceof oGroupNode) group = group.path;
   
   if (this.group != group){    
+    this.$.beginUndo("oH_moveNodeToGroup_"+_name)
+
     var _groupNodes = node.subNodes(group);
     
     node.moveToGroup(this.path, group);
@@ -1224,7 +1164,8 @@ $.oNode.prototype.moveToGroup = function(group){
         this.unlinkOutPort(i, j);
       }
     }
-    
+
+    this.$.endUndo();
   }
 }
 
@@ -1349,6 +1290,8 @@ $.oNode.prototype.clone = function( newName, newPosition ){
   if (typeof newPosition === 'undefined') var newPosition = this.nodePosition;
   if (typeof newName === 'undefined') var newName = this.name+"_1";
     
+  this.$.beginUndo("oH_cloneNode_"+this.name);
+
   var _clonedNode = this.group.addNode(this.type, newName, newPosition);
   var _attributes = this.attributes;
   
@@ -1357,6 +1300,8 @@ $.oNode.prototype.clone = function( newName, newPosition ){
     _clonedAttribute.setToAttributeValue(_attributes[i]);
   }
   
+  this.$.endUndo();
+
   return _clonedNode;
 };
 
@@ -1369,7 +1314,9 @@ $.oNode.prototype.clone = function( newName, newPosition ){
 $.oNode.prototype.duplicate = function(newName, newPosition){
   if (typeof newPosition === 'undefined') var newPosition = this.nodePosition;
   if (typeof newName === 'undefined') var newName = this.name+"_1";
-  
+
+  this.$.beginUndo("oH_cloneNode_"+this.name);
+
   var _duplicateNode = this.group.addNode(this.type, newName, newPosition);
   var _attributes = this.attributes;
 
@@ -1377,7 +1324,9 @@ $.oNode.prototype.duplicate = function(newName, newPosition){
     var _duplicateAttribute = _duplicateNode.getAttributeByName(_attributes[i].keyword);
     _duplicateAttribute.setToAttributeValue(_attributes[i], true);
   }
-  
+
+  this.$.endUndo();
+
   return _duplicateNode;
 };
 
@@ -1393,7 +1342,8 @@ $.oNode.prototype.remove = function( deleteColumns, deleteElements ){
   if (typeof deleteFrames === 'undefined') var deleteColumns = true;
   if (typeof deleteElements === 'undefined') var deleteElements = true;
 
-  // restore links for special types
+  this.$.beginUndo("oH_deleteNode_"+this.name)
+  // restore links for special types;
   if (this.type == "PEG"){
     var inNodes = this.inNodes; //Pegs can only have one inNode but we'll implement the general case for other types
     var outNodes = this.outNodes;
@@ -1407,6 +1357,7 @@ $.oNode.prototype.remove = function( deleteColumns, deleteElements ){
   }
 
   node.deleteNode(this.path, deleteColumns, deleteElements);
+  this.$.endUndo();
 }
 
 
@@ -1537,15 +1488,6 @@ $.oNode.prototype.addOutLink = function( nodeToLink, ownPort, destPort ){
   if (typeof ownPort == 'undefined') var ownPort = 0;
   if (typeof destPort == 'undefined') var destPort = 0;
   
-  /*
-  MCNote
-  removed this as "0" evals to false in js
-  also are we sure we always want a default 0? for example in the context of linking to a composite
-  
-  var ownPort  = ownPort ? ownPort:0;
-  var destPort = destPort ? destPort:0;
-  */
-  
   var newLink = new this.$.oNodeLink( this, ownPort, nodeToLink, destPort );
   newLink.apply();
   
@@ -1594,6 +1536,7 @@ $.oNode.prototype.createAttribute = function( attrName, type, displayName, linka
   var res = this.attributes[ attrName ];
   return this.attributes[ attrName ];
 }
+
 
 /**
  * Removes an existing dynamic attribute in the node.
@@ -1809,7 +1752,7 @@ Object.defineProperty($.oDrawingNode.prototype, "timings", {
 Object.defineProperty($.oDrawingNode.prototype, "palettes", {
     get : function(){
       var _element = this.element;
-      var _paletteList = paletteObjectManager.getPaletteListByElementId(_element.id);
+      var _paletteList = PaletteObjectManager.getPaletteListByElementId(_element.id);
       var _palettes = [];
       for (var i=0; i<_paletteList.numPalettes; i++){
         _palettes.push( new this.$.oPalette( _paletteList.getPaletteByIndex(i), this, _paletteList ) );
@@ -2103,6 +2046,17 @@ $.oGroupNode.prototype.getNodeByName = function(name){
 
 
  /**
+ * Returns a child node in a group based on a search.
+ * @param   {string}      name           The name of the node.
+ *
+ * @return  {$.oNode}     The node, or null if can't be found.
+ */
+$.oGroupNode.prototype.$node = function(name){
+  return this.getNodeByName(name);
+}
+
+
+ /**
  * Gets all the nodes contained within the group.
  * @param   {bool}    [recurse=false]             Whether to recurse the groups within the groups.
  *
@@ -2305,6 +2259,8 @@ $.oGroupNode.prototype.addNode = function( type, name, nodePosition ){
 
 $.oGroupNode.prototype.addDrawingNode = function( name, nodePosition, oElementObject, drawingColumn){
     // add drawing column and element if not passed as parameters
+    this.$.beginUndo("oH_addDrawingNode_"+name);
+
     if (typeof oElementObject === 'undefined') var oElementObject = this.scene.addElement( name );
     if (typeof drawingColumn === 'undefined') var drawingColumn = this.scene.addColumn( "DRAWING", name, oElementObject );
 
@@ -2317,6 +2273,8 @@ $.oGroupNode.prototype.addDrawingNode = function( name, nodePosition, oElementOb
     // setup the node
     // setup animate mode/separate based on preferences?
     _node.attributes.drawing.element.column = drawingColumn;
+
+    this.$.endUndo();
 
     return _node;
 }
@@ -2338,6 +2296,8 @@ $.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeN
     if (typeof addComposite === 'undefined') var addComposite = false;
     if (typeof includeNodes === 'undefined') var includeNodes = [];
     
+    this.$.beginUndo("oH_addGroup_"+name);
+
     var nodeBox = new this.$.oBox();
     includeNodes = includeNodes.filter(function(x){return !!x}) // filter out all invalid types    
     if (includeNodes.length > 0) nodeBox.includeNodes(includeNodes);
@@ -2387,7 +2347,7 @@ $.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeN
         }
       
         for (var j=0; j < includeNodes[i].outPorts; j++){
-          if (includeNodes[i].getOutLinksNumber(j) == 0) includeNodes[i].linkOutNode(_bottomNode);
+          if (includeNodes[i].getOutLinksNumber(j) == 0) includeNodes[i].linkOutNode(_bottomNode,0,0);
         }
       }
       
@@ -2406,6 +2366,7 @@ $.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeN
       _MPO.centerBelow(includeNodes);      
     }
 
+    this.$.endUndo();
     return _group;
 }
 
@@ -2427,6 +2388,8 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
 
   if (typeof pasteOptions === 'undefined') var pasteOptions = copyPaste.getCurrentPasteOptions();
   pasteOptions.extendScene = extendScene;
+
+  this.$.beginUndo("oH_importTemplate");
 
   var _group = this.path;
 
@@ -2451,6 +2414,7 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
     }
   }
 
+  this.$.endUndo();
   return _nodes;
 }
 
@@ -2618,7 +2582,9 @@ $.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addCo
     this.$.debug("Error: can't import PSD file "+_psdFile.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
     return null; 
   }  
-  
+
+  this.$.beginUndo("oH_importPSD_"+_psdFile.name);
+
   var _elementName = _psdFile.name;
 
   var _xSpacing = 45;
@@ -2679,6 +2645,7 @@ $.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addCo
       _nodes.push(_node);
     }
   }else{
+    this.$.endUndo();
     throw new Error("importing PSD as a flattened layer not yet implemented");
   }
 
@@ -2692,6 +2659,7 @@ $.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addCo
     _nodes.push(_comp)
   }
   // TODO how to display only one node with the whole file
+  this.$.endUndo()
 
   return _nodes
 }
@@ -2712,6 +2680,8 @@ $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
     this.$.debug("Error: can't import PSD file "+_psdFile.path+" for update because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
     return null; 
   }
+
+  this.$.beginUndo("oH_updatePSD_"+_psdFile.name)
 
   // get info from the PSD
   var _info = CELIO.getInformation(_psdFile.path);
@@ -2768,6 +2738,7 @@ $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
     if (_psdNodes.length == 0){
       // PSD was never imported, use import instead?
       this.$.debug("can't find a PSD element to update", this.$.DEBUG_LEVEL.ERROR);
+      this.$.endUndo();
       return null;
     }
 
@@ -2827,9 +2798,10 @@ $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
 
       _nodes.push(_node);
     }
-    
+    this.$.endUndo();
     return nodes;
   } else{
+      this.$.endUndo();
       throw new Error("updating a PSD imported as a flattened layer not yet implemented");
   }
 }
@@ -2904,6 +2876,8 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
     this.$.debug("Error: can't import Quicktime file "+_QTFile.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
     return null; 
   }
+
+  this.$.beginUndo("oH_importQT_"+_QTFile.name);
     
   var _elementName = _QTFile.name;
 
@@ -2948,6 +2922,7 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
     column.importSound( _soundColumn.name, 1, _audioPath);
   }
 
+  this.$.endUndo();
   return _qtNode;
 }
 

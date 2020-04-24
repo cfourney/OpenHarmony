@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library v0.01
+//                            openHarmony Library 
 //
 //
-//         Developped by Mathieu Chaptel, Chris Fourney...
+//         Developped by Mathieu Chaptel, Chris Fourney
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -23,8 +23,8 @@
 //   This library doesn't overwrite any of the objects and classes of the official
 //   Toonboom API which must remains available.
 //
-//   This library is made available under the MIT license.
-//   https://opensource.org/licenses/mit
+//   This library is made available under the Mozilla Public license 2.0.
+//   https://www.mozilla.org/en-US/MPL/2.0/
 //
 //   The repository for this library is available at the address:
 //   https://github.com/cfourney/OpenHarmony/
@@ -74,7 +74,50 @@ $.oPoint = function(x, y, z){
     this.y = y;
     this.z = z;
 }
- 
+
+/**
+ * @name $.oPoint#polarCoordinates
+ * an object containing {angle (float), radius (float)} values that represents polar coordinates (angle in radians) for the point's x and y value (z not yet supported)
+ */
+Object.defineProperty( $.oPoint.prototype, 'polarCoordinates', {
+  get: function(){
+    var _angle = Math.atan2(this.y, this.x)
+    var _radius = Math.sqrt(this.x*this.x+this.y*this.y)
+    return {angle: _angle, radius: _radius};
+  },
+
+  set: function(polarPoint){
+    var _angle = polarPoint.angle;
+    var _radius = polarPoint.radius;
+    var _x = Math.cos(_angle)*_radius;
+    var _y = Math.sin(_angle)*_radius;
+    this.x = _x;
+    this.y = _y;
+  }
+});
+
+
+/**
+ * Translate the point by the provided values.
+ * @param   {int}       x                  the x value to move the point by. 
+ * @param   {int}       y                  the y value to move the point by.
+ * @param   {int}       z                  the z value to move the point by.
+ *
+ * @return: { $.oPoint }                   Returns self (for inline addition).
+ */
+$.oPoint.prototype.translate = function( x, y, z){
+  if (typeof x === 'undefined') var x = 0;
+  if (typeof y === 'undefined') var y = 0;
+  if (typeof z === 'undefined') var z = 0;
+
+  this.x += x;
+  this.y += y;
+  this.z += z;
+
+  return this;
+}
+
+
 /**
  * Adds the input box to the bounds of the current $.oBox.
  * @param   {$.oPoint}       add_pt                The point to add to this point. 
@@ -159,6 +202,7 @@ $.oPoint.convertToOpenGL = function(){
   this.z = qpt.z;
   
 }
+
 
 /**
  * Uses the scene settings to convert this as an OpenGL point into a Harmony worldspace point, used in all displayed modules and Harmony coordinates.

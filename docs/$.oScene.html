@@ -419,6 +419,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oApp#globalMousePosition"><a href="$.oApp.html#globalMousePosition">globalMousePosition</a></li>
+            
                 <li data-name="$.oApp#mainWindow"><a href="$.oApp.html#mainWindow">mainWindow</a></li>
             
                 <li data-name="$.oApp#mousePosition"><a href="$.oApp.html#mousePosition">mousePosition</a></li>
@@ -1177,6 +1179,10 @@
             
                 <li data-name="$.oFile#path"><a href="$.oFile.html#path">path</a></li>
             
+                <li data-name="$.oFile#toonboomPath"><a href="$.oFile.html#toonboomPath">toonboomPath</a></li>
+            
+                <li data-name="$.oFile#toonboomPath"><a href="$.oFile.html#toonboomPath">toonboomPath</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -1423,6 +1429,8 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oGroupNode#$node"><a href="$.oGroupNode.html#$node">$node</a></li>
             
                 <li data-name="$.oGroupNode#addBackdrop"><a href="$.oGroupNode.html#addBackdrop">addBackdrop</a></li>
             
@@ -2200,12 +2208,6 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="$.oPieMenu#getItemAngle"><a href="$.oPieMenu.html#getItemAngle">getItemAngle</a></li>
-            
-                <li data-name="$.oPieMenu#getItemPosition"><a href="$.oPieMenu.html#getItemPosition">getItemPosition</a></li>
-            
-                <li data-name="$.oPieMenu#getMenuRadius"><a href="$.oPieMenu.html#getMenuRadius">getMenuRadius</a></li>
-            
                 <li data-name="$.oPieMenu#show"><a href="$.oPieMenu.html#show">show</a></li>
             
             </ul>
@@ -2229,10 +2231,6 @@
             
             </ul>
             <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="$.oPieSubMenu#init"><a href="$.oPieSubMenu.html#init">init</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -2273,6 +2271,8 @@
                 <li data-name="$.oPoint#pointAverage"><a href="$.oPoint.html#pointAverage">pointAverage</a></li>
             
                 <li data-name="$.oPoint#pointSubtract"><a href="$.oPoint.html#pointSubtract">pointSubtract</a></li>
+            
+                <li data-name="$.oPoint#translate"><a href="$.oPoint.html#translate">translate</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -2737,6 +2737,28 @@
             <span class="subtitle">Methods</span>
             
                 <li data-name="$.oUtils#longestCommonSubstring"><a href="$.oUtils.html#longestCommonSubstring">longestCommonSubstring</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="$#oScriptButton">
+            <span class="title">
+                <a href="$_oScriptButton.html">$#oScriptButton</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
             
             </ul>
             <ul class="events itemMembers">
@@ -4475,7 +4497,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2058
+            openHarmony/openHarmony_scene.js, line 2052
         </div>
         
     </div>
@@ -4643,7 +4665,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2047
+            openHarmony/openHarmony_scene.js, line 2041
         </div>
         
     </div>
@@ -4788,7 +4810,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2069
+            openHarmony/openHarmony_scene.js, line 2063
         </div>
         
     </div>
@@ -4933,7 +4955,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1817
+            openHarmony/openHarmony_scene.js, line 1810
         </div>
         
     </div>
@@ -5241,7 +5263,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1846
+            openHarmony/openHarmony_scene.js, line 1839
         </div>
         
     </div>
@@ -6778,7 +6800,7 @@ function myCallBackFunction(){
     
     
     <div class="description">
-        Add a palette object to the specified location.
+        Add a palette object to the scene palette list and into the specified location.
     </div>
     
 
@@ -6894,7 +6916,7 @@ function myCallBackFunction(){
             
             <td class="description last">
                 
-                The name of the palette to return, if available.</td>
+                The element to store the palette in. If paletteStorage is set to "external", provide a destination folder for the palette here.</td>
         </tr>
 	
 	
@@ -6981,7 +7003,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1981
+            openHarmony/openHarmony_scene.js, line 1975
         </div>
         
     </div>
@@ -7104,7 +7126,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1343
+            openHarmony/openHarmony_scene.js, line 1336
         </div>
         
     </div>
@@ -7314,7 +7336,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1762
+            openHarmony/openHarmony_scene.js, line 1755
         </div>
         
     </div>
@@ -7551,7 +7573,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1549
+            openHarmony/openHarmony_scene.js, line 1542
         </div>
         
     </div>
@@ -7853,7 +7875,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1996
+            openHarmony/openHarmony_scene.js, line 1990
         </div>
         
     </div>
@@ -8308,7 +8330,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2034
+            openHarmony/openHarmony_scene.js, line 2028
         </div>
         
     </div>
@@ -8560,7 +8582,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1391
+            openHarmony/openHarmony_scene.js, line 1384
         </div>
         
     </div>
@@ -8850,7 +8872,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2005
+            openHarmony/openHarmony_scene.js, line 1999
         </div>
         
     </div>
@@ -9347,7 +9369,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1289
+            openHarmony/openHarmony_scene.js, line 1268
         </div>
         
     </div>
@@ -9358,7 +9380,7 @@ $.endUndo();</code></pre>
     
     
     <div class="description">
-        Imports a palette into the specified location.
+        Imports a palette to the scene palette list and into the specified storage location.
     </div>
     
 
@@ -9497,7 +9519,7 @@ $.endUndo();</code></pre>
             
             <td class="description last">
                 
-                The name of the palette to return, if available.</td>
+                The element to store the palette in. If paletteStorage is set to "external", provide a destination folder for the palette here.</td>
         </tr>
 	
 	
@@ -9584,7 +9606,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1699
+            openHarmony/openHarmony_scene.js, line 1692
         </div>
         
     </div>
@@ -9916,7 +9938,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1789
+            openHarmony/openHarmony_scene.js, line 1782
         </div>
         
     </div>
@@ -10155,7 +10177,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1740
+            openHarmony/openHarmony_scene.js, line 1733
         </div>
         
     </div>
@@ -10323,7 +10345,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1672
+            openHarmony/openHarmony_scene.js, line 1665
         </div>
         
     </div>
@@ -10625,7 +10647,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1442
+            openHarmony/openHarmony_scene.js, line 1435
         </div>
         
     </div>
@@ -10961,7 +10983,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1905
+            openHarmony/openHarmony_scene.js, line 1898
         </div>
         
     </div>
@@ -11300,7 +11322,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1863
+            openHarmony/openHarmony_scene.js, line 1856
         </div>
         
     </div>
@@ -11371,7 +11393,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1872
+            openHarmony/openHarmony_scene.js, line 1865
         </div>
         
     </div>
@@ -11487,7 +11509,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1888
+            openHarmony/openHarmony_scene.js, line 1881
         </div>
         
     </div>
@@ -11626,7 +11648,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1719
+            openHarmony/openHarmony_scene.js, line 1712
         </div>
         
     </div>
@@ -11787,7 +11809,7 @@ $.endUndo();</code></pre>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 09:48:54 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Apr 20 2020 18:34:18 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

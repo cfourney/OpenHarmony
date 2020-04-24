@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library v0.01
+//                            openHarmony Library 
 //
 //
-//         Developped by Mathieu Chaptel, Chris Fourney...
+//         Developped by Mathieu Chaptel, Chris Fourney
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -23,8 +23,8 @@
 //   This library doesn't overwrite any of the objects and classes of the official
 //   Toonboom API which must remains available.
 //
-//   This library is made available under the MIT license.
-//   https://opensource.org/licenses/mit
+//   This library is made available under the Mozilla Public license 2.0.
+//   https://www.mozilla.org/en-US/MPL/2.0/
 //
 //   The repository for this library is available at the address:
 //   https://github.com/cfourney/OpenHarmony/
@@ -404,7 +404,6 @@ Object.defineProperty($.oProcess.prototype, 'readChannel', {
 
 /**
  * Execute a process and read the result as a string. 
- * @param {bool}     [async=false]          Wether to wait for the end of the process or carry on with script execution
  * @param {function} [readCallback]         User can provide a function to execute when new info can be read. This function's first argument will contain the available output from the process.
  * @param {function} [finishedCallback]     User can provide a function to execute when new process has finished
  * @example
@@ -441,6 +440,9 @@ Object.defineProperty($.oProcess.prototype, 'readChannel', {
  *   // Creating a function to respond to new readable information on the output channel.
  *   // This function takes a "message" argument which will contain the returned output of the process.
  * 
+ *   var progressDialogue = new this.$.oProgressDialog("Rendering : ",length,"Render Write Nodes", true);
+ *   var self = this;
+ * 
  *   var renderProgress = function(message){
  *     // parsing the message to find a Rendered frame number.
  *     var progressRegex = /Rendered Frame ([0-9]+)/igm;
@@ -450,8 +452,11 @@ Object.defineProperty($.oProcess.prototype, 'readChannel', {
  *     }
  *     if (matches.length!=0){
  *       // if a number is found, we compare it to the total frames in the render to deduce a completion percentage.
- *       var percentage = Math.round(parseInt(matches.pop(),10)/length*100);
- *       this.$.log("render : "+percentage+"% complete");
+ *       var progress = parseInt(matches.pop(),10)
+ *       progressDialogue.label = "Rendering Frame: "+progress+"/"+length
+ *       progressDialogue.value = progress;
+ *       var percentage = Math.round(progress/length*100);
+ *       self.$.log("render : "+percentage+"% complete");
  *     }
  *   }
  * 
@@ -460,7 +465,9 @@ Object.defineProperty($.oProcess.prototype, 'readChannel', {
  * 
  *   var renderFinished = function(exitCode){
  *     // here we simply output that the render completed successfully.
- *     this.$.log(exitCode+" : render finished");
+ *     progressDialogue.label = "Rendering Finished"
+       progressDialogue.value = length;
+ *     self.$.log(exitCode+" : render finished");
  *   }
  *
  *   // launching the process in async mode by providing true as first argument, and then the functions created above.
@@ -478,8 +485,7 @@ Object.defineProperty($.oProcess.prototype, 'readChannel', {
  * return readout
  * 
  */
-$.oProcess.prototype.launchAndRead = function(async, readCallback, finishedCallback){
-  if (typeof async === 'undefined') var async = false;
+$.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
   if (typeof timeOut === 'undefined') var timeOut = -1;
   
   var bin = this.bin.split("/");

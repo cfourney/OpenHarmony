@@ -419,6 +419,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oApp#globalMousePosition"><a href="$.oApp.html#globalMousePosition">globalMousePosition</a></li>
+            
                 <li data-name="$.oApp#mainWindow"><a href="$.oApp.html#mainWindow">mainWindow</a></li>
             
                 <li data-name="$.oApp#mousePosition"><a href="$.oApp.html#mousePosition">mousePosition</a></li>
@@ -1177,6 +1179,10 @@
             
                 <li data-name="$.oFile#path"><a href="$.oFile.html#path">path</a></li>
             
+                <li data-name="$.oFile#toonboomPath"><a href="$.oFile.html#toonboomPath">toonboomPath</a></li>
+            
+                <li data-name="$.oFile#toonboomPath"><a href="$.oFile.html#toonboomPath">toonboomPath</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -1423,6 +1429,8 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oGroupNode#$node"><a href="$.oGroupNode.html#$node">$node</a></li>
             
                 <li data-name="$.oGroupNode#addBackdrop"><a href="$.oGroupNode.html#addBackdrop">addBackdrop</a></li>
             
@@ -2200,12 +2208,6 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="$.oPieMenu#getItemAngle"><a href="$.oPieMenu.html#getItemAngle">getItemAngle</a></li>
-            
-                <li data-name="$.oPieMenu#getItemPosition"><a href="$.oPieMenu.html#getItemPosition">getItemPosition</a></li>
-            
-                <li data-name="$.oPieMenu#getMenuRadius"><a href="$.oPieMenu.html#getMenuRadius">getMenuRadius</a></li>
-            
                 <li data-name="$.oPieMenu#show"><a href="$.oPieMenu.html#show">show</a></li>
             
             </ul>
@@ -2229,10 +2231,6 @@
             
             </ul>
             <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="$.oPieSubMenu#init"><a href="$.oPieSubMenu.html#init">init</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -2273,6 +2271,8 @@
                 <li data-name="$.oPoint#pointAverage"><a href="$.oPoint.html#pointAverage">pointAverage</a></li>
             
                 <li data-name="$.oPoint#pointSubtract"><a href="$.oPoint.html#pointSubtract">pointSubtract</a></li>
+            
+                <li data-name="$.oPoint#translate"><a href="$.oPoint.html#translate">translate</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -2744,6 +2744,28 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$#oScriptButton">
+            <span class="title">
+                <a href="$_oScriptButton.html">$#oScriptButton</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
     </ul>
 </div>
     <div class="main">
@@ -3074,7 +3096,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_math.js, line 153
+            openHarmony/openHarmony_math.js, line 196
         </div>
         
     </div>
@@ -3145,7 +3167,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_math.js, line 166
+            openHarmony/openHarmony_math.js, line 210
         </div>
         
     </div>
@@ -3216,7 +3238,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_math.js, line 126
+            openHarmony/openHarmony_math.js, line 169
         </div>
         
     </div>
@@ -3332,7 +3354,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_math.js, line 184
+            openHarmony/openHarmony_math.js, line 228
         </div>
         
     </div>
@@ -3471,7 +3493,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_math.js, line 112
+            openHarmony/openHarmony_math.js, line 155
         </div>
         
     </div>
@@ -3587,7 +3609,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_math.js, line 84
+            openHarmony/openHarmony_math.js, line 127
         </div>
         
     </div>
@@ -3703,7 +3725,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_math.js, line 140
+            openHarmony/openHarmony_math.js, line 183
         </div>
         
     </div>
@@ -3819,7 +3841,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_math.js, line 98
+            openHarmony/openHarmony_math.js, line 141
         </div>
         
     </div>
@@ -3924,6 +3946,168 @@
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="translate">
+            
+            translate<span class="signature">(x, y, z)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_math.js, line 108
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Translate the point by the provided values.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                the x value to move the point by.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                the y value to move the point by.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>z</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                the z value to move the point by.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
         </dl>
     
     
@@ -3943,7 +4127,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 09:48:54 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Apr 20 2020 18:34:18 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

@@ -419,6 +419,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oApp#globalMousePosition"><a href="$.oApp.html#globalMousePosition">globalMousePosition</a></li>
+            
                 <li data-name="$.oApp#mainWindow"><a href="$.oApp.html#mainWindow">mainWindow</a></li>
             
                 <li data-name="$.oApp#mousePosition"><a href="$.oApp.html#mousePosition">mousePosition</a></li>
@@ -1177,6 +1179,10 @@
             
                 <li data-name="$.oFile#path"><a href="$.oFile.html#path">path</a></li>
             
+                <li data-name="$.oFile#toonboomPath"><a href="$.oFile.html#toonboomPath">toonboomPath</a></li>
+            
+                <li data-name="$.oFile#toonboomPath"><a href="$.oFile.html#toonboomPath">toonboomPath</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -1423,6 +1429,8 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oGroupNode#$node"><a href="$.oGroupNode.html#$node">$node</a></li>
             
                 <li data-name="$.oGroupNode#addBackdrop"><a href="$.oGroupNode.html#addBackdrop">addBackdrop</a></li>
             
@@ -2200,12 +2208,6 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="$.oPieMenu#getItemAngle"><a href="$.oPieMenu.html#getItemAngle">getItemAngle</a></li>
-            
-                <li data-name="$.oPieMenu#getItemPosition"><a href="$.oPieMenu.html#getItemPosition">getItemPosition</a></li>
-            
-                <li data-name="$.oPieMenu#getMenuRadius"><a href="$.oPieMenu.html#getMenuRadius">getMenuRadius</a></li>
-            
                 <li data-name="$.oPieMenu#show"><a href="$.oPieMenu.html#show">show</a></li>
             
             </ul>
@@ -2229,10 +2231,6 @@
             
             </ul>
             <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="$.oPieSubMenu#init"><a href="$.oPieSubMenu.html#init">init</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -2273,6 +2271,8 @@
                 <li data-name="$.oPoint#pointAverage"><a href="$.oPoint.html#pointAverage">pointAverage</a></li>
             
                 <li data-name="$.oPoint#pointSubtract"><a href="$.oPoint.html#pointSubtract">pointSubtract</a></li>
+            
+                <li data-name="$.oPoint#translate"><a href="$.oPoint.html#translate">translate</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -2744,6 +2744,28 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$#oScriptButton">
+            <span class="title">
+                <a href="$_oScriptButton.html">$#oScriptButton</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
     </ul>
 </div>
     <div class="main">
@@ -3067,6 +3089,195 @@
 <dl class="details">
     
         
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The name for this pie Menu.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>widgets</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;QWidget></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The widgets to display in the menu.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>minAngle</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The low limit of the range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>maxAngle</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The high limit of the  range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>radius</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The radius of the menu.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oPoint.html">$.oPoint</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The central position of the menu or button position for imbricated menus.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>menuWidget</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">QWidget</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The central position of the menu or button position for imbricated menus.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
     
     
     
@@ -3099,6 +3310,67 @@
     
     
     
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>// This example function creates a menu full of generated push buttons with callbacks, but any type of widget can be added.
+// Normally it doesn't make sense to create buttons this way, and they will be created one by one to cater to specific needs,
+// such as launching Harmony actions, or scripts, etc. Assign this function to a shortcut by creating a Harmony Package for it.
+
+function openMenu(){
+  
+  // make a callback factory for our buttons and provide access to the openHarmony object
+  var oh = $;
+  function getCallback(message){
+    var $ = oh;
+    var message = message;
+    return function(){
+      $.alert(message);
+    }
+  }
+
+  // we create a list of random widgets for our submenu
+  var subwidgets = [];
+  for (var i=0; i<5; i++){
+    var button = new QPushButton;
+    button.text = i;
+
+    var callback = getCallback("submenu button "+i);
+    button.clicked.connect(callback);
+
+    subwidgets.push(button);
+  }
+
+  // we initialise our submenu
+  var subMenu = new $.oPieSubMenu("more", subwidgets);
+
+  // we create a list of random widgets for our main menu
+  var widgets = [];
+  for (var i=0; i<8; i++){
+    var button = new QPushButton;
+    button.text = i;
+
+    var callback = getCallback("button "+i);
+    button.clicked.connect(callback);
+
+    widgets.push(button);
+  }
+
+  // we swap one of our widgets for the submenu
+  widgets[3] = subMenu;
+
+  // we initialise our main menu. The numerical values are for the minimum and maximum angle of the 
+  // circle in multiples of Pi. Going counter clockwise, 0 is right, 1 is left, 1.5 is the bottom from the left, 
+  // and -0.5 is the bottom from the right side. 0.5 is the top of the circle.
+  var menu = new $.oPieMenu("menu", widgets, -0.2, 1.2);
+
+  // we show it!
+  menu.show();
+}</code></pre>
+    
+
     
 </dd>
 
@@ -3124,472 +3396,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="getItemAngle">
-            
-            getItemAngle<span class="signature">(index)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oPoint.html">$.oPoint</a>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 478
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Get the angle for the item based on index.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>index</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                the index of the widget</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        <a href="$.oPoint.html">$.oPoint</a>
-                        
-                    
-            </td>
-            <td class="description last"></td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getItemPosition">
-            
-            getItemPosition<span class="signature">(index, radius)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oPoint.html">$.oPoint</a>}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 492
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Get the position from the center for the item based on index.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>index</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                the index of the widget</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>radius</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                the radius of the menu</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        <a href="$.oPoint.html">$.oPoint</a>
-                        
-                    
-            </td>
-            <td class="description last"></td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getMenuRadius">
-            
-            getMenuRadius<span class="signature">(itemsNumber)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{float}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 507
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Get a pie menu radius setting for a given amount of items.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>itemsNumber</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                the ammount of items to display</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        float
-                        
-                    
-            </td>
-            <td class="description last"></td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
         <h4 class="name" id="show">
             
-            show<span class="signature">()</span>
+            show<span class="signature">(<span class="optional">parent</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 401
+            openHarmony/openHarmony_dialog.js, line 466
         </div>
         
     </div>
@@ -3608,6 +3422,58 @@
     
     
     
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oPieMenu.html">$.oPieMenu</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                specify a parent oPieMenu for imbricated submenus</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -3668,7 +3534,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Apr 14 2020 09:48:54 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Apr 20 2020 18:34:18 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

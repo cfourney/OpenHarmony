@@ -124,19 +124,17 @@ Object.defineProperty( $, "directory", {
  * @name $#loadOpenHarmonyFiles
  * @private
  */
-$.loadOpenHarmonyFiles = function (){
-  var _ohDirectory = $.directory+"/openHarmony/";
-  var _dir = new QDir(_ohDirectory);
-  _dir.setNameFilters(["openHarmony*.js"]);
-  _dir.setFilter( QDir.Files);
-  var _files = _dir.entryList();
-  
-  for (var i in _files){
-    include( _ohDirectory + "/" + _files[i]);
-  }
+var _ohDirectory = $.directory+"/openHarmony/";
+var _dir = new QDir(_ohDirectory);
+_dir.setNameFilters(["openHarmony*.js"]);
+_dir.setFilter( QDir.Files);
+var _files = _dir.entryList();
+
+for (var i in _files){
+  include( _ohDirectory + "/" + _files[i]);
 }
 
-$.loadOpenHarmonyFiles();
+
 
 
 /**
