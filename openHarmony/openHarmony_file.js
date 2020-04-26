@@ -714,6 +714,7 @@ $.oFile.prototype.remove = function(){
  * @todo implement
  */
 $.oFile.prototype.parseAsXml = function(){
+  if (this.extension.toLowerCase() != "xml") return
 
   function setProperties(xmlString, object){
     var propertyRE = /(\w+)="([^\=\<\>]+)"/igm            // matches a line with name="property"
@@ -721,11 +722,8 @@ $.oFile.prototype.parseAsXml = function(){
     while (match = propertyRE.exec(xmlString)){
       var propName = match[1];
       var propValue = match[2];
-      try{
-        propValue = JSON.parse(propValue)
-      }catch(err){
-        log("couldn't parse as JSON "+propValue)
-      }
+      propValue = propValue;
+
       object[propName] = propValue;
     }
     return object;

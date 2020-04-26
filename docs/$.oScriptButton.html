@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oPreferences</title>
+    <title>Class: oScriptButton</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -2883,7 +2883,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oPreferences.html">Class: oPreferences</h1>
+        <h1 class="page-title" data-filename="$.oScriptButton.html">Class: oScriptButton</h1>
         
 
 
@@ -2894,10 +2894,8 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a>.</span>
     
-    oPreferences
+    oScriptButton
     </h2>
-    
-        <div class="class-description">Provides access to getting/setting preferenes as an object interface.<br>All preferences that have been written to the file are accessible as properties of this class.<br>Alternatively, new preferences can be retrieved with the .get function.</div>
     
 </header>  
 
@@ -2909,14 +2907,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oPreferences">
+        <h4 class="name" id="oScriptButton">
             
-            new $.oPreferences<span class="signature">()</span>
+            new $.oScriptButton<span class="signature">(scriptFile, scriptFunction, parent)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_preferences.js, line 64
+            openHarmony/openHarmony_dialog.js, line 860
         </div>
         
     </div>
@@ -2927,7 +2925,7 @@
     
     
     <div class="description">
-        The constructor for the $.preferences class.
+        The constructor for $.oScriptButton
     </div>
     
 
@@ -2936,204 +2934,96 @@
     
     
     
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-        <h5>Example</h5>
         
 
-    
-    <pre class="prettyprint"><code>var pref = $.getPreferences();pref.create( "MyNewPreferenceName", "MyPreferenceValue" );pref["MyNewPreferenceName"];     // Provides: MyPreferenceValuepref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
-    
-
-    
-</dd>
-
-    
-    </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        <h3 class="subsection-title">Members</h3>
-        
-        <dl>
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
             
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="create">create</h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Creates a new preferences based on name and value.<br><b>Note- A new preference isn't actively written into the Harmony's preference file until created and the application closed. Use preference.get for newly created preferences.</b>
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
+                <td class="name"><code>scriptFile</code></td>
             
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="get">get</h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Retrieves a preference and attempts to identify its type automatically.<br>This is generally useful for accessing newly created preferences that have not been written to disk.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-        <h5>Example</h5>
-        
-
-    
-    <pre class="prettyprint"><code>var pref = $.getPreferences();pref.create( "MyNewPreferenceName", "MyPreferenceValue" );//This new preference won't be available in the file until Harmony closes.//So if preferences are reinstantiated, it won't be readily available -- but it can still be retrieved with get.var pref2 = $.getPreferences(); pref["MyNewPreferenceName"];     // Provides: undefined -- its not in the Harmony preference file.pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue, its still available </code></pre>
-    
-
-    
-</dd>
-
-        </dl>
-    
-    
-    
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl>
             
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="refresh">
+            <td class="type">
             
-            refresh<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_preferences.js, line 72
-        </div>
-        
-    </div>
+                
+<span class="param-type">string</span>
 
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Refreshes the preferences by re-reading the preference file and ingesting their values appropriately. They are then available as properties of this class.<br><b>Note, any new preferences will not be available as properties until Harmony saves the preference file at exit. In order to reference new preferences, use the get function.
-    </div>
-    
 
-    
-    
-    
-    
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The path to the script file that will be launched</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>scriptFunction</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The function name to launch from the script</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">QWidget</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The parent QWidget for the button.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -3175,7 +3065,21 @@
     
 </dd>
 
-        </dl>
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

@@ -21,7 +21,7 @@
  /**
  * Attributes present in the node : MayaBatchRender
  * @name  NodeTypes#SCRIPT_MODULE
- * @property {string}  specs_editor=
+ * @property {string}  <code>specs_editor=
 <specs>
 __<ports>
 ____<in_type="IMAGE"/>
@@ -31,7 +31,7 @@ __<attributes>
 ____<attr_type="string"_name="renderer"_value=""_tooltip="If_this_attribute_is_not_set,_then_the_MayaBatchRender_node_will_use_the_default_renderer_specified_in_the_Maya_file._If_this_attribute_is_set,_then_it_forces_the_use_of_a_specific_renderer_other_than_the_default._The_following_renderers_are_currently_supported:_'renderMan'_(or_'reyes'),_'renderManRIS'_(or_'RIS'),_'arnold',_'mentalRay',_'mayaSoftware'_(or_'maya')._Note_that_those_values_are_case_insensitive."/>
 __</attributes>
 </specs>
-   - Specifications.
+   - Specifications.</code>
  * @property {file_editor}  script_editor   - .
  * @property {file_editor}  init_script   - .
  * @property {file_editor}  cleanup_script   - .
@@ -45,7 +45,7 @@ __</attributes>
  /**
  * Attributes present in the node : ScriptModule
  * @name  NodeTypes#SCRIPT_MODULE
- * @property {string}  specs_editor=<specs>
+ * @property {string}  <code>specs_editor=<specs>
 __<ports>
 ____<in_type="IMAGE"/>
 ____<out_type="IMAGE"/>
@@ -53,7 +53,7 @@ __</ports>
 __<attributes>
 __</attributes>
 </specs>
-   - Specifications.
+   - Specifications.</code>
  * @property {file_editor}  script_editor   - .
  * @property {file_editor}  init_script   - .
  * @property {file_editor}  cleanup_script   - .
