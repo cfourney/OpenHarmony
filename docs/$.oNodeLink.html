@@ -3143,7 +3143,36 @@
         
 
     
-    <pre class="prettyprint"><code>//Connect two pegs together. var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Peg2" );  //Create a new $.oNodeLink -- We'll connect two pegs with this new nodeLink. var link = new $.oNodeLink( peg1,     //Out Node                              0,        //Out Port                             peg2,     //In Node                             0 );      //In Port    //The node link doesn't exist yet, but lets apply it. link.apply();  //This connection between peg1 and peg2 now exists.  //We can also get the outlinks for the entire node and all of its outputs. var outLinks = peg2.outLinks;  //Lets connect peg3 to the chain with this existing outLink. This will use an existing link if its already there, or create a new one if none exists. var peg3     = $.scene.getNodeByPath( "Top/Peg3" ); outLinks[0].linkIn( peg3, 0 );  //Uh oh! We need to connect a peg between 1 and 2.  var peg4     = $.scene.getNodeByPath( "Top/Peg4" );  //The link we already created above can have a node inserted between it easily. link.insertNode(  peg4, 0, 0 ); //Peg to insert, in port, out port.  //Oh no! Peg 5 is in a group. Well, it still works! var peg5     = $.scene.getNodeByPath( "Top/Group/Peg5" ); var newLink  = peg1.addOutLink( peg5 );</code></pre>
+    <pre class="prettyprint"><code>//Connect two pegs together.
+ var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ var peg2     = $.scene.getNodeByPath( "Top/Peg2" );
+ 
+ //Create a new $.oNodeLink -- We'll connect two pegs with this new nodeLink.
+ var link = new $.oNodeLink( peg1,     //Out Node 
+                             0,        //Out Port
+                             peg2,     //In Node
+                             0 );      //In Port
+   
+ //The node link doesn't exist yet, but lets apply it.
+ link.apply(); 
+ //This connection between peg1 and peg2 now exists.
+ 
+ //We can also get the outlinks for the entire node and all of its outputs.
+ var outLinks = peg2.outLinks;
+ 
+ //Lets connect peg3 to the chain with this existing outLink. This will use an existing link if its already there, or create a new one if none exists.
+ var peg3     = $.scene.getNodeByPath( "Top/Peg3" );
+ outLinks[0].linkIn( peg3, 0 );
+ 
+ //Uh oh! We need to connect a peg between 1 and 2. 
+ var peg4     = $.scene.getNodeByPath( "Top/Peg4" );
+ 
+ //The link we already created above can have a node inserted between it easily.
+ link.insertNode(  peg4, 0, 0 ); //Peg to insert, in port, out port.
+ 
+ //Oh no! Peg 5 is in a group. Well, it still works!
+ var peg5     = $.scene.getNodeByPath( "Top/Group/Peg5" );
+ var newLink  = peg1.addOutLink( peg5 );</code></pre>
     
 
     
@@ -3212,7 +3241,14 @@
         
 
     
-    <pre class="prettyprint"><code>//Connect two pegs together. var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/NodeDoesntExist" ); var link = new $.oNodeLink( peg1,     //Out Node                              0,        //Out Port                             peg2,     //In Node                             0 );      //In Port link.exists == false;   //FALSE, This link doesnt exist in this context, because the node doesnt exist.</code></pre>
+    <pre class="prettyprint"><code>//Connect two pegs together.
+ var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ var peg2     = $.scene.getNodeByPath( "Top/NodeDoesntExist" );
+ var link = new $.oNodeLink( peg1,     //Out Node 
+                             0,        //Out Port
+                             peg2,     //In Node
+                             0 );      //In Port
+ link.exists == false;   //FALSE, This link doesnt exist in this context, because the node doesnt exist.</code></pre>
     
 
     
@@ -3567,7 +3603,18 @@
         
 
     
-    <pre class="prettyprint"><code>//Connect two pegs together. var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Peg2" );  //Create a new $.oNodeLink -- We'll connect two pegs with this new nodeLink. var link = new $.oNodeLink( peg1,     //Out Node                              0,        //Out Port                             peg2,     //In Node                             0 );      //In Port    //The node link doesn't exist yet, but lets apply it. link.apply();  </code></pre>
+    <pre class="prettyprint"><code>//Connect two pegs together.
+ var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ var peg2     = $.scene.getNodeByPath( "Top/Peg2" );
+ 
+ //Create a new $.oNodeLink -- We'll connect two pegs with this new nodeLink.
+ var link = new $.oNodeLink( peg1,     //Out Node 
+                             0,        //Out Port
+                             peg2,     //In Node
+                             0 );      //In Port
+   
+ //The node link doesn't exist yet, but lets apply it.
+ link.apply();  </code></pre>
     
 
     
@@ -3737,7 +3784,19 @@
         
 
     
-    <pre class="prettyprint"><code>//Connect two pegs together. var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Peg2" );  //Create a new $.oNodeLink -- We'll connect two pegs with this new nodeLink. var link = new $.oNodeLink( peg1,     //Out Node                              0,        //Out Port                             peg2,     //In Node                             0 );      //In Port    //The link we already created above can have a node inserted between it easily. var peg4     = $.scene.getNodeByPath( "Top/Peg4" ); link.insertNode(  peg4, 0, 0 ); //Peg to insert, in port, out port.</code></pre>
+    <pre class="prettyprint"><code>//Connect two pegs together.
+ var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ var peg2     = $.scene.getNodeByPath( "Top/Peg2" );
+ 
+ //Create a new $.oNodeLink -- We'll connect two pegs with this new nodeLink.
+ var link = new $.oNodeLink( peg1,     //Out Node 
+                             0,        //Out Port
+                             peg2,     //In Node
+                             0 );      //In Port
+   
+ //The link we already created above can have a node inserted between it easily.
+ var peg4     = $.scene.getNodeByPath( "Top/Peg4" );
+ link.insertNode(  peg4, 0, 0 ); //Peg to insert, in port, out port.</code></pre>
     
 
     
@@ -3884,7 +3943,12 @@
         
 
     
-    <pre class="prettyprint"><code>//Connect two pegs together. var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Peg2" );  var outLinks  = peg1.outLinks; outLinks[0].linkIn( peg2, 0 ); //Links the input of peg2, port 0 -- to this link, connecting its outNode [peg1] and outPort [0] and outLink [arbitrary].</code></pre>
+    <pre class="prettyprint"><code>//Connect two pegs together.
+ var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ var peg2     = $.scene.getNodeByPath( "Top/Peg2" );
+ 
+ var outLinks  = peg1.outLinks;
+ outLinks[0].linkIn( peg2, 0 ); //Links the input of peg2, port 0 -- to this link, connecting its outNode [peg1] and outPort [0] and outLink [arbitrary].</code></pre>
     
 
     
@@ -4031,7 +4095,12 @@
         
 
     
-    <pre class="prettyprint"><code>//Connect two pegs together. var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Peg2" );  var inLinks  = peg1.inLinks; inLinks[0].linkOut( peg2, 0 ); //Links the output of peg2, port 0 -- to this link, connecting its inNode [peg1] and inPort [0].</code></pre>
+    <pre class="prettyprint"><code>//Connect two pegs together.
+ var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ var peg2     = $.scene.getNodeByPath( "Top/Peg2" );
+ 
+ var inLinks  = peg1.inLinks;
+ inLinks[0].linkOut( peg2, 0 ); //Links the output of peg2, port 0 -- to this link, connecting its inNode [peg1] and inPort [0].</code></pre>
     
 
     
@@ -4127,7 +4196,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Apr 26 2020 02:40:16 GMT+0200 (heure d’été d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Apr 26 2020 00:41:33 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

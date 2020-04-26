@@ -2897,7 +2897,8 @@
     oGroupNode
     </h2>
     
-        <div class="class-description">$.oGroupNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>It represents groups in the scene. From this class, it's possible to add nodes, and backdrops, import files and templates into the group.</div>
+        <div class="class-description">$.oGroupNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>
+It represents groups in the scene. From this class, it's possible to add nodes, and backdrops, import files and templates into the group.</div>
     
 </header>  
 
@@ -3046,7 +3047,21 @@
         
 
     
-    <pre class="prettyprint"><code>// to add a new node, grab the group it'll be created in firstvar doc = $.scnvar sceneRoot = doc.root;                                              // grab the scene root groupvar myGroup = sceneRoot.addGrop("myGroup", false, false);              // create a group in the scene root, with a peg and composite but no nodesvar MPO = myGroup.multiportOut;                                        // grab the multiport in of the groupvar myNode = myGroup.addDrawingNode("myDrawingNode");                  // add a drawing node inside the groupmyNode.linkOutNode(MPO);                                               // link the newly created node to the multiportmyNode.centerAbove(MPO);var sceneComposite = doc.$node("Top/Composite");                       // grab the scene composite nodemyGroup.linkOutNode(sceneComposite);                                   // link the group to itmyGroup.centerAbove(sceneComposite);</code></pre>
+    <pre class="prettyprint"><code>// to add a new node, grab the group it'll be created in first
+var doc = $.scn
+var sceneRoot = doc.root;                                              // grab the scene root group
+
+var myGroup = sceneRoot.addGrop("myGroup", false, false);              // create a group in the scene root, with a peg and composite but no nodes
+var MPO = myGroup.multiportOut;                                        // grab the multiport in of the group
+
+var myNode = myGroup.addDrawingNode("myDrawingNode");                  // add a drawing node inside the group
+myNode.linkOutNode(MPO);                                               // link the newly created node to the multiport
+myNode.centerAbove(MPO);
+
+var sceneComposite = doc.$node("Top/Composite");                       // grab the scene composite node
+myGroup.linkOutNode(sceneComposite);                                   // link the group to it
+
+myGroup.centerAbove(sceneComposite);</code></pre>
     
 
     
@@ -3121,7 +3136,20 @@
         
 
     
-    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:var myNode = $.scn.$node("Top/Drawing")var drawingAttribute = myNode.attributes.drawing.element// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"// for a more direct way to access an attribute, it's possible to also call:var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
+    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:
+
+var myNode = $.scn.$node("Top/Drawing")
+var drawingAttribute = myNode.attributes.drawing.element
+
+// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
+
+drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
+var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
+$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
+
+// for a more direct way to access an attribute, it's possible to also call:
+
+var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
     
 
     
@@ -5596,7 +5624,30 @@
         
 
     
-    <pre class="prettyprint"><code>function createColoredBackdrop(){ // This script will prompt for a color and create a backdrop around the selection $.beginUndo() var doc = $.scn; // grab the scene var nodes = doc.getSelectedNodes(); // grab the selection if(!nodes) return    // exit the function if no nodes are selected var color = pickColor(); // prompt for color var group = doc.$node("Top") // get the group to add the backdrop to var backdrop = group.addBackdropToNodes(nodes, "BackDrop", "", color) $.endUndo(); // function to get the color chosen by the user function pickColor(){   var d = new QColorDialog;   d.exec();   var color = d.selectedColor();   return new $.oColorValue({r:color.red(), g:color.green(), b:color.blue(), a:color.alpha()}) }}</code></pre>
+    <pre class="prettyprint"><code>function createColoredBackdrop(){
+ // This script will prompt for a color and create a backdrop around the selection
+ $.beginUndo()
+
+ var doc = $.scn; // grab the scene
+ var nodes = doc.getSelectedNodes(); // grab the selection
+
+ if(!nodes) return    // exit the function if no nodes are selected
+
+ var color = pickColor(); // prompt for color
+
+ var group = doc.$node("Top") // get the group to add the backdrop to
+ var backdrop = group.addBackdropToNodes(nodes, "BackDrop", "", color)
+
+ $.endUndo();
+
+ // function to get the color chosen by the user
+ function pickColor(){
+   var d = new QColorDialog;
+   d.exec();
+   var color = d.selectedColor();
+   return new $.oColorValue({r:color.red(), g:color.green(), b:color.blue(), a:color.alpha()})
+ }
+}</code></pre>
     
 
     
@@ -6535,7 +6586,27 @@
         
 
     
-    <pre class="prettyprint"><code>// to add a node, simply call addNode on the group you want the node to be added to.var sceneRoot = $.scn.root; // grab the scene root group ("Top")var peg = sceneRoot.addNode("PEG", "MyNewlyCreatedPeg");           // adding a peg// Now we'll also create a drawing node to connect under the pegvar sceneComposite = $.scn.getNodeByPath("Top/Composite");         // can also use $.scn.$node("Top/Composite") for shorter synthaxvar drawingNode = sceneRoot.addDrawingNode("myNewDrawingNode");drawingNode.linkOutNode(sceneComposite);drawingNode.can_animate = false                // setting some attributes on the newly created Nodepeg.linkOutNode(drawingNode);//through all this we didn't specify nodePosition parameters so we'll sort evertything at oncesceneRoot.orderNodeView();// we can also do:peg.centerAbove(drawingNode);</code></pre>
+    <pre class="prettyprint"><code>// to add a node, simply call addNode on the group you want the node to be added to.
+var sceneRoot = $.scn.root; // grab the scene root group ("Top")
+
+var peg = sceneRoot.addNode("PEG", "MyNewlyCreatedPeg");           // adding a peg
+
+// Now we'll also create a drawing node to connect under the peg
+var sceneComposite = $.scn.getNodeByPath("Top/Composite");         // can also use $.scn.$node("Top/Composite") for shorter synthax
+
+var drawingNode = sceneRoot.addDrawingNode("myNewDrawingNode");
+drawingNode.linkOutNode(sceneComposite);
+drawingNode.can_animate = false                // setting some attributes on the newly created Node
+
+peg.linkOutNode(drawingNode);
+
+//through all this we didn't specify nodePosition parameters so we'll sort evertything at once
+
+sceneRoot.orderNodeView();
+
+// we can also do:
+
+peg.centerAbove(drawingNode);</code></pre>
     
 
     
@@ -6736,7 +6807,9 @@
         
 
     
-    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" ); var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
+    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" );
+ var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
     
 
     
@@ -10601,7 +10674,23 @@
         
 
     
-    <pre class="prettyprint"><code>// This example browses for a PSD file then import it in the root of the scene, then connects it to the main composite.function importCustomPSD(){  $.beginUndo("importCustomPSD");  var psd = $.dialog.browseForFile("get PSD", "*.psd");       // prompt for a PSD file  if (!psd) return;                                           // dialog was cancelled, exit the function  var doc = $.scn;                                            // get the scene object  var sceneRoot = doc.root                                    // grab the scene root group  var psdNodes = sceneRoot.importPSD(psd);                    // import the psd with default settings  var psdComp = psdNodes.pop()                                // get the composite node at the end of the psdNodes array  var sceneComp = doc.$node("Top/Composite")                  // get the scene main composite  psdComp.linkOutNode(sceneComp);                             // ... and link the two.  sceneRoot.orderNodeView();                                  // orders the node view inside the group  $.endUndo();}</code></pre>
+    <pre class="prettyprint"><code>// This example browses for a PSD file then import it in the root of the scene, then connects it to the main composite.
+
+function importCustomPSD(){
+  $.beginUndo("importCustomPSD");
+  var psd = $.dialog.browseForFile("get PSD", "*.psd");       // prompt for a PSD file
+
+  if (!psd) return;                                           // dialog was cancelled, exit the function
+
+  var doc = $.scn;                                            // get the scene object
+  var sceneRoot = doc.root                                    // grab the scene root group
+  var psdNodes = sceneRoot.importPSD(psd);                    // import the psd with default settings
+  var psdComp = psdNodes.pop()                                // get the composite node at the end of the psdNodes array
+  var sceneComp = doc.$node("Top/Composite")                  // get the scene main composite
+  psdComp.linkOutNode(sceneComp);                             // ... and link the two.
+  sceneRoot.orderNodeView();                                  // orders the node view inside the group
+  $.endUndo();
+}</code></pre>
     
 
     
@@ -13979,7 +14068,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Apr 26 2020 02:40:16 GMT+0200 (heure d’été d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Apr 26 2020 00:41:33 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

@@ -3046,7 +3046,24 @@
         
 
     
-    <pre class="prettyprint"><code>// Drawing Nodes are more than a node, as they do not work without an associated Drawing column and element.// adding a drawing node will automatically create a column and an element, unless they are provided as arguments.// Creating an element makes importing a drawing file possible.var doc = $.scn;var drawingName = "myDrawing";var myElement = doc.addElement(drawingName, "TVG");                      // add an element that holds TVG(Toonboom Vector Drawing) filesvar myDrawingColumn = doc.addColumn("DRAWING", drawingName, myElement);  // create a column and link the element created to itvar sceneRoot = doc.root;                                                // grab the scene root group// Creating the Drawing node and linking the previously created element and columnvar myDrawingNode = sceneRoot.addDrawingNode(drawingName, new $.oPoint(), myDrawingColumn, myElement);// This also works:var myOtherNode = sceneRoot.addDrawingNode("Drawing2");</code></pre>
+    <pre class="prettyprint"><code>// Drawing Nodes are more than a node, as they do not work without an associated Drawing column and element.
+// adding a drawing node will automatically create a column and an element, unless they are provided as arguments.
+// Creating an element makes importing a drawing file possible.
+
+var doc = $.scn;
+
+var drawingName = "myDrawing";
+var myElement = doc.addElement(drawingName, "TVG");                      // add an element that holds TVG(Toonboom Vector Drawing) files
+var myDrawingColumn = doc.addColumn("DRAWING", drawingName, myElement);  // create a column and link the element created to it
+
+var sceneRoot = doc.root;                                                // grab the scene root group
+
+// Creating the Drawing node and linking the previously created element and column
+var myDrawingNode = sceneRoot.addDrawingNode(drawingName, new $.oPoint(), myDrawingColumn, myElement);
+
+// This also works:
+
+var myOtherNode = sceneRoot.addDrawingNode("Drawing2");</code></pre>
     
 
     
@@ -3121,7 +3138,20 @@
         
 
     
-    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:var myNode = $.scn.$node("Top/Drawing")var drawingAttribute = myNode.attributes.drawing.element// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"// for a more direct way to access an attribute, it's possible to also call:var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
+    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:
+
+var myNode = $.scn.$node("Top/Drawing")
+var drawingAttribute = myNode.attributes.drawing.element
+
+// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
+
+drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
+var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
+$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
+
+// for a more direct way to access an attribute, it's possible to also call:
+
+var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
     
 
     
@@ -4438,7 +4468,21 @@
         
 
     
-    <pre class="prettyprint"><code>// The timings hold the keyframes that display the drawings across time.var timings = $.scn.$node("Top/Drawing").timings;for (var i in timings){  $.log( timings.frameNumber+" : "+timings.value);      // outputs the frame and the value of each keyframe}// timings are keyframe objects, so they are dynamic.timings[2].value = "5";                                 // sets the displayed image of the second key to the drawing named "5"       // to set a new value to a frame that wasn't a keyframe before, it's possible to use the attribute keyword like so:var myNode = $.scn.$node("Top/Drawing");myNode.drawing.element = {frameNumber: 5, value: "10"}             // setting the value of the frame 5myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting the value to the same as one of the timings</code></pre>
+    <pre class="prettyprint"><code>// The timings hold the keyframes that display the drawings across time.
+
+var timings = $.scn.$node("Top/Drawing").timings;
+for (var i in timings){
+  $.log( timings.frameNumber+" : "+timings.value);      // outputs the frame and the value of each keyframe
+}
+
+// timings are keyframe objects, so they are dynamic.
+timings[2].value = "5";                                 // sets the displayed image of the second key to the drawing named "5"       
+
+// to set a new value to a frame that wasn't a keyframe before, it's possible to use the attribute keyword like so:
+
+var myNode = $.scn.$node("Top/Drawing");
+myNode.drawing.element = {frameNumber: 5, value: "10"}             // setting the value of the frame 5
+myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting the value to the same as one of the timings</code></pre>
     
 
     
@@ -4915,7 +4959,9 @@
         
 
     
-    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" ); var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
+    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" );
+ var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
     
 
     
@@ -10848,7 +10894,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Apr 26 2020 02:40:16 GMT+0200 (heure d’été d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Apr 26 2020 00:41:33 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
