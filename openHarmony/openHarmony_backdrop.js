@@ -56,8 +56,31 @@
  * @classdesc  The $.oBackdrop Class represents a backdrop in the node view, and 
  * @param   {string}                 groupPath                   The path to the object in which this backdrop is placed.
  * @param   {backdropObject}         backdropObject              The harmony-internal backdrop object associated with this oBackdrop.
- * 
- * 
+ * @example
+ * function createColoredBackdrop(){
+ *  // This script will prompt for a color and create a backdrop around the selection
+ *  $.beginUndo()
+ *
+ *  var doc = $.scn; // grab the scene
+ *  var nodes = doc.getSelectedNodes(); // grab the selection
+ *
+ *  if(!nodes) return    // exit the function if no nodes are selected
+ *
+ *  var color = pickColor(); // prompt for color
+ *
+ *  var group = doc.$node("Top") // get the group to add the backdrop to
+ *  var backdrop = group.addBackdropToNodes(nodes, "BackDrop", "", color)
+ *
+ *  $.endUndo();
+ *
+ *  // function to get the color chosen by the user
+ *  function pickColor(){
+ *    var d = new QColorDialog;
+ *    d.exec();
+ *    var color = d.selectedColor();
+ *    return new $.oColorValue({r:color.red(), g:color.green(), b:color.blue(), a:color.alpha()})
+ *  }
+ * }
  */
 $.oBackdrop = function( groupPath, backdropObject ){
   this.group = ( groupPath instanceof this.$.oGroupNode )? groupPath.path: groupPath;

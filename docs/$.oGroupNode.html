@@ -524,6 +524,68 @@
             </ul>
         </li>
     
+        <li class="item" data-name="preferences">
+            <span class="title">
+                <a href="preferences.html">preferences</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="preferences#Backdrops"><a href="preferences.html#Backdrops">Backdrops</a></li>
+            
+                <li data-name="preferences#Color Management"><a href="preferences.html#ColorManagement">Color Management</a></li>
+            
+                <li data-name="preferences#Drawing Mode"><a href="preferences.html#DrawingMode">Drawing Mode</a></li>
+            
+                <li data-name="preferences#Element Manager"><a href="preferences.html#ElementManager">Element Manager</a></li>
+            
+                <li data-name="preferences#Exposure Sheet"><a href="preferences.html#ExposureSheet">Exposure Sheet</a></li>
+            
+                <li data-name="preferences#Function Editor"><a href="preferences.html#FunctionEditor">Function Editor</a></li>
+            
+                <li data-name="preferences#General"><a href="preferences.html#General">General</a></li>
+            
+                <li data-name="preferences#Highlighting"><a href="preferences.html#Highlighting">Highlighting</a></li>
+            
+                <li data-name="preferences#Internal"><a href="preferences.html#Internal">Internal</a></li>
+            
+                <li data-name="preferences#Library"><a href="preferences.html#Library">Library</a></li>
+            
+                <li data-name="preferences#Node View"><a href="preferences.html#NodeView">Node View</a></li>
+            
+                <li data-name="preferences#Playback View"><a href="preferences.html#PlaybackView">Playback View</a></li>
+            
+                <li data-name="preferences#Render"><a href="preferences.html#Render">Render</a></li>
+            
+                <li data-name="preferences#Scanning"><a href="preferences.html#Scanning">Scanning</a></li>
+            
+                <li data-name="preferences#Sceneplanning"><a href="preferences.html#Sceneplanning">Sceneplanning</a></li>
+            
+                <li data-name="preferences#Timeline"><a href="preferences.html#Timeline">Timeline</a></li>
+            
+                <li data-name="preferences#ToolProperties"><a href="preferences.html#ToolProperties">ToolProperties</a></li>
+            
+                <li data-name="preferences#user"><a href="preferences.html#user">user</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oApp">
             <span class="title">
                 <a href="$.oApp.html">$.oApp</a>
@@ -538,6 +600,8 @@
                 <li data-name="$.oApp#mainWindow"><a href="$.oApp.html#mainWindow">mainWindow</a></li>
             
                 <li data-name="$.oApp#mousePosition"><a href="$.oApp.html#mousePosition">mousePosition</a></li>
+            
+                <li data-name="$.oApp#preferences"><a href="$.oApp.html#preferences">preferences</a></li>
             
                 <li data-name="$.oApp#toolbars"><a href="$.oApp.html#toolbars">toolbars</a></li>
             
@@ -1313,6 +1377,8 @@
                 <li data-name="$.oFile#move"><a href="$.oFile.html#move">move</a></li>
             
                 <li data-name="$.oFile#moveToFolder"><a href="$.oFile.html#moveToFolder">moveToFolder</a></li>
+            
+                <li data-name="$.oFile#parseAsXml"><a href="$.oFile.html#parseAsXml">parseAsXml</a></li>
             
                 <li data-name="$.oFile#read"><a href="$.oFile.html#read">read</a></li>
             
@@ -2394,6 +2460,32 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oPreference">
+            <span class="title">
+                <a href="$.oPreference.html">$.oPreference</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oPreference#value"><a href="$.oPreference.html#value">value</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oPreferences">
             <span class="title">
                 <a href="$.oPreferences.html">$.oPreferences</a>
@@ -2897,8 +2989,7 @@
     oGroupNode
     </h2>
     
-        <div class="class-description">$.oGroupNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>
-It represents groups in the scene. From this class, it's possible to add nodes, and backdrops, import files and templates into the group.</div>
+        <div class="class-description">$.oGroupNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>It represents groups in the scene. From this class, it's possible to add nodes, and backdrops, import files and templates into the group.</div>
     
 </header>  
 
@@ -3047,21 +3138,7 @@ It represents groups in the scene. From this class, it's possible to add nodes, 
         
 
     
-    <pre class="prettyprint"><code>// to add a new node, grab the group it'll be created in first
-var doc = $.scn
-var sceneRoot = doc.root;                                              // grab the scene root group
-
-var myGroup = sceneRoot.addGrop("myGroup", false, false);              // create a group in the scene root, with a peg and composite but no nodes
-var MPO = myGroup.multiportOut;                                        // grab the multiport in of the group
-
-var myNode = myGroup.addDrawingNode("myDrawingNode");                  // add a drawing node inside the group
-myNode.linkOutNode(MPO);                                               // link the newly created node to the multiport
-myNode.centerAbove(MPO);
-
-var sceneComposite = doc.$node("Top/Composite");                       // grab the scene composite node
-myGroup.linkOutNode(sceneComposite);                                   // link the group to it
-
-myGroup.centerAbove(sceneComposite);</code></pre>
+    <pre class="prettyprint"><code>// to add a new node, grab the group it'll be created in firstvar doc = $.scnvar sceneRoot = doc.root;                                              // grab the scene root groupvar myGroup = sceneRoot.addGrop("myGroup", false, false);              // create a group in the scene root, with a peg and composite but no nodesvar MPO = myGroup.multiportOut;                                        // grab the multiport in of the groupvar myNode = myGroup.addDrawingNode("myDrawingNode");                  // add a drawing node inside the groupmyNode.linkOutNode(MPO);                                               // link the newly created node to the multiportmyNode.centerAbove(MPO);var sceneComposite = doc.$node("Top/Composite");                       // grab the scene composite nodemyGroup.linkOutNode(sceneComposite);                                   // link the group to itmyGroup.centerAbove(sceneComposite);</code></pre>
     
 
     
@@ -3136,20 +3213,7 @@ myGroup.centerAbove(sceneComposite);</code></pre>
         
 
     
-    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:
-
-var myNode = $.scn.$node("Top/Drawing")
-var drawingAttribute = myNode.attributes.drawing.element
-
-// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
-
-drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
-var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
-$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
-
-// for a more direct way to access an attribute, it's possible to also call:
-
-var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
+    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:var myNode = $.scn.$node("Top/Drawing")var drawingAttribute = myNode.attributes.drawing.element// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"// for a more direct way to access an attribute, it's possible to also call:var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
     
 
     
@@ -5624,30 +5688,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
         
 
     
-    <pre class="prettyprint"><code>function createColoredBackdrop(){
- // This script will prompt for a color and create a backdrop around the selection
- $.beginUndo()
-
- var doc = $.scn; // grab the scene
- var nodes = doc.getSelectedNodes(); // grab the selection
-
- if(!nodes) return    // exit the function if no nodes are selected
-
- var color = pickColor(); // prompt for color
-
- var group = doc.$node("Top") // get the group to add the backdrop to
- var backdrop = group.addBackdropToNodes(nodes, "BackDrop", "", color)
-
- $.endUndo();
-
- // function to get the color chosen by the user
- function pickColor(){
-   var d = new QColorDialog;
-   d.exec();
-   var color = d.selectedColor();
-   return new $.oColorValue({r:color.red(), g:color.green(), b:color.blue(), a:color.alpha()})
- }
-}</code></pre>
+    <pre class="prettyprint"><code>function createColoredBackdrop(){ // This script will prompt for a color and create a backdrop around the selection $.beginUndo() var doc = $.scn; // grab the scene var nodes = doc.getSelectedNodes(); // grab the selection if(!nodes) return    // exit the function if no nodes are selected var color = pickColor(); // prompt for color var group = doc.$node("Top") // get the group to add the backdrop to var backdrop = group.addBackdropToNodes(nodes, "BackDrop", "", color) $.endUndo(); // function to get the color chosen by the user function pickColor(){   var d = new QColorDialog;   d.exec();   var color = d.selectedColor();   return new $.oColorValue({r:color.red(), g:color.green(), b:color.blue(), a:color.alpha()}) }}</code></pre>
     
 
     
@@ -6586,27 +6627,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
         
 
     
-    <pre class="prettyprint"><code>// to add a node, simply call addNode on the group you want the node to be added to.
-var sceneRoot = $.scn.root; // grab the scene root group ("Top")
-
-var peg = sceneRoot.addNode("PEG", "MyNewlyCreatedPeg");           // adding a peg
-
-// Now we'll also create a drawing node to connect under the peg
-var sceneComposite = $.scn.getNodeByPath("Top/Composite");         // can also use $.scn.$node("Top/Composite") for shorter synthax
-
-var drawingNode = sceneRoot.addDrawingNode("myNewDrawingNode");
-drawingNode.linkOutNode(sceneComposite);
-drawingNode.can_animate = false                // setting some attributes on the newly created Node
-
-peg.linkOutNode(drawingNode);
-
-//through all this we didn't specify nodePosition parameters so we'll sort evertything at once
-
-sceneRoot.orderNodeView();
-
-// we can also do:
-
-peg.centerAbove(drawingNode);</code></pre>
+    <pre class="prettyprint"><code>// to add a node, simply call addNode on the group you want the node to be added to.var sceneRoot = $.scn.root; // grab the scene root group ("Top")var peg = sceneRoot.addNode("PEG", "MyNewlyCreatedPeg");           // adding a peg// Now we'll also create a drawing node to connect under the pegvar sceneComposite = $.scn.getNodeByPath("Top/Composite");         // can also use $.scn.$node("Top/Composite") for shorter synthaxvar drawingNode = sceneRoot.addDrawingNode("myNewDrawingNode");drawingNode.linkOutNode(sceneComposite);drawingNode.can_animate = false                // setting some attributes on the newly created Nodepeg.linkOutNode(drawingNode);//through all this we didn't specify nodePosition parameters so we'll sort evertything at oncesceneRoot.orderNodeView();// we can also do:peg.centerAbove(drawingNode);</code></pre>
     
 
     
@@ -6807,9 +6828,7 @@ peg.centerAbove(drawingNode);</code></pre>
         
 
     
-    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
- var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" );
- var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
+    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" ); var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
     
 
     
@@ -10674,23 +10693,7 @@ peg.centerAbove(drawingNode);</code></pre>
         
 
     
-    <pre class="prettyprint"><code>// This example browses for a PSD file then import it in the root of the scene, then connects it to the main composite.
-
-function importCustomPSD(){
-  $.beginUndo("importCustomPSD");
-  var psd = $.dialog.browseForFile("get PSD", "*.psd");       // prompt for a PSD file
-
-  if (!psd) return;                                           // dialog was cancelled, exit the function
-
-  var doc = $.scn;                                            // get the scene object
-  var sceneRoot = doc.root                                    // grab the scene root group
-  var psdNodes = sceneRoot.importPSD(psd);                    // import the psd with default settings
-  var psdComp = psdNodes.pop()                                // get the composite node at the end of the psdNodes array
-  var sceneComp = doc.$node("Top/Composite")                  // get the scene main composite
-  psdComp.linkOutNode(sceneComp);                             // ... and link the two.
-  sceneRoot.orderNodeView();                                  // orders the node view inside the group
-  $.endUndo();
-}</code></pre>
+    <pre class="prettyprint"><code>// This example browses for a PSD file then import it in the root of the scene, then connects it to the main composite.function importCustomPSD(){  $.beginUndo("importCustomPSD");  var psd = $.dialog.browseForFile("get PSD", "*.psd");       // prompt for a PSD file  if (!psd) return;                                           // dialog was cancelled, exit the function  var doc = $.scn;                                            // get the scene object  var sceneRoot = doc.root                                    // grab the scene root group  var psdNodes = sceneRoot.importPSD(psd);                    // import the psd with default settings  var psdComp = psdNodes.pop()                                // get the composite node at the end of the psdNodes array  var sceneComp = doc.$node("Top/Composite")                  // get the scene main composite  psdComp.linkOutNode(sceneComp);                             // ... and link the two.  sceneRoot.orderNodeView();                                  // orders the node view inside the group  $.endUndo();}</code></pre>
     
 
     
@@ -14068,7 +14071,7 @@ function importCustomPSD(){
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Apr 26 2020 00:41:33 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat May 02 2020 18:47:59 GMT+0200 (heure d’été d’Europe centrale)
         </footer>
     </div>
 </div>

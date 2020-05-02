@@ -60,6 +60,27 @@ $.oApp = function(){
 
 
 /**
+ * The Harmony version string
+ * @name $.oApp#version
+ */
+Object.defineProperty($.oApp.prototype, 'version', {
+  get : function(){
+
+  }
+});
+
+
+/**
+ * @name $.oApp#flavour
+ */
+Object.defineProperty($.oApp.prototype, 'flavour', {
+  get : function(){
+
+  }
+});
+
+
+/**
  * The Harmony Main Window.
  * @name $.oApp#mainWindow
  * @type {QWidget}
@@ -70,7 +91,7 @@ Object.defineProperty($.oApp.prototype, 'mainWindow', {
     for ( var i in windows) {
       if (windows[i] instanceof QMainWindow && !windows[i].parentWidget()) return windows[i];
     }
-    return null
+    return false
   }
 });
 
@@ -134,6 +155,97 @@ $.oApp.prototype.getWidgetByName = function(name, parentName){
   }
   return null;
 }
+
+
+/**
+ * Access the Harmony Preferences
+ * @name $.oApp#preferences
+ * @example
+ * // To access the preferences of Harmony, grab the preference object in the $.oApp class:
+ * var prefs = $.app.preferences;
+ * 
+ * // It's then possible to access all available preferences of the software:
+ * for (var i in prefs){
+ *   log (i+" "+prefs[i]);
+ * }
+ * 
+ * // accessing the preference value can be done directly by using the dot notation:
+ * prefs.USE_OVERLAY_UNDERLAY_ART = true;
+ * log (prefs.USE_OVERLAY_UNDERLAY_ART);
+ * 
+ * //the details objects of the preferences object allows access to more information about each preference
+ * var details = prefs.details
+ * log(details.USE_OVERLAY_UNDERLAY_ART.category+" "+details.USE_OVERLAY_UNDERLAY_ART.id+" "+details.USE_OVERLAY_UNDERLAY_ART.type);
+ * 
+ * for (var i in details){
+ *   log(i+" "+JSON.stringify(details[i]))       // each object inside detail is a complete oPreference instance
+ * }
+ * 
+ * // the preference object also holds a categories array with the list of all categories
+ * log (prefs.categories)
+ */
+Object.defineProperty($.oApp.prototype, 'preferences', {
+  get: function(){
+    if (typeof this._prefsObject === 'undefined'){
+      var _prefsObject = {};
+      _categories = [];
+      _details = {};
+
+      Object.defineProperty(_prefsObject, "categories", {
+        enumerable:false,
+        value:_categories
+      })
+      
+      Object.defineProperty(_prefsObject, "details", {
+        enumerable:false,
+        value:_details
+      })
+      
+      var prefFile = (new oFile(specialFolders.resource+"/prefs.xml")).parseAsXml().children[0].children;
+
+      var userPrefFile = {objectName: "category", id: "user", children:(new oFile(specialFolders.userConfig + "/Harmony Premium-pref.xml")).parseAsXml().children[0].children};
+      prefFile.push(userPrefFile);
+
+      for (var i in prefFile){
+        if (prefFile[i].objectName != "category" || prefFile[i].id == "Storyboard") continue;
+        var category = prefFile[i].id;
+        if (_categories.indexOf(category) == -1) _categories.push(category);
+
+        var preferences = prefFile[i].children;
+
+        // create a oPreference instance for each found preference and add a getter setter to the $.oApp._prefsObject
+        for (var j in preferences){
+
+          // evaluate condition for conditional preferences. For now only support Harmony Premium prefs
+          if (preferences[j].objectName == "if"){
+            var condition = preferences[j].condition;
+            var regex = /(not essentials|not sboard|not paint)/
+            if (regex.exec(condition)) preferences = preferences.concat(preferences[j].children)
+            continue;
+          }
+          var type = preferences[j].objectName;
+          var keyword = preferences[j].id;
+          var description = preferences[j].shortDesc;
+          var descriptionText = preferences[j].longDesc;
+          if (type == "color"){
+            if (typeof preferences[j].alpha === 'undefined') preferences[j].alpha = 255;
+            var value = new ColorRGBA(preferences[j].red, preferences[j].green, preferences[j].blue, preferences[j].alpha)
+          }else{
+            var value = preferences[j].value;
+          }
+          // var docString = (category+" "+keyword+" "+type+" "+description)
+          //
+          var pref = this.$.oPreference.createPreference(category, keyword, type, value, description, descriptionText, _prefsObject);
+          _details[pref.keyword] = pref;
+        }
+      }
+
+      this._prefsObject = _prefsObject;
+    }
+
+    return this._prefsObject;
+  }
+})
 
 
 

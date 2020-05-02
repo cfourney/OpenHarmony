@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library v0.01
+//                            openHarmony Library
 //
 //
-//         Developped by Mathieu Chaptel, Chris Fourney...
+//         Developped by Mathieu Chaptel, Chris Fourney
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -23,8 +23,8 @@
 //   This library doesn't overwrite any of the objects and classes of the official
 //   Toonboom API which must remains available.
 //
-//   This library is made available under the MIT license.
-//   https://opensource.org/licenses/mit
+//   This library is made available under the Mozilla Public license 2.0.
+//   https://www.mozilla.org/en-US/MPL/2.0/
 //
 //   The repository for this library is available at the address:
 //   https://github.com/cfourney/OpenHarmony/
@@ -558,18 +558,19 @@ Object.defineProperty( $.oFile.prototype, 'toonboomPath', {
  * @return: { string }                      The contents of the file.
  */
 $.oFile.prototype.read = function() {
-    var file = new File(this.path);
+  var file = new File(this.path);
 
-    try {
-        if (file.exists) {
-            file.open(FileAccess.ReadOnly);
-            var string = file.read();
-            file.close();
-            return string;
-        }
-    } catch (err) {
-        return null
+  try {
+    if (file.exists) {
+      file.open(FileAccess.ReadOnly);
+      var string = file.read();
+      file.close();
+      return string;
     }
+  } catch (err) {
+    this.$.debug(err, this.DEBUG_LEVEL.ERROR)
+    return null
+  }
 }
 
 
@@ -709,15 +710,30 @@ $.oFile.prototype.remove = function(){
 
 
 /**
- * Parses Files as XML
- * @private
- * @todo implement
+ * Parses the file as a XML and returns an object containing the values.
+ * @example
+ * // parses the xml file as an object with imbricated hierarchy.
+ * // each xml node is represented by a simple object with a "children" property containing the children nodes,
+ * // and a objectName property representing the name of the node.
+ * // If the node has attributes, those are set as properties on the object. All values are set as strings.
+ * 
+ * // example: parsing the shortcuts file
+ * 
+ * var shortcutsFile = (new $.oFile(specialFolders.userConfig+"/shortcuts.xml")).parseAsXml();
+ * 
+ * // The returned object will always be a simple document object with a single "children" property containing the document nodes.
+ * 
+ * var shortcuts = shortcuts.children[0].children     // children[0] is the "shortcuts" parent node, we want the nodes contained within
+ * 
+ * for (var i in shortcuts){
+ *   log (shortcuts[i].id)
+ * }
  */
 $.oFile.prototype.parseAsXml = function(){
   if (this.extension.toLowerCase() != "xml") return
 
   function setProperties(xmlString, object){
-    var propertyRE = /(\w+)="([^\=\<\>]+)"/igm            // matches a line with name="property"
+    var propertyRE = /(\w+)="([^\=\<\>]+?)"/igm            // matches a line with name="property"
     var match;
     while (match = propertyRE.exec(xmlString)){
       var propName = match[1];
@@ -730,23 +746,26 @@ $.oFile.prototype.parseAsXml = function(){
   }
 
   function getChildObjectsFromXML(xmlString){
-    var objectRE = /<(\w+) ?([^\s\>]*)\>?([\S\s]+)<\/\1>/igm           // matches an entire group of format <type header>properties</type>
-    var lineObjectRE = /<(\w+) ?([^\>]+)\/>/igm           // matches an entire group of format <type properties/>
+    var objectRE = /<(\w+)(\s.+?)?>([\S\s]+?)<\/\1>/igm           // matches an entire group of format <type header>properties</type>
+    var lineObjectRE = /<(\w+)([^>]+?)\/>/igm                    // matches an entire group of format <type properties/>
 
+    var string = xmlString
     var objects = [];
     var match;
     while (match = objectRE.exec(xmlString)){
       //multiline objects can contain more objects
-      xmlString.replace(match[0], "");                // remove the matches from the string so they're not parsed twice for properties
-      
-      var domNode = {objectName: match[1]};
+      //log("found object "+match[1])
+      var domNode = {objectName: match[1]};      
       domNode = setProperties(match[2], domNode);
       domNode.children = getChildObjectsFromXML(match[3]);
 
       objects.push(domNode);
+
+      string = string.replace(match[0], "");                // remove the matches from the string so they're not parsed twice for properties
     }
 
-    while (match = lineObjectRE.exec(xmlString)){
+    while (match = lineObjectRE.exec(string)){
+      //log("one line object"+match[1])
       var domNode = {objectName: match[1]};
       domNode = setProperties(match[2], domNode);
 
@@ -758,7 +777,6 @@ $.oFile.prototype.parseAsXml = function(){
 
   // build an object model representation of the contents of the XML by parsing it character by character
   var xml = this.read();
-  log (typeof xml)                  // finds properties by matching name="value"
   var xmlDocument = {children:getChildObjectsFromXML(xml)};
   return xmlDocument;
 }
