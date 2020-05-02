@@ -595,6 +595,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oApp#flavour"><a href="$.oApp.html#flavour">flavour</a></li>
+            
                 <li data-name="$.oApp#globalMousePosition"><a href="$.oApp.html#globalMousePosition">globalMousePosition</a></li>
             
                 <li data-name="$.oApp#mainWindow"><a href="$.oApp.html#mainWindow">mainWindow</a></li>
@@ -604,6 +606,8 @@
                 <li data-name="$.oApp#preferences"><a href="$.oApp.html#preferences">preferences</a></li>
             
                 <li data-name="$.oApp#toolbars"><a href="$.oApp.html#toolbars">toolbars</a></li>
+            
+                <li data-name="$.oApp#version"><a href="$.oApp.html#version">version</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -3626,8 +3630,81 @@
         
 
     
-    <pre class="prettyprint"><code>// This example from the openHarmony oScene.renderWriteNodes() function code // uses the oProcess class to launch an async process and print its progress// to the MessageLog.// declaring the binary called by the processvar harmonyBin = specialFolders.bin+"/HarmonyPremium";// building the list of arguments based on user provided inputvar args = ["-batch", "-frames", startFrame, endFrame, "-res", resX, resY];// different arguments depending on wether the scene is stored on the database or offlineif (this.online){  args.push("-env");  args.push(this.environnement);  args.push("-job");  args.push(this.job);  args.push("-scene");  args.push(this.name);}else{  args.push(this.stage);}// Create the process with the arguments abovevar p = new this.$.oProcess(harmonyBin, args);p.readChannel = "All"; // specifying which channel of the process we will listen to: here we listen to both stdout and error.// creating an async processif (renderInBackground){  var length = endFrame - startFrame;  // Creating a function to respond to new readable information on the output channel.  // This function takes a "message" argument which will contain the returned output of the process.  var progressDialogue = new this.$.oProgressDialog("Rendering : ",length,"Render Write Nodes", true);  var self = this;  var renderProgress = function(message){    // parsing the message to find a Rendered frame number.    var progressRegex = /Rendered Frame ([0-9]+)/igm;    var matches = [];    while (match = progressRegex.exec(message)) {      matches.push(match[1]);    }    if (matches.length!=0){      // if a number is found, we compare it to the total frames in the render to deduce a completion percentage.      var progress = parseInt(matches.pop(),10)      progressDialogue.label = "Rendering Frame: "+progress+"/"+length      progressDialogue.value = progress;      var percentage = Math.round(progress/length*100);      self.$.log("render : "+percentage+"% complete");    }  }  // Creating a function that will trigger when process exits.   // This function can take an "exit code" argument that will tell if the process terminated without problem.  var renderFinished = function(exitCode){    // here we simply output that the render completed successfully.    progressDialogue.label = "Rendering Finished"
-       progressDialogue.value = length;    self.$.log(exitCode+" : render finished");  }  // launching the process in async mode by providing true as first argument, and then the functions created above.  p.launchAndRead(renderProgress, renderFinished);  this.$.log("Starting render of scene "+this.name);}else{  // if we don't want to use an async process and prefer to freeze the execution while waiting, we can simply call:  var readout  = p.execute();}// we return the output of the process in case we didn't use async.return readout</code></pre>
+    <pre class="prettyprint"><code>// This example from the openHarmony oScene.renderWriteNodes() function code 
+// uses the oProcess class to launch an async process and print its progress
+// to the MessageLog.
+
+// declaring the binary called by the process
+var harmonyBin = specialFolders.bin+"/HarmonyPremium";
+
+// building the list of arguments based on user provided input
+var args = ["-batch", "-frames", startFrame, endFrame, "-res", resX, resY];
+
+// different arguments depending on wether the scene is stored on the database or offline
+if (this.online){
+  args.push("-env");
+  args.push(this.environnement);
+  args.push("-job");
+  args.push(this.job);
+  args.push("-scene");
+  args.push(this.name);
+}else{
+  args.push(this.stage);
+}
+
+// Create the process with the arguments above
+var p = new this.$.oProcess(harmonyBin, args);
+p.readChannel = "All"; // specifying which channel of the process we will listen to: here we listen to both stdout and error.
+
+// creating an async process
+if (renderInBackground){
+  var length = endFrame - startFrame;
+
+  // Creating a function to respond to new readable information on the output channel.
+  // This function takes a "message" argument which will contain the returned output of the process.
+
+  var progressDialogue = new this.$.oProgressDialog("Rendering : ",length,"Render Write Nodes", true);
+  var self = this;
+
+  var renderProgress = function(message){
+    // parsing the message to find a Rendered frame number.
+    var progressRegex = /Rendered Frame ([0-9]+)/igm;
+    var matches = [];
+    while (match = progressRegex.exec(message)) {
+      matches.push(match[1]);
+    }
+    if (matches.length!=0){
+      // if a number is found, we compare it to the total frames in the render to deduce a completion percentage.
+      var progress = parseInt(matches.pop(),10)
+      progressDialogue.label = "Rendering Frame: "+progress+"/"+length
+      progressDialogue.value = progress;
+      var percentage = Math.round(progress/length*100);
+      self.$.log("render : "+percentage+"% complete");
+    }
+  }
+
+  // Creating a function that will trigger when process exits. 
+  // This function can take an "exit code" argument that will tell if the process terminated without problem.
+
+  var renderFinished = function(exitCode){
+    // here we simply output that the render completed successfully.
+    progressDialogue.label = "Rendering Finished"
+       progressDialogue.value = length;
+    self.$.log(exitCode+" : render finished");
+  }
+
+  // launching the process in async mode by providing true as first argument, and then the functions created above.
+
+  p.launchAndRead(renderProgress, renderFinished);
+  this.$.log("Starting render of scene "+this.name);
+}else{
+
+  // if we don't want to use an async process and prefer to freeze the execution while waiting, we can simply call:
+  var readout  = p.execute();
+}
+
+// we return the output of the process in case we didn't use async.
+return readout</code></pre>
     
 
     
@@ -3752,7 +3829,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat May 02 2020 18:47:59 GMT+0200 (heure d’été d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat May 02 2020 17:07:14 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

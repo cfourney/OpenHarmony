@@ -595,6 +595,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oApp#flavour"><a href="$.oApp.html#flavour">flavour</a></li>
+            
                 <li data-name="$.oApp#globalMousePosition"><a href="$.oApp.html#globalMousePosition">globalMousePosition</a></li>
             
                 <li data-name="$.oApp#mainWindow"><a href="$.oApp.html#mainWindow">mainWindow</a></li>
@@ -604,6 +606,8 @@
                 <li data-name="$.oApp#preferences"><a href="$.oApp.html#preferences">preferences</a></li>
             
                 <li data-name="$.oApp#toolbars"><a href="$.oApp.html#toolbars">toolbars</a></li>
+            
+                <li data-name="$.oApp#version"><a href="$.oApp.html#version">version</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -2989,7 +2993,8 @@
     oNode
     </h2>
     
-        <div class="class-description">The oNode class represents a node in the Harmony scene. <br>It holds the value of its position in the node view, and functions to link to other nodes, as well as set the attributes of the node.<br></div>
+        <div class="class-description">The oNode class represents a node in the Harmony scene. <br>
+It holds the value of its position in the node view, and functions to link to other nodes, as well as set the attributes of the node.<br></div>
     
 </header>  
 
@@ -3157,7 +3162,35 @@
         
 
     
-    <pre class="prettyprint"><code>// To grab a node object from the scene, it's possible to create a new node object by calling the constructor:var myNode = new $.oNode("Top/Drawing", $.scn) // However, most nodes will be grabbed directly from the scene object.var doc = $.scn var nodes = doc.nodes;                   // grabs the list of all the nodes in the scene// It's possible to grab a single node from the path in the scenevar myNode = doc.getNodeByPath("Top/Drawing")var myNode = doc.$node("Top/Drawing")    // short synthax but same function// depending on the type of node, oNode objects returned by these functions can actually be an instance the subclasses// oDrawingNode, oGroupNode, oPegNode...$.log(myNode instanceof $.oNode)           // true$.log(myNode instanceof $.oDrawingNode)  // true// These other subclasses of nodes have other methods that are only shared by nodes of a certain type.// Not documented in this class, oNode objects have attributes which correspond to the values visible in the Layer Properties window.// The attributes values can be accessed and set by using the dot notation on the oNode object:myNode.can_animate = false;myNode.position.separate = true;myNode.position.x = 10;// To access the oAttribute objects in the node, call the oNode.attributes object that contains themvar attributes = myNode.attributes;</code></pre>
+    <pre class="prettyprint"><code>// To grab a node object from the scene, it's possible to create a new node object by calling the constructor:
+var myNode = new $.oNode("Top/Drawing", $.scn) 
+
+// However, most nodes will be grabbed directly from the scene object.
+var doc = $.scn 
+var nodes = doc.nodes;                   // grabs the list of all the nodes in the scene
+
+// It's possible to grab a single node from the path in the scene
+var myNode = doc.getNodeByPath("Top/Drawing")
+var myNode = doc.$node("Top/Drawing")    // short synthax but same function
+
+// depending on the type of node, oNode objects returned by these functions can actually be an instance the subclasses
+// oDrawingNode, oGroupNode, oPegNode...
+
+$.log(myNode instanceof $.oNode)           // true
+$.log(myNode instanceof $.oDrawingNode)  // true
+
+// These other subclasses of nodes have other methods that are only shared by nodes of a certain type.
+
+// Not documented in this class, oNode objects have attributes which correspond to the values visible in the Layer Properties window.
+// The attributes values can be accessed and set by using the dot notation on the oNode object:
+
+myNode.can_animate = false;
+myNode.position.separate = true;
+myNode.position.x = 10;
+
+// To access the oAttribute objects in the node, call the oNode.attributes object that contains them
+
+var attributes = myNode.attributes;</code></pre>
     
 
     
@@ -3226,7 +3259,20 @@
         
 
     
-    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:var myNode = $.scn.$node("Top/Drawing")var drawingAttribute = myNode.attributes.drawing.element// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"// for a more direct way to access an attribute, it's possible to also call:var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
+    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:
+
+var myNode = $.scn.$node("Top/Drawing")
+var drawingAttribute = myNode.attributes.drawing.element
+
+// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
+
+drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
+var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
+$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
+
+// for a more direct way to access an attribute, it's possible to also call:
+
+var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
     
 
     
@@ -4830,7 +4876,9 @@
         
 
     
-    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" ); var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
+    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
+ var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" );
+ var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
     
 
     
@@ -9951,7 +9999,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat May 02 2020 18:47:59 GMT+0200 (heure d’été d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat May 02 2020 17:07:14 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
