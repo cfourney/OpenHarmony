@@ -474,7 +474,7 @@ $.oPieMenu.prototype.show = function(parent){
   var _pieMenu = new QWidget();
   this.menuWidget = _pieMenu;
 
-  var flags = Qt.FramelessWindowHint;
+  var flags = new Qt.WindowFlags(Qt.Popup| Qt.FramelessWindowHint);
   _pieMenu.setWindowFlags(flags);
   _pieMenu.setStyleSheet("background-color: rgba(20, 20, 20, 85%);");
   _pieMenu.setAttribute(Qt.WA_TranslucentBackground);
@@ -952,4 +952,3 @@ $.oPrefButton = function(preferenceString, parent) {
   this.toolTip = this.scriptFunction;
 }
 $.oScriptButton.prototype = Object.create(QPushButton.prototype);
-
