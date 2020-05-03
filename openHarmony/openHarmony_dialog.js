@@ -474,7 +474,7 @@ $.oPieMenu.prototype.show = function(parent){
   var _pieMenu = new QWidget();
   this.menuWidget = _pieMenu;
 
-  var flags = Qt.FramelessWindowHint;
+  var flags = new Qt.WindowFlags(Qt.Popup| Qt.FramelessWindowHint);
   _pieMenu.setWindowFlags(flags);
   _pieMenu.setStyleSheet("background-color: rgba(20, 20, 20, 85%);");
   _pieMenu.setAttribute(Qt.WA_TranslucentBackground);
@@ -953,3 +953,57 @@ $.oPrefButton = function(preferenceString, parent) {
 }
 $.oPrefButton.prototype = Object.create(QPushButton.prototype);
 
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//      $.oPieButton class       //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for $.oPieButton
+ * @name          $#oPieButton
+ * @constructor
+ * @classdescription This subclass of QToolButton provides an easy way to create a button for a PieMenu.<br> 
+ * 
+ * This class is a subclass of QToolButton and all the methods from that class are available to modify this button.
+  * @param {string}   iconFile               The icon file for the button
+ * 
+ */
+$.oPieButton = function(iconFile) {
+  QToolButton.call(this);
+  //this.iconFile = iconFile;
+
+  // if icon isnt provided
+  if (iconFile == ""){
+    //svg not supported ?
+    var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
+  }
+  this.setStyleSheet("background :transparent;")
+  this.minimumHeight = 32;
+  this.minimumWidth = 32;
+
+  var icon = new QIcon(iconFile);
+  this.icon = icon;
+  this.setIconSize(new QSize(24, 24));
+
+
+}
+$.oPieButton.prototype = Object.create(QToolButton.prototype);
+
+
+
+/**
+ * Runs the script on mouse Click
+ * @private
+ */
+$.oPieButton.prototype.mouseMoveEvent = function(){
+  //this.click();
+  MessageLog.trace("entered")
+}
