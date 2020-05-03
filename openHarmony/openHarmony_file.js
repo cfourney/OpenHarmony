@@ -769,7 +769,7 @@ $.oFile.prototype.toString = function(){
  * @param {string}     xmlString           the string to parse for xml content          
  * @param {string}     objectName          "xmlDocument" for the top node, otherwise, the string description of the xml node (ex: <objectName> <property = "value"/> </objectName>)
  * @property {string}  objectName
- * @property {]<$.oXml[]}  children
+ * @property {$.oXml[]}  children
  */
 $.oXml = function (xmlString, objectName){
   if (typeof objectName === 'undefined') var objectName = "xmlDocument";

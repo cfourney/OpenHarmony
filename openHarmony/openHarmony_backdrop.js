@@ -53,7 +53,7 @@
 /**
  * The constructor for  the $.oBackdrop class.
  * @constructor
- * @classdesc  The $.oBackdrop Class represents a backdrop in the node view, and 
+ * @classdesc  The $.oBackdrop Class represents a backdrop in the node view, and allows users to add, remove and modify existing Backdrops. Accessing these functions is done through the oGroupNode class.
  * @param   {string}                 groupPath                   The path to the object in which this backdrop is placed.
  * @param   {backdropObject}         backdropObject              The harmony-internal backdrop object associated with this oBackdrop.
  * @example

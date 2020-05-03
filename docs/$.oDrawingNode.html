@@ -595,6 +595,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oApp#currentTool"><a href="$.oApp.html#currentTool">currentTool</a></li>
+            
                 <li data-name="$.oApp#flavour"><a href="$.oApp.html#flavour">flavour</a></li>
             
                 <li data-name="$.oApp#globalMousePosition"><a href="$.oApp.html#globalMousePosition">globalMousePosition</a></li>
@@ -605,7 +607,11 @@
             
                 <li data-name="$.oApp#preferences"><a href="$.oApp.html#preferences">preferences</a></li>
             
+                <li data-name="$.oApp#stencils"><a href="$.oApp.html#stencils">stencils</a></li>
+            
                 <li data-name="$.oApp#toolbars"><a href="$.oApp.html#toolbars">toolbars</a></li>
+            
+                <li data-name="$.oApp#tools"><a href="$.oApp.html#tools">tools</a></li>
             
                 <li data-name="$.oApp#version"><a href="$.oApp.html#version">version</a></li>
             
@@ -619,6 +625,10 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oApp#getToolByName"><a href="$.oApp.html#getToolByName">getToolByName</a></li>
+            
+                <li data-name="$.oApp#getValidStencils"><a href="$.oApp.html#getValidStencils">getValidStencils</a></li>
             
                 <li data-name="$.oApp#getWidgetByName"><a href="$.oApp.html#getWidgetByName">getWidgetByName</a></li>
             
@@ -2816,6 +2826,28 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oStencil">
+            <span class="title">
+                <a href="$.oStencil.html">$.oStencil</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oThread">
             <span class="title">
                 <a href="$.oThread.html">$.oThread</a>
@@ -2924,6 +2956,36 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oTool">
+            <span class="title">
+                <a href="$.oTool.html">$.oTool</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oTool#stencils"><a href="$.oTool.html#stencils">stencils</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oTool#activate"><a href="$.oTool.html#activate">activate</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oToolbar">
             <span class="title">
                 <a href="$.oToolbar.html">$.oToolbar</a>
@@ -2976,6 +3038,28 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oXml">
+            <span class="title">
+                <a href="$.oXml.html">$.oXml</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
     </ul>
 </div>
     <div class="main">
@@ -3012,7 +3096,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1666
+            openHarmony/openHarmony_node.js, line 1655
         </div>
         
     </div>
@@ -3142,24 +3226,7 @@
         
 
     
-    <pre class="prettyprint"><code>// Drawing Nodes are more than a node, as they do not work without an associated Drawing column and element.
-// adding a drawing node will automatically create a column and an element, unless they are provided as arguments.
-// Creating an element makes importing a drawing file possible.
-
-var doc = $.scn;
-
-var drawingName = "myDrawing";
-var myElement = doc.addElement(drawingName, "TVG");                      // add an element that holds TVG(Toonboom Vector Drawing) files
-var myDrawingColumn = doc.addColumn("DRAWING", drawingName, myElement);  // create a column and link the element created to it
-
-var sceneRoot = doc.root;                                                // grab the scene root group
-
-// Creating the Drawing node and linking the previously created element and column
-var myDrawingNode = sceneRoot.addDrawingNode(drawingName, new $.oPoint(), myDrawingColumn, myElement);
-
-// This also works:
-
-var myOtherNode = sceneRoot.addDrawingNode("Drawing2");</code></pre>
+    <pre class="prettyprint"><code>// Drawing Nodes are more than a node, as they do not work without an associated Drawing column and element.// adding a drawing node will automatically create a column and an element, unless they are provided as arguments.// Creating an element makes importing a drawing file possible.var doc = $.scn;var drawingName = "myDrawing";var myElement = doc.addElement(drawingName, "TVG");                      // add an element that holds TVG(Toonboom Vector Drawing) filesvar myDrawingColumn = doc.addColumn("DRAWING", drawingName, myElement);  // create a column and link the element created to itvar sceneRoot = doc.root;                                                // grab the scene root group// Creating the Drawing node and linking the previously created element and columnvar myDrawingNode = sceneRoot.addDrawingNode(drawingName, new $.oPoint(), myDrawingColumn, myElement);// This also works:var myOtherNode = sceneRoot.addDrawingNode("Drawing2");</code></pre>
     
 
     
@@ -3234,20 +3301,7 @@ var myOtherNode = sceneRoot.addDrawingNode("Drawing2");</code></pre>
         
 
     
-    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:
-
-var myNode = $.scn.$node("Top/Drawing")
-var drawingAttribute = myNode.attributes.drawing.element
-
-// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
-
-drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
-var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
-$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
-
-// for a more direct way to access an attribute, it's possible to also call:
-
-var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
+    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:var myNode = $.scn.$node("Top/Drawing")var drawingAttribute = myNode.attributes.drawing.element// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"// for a more direct way to access an attribute, it's possible to also call:var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
     
 
     
@@ -3711,7 +3765,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="inLinks"><span class="type-signature ">readonly</span>inLinks<span class="type-signature type array.<onodelink>">Array.&lt;oNodeLink></span> </h4>
+        <h4 class="name" id="inLinks"><span class="type-signature ">readonly</span>inLinks<span class="type-signature type array.<$.onodelink>">Array.&lt;<a href="$.oNodeLink.html">$.oNodeLink</a>></span> </h4>
     </div>
     
     
@@ -3719,7 +3773,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
 <dd>
     
     <div class="description">
-        The list of nodes connected to the inport of this node, in order of inport.
+        The list of oNodeLinks objects descibing the connections to the inport of this node, in order of inport.
     </div>
     
     
@@ -4161,7 +4215,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="outLinks"><span class="type-signature ">readonly</span>outLinks<span class="type-signature type array.<onodelink>">Array.&lt;oNodeLink></span> </h4>
+        <h4 class="name" id="outLinks"><span class="type-signature ">readonly</span>outLinks<span class="type-signature type array.<$.onodelink>">Array.&lt;<a href="$.oNodeLink.html">$.oNodeLink</a>></span> </h4>
     </div>
     
     
@@ -4169,7 +4223,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
 <dd>
     
     <div class="description">
-        The list of nodes connected to the inport of this node, in order of inport.
+        The list of oNodeLinks objects descibing the connections to the outports of this node, in order of outport.
     </div>
     
     
@@ -4564,21 +4618,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
         
 
     
-    <pre class="prettyprint"><code>// The timings hold the keyframes that display the drawings across time.
-
-var timings = $.scn.$node("Top/Drawing").timings;
-for (var i in timings){
-  $.log( timings.frameNumber+" : "+timings.value);      // outputs the frame and the value of each keyframe
-}
-
-// timings are keyframe objects, so they are dynamic.
-timings[2].value = "5";                                 // sets the displayed image of the second key to the drawing named "5"       
-
-// to set a new value to a frame that wasn't a keyframe before, it's possible to use the attribute keyword like so:
-
-var myNode = $.scn.$node("Top/Drawing");
-myNode.drawing.element = {frameNumber: 5, value: "10"}             // setting the value of the frame 5
-myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting the value to the same as one of the timings</code></pre>
+    <pre class="prettyprint"><code>// The timings hold the keyframes that display the drawings across time.var timings = $.scn.$node("Top/Drawing").timings;for (var i in timings){  $.log( timings.frameNumber+" : "+timings.value);      // outputs the frame and the value of each keyframe}// timings are keyframe objects, so they are dynamic.timings[2].value = "5";                                 // sets the displayed image of the second key to the drawing named "5"       // to set a new value to a frame that wasn't a keyframe before, it's possible to use the attribute keyword like so:var myNode = $.scn.$node("Top/Drawing");myNode.drawing.element = {frameNumber: 5, value: "10"}             // setting the value of the frame 5myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting the value to the same as one of the timings</code></pre>
     
 
     
@@ -4873,7 +4913,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1487
+            openHarmony/openHarmony_node.js, line 1476
         </div>
         
     </div>
@@ -5055,9 +5095,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
         
 
     
-    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
- var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" );
- var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
+    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" ); var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
     
 
     
@@ -5076,7 +5114,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1214
+            openHarmony/openHarmony_node.js, line 1203
         </div>
         
     </div>
@@ -5269,7 +5307,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1239
+            openHarmony/openHarmony_node.js, line 1228
         </div>
         
     </div>
@@ -5462,7 +5500,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1288
+            openHarmony/openHarmony_node.js, line 1277
         </div>
         
     </div>
@@ -5603,7 +5641,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1506
+            openHarmony/openHarmony_node.js, line 1495
         </div>
         
     </div>
@@ -5867,7 +5905,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1810
+            openHarmony/openHarmony_node.js, line 1799
         </div>
         
     </div>
@@ -6050,7 +6088,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1850
+            openHarmony/openHarmony_node.js, line 1839
         </div>
         
     </div>
@@ -6152,7 +6190,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1405
+            openHarmony/openHarmony_node.js, line 1394
         </div>
         
     </div>
@@ -6299,7 +6337,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1369
+            openHarmony/openHarmony_node.js, line 1358
         </div>
         
     </div>
@@ -6444,7 +6482,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1893
+            openHarmony/openHarmony_node.js, line 1882
         </div>
         
     </div>
@@ -6628,7 +6666,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 874
+            openHarmony/openHarmony_node.js, line 863
         </div>
         
     </div>
@@ -6790,7 +6828,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1008
+            openHarmony/openHarmony_node.js, line 997
         </div>
         
     </div>
@@ -6952,7 +6990,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 837
+            openHarmony/openHarmony_node.js, line 826
         </div>
         
     </div>
@@ -6963,7 +7001,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
     
     <div class="description">
-        Returns the nodeLink representing the connection of a specific inPort
+        Returns the oLink object representing the connection of a specific inPort
     </div>
     
 
@@ -7099,7 +7137,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 856
+            openHarmony/openHarmony_node.js, line 845
         </div>
         
     </div>
@@ -7110,7 +7148,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
     
     <div class="description">
-        Returns all the valid node links that are connected into this node.
+        Returns all the valid oLink objects describing the links that are connected into this node.
     </div>
     
 
@@ -7201,7 +7239,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 826
+            openHarmony/openHarmony_node.js, line 815
         </div>
         
     </div>
@@ -7319,7 +7357,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 944
+            openHarmony/openHarmony_node.js, line 933
         </div>
         
     </div>
@@ -7466,7 +7504,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1072
+            openHarmony/openHarmony_node.js, line 1061
         </div>
         
     </div>
@@ -7631,7 +7669,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 967
+            openHarmony/openHarmony_node.js, line 956
         </div>
         
     </div>
@@ -7813,7 +7851,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 987
+            openHarmony/openHarmony_node.js, line 976
         </div>
         
     </div>
@@ -7824,7 +7862,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
     
     <div class="description">
-        Returns all the valid node links that are coming out of this node.
+        Returns all the valid oLink objects describing the links that are coming out of this node.
     </div>
     
 
@@ -7915,7 +7953,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 955
+            openHarmony/openHarmony_node.js, line 944
         </div>
         
     </div>
@@ -8060,7 +8098,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1771
+            openHarmony/openHarmony_node.js, line 1760
         </div>
         
     </div>
@@ -8162,7 +8200,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1110
+            openHarmony/openHarmony_node.js, line 1099
         </div>
         
     </div>
@@ -8378,7 +8416,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 898
+            openHarmony/openHarmony_node.js, line 887
         </div>
         
     </div>
@@ -8620,7 +8658,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1033
+            openHarmony/openHarmony_node.js, line 1022
         </div>
         
     </div>
@@ -8860,7 +8898,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1798
+            openHarmony/openHarmony_node.js, line 1787
         </div>
         
     </div>
@@ -9042,7 +9080,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1130
+            openHarmony/openHarmony_node.js, line 1119
         </div>
         
     </div>
@@ -9160,7 +9198,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1265
+            openHarmony/openHarmony_node.js, line 1254
         </div>
         
     </div>
@@ -9353,7 +9391,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1558
+            openHarmony/openHarmony_node.js, line 1547
         </div>
         
     </div>
@@ -9500,7 +9538,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1341
+            openHarmony/openHarmony_node.js, line 1330
         </div>
         
     </div>
@@ -9670,7 +9708,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1547
+            openHarmony/openHarmony_node.js, line 1536
         </div>
         
     </div>
@@ -9817,7 +9855,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1192
+            openHarmony/openHarmony_node.js, line 1181
         </div>
         
     </div>
@@ -9966,7 +10004,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1179
+            openHarmony/openHarmony_node.js, line 1168
         </div>
         
     </div>
@@ -10113,7 +10151,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1395
+            openHarmony/openHarmony_node.js, line 1384
         </div>
         
     </div>
@@ -10215,7 +10253,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 913
+            openHarmony/openHarmony_node.js, line 902
         </div>
         
     </div>
@@ -10226,7 +10264,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
     
     <div class="description">
-        Searches for and unlinks the $.oNodeObject from this node's inNodes.
+        Searches for and unlinks the $.oNode object from this node's inNodes.
     </div>
     
 
@@ -10362,7 +10400,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 931
+            openHarmony/openHarmony_node.js, line 920
         </div>
         
     </div>
@@ -10509,7 +10547,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1050
+            openHarmony/openHarmony_node.js, line 1039
         </div>
         
     </div>
@@ -10656,7 +10694,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1086
+            openHarmony/openHarmony_node.js, line 1075
         </div>
         
     </div>
@@ -10824,7 +10862,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1835
+            openHarmony/openHarmony_node.js, line 1824
         </div>
         
     </div>
@@ -10990,7 +11028,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat May 02 2020 17:07:14 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun May 03 2020 20:51:46 GMT+0200 (heure d’été d’Europe centrale)
         </footer>
     </div>
 </div>

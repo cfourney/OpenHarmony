@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Index</title>
+    <title>Class: oTool</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -3063,27 +3063,396 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="index.html">Index</h1>
+        <h1 class="page-title" data-filename="$.oTool.html">Class: oTool</h1>
         
 
 
+
+<section>
+    
+<header>
+    <h2>
+        <span class="ancestors"><a href="$.html">$</a>.</span>
+    
+    oTool
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="oTool">
+            
+            new $.oTool<span class="signature">(id, name)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_tool.js, line 82
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The constructor for the $.oTool class
+    </div>
     
 
+    
+    
+    
+    
+    
+        
 
-    <h3> </h3>
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
 
 
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The id of the tool</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">name</span>
 
 
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The name of the tool</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
 
 
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The id of the tool</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">name</span>
 
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The name of the tool</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
 
     
 
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
 
+    
+    <pre class="prettyprint"><code>// Access the list of currently existing tools by using the $.app objectvar tools = $.app.tools;// output the list of tools names and idsfor (var i in tools){  log(i+" "+tools[i].name)}// To get a tool by name, use the $.app.getToolByName() functionvar brushTool = $.app.getToolByName("Brush");log (brushTool.name+" "+brushTool.id)            // Output: Brush 9// it's also possible to activate a tool in several ways:$.app.currentTool = 9;         // using the tool "id"$.app.currentTool = brushTool  // by passing a oTool object$.app.currentTool = "Brush"    // using the tool namebrushTool.activate()           // by using the activate function of the oTool class</code></pre>
+    
 
+    
+</dd>
 
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="stencils">stencils<span class="type-signature type array.<$.ostencil>">Array.&lt;<a href="$.oStencil.html">$.oStencil</a>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The list of stencils this tool can use. Not currently supported by custom tools.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="activate">
+            
+            activate<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_tool.js, line 124
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Activates the tool.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+
+    
+</article>
+
+</section>  
 
 
 
@@ -3092,7 +3461,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun May 03 2020 20:51:46 GMT+0200 (heure d’été d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun May 03 2020 20:51:47 GMT+0200 (heure d’été d’Europe centrale)
         </footer>
     </div>
 </div>

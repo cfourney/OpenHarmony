@@ -595,6 +595,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oApp#currentTool"><a href="$.oApp.html#currentTool">currentTool</a></li>
+            
                 <li data-name="$.oApp#flavour"><a href="$.oApp.html#flavour">flavour</a></li>
             
                 <li data-name="$.oApp#globalMousePosition"><a href="$.oApp.html#globalMousePosition">globalMousePosition</a></li>
@@ -609,6 +611,8 @@
             
                 <li data-name="$.oApp#toolbars"><a href="$.oApp.html#toolbars">toolbars</a></li>
             
+                <li data-name="$.oApp#tools"><a href="$.oApp.html#tools">tools</a></li>
+            
                 <li data-name="$.oApp#version"><a href="$.oApp.html#version">version</a></li>
             
             </ul>
@@ -621,6 +625,10 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oApp#getToolByName"><a href="$.oApp.html#getToolByName">getToolByName</a></li>
+            
+                <li data-name="$.oApp#getValidStencils"><a href="$.oApp.html#getValidStencils">getValidStencils</a></li>
             
                 <li data-name="$.oApp#getWidgetByName"><a href="$.oApp.html#getWidgetByName">getWidgetByName</a></li>
             
@@ -2948,6 +2956,36 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oTool">
+            <span class="title">
+                <a href="$.oTool.html">$.oTool</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oTool#stencils"><a href="$.oTool.html#stencils">stencils</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oTool#activate"><a href="$.oTool.html#activate">activate</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oToolbar">
             <span class="title">
                 <a href="$.oToolbar.html">$.oToolbar</a>
@@ -3039,8 +3077,7 @@
     oLink
     </h2>
     
-        <div class="class-description">The $.oLink class models a connection between two nodes.<br>
-A $.oLink object is always describing just one connection between two nodes in the same group. For distant nodes in separate groups, use $.oLinkPath.</div>
+        <div class="class-description">The $.oLink class models a connection between two nodes.<br>A $.oLink object is always describing just one connection between two nodes in the same group. For distant nodes in separate groups, use $.oLinkPath.</div>
     
 </header>  
 
@@ -3418,8 +3455,7 @@ A $.oLink object is always describing just one connection between two nodes in t
 <dd>
     
     <div class="description">
-        The in-port used by the link. Changing this value doesn't reconnect the link, just changes the connection described by the link object.
-<br>In the event this value wasn't known by the link object but the link is actually connected, the correct value will be found.
+        The in-port used by the link. Changing this value doesn't reconnect the link, just changes the connection described by the link object.<br>In the event this value wasn't known by the link object but the link is actually connected, the correct value will be found.
     </div>
     
     
@@ -3644,8 +3680,7 @@ A $.oLink object is always describing just one connection between two nodes in t
 <dd>
     
     <div class="description">
-        The index of the link comming out of the out-port.
-<br>In the event this value wasn't known by the link object but the link is actually connected, the correct value will be found.
+        The index of the link comming out of the out-port.<br>In the event this value wasn't known by the link object but the link is actually connected, the correct value will be found.
     </div>
     
     
@@ -3735,8 +3770,7 @@ A $.oLink object is always describing just one connection between two nodes in t
 <dd>
     
     <div class="description">
-        The out-port used by the link. Changing this value doesn't reconnect the link, just changes the connection described by the link object.
-<br>In the event this value wasn't known by the link object but the link is actually connected, the correct value will be found.
+        The out-port used by the link. Changing this value doesn't reconnect the link, just changes the connection described by the link object.<br>In the event this value wasn't known by the link object but the link is actually connected, the correct value will be found.
     </div>
     
     
@@ -4094,7 +4128,7 @@ A $.oLink object is always describing just one connection between two nodes in t
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun May 03 2020 02:35:19 GMT+0200 (heure d’été d’Europe centrale)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun May 03 2020 20:51:46 GMT+0200 (heure d’été d’Europe centrale)
         </footer>
     </div>
 </div>

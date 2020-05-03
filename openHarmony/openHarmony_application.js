@@ -61,9 +61,9 @@ $.oApp = function(){
 
 /**
  * The Harmony version number
- * @name $.oA
- * pp#version
+ * @name $.oApp#version
  * @type {int}
+ * @readonly
  */
 Object.defineProperty($.oApp.prototype, 'version', {
   get : function(){
@@ -73,11 +73,14 @@ Object.defineProperty($.oApp.prototype, 'version', {
 
 
 /**
+ * The software flavour: Premium, Advanced, Essential
  * @name $.oApp#flavour
+ * @type {string}
+ * @readonly
  */
 Object.defineProperty($.oApp.prototype, 'flavour', {
   get : function(){
-
+    return about.getFlavorString();
   }
 });
 
@@ -86,6 +89,7 @@ Object.defineProperty($.oApp.prototype, 'flavour', {
  * The Harmony Main Window.
  * @name $.oApp#mainWindow
  * @type {QWidget}
+ * @readonly
  */
 Object.defineProperty($.oApp.prototype, 'mainWindow', {
   get : function(){
@@ -102,6 +106,7 @@ Object.defineProperty($.oApp.prototype, 'mainWindow', {
  * The Harmony UI Toolbars.
  * @name $.oApp#toolbars
  * @type {QToolbar}
+ * @readonly
  */
 Object.defineProperty($.oApp.prototype, 'toolbars', {
   get : function(){
@@ -118,6 +123,7 @@ Object.defineProperty($.oApp.prototype, 'toolbars', {
  * The Position of the mouse cursor in the toonboom window coordinates.
  * @name $.oApp#mousePosition
  * @type {$.oPoint}
+ * @readonly
  */
 Object.defineProperty($.oApp.prototype, 'mousePosition', {
   get : function(){
@@ -131,6 +137,7 @@ Object.defineProperty($.oApp.prototype, 'mousePosition', {
  * The Position of the mouse cursor in the screen coordinates.
  * @name $.oApp#globalMousePosition
  * @type {$.oPoint}
+ * @readonly
  */
 Object.defineProperty($.oApp.prototype, 'globalMousePosition', {
   get : function(){
@@ -139,6 +146,77 @@ Object.defineProperty($.oApp.prototype, 'globalMousePosition', {
   }
 });
 
+
+/**
+ * Access the tools available in the application
+ * @name $.oApp#tools
+ * @type {$.oTool[]}
+ * @readonly
+ * @example
+ * // Access the list of currently existing tools by using the $.app object
+ * var tools = $.app.tools;
+ * 
+ * // output the list of tools names and ids
+ * for (var i in tools){
+ *   log(i+" "+tools[i].name)
+ * }
+ * 
+ * // To get a tool by name, use the $.app.getToolByName() function
+ * var brushTool = $.app.getToolByName("Brush");
+ * log (brushTool.name+" "+brushTool.id)            // Output: Brush 9
+ * 
+ * // it's also possible to activate a tool in several ways:
+ * $.app.currentTool = 9;         // using the tool "id"
+ * $.app.currentTool = brushTool  // by passing a oTool object
+ * $.app.currentTool = "Brush"    // using the tool name
+ * 
+ * brushTool.activate()           // by using the activate function of the oTool class
+ */
+Object.defineProperty($.oApp.prototype, 'tools', {
+  get: function(){
+    if (typeof this._toolsObject === 'undefined'){
+      this._toolsObject = [];
+      var _currentTool = this.currentTool;
+      var i = 0;
+      Tools.setToolSettings({currentTool:{id:i}})
+      while(Tools.getToolSettings().currentTool.name){
+        var tool = Tools.getToolSettings().currentTool;
+        this._toolsObject.push(new this.$.oTool(tool.id,tool.name));
+        i++;
+        Tools.setToolSettings({currentTool:{id:i}});
+      }
+      this.currentTool = _currentTool;
+    }
+    return this._toolsObject;
+  }
+})
+
+
+/**
+ * The Position of the mouse cursor in the screen coordinates.
+ * @name $.oApp#currentTool
+ * @type {$.oTool}
+ */
+Object.defineProperty($.oApp.prototype, 'currentTool', {
+  get : function(){
+    var _tool = Tools.getToolSettings().currentTool.id;
+    return _tool;
+  },
+  set : function(tool){
+    if (tool instanceof this.$.oTool) {
+      tool.activate();
+      return
+    }
+    if (typeof tool == "string"){
+      this.getToolByName(tool).activate();
+      return
+    }
+    if (typeof tool == "number"){
+      this.tools[tool].activate();
+      return
+    }
+  } 
+});
 
 
 /**
@@ -284,6 +362,33 @@ Object.defineProperty($.oApp.prototype, 'stencils', {
     return this._stencilsObject;
   }
 })
+
+
+
+// $.oApp Class Methods
+
+/**
+ * get a tool by its name
+ * @return {$.oTool}   a oTool object representing the tool, or null if not found.
+ */
+$.oApp.prototype.getToolByName = function(toolName){
+  var _tools  = this.tools;
+  for (var i in _tools){
+    if (_tools[i].name == toolName) return _tools[i];
+  }
+  return null;
+}
+
+
+/**
+ * returns the list of stencils useable by the specified tool
+ * @param {$.oTool}     tool      the tool object we want valid stencils for
+ * @return {$.oStencil[]}    the list of stencils compatible with the specified tool
+ */
+$.oApp.prototype.getValidStencils = function (tool){
+  if (typeof tool === 'undefined') var tool = this.currentTool;
+  return tool.stencils;
+}
 
 
 //////////////////////////////////////

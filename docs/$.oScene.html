@@ -595,6 +595,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oApp#currentTool"><a href="$.oApp.html#currentTool">currentTool</a></li>
+            
                 <li data-name="$.oApp#flavour"><a href="$.oApp.html#flavour">flavour</a></li>
             
                 <li data-name="$.oApp#globalMousePosition"><a href="$.oApp.html#globalMousePosition">globalMousePosition</a></li>
@@ -605,7 +607,11 @@
             
                 <li data-name="$.oApp#preferences"><a href="$.oApp.html#preferences">preferences</a></li>
             
+                <li data-name="$.oApp#stencils"><a href="$.oApp.html#stencils">stencils</a></li>
+            
                 <li data-name="$.oApp#toolbars"><a href="$.oApp.html#toolbars">toolbars</a></li>
+            
+                <li data-name="$.oApp#tools"><a href="$.oApp.html#tools">tools</a></li>
             
                 <li data-name="$.oApp#version"><a href="$.oApp.html#version">version</a></li>
             
@@ -619,6 +625,10 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oApp#getToolByName"><a href="$.oApp.html#getToolByName">getToolByName</a></li>
+            
+                <li data-name="$.oApp#getValidStencils"><a href="$.oApp.html#getValidStencils">getValidStencils</a></li>
             
                 <li data-name="$.oApp#getWidgetByName"><a href="$.oApp.html#getWidgetByName">getWidgetByName</a></li>
             
@@ -2816,6 +2826,28 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oStencil">
+            <span class="title">
+                <a href="$.oStencil.html">$.oStencil</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oThread">
             <span class="title">
                 <a href="$.oThread.html">$.oThread</a>
@@ -2924,6 +2956,36 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oTool">
+            <span class="title">
+                <a href="$.oTool.html">$.oTool</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oTool#stencils"><a href="$.oTool.html#stencils">stencils</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oTool#activate"><a href="$.oTool.html#activate">activate</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oToolbar">
             <span class="title">
                 <a href="$.oToolbar.html">$.oToolbar</a>
@@ -2969,6 +3031,28 @@
             <span class="subtitle">Methods</span>
             
                 <li data-name="$.oUtils#longestCommonSubstring"><a href="$.oUtils.html#longestCommonSubstring">longestCommonSubstring</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="$.oXml">
+            <span class="title">
+                <a href="$.oXml.html">$.oXml</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
             
             </ul>
             <ul class="events itemMembers">
@@ -3074,17 +3158,7 @@
         
 
     
-    <pre class="prettyprint"><code>// Access to the direct dom object. Available and automatically instantiated as $.getScene, $.scene, $.scn, $.s
-var doc = $.getScene ;
-var doc = $.scn ;
-ver doc = $.s ;         // all these are equivalents
-
-// To grab the scene from a QWidget Dialog callback, store the $ object in a local variable to access all the fonctions from the library.
-function myCallBackFunction(){
-  var this.$ = $;
-
-  var doc = this.$.scn;
-}</code></pre>
+    <pre class="prettyprint"><code>// Access to the direct dom object. Available and automatically instantiated as $.getScene, $.scene, $.scn, $.svar doc = $.getScene ;var doc = $.scn ;ver doc = $.s ;         // all these are equivalents// To grab the scene from a QWidget Dialog callback, store the $ object in a local variable to access all the fonctions from the library.function myCallBackFunction(){  var this.$ = $;  var doc = this.$.scn;}</code></pre>
     
 
     
@@ -8051,24 +8125,7 @@ function myCallBackFunction(){
         
 
     
-    <pre class="prettyprint"><code>// how to export a clean palette with no extra drawings and everything renamed by frame, and only the necessary colors gathered in one palette:
-
-$.beginUndo();
-
-var doc = $.scn;
-var nodes = doc.getSelectedNodes();
-
-for (var i in nodes){
-  if (nodes[i].type != "READ") continue;
-
-  var myColumn = nodes[i].element.column;      // we grab the column directly from the element of the node
-  myColumn.removeUnexposedDrawings();          // remove extra unused drawings
-  myColumn.renameAllByFrame();                 // rename all drawings by frame
-}
-
-doc.exportTemplate(nodes, "C:/templateExample.tpl", "createPalette"); // "createPalette" value will create one palette for all colors
-
-$.endUndo();</code></pre>
+    <pre class="prettyprint"><code>// how to export a clean palette with no extra drawings and everything renamed by frame, and only the necessary colors gathered in one palette:$.beginUndo();var doc = $.scn;var nodes = doc.getSelectedNodes();for (var i in nodes){  if (nodes[i].type != "READ") continue;  var myColumn = nodes[i].element.column;      // we grab the column directly from the element of the node  myColumn.removeUnexposedDrawings();          // remove extra unused drawings  myColumn.renameAllByFrame();                 // rename all drawings by frame}doc.exportTemplate(nodes, "C:/templateExample.tpl", "createPalette"); // "createPalette" value will create one palette for all colors$.endUndo();</code></pre>
     
 
     
@@ -12019,7 +12076,7 @@ $.endUndo();</code></pre>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat May 02 2020 17:07:14 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun May 03 2020 20:51:46 GMT+0200 (heure d’été d’Europe centrale)
         </footer>
     </div>
 </div>

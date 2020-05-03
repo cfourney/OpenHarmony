@@ -557,10 +557,10 @@ Object.defineProperty($.oNode.prototype, 'height', {
 
 
 /**
- * The list of nodes connected to the inport of this node, in order of inport.
+ * The list of oNodeLinks objects descibing the connections to the inport of this node, in order of inport.
  * @name $.oNode#inLinks
  * @readonly 
- * @type {oNodeLink[]}
+ * @type {$.oNodeLink[]}
  */
 Object.defineProperty($.oNode.prototype, 'inLinks', {
     get : function(){
@@ -660,10 +660,10 @@ Object.defineProperty($.oNode.prototype, 'outPorts', {
  
 
 /**
- * The list of nodes connected to the inport of this node, in order of inport.
+ * The list of oNodeLinks objects descibing the connections to the outports of this node, in order of outport.
  * @name $.oNode#outLinks
  * @readonly 
- * @type {oNodeLink[]}
+ * @type {$.oNodeLink[]}
  */
 Object.defineProperty($.oNode.prototype, 'outLinks', {
     get : function(){
@@ -770,17 +770,6 @@ Object.defineProperty($.oNode.prototype, 'linkedColumns', {
 
     for (var i in _attributes){
       _columns = _columns.concat(_attributes[i].getLinkedColumns());
-      /*var _column = _attributes[i].column;
-      if (_column != null) _columns.push(_column);
-
-      // look also at subAttributes
-      var _subAttributes = _attributes[i].subAttributes;
-      if (_subAttributes.length > 0) {
-        for (var j in _subAttributes){
-          _column = _subAttributes[j].column;
-          if (_column != null) _columns.push(_column);
-        }
-      }*/
     }
     return _columns;
   }
@@ -830,7 +819,7 @@ $.oNode.prototype.getInLinksNumber = function(inPort){
 
 
 /**
- * Returns the nodeLink representing the connection of a specific inPort
+ * Returns the oLink object representing the connection of a specific inPort
  * @param   {int}      inPort      the number of the port to get links from.
  * @return  {$.oLink}  the oLink Object representing the link connected to the inport
  */
@@ -850,7 +839,7 @@ $.oNode.prototype.getInLink = function(inPort){
 
 
 /**
- * Returns all the valid node links that are connected into this node.
+ * Returns all the valid oLink objects describing the links that are connected into this node.
  * @return {$.oLink[]}  An array of $.oLink objects.
  */
 $.oNode.prototype.getInLinks = function(){
@@ -906,7 +895,7 @@ $.oNode.prototype.linkInNode = function( nodeToLink, ownPort, destPort, createPo
 
 
 /**
- * Searches for and unlinks the $.oNodeObject from this node's inNodes.
+ * Searches for and unlinks the $.oNode object from this node's inNodes.
  * @param   {$.oNode}   oNodeObject            The node to link this one's inport to.
  * @return  {bool}    The result of the unlink.
  */
@@ -981,7 +970,7 @@ $.oNode.prototype.getOutLink = function(outPort, outLink){
 
 
 /**
- * Returns all the valid node links that are coming out of this node.
+ * Returns all the valid oLink objects describing the links that are coming out of this node.
  * @return {$.oLink[]}  An array of $.oLink objects.
  */
 $.oNode.prototype.getOutLinks = function(){

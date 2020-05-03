@@ -595,6 +595,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oApp#currentTool"><a href="$.oApp.html#currentTool">currentTool</a></li>
+            
                 <li data-name="$.oApp#flavour"><a href="$.oApp.html#flavour">flavour</a></li>
             
                 <li data-name="$.oApp#globalMousePosition"><a href="$.oApp.html#globalMousePosition">globalMousePosition</a></li>
@@ -605,7 +607,11 @@
             
                 <li data-name="$.oApp#preferences"><a href="$.oApp.html#preferences">preferences</a></li>
             
+                <li data-name="$.oApp#stencils"><a href="$.oApp.html#stencils">stencils</a></li>
+            
                 <li data-name="$.oApp#toolbars"><a href="$.oApp.html#toolbars">toolbars</a></li>
+            
+                <li data-name="$.oApp#tools"><a href="$.oApp.html#tools">tools</a></li>
             
                 <li data-name="$.oApp#version"><a href="$.oApp.html#version">version</a></li>
             
@@ -619,6 +625,10 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oApp#getToolByName"><a href="$.oApp.html#getToolByName">getToolByName</a></li>
+            
+                <li data-name="$.oApp#getValidStencils"><a href="$.oApp.html#getValidStencils">getValidStencils</a></li>
             
                 <li data-name="$.oApp#getWidgetByName"><a href="$.oApp.html#getWidgetByName">getWidgetByName</a></li>
             
@@ -2816,6 +2826,28 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oStencil">
+            <span class="title">
+                <a href="$.oStencil.html">$.oStencil</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oThread">
             <span class="title">
                 <a href="$.oThread.html">$.oThread</a>
@@ -2924,6 +2956,36 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oTool">
+            <span class="title">
+                <a href="$.oTool.html">$.oTool</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oTool#stencils"><a href="$.oTool.html#stencils">stencils</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oTool#activate"><a href="$.oTool.html#activate">activate</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oToolbar">
             <span class="title">
                 <a href="$.oToolbar.html">$.oToolbar</a>
@@ -2976,6 +3038,28 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oXml">
+            <span class="title">
+                <a href="$.oXml.html">$.oXml</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
     </ul>
 </div>
     <div class="main">
@@ -3012,7 +3096,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1594
+            openHarmony/openHarmony_node.js, line 1583
         </div>
         
     </div>
@@ -3093,8 +3177,7 @@
             
             <td class="description last">
                 
-                Access to the oScene object of the DOM.
-<br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.</td>
+                Access to the oScene object of the DOM.<br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.</td>
         </tr>
 	
 	
@@ -3210,20 +3293,7 @@
         
 
     
-    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:
-
-var myNode = $.scn.$node("Top/Drawing")
-var drawingAttribute = myNode.attributes.drawing.element
-
-// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.
-
-drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5
-var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation
-$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"
-
-// for a more direct way to access an attribute, it's possible to also call:
-
-var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
+    <pre class="prettyprint"><code>// You can get access to the actual oAttribute object for a node parameter by using the dot notation:var myNode = $.scn.$node("Top/Drawing")var drawingAttribute = myNode.attributes.drawing.element// from there, it's possible to set/get the value of the attribute, get the column, the attribute keyword etc.drawingAttribute.setValue ("1", 5);           // creating an exposure of drawing 1 at frame 5var drawingColumn = drawingAttribute.column;  // grabbing the column linked to the attribute that holds all the animation$.log(drawingAttribute.keyword);              // "DRAWING.ELEMENT"// for a more direct way to access an attribute, it's possible to also call:var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre>
     
 
     
@@ -3642,7 +3712,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="inLinks"><span class="type-signature ">readonly</span>inLinks<span class="type-signature type array.<onodelink>">Array.&lt;oNodeLink></span> </h4>
+        <h4 class="name" id="inLinks"><span class="type-signature ">readonly</span>inLinks<span class="type-signature type array.<$.onodelink>">Array.&lt;<a href="$.oNodeLink.html">$.oNodeLink</a>></span> </h4>
     </div>
     
     
@@ -3650,7 +3720,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
 <dd>
     
     <div class="description">
-        The list of nodes connected to the inport of this node, in order of inport.
+        The list of oNodeLinks objects descibing the connections to the inport of this node, in order of inport.
     </div>
     
     
@@ -4092,7 +4162,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="outLinks"><span class="type-signature ">readonly</span>outLinks<span class="type-signature type array.<onodelink>">Array.&lt;oNodeLink></span> </h4>
+        <h4 class="name" id="outLinks"><span class="type-signature ">readonly</span>outLinks<span class="type-signature type array.<$.onodelink>">Array.&lt;<a href="$.oNodeLink.html">$.oNodeLink</a>></span> </h4>
     </div>
     
     
@@ -4100,7 +4170,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
 <dd>
     
     <div class="description">
-        The list of nodes connected to the inport of this node, in order of inport.
+        The list of oNodeLinks objects descibing the connections to the outports of this node, in order of outport.
     </div>
     
     
@@ -4647,7 +4717,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1487
+            openHarmony/openHarmony_node.js, line 1476
         </div>
         
     </div>
@@ -4829,9 +4899,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
         
 
     
-    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" );
- var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" );
- var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
+    <pre class="prettyprint"><code>var peg1     = $.scene.getNodeByPath( "Top/Peg1" ); var peg2     = $.scene.getNodeByPath( "Top/Group/Peg2" ); var newLink  = peg1.addOutLink( peg2, 0, 0 );</code></pre>
     
 
     
@@ -4850,7 +4918,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1214
+            openHarmony/openHarmony_node.js, line 1203
         </div>
         
     </div>
@@ -5043,7 +5111,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1239
+            openHarmony/openHarmony_node.js, line 1228
         </div>
         
     </div>
@@ -5236,7 +5304,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1288
+            openHarmony/openHarmony_node.js, line 1277
         </div>
         
     </div>
@@ -5377,7 +5445,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1506
+            openHarmony/openHarmony_node.js, line 1495
         </div>
         
     </div>
@@ -5643,7 +5711,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1314
+            openHarmony/openHarmony_node.js, line 1303
         </div>
         
     </div>
@@ -5798,7 +5866,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1405
+            openHarmony/openHarmony_node.js, line 1394
         </div>
         
     </div>
@@ -5945,7 +6013,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1369
+            openHarmony/openHarmony_node.js, line 1358
         </div>
         
     </div>
@@ -6092,7 +6160,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 874
+            openHarmony/openHarmony_node.js, line 863
         </div>
         
     </div>
@@ -6254,7 +6322,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1008
+            openHarmony/openHarmony_node.js, line 997
         </div>
         
     </div>
@@ -6416,7 +6484,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 837
+            openHarmony/openHarmony_node.js, line 826
         </div>
         
     </div>
@@ -6427,7 +6495,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
     
     <div class="description">
-        Returns the nodeLink representing the connection of a specific inPort
+        Returns the oLink object representing the connection of a specific inPort
     </div>
     
 
@@ -6563,7 +6631,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 856
+            openHarmony/openHarmony_node.js, line 845
         </div>
         
     </div>
@@ -6574,7 +6642,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
     
     <div class="description">
-        Returns all the valid node links that are connected into this node.
+        Returns all the valid oLink objects describing the links that are connected into this node.
     </div>
     
 
@@ -6665,7 +6733,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 826
+            openHarmony/openHarmony_node.js, line 815
         </div>
         
     </div>
@@ -6783,7 +6851,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 944
+            openHarmony/openHarmony_node.js, line 933
         </div>
         
     </div>
@@ -6930,7 +6998,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1072
+            openHarmony/openHarmony_node.js, line 1061
         </div>
         
     </div>
@@ -7095,7 +7163,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 967
+            openHarmony/openHarmony_node.js, line 956
         </div>
         
     </div>
@@ -7277,7 +7345,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 987
+            openHarmony/openHarmony_node.js, line 976
         </div>
         
     </div>
@@ -7288,7 +7356,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
     
     <div class="description">
-        Returns all the valid node links that are coming out of this node.
+        Returns all the valid oLink objects describing the links that are coming out of this node.
     </div>
     
 
@@ -7379,7 +7447,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 955
+            openHarmony/openHarmony_node.js, line 944
         </div>
         
     </div>
@@ -7526,7 +7594,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1110
+            openHarmony/openHarmony_node.js, line 1099
         </div>
         
     </div>
@@ -7742,7 +7810,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 898
+            openHarmony/openHarmony_node.js, line 887
         </div>
         
     </div>
@@ -7984,7 +8052,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1033
+            openHarmony/openHarmony_node.js, line 1022
         </div>
         
     </div>
@@ -8226,7 +8294,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1130
+            openHarmony/openHarmony_node.js, line 1119
         </div>
         
     </div>
@@ -8344,7 +8412,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1265
+            openHarmony/openHarmony_node.js, line 1254
         </div>
         
     </div>
@@ -8537,7 +8605,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1558
+            openHarmony/openHarmony_node.js, line 1547
         </div>
         
     </div>
@@ -8684,7 +8752,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1341
+            openHarmony/openHarmony_node.js, line 1330
         </div>
         
     </div>
@@ -8854,7 +8922,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1547
+            openHarmony/openHarmony_node.js, line 1536
         </div>
         
     </div>
@@ -9001,7 +9069,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1192
+            openHarmony/openHarmony_node.js, line 1181
         </div>
         
     </div>
@@ -9150,7 +9218,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1179
+            openHarmony/openHarmony_node.js, line 1168
         </div>
         
     </div>
@@ -9297,7 +9365,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1395
+            openHarmony/openHarmony_node.js, line 1384
         </div>
         
     </div>
@@ -9399,7 +9467,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 913
+            openHarmony/openHarmony_node.js, line 902
         </div>
         
     </div>
@@ -9410,7 +9478,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
     
     <div class="description">
-        Searches for and unlinks the $.oNodeObject from this node's inNodes.
+        Searches for and unlinks the $.oNode object from this node's inNodes.
     </div>
     
 
@@ -9546,7 +9614,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 931
+            openHarmony/openHarmony_node.js, line 920
         </div>
         
     </div>
@@ -9693,7 +9761,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1050
+            openHarmony/openHarmony_node.js, line 1039
         </div>
         
     </div>
@@ -9840,7 +9908,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1086
+            openHarmony/openHarmony_node.js, line 1075
         </div>
         
     </div>
@@ -10016,7 +10084,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat May 02 2020 17:07:14 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun May 03 2020 20:51:46 GMT+0200 (heure d’été d’Europe centrale)
         </footer>
     </div>
 </div>
