@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library v0.01
+//                            openHarmony Library
 //
 //
-//         Developped by Mathieu Chaptel, Chris Fourney...
+//         Developped by Mathieu Chaptel, Chris Fourney
 //
 //
 //   This library is an open source implementation of a Document Object Model
@@ -23,8 +23,8 @@
 //   This library doesn't overwrite any of the objects and classes of the official
 //   Toonboom API which must remains available.
 //
-//   This library is made available under the MIT license.
-//   https://opensource.org/licenses/mit
+//   This library is made available under the Mozilla Public license 2.0.
+//   https://www.mozilla.org/en-US/MPL/2.0/
 //
 //   The repository for this library is available at the address:
 //   https://github.com/cfourney/OpenHarmony/
@@ -62,13 +62,13 @@
  *  $.beginUndo()
  *
  *  var doc = $.scn; // grab the scene
- *  var nodes = doc.getSelectedNodes(); // grab the selection
+ *  var nodes = doc.selectedNodes; // grab the selection
  *
  *  if(!nodes) return    // exit the function if no nodes are selected
  *
  *  var color = pickColor(); // prompt for color
  *
- *  var group = doc.$node("Top") // get the group to add the backdrop to
+ *  var group = doc.root // get the group to add the backdrop to
  *  var backdrop = group.addBackdropToNodes(nodes, "BackDrop", "", color)
  *
  *  $.endUndo();

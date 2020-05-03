@@ -60,12 +60,14 @@ $.oApp = function(){
 
 
 /**
- * The Harmony version string
- * @name $.oApp#version
+ * The Harmony version number
+ * @name $.oA
+ * pp#version
+ * @type {int}
  */
 Object.defineProperty($.oApp.prototype, 'version', {
   get : function(){
-
+    return parseInt(about.getVersionInfoStr().split("version").pop().split(".")[0], 10);
   }
 });
 
@@ -247,6 +249,41 @@ Object.defineProperty($.oApp.prototype, 'preferences', {
   }
 })
 
+
+
+/**
+ * The list of stencils available in the Harmony UI.
+ * @name $.oApp#stencils
+ * @type {$.oStencil[]}
+ * @example
+ * // Access the stencils list through the $.app object.
+ * var stencils = $.app.stencils
+ * 
+ * // list all the properties of stencils
+ * for (var i in stencils){
+ *   log(" ---- "+stencils[i].type+" "+stencils[i].name+" ---- ")
+ *   for(var j in stencils[i]){
+ *     log (j);
+ *   }
+ * }
+ */
+Object.defineProperty($.oApp.prototype, 'stencils', {
+  get: function(){
+    if (typeof this._stencilsObject === 'undefined'){
+      // parse stencil xml file penstyles.xml to get stencils info
+      var stencilsFile = (new oFile(specialFolders.userConfig+"/penstyles.xml")).read();
+      var penRegex = /<pen>([\S\s]*?)<\/pen>/igm
+      var stencils = [];
+      var stencilXml;
+      while(stencilXml = penRegex.exec(stencilsFile)){
+        var stencilObject = new this.$.oStencil(stencilXml[1]);
+        stencils.push(stencilObject);
+      }
+      this._stencilsObject = stencils;
+    }
+    return this._stencilsObject;
+  }
+})
 
 
 //////////////////////////////////////

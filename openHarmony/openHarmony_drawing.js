@@ -479,3 +479,74 @@ Object.defineProperty( $.oShape.prototype, 'selected', {
   set : function(){
   }
 })
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//        $.oStencil class          //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for the $.oStencil class.
+ * @constructor
+ * @classdesc  The $.oStencil class allows access to some of the settings, name and type of the stencils available in the Harmony UI. <br>
+ * Harmony stencils can have the following types: "pencil", "penciltemplate", "brush", "texture", "bitmapbrush" and "bitmaperaser". Each type is only available to specific tools. <br>
+ * Access the main size information of the brush with the mainBrushShape property.
+ * @param   {string}   xmlDescription        the part of the penstyles.xml file between <pen> tags that describe a stencils.
+ * @property {string}  name                  the display name of the stencil
+ * @property {string}  type                  the type of stencil
+ * @property {Object}  mainBrushShape        the description of the shape of the stencil
+ */
+$.oStencil = function(xmlDescription){
+  _settings = this.$.oStencil.getSettingsFromXml(xmlDescription);
+  this.type = _settings.style;
+  for (var i in _settings){
+    this[i] = _settings[i];
+  }
+}
+
+
+/**
+ * Parses the xml string of the stencil xml description to create an object with all the information from it.
+ * @private 
+ */
+$.oStencil.getSettingsFromXml = function(xmlString){
+  var object = {};
+  var objectRE = /<(\w+)>([\S\s]*?)<\/\1>/igm
+  var match;
+  var string = xmlString+"";
+  while (match = objectRE.exec(xmlString)){
+    object[match[1]] = this.prototype.$.oStencil.getSettingsFromXml(match[2]);
+    // remove the match from the string to parse the rest as properties
+    string = string.replace(match[0], "");
+  }
+
+  var propsRE = /<(\w+) value="([\S\s]*?)"\/>/igm
+  var match;
+  while (match = propsRE.exec(string)){
+    // try to convert the value to int, float or bool
+    var value = match[2];
+    var intValue = parseInt(value, 10);
+    var floatValue = parseFloat(value);
+    if (value == "true" || value == "false"){
+      value = !!value
+    }else if(!isNaN(floatValue)){
+      if(intValue == floatValue){
+        value = intValue;
+      }else{
+        value = floatValue;        
+      }
+    }
+    
+    object[match[1]] = match[2];
+  }
+
+  return object;
+}

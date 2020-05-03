@@ -732,56 +732,11 @@ $.oFile.prototype.remove = function(){
 $.oFile.prototype.parseAsXml = function(){
   if (this.extension.toLowerCase() != "xml") return
 
-  function setProperties(xmlString, object){
-    var propertyRE = /(\w+)="([^\=\<\>]+?)"/igm            // matches a line with name="property"
-    var match;
-    while (match = propertyRE.exec(xmlString)){
-      var propName = match[1];
-      var propValue = match[2];
-      propValue = propValue;
-
-      object[propName] = propValue;
-    }
-    return object;
-  }
-
-  function getChildObjectsFromXML(xmlString){
-    var objectRE = /<(\w+)(\s.+?)?>([\S\s]+?)<\/\1>/igm           // matches an entire group of format <type header>properties</type>
-    var lineObjectRE = /<(\w+)([^>]+?)\/>/igm                    // matches an entire group of format <type properties/>
-
-    var string = xmlString
-    var objects = [];
-    var match;
-    while (match = objectRE.exec(xmlString)){
-      //multiline objects can contain more objects
-      //log("found object "+match[1])
-      var domNode = {objectName: match[1]};      
-      domNode = setProperties(match[2], domNode);
-      domNode.children = getChildObjectsFromXML(match[3]);
-
-      objects.push(domNode);
-
-      string = string.replace(match[0], "");                // remove the matches from the string so they're not parsed twice for properties
-    }
-
-    while (match = lineObjectRE.exec(string)){
-      //log("one line object"+match[1])
-      var domNode = {objectName: match[1]};
-      domNode = setProperties(match[2], domNode);
-
-      objects.push(domNode);
-    }
-
-    return objects;
-  }
-
   // build an object model representation of the contents of the XML by parsing it character by character
   var xml = this.read();
-  var xmlDocument = {children:getChildObjectsFromXML(xml)};
+  var xmlDocument = new this.$.oXml(xml);
   return xmlDocument;
 }
-
-
 
 
  /**
@@ -790,4 +745,53 @@ $.oFile.prototype.parseAsXml = function(){
  */
 $.oFile.prototype.toString = function(){
     return this.path;
+}
+
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//           $.oXml class           //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for the $.oXml class.
+ * @classdesc
+ * The $.oXml class can be used to create an object from a xml string. It will contain a "children" property which is an array that holds all the children node from the main document. 
+ * @constructor
+ * @param {string}     xmlString           the string to parse for xml content          
+ * @param {string}     objectName          "xmlDocument" for the top node, otherwise, the string description of the xml node (ex: <objectName> <property = "value"/> </objectName>)
+ * @property {string}  objectName
+ * @property {]<$.oXml[]}  children
+ */
+$.oXml = function (xmlString, objectName){
+  if (typeof objectName === 'undefined') var objectName = "xmlDocument";
+  this.objectName = objectName;
+  this.children = [];
+
+  var string = xmlString+"";
+
+  // matches children xml nodes, multiline or single line, and provides one group for the objectName and one for the insides to parse again.
+  var objectRE = /<(\w+)[ >?]([\S\s]+?\/\1|[^<]+?\/)>/igm
+  var match;
+  while (match = objectRE.exec(xmlString)){
+    this.children.push(new this.$.oXml(match[2], match[1]));
+    // remove the match from the string to parse the rest as properties
+    string = string.replace(match[0], "");
+  }
+
+  // matches a line with name="property"
+  var propertyRE = /(\w+)="([^\=\<\>]+?)"/igm            
+  var match;
+  while (match = propertyRE.exec(string)){
+    // set the property on the object
+    this[match[1]] = match[2];
+  }
 }
