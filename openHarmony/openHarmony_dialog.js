@@ -995,12 +995,13 @@ $.oPieButton = function(iconFile) {
     var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
   }
   this.setStyleSheet("background :transparent;")
-  this.minimumHeight = 32;
-  this.minimumWidth = 32;
+  this.minimumHeight = 48;
+  this.minimumWidth = 48;
+  this.cursor=new QCursor(Qt.PointingHandCursor);
 
   var icon = new QIcon(iconFile);
   this.icon = icon;
-  this.setIconSize(new QSize(24, 24));
+  this.setIconSize(new QSize(48, 48));
 
 
 }
