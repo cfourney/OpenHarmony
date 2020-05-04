@@ -441,7 +441,6 @@ function openMenu(){
   menu.show();
 }
  */
-$.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show ){
 $.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show , sliceColor ){
   this.name = name;
   this.widgets = widgets;
