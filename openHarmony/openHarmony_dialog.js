@@ -564,6 +564,12 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
   var linesColor = new QColor(0,0,0,0)
   var backgroundColor = new QColor(50, 50, 50, 50)
   var sliceColor = new QColor(0, 200, 255, 200)
+  var backgroundGradient = new QRadialGradient (new QPointF(this._height/2, this._width/2), maxRadius);
+  backgroundGradient.setColorAt(1, new QColor(backgroundColor.red(), backgroundColor.green(), backgroundColor.blue(), 50));
+  backgroundGradient.setColorAt(0, backgroundColor);
+  var sliceGradient = new QRadialGradient (new QPointF(this._height/2, this._width/2), maxRadius);
+  sliceGradient.setColorAt(1, new QColor(sliceColor.red(), sliceColor.green(), sliceColor.blue(), 20));
+  sliceGradient.setColorAt(0, sliceColor);
 
   // get the slice and background geometry 
   var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
@@ -592,7 +598,9 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
     // draw background
     painter.setRenderHint(QPainter.Antialiasing);
     painter.setPen(new QPen(linesColor));
-    painter.setBrush(new QBrush(backgroundColor));
+    // painter.setBrush(new QBrush(backgroundColor));
+    painter.setBrush(new QBrush(backgroundGradient));
+    
     painter.drawPath(contactPath);
   
     // draw slice and rotate around widget center
@@ -600,7 +608,8 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
     painter.rotate(sliceWidth*index*(-180));
     painter.translate(-menuWidgetCenter.x, -menuWidgetCenter.y);
     painter.setPen(new QPen(linesColor));
-    painter.setBrush(new QBrush(sliceColor));
+    // painter.setBrush(new QBrush(sliceColor));
+    painter.setBrush(new QBrush(sliceGradient));
     painter.drawPath(slicePath);
     painter.end();
     painter.restore();
