@@ -523,7 +523,8 @@ $.oPieMenu.prototype.show = function(parent){
   }
 
   // add close button
-  var closeButton = new QPushButton("close", _pieMenu);
+  var closeButton = new QToolButton(_pieMenu);
+  closeButton.text="close";
   closeButton.setStyleSheet("font-size:14px; font-weight:bold; background-color: rgba(0, 0, 0, 1)");
   closeButton.cursor=new QCursor(Qt.PointingHandCursor);
   closeButton.minimumHeight = 50;
@@ -570,9 +571,9 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
   var maxRadius = this.radius+30;
   var index = 0;
   var linesColor = new QColor(0,0,0,0)
-  var backgroundColor = new QColor(50, 50, 50, 50)
+  var backgroundColor = new QColor(40, 40, 40, 10)
   var backgroundGradient = new QRadialGradient (new QPointF(this._height/2, this._width/2), maxRadius);
-  backgroundGradient.setColorAt(1, new QColor(backgroundColor.red(), backgroundColor.green(), backgroundColor.blue(), 50));
+  backgroundGradient.setColorAt(1, new QColor(backgroundColor.red(), backgroundColor.green(), backgroundColor.blue(), 255));
   backgroundGradient.setColorAt(0, backgroundColor);
   var sliceColor = this.sliceColor;
   var sliceGradient = new QRadialGradient (new QPointF(this._height/2, this._width/2), maxRadius);
@@ -1014,14 +1015,3 @@ $.oPieButton = function(iconFile) {
 
 }
 $.oPieButton.prototype = Object.create(QToolButton.prototype);
-
-
-
-/**
- * Runs the script on mouse Click
- * @private
- */
-$.oPieButton.prototype.mouseMoveEvent = function(){
-  //this.click();
-  MessageLog.trace("entered")
-}
