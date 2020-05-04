@@ -376,6 +376,7 @@ $.oProgressDialog.prototype.close = function(){
  * @param       {float}               [radius]                The radius of the menu.
  * @param       {$.oPoint}            [position]              The central position of the menu.
  * @param       {bool}                [show=false]            Whether to immediately show the dialog.
+ * @param       {QColor}              [sliceColor]              The color of the slices.
  * 
  * @property    {string}              name                    The name for this pie Menu.
  * @property    {QWidget[]}           widgets                 The widgets to display in the menu.
@@ -440,7 +441,8 @@ function openMenu(){
   menu.show();
 }
  */
-$.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show ){
+
+$.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show , sliceColor ){
   this.name = name;
   this.widgets = widgets;
 
@@ -449,12 +451,14 @@ $.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show
   if (typeof radius === 'undefined') var radius = this.getMenuRadius();;
   if (typeof position === 'undefined') var position = this.$.app.globalMousePosition;
   if (typeof show === 'undefined') var show = false;
+  if (typeof sliceColor === 'undefined') var  sliceColor =new QColor(0, 200, 255, 200)
 
   this.radius = radius;
   this.minAngle = minAngle;
   this.maxAngle = maxAngle;
   this.position = position;
-
+  this.sliceColor = sliceColor;
+   
   if (show) this.show();
 }
 
@@ -520,6 +524,10 @@ $.oPieMenu.prototype.show = function(parent){
 
   // add close button
   var closeButton = new QPushButton("close", _pieMenu);
+  closeButton.setStyleSheet("font-size:14px; font-weight:bold; background-color: rgba(0, 0, 0, 1)");
+  closeButton.cursor=new QCursor(Qt.PointingHandCursor);
+  closeButton.minimumHeight = 50;
+  closeButton.minimumWidth = 50;
   closeButton.objectName = this.name+"_closeButton";
   closeButton.show();
   closeButton.move(closeButtonPosition.x-(closeButton.width/2), closeButtonPosition.y-(closeButton.height/2));
@@ -563,7 +571,13 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
   var index = 0;
   var linesColor = new QColor(0,0,0,0)
   var backgroundColor = new QColor(50, 50, 50, 50)
-  var sliceColor = new QColor(0, 200, 255, 200)
+  var backgroundGradient = new QRadialGradient (new QPointF(this._height/2, this._width/2), maxRadius);
+  backgroundGradient.setColorAt(1, new QColor(backgroundColor.red(), backgroundColor.green(), backgroundColor.blue(), 50));
+  backgroundGradient.setColorAt(0, backgroundColor);
+  var sliceColor = this.sliceColor;
+  var sliceGradient = new QRadialGradient (new QPointF(this._height/2, this._width/2), maxRadius);
+  sliceGradient.setColorAt(1, new QColor(sliceColor.red(), sliceColor.green(), sliceColor.blue(), 20));
+  sliceGradient.setColorAt(0, sliceColor);
 
   // get the slice and background geometry 
   var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
@@ -592,7 +606,9 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
     // draw background
     painter.setRenderHint(QPainter.Antialiasing);
     painter.setPen(new QPen(linesColor));
-    painter.setBrush(new QBrush(backgroundColor));
+    // painter.setBrush(new QBrush(backgroundColor));
+    painter.setBrush(new QBrush(backgroundGradient));
+    
     painter.drawPath(contactPath);
   
     // draw slice and rotate around widget center
@@ -600,7 +616,8 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
     painter.rotate(sliceWidth*index*(-180));
     painter.translate(-menuWidgetCenter.x, -menuWidgetCenter.y);
     painter.setPen(new QPen(linesColor));
-    painter.setBrush(new QBrush(sliceColor));
+    // painter.setBrush(new QBrush(sliceColor));
+    painter.setBrush(new QBrush(sliceGradient));
     painter.drawPath(slicePath);
     painter.end();
     painter.restore();
@@ -986,12 +1003,13 @@ $.oPieButton = function(iconFile) {
     var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
   }
   this.setStyleSheet("background :transparent;")
-  this.minimumHeight = 32;
-  this.minimumWidth = 32;
+  this.minimumHeight = 48;
+  this.minimumWidth = 48;
+  this.cursor=new QCursor(Qt.PointingHandCursor);
 
   var icon = new QIcon(iconFile);
   this.icon = icon;
-  this.setIconSize(new QSize(24, 24));
+  this.setIconSize(new QSize(48, 48));
 
 
 }
