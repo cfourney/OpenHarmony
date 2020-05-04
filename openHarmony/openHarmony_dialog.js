@@ -523,7 +523,8 @@ $.oPieMenu.prototype.show = function(parent){
   }
 
   // add close button
-  var closeButton = new QPushButton("close", _pieMenu);
+  var closeButton = new QToolButton(_pieMenu);
+  closeButton.text="close";
   closeButton.setStyleSheet("font-size:14px; font-weight:bold; background-color: rgba(0, 0, 0, 1)");
   closeButton.cursor=new QCursor(Qt.PointingHandCursor);
   closeButton.minimumHeight = 50;
