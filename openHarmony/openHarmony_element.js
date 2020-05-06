@@ -121,7 +121,7 @@ Object.defineProperty($.oElement.prototype, 'drawings', {
 Object.defineProperty($.oElement.prototype, 'format', {
     get : function(){
         var _type = element.pixmapFormat(this.id);
-        if (_type == "SCAN") _type = "TVG";
+        if (element.vectorType(this.id)) _type = "TVG";
         return _type;
     }
 })
