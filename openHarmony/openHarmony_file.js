@@ -306,7 +306,7 @@ $.oFolder.prototype.create = function(){
     var dir = new QDir(this.path);
     //dir.path = this.path;
     try{
-      dir.mkdir(this.path);
+      dir.mkpath(this.path);
       return this.exists;  
     }catch(err){
       this.$.debug(err+" ", this.$.DEBUG_LEVEL.ERROR)
