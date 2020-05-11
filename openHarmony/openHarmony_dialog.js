@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library 
+//                            openHarmony Library
 //
 //
 //         Developped by Mathieu Chaptel, Chris Fourney
@@ -67,7 +67,7 @@ $.oDialog = function( ){
  * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * @param   {string}           [cancelButtonText]             The text on the CANCEL button of the dialog.
- * 
+ *
  * @return  {bool}       Result of the confirmation dialog.
  */
 
@@ -76,28 +76,28 @@ $.oDialog.prototype.confirm = function( labelText, title, okButtonText, cancelBu
     this.$.debug("$.oDialog.confirm not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
   }
-  
+
   if (typeof labelText === 'undefined')        var labelText = false;
   if (typeof title === 'undefined')            var title = "Confirmation";
-  if (typeof okButtonText === 'undefined')     var okButtonText = "Okay";
+  if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
   if (typeof cancelButtonText === 'undefined') var cancelButtonText = "Cancel";
-  
+
   var d = new Dialog();
       d.title            = title;
       d.okButtonText     = okButtonText;
       d.cancelButtonText = cancelButtonText;
-  
+
   if( labelText ){
     var label = new Label;
-    label.text = labelText;    
+    label.text = labelText;
   }
-    
+
   d.add( label );
-  
+
   if ( !d.exec() ){
     return false;
   }
-    
+
   return true;
 }
 
@@ -107,18 +107,18 @@ $.oDialog.prototype.confirm = function( labelText, title, okButtonText, cancelBu
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
  * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
- * 
+ *
  */
-$.oDialog.prototype.alert = function( labelText, title, okButtonText ){ 
+$.oDialog.prototype.alert = function( labelText, title, okButtonText ){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.alert not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
   }
-   
+
   if (typeof labelText === 'undefined')        var labelText = "Alert!";
   if (typeof title === 'undefined')            var title = "Alert";
   if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
-  
+
   this.$.debug(labelText, this.$.DEBUG_LEVEL.LOG)
 
   var d = new QMessageBox( false, title, labelText, QMessageBox.Ok );
@@ -129,7 +129,7 @@ $.oDialog.prototype.alert = function( labelText, title, okButtonText ){
   if( labelText ){
     d.text = labelText;
   }
-    
+
   if ( !d.exec() ){
     return;
   }
@@ -137,13 +137,50 @@ $.oDialog.prototype.alert = function( labelText, title, okButtonText ){
 
 
 /**
+ * Prompts with an alert dialog with a text box which can be selected (informational).
+ * @param   {string}           [labelText]                    The label/internal text of the dialog.
+ * @param   {string}           [title]                        The title of the confirmation dialog.
+ * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
+ */
+$.oDialog.prototype.alertBox = function( labelText, title, okButtonText ){
+  if (this.$.batchMode) {
+    this.$.debug("$.oDialog.alert not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
+    return;
+  }
+
+  if (typeof labelText === 'undefined')        var labelText = "Alert!";
+  if (typeof title === 'undefined')            var title = "Alert";
+  if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
+
+  this.$.debug(labelText, this.$.DEBUG_LEVEL.LOG)
+
+  var d = new QDialog();
+
+  var label = new QPlainTextEdit(labelText);
+  label.readOnly = true;
+
+  var button = new QPushButton(okButtonText);
+
+  var layout = new QVBoxLayout(d);
+  layout.addWidget(label, 0, Qt.AlignHCenter);
+  layout.addWidget(button, 0, Qt.AlignHCenter);
+
+  d.setWindowTitle( title );
+  button.clicked.connect(d.accept);
+
+  d.exec();
+}
+
+
+
+/**
  * Prompts for a user input.
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
  * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [prefilledText]                The text to display in the input area.
- * 
+ *
  */
-$.oDialog.prototype.prompt = function( labelText, title, prefilledText){ 
+$.oDialog.prototype.prompt = function( labelText, title, prefilledText){
   if (typeof labelText === 'undefined') var labelText = "enter value :";
   if (typeof title === 'undefined') var title = "Prompt";
   if (typeof prefilledText === 'undefined') var prefilledText = "";
@@ -158,10 +195,10 @@ $.oDialog.prototype.prompt = function( labelText, title, prefilledText){
  * @param   {string}           [getExisting=true]            Whether to select an existing file or a save location
  * @param   {string}           [acceptMultiple=false]        Whether or not selecting more than one file is ok. Is ignored if getExisting is falses.
  * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
- * 
+ *
  * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
  */
-$.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptMultiple, startDirectory){   
+$.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptMultiple, startDirectory){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.browseForFile not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
@@ -171,19 +208,19 @@ $.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptM
   if (typeof filter === 'undefined') var filter = "*"
   if (typeof getExisting === 'undefined') var getExisting = true;
   if (typeof acceptMultiple === 'undefined') var acceptMultiple = false;
-  
-  
+
+
   if (getExisting){
     if (acceptMultiple){
       var _files = QFileDialog.getOpenFileNames(0, text, startDirectory, filter)
     }else{
       var _files = QFileDialog.getOpenFileName(0, text, startDirectory, filter)
-    }        
+    }
   }else{
     var _files = QFileDialog.getSaveFileName(0, text, startDirectory, filter)
   }
 
-  this.$.debug(_files)    
+  this.$.debug(_files)
   return _files;
 }
 
@@ -192,24 +229,24 @@ $.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptM
  * Prompts with a browse for folder dialog (informational).
  * @param   {string}           [text]                        The title of the confirmation dialog.
  * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
- * 
- * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled 
+ *
+ * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled
  */
-$.oDialog.prototype.browseForFolder = function(text, startDirectory){ 
+$.oDialog.prototype.browseForFolder = function(text, startDirectory){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.browseForFolder not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
   }
 
   if (typeof title === 'undefined') var title = "Select a folder:";
-  
+
   var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory);
   _folder = _folder.split("\\").join("/");
   // this.$.alert(_folder)
   return _folder;
 }
- 
- 
+
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -220,7 +257,7 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
 //////////////////////////////////////
 //////////////////////////////////////
 
- 
+
 /**
  * The $.oProgressDialog constructor.
  * @name        $.oProgressDialog
@@ -228,13 +265,13 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
  * @classdesc   An simple progress dialog to display the progress of a task.
  * @param       {string}              labelText                  The path to the folder.
  * @param       {string}              [range=100]                The path to the folder.
- * @param       {bool}                [show=false]               Whether to immediately show the dialog.
  * @param       {string}              [title]                    The title of the dialog
+ * @param       {bool}                [show=false]               Whether to immediately show the dialog.
  *
  * @property    {bool}                cancelled                  Whether the progress bar was cancelled.
  */
-$.oProgressDialog = function( labelText, range, title, show ){  
-  if (typeof title === 'undefined') var title = "Progress";  
+$.oProgressDialog = function( labelText, range, title, show ){
+  if (typeof title === 'undefined') var title = "Progress";
   if (typeof range === 'undefined') var range = 100;
   if (typeof labelText === 'undefined') var labelText = "";
 
@@ -242,9 +279,9 @@ $.oProgressDialog = function( labelText, range, title, show ){
   this._range = range;
   this._title = title;
   this._labelText = labelText;
-  
+
   if (show) this.show();
-  
+
   this.cancelled = false;
 }
 
@@ -257,7 +294,7 @@ $.oDialog.Progress = $.oProgressDialog;
  * @name $.oProgressDialog#text
  * @type {string}
  */
-Object.defineProperty( $.oProgressDialog.prototype, 'label', { 
+Object.defineProperty( $.oProgressDialog.prototype, 'label', {
   get: function(){
     return this._labelText;
   },
@@ -307,6 +344,18 @@ Object.defineProperty( $.oProgressDialog.prototype, 'value', {
 });
 
 
+/**
+ * Whether the Progress Dialog was cancelled by the user
+ * @name $.oProgressDialog#cancelled
+ * @type {int}
+ */
+Object.defineProperty( $.oProgressDialog.prototype, 'cancelled', {
+  get: function(){
+    return this.progress.wasCanceled();
+  }
+});
+
+
 // oProgressDialog Class Methods
 
 /**
@@ -317,14 +366,14 @@ $.oProgressDialog.prototype.show = function(){
     this.$.debug("$.oProgressDialog not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
     return;
   }
-  
+
   this.progress = new QProgressDialog();
   this.progress.title = this._title;
   this.progress.setLabelText( this._labelText );
   this.progress.setRange( 0, this._range );
-  
+
   this.progress.show();
-  
+
   {
     //CANCEL EVENT.
     var prog = this;
@@ -333,7 +382,7 @@ $.oProgressDialog.prototype.show = function(){
     }
     this.progress["canceled()"].connect( this, canceled );
   }
-  
+
 }
 
 /**
@@ -377,7 +426,7 @@ $.oProgressDialog.prototype.close = function(){
  * @param       {$.oPoint}            [position]              The central position of the menu.
  * @param       {bool}                [show=false]            Whether to immediately show the dialog.
  * @param       {QColor}              [sliceColor]              The color of the slices.
- * 
+ *
  * @property    {string}              name                    The name for this pie Menu.
  * @property    {QWidget[]}           widgets                 The widgets to display in the menu.
  * @property    {float}               minAngle                The low limit of the range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)
@@ -391,7 +440,7 @@ $.oProgressDialog.prototype.close = function(){
 // such as launching Harmony actions, or scripts, etc. Assign this function to a shortcut by creating a Harmony Package for it.
 
 function openMenu(){
-  
+
   // make a callback factory for our buttons and provide access to the openHarmony object
   var oh = $;
   function getCallback(message){
@@ -432,8 +481,8 @@ function openMenu(){
   // we swap one of our widgets for the submenu
   widgets[3] = subMenu;
 
-  // we initialise our main menu. The numerical values are for the minimum and maximum angle of the 
-  // circle in multiples of Pi. Going counter clockwise, 0 is right, 1 is left, 1.5 is the bottom from the left, 
+  // we initialise our main menu. The numerical values are for the minimum and maximum angle of the
+  // circle in multiples of Pi. Going counter clockwise, 0 is right, 1 is left, 1.5 is the bottom from the left,
   // and -0.5 is the bottom from the right side. 0.5 is the top of the circle.
   var menu = new $.oPieMenu("menu", widgets, -0.2, 1.2);
 
@@ -458,7 +507,7 @@ $.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show
   this.maxAngle = maxAngle;
   this.position = position;
   this.sliceColor = sliceColor;
-   
+
   if (show) this.show();
 }
 
@@ -495,8 +544,8 @@ $.oPieMenu.prototype.show = function(parent){
 
     closeButtonPosition = this.position;
     _pieMenu.setParent(parent.menuWidget);
-  } 
-  
+  }
+
   _pieMenu.move(this._x, this._y);
   _pieMenu.minimumHeight = this._height;
   _pieMenu.minimumWidth = this._width;
@@ -510,7 +559,7 @@ $.oPieMenu.prototype.show = function(parent){
     var _widgetPosition = new this.$.oPoint(menuWidgetCenter.x+_itemPosition.x, menuWidgetCenter.y+_itemPosition.y);
 
     if (widget instanceof oPieSubMenu) widget = widget.init(i, _widgetPosition, this);
-    
+
     widget.setParent(_pieMenu);
     widget.show();
 
@@ -580,12 +629,12 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
   sliceGradient.setColorAt(1, new QColor(sliceColor.red(), sliceColor.green(), sliceColor.blue(), 20));
   sliceGradient.setColorAt(0, sliceColor);
 
-  // get the slice and background geometry 
+  // get the slice and background geometry
   var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
   var angleSlice = this.getItemAngleRange(index);
   var slicePath = this.getSlicePath(menuWidgetCenter, angleSlice[0], angleSlice[1], minRadius, maxRadius);
   var contactPath = this.getSlicePath(menuWidgetCenter, this.minAngle, this.maxAngle, minRadius, maxRadius);
-  
+
   // create a widget to paint into
   var _parent = this.menuWidget;
   var sliceWidget = new QWidget(_parent);
@@ -609,9 +658,9 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
     painter.setPen(new QPen(linesColor));
     // painter.setBrush(new QBrush(backgroundColor));
     painter.setBrush(new QBrush(backgroundGradient));
-    
+
     painter.drawPath(contactPath);
-  
+
     // draw slice and rotate around widget center
     painter.translate(menuWidgetCenter.x, menuWidgetCenter.y);
     painter.rotate(sliceWidth*index*(-180));
@@ -637,7 +686,7 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
 
     // on index value change, change the slice rotation and update slicewidget, as well as focus the widget
     if (index != currentIndex && currentIndex >= 0 && currentIndex < self.widgets.length){
-      index = currentIndex;  
+      index = currentIndex;
       sliceWidget.update();
       var indexWidget = self.widgets[index]
       if (indexWidget instanceof self.$.oPieSubMenu) indexWidget = indexWidget.menu.button;
@@ -652,10 +701,10 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
 /**
  * Generate a pie slice path to draw based on parameters
  * @param {$.oPoint}    center      the center of the slice
- * @param {float}       minAngle    a value between -0.5 and 1.5 for the lowest angle value for the pie slice  
- * @param {float}       maxAngle    a value between -0.5 and 1.5 for the highest angle value for the pie slice  
- * @param {float}       minRadius   the smallest circle radius  
- * @param {float}       maxRadius   the largest circle radius  
+ * @param {float}       minAngle    a value between -0.5 and 1.5 for the lowest angle value for the pie slice
+ * @param {float}       maxAngle    a value between -0.5 and 1.5 for the highest angle value for the pie slice
+ * @param {float}       minRadius   the smallest circle radius
+ * @param {float}       maxRadius   the largest circle radius
  * @private
  */
 $.oPieMenu.prototype.getSlicePath = function(center, minAngle, maxAngle, minRadius, maxRadius){
@@ -665,7 +714,7 @@ $.oPieMenu.prototype.getSlicePath = function(center, minAngle, maxAngle, minRadi
   smallArcStart.polarCoordinates = {radius: minRadius, angle:minAngle*(-Math.PI)}
   smallArcStart.translate(center.x, center.y);
   var smallArcAngleStart = minAngle*180;
-  var smallArcSweep = (maxAngle-minAngle)*180; // convert values from 0-2 (radiant angles in multiples of pi) to degrees 
+  var smallArcSweep = (maxAngle-minAngle)*180; // convert values from 0-2 (radiant angles in multiples of pi) to degrees
 
   var bigArcBoundingBox = new QRectF(center.x-maxRadius, center.y-maxRadius, maxRadius*2, maxRadius*2);
   var bigArcAngleStart = maxAngle*180;
@@ -684,27 +733,27 @@ $.oPieMenu.prototype.getSlicePath = function(center, minAngle, maxAngle, minRadi
 /**
  * Get the angle range for the item pie slice based on index.
  * @private
- * @param {int}     index         the index of the widget 
+ * @param {int}     index         the index of the widget
  * @return {float[]}
  */
 $.oPieMenu.prototype.getItemAngleRange = function(index){
   var length = this.widgets.length;
   var angleStart = this.minAngle+(index/length)*(this.maxAngle-this.minAngle);
   var angleEnd = this.minAngle+((index+1)/length)*(this.maxAngle-this.minAngle);
-  
+
   return [angleStart, angleEnd];
 }
 
 /**
  * Get the angle for the item widget based on index.
  * @private
- * @param {int}     index         the index of the widget 
+ * @param {int}     index         the index of the widget
  * @return {float}
  */
 $.oPieMenu.prototype.getItemAngle = function(index){
   var angleRange = this.getItemAngleRange(index, this.minAngle, this.maxAngle);
   var angle = (angleRange[1] - angleRange[0])/2+angleRange[0]
-  
+
   return angle;
 }
 
@@ -712,7 +761,7 @@ $.oPieMenu.prototype.getItemAngle = function(index){
 /**
  * Get the widget index for the angle value.
  * @private
- * @param {float}     angle         the index of the widget 
+ * @param {float}     angle         the index of the widget
  * @return {float}
  */
 $.oPieMenu.prototype.getIndexAtAngle = function(angle){
@@ -724,7 +773,7 @@ $.oPieMenu.prototype.getIndexAtAngle = function(angle){
 /**
  * Get the position from the center for the item based on index.
  * @private
- * @param {int}     index         the index of the widget 
+ * @param {int}     index         the index of the widget
  * @param {float}     radius        the radius of the menu
  * @return {$.oPoint}
  */
@@ -734,7 +783,7 @@ $.oPieMenu.prototype.getItemPosition = function(index, radius){
   var angle = this.getItemAngle(index, this.minAngle, this.maxAngle)*(-pi);
   var _point = new this.$.oPoint();
   _point.polarCoordinates = {radius:radius, angle:angle}
-  
+
   return _point;
 }
 
@@ -742,7 +791,7 @@ $.oPieMenu.prototype.getItemPosition = function(index, radius){
 /**
  * Get a pie menu radius setting for a given amount of items.
  * @private
- * @param {int}     itemsNumber         the ammount of items to display 
+ * @param {int}     itemsNumber         the ammount of items to display
  * @return {float}
  */
 $.oPieMenu.prototype.getMenuRadius = function(){
@@ -781,7 +830,7 @@ $.oPieMenu.prototype.showButton = function(parent){
       _button.leaveEvent = null;
     }
   }else{
-    _button.enterEvent = openMenuCallback;    
+    _button.enterEvent = openMenuCallback;
   }
 }
 
@@ -816,7 +865,7 @@ $.oPieMenu.prototype.hideButton = function(){
  * @classdesc   A type of menu with nested levels that appear around the mouse
  * @param       {string}              name                     The name for this pie Menu.
  * @param       {QWidget[]}           [widgets]                The widgets to display in the menu.
- * 
+ *
  * @property    {string}              name                     The name for this pie Menu.
  * @property    {string}              widgets                  The widgets to display in the menu.
  * @property    {string}              menu                     The oPieMenu Object containing the widgets for the submenu
@@ -844,9 +893,9 @@ $.oPieSubMenu.prototype.init = function(index, position, parent){
   var name = this.name;
   var angle = parent.getItemAngle(index);
 
-  // submenu widgets calculate their range from to go on both sides of the button, at a fixed angle 
+  // submenu widgets calculate their range from to go on both sides of the button, at a fixed angle
   // (in order to keep the span of submenu options centered around the menu button)
-  var widgetNum = this.widgets.length/2; 
+  var widgetNum = this.widgets.length/2;
   var minAngle = angle-widgetNum*this.itemAngle;
   var maxAngle = angle+widgetNum*this.itemAngle;
   var radius = parent.radius+this.extraRadius;
@@ -879,14 +928,14 @@ $.oPieSubMenu.prototype.init = function(index, position, parent){
  * The constructor for $.oScriptButton
  * @name          $.oScriptButton
  * @constructor
- * @classdescription This subclass of QPushButton provides an easy way to create a button for a widget that will launch a function from another script file.<br> 
+ * @classdescription This subclass of QPushButton provides an easy way to create a button for a widget that will launch a function from another script file.<br>
  * The buttons created this way automatically load the icon named after the script if it finds one named like the funtion in a script-icons folder next to the script file.<br>
  * It will also automatically set the callback to lanch the function from the script.<br>
  * This class is a subclass of QPushButton and all the methods from that class are available to modify this button.
  * @param {string}   scriptFile               The path to the script file that will be launched
  * @param {string}   scriptFunction           The function name to launch from the script
- * @param {QWidget}  parent                   The parent QWidget for the button.     
- * 
+ * @param {QWidget}  parent                   The parent QWidget for the button.
+ *
  */
 $.oScriptButton = function(scriptFile, scriptFunction, parent) {
   QPushButton.call(this, "", parent);
@@ -988,11 +1037,11 @@ $.oPrefButton.prototype = Object.create(QPushButton.prototype);
  * The constructor for $.oPieButton
  * @name          $#oPieButton
  * @constructor
- * @classdescription This subclass of QToolButton provides an easy way to create a button for a PieMenu.<br> 
- * 
+ * @classdescription This subclass of QToolButton provides an easy way to create a button for a PieMenu.<br>
+ *
  * This class is a subclass of QToolButton and all the methods from that class are available to modify this button.
   * @param {string}   iconFile               The icon file for the button
- * 
+ *
  */
 $.oPieButton = function(iconFile) {
   QToolButton.call(this);

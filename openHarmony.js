@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library 
+//                            openHarmony Library
 //
 //
 //         Developped by Mathieu Chaptel, Chris Fourney
@@ -68,12 +68,12 @@
  * @property {$.oUtils}    utils                     Access point for all the functions of the $.oUtils class
  * @property {$.oDialog}   dialog                    Access point for all the functions of the $.oDialog class
  * @property {Object}      global                    The global scope.
- * 
+ *
  * @example
  * // To access the functions, first call the $ object. It is made available after loading openHarmony like so:
  *
  * include ("openHarmony.js");
- * 
+ *
  * var doc = $.scn;                    // grabbing the scene document
  * $.log("hello");                     // prints out a message to the MessageLog.
  * var myPoint = new $.oPoint(0,0,0);  // create a new class instance from an openHarmony class.
@@ -83,7 +83,7 @@
  * log("hello");
  * var myPoint = new oPoint(0,0,0);    // This is all valid
  * var doc = scn;                      // "scn" isn't a function so this one isn't
- * 
+ *
  */
 $ = {
   debug_level : 0,
@@ -97,11 +97,11 @@ $ = {
                  'ERROR'   : 0,
                  'WARNING' : 1,
                  'LOG'     : 2
-                },            
+                },
   file      : __file__,
   directory : false,
   batchMode : false,
-  
+
   pi        : 3.14159265359
 };
 
@@ -147,7 +147,7 @@ for (var i in _files){
 $.debug = function( obj, level ){
   if( level > this.debug_level ) return;
 
-  try{ 
+  try{
     this.log(JSON.stringify(obj));
   }catch(err){
     this.log(obj);
@@ -210,7 +210,7 @@ $.getScene = $.s;
  * @param   {string}           [title]                        The title of the confirmation dialog.
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  * @param   {string}           [cancelButtonText]             The text on the CANCEL button of the dialog.
- * 
+ *
  * @return  {bool}       Result of the confirmation dialog.
  */
 $.confirm = function(){ return $.dialog.confirm.apply( $.dialog, arguments ) };
@@ -225,6 +225,19 @@ $.confirm = function(){ return $.dialog.confirm.apply( $.dialog, arguments ) };
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  */
 $.alert = function(){ return $.dialog.alert.apply( $.dialog, arguments ) };
+
+
+
+/**
+ * Prompts with an alert dialog with a text box which can be selected (informational).
+ * @function
+ * @name    $#alertBox
+ * @param   {string}           [labelText]                    The label/internal text of the dialog.
+ * @param   {string}           [title]                        The title of the confirmation dialog.
+ * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
+ */
+$.alertBox = function(){ return $.dialog.alertBox.apply( $.dialog, arguments ) };
+
 
 
 /**
@@ -247,7 +260,7 @@ $.prompt = function(){ return $.dialog.prompt.apply( $.dialog, arguments ) };
  * @param   {string}           [getExisting=true]            Whether to select an existing file or a save location
  * @param   {string}           [acceptMultiple=false]        Whether or not selecting more than one file is ok. Is ignored if getExisting is false.
  * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
- * 
+ *
  * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
  */
 $.browseForFile = function(){ return $.dialog.browseForFile.apply( $.dialog, arguments ) };
@@ -259,8 +272,8 @@ $.browseForFile = function(){ return $.dialog.browseForFile.apply( $.dialog, arg
  * @name    $#browseForFolder
  * @param   {string}           [text]                        The title of the confirmation dialog.
  * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
- * 
- * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled 
+ *
+ * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled
  */
 $.browseForFolder = function(){ return $.dialog.browseForFolder.apply( $.dialog, arguments ) };
 
@@ -293,8 +306,8 @@ $.cache_oNode = {};
  */
 $.beginUndo = function( undoName ){
   //Using epoch as the temp name.
-  if (typeof undoName === 'undefined') var undoName = ''+((new Date()).getTime()); 
-  
+  if (typeof undoName === 'undefined') var undoName = ''+((new Date()).getTime());
+
   scene.beginUndoRedoAccum( undoName );
 }
 
@@ -373,7 +386,7 @@ for( var classItem in $ ){
     }catch(err){
       $.debug( "Error extending DOM access to : " + classItem, $.DEBUG_LEVEL.ERROR );
     }
-    
+
     //Also extend it to the global object.
     this[classItem] = $[classItem];
   }
