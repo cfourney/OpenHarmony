@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library 
+//                            openHarmony Library
 //
 //
 //         Developped by Mathieu Chaptel, Chris Fourney
@@ -471,7 +471,7 @@ Object.defineProperty($.oScene.prototype, 'columns', {
 Object.defineProperty($.oScene.prototype, 'palettes', {
   get : function(){
     var _paletteList = PaletteObjectManager.getScenePaletteList();
-    
+
     var _palettes = [];
     for (var i=0; i<_paletteList.numPalettes; i++){
         _palettes.push( new this.$.oPalette( _paletteList.getPaletteByIndex(i), _paletteList ) );
@@ -1289,11 +1289,11 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
     case 'environment' :
       var paletteFolder = fileMapper.toNativePath(PaletteObjectManager.Locator.folderForLocation(_location.environment,1));
       break;
-  
+
     case 'job' :
       var paletteFolder = fileMapper.toNativePath(PaletteObjectManager.Locator.folderForLocation(_location.job,1))
       break;
-    
+
     case 'scene' :
       var paletteFolder = fileMapper.toNativePath(PaletteObjectManager.Locator.folderForLocation(_location.scene,1))
       break;
@@ -1583,7 +1583,7 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
     }
   }
 
-  
+
   this.selectedNodes = _allNodes;
   this.selectedFrames = [this.startPreview, this.stopPreview];
 
@@ -1876,7 +1876,7 @@ $.oScene.prototype.saveAs = function(newPath){
 /**
  * Saves the scene as new version.
  * @param {string}      newVersionName      The name for the new version
- * @param {bool}        markAsDefault       Wether to make this new version the default version that will be opened from the database.   
+ * @param {bool}        markAsDefault       Wether to make this new version the default version that will be opened from the database.
  */
 $.oScene.prototype.saveNewVersion = function(newVersionName, markAsDefault){
   if (typeof markAsDefault === 'undefined') var markAsDefault = true;
@@ -1904,13 +1904,13 @@ $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, e
 
   this.save();
   var harmonyBin = specialFolders.bin+"/HarmonyPremium.exe";
-  
-  var args = ["-batch", "-frames", startFrame, endFrame, "-res", resX, resY];
+
+  var args = ["-batch", "-frames", startFrame, endFrame, "-res", resX, resY, this.fov];
 
   if (typeof preRenderScript !== 'undefined'){
     args.push("-preRenderScript");
     args.push(preRenderScript);
-  } 
+  }
 
   if (typeof postRenderScript !== 'undefined'){
     args.push("-postRenderScript");
