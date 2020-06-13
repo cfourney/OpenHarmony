@@ -1026,7 +1026,7 @@ $.oPrefButton.prototype = Object.create(QPushButton.prototype);
 //////////////////////////////////////
 //                                  //
 //                                  //
-//      $.oPieButton class       //
+//        $.oPieButton class        //
 //                                  //
 //                                  //
 //////////////////////////////////////
