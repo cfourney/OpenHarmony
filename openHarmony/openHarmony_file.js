@@ -387,6 +387,19 @@ $.oFolder.prototype.moveToFolder = function( destFolderPath, overwrite ){
 
 
 /**
+ * Deletes the folder.
+ * @param   {bool}    removeContents            Whether to check if the folder contains files before deleting.
+ */
+$.oFolder.prototype.remove = function (removeContents){
+  if (typeof removeContents === 'undefined') var removeContents = false;
+  
+  if (this.listFiles.length > 0 && this.listFolders.length > 0 && !removeContents) throw new Error("Can't remove folder "+this.path+", it is not empty.")
+  var _folder = new Dir(this.path);
+  _folder.rmdirs();
+}
+
+
+/**
  * Get the sub folder or file by name.
  * @param   {string}   name                     The sub name of a folder or file within a directory.
  * @return: {$.oFolder/$.oFile}                 The resulting oFile or oFolder.
