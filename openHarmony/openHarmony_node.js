@@ -2014,7 +2014,7 @@ Object.defineProperty($.oGroupNode.prototype, "backdrops", {
   get : function() {
     var _path = this.path;
     var _backdropObjects = Backdrop.backdrops(this.path);
-    var _backdrops = _backdropObjects.map(function(x){new this.$.oBackdrop(_path, x)});
+    var _backdrops = _backdropObjects.map(function(x){return new this.$.oBackdrop(_path, x)});
 
     return _backdrops;
   }
