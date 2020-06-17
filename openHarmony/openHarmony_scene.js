@@ -570,8 +570,8 @@ Object.defineProperty($.oScene.prototype, 'selectedNodes', {
 
 
 /**
- * Retrieve and change the selected nodes. Use to retrieve and set Selection. Doesn't work recursively, use scene.getSelectedNodes(true) to get the content of selected groups as well.
- * @name $.oScene#selectedNodes
+ * Retrieve and change the selected frames. This is an array with two values, one for the start and one for the end of the selection (not included).
+ * @name $.oScene#selectedFrames
  * @type {int[]}
  */
 Object.defineProperty($.oScene.prototype, 'selectedFrames', {
@@ -587,9 +587,28 @@ Object.defineProperty($.oScene.prototype, 'selectedFrames', {
 
 
 /**
+ * Retrieve and set the selected palette.
+ * @type {$.oPalette}   oPalette with provided name.
+ */
+Object.defineProperty($.oScene.prototype, "selectedPalette", {
+  get: function(){
+    var _paletteList = PaletteObjectManager.getScenePaletteList()
+    var _id = PaletteManager.getCurrentPaletteId()
+    var _palette = new this.$.oPalette(_paletteList.getPaletteById(_id), _paletteList);
+    return _palette;    
+  },
+  
+  set: function(newSelection){
+    var _id = newSelection.id;
+    PaletteManager.setCurrentPaletteById(_id);
+  }
+})
+
+
+/**
  * The current drawing of the scene.
  * @name $.oScene#activeDrawing
- * @type {int}
+ * @type {in$.oDrawing}
  */
 Object.defineProperty($.oScene.prototype, 'activeDrawing', {
   get : function(){
@@ -1210,6 +1229,7 @@ $.oScene.prototype.getPaletteByName = function(name){
 /**
  * Grabs the selected palette.
  * @return {$.oPalette}   oPalette with provided name.
+ * @deprecated
  */
 $.oScene.prototype.getSelectedPalette = function(){
     var _paletteList = PaletteManager.getScenePaletteList();

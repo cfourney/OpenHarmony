@@ -1739,15 +1739,10 @@ Object.defineProperty($.oDrawingNode.prototype, "timings", {
  * @type {oPalette[]}
  */
 Object.defineProperty($.oDrawingNode.prototype, "palettes", {
-    get : function(){
-      var _element = this.element;
-      var _paletteList = PaletteObjectManager.getPaletteListByElementId(_element.id);
-      var _palettes = [];
-      for (var i=0; i<_paletteList.numPalettes; i++){
-        _palettes.push( new this.$.oPalette( _paletteList.getPaletteByIndex(i), this, _paletteList ) );
-      }
-      return _palettes;
-    }
+  get : function(){
+    var _element = this.element;
+    return _element.palettes;
+  }
 })
 
 
@@ -1787,6 +1782,18 @@ $.oDrawingNode.prototype.getUsedPalettes = function(){
 $.oDrawingNode.prototype.linkPalette = function(oPaletteObject, index){
   return this.element.linkPalette(oPaletteObject, index);
 }
+
+
+ /**
+ * Unlinks an Element Palette from a drawing node.
+ * @param {$.oPalette}     oPaletteObject      the palette to unlink from the node
+ * 
+ * @return {bool}          The success of the unlink operation.
+ */
+$.oDrawingNode.prototype.unlinkPalette = function(oPaletteObject){
+  return this.element.unlinkPalette(oPaletteObject);
+}
+
 
 
 

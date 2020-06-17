@@ -102,14 +102,14 @@ Object.defineProperty($.oElement.prototype, 'path', {
  * @type {$.oDrawing[]}
  */
 Object.defineProperty($.oElement.prototype, 'drawings', {
-    get : function(){
-        var _drawingsNumber = Drawing.numberOf(this.id);
-        var _drawings = [];
-        for (var i=0; i<_drawingsNumber; i++){
-            _drawings.push( new this.$.oDrawing(Drawing.name(this.id, i), this) );
-        }
-        return _drawings;
+  get : function(){
+    var _drawingsNumber = Drawing.numberOf(this.id);
+    var _drawings = [];
+    for (var i=0; i<_drawingsNumber; i++){
+      _drawings.push( new this.$.oDrawing(Drawing.name(this.id, i), this) );
     }
+    return _drawings;
+  }
 })
  
 
@@ -119,14 +119,32 @@ Object.defineProperty($.oElement.prototype, 'drawings', {
  * @type {string}
  */
 Object.defineProperty($.oElement.prototype, 'format', {
-    get : function(){
-        var _type = element.pixmapFormat(this.id);
-        if (element.vectorType(this.id)) _type = "TVG";
-        return _type;
-    }
+  get : function(){
+    var _type = element.pixmapFormat(this.id);
+    if (element.vectorType(this.id)) _type = "TVG";
+    return _type;
+  }
 })
 
  
+/**
+ * The palettes linked to this element.
+ * @name $.oElement#palettes
+ * @type {$.oPalette[]}
+ */
+Object.defineProperty($.oElement.prototype, 'palettes', {
+  get: function(){
+    var _paletteList = PaletteObjectManager.getPaletteListByElementId(this.id);
+    var _palettes = [];
+    for (var i=0; i<_paletteList.numPalettes; i++){
+      _palettes.push( new this.$.oPalette( _paletteList.getPaletteByIndex(i), _paletteList ) );
+    }
+
+    return _palettes;
+  }
+})
+
+
 // $.oElement Class methods
 
 /**
@@ -180,11 +198,39 @@ $.oElement.prototype.getDrawingByName = function ( name ){
  */
 $.oElement.prototype.linkPalette = function ( oPaletteObject , listIndex){
   var _paletteList = PaletteObjectManager.getPaletteListByElementId(this.id);
-  
   if (typeof listIndex === 'undefined') var listIndex = _paletteList.numPalettes;
-  var _palette = _paletteList.insertPalette (oPaletteObject.path, index);
+  
+  var _palettePath = oPaletteObject.path.path.replace(".plt", "");
+
+  var _palette = new this.$.oPalette(_paletteList.insertPalette (_palettePath, listIndex), _paletteList);
   return _palette;
 }
+
+
+/**
+ * If the palette passed as a parameter is linked to this element, it will be unlinked, and moved to the scene palette list.
+ * @param {$.oPalette} oPaletteObject 
+ */
+$.oElement.prototype.unlinkPalette = function ( oPaletteObject) {
+  log(oPaletteObject.id)
+  var _palettes = this.palettes;
+  var _ids = _palettes.map(function(x){return x.id});
+  var _paletteId = oPaletteObject.id;
+  var _paletteIndex = _ids.indexOf(_paletteId);
+  log(_paletteIndex)
+  if (_paletteIndex == -1) return; // palette already isn't linked
+
+  var _palette = _palettes[_paletteIndex];
+  try{
+    _palette.remove(false);
+    return true;
+  }catch(err){
+    this.$.debug(JSON.stringify(err, null, " "))
+    this.$.debug("Failed to unlink palette "+_palette.name+" from element "+this.name);
+    return false;
+  }
+}
+
 
 
 /**
