@@ -5,8 +5,8 @@ function oh_load(){
   try{
     //If an override debug path exists, use it.
     var oh_incl = preferences.getString( 'openHarmonyIncludeDebug', false );
-    if( oh_incl ){
-      oh_incl = preferences.getString( 'openHarmonyInclude', false );
+    if( !oh_incl ){
+      oh_incl = preferences.getString( 'openHarmonyInclude', "openHarmony.js" );
     }
   
     if( !this["$"] ){  
