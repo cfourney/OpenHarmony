@@ -2281,7 +2281,7 @@ $.oGroupNode.prototype.addDrawingNode = function( name, nodePosition, oElementOb
  * @param   {string}     name                           The name of the newly created group.
  * @param   {$.oPoint}   [addComposite=false]           Whether to add a composite.
  * @param   {bool}       [addPeg=false]                 Whether to add a peg.
- * @param   {string}     [includeNodes]                 The nodes to add to the group.
+ * @param   {$.oNode[]}  [includeNodes]                 The nodes to add to the group.
  * @param   {$.oPoint}   [nodePosition={0,0,0}]         The position for the node to be placed in the network.
 
  * @return {$.oGroupNode}   The created node, or bool as false.
