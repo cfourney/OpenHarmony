@@ -1325,7 +1325,7 @@ $.oLink.prototype.connect = function(){
   if (this._inNode.type == "GROUP" && createInPorts) this._inNode.addInPort(this._inPort);
 
   try{
-    this.$.debug("linking nodes "+this._outNode+" to "+this._inNode+" through outPort: "+this._outPort+", inPort: "+this._inPort+" and create ports: "+createOutPorts+" "+createInPorts, this.$.DEBUG_LEVEL.ERROR);
+    this.$.debug("linking nodes "+this._outNode+" to "+this._inNode+" through outPort: "+this._outPort+", inPort: "+this._inPort+" and create ports: "+createOutPorts+" "+createInPorts, this.$.DEBUG_LEVEL.LOG);
 
     var success = node.link(this._outNode, this._outPort, this._inNode, this._inPort, createOutPorts, createInPorts);
     this._linked = success;
@@ -1471,7 +1471,7 @@ $.oLinkPath = function( startNode, endNode, outPort, inPort, outLink){
 
 /**
  * Compares the start and end nodes groups to see if the path traverses several groups or not.
- * @name $.oLink#isMultiLevel
+ * @name $.oLinkPath#isMultiLevel
  * @readonly
  * @type {bool}
  */
@@ -1485,7 +1485,7 @@ Object.defineProperty($.oLinkPath.prototype, 'isMultiLevel', {
 
 /**
  * Identifies the group in which the two nodes will connect if they are at different levels of depth.
- * @name $.oLink#lowestCommonGroup
+ * @name $.oLinkPath#lowestCommonGroup
  * @readonly
  * @type {$.oGroupNode}
  */
