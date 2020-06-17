@@ -714,7 +714,7 @@ $.oNodeLink.prototype.findInwardPath = function( createPort ){
     // if( from_node.outNodes.length>from_port ){
     if( from_node.outPorts > from_port){
       // var ops = from_node.outNodes[from_port];
-      var ops = from_node.getLinksNumber(from_port);
+      var ops = from_node.getOutLinksNumber(from_port);
       // for( var n=0; n<ops.length; n++ ){
       for( var n=0; n<ops; n++ ){
         // if( ops[n].path == targ_grp ){
@@ -896,7 +896,7 @@ $.oNodeLink.prototype.validate = function ( ) {
       var huntInNode = function( currentNode, port, link ){
         try{
           // var on = currentNode.outNodes[port];
-          var numOutLinks = currentNode.getLinksNumber(port);
+          var numOutLinks = currentNode.getOutLinksNumber(port);
 
           // if( on.length != 1 ){
           if( numOutLinks != 1 ){
