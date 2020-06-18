@@ -1,31 +1,20 @@
 /**
  *  Load the Open Harmony Library as needed.
  */
-function oh_load(){
-  try{
-    //If an override debug path exists, use it.
-    var oh_incl = preferences.getString( 'openHarmonyIncludeDebug', false );
-    if( !oh_incl ){
-      oh_incl = preferences.getString( 'openHarmonyInclude', "openHarmony.js" );
-    }
-  
-    if( !this["$"] ){  
-      include( oh_incl );
-    }
-    if( !this["$"] ){  
-      MessageBox.warning( "Unable to load the openHarmony library. Is it installed?" );
-    }
-  }catch(err){
-    System.println( err + " : " + err.lineNumber + " " + err.fileName );
-  }
+
+try{
+  var oh_incl = preferences.getString( 'openHarmonyIncludeDebug', false );
+  if( oh_incl=="false" ) oh_incl = preferences.getString( 'openHarmonyInclude', false );
+  if( oh_incl=="false" ) oh_incl = "openHarmony.js";
+  include(oh_incl);
+}catch(err){
+  MessageBox.information ("OpenHarmony is not installed. Get it here: \nhttps://github.com/cfourney/OpenHarmony")
 }
 
 /**
  *  Finds and removes all unnecessary asset files from the filesystem.
  */
 function oh_rigging_removeUnnecesaryPaletteFiles(){
-  oh_load();  //Load the copy of openHarmony.
-  
   var palette_list = $.scene.palettes;
   var registered_palette_files = {};
   
@@ -101,7 +90,6 @@ function oh_rigging_removeUnnecesaryPaletteFiles(){
  */
 function oh_rigging_addCenterWeightedPeg(){
   scene.beginUndoRedoAccum( "oh_rigging_addCenterWeightedPeg" );
-  oh_load();
   
   //Work only on SELECTED READ modules.
   var nodes = $.scene.nodeSearch( "#READ(SELECTED)" );
@@ -151,244 +139,238 @@ function oh_rigging_addCenterWeightedPeg(){
  *  Adds a backdrop with specified color, to selected nodes in the node-view.
  */
 function oh_rigging_addBackdropToSelected(){
-  try{
-    oh_load();
-    scene.beginUndoRedoAccum( "oh_rigging_addBackdropToSelected" );
-  
-    //The path to the UI should be here:
-    var oh_colorPicker = specialFolders.userScripts + "/openHarmony_basic/" + "openHarmony_basic_backdropPicker.ui";
-    var ui_file = new $.oFile( oh_colorPicker );
+  scene.beginUndoRedoAccum( "oh_rigging_addBackdropToSelected" );
 
-    if( !ui_file.exists ){
-      MessageBox.information( "Unable to find UI file for the command -- please ensure it was installed properly." );
-      return;
-    }
-  
-    var backdropGUI = function(){
-      this.gui = UiLoader.load( oh_colorPicker );
-      
-      this.gui_labelColor  = this.gui.backdropColor;
-      this.gui_buttonColor = this.gui.backdropColorButton;
-      this.gui_name        = this.gui.backdropName;
-      this.gui_text        = this.gui.backdropText;
-      
-      //When the change color button is clicked.
-      this.changeColor = function( ev ){
-        try{
-          var colorDialog = new QColorDialog( new QColor( this.color.r, this.color.g, this.color.b ) );
-          var color_res = colorDialog.exec();
-          
-          if( !color_res ){
-            return;
-          }
-          
-          var qcol = colorDialog.currentColor;
-          this.color.r = qcol.red(); this.color.g = qcol.green(); this.color.b = qcol.blue(); this.color.alpha = qcol.alpha();
-          
-          var hex_color = this.color.toString().slice( 0, 7 );
-           
-          this.gui_labelColor.setStyleSheet("QLabel { background-color : "+hex_color+"; color : blue; opacity:0}");
-          this.gui_labelColor.update();
-        }catch(err){
-          System.println( err + " ("+err.fileName+" "+err.lineNumber+")" );
-        }
-      }
-      
-      this.gui_buttonColor["clicked"].connect( this, this.changeColor );
-      
-      //When the dialog comes into view, select the input area immediately.
-      var gui_focuser  = this.gui;
-      var text_focuser = this.gui_name;
-      this.focusInput = function( ev ){
-      
-        try{
-          gui_focuser.activateWindow();
-          gui_focuser.raise();
-          gui_focuser.setFocus();
-          
-          text_focuser.setFocus();
-          text_focuser.selectAll();
-        }catch( err ){
-          System.println( err );
-        }
-      }
-      
-      //WHEN LAUNCHING THE DIALOG, INITIALIZE IT.
-      this.exec = function( name, text, color ){
-        this.color = new $.oColorValue( Math.random()*256|0, Math.random()*256|0, Math.random()*256|0 );
-        var hex_color = this.color.toString().slice( 0, 7 );
-        
-        this.gui_name.text = name;
-        this.gui_text.text = text;
-        
-        this.gui_labelColor.setStyleSheet("QLabel { background-color : "+hex_color+"; color : blue; opacity:0}");
-        
-        //QTimer::singleShot(0, line, SLOT(setFocus()));
-        var focusTimer = new QTimer();
-            focusTimer.singleShot = true;
-            focusTimer["timeout"].connect( this, this.focusInput );
-            focusTimer.start( 50 );
-        
-        var result = this.gui.exec();
-        
-        if( !result ){
-          return false;
-        }
-        
-        
-        return { 
-                 "name"  : this.gui_name.text, 
-                 "text"  : this.gui_text.plainText,
-                 "color" : this.color
-               };
-      }
-    }
-  
-    var color_selector = new backdropGUI();
-    
-    var equivalent = {
-                        "HAND"  : "ARM",
-                        "FOOT"  : "LEG",
-                        
-                        "EYE"     : "FEATURES",
-                        "EYES"    : "FEATURES",
-                        "NOSE"    : "FEATURES",
-                        "MOUTH"   : "FEATURES",
-                        "PUPIL"   : "FEATURES",
-                        
-                        "EYE"     : "HEAD",
-                        "EYES"    : "HEAD",
-                        "NOSE"    : "HEAD",
-                        "MOUTH"   : "HEAD",
-                        "PUPIL"   : "HEAD",
-                        "EAR"     : "HEAD",
-                        "HAIR"    : "HEAD",
-                        "BROW"    : "HEAD",
-                        "EYEBROW" : "HEAD",
-                     };
-    
-    //Separate selections into common groups.
-    var group_items = {};
-    
-    var nodes = $.scene.nodeSearch( "(SELECTED)" );
-    
-    //Iterate the nodes, and separate them into common groups.
-    for( var n=0;n<nodes.length;n++ ){
-      var tnode = nodes[n];
-      if( !group_items[tnode.group] ){
-        group_items[tnode.group] = [];
-      }
-      
-      group_items[tnode.group].push( tnode );
-    }
-    
-    //Now, with each group in mind, lets provide an interface to colour, ect.
-    for( var grp in group_items ){
-      var grp_items = group_items[ grp ];
-      var laststring = false;
-      var common_substrings = {};
-      
-      var numNodes = grp_items.length;
-      
-      // Find the longest common substring. This accumulates the common substrings, and makes a 'voting' system that will subsequently name
-      // the backdrop based on the common result (as 'voted').
-      for (i = 0; i < numNodes; ++i){
-        var node = grp_items[i];
-        
-        var bnm = node.name.toUpperCase();
-           
-        if( bnm.slice( bnm.length-2 ).toUpperCase() == ("-P") ){
-          bnm = bnm.slice( 0, bnm.length-2 );
-        }
-           
-        if( laststring ){
-          var lcs = $.utils.longestCommonSubstring( bnm, laststring );
-          
-          if( lcs.length>2 ){
-            var clean_lcs = lcs.sequence;
-            
-            if( clean_lcs.slice( clean_lcs.length-1 ) == ("_") ){
-              clean_lcs = clean_lcs.slice( 0, clean_lcs.length-1 );
-            }
-             
-            if( clean_lcs.slice( 0,1 ) == ("_") ){
-              clean_lcs = clean_lcs.slice( 1 );
-            }
-            
-            if(!common_substrings[clean_lcs]){
-              common_substrings[clean_lcs] = 0;
-            }
-            
-            common_substrings[clean_lcs]++;
-          }
-        }
-        
-        laststring = bnm;
-      }
+  //The path to the UI should be here:
+  var oh_colorPicker = specialFolders.userScripts + "/openHarmony_basic/" + "openHarmony_basic_backdropPicker.ui";
+  var ui_file = new $.oFile( oh_colorPicker );
 
-      var names = [];
-      for( var n in common_substrings ){
-        names.push( n );
-      }
-      
-      //Now compare cleaned LCS and accumulate them as votes as well.
-      for( var n=0;n<names.length;n++ ){
-        for( var x=n+1;x<names.length;x++ ){
-          var lcs = $.utils.longestCommonSubstring(names[n], names[x]);
-          if( lcs.length>2 ){
-            var clean_lcs = lcs.sequence;
-            
-            if( clean_lcs.slice( clean_lcs.length-1 ) == ("_") ){
-              clean_lcs = clean_lcs.slice( 0, clean_lcs.length-1 );
-            } 
-            if( clean_lcs.slice( 0,1 ) == ("_") ){
-              clean_lcs = clean_lcs.slice( 1 );
-            }
-            
-            if(!common_substrings[clean_lcs]){
-              common_substrings[clean_lcs] = 0;
-            }
-            common_substrings[clean_lcs]++;
-            
-            if( equivalent[clean_lcs] ){
-              var clean_lcs2 = equivalent[clean_lcs];
-              if(!common_substrings[clean_lcs2]){
-                common_substrings[clean_lcs2] = 0;
-              }
-              common_substrings[clean_lcs2]++;
-            }
-          }
-        }
-      }
-      
-      //Find the highest voted LCS.
-      var highest    = 0;
-      var common_name = 'Backdrop';
-      for( var n in common_substrings ){
-        if( common_substrings[n] > highest ){
-          if( n.toUpperCase()=="DRAWING" ){
-            continue;
-          }
-          
-          highest    = common_substrings[n];
-          common_name = n;
-        }
-      }
-      
-      var res = color_selector.exec( common_name, "", "" );
-      if( !res ){ //A cancel option was selected.
-        continue;
-      }
-      
-      //Add that beautiful backdrop.
-      $.scene.addBackdropToNodes( grp, grp_items, res.name, res.text, res.color, 0, 0, 35, 35 );
-    }
-    
-    scene.endUndoRedoAccum( );
-  }catch( err ){
-    $.debug( err + " ("+err.fileName+" "+err.lineNumber+")", $.DEBUG_LEVEL["ERROR"] );
-    
+  if( !ui_file.exists ){
+    MessageBox.information( "Unable to find UI file for the command -- please ensure it was installed properly." );
+    return;
   }
+
+  var backdropGUI = function(){
+    this.gui = UiLoader.load( oh_colorPicker );
+    
+    this.gui_labelColor  = this.gui.backdropColor;
+    this.gui_buttonColor = this.gui.backdropColorButton;
+    this.gui_name        = this.gui.backdropName;
+    this.gui_text        = this.gui.backdropText;
+    
+    //When the change color button is clicked.
+    this.changeColor = function( ev ){
+      try{
+        var colorDialog = new QColorDialog( new QColor( this.color.r, this.color.g, this.color.b ) );
+        var color_res = colorDialog.exec();
+        
+        if( !color_res ){
+          return;
+        }
+        
+        var qcol = colorDialog.currentColor;
+        this.color.r = qcol.red(); this.color.g = qcol.green(); this.color.b = qcol.blue(); this.color.alpha = qcol.alpha();
+        
+        var hex_color = this.color.toString().slice( 0, 7 );
+          
+        this.gui_labelColor.setStyleSheet("QLabel { background-color : "+hex_color+"; color : blue; opacity:0}");
+        this.gui_labelColor.update();
+      }catch(err){
+        System.println( err + " ("+err.fileName+" "+err.lineNumber+")" );
+      }
+    }
+    
+    this.gui_buttonColor["clicked"].connect( this, this.changeColor );
+    
+    //When the dialog comes into view, select the input area immediately.
+    var gui_focuser  = this.gui;
+    var text_focuser = this.gui_name;
+    this.focusInput = function( ev ){
+    
+      try{
+        gui_focuser.activateWindow();
+        gui_focuser.raise();
+        gui_focuser.setFocus();
+        
+        text_focuser.setFocus();
+        text_focuser.selectAll();
+      }catch( err ){
+        System.println( err );
+      }
+    }
+    
+    //WHEN LAUNCHING THE DIALOG, INITIALIZE IT.
+    this.exec = function( name, text, color ){
+      this.color = new $.oColorValue( Math.random()*256|0, Math.random()*256|0, Math.random()*256|0 );
+      var hex_color = this.color.toString().slice( 0, 7 );
+      
+      this.gui_name.text = name;
+      this.gui_text.text = text;
+      
+      this.gui_labelColor.setStyleSheet("QLabel { background-color : "+hex_color+"; color : blue; opacity:0}");
+      
+      //QTimer::singleShot(0, line, SLOT(setFocus()));
+      var focusTimer = new QTimer();
+          focusTimer.singleShot = true;
+          focusTimer["timeout"].connect( this, this.focusInput );
+          focusTimer.start( 50 );
+      
+      var result = this.gui.exec();
+      
+      if( !result ){
+        return false;
+      }
+      
+      
+      return { 
+                "name"  : this.gui_name.text, 
+                "text"  : this.gui_text.plainText,
+                "color" : this.color
+              };
+    }
+  }
+
+  var color_selector = new backdropGUI();
+  
+  var equivalent = {
+                      "HAND"  : "ARM",
+                      "FOOT"  : "LEG",
+                      
+                      "EYE"     : "FEATURES",
+                      "EYES"    : "FEATURES",
+                      "NOSE"    : "FEATURES",
+                      "MOUTH"   : "FEATURES",
+                      "PUPIL"   : "FEATURES",
+                      
+                      "EYE"     : "HEAD",
+                      "EYES"    : "HEAD",
+                      "NOSE"    : "HEAD",
+                      "MOUTH"   : "HEAD",
+                      "PUPIL"   : "HEAD",
+                      "EAR"     : "HEAD",
+                      "HAIR"    : "HEAD",
+                      "BROW"    : "HEAD",
+                      "EYEBROW" : "HEAD",
+                    };
+  
+  //Separate selections into common groups.
+  var group_items = {};
+  
+  var nodes = $.scene.nodeSearch( "(SELECTED)" );
+  
+  //Iterate the nodes, and separate them into common groups.
+  for( var n=0;n<nodes.length;n++ ){
+    var tnode = nodes[n];
+    if( !group_items[tnode.group] ){
+      group_items[tnode.group] = [];
+    }
+    
+    group_items[tnode.group].push( tnode );
+  }
+  
+  //Now, with each group in mind, lets provide an interface to colour, ect.
+  for( var grp in group_items ){
+    var grp_items = group_items[ grp ];
+    var laststring = false;
+    var common_substrings = {};
+    
+    var numNodes = grp_items.length;
+    
+    // Find the longest common substring. This accumulates the common substrings, and makes a 'voting' system that will subsequently name
+    // the backdrop based on the common result (as 'voted').
+    for (i = 0; i < numNodes; ++i){
+      var node = grp_items[i];
+      
+      var bnm = node.name.toUpperCase();
+          
+      if( bnm.slice( bnm.length-2 ).toUpperCase() == ("-P") ){
+        bnm = bnm.slice( 0, bnm.length-2 );
+      }
+          
+      if( laststring ){
+        var lcs = $.utils.longestCommonSubstring( bnm, laststring );
+        
+        if( lcs.length>2 ){
+          var clean_lcs = lcs.sequence;
+          
+          if( clean_lcs.slice( clean_lcs.length-1 ) == ("_") ){
+            clean_lcs = clean_lcs.slice( 0, clean_lcs.length-1 );
+          }
+            
+          if( clean_lcs.slice( 0,1 ) == ("_") ){
+            clean_lcs = clean_lcs.slice( 1 );
+          }
+          
+          if(!common_substrings[clean_lcs]){
+            common_substrings[clean_lcs] = 0;
+          }
+          
+          common_substrings[clean_lcs]++;
+        }
+      }
+      
+      laststring = bnm;
+    }
+
+    var names = [];
+    for( var n in common_substrings ){
+      names.push( n );
+    }
+    
+    //Now compare cleaned LCS and accumulate them as votes as well.
+    for( var n=0;n<names.length;n++ ){
+      for( var x=n+1;x<names.length;x++ ){
+        var lcs = $.utils.longestCommonSubstring(names[n], names[x]);
+        if( lcs.length>2 ){
+          var clean_lcs = lcs.sequence;
+          
+          if( clean_lcs.slice( clean_lcs.length-1 ) == ("_") ){
+            clean_lcs = clean_lcs.slice( 0, clean_lcs.length-1 );
+          } 
+          if( clean_lcs.slice( 0,1 ) == ("_") ){
+            clean_lcs = clean_lcs.slice( 1 );
+          }
+          
+          if(!common_substrings[clean_lcs]){
+            common_substrings[clean_lcs] = 0;
+          }
+          common_substrings[clean_lcs]++;
+          
+          if( equivalent[clean_lcs] ){
+            var clean_lcs2 = equivalent[clean_lcs];
+            if(!common_substrings[clean_lcs2]){
+              common_substrings[clean_lcs2] = 0;
+            }
+            common_substrings[clean_lcs2]++;
+          }
+        }
+      }
+    }
+    
+    //Find the highest voted LCS.
+    var highest    = 0;
+    var common_name = 'Backdrop';
+    for( var n in common_substrings ){
+      if( common_substrings[n] > highest ){
+        if( n.toUpperCase()=="DRAWING" ){
+          continue;
+        }
+        
+        highest    = common_substrings[n];
+        common_name = n;
+      }
+    }
+    
+    var res = color_selector.exec( common_name, "", "" );
+    if( !res ){ //A cancel option was selected.
+      continue;
+    }
+    
+    //Add that beautiful backdrop.
+    $.scene.addBackdropToNodes( grp, grp_items, res.name, res.text, res.color, 0, 0, 35, 35 );
+  }
+  
+  scene.endUndoRedoAccum( );
 }
 
 
@@ -396,40 +378,34 @@ function oh_rigging_addBackdropToSelected(){
  *  Sets the peg's pivot based on a clicked position in the interface.
  */
 function oh_rigging_setSelectedPegPivotWithClick(){
-  try{
-    oh_load();
-    
-    var nodes = $.scene.nodeSearch( "#PEG(SELECTED)" );
-    
-    if( nodes.length == 0 ){
-      $.dialog.alert( "No peg selected." );
-      return;
-    }
-    
-    Action.perform( "onActionChoosePencilTool()" );
-    var context = this;
-    
-      var setPiv = function( res ){
-        var $    = context.$;
-        var m    = context;
-            
-        $.beginUndo();
-        try{
-          for( var n=0;n<nodes.length;n++ ){
-            nodes[n].pivot = new $.oPoint( res[0][0], res[0][1], 0.0 );
-          }
-        }catch( err ){
-          System.println( err + " " + err.lineNumber + " " + err.fileName );
-        }
-        Action.perform( "onActionChooseSpTransformTool()" );
-        $.endUndo();
-      }
-    
-      //We're using the EnvelopeCreator interface for a click interface. This may have been removed in newer versions of Harmony.
-      var en  = new EnvelopeCreator();
-      en.drawPathOverlay( setPiv, 1 );
-      
-  }catch( err ){
-    $.debug( err + " ("+err.fileName+" "+err.lineNumber+")", $.DEBUG_LEVEL["ERROR"] );
+  var nodes = $.scene.nodeSearch( "#PEG(SELECTED)" );
+  
+  if( nodes.length == 0 ){
+    $.dialog.alert( "No peg selected." );
+    return;
   }
+  
+  Action.perform( "onActionChoosePencilTool()" );
+  var context = this;
+  
+    var setPiv = function( res ){
+      var $    = context.$;
+      var m    = context;
+          
+      $.beginUndo();
+      try{
+        for( var n=0;n<nodes.length;n++ ){
+          nodes[n].pivot = new $.oPoint( res[0][0], res[0][1], 0.0 );
+        }
+      }catch( err ){
+        System.println( err + " " + err.lineNumber + " " + err.fileName );
+      }
+      Action.perform( "onActionChooseSpTransformTool()" );
+      $.endUndo();
+    }
+  
+    //We're using the EnvelopeCreator interface for a click interface. This may have been removed in newer versions of Harmony.
+    var en  = new EnvelopeCreator();
+    en.drawPathOverlay( setPiv, 1 );
+  
 }

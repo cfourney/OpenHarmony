@@ -23,6 +23,44 @@
    "license": "MPL-2.0",
    "website": "https://github.com/cfourney/OpenHarmony/",
    "localFiles": ""
+  },
+  {
+   "name": "oH Anim tools - Smartkey",
+   "version": "1.0.0",
+   "compatibility": "Harmony Premium 15",
+   "description": "This script creates a key frame on the current timeline layer, and set the stop motion or interpolated mode of the key according to the surrounding keyframes. A Keyframe placed on an interpolation will remain interpolated, and a key placed between stop motion keyframes will also be set to stop motion.\n<p>This script uses the <b>OpenHarmony</b> library. Install it first to be able to use it.</p>\n\n<p>Assign this script to a shortcut with the script <b>ScriptShortcuts</b>.</p>",
+   "repository": "https://github.com/cfourney/OpenHarmony/",
+   "isPackage": false,
+   "files": [
+    "tools/OpenHarmony_basic/openHarmony_anim_tools.js"
+   ],
+   "keywords": [
+    "openHarmony",
+    "animation"
+   ],
+   "author": "Chris F",
+   "license": "MPL-v2.0",
+   "website": "https://github.com/cfourney/OpenHarmony/",
+   "localFiles": ""
+  },
+  {
+   "name": "oH Rigging tools",
+   "version": "1.0.0",
+   "compatibility": "Harmony Premium 15",
+   "description": "<p><u></u><br></p>\n\n<p><u>Clean Unused Palettes</u><br>\nFinds and removes all unnecessary palettes files from the filesystem. Doesn't support Element Palettes yet!</p>",
+   "repository": "https://github.com/cfourney/OpenHarmony/",
+   "isPackage": false,
+   "files": [
+    "tools/OpenHarmony_basic/openHarmony_rigging_tools.js"
+   ],
+   "keywords": [
+    "openHarmony",
+    "palettes"
+   ],
+   "author": "Chris F",
+   "license": "MPL-v2.0",
+   "website": "https://github.com/cfourney/OpenHarmony/",
+   "localFiles": ""
   }
  ]
 }
