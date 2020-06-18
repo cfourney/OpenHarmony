@@ -142,7 +142,7 @@ function oh_rigging_addBackdropToSelected(){
   scene.beginUndoRedoAccum( "oh_rigging_addBackdropToSelected" );
 
   //The path to the UI should be here:
-  var oh_colorPicker = specialFolders.userScripts + "/openHarmony_basic/" + "openHarmony_basic_backdropPicker.ui";
+  var oh_colorPicker = specialFolders.userScripts + "/openHarmony_basic_backdropPicker.ui";
   var ui_file = new $.oFile( oh_colorPicker );
 
   if( !ui_file.exists ){

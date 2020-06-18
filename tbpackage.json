@@ -47,17 +47,18 @@
    "name": "oH Rigging tools",
    "version": "1.0.0",
    "compatibility": "Harmony Premium 15",
-   "description": "<p><u></u><br></p>\n\n<p><u>Clean Unused Palettes</u><br>\nFinds and removes all unnecessary palettes files from the filesystem. Doesn't support Element Palettes yet!</p>",
+   "description": "<b>OpenHarmony Rigging Tools</b>\n<p>Those scripts require the <b>openHarmony</b> lib to work. Install it first for the scripts to work.</p>\n<p><u>Add Centered Weighted Peg</u><br>Adds a peg with a pivot at the center of the selected drawing.</p>\n\n<p><u>Place Pivot with Click</u><br>Place the pivot with a simple click.</p>\n\n<p><u>Clean Unused Palettes</u><br>\nFinds and removes all unnecessary palettes files from the filesystem. Doesn't support Element Palettes yet!</p>\n\n<p><u>Create Backdrop on Selection</u><br>Set up backdrops easily on the selection with this script.</p>\n",
    "repository": "https://github.com/cfourney/OpenHarmony/",
    "isPackage": false,
    "files": [
-    "tools/OpenHarmony_basic/openHarmony_rigging_tools.js"
+    "tools/OpenHarmony_basic/openHarmony_rigging_tools.js",
+    "tools/OpenHarmony_basic/openHarmony_basic_backdropPicker.ui"
    ],
    "keywords": [
     "openHarmony",
     "palettes"
    ],
-   "author": "Chris F",
+   "author": "OpenHarmony",
    "license": "MPL-v2.0",
    "website": "https://github.com/cfourney/OpenHarmony/",
    "localFiles": ""
