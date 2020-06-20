@@ -927,8 +927,8 @@ $.oNode.prototype.unlinkInPort = function( inPort ){
 
 /**
  * Returns the node connected to a specific in-port
- * @param   {int}      inPort      the number of the port to get the linked Node from.
- * @return  {int}    the number of links
+ * @param   {int}        inPort      the number of the port to get the linked Node from.
+ * @return  {$.oNode}                The node connected to this in-port
  */
 $.oNode.prototype.getLinkedInNode = function(inPort){
   if (this.inPorts < inPort) return null;
@@ -1057,6 +1057,7 @@ $.oNode.prototype.unlinkOutNode = function( oNodeObject ){
  * Returns the node connected to a specific outPort
  * @param   {int}      outPort      the number of the port to get the node from.
  * @param   {int}      [outLink=0]  the index of the link.
+ * @return  {$.oNode}   The node connected to this outPort and outLink
  */
 $.oNode.prototype.getLinkedOutNode = function(outPort, outLink){
   if (typeof outLink == 'undefined') var outLink = 0;
