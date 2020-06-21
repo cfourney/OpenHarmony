@@ -461,7 +461,7 @@ Object.defineProperty ($.oPreference.prototype, 'value', {
     }catch(err){
       this.$.debug(err, this.$.DEBUG_LEVEL.ERROR) 
     }
-    this.$.debug("Getting value of Preference "+this.keyword+" : "+value, this.$.DEBUG_LEVEL.ERROR)
+    this.$.debug("Getting value of Preference "+this.keyword+" : "+_value, this.$.DEBUG_LEVEL.ERROR)
     return _value;
   },
 
