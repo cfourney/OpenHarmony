@@ -1278,7 +1278,7 @@ $.oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
 $.oNode.prototype.clone = function( newName, newPosition ){
   // Defaults for optional parameters
   if (typeof newPosition === 'undefined') var newPosition = this.nodePosition;
-  if (typeof newName === 'undefined') var newName = this.name+"_1";
+  if (typeof newName === 'undefined') var newName = this.name+"_clone";
 
   this.$.beginUndo("oH_cloneNode_"+this.name);
 
@@ -1286,8 +1286,14 @@ $.oNode.prototype.clone = function( newName, newPosition ){
   var _attributes = this.attributes;
 
   for (var i in _attributes){
-    var _clonedAttribute = _duplicateNode.getAttributeByName(_attributes[i].keyword);
+    var _clonedAttribute = _clonedNode.getAttributeByName(_attributes[i].keyword);
     _clonedAttribute.setToAttributeValue(_attributes[i]);
+    log(_clonedAttribute.column == null)
+  }
+
+  var palettes = this.palettes
+  for (var i in palettes){
+    _clonedNode.linkPalette(palettes[i])
   }
 
   this.$.endUndo();
@@ -1303,7 +1309,7 @@ $.oNode.prototype.clone = function( newName, newPosition ){
  */
 $.oNode.prototype.duplicate = function(newName, newPosition){
   if (typeof newPosition === 'undefined') var newPosition = this.nodePosition;
-  if (typeof newName === 'undefined') var newName = this.name+"_1";
+  if (typeof newName === 'undefined') var newName = this.name+"_duplicate";
 
   this.$.beginUndo("oH_cloneNode_"+this.name);
 
@@ -1313,6 +1319,11 @@ $.oNode.prototype.duplicate = function(newName, newPosition){
   for (var i in _attributes){
     var _duplicateAttribute = _duplicateNode.getAttributeByName(_attributes[i].keyword);
     _duplicateAttribute.setToAttributeValue(_attributes[i], true);
+  }
+
+  var palettes = this.palettes
+  for (var i in palettes){
+    _duplicateNode.linkPalette(palettes[i])
   }
 
   this.$.endUndo();
@@ -1788,7 +1799,7 @@ $.oDrawingNode.prototype.linkPalette = function(oPaletteObject, index){
  /**
  * Unlinks an Element Palette from a drawing node.
  * @param {$.oPalette}     oPaletteObject      the palette to unlink from the node
- * 
+ *
  * @return {bool}          The success of the unlink operation.
  */
 $.oDrawingNode.prototype.unlinkPalette = function(oPaletteObject){
