@@ -2451,9 +2451,8 @@ $.oGroupNode.prototype.addBackdrop = function(title, body, color, x, y, width, h
 
   var position = {"x":x, "y":y, "w":width, "h":height};
 
-  if (typeof groupPath === 'undefined') var groupPath = "Top";
-
-  if(groupPath instanceof this.$.oGroupNode) groupPath = groupPath.path;
+  var groupPath = this.path;
+  
   if(!(color instanceof this.$.oColorValue)) color = new this.$.oColorValue(color);
 
 
