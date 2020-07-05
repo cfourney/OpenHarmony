@@ -1183,6 +1183,10 @@
             
                 <li data-name="$.oDrawingNode#linkedColumns"><a href="$.oDrawingNode.html#linkedColumns">linkedColumns</a></li>
             
+                <li data-name="$.oDrawingNode#linkedInNodes"><a href="$.oDrawingNode.html#linkedInNodes">linkedInNodes</a></li>
+            
+                <li data-name="$.oDrawingNode#linkedOutNodes"><a href="$.oDrawingNode.html#linkedOutNodes">linkedOutNodes</a></li>
+            
                 <li data-name="$.oDrawingNode#locked"><a href="$.oDrawingNode.html#locked">locked</a></li>
             
                 <li data-name="$.oDrawingNode#name"><a href="$.oDrawingNode.html#name">name</a></li>
@@ -1589,6 +1593,10 @@
             
                 <li data-name="$.oGroupNode#linkedColumns"><a href="$.oGroupNode.html#linkedColumns">linkedColumns</a></li>
             
+                <li data-name="$.oGroupNode#linkedInNodes"><a href="$.oGroupNode.html#linkedInNodes">linkedInNodes</a></li>
+            
+                <li data-name="$.oGroupNode#linkedOutNodes"><a href="$.oGroupNode.html#linkedOutNodes">linkedOutNodes</a></li>
+            
                 <li data-name="$.oGroupNode#locked"><a href="$.oGroupNode.html#locked">locked</a></li>
             
                 <li data-name="$.oGroupNode#multiportIn"><a href="$.oGroupNode.html#multiportIn">multiportIn</a></li>
@@ -1781,6 +1789,8 @@
                 <li data-name="$.oLink#disconnect"><a href="$.oLink.html#disconnect">disconnect</a></li>
             
                 <li data-name="$.oLink#getValidLink"><a href="$.oLink.html#getValidLink">getValidLink</a></li>
+            
+                <li data-name="$.oLink#insertNode"><a href="$.oLink.html#insertNode">insertNode</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1984,6 +1994,10 @@
                 <li data-name="$.oNode#isRoot"><a href="$.oNode.html#isRoot">isRoot</a></li>
             
                 <li data-name="$.oNode#linkedColumns"><a href="$.oNode.html#linkedColumns">linkedColumns</a></li>
+            
+                <li data-name="$.oNode#linkedInNodes"><a href="$.oNode.html#linkedInNodes">linkedInNodes</a></li>
+            
+                <li data-name="$.oNode#linkedOutNodes"><a href="$.oNode.html#linkedOutNodes">linkedOutNodes</a></li>
             
                 <li data-name="$.oNode#locked"><a href="$.oNode.html#locked">locked</a></li>
             
@@ -2284,6 +2298,10 @@
                 <li data-name="$.oPegNode#isRoot"><a href="$.oPegNode.html#isRoot">isRoot</a></li>
             
                 <li data-name="$.oPegNode#linkedColumns"><a href="$.oPegNode.html#linkedColumns">linkedColumns</a></li>
+            
+                <li data-name="$.oPegNode#linkedInNodes"><a href="$.oPegNode.html#linkedInNodes">linkedInNodes</a></li>
+            
+                <li data-name="$.oPegNode#linkedOutNodes"><a href="$.oPegNode.html#linkedOutNodes">linkedOutNodes</a></li>
             
                 <li data-name="$.oPegNode#locked"><a href="$.oPegNode.html#locked">locked</a></li>
             
@@ -3815,7 +3833,7 @@ myLink.connect()     // this will connect the nodes once more, with different po
     
     
     <div class="description">
-        Attemps to connect a link.
+        Attemps to connect a link. Will guess the ports if not provided.
     </div>
     
 
@@ -3904,7 +3922,7 @@ myLink.connect()     // this will connect the nodes once more, with different po
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_nodeLink.js, line 1349
+            openHarmony/openHarmony_nodeLink.js, line 1356
         </div>
         
     </div>
@@ -4093,6 +4111,285 @@ myLink.connect()     // this will connect the nodes once more, with different po
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="insertNode">
+            
+            insertNode<span class="signature">(oNode, <span class="optional">nodeInPort</span>, <span class="optional">nodeOutPort</span>, <span class="optional">nodeOutLink</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;<a href="$.oLink.html">$.oLink</a>>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_nodeLink.js, line 1451
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Connects the given node in the middle of the link. The link must be connected.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>oNode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oNode.html">$.oNode</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                The node to insert in the link</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>nodeInPort</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The inPort to use on the inserted node</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>nodeOutPort</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The outPort to use on the inserted node</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>nodeOutLink</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The outLink to use on the inserted node</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Array.&lt;<a href="$.oLink.html">$.oLink</a>>
+                        
+                    
+            </td>
+            <td class="description last">an Array of two oLink objects that describe the new connections.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>include("openHarmony.js")
+doc = $.scn
+var node1 = doc.$node("Top/Drawing")
+var node2 = doc.$node("Top/Composite")
+var node3 = doc.$node("Top/Transparency")
+
+var link = new $.oLink(node1, node2)
+link.insertNode(node3) // insert the Transparency node between the Drawing and Composite</code></pre>
+    
+
+    
+</dd>
+
         </dl>
     
     
@@ -4112,7 +4409,7 @@ myLink.connect()     // this will connect the nodes once more, with different po
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Jul 02 2020 11:32:01 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Jul 05 2020 18:57:27 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
