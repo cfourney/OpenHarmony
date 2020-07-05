@@ -691,6 +691,34 @@ Object.defineProperty($.oNode.prototype, 'outLinks', {
 
 
 /**
+ * The list of nodes connected to the inport of this node, as a flat list, in order of inport.
+ * @name $.oNode#linkedOutNodes
+ * @readonly
+ * @type {$.oNode[]}
+ */
+Object.defineProperty($.oNode.prototype, 'linkedOutNodes', {
+  get: function(){
+    var _outNodes = this.getOutLinks.map(function(x){return x.outNode});
+    return _outNodes;
+  }
+})
+
+
+/**
+ * The list of nodes connected to the inport of this node, as a flat list, in order of inport.
+ * @name $.oNode#linkedInNodes
+ * @readonly
+ * @type {$.oNode[]}
+ */
+Object.defineProperty($.oNode.prototype, 'linkedInNodes', {
+  get: function(){
+    var _inNodes = this.getInLinks.map(function(x){return x.inNode});
+    return _inNodes
+  }
+})
+
+
+/**
  * The list of nodes connected to the inport of this node, in order of inport.
  * @name $.oNode#ins
  * @readonly
@@ -2507,7 +2535,7 @@ $.oGroupNode.prototype.addBackdrop = function(title, body, color, x, y, width, h
  *
  *  var color = pickColor(); // prompt for color
  *
- *  var group = doc.$node("Top") // get the group to add the backdrop to
+ *  var group = nodes[0].group // get the group to add the backdrop to
  *  var backdrop = group.addBackdropToNodes(nodes, "BackDrop", "", color)
  *
  *  $.endUndo();
