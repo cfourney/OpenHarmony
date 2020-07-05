@@ -912,10 +912,10 @@ $.oNodeLink.prototype.validate = function ( ) {
 
           // if( on[0].type == "MULTIPORT_OUT" ){
           if( outNode.type == "MULTIPORT_OUT" ){
-            return huntInNode( src_node.grp, dstNodeInfo.port );
+            return huntInNode( currentNode.grp, dstNodeInfo.port );
           // }else if( on[0].type == "GROUP" ){
           }else if( outNode.type == "GROUP" ){
-            return huntInNode( src_node.multiportIn, dstNodeInfo.port, dstNodeInfo.link );
+            return huntInNode( outNode.multiportIn, dstNodeInfo.port, dstNodeInfo.link );
           }else{
             // var ret = { "node": on[0], "port":dstNodeInfo.port };
             var ret = { "node": outNode, "port":dstNodeInfo.port };
@@ -1305,7 +1305,7 @@ $.oLink.prototype.getValidLink = function(createOutPorts, createInPorts){
 
 
 /**
- * Attemps to connect a link.
+ * Attemps to connect a link. Will guess the ports if not provided.
  * @return {bool}
  */
 $.oLink.prototype.connect = function(){
@@ -1315,7 +1315,14 @@ $.oLink.prototype.connect = function(){
   }
 
   // do we want to just always get a valid link here or do we want it to fail if not set properly?
-  if (!this.findPorts()) return false;
+  if (!this.findPorts()){
+    var _validLink = this.getValidLink(this.outNode.canCreateInPorts, this.inNode.canCreateInPorts);
+    if (!_validLink) return false;
+    this.inPort = _validLink.inPort;
+    this.outPort = _validLink.outPort;
+    this.outLink = _validLink.outLink;
+  };
+
   if (this.inNode.getInLinksNumber(this._inPort) > 0 && !this.inNode.canCreateInPorts) return false; // can't connect if the in-port is already connected
 
   var createOutPorts = (this.outNode.outPorts <= this._outPort && this.outNode.canCreateOutPorts);
@@ -1423,6 +1430,52 @@ $.oLink.prototype.findPorts = function(){
   return false;
 }
 
+
+/**
+ * Connects the given node in the middle of the link. The link must be connected.
+ * @param {$.oNode} oNode          The node to insert in the link 
+ * @param {int} [nodeInPort = 0]   The inPort to use on the inserted node 
+ * @param {int} [nodeOutPort = 0]  The outPort to use on the inserted node 
+ * @param {int} [nodeOutLink = 0]  The outLink to use on the inserted node
+ * @return {$.oLink[]}   an Array of two oLink objects that describe the new connections.
+ * @example
+ * include("openHarmony.js")
+ * doc = $.scn
+ * var node1 = doc.$node("Top/Drawing")
+ * var node2 = doc.$node("Top/Composite")
+ * var node3 = doc.$node("Top/Transparency")
+ * 
+ * var link = new $.oLink(node1, node2)
+ * link.insertNode(node3) // insert the Transparency node between the Drawing and Composite
+ */
+$.oLink.prototype.insertNode = function(oNode, nodeInPort, nodeOutPort, nodeOutLink){
+  if (!this.linked) return    // can't insert a node if the link isn't connected
+
+  this.$.beginUndo("oh_insertNode")
+
+  var _inNode = this.inNode
+  var _outNode = this.outNode
+  var _inPort = this.inPort
+  var _outPort = this.outPort
+  var _outLink = this.outLink
+
+  var _topLink = new this.$.oLink(_outNode, oNode, _outPort, nodeInPort, _outLink)
+  var _lowerLink = new this.$.oLink(oNode, _inNode, nodeOutPort, _inPort, nodeOutLink)
+
+  this.linked = false;
+  var success = (_topLink.connect() && _lowerLink.connect());
+
+  this.$.endUndo()
+
+  if (success) {
+    return [_topLink, _lowerLink]
+  } else{
+    // we restore the links to default state and return false
+    this.$.debug("failed to insert node "+oNode+" into link "+this)
+    this.$.undo()
+    return false
+  }
+}
 
 /**
  * Converts the node link to a string.
