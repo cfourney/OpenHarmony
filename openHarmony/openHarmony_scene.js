@@ -1700,30 +1700,53 @@ $.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, 
 }
 
 
-$.oScene.prototype.exportLayoutImage = function (path, oNode, exportFrame, exportCameraFrame, exportBackground, frameScale){
-  if (typeof exportCameraFrame === 'undefined') exportCameraFrame = false;
-  if (typeof exportBackground === 'undefined') exportBackground = false;
-  if (typeof frameScale === 'undefined') frameScale = 1;
-  if (typeof frameScale === 'undefined') frame = 1;
+/**
+ * Exports a png of the selected node/frame. if no node is given, all layers will be visible.
+ * @param {$.oFile}  path                        The path in which to save the image. Image will be outputted as PNG.
+ * @param {$.oNode}  [includedNodes]             The nodes to include in the rendering. If no node is specified, all layers will be visible.
+ * @param {int}      [exportFrame]               The frame at which to create the image. By default, the timeline current Frame.
+ * @param {bool}     [exportCameraFrame=false]   Whether to export the camera frames
+ * @param {bool}     [exportBackground=false]    Whether to add a white background.
+ * @param {float}    [frameScale=1]              A factor by which to scale the frame. ex: 1.05 will add a 10% margin (5% on both sides)
+ */
+$.oScene.prototype.exportLayoutImage = function (path, includedNodes, exportFrame, exportCameraFrame, exportBackground, frameScale, format){
+  if (typeof exportCameraFrame === 'undefined') var exportCameraFrame = false;
+  if (typeof exportBackground === 'undefined') var exportBackground = false;
+  if (typeof frameScale === 'undefined') var frameScale = 1;
+  if (typeof frame === 'undefined') var frame = 1;
+  if (typeof format === 'undefined') var format = "PNG4"
   if (typeof path != this.$.oFile) path = new $.oFile(path)
 
   var exporter = new LayoutExport();
   var params = new LayoutExportParams();
   params.renderStaticCameraAtSceneRes = true;
-  params.fileFormat = "PNG4";
+  params.fileFormat = format;
   params.borderScale = frameScale;
   params.exportCameraFrame = exportCameraFrame;
   params.exportAllCameraFrame = false;
   params.filePattern = path.name;
   params.fileDirectory = path.folder;
-
-  params.node = oNode.path;
-  params.frame = exportFrame;
-  params.layoutname = oNode.name;
   params.whiteBackground = exportBackground;
-  exporter.addRender(params);
 
-  if (!exporter.save(params)) throw new Error("failed to export layer "+oNode.name+" at location "+path);
+  if (typeof includedNodes === 'undefined') {
+    params.frame = exportFrame;
+    params.layoutname = this.name;
+    exporter.addRender(params);
+    if (!exporter.save(params)) throw new Error("failed to export layer "+oNode.name+" at location "+path);
+  }else{
+    // include nodes
+    for (var i in includedNodes){
+      var includedNode = includedNodes[i];
+      params.whiteBackground = (i==0 && exportBackground)
+      params.node = includedNode.path;
+      params.frame = exportFrame;
+      params.layoutname = includedNode.name;
+      params.exportCameraFrame = ((i == includedNodes.length-1) && exportCameraFrame);
+      exporter.addRender(params);
+      if (!exporter.save(params)) throw new Error("failed to export layer "+oNode.name+" at location "+path);
+    }
+  }
+
   exporter.flush();
 
   return path;
