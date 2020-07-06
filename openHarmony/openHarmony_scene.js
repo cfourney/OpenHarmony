@@ -401,6 +401,22 @@ Object.defineProperty($.oScene.prototype, 'fov', {
 
 
 /**
+ * The default Display of the scene.
+ * @name $.oScene#defaultDisplay
+ * @type {oNode}
+ */
+Object.defineProperty($.oScene.prototype, 'defaultDisplay', {
+  get : function(){
+    return this.getNodeByPath(scene.getDefaultDisplay());
+  },
+
+  set : function(newDisplay){
+    node.setAsGlobalDisplay(newDisplay.path);
+  }
+});
+
+
+/**
  * Whether the scene contains unsaved changes.
  * @name $.oScene#unsaved
  * @readonly
@@ -598,7 +614,7 @@ Object.defineProperty($.oScene.prototype, "selectedPalette", {
     var _palette = new this.$.oPalette(_paletteList.getPaletteById(_id), _paletteList);
     return _palette;
   },
-  
+
   set: function(newSelection){
     var _id = newSelection.id;
     PaletteManager.setCurrentPaletteById(_id);
@@ -631,20 +647,7 @@ Object.defineProperty($.oScene.prototype, 'activeDrawing', {
 });
 
 
-/**
- * The default Display of the scene.
- * @name $.oScene#defaultDisplay
- * @type {oNode}
- */
-Object.defineProperty($.oScene.prototype, 'defaultDisplay', {
-    get : function(){
-      return this.getNodeByPath(scene.getDefaultDisplay());
-    },
 
-    set : function(newDisplay){
-      node.setAsGlobalDisplay(newDisplay.path);
-    }
-});
 
 
 //-------------------------------------------------------------------------------------
@@ -1694,6 +1697,94 @@ $.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, 
   }else{
     throw new Error (group+" is an invalid group to import the template into.")
   }
+}
+
+
+$.oScene.prototype.exportLayoutImage = function (path, oNode, exportFrame, exportCameraFrame, exportBackground, frameScale){
+  if (typeof exportCameraFrame === 'undefined') exportCameraFrame = false;
+  if (typeof exportBackground === 'undefined') exportBackground = false;
+  if (typeof frameScale === 'undefined') frameScale = 1;
+  if (typeof frameScale === 'undefined') frame = 1;
+  if (typeof path != this.$.oFile) path = new $.oFile(path)
+
+  var exporter = new LayoutExport();
+  var params = new LayoutExportParams();
+  params.renderStaticCameraAtSceneRes = true;
+  params.fileFormat = "PNG4";
+  params.borderScale = frameScale;
+  params.exportCameraFrame = exportCameraFrame;
+  params.exportAllCameraFrame = false;
+  params.filePattern = path.name;
+  params.fileDirectory = path.folder;
+
+  params.node = oNode.path;
+  params.frame = exportFrame;
+  params.layoutname = oNode.name;
+  params.whiteBackground = exportBackground;
+  exporter.addRender(params);
+
+  if (!exporter.save(params)) throw new Error("failed to export layer "+oNode.name+" at location "+path);
+  exporter.flush();
+
+  return path;
+}
+
+
+/**
+ * Export the scene as a single PSD file, with layers described by the layerDescription array. This function is not supported in batch mode.
+ * @param {$.oFile}  path
+ * @param {float}    margin                    a factor by which to increase the rendering area. for example, 1.05 creates a 10% margin. (5% on each side)
+ * @param {Object[]} layersDescription          must be an array of objects {layer: $.oNode, frame: int} which describe all the images to export. By default, will include all visible layers of the timeline.
+ */
+$.oScene.prototype.exportPSD = function (path, margin, layersDescription){
+  if (typeof margin === 'undefined') var margin = 1;
+  if (typeof layersDescription === 'undefined') {
+    // export the current frame for each drawing layer present in the default timeline.
+    var _allNodes = this.$.scn.nodes.filter(function(x){return ["READ", "COLOR_CARD", "GRADIENT"].indexOf(x.type) != -1 && x.enabled })
+    var _timeline = new this.$.oTimeline();
+    _allNodes = _allNodes.sort(function (a, b){return b.timelineIndex(_timeline) - a.timelineIndex(_timeline)})
+    var _scene = this;
+    var layersDescription = _allNodes.map(function(x){return ({layer: x, frame: _scene.currentFrame})})
+  }
+  if (typeof path != this.$.oFile) path = new $.oFile(path)
+  var tempPath = new $.oFile(path.folder+"/"+path.name+"~")
+
+  var errors = [];
+
+  // setting up render
+  var exporter = new LayoutExport();
+  var params = new LayoutExportParams();
+  params.renderStaticCameraAtSceneRes = true;
+  params.fileFormat = "PSD4";
+  params.borderScale = margin;
+  params.exportCameraFrame = false;
+  params.exportAllCameraFrame = false;
+  params.filePattern = tempPath.name;
+  params.fileDirectory = tempPath.folder;
+  params.whiteBackground = false;
+
+  // export layers
+  for (var i in layersDescription){
+    var _frame = layersDescription[i].frame;
+    var _layer = layersDescription[i].layer;
+
+    params.node = _layer.path;
+    params.frame = _frame;
+    params.layoutname = _layer.name;
+    params.exportCameraFrame = (i == layersDescription.length-1);
+    exporter.addRender(params);
+
+    if (!exporter.save(params)) errors.push(params.layoutname);
+  }
+
+  if (errors.length > 0) throw new Error("errors during export of file "+path+" with layers "+errors)
+
+  // write file
+  exporter.flush();
+
+  if (path.exists) path.remove();
+  log(tempPath.exist+" "+tempPath);
+  tempPath.rename(path.name+".psd");
 }
 
 
