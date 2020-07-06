@@ -2754,6 +2754,8 @@
             
                 <li data-name="$.oScene#createPaletteFromNodes"><a href="$.oScene.html#createPaletteFromNodes">createPaletteFromNodes</a></li>
             
+                <li data-name="$.oScene#exportLayoutImage"><a href="$.oScene.html#exportLayoutImage">exportLayoutImage</a></li>
+            
                 <li data-name="$.oScene#exportPSD"><a href="$.oScene.html#exportPSD">exportPSD</a></li>
             
                 <li data-name="$.oScene#exportQT"><a href="$.oScene.html#exportQT">exportQT</a></li>
@@ -4849,7 +4851,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2164
+            openHarmony/openHarmony_scene.js, line 2187
         </div>
         
     </div>
@@ -5017,7 +5019,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2153
+            openHarmony/openHarmony_scene.js, line 2176
         </div>
         
     </div>
@@ -5162,7 +5164,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2175
+            openHarmony/openHarmony_scene.js, line 2198
         </div>
         
     </div>
@@ -5307,7 +5309,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1922
+            openHarmony/openHarmony_scene.js, line 1945
         </div>
         
     </div>
@@ -5615,7 +5617,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1951
+            openHarmony/openHarmony_scene.js, line 1974
         </div>
         
     </div>
@@ -7355,7 +7357,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2087
+            openHarmony/openHarmony_scene.js, line 2110
         </div>
         
     </div>
@@ -7681,6 +7683,309 @@ function myCallBackFunction(){
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="exportLayoutImage">
+            
+            exportLayoutImage<span class="signature">(path, <span class="optional">includedNodes</span>, <span class="optional">exportFrame</span>, <span class="optional">exportCameraFrame</span>, <span class="optional">exportBackground</span>, <span class="optional">frameScale</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_scene.js, line 1712
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Exports a png of the selected node/frame. if no node is given, all layers will be visible.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oFile.html">$.oFile</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                The path in which to save the image. Image will be outputted as PNG.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>includedNodes</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oNode.html">$.oNode</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The nodes to include in the rendering. If no node is specified, all layers will be visible.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>exportFrame</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The frame at which to create the image. By default, the timeline current Frame.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>exportCameraFrame</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether to export the camera frames</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>exportBackground</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Whether to add a white background.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>frameScale</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                A factor by which to scale the frame. ex: 1.05 will add a 10% margin (5% on both sides)</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="exportPSD">
             
             exportPSD<span class="signature">(path, margin, layersDescription)</span>
@@ -7688,7 +7993,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1739
+            openHarmony/openHarmony_scene.js, line 1762
         </div>
         
     </div>
@@ -7850,7 +8155,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1867
+            openHarmony/openHarmony_scene.js, line 1890
         </div>
         
     </div>
@@ -8389,7 +8694,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2102
+            openHarmony/openHarmony_scene.js, line 2125
         </div>
         
     </div>
@@ -8844,7 +9149,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2140
+            openHarmony/openHarmony_scene.js, line 2163
         </div>
         
     </div>
@@ -9386,7 +9691,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2111
+            openHarmony/openHarmony_scene.js, line 2134
         </div>
         
     </div>
@@ -10122,7 +10427,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1804
+            openHarmony/openHarmony_scene.js, line 1827
         </div>
         
     </div>
@@ -10454,7 +10759,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1894
+            openHarmony/openHarmony_scene.js, line 1917
         </div>
         
     </div>
@@ -10693,7 +10998,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1845
+            openHarmony/openHarmony_scene.js, line 1868
         </div>
         
     </div>
@@ -11499,7 +11804,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2010
+            openHarmony/openHarmony_scene.js, line 2033
         </div>
         
     </div>
@@ -11838,7 +12143,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1968
+            openHarmony/openHarmony_scene.js, line 1991
         </div>
         
     </div>
@@ -11909,7 +12214,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1977
+            openHarmony/openHarmony_scene.js, line 2000
         </div>
         
     </div>
@@ -12025,7 +12330,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1993
+            openHarmony/openHarmony_scene.js, line 2016
         </div>
         
     </div>
@@ -12164,7 +12469,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1824
+            openHarmony/openHarmony_scene.js, line 1847
         </div>
         
     </div>
@@ -12325,7 +12630,7 @@ $.endUndo();</code></pre>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Jul 06 2020 16:15:01 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Jul 06 2020 16:52:56 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
