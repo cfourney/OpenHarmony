@@ -1728,7 +1728,8 @@ $.oScene.prototype.exportLayoutImage = function (path, includedNodes, exportFram
   params.fileDirectory = path.folder;
   params.whiteBackground = exportBackground;
 
-  if (typeof includedNodes === 'undefined') {
+  if (typeof includedNodes === 'undefined' || includedNodes.length == 0) {
+    params.node = this.root;
     params.frame = exportFrame;
     params.layoutname = this.name;
     exporter.addRender(params);
