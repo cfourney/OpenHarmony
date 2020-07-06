@@ -2754,6 +2754,8 @@
             
                 <li data-name="$.oScene#createPaletteFromNodes"><a href="$.oScene.html#createPaletteFromNodes">createPaletteFromNodes</a></li>
             
+                <li data-name="$.oScene#exportPSD"><a href="$.oScene.html#exportPSD">exportPSD</a></li>
+            
                 <li data-name="$.oScene#exportQT"><a href="$.oScene.html#exportQT">exportQT</a></li>
             
                 <li data-name="$.oScene#exportTemplate"><a href="$.oScene.html#exportTemplate">exportTemplate</a></li>
@@ -4847,7 +4849,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2073
+            openHarmony/openHarmony_scene.js, line 2164
         </div>
         
     </div>
@@ -5015,7 +5017,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2062
+            openHarmony/openHarmony_scene.js, line 2153
         </div>
         
     </div>
@@ -5160,7 +5162,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2084
+            openHarmony/openHarmony_scene.js, line 2175
         </div>
         
     </div>
@@ -5305,7 +5307,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1831
+            openHarmony/openHarmony_scene.js, line 1922
         </div>
         
     </div>
@@ -5613,7 +5615,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1860
+            openHarmony/openHarmony_scene.js, line 1951
         </div>
         
     </div>
@@ -5944,7 +5946,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1087
+            openHarmony/openHarmony_scene.js, line 1090
         </div>
         
     </div>
@@ -6135,7 +6137,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1164
+            openHarmony/openHarmony_scene.js, line 1167
         </div>
         
     </div>
@@ -6397,7 +6399,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1134
+            openHarmony/openHarmony_scene.js, line 1137
         </div>
         
     </div>
@@ -6661,7 +6663,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1189
+            openHarmony/openHarmony_scene.js, line 1192
         </div>
         
     </div>
@@ -6923,7 +6925,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1064
+            openHarmony/openHarmony_scene.js, line 1067
         </div>
         
     </div>
@@ -7139,7 +7141,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1252
+            openHarmony/openHarmony_scene.js, line 1255
         </div>
         
     </div>
@@ -7353,7 +7355,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1996
+            openHarmony/openHarmony_scene.js, line 2087
         </div>
         
     </div>
@@ -7476,7 +7478,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1357
+            openHarmony/openHarmony_scene.js, line 1360
         </div>
         
     </div>
@@ -7679,6 +7681,168 @@ function myCallBackFunction(){
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="exportPSD">
+            
+            exportPSD<span class="signature">(path, margin, layersDescription)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_scene.js, line 1739
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Export the scene as a single PSD file, with layers described by the layerDescription array. This function is not supported in batch mode.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oFile.html">$.oFile</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>margin</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                a factor by which to increase the rendering area. for example, 1.05 creates a 10% margin. (5% on each side)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>layersDescription</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                must be an array of objects {layer: $.oNode, frame: int} which describe all the images to export. By default, will include all visible layers of the timeline.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="exportQT">
             
             exportQT<span class="signature">(path, display, scale, exportSound, exportPreviewArea)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oNode.html">$.oNode</a>}</span>
@@ -7686,7 +7850,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1776
+            openHarmony/openHarmony_scene.js, line 1867
         </div>
         
     </div>
@@ -7923,7 +8087,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1563
+            openHarmony/openHarmony_scene.js, line 1566
         </div>
         
     </div>
@@ -8225,7 +8389,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2011
+            openHarmony/openHarmony_scene.js, line 2102
         </div>
         
     </div>
@@ -8325,7 +8489,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 700
+            openHarmony/openHarmony_scene.js, line 703
         </div>
         
     </div>
@@ -8500,7 +8664,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 721
+            openHarmony/openHarmony_scene.js, line 724
         </div>
         
     </div>
@@ -8680,7 +8844,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2049
+            openHarmony/openHarmony_scene.js, line 2140
         </div>
         
     </div>
@@ -8787,7 +8951,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 662
+            openHarmony/openHarmony_scene.js, line 665
         </div>
         
     </div>
@@ -8932,7 +9096,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1405
+            openHarmony/openHarmony_scene.js, line 1408
         </div>
         
     </div>
@@ -9077,7 +9241,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1220
+            openHarmony/openHarmony_scene.js, line 1223
         </div>
         
     </div>
@@ -9222,7 +9386,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2020
+            openHarmony/openHarmony_scene.js, line 2111
         </div>
         
     </div>
@@ -9322,7 +9486,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 738
+            openHarmony/openHarmony_scene.js, line 741
         </div>
         
     </div>
@@ -9467,7 +9631,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1235
+            openHarmony/openHarmony_scene.js, line 1238
         </div>
         
     </div>
@@ -9569,7 +9733,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1208
+            openHarmony/openHarmony_scene.js, line 1211
         </div>
         
     </div>
@@ -9721,7 +9885,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1289
+            openHarmony/openHarmony_scene.js, line 1292
         </div>
         
     </div>
@@ -9958,7 +10122,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1713
+            openHarmony/openHarmony_scene.js, line 1804
         </div>
         
     </div>
@@ -10290,7 +10454,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1803
+            openHarmony/openHarmony_scene.js, line 1894
         </div>
         
     </div>
@@ -10529,7 +10693,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1754
+            openHarmony/openHarmony_scene.js, line 1845
         </div>
         
     </div>
@@ -10697,7 +10861,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1686
+            openHarmony/openHarmony_scene.js, line 1689
         </div>
         
     </div>
@@ -10999,7 +11163,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1456
+            openHarmony/openHarmony_scene.js, line 1459
         </div>
         
     </div>
@@ -11190,7 +11354,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 771
+            openHarmony/openHarmony_scene.js, line 774
         </div>
         
     </div>
@@ -11335,7 +11499,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1919
+            openHarmony/openHarmony_scene.js, line 2010
         </div>
         
     </div>
@@ -11674,7 +11838,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1877
+            openHarmony/openHarmony_scene.js, line 1968
         </div>
         
     </div>
@@ -11745,7 +11909,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1886
+            openHarmony/openHarmony_scene.js, line 1977
         </div>
         
     </div>
@@ -11861,7 +12025,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1902
+            openHarmony/openHarmony_scene.js, line 1993
         </div>
         
     </div>
@@ -12000,7 +12164,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1733
+            openHarmony/openHarmony_scene.js, line 1824
         </div>
         
     </div>
@@ -12161,7 +12325,7 @@ $.endUndo();</code></pre>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Jul 05 2020 19:08:36 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Jul 06 2020 16:15:01 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
