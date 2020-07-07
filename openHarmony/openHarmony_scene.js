@@ -1710,12 +1710,13 @@ $.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, 
  * @param {float}    [frameScale=1]              A factor by which to scale the frame. ex: 1.05 will add a 10% margin (5% on both sides)
  */
 $.oScene.prototype.exportLayoutImage = function (path, includedNodes, exportFrame, exportCameraFrame, exportBackground, frameScale, format){
+  if (typeof includedNodes === 'undefined') var includedNodes = [];
   if (typeof exportCameraFrame === 'undefined') var exportCameraFrame = false;
   if (typeof exportBackground === 'undefined') var exportBackground = false;
   if (typeof frameScale === 'undefined') var frameScale = 1;
   if (typeof frame === 'undefined') var frame = 1;
-  if (typeof format === 'undefined') var format = "PNG4"
-  if (typeof path != this.$.oFile) path = new $.oFile(path)
+  if (typeof format === 'undefined') var format = "PNG4";
+  if (typeof path != this.$.oFile) path = new $.oFile(path);
 
   var exporter = new LayoutExport();
   var params = new LayoutExportParams();
@@ -1728,17 +1729,20 @@ $.oScene.prototype.exportLayoutImage = function (path, includedNodes, exportFram
   params.fileDirectory = path.folder;
   params.whiteBackground = exportBackground;
 
-  if (typeof includedNodes === 'undefined' || includedNodes.length == 0) {
+  includedNodes = includedNodes.filter(function(x){return ["READ", "COLOR_CARD", "GRADIENT"].indexOf(x.type) != -1 && x.enabled })
+  var _timeline = new this.$.oTimeline();
+  includedNodes = includedNodes.sort(function (a, b){return b.timelineIndex(_timeline) - a.timelineIndex(_timeline)})
+
+  if (includedNodes.length == 0) {
     params.node = this.root;
     params.frame = exportFrame;
     params.layoutname = this.name;
     exporter.addRender(params);
     if (!exporter.save(params)) throw new Error("failed to export layer "+oNode.name+" at location "+path);
   }else{
-    // include nodes
     for (var i in includedNodes){
       var includedNode = includedNodes[i];
-      params.whiteBackground = (i==0 && exportBackground)
+      params.whiteBackground = (i==0 && exportBackground);
       params.node = includedNode.path;
       params.frame = exportFrame;
       params.layoutname = includedNode.name;
@@ -1764,7 +1768,7 @@ $.oScene.prototype.exportPSD = function (path, margin, layersDescription){
   if (typeof margin === 'undefined') var margin = 1;
   if (typeof layersDescription === 'undefined') {
     // export the current frame for each drawing layer present in the default timeline.
-    var _allNodes = this.$.scn.nodes.filter(function(x){return ["READ", "COLOR_CARD", "GRADIENT"].indexOf(x.type) != -1 && x.enabled })
+    var _allNodes = this.nodes.filter(function(x){return ["READ", "COLOR_CARD", "GRADIENT"].indexOf(x.type) != -1 && x.enabled })
     var _timeline = new this.$.oTimeline();
     _allNodes = _allNodes.sort(function (a, b){return b.timelineIndex(_timeline) - a.timelineIndex(_timeline)})
     var _scene = this;
