@@ -914,11 +914,11 @@ $.oNode.prototype.getFreeInPort = function(createNew){
  */
 $.oNode.prototype.linkInNode = function( nodeToLink, ownPort, destPort, createPorts){
 
-  var link = (new this.$.oLink(nodeToLink, this, destPort, ownPort)).getValidLink(createPorts, createPorts);
-  if (link == null) return;
-  this.$.debug("linking "+this.path+" to "+nodeToLink+" "+link._outPort+" "+link._inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.LOG);
+  var _link = (new this.$.oLink(nodeToLink, this, destPort, ownPort)).getValidLink(createPorts, createPorts);
+  if (_link == null) return;
+  this.$.debug("linking "+_link, this.$.DEBUG_LEVEL.LOG);
 
-  return link.connect();
+  return _link.connect();
 };
 
 
@@ -1048,13 +1048,11 @@ $.oNode.prototype.getFreeOutPort = function(createNew){
  * @return  {bool}    The result of the link, if successful.
  */
 $.oNode.prototype.linkOutNode = function(nodeToLink, ownPort, destPort, createPorts){
-  var link = (new this.$.oLink(this, nodeToLink, ownPort, destPort)).getValidLink(createPorts, createPorts);
-  if (link == null) return;
+  var _link = (new this.$.oLink(this, nodeToLink, ownPort, destPort)).getValidLink(createPorts, createPorts)
+  if (_link == null) return;
+  this.$.debug("linking "+_link, this.$.DEBUG_LEVEL.LOG);
 
-  this.$.debug("linking "+this.path+" to "+nodeToLink+" "+link._outPort+" "+link._inPort+" "+createPorts+" type: "+nodeToLink.type+" "+nodeToLink.inNodes.length, this.$.DEBUG_LEVEL.LOG);
-
-  return link.connect();
-
+  return _link.connect();
 }
 
 
@@ -2480,7 +2478,7 @@ $.oGroupNode.prototype.addBackdrop = function(title, body, color, x, y, width, h
   var position = {"x":x, "y":y, "w":width, "h":height};
 
   var groupPath = this.path;
-  
+
   if(!(color instanceof this.$.oColorValue)) color = new this.$.oColorValue(color);
 
 

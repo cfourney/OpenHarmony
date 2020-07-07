@@ -1385,9 +1385,9 @@ $.oLink.prototype.findPorts = function(){
 
   // Try to find outPort based on inPort
   // most likely to be missing is outLink, and this is the quickest way to find it.
-  if (this._inPort !== undefined){
+  if (this._inPort != undefined){
     var _nodeInfo = node.srcNodeInfo(_inNodePath, this._inPort);
-    if (_nodeInfo && _nodeInfo.node == _outNodePath){
+    if (_nodeInfo && _nodeInfo.node == _outNodePath && (this._outPort == undefined || this._outPort == _nodeInfo.port)){
       this._outPort = _nodeInfo.port;
       this._outLink = _nodeInfo.link;
       this._linked = true;
@@ -1414,6 +1414,8 @@ $.oLink.prototype.findPorts = function(){
   for (var i = 0; i<_inPorts; i++){
     var _nodeInfo = node.srcNodeInfo(_inNodePath, i);
     if (_nodeInfo && _nodeInfo.node == _outNodePath){
+      if (this._outPort !== undefined && this._outPort !== _nodeInfo.port) continue;
+
       this._inPort = i;
       this._outPort = _nodeInfo.port;
       this._outLink = _nodeInfo.link;
@@ -1433,9 +1435,9 @@ $.oLink.prototype.findPorts = function(){
 
 /**
  * Connects the given node in the middle of the link. The link must be connected.
- * @param {$.oNode} oNode          The node to insert in the link 
- * @param {int} [nodeInPort = 0]   The inPort to use on the inserted node 
- * @param {int} [nodeOutPort = 0]  The outPort to use on the inserted node 
+ * @param {$.oNode} oNode          The node to insert in the link
+ * @param {int} [nodeInPort = 0]   The inPort to use on the inserted node
+ * @param {int} [nodeOutPort = 0]  The outPort to use on the inserted node
  * @param {int} [nodeOutLink = 0]  The outLink to use on the inserted node
  * @return {$.oLink[]}   an Array of two oLink objects that describe the new connections.
  * @example
@@ -1444,7 +1446,7 @@ $.oLink.prototype.findPorts = function(){
  * var node1 = doc.$node("Top/Drawing")
  * var node2 = doc.$node("Top/Composite")
  * var node3 = doc.$node("Top/Transparency")
- * 
+ *
  * var link = new $.oLink(node1, node2)
  * link.insertNode(node3) // insert the Transparency node between the Drawing and Composite
  */
