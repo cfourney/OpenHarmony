@@ -585,9 +585,6 @@ $.oAttribute.prototype.setValue = function (value, frame) {
       _animate = true;
     }
 
-    log(_attr.fullKeyword()+" animate? "+_animate+" "+_type)
-
-
     switch(_type){
         // TODO: sanitize input
         case "COLOR" :
