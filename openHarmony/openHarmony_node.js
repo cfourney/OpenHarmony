@@ -1008,7 +1008,7 @@ $.oNode.prototype.getOutLinks = function(){
   for (var i = 0; i<_outPorts; i++){
     var _outLinks = this.getOutLinksNumber(i);
     for (var j = 0; j<_outLinks; j++){
-      var _link = this.getOutLink(i);
+      var _link = this.getOutLink(i, j);
       if (_link != null) _links.push(_link);
     }
   }
