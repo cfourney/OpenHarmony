@@ -991,7 +991,7 @@ $.oNode.prototype.getOutLink = function(outPort, outLink){
   if (!_info) return null;
 
   var _outNode = this.scene.getNodeByPath(_info.node);
-  var _outLink = this.$.oLink(this, _outNode, outPort, _info.port, outLink, true);
+  var _outLink = new this.$.oLink(this, _outNode, outPort, _info.port, outLink, true);
 
   return _outLink;
 }
