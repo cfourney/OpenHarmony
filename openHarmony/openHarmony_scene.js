@@ -1729,7 +1729,7 @@ $.oScene.prototype.exportLayoutImage = function (path, includedNodes, exportFram
   params.fileDirectory = path.folder;
   params.whiteBackground = exportBackground;
 
-  includedNodes = includedNodes.filter(function(x){return ["READ", "COLOR_CARD", "GRADIENT"].indexOf(x.type) != -1 && x.enabled })
+  includedNodes = includedNodes.filter(function(x){return ["CAMERA", "READ", "COLOR_CARD", "GRADIENT"].indexOf(x.type) != -1 && x.enabled })
   var _timeline = new this.$.oTimeline();
   includedNodes = includedNodes.sort(function (a, b){return b.timelineIndex(_timeline) - a.timelineIndex(_timeline)})
 
