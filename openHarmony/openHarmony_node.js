@@ -698,7 +698,7 @@ Object.defineProperty($.oNode.prototype, 'outLinks', {
  */
 Object.defineProperty($.oNode.prototype, 'linkedOutNodes', {
   get: function(){
-    var _outNodes = this.getOutLinks.map(function(x){return x.outNode});
+    var _outNodes = this.getOutLinks().map(function(x){return x.inNode});
     return _outNodes;
   }
 })
@@ -712,7 +712,7 @@ Object.defineProperty($.oNode.prototype, 'linkedOutNodes', {
  */
 Object.defineProperty($.oNode.prototype, 'linkedInNodes', {
   get: function(){
-    var _inNodes = this.getInLinks.map(function(x){return x.inNode});
+    var _inNodes = this.getInLinks().map(function(x){return x.outNode});
     return _inNodes
   }
 })
