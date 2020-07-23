@@ -815,6 +815,9 @@ Object.defineProperty($.oNode.prototype, 'canCreateInPorts', {
   get : function(){
     return ["COMPOSITE",
             "GROUP",
+            "MultiLayerWrite",
+            "TransformGate",
+            "PointConstraintMulti",
             "MULTIPORT_OUT"]
             .indexOf(this.type) != -1;
   }
