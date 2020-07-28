@@ -164,11 +164,11 @@ Object.defineProperty( $.oDrawing.prototype, 'pivot', {
 /**
  * Access the underlay art layer's content through this object.
  * @name $.oDrawing#underlay
- * @type {$.oDrawingLayer}
+ * @type {$.oArtLayer}
  */
 Object.defineProperty( $.oDrawing.prototype, 'underlay', {
   get : function(){
-    return new this.$.oDrawingLayer(0, this);
+    return new this.$.oArtLayer(0, this);
   }
 })
 
@@ -176,11 +176,11 @@ Object.defineProperty( $.oDrawing.prototype, 'underlay', {
 /**
  * Access the color art layer's content through this object.
  * @name $.oDrawing#colorArt
- * @type {$.oDrawingLayer}
+ * @type {$.oArtLayer}
  */
 Object.defineProperty( $.oDrawing.prototype, 'colorArt', {
   get : function(){
-    return new this.$.oDrawingLayer(1, this);
+    return new this.$.oArtLayer(1, this);
   }
 })
 
@@ -188,11 +188,11 @@ Object.defineProperty( $.oDrawing.prototype, 'colorArt', {
 /**
  * Access the line art layer's content through this object.
  * @name $.oDrawing#lineArt
- * @type {$.oDrawingLayer}
+ * @type {$.oArtLayer}
  */
 Object.defineProperty( $.oDrawing.prototype, 'lineArt', {
   get : function(){
-    return new this.$.oDrawingLayer(2, this);
+    return new this.$.oArtLayer(2, this);
   }
 })
 
@@ -200,11 +200,11 @@ Object.defineProperty( $.oDrawing.prototype, 'lineArt', {
 /**
  * Access the overlay art layer's content through this object.
  * @name $.oDrawing#overlay
- * @type {$.oDrawingLayer}
+ * @type {$.oArtLayer}
  */
 Object.defineProperty( $.oDrawing.prototype, 'overlay', {
   get : function(){
-    return new this.$.oDrawingLayer(3, this);
+    return new this.$.oArtLayer(3, this);
   }
 })
 
