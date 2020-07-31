@@ -307,7 +307,7 @@ $.oFolder.prototype.create = function(){
     //dir.path = this.path;
     try{
       dir.mkpath(this.path);
-      return this.exists;  
+      return this.exists;
     }catch(err){
       this.$.debug(err+" ", this.$.DEBUG_LEVEL.ERROR)
       return false;
@@ -392,7 +392,7 @@ $.oFolder.prototype.moveToFolder = function( destFolderPath, overwrite ){
  */
 $.oFolder.prototype.remove = function (removeContents){
   if (typeof removeContents === 'undefined') var removeContents = false;
-  
+
   if (this.listFiles.length > 0 && this.listFolders.length > 0 && !removeContents) throw new Error("Can't remove folder "+this.path+", it is not empty.")
   var _folder = new Dir(this.path);
   _folder.rmdirs();
@@ -617,23 +617,27 @@ $.oFile.prototype.write = function(content, append){
  * @return: { bool }                           The result of the move.
  */
 $.oFile.prototype.move = function( newPath, overwrite ){
-    if (typeof overwrite === 'undefined') var overwrite = false;
+  if (typeof overwrite === 'undefined') var overwrite = false;
 
-    if(newPath instanceof this.$.oFile) newPath = newPath.path;
+  if(newPath instanceof this.$.oFile) newPath = newPath.path;
 
-    var _file = new PermanentFile(this.path);
-    var _dest = new PermanentFile(newPath);
-    // this.$.alert("moving "+_file.path()+" to "+_dest.path()+" exists?"+_dest.exists())
+  var _file = new PermanentFile(this.path);
+  var _dest = new PermanentFile(newPath);
+  // this.$.alert("moving "+_file.path()+" to "+_dest.path()+" exists?"+_dest.exists())
 
-    if (_dest.exists() && !overwrite){
-        this.$.debug("destination file "+newPath+" exists and will not be overwritten. Can't move file.", this.$.DEBUG_LEVEL.ERROR);
-        return false;
+  if (_dest.exists()){
+    if (!overwrite){
+      this.$.debug("destination file "+newPath+" exists and will not be overwritten. Can't move file.", this.$.DEBUG_LEVEL.ERROR);
+      return false;
+    }else{
+      _dest.remove()
     }
+  }
 
-    var success = _file.move(_dest);
-    // this.$.alert(success)
-    if (success) return new this.$.oFile(_dest.path)
-    return false;
+  var success = _file.move(_dest);
+  // this.$.alert(success)
+  if (success) return new this.$.oFile(_dest.path)
+  return false;
 }
 
 
@@ -729,15 +733,15 @@ $.oFile.prototype.remove = function(){
  * // each xml node is represented by a simple object with a "children" property containing the children nodes,
  * // and a objectName property representing the name of the node.
  * // If the node has attributes, those are set as properties on the object. All values are set as strings.
- * 
+ *
  * // example: parsing the shortcuts file
- * 
+ *
  * var shortcutsFile = (new $.oFile(specialFolders.userConfig+"/shortcuts.xml")).parseAsXml();
- * 
+ *
  * // The returned object will always be a simple document object with a single "children" property containing the document nodes.
- * 
+ *
  * var shortcuts = shortcuts.children[0].children     // children[0] is the "shortcuts" parent node, we want the nodes contained within
- * 
+ *
  * for (var i in shortcuts){
  *   log (shortcuts[i].id)
  * }
@@ -777,9 +781,9 @@ $.oFile.prototype.toString = function(){
 /**
  * The constructor for the $.oXml class.
  * @classdesc
- * The $.oXml class can be used to create an object from a xml string. It will contain a "children" property which is an array that holds all the children node from the main document. 
+ * The $.oXml class can be used to create an object from a xml string. It will contain a "children" property which is an array that holds all the children node from the main document.
  * @constructor
- * @param {string}     xmlString           the string to parse for xml content          
+ * @param {string}     xmlString           the string to parse for xml content
  * @param {string}     objectName          "xmlDocument" for the top node, otherwise, the string description of the xml node (ex: <objectName> <property = "value"/> </objectName>)
  * @property {string}  objectName
  * @property {$.oXml[]}  children
@@ -801,7 +805,7 @@ $.oXml = function (xmlString, objectName){
   }
 
   // matches a line with name="property"
-  var propertyRE = /(\w+)="([^\=\<\>]+?)"/igm            
+  var propertyRE = /(\w+)="([^\=\<\>]+?)"/igm
   var match;
   while (match = propertyRE.exec(string)){
     // set the property on the object
