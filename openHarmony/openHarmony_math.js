@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
-//                            openHarmony Library 
+//                            openHarmony Library
 //
 //
 //         Developped by Mathieu Chaptel, Chris Fourney
@@ -50,8 +50,8 @@
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
- 
- 
+
+
 
 /**
  * The $.oPoint helper class - representing a 3D point.
@@ -67,7 +67,7 @@
  */
 $.oPoint = function(x, y, z){
     if (typeof z === 'undefined') var z = 0;
-    
+
     this._type = "point";
 
     this.x = x;
@@ -99,7 +99,7 @@ Object.defineProperty( $.oPoint.prototype, 'polarCoordinates', {
 
 /**
  * Translate the point by the provided values.
- * @param   {int}       x                  the x value to move the point by. 
+ * @param   {int}       x                  the x value to move the point by.
  * @param   {int}       y                  the y value to move the point by.
  * @param   {int}       z                  the z value to move the point by.
  *
@@ -120,7 +120,7 @@ $.oPoint.prototype.translate = function( x, y, z){
 
 /**
  * Adds the input box to the bounds of the current $.oBox.
- * @param   {$.oPoint}       add_pt                The point to add to this point. 
+ * @param   {$.oPoint}       add_pt                The point to add to this point.
  *
  * @return: { $.oPoint }                           Returns self (for inline addition).
  */
@@ -128,13 +128,13 @@ $.oPoint.prototype.pointAdd = function( add_pt ){
   this.x += add_pt.x;
   this.y += add_pt.y;
   this.z += add_pt.z;
-    
+
   return this;
 }
 
 /**
  * Subtracts the input box to the bounds of the current $.oBox.
- * @param   {$.oPoint}       sub_pt                The point to subtract to this point. 
+ * @param   {$.oPoint}       sub_pt                The point to subtract to this point.
  *
  * @return: { $.oPoint }                           Returns self (for inline addition).
  */
@@ -142,13 +142,13 @@ $.oPoint.prototype.pointSubtract = function( sub_pt ){
   this.x -= sub_pt.x;
   this.y -= sub_pt.y;
   this.z -= sub_pt.z;
-    
+
   return this;
 }
 
 /**
  * Multiply all coordinates by this value.
- * @param   {float}       float_val                Multiply all coordinates by this value. 
+ * @param   {float}       float_val                Multiply all coordinates by this value.
  *
  * @return: { $.oPoint }                           Returns self (for inline addition).
  */
@@ -156,13 +156,13 @@ $.oPoint.prototype.multiply = function( float_val ){
   this.x *= float_val;
   this.y *= float_val;
   this.z *= float_val;
-    
+
   return this;
 }
 
 /**
  * Divides all coordinates by this value.
- * @param   {float}       float_val                Divide all coordinates by this value. 
+ * @param   {float}       float_val                Divide all coordinates by this value.
  *
  * @return: { $.oPoint }                           Returns self (for inline addition).
  */
@@ -170,13 +170,13 @@ $.oPoint.prototype.divide = function( float_val ){
   this.x /= float_val;
   this.y /= float_val;
   this.z /= float_val;
-    
+
   return this;
 }
 
 /**
  * Find average of provided points.
- * @param   {$.oPoint[]}       point_array         The array of points to get the average. 
+ * @param   {$.oPoint[]}       point_array         The array of points to get the average.
  *
  * @return: { $.oPoint }                           Returns the $.oPoint average of provided points.
  */
@@ -186,21 +186,42 @@ $.oPoint.prototype.pointAverage = function( point_array ){
     _avg.pointAdd( point_array[x] );
   }
   _avg.divide( point_array.length );
-  
+
   return _avg;
 }
+
+
+/**
+ * Converts a Drawing point coordinate into a scene coordinate, as used by pegs
+ * @returns {$.oPoint}
+ */
+$.oPoint.prototype.convertToSceneCoordinates = function () {
+  var _point = scene.toOGL( new Point3d( this.x, this.y, this.z ) );
+  return new this.$.oPoint(_point.x, _point.y, _point.z)
+}
+
+
+/**
+ * Converts a scene coordinate point into a Drawing space coordinate, as used by Drawing tools and $.oShape
+ * @returns {$.oPoint}
+ */
+$.oPoint.prototype.convertToDrawingSpace = function () {
+  var _point = scene.fromOGL( new Point3d( this.x, this.y, this.z ) );
+  return new this.$.oPoint(_point.x, _point.y, _point.z)
+}
+
 
 /**
  * Uses the scene settings to convert this as a worldspace point into an OpenGL point, used in underlying transformation operations in Harmony.
  */
 $.oPoint.convertToOpenGL = function(){
-  
+
   var qpt = scene.toOGL( new Point3d( this.x, this.y, this.z ) );
-  
+
   this.x = qpt.x;
   this.y = qpt.y;
   this.z = qpt.z;
-  
+
 }
 
 
@@ -210,7 +231,7 @@ $.oPoint.convertToOpenGL = function(){
 $.oPoint.convertToWorldspace = function(){
 
   var qpt = scene.fromOGL( new Point3d( this.x, this.y, this.z ) );
-  
+
   this.x = qpt.x;
   this.y = qpt.y;
   this.z = qpt.z;
@@ -227,11 +248,11 @@ $.oPoint.convertToWorldspace = function(){
  */
 $.oPoint.prototype.lerp = function( point, perc ){
   var delta = new this.$.oPoint( point.x, point.y, point.z );
- 
+
   delta = delta.pointSubtract( this );
   delta.multiply( perc );
   delta.pointAdd( this );
-  
+
   return delta;
 }
 
@@ -244,9 +265,9 @@ $.oPoint.prototype.lerp = function( point, perc ){
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
- 
 
- 
+
+
 /**
  * The $.oBox helper class - representing a 2D box.
  * @constructor
@@ -274,8 +295,8 @@ $.oBox = function( left, top, right, bottom ){
   this.right = right;
   this.bottom = bottom;
 }
- 
- 
+
+
 /**
  * The width of the box.
  * @name $.oBox#width
@@ -286,8 +307,8 @@ Object.defineProperty($.oBox.prototype, 'width', {
     return this.right - this.left + 1; //Inclusive size.
   }
 })
- 
- 
+
+
 /**
  * The height of the box.
  * @name $.oBox#height
@@ -298,8 +319,8 @@ Object.defineProperty($.oBox.prototype, 'height', {
     return this.bottom - this.top;
   }
 })
- 
- 
+
+
 /**
  * The center of the box.
  * @name $.oBox#center
@@ -310,11 +331,11 @@ Object.defineProperty($.oBox.prototype, 'center', {
     return new this.$.oPoint(this.left+this.width/2, this.top+this.height/2);
   }
 })
- 
- 
+
+
 /**
  * Adds the input box to the bounds of the current $.oBox.
- * @param   {$.oBox}       box                The $.oBox to include.                    
+ * @param   {$.oBox}       box                The $.oBox to include.
  */
 $.oBox.prototype.include = function(box){
   if (box.left < this.left) this.left = box.left;
@@ -325,17 +346,17 @@ $.oBox.prototype.include = function(box){
 
 /**
  * Adds the bounds of the nodes to the current $.oBox.
- * @param   {oNode[]}       oNodeArray                An array of nodes to include in the box.                 
+ * @param   {oNode[]}       oNodeArray                An array of nodes to include in the box.
  */
 $.oBox.prototype.includeNodes = function(oNodeArray){
   // convert to array if only one node is passed
   if (!Array.isArray(oNodeArray)) oNodeArray = [oNodeArray];
-  
+
   for (var i in oNodeArray){
      var _node = oNodeArray[i];
      var _nodeBox = _node.bounds;
      this.include(_nodeBox);
-  } 
+  }
 }
 
 
