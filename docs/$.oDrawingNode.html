@@ -1246,6 +1246,8 @@
             
                 <li data-name="$.oDrawingNode#duplicate"><a href="$.oDrawingNode.html#duplicate">duplicate</a></li>
             
+                <li data-name="$.oDrawingNode#exposeAllDrawings"><a href="$.oDrawingNode.html#exposeAllDrawings">exposeAllDrawings</a></li>
+            
                 <li data-name="$.oDrawingNode#extractPeg"><a href="$.oDrawingNode.html#extractPeg">extractPeg</a></li>
             
                 <li data-name="$.oDrawingNode#getAttributeByColumnName"><a href="$.oDrawingNode.html#getAttributeByColumnName">getAttributeByColumnName</a></li>
@@ -1293,6 +1295,8 @@
                 <li data-name="$.oDrawingNode#remove"><a href="$.oDrawingNode.html#remove">remove</a></li>
             
                 <li data-name="$.oDrawingNode#removeAttribute"><a href="$.oDrawingNode.html#removeAttribute">removeAttribute</a></li>
+            
+                <li data-name="$.oDrawingNode#showDrawingAtFrame"><a href="$.oDrawingNode.html#showDrawingAtFrame">showDrawingAtFrame</a></li>
             
                 <li data-name="$.oDrawingNode#subNodes"><a href="$.oDrawingNode.html#subNodes">subNodes</a></li>
             
@@ -6101,7 +6105,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1847
+            openHarmony/openHarmony_node.js, line 1879
         </div>
         
     </div>
@@ -6277,6 +6281,122 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="exposeAllDrawings">
+            
+            exposeAllDrawings<span class="signature">(framesPerDrawing)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_node.js, line 1820
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Displays all the drawings from the node's element onto the timeline
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>framesPerDrawing</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="extractPeg">
             
             extractPeg<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oPegNode.html">$.oPegNode</a>}</span>
@@ -6284,7 +6404,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1887
+            openHarmony/openHarmony_node.js, line 1922
         </div>
         
     </div>
@@ -6678,7 +6798,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1930
+            openHarmony/openHarmony_node.js, line 1965
         </div>
         
     </div>
@@ -9123,7 +9243,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1823
+            openHarmony/openHarmony_node.js, line 1855
         </div>
         
     </div>
@@ -10062,6 +10182,145 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     </tbody>
 </table>
 
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="showDrawingAtFrame">
+            
+            showDrawingAtFrame<span class="signature">(drawing, frameNum)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_node.js, line 1842
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Displays the given drawing at the given frame
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>drawing</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oDrawing.html">$.oDrawing</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>frameNum</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
     
     
     
@@ -11087,7 +11346,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1834
+            openHarmony/openHarmony_node.js, line 1866
         </div>
         
     </div>
@@ -11232,7 +11491,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1872
+            openHarmony/openHarmony_node.js, line 1907
         </div>
         
     </div>
@@ -11398,7 +11657,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Jul 30 2020 12:59:55 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Jul 31 2020 10:28:13 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
