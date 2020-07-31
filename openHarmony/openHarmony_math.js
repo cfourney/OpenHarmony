@@ -196,7 +196,7 @@ $.oPoint.prototype.pointAverage = function( point_array ){
  * @returns {$.oPoint}
  */
 $.oPoint.prototype.convertToSceneCoordinates = function () {
-  var _point = scene.toOGL( new Point3d( this.x, this.y, this.z ) );
+  var _point = scene.fromOGL( new Point3d( this.x/1875, this.y/1875, this.z ) );
   return new this.$.oPoint(_point.x, _point.y, _point.z)
 }
 
@@ -206,8 +206,8 @@ $.oPoint.prototype.convertToSceneCoordinates = function () {
  * @returns {$.oPoint}
  */
 $.oPoint.prototype.convertToDrawingSpace = function () {
-  var _point = scene.fromOGL( new Point3d( this.x, this.y, this.z ) );
-  return new this.$.oPoint(_point.x, _point.y, _point.z)
+  var _point = scene.toOGL( new Point3d( this.x, this.y, this.z ) );
+  return new this.$.oPoint(_point.x*1875, _point.y*1875, _point.z)
 }
 
 
