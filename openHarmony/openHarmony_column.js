@@ -48,10 +48,10 @@
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
- 
+
 
 /**
- * The constructor for the $.oColumn class. 
+ * The constructor for the $.oColumn class.
  * @classdesc  Columns are the objects that hold all the animation information of an attribute. Any animated value in Harmony is so thanks to a column linked to the attribute representing the node parameter. Columns can be added from the scene class, or are directly created when giving a non 1 value when setting an attribute.
  * @constructor
  * @param   {string}                   uniqueName                  The unique name of the column.
@@ -74,23 +74,23 @@
  *
  * // you can extract all the keys to be able to iterate over it:
  * var keyFrames = myColumn.getKeyFrames();
- * 
+ *
  * for (var i in keyFrames){
  *   $.log (keyFrames[i].frameNumber);
  * }
  *
  * // you can also link a given column to more than one attribute so they share the same animated values:
- * 
- * doc.nodes[0].attributes.position.y.column = myColumn;  // now position.x and position.y will share the same animation on the node. 
+ *
+ * doc.nodes[0].attributes.position.y.column = myColumn;  // now position.x and position.y will share the same animation on the node.
  */
 $.oColumn = function( uniqueName, oAttributeObject ){
   this._type = "column";
-  
+
   this.uniqueName = uniqueName;
   this.attributeObject = oAttributeObject;
-  
+
   this._cacheFrames = [];
-  
+
   //Helper cache for subsequent actions.
   try{
     // fails when the column has no attribute
@@ -100,7 +100,7 @@ $.oColumn = function( uniqueName, oAttributeObject ){
 }
 
 
-// $.oColumn Object Properties 
+// $.oColumn Object Properties
 /**
  * The name of the column.
  * @name $.oColumn#name
@@ -110,10 +110,10 @@ Object.defineProperty( $.oColumn.prototype, 'name', {
     get : function(){
          return column.getDisplayName(this.uniqueName);
     },
- 
+
     set : function(newName){
         var _success = column.rename(this.uniqueName, newName)
-        if (_success){ 
+        if (_success){
           this.uniqueName = newName;
         }else{
           throw new Error("Failed to rename column "+this.uniqueName+" to "+newName+".")
@@ -123,7 +123,7 @@ Object.defineProperty( $.oColumn.prototype, 'name', {
 
 
 /**
- * The type of the column. There are nine column types: drawing (DRAWING), sound (SOUND), 3D Path (3DPATH), Bezier Curve (BEZIER), Ease Curve (EASE), Expression (EXPR), Timing (TIMING) for timing columns, Quaternion path (QUATERNIONPATH) for 3D rotation and Annotation (ANNOTATION) for annotation columns. 
+ * The type of the column. There are nine column types: drawing (DRAWING), sound (SOUND), 3D Path (3DPATH), Bezier Curve (BEZIER), Ease Curve (EASE), Expression (EXPR), Timing (TIMING) for timing columns, Quaternion path (QUATERNIONPATH) for 3D rotation and Annotation (ANNOTATION) for annotation columns.
  * @name $.oColumn#type
  * @readonly
  * @type {string}
@@ -133,8 +133,8 @@ Object.defineProperty( $.oColumn.prototype, 'type', {
         return column.type(this.uniqueName)
     }
 });
- 
- 
+
+
 /**
  * Whether the column is selected.
  * @name $.oColumn#selected
@@ -149,13 +149,13 @@ Object.defineProperty($.oColumn.prototype, 'selected', {
             return true;
           }
         }
-        
+
         //Also look through the timeline.
         System.println( "TODO: Also look through the timeline" );
-        
+
         return false;
     },
-    
+
     set : function(){
       throw "Setting oColumn.selected is not yet implemented."
     }
@@ -173,11 +173,11 @@ Object.defineProperty($.oColumn.prototype, 'frames', {
         while( this._cacheFrames.length < frame.numberOf()+1 ){
           this._cacheFrames.push( new this.$.oFrame( this._cacheFrames.length, this ) );
         }
-        
+
         return this._cacheFrames;
     }
 });
- 
+
 
 /**
  * An array of the keyframes provided by the column.
@@ -211,7 +211,7 @@ Object.defineProperty($.oColumn.prototype, 'subColumns', {
         return { a : 1 };
     }
 });
- 
+
 /**
  * The type of easing used by the column
  * @name $.oColumn#subColumns
@@ -255,10 +255,10 @@ Object.defineProperty($.oColumn.prototype, 'stepSection', {
     func.setHoldStep (_columnName, newSection.step)
   }
 });
- 
- 
+
+
 // $.oColumn Class methods
- 
+
 /**
  * Extends the exposure of the drawing's keyframes given the provided arguments.
  * @deprecated Use oDrawingColumn.extendExposures instead.
@@ -269,13 +269,13 @@ Object.defineProperty($.oColumn.prototype, 'stepSection', {
 $.oColumn.prototype.extendExposures = function( exposures, amount, replace){
     if (this.type != "DRAWING") return false;
     // if amount is undefined, extend function below will automatically fill empty frames
-   
+
     if (typeof exposures === 'undefined') var exposures = this.attributeObject.getKeyframes();
- 
+
     for (var i in exposures) {
         if (!exposures[i].isBlank) exposures[i].extend(amount, replace);
     }
- 
+
 }
 
 
@@ -285,49 +285,49 @@ $.oColumn.prototype.extendExposures = function( exposures, amount, replace){
  */
 $.oColumn.prototype.removeDuplicateKeys = function(){
     var _keys = this.getKeyframes();
-        
+
     var _pointsToRemove = [];
     var _pointC;
-    
+
     // check the extremities
     var _pointA = _keys[0].value;
     var _pointB = _keys[1].value;
     if (JSON.stringify(_pointA) == JSON.stringify(_pointB)) _pointsToRemove.push(_keys[0].frameNumber);
-    
+
     for (var k=1; k<_keys.length-2; k++){
         _pointA = _keys[k-1].value;
         _pointB = _keys[k].value;
         _pointC = _keys[k+1].value;
-        
+
         MessageLog.trace(this.attributeObject.keyword+" pointA: "+JSON.stringify(_pointA)+" pointB: "+JSON.stringify(_pointB)+" pointC: "+JSON.stringify(_pointC));
-        
+
         if (JSON.stringify(_pointA) == JSON.stringify(_pointB) && JSON.stringify(_pointB) == JSON.stringify(_pointC)){
             _pointsToRemove.push(_keys[k].frameNumber);
         }
     }
-    
+
     _pointA = _keys[_keys.length-2].value;
     _pointB = _keys[_keys.length-1].value;
     if (JSON.stringify(_pointC) == JSON.stringify(_pointB)) _pointsToRemove.push(_keys[_keys.length-1].frameNumber);
-    
+
     var _frames = this.frames;
 
     for (var i in _pointsToRemove){
         _frames[_pointsToRemove[i]].isKeyframe = false;
     }
-    
+
 }
 
 
 /**
  * Duplicates a column. Because of the way Harmony works, specifying an attribute the column will be connected to ensures higher value fidelity between the original and the copy.
  * @param {$.oAttribute}     [newAttribute]         An attribute to link the column to upon duplication.
- * 
+ *
  * @return {$.oColumn}                The column generated.
  */
 $.oColumn.prototype.duplicate = function(newAttribute) {
   var _duplicateColumn = this.$.scene.addColumn(this.type, this.name);
-  
+
   // linking to an attribute if one is provided
   if (typeof newAttribute !== 'undefined'){
     newAttribute.column = _duplicateColumn;
@@ -336,7 +336,7 @@ $.oColumn.prototype.duplicate = function(newAttribute) {
 
   var _duplicatedFrames = _duplicateColumn.frames;
   var _keyframes = this.keyframes;
-  
+
   // we set the ease twice to avoid incompatibilities between ease parameters and yet unchanged points
   for (var i in _keyframes){
     var _duplicateFrame = _duplicatedFrames[_keyframes[i].frameNumber];
@@ -366,7 +366,7 @@ $.oColumn.prototype.duplicate = function(newAttribute) {
  */
 $.oColumn.prototype.getKeyframes = function(){
   var _frames = this.frames;
-  
+
   var _ease = this.easeType;
   if( _ease == "BEZIER" || _ease == "EASE" ){
     var _keyFrames = [];
@@ -380,7 +380,7 @@ $.oColumn.prototype.getKeyframes = function(){
 
     return _keyFrames;
   }
-  
+
   _frames = _frames.filter(function(x){return x.isKeyframe});
   return _frames;
 }
@@ -405,7 +405,7 @@ $.oColumn.prototype.getKeyFrames = function(){
 $.oColumn.prototype.getValue = function(frame){
   if (typeof frame === 'undefined') var frame = 1;
 
-  // this.$.log("Getting value of frame "+this.frameNumber+" of column "+this.column.name) 
+  // this.$.log("Getting value of frame "+this.frameNumber+" of column "+this.column.name)
   if (this.attributeObject){
     return this.attributeObject.getValue(frame);
   }else{
@@ -416,7 +416,7 @@ $.oColumn.prototype.getValue = function(frame){
       var _frame = new this.$.oFrame(frame, this, this.subColumns);
       return new this.$.oPathPoint(this, _frame);
     }
-    
+
     return column.getEntry (this.uniqueName, 1, frame);
   }
 }
@@ -431,16 +431,16 @@ $.oColumn.prototype.setValue = function(newValue, frame){
   if (typeof frame === 'undefined') var frame = 1;
 
   if (this.attributeObject){
-    this.attributeObject.setValue( newValue, frame);   
+    this.attributeObject.setValue( newValue, frame);
   }else{
     this.$.debug("setting unlinked column "+this.name+" value to "+newValue+" at frame "+frame, this.$.DEBUG_LEVEL.ERROR);
     this.$.debug("warning : setting a value on a column without attribute destroys value fidelity", this.$.DEBUG_LEVEL.ERROR);
-    
+
     if (this.type == "3DPATH") {
       column.setEntry (this.uniqueName, 1, frame, newValue.x);
       column.setEntry (this.uniqueName, 2, frame, newValue.y);
       column.setEntry (this.uniqueName, 3, frame, newValue.z);
-      column.setEntry (this.uniqueName, 4, frame, newValue.velocity);    
+      column.setEntry (this.uniqueName, 4, frame, newValue.velocity);
     }else{
       column.setEntry (this.uniqueName, 1, frame, newValue.toString());
     }
@@ -464,7 +464,7 @@ $.oColumn.prototype.setValue = function(newValue, frame){
 //                                  //
 //////////////////////////////////////
 //////////////////////////////////////
- 
+
 
 /**
  * the $.oDrawingColumn constructor. Only called internally by the factory function [scene.getColumnByName()]{@link $.oScene#getColumnByName};
@@ -484,7 +484,7 @@ $.oDrawingColumn = function( uniqueName, oAttributeObject ) {
     $.oColumn.call(this, uniqueName, oAttributeObject);
 }
 
- 
+
 // extends $.oColumn and can use its methods
 $.oDrawingColumn.prototype = Object.create($.oColumn.prototype);
 
@@ -515,10 +515,15 @@ Object.defineProperty($.oDrawingColumn.prototype, 'element', {
 $.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace){
     // if amount is undefined, extend function below will automatically fill empty frames
     if (typeof exposures === 'undefined') var exposures = this.getKeyframes();
- 
-    this.$.debug("extendingExposures "+exposures.map(function(x){return x.frameNumber}), this.$.DEBUG_LEVEL.LOG)
+    if (typeof amount === 'undefined') var amount = 1;
+
+    this.$.debug("extendingExposures "+exposures.map(function(x){return x.frameNumber})+" by "+amount, this.$.DEBUG_LEVEL.DEBUG)
+
+    // can't extend blank exposures, so we remove them from the list to extend
+    exposures = exposures.filter(function(x){return !x.isBlank})
+
     for (var i in exposures) {
-        if (!exposures[i].isBlank) exposures[i].extend(amount, replace);
+      exposures[i].extend(amount, replace);
     }
 }
 
@@ -533,23 +538,23 @@ $.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replac
 $.oDrawingColumn.prototype.duplicate = function(newAttribute, duplicateElement) {
   // duplicate element?
   if (typeof duplicateElement === 'undefined') var duplicateElement = true;
-  var _duplicateElement = duplicateElement?this.element.duplicate():this.element;  
+  var _duplicateElement = duplicateElement?this.element.duplicate():this.element;
 
   var _duplicateColumn = this.$.scene.addColumn(this.type, this.name, _duplicateElement);
-  
+
   // linking to an attribute if one is provided
   if (typeof newAttribute !== 'undefined'){
     newAttribute.column = _duplicateColumn;
     _duplicateColumn.attributeObject = newAttribute;
   }
-  
+
   var _frames = this.frames;
   for (var i in _frames){
     var _duplicateFrame = _duplicateColumn.frames[i];
     _duplicateFrame.value = _frames[i].value;
     if (_frames[i].isKeyframe) _duplicateFrame.isKeyframe = true;
   }
-  
+
   return _duplicateColumn;
 }
 
@@ -563,11 +568,11 @@ $.oDrawingColumn.prototype.duplicate = function(newAttribute, duplicateElement) 
 $.oDrawingColumn.prototype.renameAllByFrame = function(prefix, suffix){
   if (typeof prefix === 'undefined') var prefix = "";
   if (typeof suffix === 'undefined') var suffix = "";
-  
+
   // get exposed drawings
   var _displayedDrawings = this.getKeyframes();
   this.$.debug("Column "+this.name+" has drawings : "+_displayedDrawings.map(function(x){return x.value}), this.$.DEBUG_LEVEL.LOG);
-  
+
   // remove duplicates
   var _seen = [];
   for (var i=0; i<_displayedDrawings.length; i++){
@@ -579,7 +584,7 @@ $.oDrawingColumn.prototype.renameAllByFrame = function(prefix, suffix){
       i--;
     }
   }
-  
+
   // rename
   for (var i in _displayedDrawings){
     var _frameNum = _displayedDrawings[i].frameNumber;
