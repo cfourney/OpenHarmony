@@ -61,7 +61,7 @@
  */
 $.oElement = function( id, oColumnObject){
   this._type = "element";
-  
+
   this.id = id;
   this.column = oColumnObject;
 }
@@ -77,7 +77,7 @@ Object.defineProperty($.oElement.prototype, 'name', {
     get : function(){
          return element.getNameById(this.id)
     },
- 
+
     set : function(newName){
          element.renameById(this.id, newName);
     }
@@ -94,8 +94,8 @@ Object.defineProperty($.oElement.prototype, 'path', {
          return fileMapper.toNativePath(element.completeFolder(this.id))
     }
 })
- 
- 
+
+
 /**
  * The drawings available in the element.
  * @name $.oElement#drawings
@@ -111,7 +111,7 @@ Object.defineProperty($.oElement.prototype, 'drawings', {
     return _drawings;
   }
 })
- 
+
 
 /**
  * The file format of the element.
@@ -126,7 +126,7 @@ Object.defineProperty($.oElement.prototype, 'format', {
   }
 })
 
- 
+
 /**
  * The palettes linked to this element.
  * @name $.oElement#palettes
@@ -149,47 +149,47 @@ Object.defineProperty($.oElement.prototype, 'palettes', {
 
 /**
  * Adds a drawing to the element. Provide a filename to import an external file as a drawing.
- * @param   {int}        [atFrame]              The frame at which to add the drawing on the $.oDrawingColumn.
+ * @param   {int}        [atFrame]              The frame at which to add the drawing on the $.oDrawingColumn. Values < 1 create no exposure.
  * @param   {name}       [name]                 The name of the drawing to add.
- * @param   {string}       [filename]             The filename for the drawing to add.
- *  
+ * @param   {string}     [filename]             The filename for the drawing to add.
+ *
  * @return {$.oDrawing}      The added drawing
  */
 $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
   if (typeof atFrame === 'undefined') var atFrame = 1;
   if (typeof filename === 'undefined') var filename = null;
   if (typeof name === 'undefined') var name = atFrame+'';
-   
+
   if (!(filename instanceof this.$.oFile)) filename = new this.$.oFile(filename);
 
-  var _fileExists = filename.exists; 
+  var _fileExists = filename.exists;
   // TODO deal with fileExists and storeInProjectFolder
   Drawing.create (this.id, name, _fileExists, true);
-  
+
   var _drawing = new this.$.oDrawing( name, this );
 
   if (_fileExists) _drawing.importBitmap(filename);
-  
+
   // place drawing on the column at the provided frame
-  if (this.column != null || this.column != undefined){
+  if (this.column != null || this.column != undefined && atFrame >= 1){
     column.setEntry(this.column.uniqueName, 1, atFrame, name);
   }
-  
+
   return _drawing;
 }
- 
+
 
 /**
  * Gets a drawing object by the name.
  * @param   {string}     name              The name of the drawing to get.
- * 
+ *
  * @return { $.oDrawing }      The drawing found by the search
  */
 $.oElement.prototype.getDrawingByName = function ( name ){
     return new this.$.oDrawing( name, this );
 }
 
- 
+
 /**
  * Link a provided palette to an element as an Element palette.
  * @param   {$.oPalette}    oPaletteObject              The oPalette object to link
@@ -199,7 +199,7 @@ $.oElement.prototype.getDrawingByName = function ( name ){
 $.oElement.prototype.linkPalette = function ( oPaletteObject , listIndex){
   var _paletteList = PaletteObjectManager.getPaletteListByElementId(this.id);
   if (typeof listIndex === 'undefined') var listIndex = _paletteList.numPalettes;
-  
+
   var _palettePath = oPaletteObject.path.path.replace(".plt", "");
 
   var _palette = new this.$.oPalette(_paletteList.insertPalette (_palettePath, listIndex), _paletteList);
@@ -209,7 +209,7 @@ $.oElement.prototype.linkPalette = function ( oPaletteObject , listIndex){
 
 /**
  * If the palette passed as a parameter is linked to this element, it will be unlinked, and moved to the scene palette list.
- * @param {$.oPalette} oPaletteObject 
+ * @param {$.oPalette} oPaletteObject
  */
 $.oElement.prototype.unlinkPalette = function ( oPaletteObject) {
   log(oPaletteObject.id)
@@ -225,7 +225,6 @@ $.oElement.prototype.unlinkPalette = function ( oPaletteObject) {
     _palette.remove(false);
     return true;
   }catch(err){
-    this.$.debug(JSON.stringify(err, null, " "))
     this.$.debug("Failed to unlink palette "+_palette.name+" from element "+this.name);
     return false;
   }
@@ -245,15 +244,15 @@ $.oElement.prototype.duplicate = function(name){
   var _scanType = element.scanType(this.id);
 
   var _duplicateElement = this.$.scene.addElement(name, this.format, _fieldGuide, _scanType);
-  
+
   var _drawings = this.drawings;
-  var _elementFolder = new this.$.oFolder(_duplicateElement.path.slice(0,-1)+"d");
-  
+  var _elementFolder = new this.$.oFolder(_duplicateElement.path);
+
   for (var i in _drawings){
     var _drawingFile = new this.$.oFile(_drawings[i].path);
     try{
-      _duplicateElement.addDrawing(i, _drawings[i].name, _drawingFile);
-      //_drawingFile.copy(_elementFolder, _drawingFile.name.replace(this.name, "d"));
+      var duplicateDrawing = _duplicateElement.addDrawing(0, _drawings[i].name, _drawingFile);
+      _drawingFile.copy(_elementFolder, duplicateDrawing.name, true);
     }catch(err){
       this.debug("could not copy drawing file "+drawingFile.name+" into element "+_duplicateElement.name, this.DEBUG_LEVEL.ERROR);
     }
