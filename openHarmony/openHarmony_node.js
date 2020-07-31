@@ -1813,6 +1813,38 @@ $.oDrawingNode.prototype.getUsedPalettes = function(){
 }
 
 
+/**
+ * Displays all the drawings from the node's element onto the timeline
+ * @param {int} framesPerDrawing
+ */
+$.oDrawingNode.prototype.exposeAllDrawings = function(framesPerDrawing){
+  if (typeof framesPerDrawing === 'undefined') var framesPerDrawing = 1;
+
+  var _drawings = this.element.drawings;
+  var frameNumber = 1
+  for (var i=0; i < _drawings.length; i++){
+    //log("showing drawing "+_drawings[i].name+" at frame "+i)
+    this.showDrawingAtFrame(_drawings[i], frameNumber)
+    frameNumber+=framesPerDrawing
+  }
+
+  var _column = this.attributes.drawing.element.column
+  var _exposures = _column.getKeyframes()
+  _column.extendExposures(_exposures, framesPerDrawing-1)
+}
+
+
+/**
+ * Displays the given drawing at the given frame
+ * @param {$.oDrawing} drawing
+ * @param {int} frameNum
+ */
+$.oDrawingNode.prototype.showDrawingAtFrame = function(drawing, frameNum){
+  var _column = this.attributes.drawing.element.column
+  _column.setValue(drawing.name, frameNum)
+}
+
+
  /**
  * Links a palette to a drawing node as Element Palette.
  * @param {$.oPalette}     oPaletteObject      the palette to link to the node
@@ -1847,8 +1879,11 @@ $.oDrawingNode.prototype.unlinkPalette = function(oPaletteObject){
 $.oDrawingNode.prototype.duplicate = function(newName, newPosition, duplicateElement){
   if (typeof newPosition === 'undefined') var newPosition = this.nodePosition;
   if (typeof newName === 'undefined') var newName = this.name+"_1";
+  if (typeof duplicateElement === 'undefined') var duplicateElement = true;
 
-  var _duplicateNode = this.group.addNode(this.type, newName, newPosition);
+  var _duplicateElement = duplicateElement?this.element.duplicate(this.name):this.element;
+
+  var _duplicateNode = this.group.addDrawingNode(newName, newPosition, _duplicateElement);
   var _attributes = this.attributes;
 
   for (var i in _attributes){
