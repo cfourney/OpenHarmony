@@ -104,7 +104,7 @@ Object.defineProperty( $.oDrawing.prototype, 'name', {
     get : function(){
        return this._name;
     },
-    
+
     set : function(newName){
       if (this._name == newName) return;
 
@@ -149,7 +149,7 @@ Object.defineProperty( $.oDrawing.prototype, 'path', {
  */
 Object.defineProperty( $.oDrawing.prototype, 'pivot', {
   get : function(){
-    var _pivot = Drawing.getPivot(this._key);
+    var _pivot = Drawing.getPivot({"drawing":this._key});
     return new this.$.oPoint(_pivot.x, _pivot.y, 0);
   },
 
@@ -217,7 +217,7 @@ Object.defineProperty( $.oDrawing.prototype, 'overlay', {
 /**
  * Import a given file into an existing drawing.
  * @param   {string}     file              The path to the file
- * 
+ *
  * @return { $.oDrawing }      The drawing found by the search
  */
 $.oDrawing.prototype.importBitmap = function(file){
@@ -235,11 +235,11 @@ $.oDrawing.prototype.importBitmap = function(file){
 $.oDrawing.prototype.getVisibleFrames = function(){
   var _element = this.element;
   var _column = _element.column;
-  
+
   if (!_column){
     this.$.log("Column missing: can't get visible frames for  drawing "+this.name+" of element "+_element.name);
-    return null; 
-  } 
+    return null;
+  }
 
   var _frames = [];
   var _keys = _column.keyframes;
@@ -257,26 +257,26 @@ $.oDrawing.prototype.getVisibleFrames = function(){
 $.oDrawing.prototype.remove = function(){
     var _element = this.element;
     var _column = _element.column;
-    
+
     if (!_column){
       this.$.log("Column missing: impossible to delete drawing "+this.name+" of element "+_element.name);
-      return; 
-    } 
+      return;
+    }
 
     var _frames = _column.frames;
     var _lastFrame = _frames.pop();
     // this.$.log(_lastFrame.frameNumber+": "+_lastFrame.value)
 
     var _thisDrawing = this;
-    
+
     // we have to expose the drawing on the column to delete it. Exposing at the last frame...
     this.$.debug("deleting drawing "+_thisDrawing+" from element "+_element.name, this.$.DEBUG_LEVEL.LOG)
     var _lastDrawing = _lastFrame.value;
     var _keyFrame = _lastFrame.isKeyFrame;
     _lastFrame.value = _thisDrawing;
-    
+
     column.deleteDrawingAt(_column.uniqueName, _lastFrame.frameNumber);
-    
+
     // resetting the last frame
     _lastFrame.value = _lastDrawing;
     _lastFrame.isKeyFrame = _keyFrame;
@@ -303,7 +303,7 @@ $.oDrawing.prototype.refreshPreview = function(){
  /**
  * Change the currently active drawing. Can specify an art Layer
  * Doesn't work in batch mode.
- * @param {oDrawing.ART_LAYER}   [artLayer]      activate the given art layer 
+ * @param {oDrawing.ART_LAYER}   [artLayer]      activate the given art layer
  * @return {bool}   success of setting the drawing as current
  */
 $.oDrawing.prototype.setAsActiveDrawing = function(artLayer){
@@ -335,7 +335,7 @@ $.oDrawing.prototype.setAsActiveDrawing = function(artLayer){
  /**
  * Converts the line ends of the Drawing object to the defined type.
  * Doesn't work in batch mode. This function modifies the selection.
- * 
+ *
  * @param {oDrawing.LINE_END_TYPE}     endType        the type of line ends to set.
  * @param {oDrawing.ART_LAYER}        [artLayer]     only apply to provided art Layer.
  */
@@ -354,7 +354,7 @@ $.oDrawing.prototype.setLineEnds = function(endType, artLayer){
   // apply to all arts only if art layer not specified
   ToolProperties.setApplyAllArts( !artLayer );
   Action.perform( "deselect()", "cameraView" );
-  Action.perform( "onActionChooseSelectTool()" );	
+  Action.perform( "onActionChooseSelectTool()" );
   Action.perform( "selectAll()", "cameraView" );
 
   var widget = $.getHarmonyUIWidget("pencilShape", "frameBrushParameters");
@@ -515,7 +515,7 @@ $.oStencil = function(xmlDescription){
 
 /**
  * Parses the xml string of the stencil xml description to create an object with all the information from it.
- * @private 
+ * @private
  */
 $.oStencil.getSettingsFromXml = function(xmlString){
   var object = {};
@@ -541,10 +541,10 @@ $.oStencil.getSettingsFromXml = function(xmlString){
       if(intValue == floatValue){
         value = intValue;
       }else{
-        value = floatValue;        
+        value = floatValue;
       }
     }
-    
+
     object[match[1]] = match[2];
   }
 
