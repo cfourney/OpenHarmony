@@ -332,12 +332,50 @@ $.oDrawing.prototype.setAsActiveDrawing = function(artLayer){
 }
 
 
+/**
+ * Copies the contents of the Drawing into the clipboard
+ * @param {oDrawing.ART_LAYER} [artLayer]    Specify to only copy the contents of the specified artLayer
+ */
+$.oDrawing.prototype.copyContents = function(artLayer){
+
+  var _current = this.setAsActiveDrawing( artLayer );
+  if (!_current) {
+    this.$.debug("Impossible to copy contents of drawing "+this.name+" of element "+_element.name+", the drawing cannot be set as active.", this.DEBUG_LEVEL.ERROR);
+    return;
+  }
+  ToolProperties.setApplyAllArts( !artLayer );
+  Action.perform( "deselect()", "cameraView" );
+  Action.perform( "onActionChooseSelectTool()" );
+  Action.perform( "selectAll()", "cameraView" );
+
+  if (Action.validate("copy()", "cameraView").enabled) Action.perform("copy()", "cameraView");
+}
+
+
+/**
+ * Pastes the contents of the clipboard into the Drawing
+ * @param {oDrawing.ART_LAYER} [artLayer]    Specify to only paste the contents onto the specified artLayer
+ */
+$.oDrawing.prototype.pasteContents = function(artLayer){
+
+  var _current = this.setAsActiveDrawing( artLayer );
+  if (!_current) {
+    this.$.debug("Impossible to copy contents of drawing "+this.name+" of element "+_element.name+", the drawing cannot be set as active.", this.DEBUG_LEVEL.ERROR);
+    return;
+  }
+  ToolProperties.setApplyAllArts( !artLayer );
+  Action.perform( "deselect()", "cameraView" );
+  Action.perform( "onActionChooseSelectTool()" );
+  if (Action.validate("paste()", "cameraView").enabled) Action.perform("paste()", "cameraView");
+}
+
+
  /**
  * Converts the line ends of the Drawing object to the defined type.
  * Doesn't work in batch mode. This function modifies the selection.
  *
  * @param {oDrawing.LINE_END_TYPE}     endType        the type of line ends to set.
- * @param {oDrawing.ART_LAYER}        [artLayer]     only apply to provided art Layer.
+ * @param {oDrawing.ART_LAYER}        [artLayer]      only apply to provided art Layer.
  */
 $.oDrawing.prototype.setLineEnds = function(endType, artLayer){
   if (this.$.batchMode){
@@ -347,7 +385,7 @@ $.oDrawing.prototype.setLineEnds = function(endType, artLayer){
 
   var _current = this.setAsActiveDrawing( artLayer );
   if (!_current) {
-    this.$.debug("Impossible to change line ends on drawing "+this.name+" of element "+_element.name, this.DEBUG_LEVEL.ERROR);
+    this.$.debug("Impossible to change line ends on drawing "+this.name+" of element "+_element.name+", the drawing cannot be set as active.", this.DEBUG_LEVEL.ERROR);
     return;
   }
 
