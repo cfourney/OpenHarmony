@@ -1058,9 +1058,13 @@
             
             <span class="subtitle">Methods</span>
             
+                <li data-name="$.oDrawing#copyContents"><a href="$.oDrawing.html#copyContents">copyContents</a></li>
+            
                 <li data-name="$.oDrawing#getVisibleFrames"><a href="$.oDrawing.html#getVisibleFrames">getVisibleFrames</a></li>
             
                 <li data-name="$.oDrawing#importBitmap"><a href="$.oDrawing.html#importBitmap">importBitmap</a></li>
+            
+                <li data-name="$.oDrawing#pasteContents"><a href="$.oDrawing.html#pasteContents">pasteContents</a></li>
             
                 <li data-name="$.oDrawing#refreshPreview"><a href="$.oDrawing.html#refreshPreview">refreshPreview</a></li>
             
@@ -3842,6 +3846,129 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="copyContents">
+            
+            copyContents<span class="signature">(<span class="optional">artLayer</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 339
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Copies the contents of the Drawing into the clipboard
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>artLayer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oDrawing.ART_LAYER</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Specify to only copy the contents of the specified artLayer</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="getVisibleFrames">
             
             getVisibleFrames<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;int>}</span>
@@ -4074,6 +4201,129 @@
     </tbody>
 </table>
 
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="pasteContents">
+            
+            pasteContents<span class="signature">(<span class="optional">artLayer</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 359
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Pastes the contents of the clipboard into the Drawing
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>artLayer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oDrawing.ART_LAYER</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Specify to only paste the contents onto the specified artLayer</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
     
     
     
@@ -4385,7 +4635,7 @@ Doesn't work in batch mode.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 342
+            openHarmony/openHarmony_drawing.js, line 380
         </div>
         
     </div>
@@ -4537,7 +4787,7 @@ Doesn't work in batch mode. This function modifies the selection.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 373
+            openHarmony/openHarmony_drawing.js, line 411
         </div>
         
     </div>
@@ -4616,7 +4866,7 @@ Doesn't work in batch mode. This function modifies the selection.
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Jul 31 2020 10:58:46 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Aug 05 2020 14:13:01 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
