@@ -179,7 +179,7 @@ Object.defineProperty($.oFolder.prototype, 'folders', {
           if (_folders[i] == "." || _folders[i] == "..") _folders.splice(i,1);
       }
 
-      return _folders.map(function(x){return new this.$.oFolder( dir.path() + "/" + x )});
+      return _folders.map(function(x){return new this.$.oFolder( _dir.path() + "/" + x )});
     }
 });
 
