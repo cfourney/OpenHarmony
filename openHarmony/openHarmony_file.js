@@ -265,9 +265,7 @@ $.oFolder.prototype.listFolders = function(filter){
     _dir.setFilter(QDir.Dirs); //QDir.NoDotAndDotDot not supported?
     var _folders = _dir.entryList();
 
-    for (var i in _folders){
-        if (_folders[i] == "." || _folders[i] == "..") _folders.splice(i,1);
-    }
+    _folders = _folders.filter(function(x){return x!= "." && x!= ".."})
 
     return _folders;
 }
@@ -652,7 +650,10 @@ $.oFile.prototype.move = function( newPath, overwrite ){
 
   var success = _file.move(_dest);
   // this.$.alert(success)
-  if (success) return new this.$.oFile(_dest.path)
+  if (success) {
+    this.path = _dest.path()
+    return this;
+  }
   return false;
 }
 
