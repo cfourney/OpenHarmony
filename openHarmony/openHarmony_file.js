@@ -111,6 +111,9 @@ Object.defineProperty($.oFolder.prototype, 'name', {
         var _name = this.path.split("/");
         _name = _name.pop();
         return _name;
+    },
+    set: function(newName){
+      this.rename(newName)
     }
 });
 
@@ -337,7 +340,7 @@ $.oFolder.prototype.copy = function( folderPath, copyName, overwrite ){
 
 /**
  * Move this folder to the specified path.
- * @param   {string}   destFolderPath           The new complete path of the folder after the move (CFNote: Should this not be a $.oFolder?)
+ * @param   {string}   destFolderPath           The new complete path of the folder after the move
  * @param   {bool}     [overwrite=false]        Whether to overwrite the target.
  *
  * @return { bool }                            The result of the move.
@@ -383,6 +386,16 @@ $.oFolder.prototype.moveToFolder = function( destFolderPath, overwrite ){
   var name = this.name;
 
   destFolderPath.move(folder+"/"+name, overwrite);
+}
+
+
+/**
+ * Renames the folder
+ * @param {string} newName
+ */
+$.oFolder.prototype.rename = function(newName){
+  var destFolderPath = this.folder.path+"/"+newName
+  this.move(destFolderPath)
 }
 
 
@@ -479,6 +492,9 @@ Object.defineProperty($.oFile.prototype, 'name', {
 
       var _name = _fullName.slice(0, _fullName.lastIndexOf("."));
       return _name;
+    },
+    set: function(newName){
+      this.rename(newName)
     }
 });
 
