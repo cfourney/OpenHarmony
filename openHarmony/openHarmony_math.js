@@ -363,3 +363,46 @@ $.oBox.prototype.includeNodes = function(oNodeArray){
 $.oBox.prototype.toString = function(){
   return "{top:"+this.top+", right:"+this.right+", bottom:"+this.bottom+", left:"+this.left+"}"
 }
+
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//         $.oVector class          //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+$.oVector = function(x, y, z){
+  if (typeof z === "undefined") var z = 0;
+  this._vector = vector3D(x, y, z)
+}
+
+
+$.oVector.prototype.normalize = function(){
+  this._vector.normalize()
+
+  return this
+}
+
+$.oVector.prototype.add = function (vector2){
+  x = this._vector.x
+  y = this._vector.y
+  z = this._vector.z
+
+  this._vector = vector3D(x+vector2.x, y+vector2.y, z+vector2.z)
+
+  return this
+}
+
+$.oVector.prototype.multiply = function(num){
+  this._vector = vector3D(num*vector2.x, num*vector2.y, num*vector2.z)
+}
+
+
+
