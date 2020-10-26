@@ -63,10 +63,19 @@ $.oDrawing = function( name, oElementObject ){
   this._type = "drawing";
   this._name = name;
   this.element = oElementObject;
+
   this._key = Drawing.Key({
     elementId : oElementObject.id,
     exposure : name
   });
+
+  //log(JSON.stringify(this._key))
+
+  this._overlay = new this.$.oArtLayer(3, this);
+  this._lineArt = new this.$.oArtLayer(2, this);
+  this._colorArt = new this.$.oArtLayer(1, this);
+  this._underlay = new this.$.oArtLayer(0, this);
+  this._artLayers = [this._underlay, this._colorArt, this._lineArt, this._overlay];
 }
 
 
@@ -162,13 +171,31 @@ Object.defineProperty( $.oDrawing.prototype, 'pivot', {
 
 
 /**
+ * The bounding box of the drawing, in drawing space coordinates. (null if the drawing is empty.)
+ * @name $.oDrawing#boundingBox
+ * @type {$.oBox}
+ */
+Object.defineProperty( $.oDrawing.prototype, 'boundingBox', {
+  get: function(){
+    var _box = new this.$.oBox()
+    for (var i in this.artLayers){
+      var _layerBox = this.artLayers[i].boundingBox
+      if (_layerBox) _box.include(_layerBox)
+    }
+
+    return _box
+  }
+})
+
+
+/**
  * Access the underlay art layer's content through this object.
  * @name $.oDrawing#underlay
  * @type {$.oArtLayer}
  */
 Object.defineProperty( $.oDrawing.prototype, 'underlay', {
   get : function(){
-    return new this.$.oArtLayer(0, this);
+    return this._underlay;
   }
 })
 
@@ -180,7 +207,7 @@ Object.defineProperty( $.oDrawing.prototype, 'underlay', {
  */
 Object.defineProperty( $.oDrawing.prototype, 'colorArt', {
   get : function(){
-    return new this.$.oArtLayer(1, this);
+    return this.colorArt;
   }
 })
 
@@ -192,7 +219,7 @@ Object.defineProperty( $.oDrawing.prototype, 'colorArt', {
  */
 Object.defineProperty( $.oDrawing.prototype, 'lineArt', {
   get : function(){
-    return new this.$.oArtLayer(2, this);
+    return this.lineArt;
   }
 })
 
@@ -204,11 +231,73 @@ Object.defineProperty( $.oDrawing.prototype, 'lineArt', {
  */
 Object.defineProperty( $.oDrawing.prototype, 'overlay', {
   get : function(){
-    return new this.$.oArtLayer(3, this);
+    return this.overlay;
   }
 })
 
 
+/**
+ * The list of artLayers of this drawing.
+ * @name $.oDrawing#artLayers
+ * @type {$.oArtLayer[]}
+ */
+Object.defineProperty( $.oDrawing.prototype, 'artLayers', {
+  get : function(){
+    return this._artLayers;
+  }
+})
+
+
+/**
+ * the currently active art layer of this drawing.
+ * @name $.oDrawing#activeArtLayer
+ * @type {$.oArtLayer}
+ */
+Object.defineProperty( $.oDrawing.prototype, 'activeArtLayer', {
+  get : function(){
+    var settings = Tools.getToolSettings();
+    if (!settings.currentDrawing) return null;
+
+    return this.artLayers[settings.activeArt]
+  },
+  set : function(newArtLayer){
+    this.setAsActiveDrawing(newArtLayer._layerIndex);
+  }
+})
+
+
+/**
+ * the selected shapes on this drawing
+ * @name $.oDrawing#selectedShapes
+ * @type {$.oShape}
+ */
+Object.defineProperty( $.oDrawing.prototype, 'selectedShapes', {
+  get: function(){
+    var _selectedShapes = [];
+    for (var i in this.artLayers){
+      _selectedShapes = _selectedShapes.concat(this.artLayers[i].selectedShapes);
+    }
+
+    return _selectedShapes;
+  }
+})
+
+
+/**
+ * the selected shapes on this drawing
+ * @name $.oDrawing#selectedStrokes
+ * @type {$.oShape}
+ */
+Object.defineProperty( $.oDrawing.prototype, 'selectedStrokes', {
+  get: function(){
+    var _selectedStrokes = [];
+    for (var i in this.artLayers){
+      _selectedStrokes = _selectedStrokes.concat(this.artLayers[i].selectedStrokes);
+    }
+
+    return _selectedStrokes;
+  }
+})
 
 
 
@@ -270,7 +359,7 @@ $.oDrawing.prototype.remove = function(){
     var _thisDrawing = this;
 
     // we have to expose the drawing on the column to delete it. Exposing at the last frame...
-    this.$.debug("deleting drawing "+_thisDrawing+" from element "+_element.name, this.$.DEBUG_LEVEL.LOG)
+    this.$.debug("deleting drawing "+_thisDrawing+" from element "+_element.name, this.$.DEBUG_LEVEL.LOG);
     var _lastDrawing = _lastFrame.value;
     var _keyFrame = _lastFrame.isKeyFrame;
     _lastFrame.value = _thisDrawing;
@@ -435,7 +524,8 @@ $.oDrawing.prototype.toString = function(){
 $.oArtLayer = function( index , oDrawingObject ){
   this._layerIndex = index;
   this._drawing = oDrawingObject;
-  this._key = {drawing: oDrawingObject._key, art:index}
+  //log(this._drawing._key)
+  this._key = {"drawing": this._drawing._key, "art":index}
 }
 
 
@@ -457,7 +547,78 @@ Object.defineProperty( $.oArtLayer.prototype, 'shapes', {
 
 
 /**
+ * The shapes contained on the drawing.
+ * @name $.oArtLayer#strokes
+ * @type {$.oStroke[]}
+ */
+Object.defineProperty( $.oArtLayer.prototype, 'strokes', {
+  get : function(){
+    var _strokes = []
+
+    var _shapes = this.shapes
+    for (var i in _shapes){
+      _strokes = _strokes.concat(_shapes[i].strokes)
+    }
+
+    return _strokes
+  }
+})
+
+
+
+/**
+ * The bounds of the layer, in drawing space coordinates. (null if the drawing is empty.)
+ * @name $.oArtLayer#boundingBox
+ * @type {$.oBox}
+ */
+Object.defineProperty( $.oArtLayer.prototype, 'boundingBox', {
+  get: function(){
+    var _box = Drawing.query.getBox(this._key);
+
+    log(JSON.stringify(this._key)+': '+JSON.stringify(_box))
+
+    if (_box.empty) return null;
+
+    var _boundingBox = new $.oBox(_box.x0, _box.y0, _box.x1, _box.y1);
+    return _boundingBox;
+  }
+})
+
+
+/**
+ * the currently selected shapes on the ArtLayer.
+ */
+Object.defineProperty( $.oArtLayer.prototype, 'selectedShapes', {
+  get: function(){
+    var _shapes = Drawing.selection.get(this._key).selectedLayers;
+    var _artLayer = this;
+    return _shapes.map(function(x){return new this.$.oShape(x, _artLayer)})
+  }
+})
+
+
+
+/**
+ * the currently selected strokes on the ArtLayer.
+ */
+Object.defineProperty( $.oArtLayer.prototype, 'selectedStrokes', {
+  get: function(){
+    var _shapes = this.selectedShapes;
+    var _strokes = []
+
+    for (var i in _shapes){
+      _strokes = _strokes.concat(_shapes[i].strokes)
+    }
+
+    return _strokes
+  }
+})
+
+
+
+/**
  * Removes the contents of the art layer.
+ * WIP
  */
 $.oArtLayer.prototype.clear = function(){
   return this.name;
@@ -500,23 +661,64 @@ $.oShape = function( index , oArtLayerObject ){
 Object.defineProperty( $.oShape.prototype, 'strokes', {
   get : function(){
     var _strokes = Drawing.query.getLayerStrokes(this._key).layers[0].strokes;
-    return _strokes;
+    var _strokeObjects = _strokes.map(function(x){return new this.$.oStroke(x, this)})
+    return _strokeObjects;
   }
 })
 
 
 /**
- * WIP Set and retrieve the selected status of each shape.
+ * WIP Retrieve the selected status of each shape.
  * @name $.oShape#selected
- * @type {$.oShape[]}
+ * @type {bool}
  */
 Object.defineProperty( $.oShape.prototype, 'selected', {
   get : function(){
+    var _selection = this._drawingLayer._selectedShapes;
+    var _indices = _selection.map(function(x){return x._shapeIndex});
+    return (_indices.indexOf(this._shapeIndex) != -1)
   },
-
   set : function(){
   }
 })
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//         $.oStroke class          //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for the $.oStroke class.
+ * @constructor
+ * @classdesc  The $.oStroke class models the strokes that make up the shapes visible on the Drawings.
+ * @param {object}    strokeObject      The stroke object descriptor that contains the info for the stroke
+ * @param {oArtLayer} oArtLayerObject   The parent ArtLayer
+ */
+$.oStroke = function(strokeObject, oArtLayerObject){
+  this._stroke = strokeObject;
+  this._drawingLayer = oArtLayerObject;
+}
+
+
+/**
+ * The points that make up the stroke
+ * @name $.oStroke#path
+ * @type {$.oPoint[]}
+ */
+Object.defineProperty($.oStroke.prototype, "path", {
+  get: function (){
+    return this._stroke.path
+  }
+})
+
 
 
 

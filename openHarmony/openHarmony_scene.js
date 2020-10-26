@@ -623,9 +623,39 @@ Object.defineProperty($.oScene.prototype, "selectedPalette", {
 
 
 /**
+ * The selected strokes on the currently active Drawing
+ * @name $.oScene#selectedShapes
+ * @type {$.oStroke[]}
+ */
+Object.defineProperty($.oScene.prototype, "selectedShapes", {
+  get : function(){
+    var _currentDrawing = this.activeDrawing;
+    var _shapes = _currentDrawing.shapes;
+
+    return _shapes;
+  }
+})
+
+
+/**
+ * The selected strokes on the currently active Drawing
+ * @name $.oScene#selectedStrokes
+ * @type {$.oStroke[]}
+ */
+Object.defineProperty($.oScene.prototype, "selectedStrokes", {
+  get : function(){
+    var _currentDrawing = this.activeDrawing;
+    var _strokes = _currentDrawing.strokes;
+
+    return _strokes;
+  }
+})
+
+
+/**
  * The current drawing of the scene.
  * @name $.oScene#activeDrawing
- * @type {in$.oDrawing}
+ * @type {$.oDrawing}
  */
 Object.defineProperty($.oScene.prototype, 'activeDrawing', {
   get : function(){
