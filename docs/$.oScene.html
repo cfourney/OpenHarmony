@@ -649,7 +649,11 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oArtLayer#boundingBox"><a href="$.oArtLayer.html#boundingBox">boundingBox</a></li>
+            
                 <li data-name="$.oArtLayer#shapes"><a href="$.oArtLayer.html#shapes">shapes</a></li>
+            
+                <li data-name="$.oArtLayer#strokes"><a href="$.oArtLayer.html#strokes">strokes</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -1027,7 +1031,13 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oDrawing#activeArtLayer"><a href="$.oDrawing.html#activeArtLayer">activeArtLayer</a></li>
+            
                 <li data-name="$.oDrawing#ART_LAYER"><a href="$.oDrawing.html#ART_LAYER">ART_LAYER</a></li>
+            
+                <li data-name="$.oDrawing#artLayers"><a href="$.oDrawing.html#artLayers">artLayers</a></li>
+            
+                <li data-name="$.oDrawing#boundingBox"><a href="$.oDrawing.html#boundingBox">boundingBox</a></li>
             
                 <li data-name="$.oDrawing#colorArt"><a href="$.oDrawing.html#colorArt">colorArt</a></li>
             
@@ -1044,6 +1054,10 @@
                 <li data-name="$.oDrawing#path"><a href="$.oDrawing.html#path">path</a></li>
             
                 <li data-name="$.oDrawing#pivot"><a href="$.oDrawing.html#pivot">pivot</a></li>
+            
+                <li data-name="$.oDrawing#selectedShapes"><a href="$.oDrawing.html#selectedShapes">selectedShapes</a></li>
+            
+                <li data-name="$.oDrawing#selectedStrokes"><a href="$.oDrawing.html#selectedStrokes">selectedStrokes</a></li>
             
                 <li data-name="$.oDrawing#underlay"><a href="$.oDrawing.html#underlay">underlay</a></li>
             
@@ -2715,6 +2729,10 @@
             
                 <li data-name="$.oScene#selectedNodes"><a href="$.oScene.html#selectedNodes">selectedNodes</a></li>
             
+                <li data-name="$.oScene#selectedShapes"><a href="$.oScene.html#selectedShapes">selectedShapes</a></li>
+            
+                <li data-name="$.oScene#selectedStrokes"><a href="$.oScene.html#selectedStrokes">selectedStrokes</a></li>
+            
                 <li data-name="$.oScene#stage"><a href="$.oScene.html#stage">stage</a></li>
             
                 <li data-name="$.oScene#startPreview"><a href="$.oScene.html#startPreview">startPreview</a></li>
@@ -2884,6 +2902,32 @@
                 
             </span>
             <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="$.oStroke">
+            <span class="title">
+                <a href="$.oStroke.html">$.oStroke</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oStroke#path"><a href="$.oStroke.html#path">path</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -3268,7 +3312,7 @@ function myCallBackFunction(){
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="activeDrawing">activeDrawing<span class="type-signature type in$.odrawing">in$.oDrawing</span> </h4>
+        <h4 class="name" id="activeDrawing">activeDrawing<span class="type-signature type $.odrawing"><a href="$.oDrawing.html">$.oDrawing</a></span> </h4>
     </div>
     
     
@@ -4492,6 +4536,96 @@ function myCallBackFunction(){
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="selectedShapes">selectedShapes<span class="type-signature type array.<$.ostroke>">Array.&lt;<a href="$.oStroke.html">$.oStroke</a>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The selected strokes on the currently active Drawing
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="selectedStrokes">selectedStrokes<span class="type-signature type array.<$.ostroke>">Array.&lt;<a href="$.oStroke.html">$.oStroke</a>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The selected strokes on the currently active Drawing
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="stage"><span class="type-signature ">readonly</span>stage<span class="type-signature type $.ofile"><a href="$.oFile.html">$.oFile</a></span> </h4>
     </div>
     
@@ -4865,7 +4999,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2192
+            openHarmony/openHarmony_scene.js, line 2222
         </div>
         
     </div>
@@ -5033,7 +5167,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2181
+            openHarmony/openHarmony_scene.js, line 2211
         </div>
         
     </div>
@@ -5178,7 +5312,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2203
+            openHarmony/openHarmony_scene.js, line 2233
         </div>
         
     </div>
@@ -5323,7 +5457,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1950
+            openHarmony/openHarmony_scene.js, line 1980
         </div>
         
     </div>
@@ -5631,7 +5765,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1979
+            openHarmony/openHarmony_scene.js, line 2009
         </div>
         
     </div>
@@ -5962,7 +6096,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1090
+            openHarmony/openHarmony_scene.js, line 1120
         </div>
         
     </div>
@@ -6153,7 +6287,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1167
+            openHarmony/openHarmony_scene.js, line 1197
         </div>
         
     </div>
@@ -6415,7 +6549,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1137
+            openHarmony/openHarmony_scene.js, line 1167
         </div>
         
     </div>
@@ -6679,7 +6813,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1192
+            openHarmony/openHarmony_scene.js, line 1222
         </div>
         
     </div>
@@ -6941,7 +7075,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1067
+            openHarmony/openHarmony_scene.js, line 1097
         </div>
         
     </div>
@@ -7157,7 +7291,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1255
+            openHarmony/openHarmony_scene.js, line 1285
         </div>
         
     </div>
@@ -7371,7 +7505,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2115
+            openHarmony/openHarmony_scene.js, line 2145
         </div>
         
     </div>
@@ -7494,7 +7628,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1360
+            openHarmony/openHarmony_scene.js, line 1390
         </div>
         
     </div>
@@ -7704,7 +7838,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1712
+            openHarmony/openHarmony_scene.js, line 1742
         </div>
         
     </div>
@@ -8007,7 +8141,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1767
+            openHarmony/openHarmony_scene.js, line 1797
         </div>
         
     </div>
@@ -8169,7 +8303,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1895
+            openHarmony/openHarmony_scene.js, line 1925
         </div>
         
     </div>
@@ -8406,7 +8540,7 @@ function myCallBackFunction(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1566
+            openHarmony/openHarmony_scene.js, line 1596
         </div>
         
     </div>
@@ -8708,7 +8842,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2130
+            openHarmony/openHarmony_scene.js, line 2160
         </div>
         
     </div>
@@ -8808,7 +8942,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 703
+            openHarmony/openHarmony_scene.js, line 733
         </div>
         
     </div>
@@ -8983,7 +9117,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 724
+            openHarmony/openHarmony_scene.js, line 754
         </div>
         
     </div>
@@ -9163,7 +9297,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2168
+            openHarmony/openHarmony_scene.js, line 2198
         </div>
         
     </div>
@@ -9270,7 +9404,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 665
+            openHarmony/openHarmony_scene.js, line 695
         </div>
         
     </div>
@@ -9415,7 +9549,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1408
+            openHarmony/openHarmony_scene.js, line 1438
         </div>
         
     </div>
@@ -9560,7 +9694,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1223
+            openHarmony/openHarmony_scene.js, line 1253
         </div>
         
     </div>
@@ -9705,7 +9839,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2139
+            openHarmony/openHarmony_scene.js, line 2169
         </div>
         
     </div>
@@ -9805,7 +9939,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 741
+            openHarmony/openHarmony_scene.js, line 771
         </div>
         
     </div>
@@ -9950,7 +10084,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1238
+            openHarmony/openHarmony_scene.js, line 1268
         </div>
         
     </div>
@@ -10052,7 +10186,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1211
+            openHarmony/openHarmony_scene.js, line 1241
         </div>
         
     </div>
@@ -10204,7 +10338,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1292
+            openHarmony/openHarmony_scene.js, line 1322
         </div>
         
     </div>
@@ -10441,7 +10575,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1832
+            openHarmony/openHarmony_scene.js, line 1862
         </div>
         
     </div>
@@ -10773,7 +10907,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1922
+            openHarmony/openHarmony_scene.js, line 1952
         </div>
         
     </div>
@@ -11012,7 +11146,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1873
+            openHarmony/openHarmony_scene.js, line 1903
         </div>
         
     </div>
@@ -11180,7 +11314,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1689
+            openHarmony/openHarmony_scene.js, line 1719
         </div>
         
     </div>
@@ -11482,7 +11616,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1459
+            openHarmony/openHarmony_scene.js, line 1489
         </div>
         
     </div>
@@ -11673,7 +11807,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 774
+            openHarmony/openHarmony_scene.js, line 804
         </div>
         
     </div>
@@ -11818,7 +11952,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2038
+            openHarmony/openHarmony_scene.js, line 2068
         </div>
         
     </div>
@@ -12157,7 +12291,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1996
+            openHarmony/openHarmony_scene.js, line 2026
         </div>
         
     </div>
@@ -12228,7 +12362,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2005
+            openHarmony/openHarmony_scene.js, line 2035
         </div>
         
     </div>
@@ -12344,7 +12478,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 2021
+            openHarmony/openHarmony_scene.js, line 2051
         </div>
         
     </div>
@@ -12483,7 +12617,7 @@ $.endUndo();</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_scene.js, line 1852
+            openHarmony/openHarmony_scene.js, line 1882
         </div>
         
     </div>
@@ -12644,7 +12778,7 @@ $.endUndo();</code></pre>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Oct 23 2020 17:32:42 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Oct 26 2020 18:31:09 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
