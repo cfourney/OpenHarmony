@@ -651,6 +651,12 @@
             
                 <li data-name="$.oArtLayer#boundingBox"><a href="$.oArtLayer.html#boundingBox">boundingBox</a></li>
             
+                <li data-name="$.oArtLayer#name"><a href="$.oArtLayer.html#name">name</a></li>
+            
+                <li data-name="$.oArtLayer#selectedShapes"><a href="$.oArtLayer.html#selectedShapes">selectedShapes</a></li>
+            
+                <li data-name="$.oArtLayer#selectedStrokes"><a href="$.oArtLayer.html#selectedStrokes">selectedStrokes</a></li>
+            
                 <li data-name="$.oArtLayer#shapes"><a href="$.oArtLayer.html#shapes">shapes</a></li>
             
                 <li data-name="$.oArtLayer#strokes"><a href="$.oArtLayer.html#strokes">strokes</a></li>
@@ -666,7 +672,7 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="$.oArtLayer#clear"><a href="$.oArtLayer.html#clear">clear</a></li>
+                <li data-name="$.oArtLayer#getShapeByIndex"><a href="$.oArtLayer.html#getShapeByIndex">getShapeByIndex</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1040,6 +1046,8 @@
                 <li data-name="$.oDrawing#boundingBox"><a href="$.oDrawing.html#boundingBox">boundingBox</a></li>
             
                 <li data-name="$.oDrawing#colorArt"><a href="$.oDrawing.html#colorArt">colorArt</a></li>
+            
+                <li data-name="$.oDrawing#drawingData"><a href="$.oDrawing.html#drawingData">drawingData</a></li>
             
                 <li data-name="$.oDrawing#id"><a href="$.oDrawing.html#id">id</a></li>
             
@@ -2890,6 +2898,10 @@
             </ul>
             <ul class="methods itemMembers">
             
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oShape#getStrokeByIndex"><a href="$.oShape.html#getStrokeByIndex">getStrokeByIndex</a></li>
+            
             </ul>
             <ul class="events itemMembers">
             
@@ -2927,6 +2939,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oStroke#index"><a href="$.oStroke.html#index">index</a></li>
+            
                 <li data-name="$.oStroke#path"><a href="$.oStroke.html#path">path</a></li>
             
             </ul>
@@ -2937,6 +2951,12 @@
             
             </ul>
             <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oStroke#addPoints"><a href="$.oStroke.html#addPoints">addPoints</a></li>
+            
+                <li data-name="$.oStroke#getIntersections"><a href="$.oStroke.html#getIntersections">getIntersections</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -3214,7 +3234,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 524
+            openHarmony/openHarmony_drawing.js, line 539
         </div>
         
     </div>
@@ -3407,6 +3427,141 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="name">name<span class="type-signature type string">string</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The name of the artLayer (lineArt, colorArt, etc)
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="selectedShapes">selectedShapes<span class="type-signature type array.<$.oshape>">Array.&lt;<a href="$.oShape.html">$.oShape</a>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        the currently selected shapes on the ArtLayer.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="selectedStrokes">selectedStrokes<span class="type-signature type array.<$.ostroke>">Array.&lt;<a href="$.oStroke.html">$.oStroke</a>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        the currently selected strokes on the ArtLayer.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="shapes">shapes<span class="type-signature type array.<$.oshape>">Array.&lt;<a href="$.oShape.html">$.oShape</a>></span> </h4>
     </div>
     
@@ -3503,14 +3658,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="clear">
+        <h4 class="name" id="getShapeByIndex">
             
-            clear<span class="signature">()</span>
+            getShapeByIndex<span class="signature">(index)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oShape.html">$.oShape</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 623
+            openHarmony/openHarmony_drawing.js, line 668
         </div>
         
     </div>
@@ -3521,8 +3676,7 @@
     
     
     <div class="description">
-        Removes the contents of the art layer.
-WIP
+        get a shape from the artLayer by its index
     </div>
     
 
@@ -3530,6 +3684,51 @@ WIP
     
     
     
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -3567,6 +3766,35 @@ WIP
     
     
     
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oShape.html">$.oShape</a>
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
     
     
 </dd>
@@ -3590,7 +3818,7 @@ WIP
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Oct 26 2020 18:31:09 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Oct 27 2020 18:26:25 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

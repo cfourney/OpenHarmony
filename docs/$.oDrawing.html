@@ -651,6 +651,12 @@
             
                 <li data-name="$.oArtLayer#boundingBox"><a href="$.oArtLayer.html#boundingBox">boundingBox</a></li>
             
+                <li data-name="$.oArtLayer#name"><a href="$.oArtLayer.html#name">name</a></li>
+            
+                <li data-name="$.oArtLayer#selectedShapes"><a href="$.oArtLayer.html#selectedShapes">selectedShapes</a></li>
+            
+                <li data-name="$.oArtLayer#selectedStrokes"><a href="$.oArtLayer.html#selectedStrokes">selectedStrokes</a></li>
+            
                 <li data-name="$.oArtLayer#shapes"><a href="$.oArtLayer.html#shapes">shapes</a></li>
             
                 <li data-name="$.oArtLayer#strokes"><a href="$.oArtLayer.html#strokes">strokes</a></li>
@@ -666,7 +672,7 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="$.oArtLayer#clear"><a href="$.oArtLayer.html#clear">clear</a></li>
+                <li data-name="$.oArtLayer#getShapeByIndex"><a href="$.oArtLayer.html#getShapeByIndex">getShapeByIndex</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1040,6 +1046,8 @@
                 <li data-name="$.oDrawing#boundingBox"><a href="$.oDrawing.html#boundingBox">boundingBox</a></li>
             
                 <li data-name="$.oDrawing#colorArt"><a href="$.oDrawing.html#colorArt">colorArt</a></li>
+            
+                <li data-name="$.oDrawing#drawingData"><a href="$.oDrawing.html#drawingData">drawingData</a></li>
             
                 <li data-name="$.oDrawing#id"><a href="$.oDrawing.html#id">id</a></li>
             
@@ -2890,6 +2898,10 @@
             </ul>
             <ul class="methods itemMembers">
             
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oShape#getStrokeByIndex"><a href="$.oShape.html#getStrokeByIndex">getStrokeByIndex</a></li>
+            
             </ul>
             <ul class="events itemMembers">
             
@@ -2927,6 +2939,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oStroke#index"><a href="$.oStroke.html#index">index</a></li>
+            
                 <li data-name="$.oStroke#path"><a href="$.oStroke.html#path">path</a></li>
             
             </ul>
@@ -2937,6 +2951,12 @@
             
             </ul>
             <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oStroke#addPoints"><a href="$.oStroke.html#addPoints">addPoints</a></li>
+            
+                <li data-name="$.oStroke#getIntersections"><a href="$.oStroke.html#getIntersections">getIntersections</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -3661,6 +3681,51 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="drawingData">drawingData<span class="type-signature type object">Object</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        all the data from this drawing. For internal use.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="id">id<span class="type-signature type int">int</span> </h4>
     </div>
     
@@ -4124,7 +4189,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 428
+            openHarmony/openHarmony_drawing.js, line 442
         </div>
         
     </div>
@@ -4247,7 +4312,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 324
+            openHarmony/openHarmony_drawing.js, line 338
         </div>
         
     </div>
@@ -4343,7 +4408,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 312
+            openHarmony/openHarmony_drawing.js, line 326
         </div>
         
     </div>
@@ -4488,7 +4553,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 448
+            openHarmony/openHarmony_drawing.js, line 462
         </div>
         
     </div>
@@ -4611,7 +4676,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 379
+            openHarmony/openHarmony_drawing.js, line 393
         </div>
         
     </div>
@@ -4682,7 +4747,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 346
+            openHarmony/openHarmony_drawing.js, line 360
         </div>
         
     </div>
@@ -4753,7 +4818,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 398
+            openHarmony/openHarmony_drawing.js, line 412
         </div>
         
     </div>
@@ -4906,7 +4971,7 @@ Doesn't work in batch mode.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 469
+            openHarmony/openHarmony_drawing.js, line 483
         </div>
         
     </div>
@@ -5058,7 +5123,7 @@ Doesn't work in batch mode. This function modifies the selection.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 500
+            openHarmony/openHarmony_drawing.js, line 515
         </div>
         
     </div>
@@ -5137,7 +5202,7 @@ Doesn't work in batch mode. This function modifies the selection.
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon Oct 26 2020 18:31:09 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Oct 27 2020 18:26:25 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
