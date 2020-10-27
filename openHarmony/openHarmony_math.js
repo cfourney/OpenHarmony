@@ -256,6 +256,12 @@ $.oPoint.prototype.lerp = function( point, perc ){
   return delta;
 }
 
+
+$.oPoint.prototype.toString = function(){
+  return this._type+": {x:"+this.x+", y:"+this.y+", z:"+this.z+"}";
+}
+
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
