@@ -2958,6 +2958,12 @@
             
                 <li data-name="$.oStroke#getIntersections"><a href="$.oStroke.html#getIntersections">getIntersections</a></li>
             
+                <li data-name="$.oStroke#getPointCoordinates"><a href="$.oStroke.html#getPointCoordinates">getPointCoordinates</a></li>
+            
+                <li data-name="$.oStroke#getPointPosition"><a href="$.oStroke.html#getPointPosition">getPointPosition</a></li>
+            
+                <li data-name="$.oStroke#updateDefinition"><a href="$.oStroke.html#updateDefinition">updateDefinition</a></li>
+            
             </ul>
             <ul class="events itemMembers">
             
@@ -3600,12 +3606,12 @@
     <div class="nameContainer">
         <h4 class="name" id="addPoints">
             
-            addPoints<span class="signature">(pointsToAdd)</span>
+            addPoints<span class="signature">(pointsToAdd)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;$.oVertex>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 882
+            openHarmony/openHarmony_drawing.js, line 886
         </div>
         
     </div>
@@ -3663,7 +3669,7 @@
             
             <td class="description last">
                 
-                </td>
+                an array of float value between 0 and 1 for each point to create</td>
         </tr>
 	
 	
@@ -3706,6 +3712,35 @@
     
     
     
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Array.&lt;$.oVertex>
+                        
+                    
+            </td>
+            <td class="description last">the points that were created</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
     
     
         <h5>Example</h5>
@@ -3738,12 +3773,12 @@ sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);</code></pre>
     <div class="nameContainer">
         <h4 class="name" id="getIntersections">
             
-            getIntersections<span class="signature">(stroke)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;Object>}</span>
+            getIntersections<span class="signature">(<span class="optional">stroke</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;Object>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 833
+            openHarmony/openHarmony_drawing.js, line 836
         </div>
         
     </div>
@@ -3802,7 +3837,14 @@ One of these objects describes an intersection by giving the stroke it intersect
             
             <td class="description last">
                 
-                </td>
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Specify a stroke to find intersections specific to it. If no stroke is specified,</td>
         </tr>
 	
 	
@@ -3887,13 +3929,396 @@ for (var i in sel){
   // get intersections with all other elements of the drawing
 	var intersections = sel[i].getIntersections();
 
-	log("intersection points : "+intersections.map(function(x){return x.point}));                   // the point coordinates
-	log("strokes index : "+JSON.stringify(intersections.map(function(x){return x.stroke.index})));  // the index of the intersecting strokes in their own shape
-  log("own point : "+intersections.map(function(x){return x.ownPoint}));                          // how far the intersection is on the stroke itself
-	log("stroke point : "+intersections.map(function(x){return x.strokePoint}));                    // how far the intersection is on the intersecting stroke
+  for (var j in intersections){
+    log("intersection : " + j);
+    log("point : " + intersections[j].point);                    // the point coordinates
+    log("strokes index : " + intersections[j].stroke.index);     // the index of the intersecting strokes in their own shape
+    log("own point : " + intersections[j].ownPoint);             // how far the intersection is on the stroke itself
+    log("stroke point : " + intersections[j].strokePoint);       // how far the intersection is on the intersecting stroke
+  }
 }</code></pre>
     
 
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getPointCoordinates">
+            
+            getPointCoordinates<span class="signature">(position)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{$.oVertex}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 942
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        $.oVertex
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="getPointPosition">
+            
+            getPointPosition<span class="signature">(x, y)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{float}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 926
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Gets the closest position of the point on the stroke (float value from 0 to 1) from a point with coordinates
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        float
+                        
+                    
+            </td>
+            <td class="description last">the position of the point on the stroke, between 0 and 1</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="updateDefinition">
+            
+            updateDefinition<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 911
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        fetch the stroke information again to update it.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
     
 </dd>
 
@@ -3916,7 +4341,7 @@ for (var i in sel){
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Oct 27 2020 18:26:25 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Oct 28 2020 17:29:54 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
