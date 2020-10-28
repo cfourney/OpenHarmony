@@ -780,9 +780,9 @@ $.oShape.prototype.getStrokeByIndex = function (index) {
  */
 $.oStroke = function (index, strokeObject, oShapeObject) {
   this.index = index
-  this._stroke = strokeObject;
   this.shape = oShapeObject
   this.artLayer = oShapeObject.artLayer;
+  this._stroke = strokeObject;
 }
 
 
@@ -814,7 +814,7 @@ Object.defineProperty($.oStroke.prototype, "index", {
 /**
  * The intersections on this stroke. Each intersection is an object with stroke ($.oStroke), point($.oPoint), strokePoint(float) and ownPoint(float)
  * One of these objects describes an intersection by giving the stroke it intersects with, the coordinates of the intersection and two values which represent the place on the stroke at which the point is placed, with a value between 0 (start) and 1(end)
- * @param  {$.oStroke}
+ * @param  {$.oStroke}   [stroke]       Specify a stroke to find intersections specific to it. If no stroke is specified,
  * @return {Object[]}
  * @example
 // get the selected strokes on the active drawing
@@ -824,10 +824,13 @@ for (var i in sel){
   // get intersections with all other elements of the drawing
 	var intersections = sel[i].getIntersections();
 
-	log("intersection points : "+intersections.map(function(x){return x.point}));                   // the point coordinates
-	log("strokes index : "+JSON.stringify(intersections.map(function(x){return x.stroke.index})));  // the index of the intersecting strokes in their own shape
-  log("own point : "+intersections.map(function(x){return x.ownPoint}));                          // how far the intersection is on the stroke itself
-	log("stroke point : "+intersections.map(function(x){return x.strokePoint}));                    // how far the intersection is on the intersecting stroke
+  for (var j in intersections){
+    log("intersection : " + j);
+    log("point : " + intersections[j].point);                    // the point coordinates
+    log("strokes index : " + intersections[j].stroke.index);     // the index of the intersecting strokes in their own shape
+    log("own point : " + intersections[j].ownPoint);             // how far the intersection is on the stroke itself
+    log("stroke point : " + intersections[j].strokePoint);       // how far the intersection is on the intersecting stroke
+  }
 }
  */
 $.oStroke.prototype.getIntersections = function (stroke){
@@ -848,7 +851,7 @@ $.oStroke.prototype.getIntersections = function (stroke){
     var _stroke = _shape.getStrokeByIndex(intersections[i].strokeIndex);
     var points = intersections[i].intersections[0]
 
-    var point = new this.$.oPoint(points.x0, points.y0);
+    var point = new this.$.oVertex(this, points.x0, points.y0, true);
     var intersection = { stroke: _stroke, point: point, ownPoint: points.t0, strokePoint: points.t1 };
 
     result.push(intersection)
@@ -861,7 +864,8 @@ $.oStroke.prototype.getIntersections = function (stroke){
 
 /**
  * Adds points on the stroke without moving them, at the distance specified (0=start vertice, 1=end vertice)
- * @param {float[]} pointsToAdd
+ * @param   {float[]}       pointsToAdd     an array of float value between 0 and 1 for each point to create
+ * @returns {$.oVertex[]}   the points that were created
  * @example
 // get the selected stroke and create points where it intersects with the other two strokes
 var sel = $.scn.activeDrawing.selectedStrokes[0];
@@ -882,10 +886,124 @@ sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);
 $.oStroke.prototype.addPoints = function (pointsToAdd) {
   var config = this.artLayer._key;
   config.label = "addPoint";
+
+  // return oVertex objects for each new created point
+  var points = [];
+  for (var i in pointsToAdd){
+    var point = this.getPointCoordinates(pointsToAdd[i]);
+    points.push(point);
+  }
+
   config.strokes = [{layer:this.shape.index, strokeIndex:this.index, insertPoints: pointsToAdd }];
 
   DrawingTools.modifyStrokes(config);
+
+  // update the path
+  this.updateDefinition();
+
+  return points;
 }
+
+
+/**
+ * fetch the stroke information again to update it.
+ */
+$.oStroke.prototype.updateDefinition = function(){
+  var _key = this.artLayer._key;
+  var strokes = Drawing.query.getStrokes(_key);
+  this._stroke = strokes.layers[this.shape.index].strokes[this.index];
+
+  return this._stroke;
+}
+
+
+/**
+ * Gets the closest position of the point on the stroke (float value from 0 to 1) from a point with coordinates
+ * @param {int}  x
+ * @param {int}  y
+ * @return {float}   the position of the point on the stroke, between 0 and 1
+ */
+$.oStroke.prototype.getPointPosition = function(point){
+  var arg = {
+    path : this.path,
+    points: [{x:point.x, y:point.y}]
+  }
+  var strokePoint = Drawing.geometry.getClosestPoint(arg)[0];
+
+  return strokePoint.t;
+}
+
+
+/**
+ *
+ * @param {float}  position
+ * @return {$.oVertex}
+ */
+$.oStroke.prototype.getPointCoordinates = function(position){
+  var arg = {
+    path : this.path,
+    params : [ position ]
+ };
+ var point = Drawing.geometry.evaluate(arg)[0];
+
+ //log(JSON.stringify(point))
+
+  return new $.oVertex(this, point.x, point.y, true);
+}
+
+
+$.oStroke.prototype.containsPoint = function (point){
+  var arg = {
+    path : this.path,
+    points: [ point ]
+  };
+
+  var _result = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
+
+  log(JSON.stringify(_result));
+
+  var onCurve = (_result.x == point.x && _result.y == point.y);
+
+  return onCurve;
+}
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//         $.oVertex class          //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+$.oVertex = function(stroke, x, y, onCurve){
+  this.x = x;
+  this.y = y;
+  this.onCurve = onCurve;
+  this.stroke = stroke;
+}
+
+
+/*Object.defineProperty($.oVertex.prototype, 'onCurve', {
+  get: function(){
+    return this.onthis.stroke.containsPoint(this);
+  }
+})*/
+
+
+Object.defineProperty($.oVertex.prototype, 'strokePosition', {
+  get: function(){
+    return this.stroke.getPointPosition(this);
+  }
+})
+
+
+$.oVertex.prototype.toString = function(){
+ return "oVertex : { x: "+this.x+", y: "+this.y+", onCurve: "+this.onCurve+", position: "+this.strokePosition+" }"
+}
+
 
 
 //////////////////////////////////////
