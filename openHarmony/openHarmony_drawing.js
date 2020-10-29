@@ -793,7 +793,16 @@ $.oStroke = function (index, strokeObject, oShapeObject) {
  */
 Object.defineProperty($.oStroke.prototype, "path", {
   get: function () {
-    return this._stroke.path
+    // path vertices get cached
+    if (!this.hasOwnProperty("_path")){
+      var _stroke = this;
+      var _path = this._stroke.path.map(function(point, index){
+        return new _stroke.$.oVertex(_stroke, point.x, point.y, point.onCurve, index);
+      })
+
+      this._path = _path
+    }
+    return this._path;
   }
 })
 
@@ -886,32 +895,41 @@ sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);
 $.oStroke.prototype.addPoints = function (pointsToAdd) {
   var config = this.artLayer._key;
   config.label = "addPoint";
-
-  // return oVertex objects for each new created point
-  var points = [];
-  for (var i in pointsToAdd){
-    var point = this.getPointCoordinates(pointsToAdd[i]);
-    points.push(point);
-  }
-
   config.strokes = [{layer:this.shape.index, strokeIndex:this.index, insertPoints: pointsToAdd }];
+
+  // get the list of the current fixed points
+  var fixedPoints = this.path.filter(function(x){return x.onCurve});
 
   DrawingTools.modifyStrokes(config);
 
   // update the path
   this.updateDefinition();
 
-  return points;
+  // get the list of the current fixed points
+  var newFixedPoints = this.path.filter(function(x){return x.onCurve});
+
+  // get the fixed points that didn't exist before
+  for (var i=newFixedPoints.length-1; i>=0; i--){
+    var newPoint = newFixedPoints[i];
+    for (var j in fixedPoints){
+      if (fixedPoints[j].x == newPoint.x && fixedPoints[j].y == newPoint.y) newFixedPoints.splice(i, 1);
+    }
+  }
+
+  return newFixedPoints;
 }
 
 
 /**
- * fetch the stroke information again to update it.
+ * fetch the stroke information again to update it after modifications
  */
 $.oStroke.prototype.updateDefinition = function(){
   var _key = this.artLayer._key;
   var strokes = Drawing.query.getStrokes(_key);
   this._stroke = strokes.layers[this.shape.index].strokes[this.index];
+
+  // remove cache for path
+  delete this._path;
 
   return this._stroke;
 }
@@ -920,22 +938,22 @@ $.oStroke.prototype.updateDefinition = function(){
 /**
  * Gets the closest position of the point on the stroke (float value from 0 to 1) from a point with coordinates
  * @param {int}  x
- * @param {int}  y
  * @return {float}   the position of the point on the stroke, between 0 and 1
  */
 $.oStroke.prototype.getPointPosition = function(point){
   var arg = {
     path : this.path,
-    points: [{x:point.x, y:point.y}]
+    points: [point]
   }
-  var strokePoint = Drawing.geometry.getClosestPoint(arg)[0];
+  var strokePoint = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
+  if (!strokePoint) return 0
 
   return strokePoint.t;
 }
 
 
 /**
- *
+ * Get the coordinates of the point on the stroke from its position (from 0 to 1)
  * @param {float}  position
  * @return {$.oVertex}
  */
@@ -946,12 +964,30 @@ $.oStroke.prototype.getPointCoordinates = function(position){
  };
  var point = Drawing.geometry.evaluate(arg)[0];
 
- //log(JSON.stringify(point))
-
   return new $.oVertex(this, point.x, point.y, true);
 }
 
 
+/**
+ *
+ * @param {*} position
+ */
+$.oStroke.prototype.getVertexIndexAtPosition = function(position){
+  // get the indices at which new points will be created
+  var pointsPositions = this.path.map(function(x){return x.strokePosition});
+
+  for (var j in pointsPositions){
+    if (pointsPositions[j]> position){
+      return j;
+    }
+  }
+}
+
+
+/**
+ *
+ * @param {*} point
+ */
 $.oStroke.prototype.containsPoint = function (point){
   var arg = {
     path : this.path,
@@ -960,7 +996,7 @@ $.oStroke.prototype.containsPoint = function (point){
 
   var _result = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
 
-  log(JSON.stringify(_result));
+  //log("closest point : "+JSON.stringify(_result));
 
   var onCurve = (_result.x == point.x && _result.y == point.y);
 
@@ -978,30 +1014,55 @@ $.oStroke.prototype.containsPoint = function (point){
 //////////////////////////////////////
 
 
-$.oVertex = function(stroke, x, y, onCurve){
+/**
+ * The constructor for the $.oVertex class
+ * @constructor
+ * @classdesc
+ * The $.oVertex class represents a single control point on a stroke. This class is used to get the index of the point in the stroke path sequence, as well as its position as a float along the stroke's length.
+ * The onCurve property describes wether this control point is a bezier handle or a point on the curve.
+ *
+ * @param {$.oStroke} stroke   the stroke that this vertex belongs to
+ * @param {float}     x        the x coordinate of the vertex, in drawing space
+ * @param {float}     y        the y coordinate of the vertex, in drawing space
+ * @param {bool}      onCurve  whether the point is a bezier handle or situated on the curve
+ * @param {int}       index    the index of the point on the stroke
+ *
+ * @property {$.oStroke} stroke    the stroke that this vertex belongs to
+ * @property {float}     x         the x coordinate of the vertex, in drawing space
+ * @property {float}     y         the y coordinate of the vertex, in drawing space
+ * @property {bool}      onCurve   whether the point is a bezier handle or situated on the curve
+ * @property {int}       index     the index of the point on the stroke
+ */
+$.oVertex = function(stroke, x, y, onCurve, index){
+  if (typeof onCurve === 'undefined') var onCurve = false;
+  if (typeof index === 'undefined') var index = -1;
+
   this.x = x;
   this.y = y;
   this.onCurve = onCurve;
   this.stroke = stroke;
+  this.index = index
 }
 
 
-/*Object.defineProperty($.oVertex.prototype, 'onCurve', {
-  get: function(){
-    return this.onthis.stroke.containsPoint(this);
-  }
-})*/
-
-
+/**
+ * The position of the point on the curve, from
+ * @name $.oVertex#strokePosition
+ * @type {float}
+ */
 Object.defineProperty($.oVertex.prototype, 'strokePosition', {
   get: function(){
-    return this.stroke.getPointPosition(this);
+    var _position = this.stroke.getPointPosition(this);
+    return _position;
   }
 })
 
 
+/**
+ * @private
+ */
 $.oVertex.prototype.toString = function(){
- return "oVertex : { x: "+this.x+", y: "+this.y+", onCurve: "+this.onCurve+", position: "+this.strokePosition+" }"
+ return "oVertex : { index:"+this.index+", x: "+this.x+", y: "+this.y+", onCurve: "+this.onCurve+", position: "+this.strokePosition+" }"
 }
 
 
