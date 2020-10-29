@@ -560,6 +560,7 @@ Object.defineProperty($.oNode.prototype, 'height', {
  * The list of oNodeLinks objects descibing the connections to the inport of this node, in order of inport.
  * @name $.oNode#inLinks
  * @readonly
+ * @deprecated
  * @type {$.oNodeLink[]}
  */
 Object.defineProperty($.oNode.prototype, 'inLinks', {
@@ -580,6 +581,7 @@ Object.defineProperty($.oNode.prototype, 'inLinks', {
  * @name $.oNode#inNodes
  * @readonly
  * @type {$.oNode[]}
+ * @deprecated
 */
 Object.defineProperty($.oNode.prototype, 'inNodes', {
     get : function(){
@@ -613,6 +615,7 @@ Object.defineProperty($.oNode.prototype, 'inPorts', {
  * @name $.oNode#outNodes
  * @readonly
  * @type {$.oNode[][]}
+ * @deprecated
 */
 Object.defineProperty($.oNode.prototype, 'outNodes', {
     get : function(){
@@ -626,20 +629,10 @@ Object.defineProperty($.oNode.prototype, 'outNodes', {
                 var _node = this.getLinkedOutNode(i, j);
 
                 if (_node != null) _outLinks.push(_node);
-                // if (_node != null) _outNodes.push(_node);
             }
 
             //Always return the list of links for consistency.
-            // _outNodes.push(_outLinks);
-
-
-            // MCNote: move to concat so we always have a flat list?
-            //Deprecated.
-            // if (_outLinks.length > 1){
-                _outNodes.push(_outLinks);
-            // }else{
-                // _outNodes = _outNodes.concat(_outLinks);
-            // }
+            _outNodes.push(_outLinks);
         }
         return _outNodes;
     }
@@ -664,6 +657,7 @@ Object.defineProperty($.oNode.prototype, 'outPorts', {
  * @name $.oNode#outLinks
  * @readonly
  * @type {$.oNodeLink[]}
+ * @deprecated
  */
 Object.defineProperty($.oNode.prototype, 'outLinks', {
     get : function(){
@@ -931,14 +925,16 @@ $.oNode.prototype.linkInNode = function( nodeToLink, ownPort, destPort, createPo
  * @return  {bool}    The result of the unlink.
  */
 $.oNode.prototype.unlinkInNode = function( oNodeObject ){
-  //CF Note: Should be able to define the port.
-  var _node = oNodeObject.path;
-  var _inPorts = this.inPorts;
 
-  for (var i=0; i<_inPorts; i++){
-    if (node.srcNode(this.path, i) == _node) return this.unlinkInPort(i);
+  var _node = oNodeObject.path;
+
+  var _links = this.getInLinks();
+
+  for (var i in _links){
+    if (_links[i].outNode.path == _node) return _links[i].disconnect();
   }
-  return false;
+
+  throw new Error (oNodeObject.name + " is not linked to node " + this.name + ", can't unlink.");
 };
 
 
@@ -1066,19 +1062,15 @@ $.oNode.prototype.linkOutNode = function(nodeToLink, ownPort, destPort, createPo
  * @return  {bool}    The result of the link, if successful.
  */
 $.oNode.prototype.unlinkOutNode = function( oNodeObject ){
-  //CF Note: Should be able to define the port.
   var _node = oNodeObject.path;
-  var _outPorts = oNodeObject.outPorts;
 
-  for (var i=0; i<_outPorts; i++){
-    var _outLinks = oNodeObject.getOutLinksNumber(i);
-    for (var j=0; j<_outLinks; j++){
-      if (node.dstNode(this.path, i, j) == _node){
-        return this.unlinkOutPort(i, j);
-      }
-    }
+  var _links = this.getOutLinks();
+
+  for (var i in _links){
+    if (_links[i].inNode.path == _node) return _links[i].disconnect();
   }
-  return false;
+
+  throw new Error (oNodeObject.name + " is not linked to node " + this.name + ", can't unlink.");
 };
 
 
@@ -2397,7 +2389,9 @@ $.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeN
     // moves nodes into the created group and recreates their hierarchy and links
     if (includeNodes.length > 0){
       var _timeline = this.scene.getTimeline();
-      includeNodes = includeNodes.sort(function(b, a){return a.timelineIndex(_timeline)-b.timelineIndex(_timeline)})
+      includeNodes = includeNodes.sort(function(a, b){return a.timelineIndex(_timeline)-b.timelineIndex(_timeline)})
+
+      log(includeNodes)
 
       var _links = this.scene.getNodesLinks(includeNodes);
 
