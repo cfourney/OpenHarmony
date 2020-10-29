@@ -2956,11 +2956,15 @@
             
                 <li data-name="$.oStroke#addPoints"><a href="$.oStroke.html#addPoints">addPoints</a></li>
             
+                <li data-name="$.oStroke#containsPoint"><a href="$.oStroke.html#containsPoint">containsPoint</a></li>
+            
                 <li data-name="$.oStroke#getIntersections"><a href="$.oStroke.html#getIntersections">getIntersections</a></li>
             
                 <li data-name="$.oStroke#getPointCoordinates"><a href="$.oStroke.html#getPointCoordinates">getPointCoordinates</a></li>
             
                 <li data-name="$.oStroke#getPointPosition"><a href="$.oStroke.html#getPointPosition">getPointPosition</a></li>
+            
+                <li data-name="$.oStroke#getVertexIndexAtPosition"><a href="$.oStroke.html#getVertexIndexAtPosition">getVertexIndexAtPosition</a></li>
             
                 <li data-name="$.oStroke#updateDefinition"><a href="$.oStroke.html#updateDefinition">updateDefinition</a></li>
             
@@ -3153,6 +3157,32 @@
             <span class="subtitle">Methods</span>
             
                 <li data-name="$.oUtils#longestCommonSubstring"><a href="$.oUtils.html#longestCommonSubstring">longestCommonSubstring</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="$.oVertex">
+            <span class="title">
+                <a href="$.oVertex.html">$.oVertex</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oVertex#strokePosition"><a href="$.oVertex.html#strokePosition">strokePosition</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
             
             </ul>
             <ul class="events itemMembers">
@@ -3606,12 +3636,12 @@
     <div class="nameContainer">
         <h4 class="name" id="addPoints">
             
-            addPoints<span class="signature">(pointsToAdd)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;$.oVertex>}</span>
+            addPoints<span class="signature">(pointsToAdd)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;<a href="$.oVertex.html">$.oVertex</a>>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 886
+            openHarmony/openHarmony_drawing.js, line 895
         </div>
         
     </div>
@@ -3730,7 +3760,7 @@
             
             <td class="type">
             
-                        Array.&lt;$.oVertex>
+                        Array.&lt;<a href="$.oVertex.html">$.oVertex</a>>
                         
                     
             </td>
@@ -3771,6 +3801,118 @@ sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);</code></pre>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="containsPoint">
+            
+            containsPoint<span class="signature">(point)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 991
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>point</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="getIntersections">
             
             getIntersections<span class="signature">(<span class="optional">stroke</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;Object>}</span>
@@ -3778,7 +3920,7 @@ sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 836
+            openHarmony/openHarmony_drawing.js, line 845
         </div>
         
     </div>
@@ -3948,12 +4090,12 @@ for (var i in sel){
     <div class="nameContainer">
         <h4 class="name" id="getPointCoordinates">
             
-            getPointCoordinates<span class="signature">(position)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{$.oVertex}</span>
+            getPointCoordinates<span class="signature">(position)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oVertex.html">$.oVertex</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 942
+            openHarmony/openHarmony_drawing.js, line 960
         </div>
         
     </div>
@@ -3962,6 +4104,10 @@ for (var i in sel){
 </dt>
 <dd>
     
+    
+    <div class="description">
+        Get the coordinates of the point on the stroke from its position (from 0 to 1)
+    </div>
     
 
     
@@ -4068,7 +4214,7 @@ for (var i in sel){
             
             <td class="type">
             
-                        $.oVertex
+                        <a href="$.oVertex.html">$.oVertex</a>
                         
                     
             </td>
@@ -4089,12 +4235,12 @@ for (var i in sel){
     <div class="nameContainer">
         <h4 class="name" id="getPointPosition">
             
-            getPointPosition<span class="signature">(x, y)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{float}</span>
+            getPointPosition<span class="signature">(x)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{float}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 926
+            openHarmony/openHarmony_drawing.js, line 943
         </div>
         
     </div>
@@ -4137,29 +4283,6 @@ for (var i in sel){
         <tr>
             
                 <td class="name"><code>x</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                </td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>y</code></td>
             
             
             <td class="type">
@@ -4255,6 +4378,118 @@ for (var i in sel){
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="getVertexIndexAtPosition">
+            
+            getVertexIndexAtPosition<span class="signature">(position)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 975
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="updateDefinition">
             
             updateDefinition<span class="signature">()</span>
@@ -4262,7 +4497,7 @@ for (var i in sel){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 911
+            openHarmony/openHarmony_drawing.js, line 926
         </div>
         
     </div>
@@ -4273,7 +4508,7 @@ for (var i in sel){
     
     
     <div class="description">
-        fetch the stroke information again to update it.
+        fetch the stroke information again to update it after modifications
     </div>
     
 
@@ -4341,7 +4576,7 @@ for (var i in sel){
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Oct 29 2020 16:14:50 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Oct 29 2020 18:19:10 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

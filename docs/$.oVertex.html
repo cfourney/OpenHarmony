@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oToolbar</title>
+    <title>Class: oVertex</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -2956,7 +2956,17 @@
             
                 <li data-name="$.oStroke#addPoints"><a href="$.oStroke.html#addPoints">addPoints</a></li>
             
+                <li data-name="$.oStroke#containsPoint"><a href="$.oStroke.html#containsPoint">containsPoint</a></li>
+            
                 <li data-name="$.oStroke#getIntersections"><a href="$.oStroke.html#getIntersections">getIntersections</a></li>
+            
+                <li data-name="$.oStroke#getPointCoordinates"><a href="$.oStroke.html#getPointCoordinates">getPointCoordinates</a></li>
+            
+                <li data-name="$.oStroke#getPointPosition"><a href="$.oStroke.html#getPointPosition">getPointPosition</a></li>
+            
+                <li data-name="$.oStroke#getVertexIndexAtPosition"><a href="$.oStroke.html#getVertexIndexAtPosition">getVertexIndexAtPosition</a></li>
+            
+                <li data-name="$.oStroke#updateDefinition"><a href="$.oStroke.html#updateDefinition">updateDefinition</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -3154,6 +3164,32 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oVertex">
+            <span class="title">
+                <a href="$.oVertex.html">$.oVertex</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oVertex#strokePosition"><a href="$.oVertex.html#strokePosition">strokePosition</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oXml">
             <span class="title">
                 <a href="$.oXml.html">$.oXml</a>
@@ -3201,7 +3237,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oToolbar.html">Class: oToolbar</h1>
+        <h1 class="page-title" data-filename="$.oVertex.html">Class: oVertex</h1>
         
 
 
@@ -3212,10 +3248,11 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a>.</span>
     
-    oToolbar
+    oVertex
     </h2>
     
-        <div class="class-description">A toolbar that can contain any type of widgets.</div>
+        <div class="class-description">The $.oVertex class represents a single control point on a stroke. This class is used to get the index of the point in the stroke path sequence, as well as its position as a float along the stroke's length.
+The onCurve property describes wether this control point is a bezier handle or a point on the curve.</div>
     
 </header>  
 
@@ -3227,14 +3264,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oToolbar">
+        <h4 class="name" id="oVertex">
             
-            new $.oToolbar<span class="signature">(name, <span class="optional">widgets</span>, <span class="optional">parent</span>, <span class="optional">show</span>)</span>
+            new $.oVertex<span class="signature">(stroke, x, y, onCurve, index)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_application.js, line 404
+            openHarmony/openHarmony_drawing.js, line 1036
         </div>
         
     </div>
@@ -3245,7 +3282,7 @@
     
     
     <div class="description">
-        The $.oToolbar constructor.
+        The constructor for the $.oVertex class
     </div>
     
 
@@ -3276,13 +3313,13 @@
 	
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>stroke</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="$.oStroke.html">$.oStroke</a></span>
 
 
             
@@ -3292,25 +3329,20 @@
             
             <td class="description last">
                 
-                    
-                    
-                        
-                    
-                
-                The name of the toolbar to create.</td>
+                the stroke that this vertex belongs to</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>widgets</code></td>
+                <td class="name"><code>x</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;QWidget></span>
+<span class="param-type">float</span>
 
 
             
@@ -3320,27 +3352,20 @@
             
             <td class="description last">
                 
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The list of widgets to add to the toolbar.</td>
+                the x coordinate of the vertex, in drawing space</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>parent</code></td>
+                <td class="name"><code>y</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">QWidget</span>
+<span class="param-type">float</span>
 
 
             
@@ -3350,21 +3375,14 @@
             
             <td class="description last">
                 
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The parent widget to add the toolbar to.</td>
+                the y coordinate of the vertex, in drawing space</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>show</code></td>
+                <td class="name"><code>onCurve</code></td>
             
             
             <td class="type">
@@ -3380,14 +3398,30 @@
             
             <td class="description last">
                 
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
+                whether the point is a bezier handle or situated on the curve</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
                 
-                Whether to show the toolbar instantly after creation.</td>
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                the index of the point on the stroke</td>
         </tr>
 	
 	
@@ -3397,6 +3431,149 @@
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>stroke</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oStroke.html">$.oStroke</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">the stroke that this vertex belongs to</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">the x coordinate of the vertex, in drawing space</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">the y coordinate of the vertex, in drawing space</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>onCurve</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">whether the point is a bezier handle or situated on the curve</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">the index of the point on the stroke</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -3454,7 +3631,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="show">show</h4>
+        <h4 class="name" id="strokePosition">strokePosition<span class="type-signature type float">float</span> </h4>
     </div>
     
     
@@ -3462,7 +3639,7 @@
 <dd>
     
     <div class="description">
-        Shows the oToolbar.
+        The position of the point on the curve, from
     </div>
     
     
@@ -3516,7 +3693,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Oct 27 2020 18:26:25 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Oct 29 2020 18:19:10 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
