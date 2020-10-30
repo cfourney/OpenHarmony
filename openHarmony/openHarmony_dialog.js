@@ -1035,9 +1035,8 @@ $.oPrefButton.prototype = Object.create(QPushButton.prototype);
 
 /**
  * The constructor for $.oPieButton
- * @name          $#oPieButton
  * @constructor
- * @classdescription This subclass of QToolButton provides an easy way to create a button for a PieMenu.<br>
+ * @classdesc This subclass of QToolButton provides an easy way to create a button for a PieMenu.<br>
  *
  * This class is a subclass of QToolButton and all the methods from that class are available to modify this button.
   * @param {string}   iconFile               The icon file for the button

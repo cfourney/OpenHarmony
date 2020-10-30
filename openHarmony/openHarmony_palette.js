@@ -259,6 +259,11 @@ Object.defineProperty($.oPalette.prototype, 'colors', {
 })
 
 
+/**
+ * The color currently active in the palette view. 'null' if no color is currently selected
+ * @name $.oPalette#currentColor
+ * @type {oColor}
+ */
 Object.defineProperty($.oPalette.prototype, 'currentColor', {
   get: function () {
     var id = PaletteManager.getCurrentColorId()
@@ -284,7 +289,7 @@ $.oPalette.prototype.addColor = function (name, type, colorData) {
 
 
 /**
- * Gets a oColor object based on id.
+ * Gets a oColor object based on id. 'null' if the color is not found in this palette
  * @param   {string}     id                          the color id as found in toonboom palette file.
  *
  * @return: {oColor}     the found oColor object.
