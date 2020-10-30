@@ -207,7 +207,7 @@ Object.defineProperty($.oDrawing.prototype, 'underlay', {
  */
 Object.defineProperty($.oDrawing.prototype, 'colorArt', {
   get: function () {
-    return this.colorArt;
+    return this._colorArt;
   }
 })
 
@@ -219,7 +219,7 @@ Object.defineProperty($.oDrawing.prototype, 'colorArt', {
  */
 Object.defineProperty($.oDrawing.prototype, 'lineArt', {
   get: function () {
-    return this.lineArt;
+    return this._lineArt;
   }
 })
 
@@ -231,7 +231,7 @@ Object.defineProperty($.oDrawing.prototype, 'lineArt', {
  */
 Object.defineProperty($.oDrawing.prototype, 'overlay', {
   get: function () {
-    return this.overlay;
+    return this._overlay;
   }
 })
 
@@ -648,6 +648,64 @@ Object.defineProperty($.oArtLayer.prototype, 'selectedStrokes', {
 })
 
 
+/**
+ * Draws a circle on the artLayer.
+ * @param {$.oPoint}       center         The center of the circle
+ * @param {float}          radius         The radius of the circle
+ * @param {$.oLineStyle}   [lineStyle]    Provide a $.oLineStyle object to specify how the line will look
+ * @param {object}         [fillStyle]    The fill information to fill the circle with. currently WIP
+ */
+$.oArtLayer.prototype.drawCircle = function(center, radius, lineStyle, fillStyle){
+  var arg = {
+    x: center.x,
+    y: center.y,
+    radius: radius
+  };
+  var _path = Drawing.geometry.createCircle(arg);
+
+  this.drawStroke(_path, lineStyle, fillStyle);
+}
+
+
+/**
+ * Draws the given path on the artLayer.
+ * @param {$.oVertex[]}    path          an array of $.oVertex objects that describe a path.
+ * @param {$.oLineStyle}   lineStyle     the line style to draw with.
+ * @param {object}         fillStyle     the fill information for the path.
+ */
+$.oArtLayer.prototype.drawStroke = function(path, lineStyle, fillStyle){
+  if (typeof fillStyle === 'undefined') var fillStyle = []
+  if (typeof lineStyle === 'undefined') var lineStyle = new this.$.oLineStyle();
+
+  var _lineStyle = {
+    shaderLeft: 0,
+    stroke: true,
+    pencilColorId: lineStyle.colorID,
+    thickness: {
+      "minThickness": lineStyle.minThickness,
+      "maxThickness": lineStyle.maxThickness,
+      "thicknessPath": lineStyle.stencil
+    }
+  }
+
+  log(JSON.stringify(_lineStyle))
+
+  var strokeDesciption = _lineStyle;
+  strokeDesciption.path = path;
+
+  DrawingTools.createLayers({
+    label: "draw stroke",
+    drawing: this._key.drawing,
+    art: this._key.art,
+    layers: [
+      {
+        shaders: fillStyle,
+        strokes: [strokeDesciption]
+      }
+    ]
+  });
+};
+
 
 /**
  * Removes the contents of the art layer.
@@ -675,6 +733,58 @@ $.oArtLayer.prototype.getShapeByIndex = function (index) {
  */
 $.oArtLayer.prototype.toString = function(){
   return "Object $.oArtLayer ["+this.name+"]";
+}
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//       $.oLineStyle class         //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for the $.oLineStyle class.
+ * @constructor
+ * @classdesc
+ * The $.oLineStyle class describes a lineStyle used to describe the appearance of strokes and perform drawing operations. <br>
+ * Initializing a $.oLineStyle without any parameters attempts to get the current pencil thickness settings and color.
+ * @param {string}     colorId             the color Id to paint the line with.
+ * @param {float}      minThickness        the minimum thickness of the line.
+ * @param {float}      maxThickness        the maximum thickness of the line.
+ * @param {$.oStencil} stencil             not supported yet.
+ */
+$.oLineStyle = function (colorId, minThickness, maxThickness, stencil) {
+  if (typeof stencil === 'undefined') var stencil = 0;
+  if (typeof minThickness === 'undefined') var minThickness = PenstyleManager.getCurrentPenstyleMinimumSize();
+  if (typeof maxThickness === 'undefined') {
+    var maxThickness = PenstyleManager.getCurrentPenstyleMaximumSize();
+    if (!maxThickness && !minThickness) maxThickness = 1;
+  }
+
+  if (typeof colorId === 'undefined'){
+    var _palette = this.$.scn.selectedPalette;
+    if (_palette) {
+      var _color = this.$.scn.selectedPalette.currentColor;
+      if (_color) {
+        var colorId = _color.id;
+      } else{
+        var colorId = "0000000000000003";
+      }
+    }
+  }
+
+  this.minThickness = minThickness;
+  this.maxThickness = maxThickness;
+  this.colorId = colorId;
+  this.stencil = stencil;
+
+  this.$.log(colorId+" "+minThickness+" "+maxThickness+" "+stencil)
 }
 
 
@@ -816,6 +926,24 @@ Object.defineProperty($.oStroke.prototype, "index", {
   get: function () {
     log("stroke object : "+JSON.stringify(this._stroke, null, "  "))
     return this._stroke.strokeIndex
+  }
+})
+
+
+/**
+ * The style of the stroke. null if the stroke is invisible
+ * @name $.oStroke#style
+ * @type {$.oLineStyle}
+ */
+Object.defineProperty($.oStroke.prototype, "style", {
+  get: function () {
+    if (this._stroke.invisible){
+      return null;
+    }
+    var _thickness = this._stroke.thickness;
+    var _colorId = this._stroke.pencilColorId;
+
+    return new this.$.oLineStyle(_colorId, _thickness.minThickness, _thickness.maxThickness, _thickness.thicknessPath);
   }
 })
 
@@ -970,25 +1098,9 @@ $.oStroke.prototype.getPointCoordinates = function(position){
 
 /**
  *
- * @param {*} position
- */
-$.oStroke.prototype.getVertexIndexAtPosition = function(position){
-  // get the indices at which new points will be created
-  var pointsPositions = this.path.map(function(x){return x.strokePosition});
-
-  for (var j in pointsPositions){
-    if (pointsPositions[j]> position){
-      return j;
-    }
-  }
-}
-
-
-/**
- *
  * @param {*} point
  */
-$.oStroke.prototype.containsPoint = function (point){
+$.oStroke.prototype.getClosestPoint = function (point){
   var arg = {
     path : this.path,
     points: [ point ]
@@ -996,11 +1108,7 @@ $.oStroke.prototype.containsPoint = function (point){
 
   var _result = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
 
-  //log("closest point : "+JSON.stringify(_result));
 
-  var onCurve = (_result.x == point.x && _result.y == point.y);
-
-  return onCurve;
 }
 
 //////////////////////////////////////
