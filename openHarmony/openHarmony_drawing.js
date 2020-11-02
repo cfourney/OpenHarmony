@@ -708,6 +708,19 @@ $.oArtLayer.prototype.drawStroke = function(path, lineStyle, fillStyle){
 
 
 /**
+ * Draws a line on the artLayer
+ * @param {$.oPoint}     startPoint
+ * @param {$.oPoint}     endPoint
+ * @param {$.oLineStyle} lineStyle
+ */
+$.oArtLayer.prototype.drawLine = function(startPoint, endPoint, lineStyle){
+  var path = [{x:startPoint.x,y:startPoint.y,onCurve:true},{x:endPoint.x,y:endPoint.y,onCurve:true}];
+
+  this.drawStroke(path, lineStyle);
+}
+
+
+/**
  * Removes the contents of the art layer.
  * WIP
  * @private
@@ -986,12 +999,15 @@ $.oStroke.prototype.getIntersections = function (stroke){
   for (var i in intersections) {
     var _shape = this.artLayer.getShapeByIndex(intersections[i].layer);
     var _stroke = _shape.getStrokeByIndex(intersections[i].strokeIndex);
-    var points = intersections[i].intersections[0]
 
-    var point = new this.$.oVertex(this, points.x0, points.y0, true);
-    var intersection = { stroke: _stroke, point: point, ownPoint: points.t0, strokePoint: points.t1 };
+    for (var j in intersections[i].intersections){
+      var points = intersections[i].intersections[j]
 
-    result.push(intersection)
+      var point = new this.$.oVertex(this, points.x0, points.y0, true);
+      var intersection = { stroke: _stroke, point: point, ownPoint: points.t0, strokePoint: points.t1 };
+
+      result.push(intersection)
+    }
   }
 
   return result;
