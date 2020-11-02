@@ -680,7 +680,7 @@ $.oArtLayer.prototype.drawStroke = function(path, lineStyle, fillStyle){
   var _lineStyle = {
     shaderLeft: 0,
     stroke: true,
-    pencilColorId: lineStyle.colorID,
+    pencilColorId: lineStyle.colorId,
     thickness: {
       "minThickness": lineStyle.minThickness,
       "maxThickness": lineStyle.maxThickness,
