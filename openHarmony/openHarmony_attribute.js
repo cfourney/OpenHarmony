@@ -415,7 +415,7 @@ $.oAttribute.prototype.getLinkedColumns = function(){
   if (_ownColumn != null) _columns.push(_ownColumn);
 
   for (var i=0; i<_subAttributes.length; i++) {
-    _columns = _column.concat(_subAttributes[i].getLinkedColumns());
+    _columns = _columns.concat(_subAttributes[i].getLinkedColumns());
   }
 
   return _columns;
