@@ -162,7 +162,7 @@ $.oDialog.prototype.alertBox = function( labelText, title, okButtonText ){
   var button = new QPushButton(okButtonText);
 
   var layout = new QVBoxLayout(d);
-  layout.addWidget(label, 0, Qt.AlignHCenter);
+  layout.addWidget(label, 1, Qt.Justify);
   layout.addWidget(button, 0, Qt.AlignHCenter);
 
   d.setWindowTitle( title );
