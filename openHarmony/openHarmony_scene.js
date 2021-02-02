@@ -592,7 +592,12 @@ Object.defineProperty($.oScene.prototype, 'selectedNodes', {
  */
 Object.defineProperty($.oScene.prototype, 'selectedFrames', {
   get : function(){
-    var _selectedFrames = [selection.startFrame(), selection.startFrame()+selection.numberOfFrames()];
+    if (selection.isSelectionRange()){
+      var _selectedFrames = [selection.startFrame(), selection.startFrame()+selection.numberOfFrames()];
+    }else{
+      var _selectedFrames = [this.currentFrame, this.currentFrame+1];
+    }
+
     return _selectedFrames;
   },
 
