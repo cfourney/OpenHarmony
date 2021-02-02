@@ -334,7 +334,7 @@ $.endUndo = function( ){
  * 	Undoes the last n operations. If n is not specified, it will be 1
  * @name $#undo
  * @function
- * @param   {int}           n                                       The amount of operations to undo.
+ * @param   {int}           dist                                    The amount of operations to undo.
  */
 $.undo = function( dist ){
   if (typeof dist === 'undefined'){ var dist = 1; }
@@ -345,7 +345,7 @@ $.undo = function( dist ){
  * 	Redoes the last n operations. If n is not specified, it will be 1
  * @name $#redo
  * @function
- * @param   {int}           n                                       The amount of operations to undo.
+ * @param   {int}           dist                                    The amount of operations to undo.
  */
 $.redo = function( dist ){
   if (typeof dist === 'undefined'){ var dist = 1; }

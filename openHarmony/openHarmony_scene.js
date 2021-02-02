@@ -605,7 +605,7 @@ Object.defineProperty($.oScene.prototype, 'selectedFrames', {
 /**
  * Retrieve and set the selected palette from the scene palette list.
  * @name $.oScene#selectedPalette
- * @type {$.oPalette}   oPalette with provided name.
+ * @type {$.oPalette}
  */
 Object.defineProperty($.oScene.prototype, "selectedPalette", {
   get: function(){
