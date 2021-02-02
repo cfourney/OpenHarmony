@@ -450,11 +450,6 @@ $.oColumn.prototype.setValue = function(newValue, frame){
 
 
 
-
-//------------------------------------------------------
-//TODO FULL IMPLEMENTATION OF THIS.
-
-
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -507,15 +502,14 @@ Object.defineProperty($.oDrawingColumn.prototype, 'element', {
 
 
 /**
- * Extends the exposure of the drawing's keyframes given the provided arguments.
- * @param   {$.oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
- * @param   {int}         amount               The amount to extend.
- * @param   {bool}        replace              Setting this to false will insert frames as opposed to overwrite existing ones.(currently unsupported))
+ * Extends the exposure of the drawing's keyframes by the specified amount.
+ * @param   {$.oFrame[]}  [exposures]            The exposures to extend. If not specified, extends all keyframes.
+ * @param   {int}         [amount]               The number of frames to add to each exposure. If not specified, will extend frame up to the next one.
+ * @param   {bool}        [replace=false]        Setting this to false will insert frames as opposed to overwrite existing ones.(currently unsupported))
  */
 $.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace){
     // if amount is undefined, extend function below will automatically fill empty frames
     if (typeof exposures === 'undefined') var exposures = this.getKeyframes();
-    if (typeof amount === 'undefined') var amount = 1;
 
     this.$.debug("extendingExposures "+exposures.map(function(x){return x.frameNumber})+" by "+amount, this.$.DEBUG_LEVEL.DEBUG)
 
