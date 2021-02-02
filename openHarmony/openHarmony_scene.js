@@ -1410,7 +1410,7 @@ $.oScene.prototype.createPaletteFromNodes = function(nodes, paletteName, colorNa
     for (var j in _palettes){
       var _color = _palettes[j].getColorById(_usedColorIds[i]);
       // color found
-      if (_color != null){
+      if (_color){
         _usedColors[i] = _color;
         break;
       }
