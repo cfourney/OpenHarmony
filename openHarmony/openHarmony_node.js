@@ -1696,6 +1696,7 @@ $.oDrawingNode = function(path, oSceneObject) {
 $.oDrawingNode.prototype = Object.create($.oNode.prototype);
 
 
+
 /**
  * The element that holds the drawings displayed by the node.
  * @name $.oDrawingNode#element
@@ -1710,6 +1711,24 @@ Object.defineProperty($.oDrawingNode.prototype, "element", {
   set : function( oElementObject ){
     var _column = this.attributes.drawing.element.column;
     column.setElementIdOfDrawing( _column.uniqueName, oElementObject.id );
+  }
+});
+
+
+/**
+ * The column that holds the drawings displayed by the node.
+ * @name $.oDrawingNode#timingColumn
+ * @type {oColumn}
+ */
+Object.defineProperty($.oDrawingNode.prototype, "timingColumn", {
+  get : function(){
+    var _column = this.attributes.drawing.element.column;
+    return _column;
+  },
+
+  set : function (oColumnObject){
+    var _attribute = this.attributes.drawing.element;
+    _attribute.column = oColumnObject;
   }
 });
 
@@ -1781,6 +1800,19 @@ Object.defineProperty($.oDrawingNode.prototype, "palettes", {
 
 // Class Methods
 
+/**
+ * Gets the drawing name at the given frame.
+ * @param {int} frameNumber
+ * @return
+ */
+$.oDrawingNode.prototype.getDrawingAtFrame = function(frameNumber){
+  if (typeof frame === "undefined") var frame = this.$.scene.currentFrame;
+
+  var _attribute = this.attributes.drawing.element
+  return _attribute.getValue(frameNumber);
+}
+
+
  /**
  * Gets the list of palettes containing colors used by a drawing node. This only gets palettes with the first occurence of the colors.
  * @return  {$.oPalette[]}   The palettes that contain the color IDs used by the drawings of the node.
@@ -1794,7 +1826,7 @@ $.oDrawingNode.prototype.getUsedPalettes = function(){
     for (var j in _palettes){
       var _color = _palettes[j].getColorById(_usedColorIds[i]);
       // color found
-      if (_color != null){
+      if (_color){
         if (_usedPalettes.indexOf(_palettes[j]) == -1) _usedPalettes.push(_palettes[j]);
         break;
       }
@@ -1807,22 +1839,22 @@ $.oDrawingNode.prototype.getUsedPalettes = function(){
 
 /**
  * Displays all the drawings from the node's element onto the timeline
- * @param {int} framesPerDrawing
+ * @param {int} [framesPerDrawing=1]   The number of frames each drawing will be shown for
  */
 $.oDrawingNode.prototype.exposeAllDrawings = function(framesPerDrawing){
   if (typeof framesPerDrawing === 'undefined') var framesPerDrawing = 1;
 
   var _drawings = this.element.drawings;
-  var frameNumber = 1
+  var frameNumber = 1;
   for (var i=0; i < _drawings.length; i++){
     //log("showing drawing "+_drawings[i].name+" at frame "+i)
-    this.showDrawingAtFrame(_drawings[i], frameNumber)
-    frameNumber+=framesPerDrawing
+    this.showDrawingAtFrame(_drawings[i], frameNumber);
+    frameNumber+=framesPerDrawing;
   }
 
-  var _column = this.attributes.drawing.element.column
-  var _exposures = _column.getKeyframes()
-  _column.extendExposures(_exposures, framesPerDrawing-1)
+  var _column = this.attributes.drawing.element.column;
+  var _exposures = _column.getKeyframes();
+  _column.extendExposures(_exposures, framesPerDrawing-1);
 }
 
 
@@ -1832,8 +1864,8 @@ $.oDrawingNode.prototype.exposeAllDrawings = function(framesPerDrawing){
  * @param {int} frameNum
  */
 $.oDrawingNode.prototype.showDrawingAtFrame = function(drawing, frameNum){
-  var _column = this.attributes.drawing.element.column
-  _column.setValue(drawing.name, frameNum)
+  var _column = this.attributes.drawing.element.column;
+  _column.setValue(drawing.name, frameNum);
 }
 
 
@@ -2923,10 +2955,10 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
 /**
  * Imports a QT into the group
  * @param   {string}         path                          The palette file to import.
- * @param   {bool}           importSound                   Whether to import the sound
- * @param   {bool}           extendScene                   Whether to extend the scene to the duration of the QT.
- * @param   {string}         alignment                     Alignment type.
- * @param   {$.oPoint}       nodePosition                  The position for the node to be placed in the network.
+ * @param   {bool}           [importSound=true]            Whether to import the sound
+ * @param   {bool}           [extendScene=true]            Whether to extend the scene to the duration of the QT.
+ * @param   {string}         [alignment="ASIS"]            Alignment type.
+ * @param   {$.oPoint}       [nodePosition]                The position for the node to be placed in the network.
  *
  * @return {$.oNode}        The imported Quicktime Node.
  */
