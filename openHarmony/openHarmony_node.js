@@ -1803,7 +1803,7 @@ Object.defineProperty($.oDrawingNode.prototype, "palettes", {
 /**
  * Gets the drawing name at the given frame.
  * @param {int} frameNumber
- * @return
+ * @return {$.oDrawing}
  */
 $.oDrawingNode.prototype.getDrawingAtFrame = function(frameNumber){
   if (typeof frame === "undefined") var frame = this.$.scene.currentFrame;
