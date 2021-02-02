@@ -391,3 +391,7 @@ for( var classItem in $ ){
     this[classItem] = $[classItem];
   }
 }
+
+
+// Add global access to $ object
+this.__proto__.$ = $
