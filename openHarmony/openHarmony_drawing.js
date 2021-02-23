@@ -722,11 +722,14 @@ $.oArtLayer.prototype.drawLine = function(startPoint, endPoint, lineStyle){
 
 /**
  * Removes the contents of the art layer.
- * WIP
- * @private
  */
-$.oArtLayer.prototype.clear = function () {
-  return this.name;
+$.oArtLayer.prototype.clear = function(){
+  var _shapes = this.shapes;
+  this.$.debug(_shapes, this.$.DEBUG_LEVEL.DEBUG)
+  for (var i=_shapes.length - 1; i>=0; i--){
+    print(i)
+    _shapes[i].deleteShape();
+  }
 }
 
 
@@ -826,10 +829,22 @@ $.oLineStyle = function (colorId, minThickness, maxThickness, stencil) {
 $.oShape = function (index, oArtLayerObject) {
   this.index = index;
   this.artLayer = oArtLayerObject;
-  var _key = oArtLayerObject._key;
-  this._key = { drawing: _key.drawing, art: _key.art, layers: [index] };
 }
 
+
+/**
+ * @private
+ * @name $.oShape#_key
+ * @type {object}
+ * @readonly
+ * the toonboom key object identifying this shape.
+ */
+Object.defineProperty($.oShape.prototype, '_key', {
+  get: function () {
+    var _key = this.artLayer._key;
+    return { drawing: _key.drawing, art: _key.art, layers: [this.index] };
+  }
+})
 
 /**
  * The strokes making up the shape.
@@ -865,6 +880,17 @@ Object.defineProperty($.oShape.prototype, 'selected', {
   }
 })
 
+
+/**
+ * Deletes the shape from its artlayer.
+ * Warning : Because shapes are referenced by index, deleting a shape
+ * that isn't at the end of the list of shapes from this layer
+ * might render other shape objects from this layer obsolete.
+ * Get them again with artlayer.shapes.
+ */
+$.oShape.prototype.deleteShape = function(){
+  DrawingTools.deleteLayers(this._key);
+}
 
 /**
  * Gets a stroke from this shape by its index

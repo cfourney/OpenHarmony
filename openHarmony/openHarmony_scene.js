@@ -659,7 +659,7 @@ Object.defineProperty($.oScene.prototype, "selectedStrokes", {
 
 
 /**
- * The current drawing of the scene.
+ * The currently active drawing in the harmony UI.
  * @name $.oScene#activeDrawing
  * @type {$.oDrawing}
  */
