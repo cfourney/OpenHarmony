@@ -157,7 +157,7 @@ Object.defineProperty($.oScene.prototype, 'online', {
 Object.defineProperty($.oScene.prototype, 'environnement', {
   get : function(){
     if (!this.online) return null;
-    return scene.currentScene();
+    return scene.currentEnvironment();
   }
 });
 
