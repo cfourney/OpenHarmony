@@ -1884,6 +1884,8 @@ $.oScene.prototype.importPSD = function( path, group, nodePosition, separateLaye
  * @deprecated
  * @param   {string}       path                          The PSD file to update.
  * @param   {bool}         [separateLayers]              Whether the PSD was imported as separate layers.
+ *
+ * @returns {$.oNode[]}    The nodes affected by the update
  */
 $.oScene.prototype.updatePSD = function( path, group, separateLayers ){
   if (typeof group === 'undefined') var group = this.root;
@@ -1904,7 +1906,7 @@ $.oScene.prototype.updatePSD = function( path, group, separateLayers ){
  * @param   {string}         path                          The sound file to import.
  * @param   {string}         layerName                     The name to give the layer created.
  *
- * @return {$.oNode}        The imported Quicktime Node.
+ * @return {$.oNode}        The imported sound column.
  */
  $.oScene.prototype.importSound = function(path, layerName){
    var _audioFile = new this.$.oFile(path);
@@ -1926,7 +1928,7 @@ $.oScene.prototype.updatePSD = function( path, group, separateLayers ){
  * @param   {bool}           exportSound                   Whether to include the sound in the export.
  * @param   {bool}           exportPreviewArea             Whether to only export the preview area of the timeline.
  *
- * @return {$.oNode}        The imported Quicktime Node.
+ * @return {bool}        The success of the export
  */
 $.oScene.prototype.exportQT = function( path, display, scale, exportSound, exportPreviewArea){
   if (typeof display === 'undefined') var display = node.getName(node.getNodes(["DISPLAY"])[0]);
@@ -2062,7 +2064,7 @@ $.oScene.prototype.saveNewVersion = function(newVersionName, markAsDefault){
 
 
 /**
- * Renders the write nodes of the scene
+ * Renders the write nodes of the scene. This action saves the scene.
  * @param {bool}   [renderInBackground=true]    Whether to do the render on the main thread and block script execution
  * @param {int}    [startFrame=1]               The first frame to render
  * @param {int}    [endFrame=oScene.length]     The end of the render (non included)

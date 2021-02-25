@@ -100,8 +100,6 @@ $ = {
                 },
   file      : __file__,
   directory : false,
-  batchMode : false,
-
   pi        : 3.14159265359
 };
 
@@ -118,6 +116,25 @@ Object.defineProperty( $, "directory", {
   }
 });
 
+
+/**
+ * Wether Harmony is run with the interface or simply from command line
+ */
+Object.defineProperty( $, "batchMode", {
+  get: function(){
+    // use a cache to avoid pulling the widgets every time
+    if (!this.hasOwnProperty("_batchMode")){
+      this._batchMode = true;
+
+      // batchmode is false if there are any widgets visible in the application
+      var _widgets = QApplication.topLevelWidgets();
+      for (var i in _widgets){
+        if (_widgets[i].visible) this._batchMode = false;
+      }
+    }
+    return this._batchMode
+  }
+})
 
 /**
  * Function to load openHarmony files from the %installdir%/openHarmony/ folder.
