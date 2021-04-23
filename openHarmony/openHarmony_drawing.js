@@ -158,6 +158,10 @@ Object.defineProperty($.oDrawing.prototype, 'path', {
  */
 Object.defineProperty($.oDrawing.prototype, 'pivot', {
   get: function () {
+    if (this.$.batchMode){
+      throw new Error("oDrawing.pivot is not available in batch mode.")
+    }
+
     var _pivot = Drawing.getPivot({ "drawing": this._key });
     return new this.$.oPoint(_pivot.x, _pivot.y, 0);
   },
@@ -177,6 +181,10 @@ Object.defineProperty($.oDrawing.prototype, 'pivot', {
  */
 Object.defineProperty($.oDrawing.prototype, 'boundingBox', {
   get: function () {
+    if (this.$.batchMode){
+      throw new Error("oDrawing.boudingBox is not available in batch mode.")
+    }
+
     var _box = new this.$.oBox()
     for (var i in this.artLayers) {
       var _layerBox = this.artLayers[i].boundingBox
