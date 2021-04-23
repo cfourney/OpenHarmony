@@ -2142,6 +2142,20 @@ $.oGroupNode.prototype.getNodeByName = function(name){
 
 
  /**
+ * Returns all the nodes of a certain type in the group.
+ * Pass a value to recurse to look into the groups as well.
+ * @param   {string}        typeName      The type of the nodes.
+ * @param   {bool}          recurse       Wether to look inside the groups.
+ *
+ * @return  {$.oNode[]}     The nodes found.
+ */
+$.oGroupNode.prototype.getNodesByType = function(typeName, recurse){
+  if (typeof recurse === 'undefined') var recurse = false;
+  return this.subNodes(recurse).filter(function(x){return x.type == typeName});
+}
+
+
+ /**
  * Returns a child node in a group based on a search.
  * @param   {string}      name           The name of the node.
  *
@@ -2641,6 +2655,7 @@ $.oGroupNode.prototype.addBackdropToNodes = function( nodes, title, body, color,
 
 /**
  * Imports a PSD into the group.
+ * This function is not available when running as harmony in batch mode.
  * @param   {string}         path                          The PSD file to import.
  * @param   {bool}           [separateLayers=true]         Separate the layers of the PSD.
  * @param   {bool}           [addPeg=true]                 Whether to add a peg.
@@ -2675,6 +2690,11 @@ $.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addCo
   if (typeof separateLayers === 'undefined') var separateLayers = true;
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
 
+  if (this.$.batchMode){
+    this.$.debug("Error: can't import PSD file "+_psdFile.path+" in batch mode.", this.$.DEBUG_LEVEL.ERROR);
+    return null
+  }
+
   var _psdFile = (path instanceof this.$.oFile)?path:new this.$.oFile( path );
   if (!_psdFile.exists){
     this.$.debug("Error: can't import PSD file "+_psdFile.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
@@ -2706,7 +2726,6 @@ $.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addCo
   var _info = CELIO.getInformation(_psdFile.path);
 
   // create the nodes for each layer
-
   var _nodes = [];
   if (separateLayers){
 

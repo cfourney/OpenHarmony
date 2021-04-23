@@ -728,6 +728,16 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
     return _node;
 }
 
+ /**
+ * Returns the nodes of a certain type in the entire scene.
+ * @param   {string}      typeName       The name of the node.
+ *
+ * @return  {$.oNode[]}     The nodes found.
+ */
+$.oScene.prototype.getNodesByType = function(typeName){
+  return this.root.getNodesByType(typeName, true);
+}
+
 /**
  * Gets a column by the name.
  * @param  {string}             uniqueName               The unique name of the column as a string.
