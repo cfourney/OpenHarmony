@@ -316,7 +316,9 @@ $.cache_oNode = {};
 
 /**
  * Starts the tracking of the undo accumulation, all subsequent actions are done in a single undo operation.<br>Close the undo accum with $.endUndo().
- * @param   {string}           undoName                                       The name of the operation that is being done in the undo accum.
+ * If this function is called multiple time, only the first time will count.
+ * (this prevents small functions wrapped in their own undo block to interfere with global script undo)
+ * @param   {string}           undoName        The name of the operation that is being done in the undo accum.
  * @name $#beginUndo
  * @function
  * @see $.endUndo
@@ -324,8 +326,9 @@ $.cache_oNode = {};
 $.beginUndo = function( undoName ){
   //Using epoch as the temp name.
   if (typeof undoName === 'undefined') var undoName = ''+((new Date()).getTime());
-
-  scene.beginUndoRedoAccum( undoName );
+  if (!$.hasOwnProperty("undoStackSize")) $.undoStackSize = 0;
+  if ($.undoStackSize == 0) scene.beginUndoRedoAccum( undoName );
+  $.undoStackSize++;
 }
 
 /**
@@ -339,12 +342,16 @@ $.cancelUndo = function( ){
 
 /**
  * Stops the tracking of the undo accumulation, everything between this and the start of the accumulation behaves as a single undo operation.
+ * If beginUndo function is called multiple time, each call must be matched with this function.
+ * (this prevents small functions wrapped in their own undo block to interfere with global script undo)
  * @name $#endUndo
  * @function
  * @see $.beginUndo
  */
 $.endUndo = function( ){
-  scene.endUndoRedoAccum( );
+  if (!$.hasOwnProperty("undoStackSize")) $.undoStackSize = 1;
+  $.undoStackSize--;
+  if ($.undoStackSize == 0)   scene.endUndoRedoAccum();
 }
 
 /**
