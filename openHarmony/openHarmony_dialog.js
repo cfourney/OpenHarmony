@@ -493,7 +493,7 @@ function openMenu(){
 }
  */
 
-$.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show , sliceColor, backgroundColor, linesColor){
+$.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show, sliceColor, backgroundColor, linesColor){
   this.name = name;
   this.widgets = widgets;
 
@@ -517,29 +517,51 @@ $.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show
   this.linesColor = linesColor;
 
   // how wide outisde the icons is the slice drawn
-  this._circle_margin = 30
+  this._circle_margin = 30;
 
   if (show) this.show();
 }
 
-Object.defineProperty($.oPieMenu.prototype, "center", {
+
+/**
+ * The top left point of the entire widget
+ * @name $.oPieMenu#anchor
+ * @type {$.oPoint}
+ */
+Object.defineProperty($.oPieMenu.prototype, "anchor", {
   get: function(){
     return new this.$.oPoint(this.position.x-this.radius*2, this.position.y-this.radius*2)
-  },
+  }
 })
 
 
+Object.defineProperty($.oPieMenu.prototype, "center", {
+  get: function(){
+    return new this.$.oPoint(this.height/2, this.width/2)
+  }
+})
+
+/**
+ * The height of the entire widget
+ * @name $.oPieMenu#height
+ * @type {int}
+ */
 Object.defineProperty($.oPieMenu.prototype, "height", {
   get: function(){
     return 4*this.radius
-  },
+  }
 })
 
 
+/**
+ * The width of the entire widget
+ * @name $.oPieMenu#width
+ * @type {int}
+ */
 Object.defineProperty($.oPieMenu.prototype, "width", {
   get: function(){
     return 4*this.radius
-  },
+  }
 })
 
 
@@ -549,8 +571,8 @@ Object.defineProperty($.oPieMenu.prototype, "width", {
  */
 $.oPieMenu.prototype.show = function(parent){
   // menu geometry
-  this._x = this.center.x;
-  this._y = this.center.y;
+  this._x = this.anchor.x;
+  this._y = this.anchor.y;
   this._height = this.height;
   this._width = this.width;
   this.parent = parent;
@@ -563,7 +585,7 @@ $.oPieMenu.prototype.show = function(parent){
   _pieMenu.setStyleSheet("background-color: rgba(20, 20, 20, 85%);");
   _pieMenu.setAttribute(Qt.WA_TranslucentBackground);
 
-  var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
+  var menuWidgetCenter = this.center;
   var closeButtonPosition = menuWidgetCenter;
 
   // set position/dimensions to parent if present
