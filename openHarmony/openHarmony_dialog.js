@@ -425,7 +425,9 @@ $.oProgressDialog.prototype.close = function(){
  * @param       {float}               [radius]                The radius of the menu.
  * @param       {$.oPoint}            [position]              The central position of the menu.
  * @param       {bool}                [show=false]            Whether to immediately show the dialog.
- * @param       {QColor}              [sliceColor]              The color of the slices.
+ * @param       {QColor}              [sliceColor]            The color of the slices. Can set to any fill type accepted by QBrush
+ * @param       {QColor}              [backgroundColor]       The background of the menu. Can set to any fill type accepted by QBrush
+ * @param       {QColor}              [linesColor]            The color of the lines.
  *
  * @property    {string}              name                    The name for this pie Menu.
  * @property    {QWidget[]}           widgets                 The widgets to display in the menu.
@@ -491,25 +493,30 @@ function openMenu(){
 }
  */
 
-$.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show , sliceColor ){
+$.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show , sliceColor, backgroundColor, linesColor){
   this.name = name;
   this.widgets = widgets;
 
   if (typeof minAngle === 'undefined') var minAngle = 0;
   if (typeof maxAngle === 'undefined') var maxAngle = 1;
-  if (typeof radius === 'undefined') var radius = this.getMenuRadius();;
+  if (typeof radius === 'undefined') var radius = this.getMenuRadius();
   if (typeof position === 'undefined') var position = this.$.app.globalMousePosition;
   if (typeof show === 'undefined') var show = false;
-  if (typeof sliceColor === 'undefined') var  sliceColor =new QColor(0, 200, 255, 200)
+  if (typeof sliceColor === 'undefined') var sliceColor =new QColor(0, 200, 255, 200);
+  if (typeof backgroundColor === 'undefined') var backgroundColor = new QColor(40, 40, 40, 180);
+  if (typeof linesColor === 'undefined') var linesColor = new QColor(0,0,0,0);
 
   this.radius = radius;
   this.minAngle = minAngle;
   this.maxAngle = maxAngle;
   this.position = position;
   this.sliceColor = sliceColor;
+  this.backgroundColor = backgroundColor;
+  this.linesColor = linesColor;
 
   if (show) this.show();
 }
+
 
 
 /**
@@ -556,7 +563,7 @@ $.oPieMenu.prototype.show = function(parent){
   for (var i=0; i < this.widgets.length; i++){
     var widget = this.widgets[i];
     var _itemPosition = this.getItemPosition(i, this.radius, this.minAngle, this.maxAngle);
-    var _widgetPosition = new this.$.oPoint(menuWidgetCenter.x+_itemPosition.x, menuWidgetCenter.y+_itemPosition.y);
+    var _widgetPosition = new this.$.oPoint(menuWidgetCenter.x + _itemPosition.x, menuWidgetCenter.y + _itemPosition.y);
 
     if (widget instanceof oPieSubMenu) widget = widget.init(i, _widgetPosition, this);
 
@@ -566,18 +573,19 @@ $.oPieMenu.prototype.show = function(parent){
     widget.move(_widgetPosition.x-widget.width/2 ,_widgetPosition.y-widget.height/2);
   }
 
-  _pieMenu.focusPolicy = Qt.StrongFocus
+  _pieMenu.focusPolicy = Qt.StrongFocus;
   _pieMenu.focusOutEvent = function(){
-    log("focus out")
+    log("focus out");
   }
 
   // add close button
-  var closeButton = new QToolButton(_pieMenu);
-  closeButton.text="close";
-  closeButton.setStyleSheet("font-size:14px; font-weight:bold; background-color: rgba(0, 0, 0, 1)");
+  var closeIcon = specialFolders.resource + "/icons/brushpreset/defaultpresetellipse/ellipse03.svg"
+  var closeButton = new this.$.oPieButton(closeIcon, _pieMenu);
+  // closeButton.text="close";
+  // closeButton.setStyleSheet("font-size:14px; font-weight:bold; background-color: rgba(0, 0, 0, 1)");
   closeButton.cursor=new QCursor(Qt.PointingHandCursor);
-  closeButton.minimumHeight = 50;
-  closeButton.minimumWidth = 50;
+  // closeButton.minimumHeight = 50;
+  // closeButton.minimumWidth = 50;
   closeButton.objectName = this.name+"_closeButton";
   closeButton.show();
   closeButton.move(closeButtonPosition.x-(closeButton.width/2), closeButtonPosition.y-(closeButton.height/2));
@@ -619,15 +627,15 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
   if (typeof minRadius === 'undefined') minRadius = 30;
   var maxRadius = this.radius+30;
   var index = 0;
-  var linesColor = new QColor(0,0,0,0)
-  var backgroundColor = new QColor(40, 40, 40, 10)
-  var backgroundGradient = new QRadialGradient (new QPointF(this._height/2, this._width/2), maxRadius);
-  backgroundGradient.setColorAt(1, new QColor(backgroundColor.red(), backgroundColor.green(), backgroundColor.blue(), 255));
-  backgroundGradient.setColorAt(0, backgroundColor);
+  var linesColor = this.linesColor;
+  var backgroundColor = this.backgroundColor;
+  // var backgroundGradient = new QRadialGradient (new QPointF(this._height/2, this._width/2), maxRadius);
+  // backgroundGradient.setColorAt(1, new QColor(backgroundColor.red(), backgroundColor.green(), backgroundColor.blue(), 255));
+  // backgroundGradient.setColorAt(0, backgroundColor);
   var sliceColor = this.sliceColor;
-  var sliceGradient = new QRadialGradient (new QPointF(this._height/2, this._width/2), maxRadius);
-  sliceGradient.setColorAt(1, new QColor(sliceColor.red(), sliceColor.green(), sliceColor.blue(), 20));
-  sliceGradient.setColorAt(0, sliceColor);
+  // var sliceGradient = new QRadialGradient (new QPointF(this._height/2, this._width/2), maxRadius);
+  // sliceGradient.setColorAt(1, new QColor(sliceColor.red(), sliceColor.green(), sliceColor.blue(), 20));
+  // sliceGradient.setColorAt(0, sliceColor);
 
   // get the slice and background geometry
   var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
@@ -656,8 +664,7 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
     // draw background
     painter.setRenderHint(QPainter.Antialiasing);
     painter.setPen(new QPen(linesColor));
-    // painter.setBrush(new QBrush(backgroundColor));
-    painter.setBrush(new QBrush(backgroundGradient));
+    painter.setBrush(new QBrush(backgroundColor));
 
     painter.drawPath(contactPath);
 
@@ -666,8 +673,8 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
     painter.rotate(sliceWidth*index*(-180));
     painter.translate(-menuWidgetCenter.x, -menuWidgetCenter.y);
     painter.setPen(new QPen(linesColor));
-    // painter.setBrush(new QBrush(sliceColor));
-    painter.setBrush(new QBrush(sliceGradient));
+    painter.setBrush(new QBrush(sliceColor));
+    // painter.setBrush(new QBrush(sliceGradient));
     painter.drawPath(slicePath);
     painter.end();
     painter.restore();
@@ -692,6 +699,10 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
       if (indexWidget instanceof self.$.oPieSubMenu) indexWidget = indexWidget.menu.button;
       indexWidget.setFocus(true);
     }
+  }
+
+  sliceWidget.mouseDownEvent = function(mousePos){
+    log("mouse Down ")
   }
 
   return sliceWidget;
@@ -859,10 +870,10 @@ $.oPieMenu.prototype.hideButton = function(){
 
 
 /**
- * The $.oPieMenu constructor.
+ * The $.oPieSubMenu constructor.
  * @name        $.oPieSubMenu
  * @constructor
- * @classdesc   A type of menu with nested levels that appear around the mouse
+ * @classdesc   A menu with more options that opens/closes when the user clicks on the button.
  * @param       {string}              name                     The name for this pie Menu.
  * @param       {QWidget[]}           [widgets]                The widgets to display in the menu.
  *
@@ -904,13 +915,49 @@ $.oPieSubMenu.prototype.init = function(index, position, parent){
   this.menu = new this.$.oPieMenu(name, this.widgets, minAngle, maxAngle, radius, position, false);
 
   // initialise the button to open the menu
-  this.menu.button = new QPushButton(parent.menuWidget);
+  this.menu.button = new this.$.oPieButton("", parent.menuWidget);
   this.menu.button.text = name;
   this.menu.button.mouseTracking = true;
   this.menu.showButton(parent);
 
   return this.menu.button;
 }
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//        $.oPieButton class        //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for $.oPieButton
+ * @constructor
+ * @classdesc This subclass of QPushButton provides an easy way to create a button for a PieMenu.<br>
+ *
+ * This class is a subclass of QPushButton and all the methods from that class are available to modify this button.
+  * @param {string}   iconFile               The icon file for the button
+ *
+ */
+ $.oPieButton = function(iconFile, parent) {
+  // if icon isnt provided
+  if (typeof iconFile === 'undefined') var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
+
+  QPushButton.call(this, parent);
+
+  this.minimumHeight = 32;
+  this.minimumWidth = 32;
+  // this.cursor=new QCursor(Qt.PointingHandCursor);
+  UiLoader.setSvgIcon(this, iconFile)
+}
+$.oPieButton.prototype = Object.create(QToolButton.prototype);
+
 
 
 //////////////////////////////////////
@@ -938,7 +985,6 @@ $.oPieSubMenu.prototype.init = function(index, position, parent){
  *
  */
 $.oScriptButton = function(scriptFile, scriptFunction, parent) {
-  QPushButton.call(this, "", parent);
   this.scriptFile = scriptFile;
   this.scriptFunction = scriptFunction;
 
@@ -954,6 +1000,8 @@ $.oScriptButton = function(scriptFile, scriptFunction, parent) {
     var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
   }
 
+  this.$.oPieButton.call(this, iconFile, parent);
+
   this.minimumHeight = 32;
   this.minimumWidth = 32;
 
@@ -963,7 +1011,7 @@ $.oScriptButton = function(scriptFile, scriptFunction, parent) {
 
   this.toolTip = this.scriptFunction;
 }
-$.oScriptButton.prototype = Object.create(QPushButton.prototype);
+$.oScriptButton.prototype = Object.create($.oPieButton.prototype);
 
 
 
@@ -1019,47 +1067,3 @@ $.oPrefButton = function(preferenceString, parent) {
   this.toolTip = this.scriptFunction;
 }
 $.oPrefButton.prototype = Object.create(QPushButton.prototype);
-
-
-
-//////////////////////////////////////
-//////////////////////////////////////
-//                                  //
-//                                  //
-//        $.oPieButton class        //
-//                                  //
-//                                  //
-//////////////////////////////////////
-//////////////////////////////////////
-
-
-/**
- * The constructor for $.oPieButton
- * @constructor
- * @classdesc This subclass of QToolButton provides an easy way to create a button for a PieMenu.<br>
- *
- * This class is a subclass of QToolButton and all the methods from that class are available to modify this button.
-  * @param {string}   iconFile               The icon file for the button
- *
- */
-$.oPieButton = function(iconFile) {
-  QToolButton.call(this);
-  //this.iconFile = iconFile;
-
-  // if icon isnt provided
-  if (iconFile == ""){
-    //svg not supported ?
-    var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
-  }
-  this.setStyleSheet("background :transparent;")
-  this.minimumHeight = 48;
-  this.minimumWidth = 48;
-  this.cursor=new QCursor(Qt.PointingHandCursor);
-
-  var icon = new QIcon(iconFile);
-  this.icon = icon;
-  this.setIconSize(new QSize(48, 48));
-
-
-}
-$.oPieButton.prototype = Object.create(QToolButton.prototype);
