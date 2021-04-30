@@ -494,6 +494,8 @@ function openMenu(){
  */
 
 $.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show, sliceColor, backgroundColor, linesColor){
+  QWidget.call(this, this.$.app.mainWindow)
+
   this.name = name;
   this.widgets = widgets;
 
@@ -517,11 +519,12 @@ $.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show
   this.linesColor = linesColor;
 
   // how wide outisde the icons is the slice drawn
-  this._circle_margin = 30;
+  this._circleMargin = 30;
+  this.buildWidget()
 
   if (show) this.show();
 }
-
+$.oPieMenu.prototype = Object.create(QWidget.prototype);
 
 /**
  * The top left point of the entire widget
@@ -546,7 +549,7 @@ Object.defineProperty($.oPieMenu.prototype, "center", {
  * @name $.oPieMenu#height
  * @type {int}
  */
-Object.defineProperty($.oPieMenu.prototype, "height", {
+Object.defineProperty($.oPieMenu.prototype, "circleHeight", {
   get: function(){
     return 4*this.radius
   }
@@ -558,7 +561,7 @@ Object.defineProperty($.oPieMenu.prototype, "height", {
  * @name $.oPieMenu#width
  * @type {int}
  */
-Object.defineProperty($.oPieMenu.prototype, "width", {
+Object.defineProperty($.oPieMenu.prototype, "circleWidth", {
   get: function(){
     return 4*this.radius
   }
@@ -569,39 +572,36 @@ Object.defineProperty($.oPieMenu.prototype, "width", {
  * Build and show the pie menu.
  * @param {$.oPieMenu}   [parent]    specify a parent oPieMenu for imbricated submenus
  */
-$.oPieMenu.prototype.show = function(parent){
+$.oPieMenu.prototype.buildWidget = function(parent){
   // menu geometry
   this._x = this.anchor.x;
   this._y = this.anchor.y;
-  this._height = this.height;
-  this._width = this.width;
+  this._height = this.circleHeight;
+  this._width = this.circleWidth;
   this.parent = parent;
 
-  var _pieMenu = new QWidget();
-  this.menuWidget = _pieMenu;
-
   var flags = new Qt.WindowFlags(Qt.Popup| Qt.FramelessWindowHint);
-  _pieMenu.setWindowFlags(flags);
-  _pieMenu.setStyleSheet("background-color: rgba(20, 20, 20, 85%);");
-  _pieMenu.setAttribute(Qt.WA_TranslucentBackground);
+  this.setWindowFlags(flags);
+  this.setStyleSheet("background-color: rgba(20, 20, 20, 85%);");
+  this.setAttribute(Qt.WA_TranslucentBackground);
 
-  var menuWidgetCenter = this.center;
-  var closeButtonPosition = menuWidgetCenter;
+  // var menuWidgetCenter = this.center;
+  // var closeButtonPosition = menuWidgetCenter;
 
-  // set position/dimensions to parent if present
-  if (typeof parent !== 'undefined'){
-    this._x = 0;
-    this._y = 0;
-    this._height = parent._height;
-    this._width = parent._width;
+  // // set position/dimensions to parent if present
+  // if (typeof parent !== 'undefined'){
+  //   this._x = 0;
+  //   this._y = 0;
+  //   this._height = parent._height;
+  //   this._width = parent._width;
 
-    closeButtonPosition = this.position;
-    _pieMenu.setParent(parent.menuWidget);
-  }
+  //   closeButtonPosition = this.position;
+  //   this.setParent(parent.menuWidget);
+  // }
 
-  _pieMenu.move(this._x, this._y);
-  _pieMenu.minimumHeight = this._height;
-  _pieMenu.minimumWidth = this._width;
+  this.move(this._x, this._y);
+  this.minimumHeight = this._height;
+  this.minimumWidth = this._width;
 
   // arrange widgets into half a circle around the center
   var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
@@ -611,56 +611,56 @@ $.oPieMenu.prototype.show = function(parent){
     var _itemPosition = this.getItemPosition(i, this.radius, this.minAngle, this.maxAngle);
     var _widgetPosition = new this.$.oPoint(menuWidgetCenter.x + _itemPosition.x, menuWidgetCenter.y + _itemPosition.y);
 
-    if (widget instanceof oPieSubMenu) widget = widget.init(i, _widgetPosition, this);
+    // if (widget instanceof oPieSubMenu) widget = widget.init(i, _widgetPosition, this);
 
-    widget.setParent(_pieMenu);
+    widget.setParent(this);
     widget.show();
 
     widget.move(_widgetPosition.x-widget.width/2 ,_widgetPosition.y-widget.height/2);
   }
 
-  _pieMenu.focusPolicy = Qt.StrongFocus;
-  _pieMenu.focusOutEvent = function(){
+  this.focusPolicy = Qt.StrongFocus;
+  this.focusOutEvent = function(){
     log("focus out");
   }
 
   // add close button
   var closeIcon = specialFolders.resource + "/icons/brushpreset/defaultpresetellipse/ellipse03.svg"
-  var closeButton = new this.$.oPieButton(closeIcon, _pieMenu);
+  var closeButton = new this.$.oPieButton(closeIcon, this);
   // closeButton.text="close";
   // closeButton.setStyleSheet("font-size:14px; font-weight:bold; background-color: rgba(0, 0, 0, 1)");
-  closeButton.cursor=new QCursor(Qt.PointingHandCursor);
+  closeButton.cursor = new QCursor(Qt.PointingHandCursor);
   // closeButton.minimumHeight = 50;
   // closeButton.minimumWidth = 50;
+  // var menuWidgetCenter = this.center;
+  var closeButtonPosition = menuWidgetCenter;
   closeButton.objectName = this.name+"_closeButton";
   closeButton.show();
   closeButton.move(closeButtonPosition.x-(closeButton.width/2), closeButtonPosition.y-(closeButton.height/2));
 
-  if (parent){
-    // this is a submenu, so we set up the close button differently as it will show the button to open it again
-    var self = this;
-    var closeCallBack = function(){
-      _pieMenu.close();
-      self.showButton(parent);
-    }
-    closeButton.mouseTracking = true;
-    closeButton.leaveEvent = function(){
-      // enterEvent will only fire after having left the widget
-      closeButton.enterEvent = closeCallBack;
-    }
-    this.slice = this.drawSlice(parent.radius+this._circle_margin);
-  }else{
-    var closeCallBack = function(){
-      _pieMenu.close();
-    }
+  // if (parent){
+  //   // this is a submenu, so we set up the close button differently as it will show the button to open it again
+  //   var self = this;
+  //   var closeCallBack = function(){
+  //     _pieMenu.close();
+  //     self.showButton(parent);
+  //   }
+  //   closeButton.mouseTracking = true;
+  //   closeButton.leaveEvent = function(){
+  //     // enterEvent will only fire after having left the widget
+  //     closeButton.enterEvent = closeCallBack;
+  //   }
+  //   this.slice = this.drawSlice(parent.radius+this._circleMargin);
+  // }else{
+  //   var closeCallBack = function(){
+  //     this.close();
+  //   }
     this.slice = this.drawSlice();
-  }
+  // }
   // add close button actions
-  closeButton.clicked.connect(closeCallBack)
+  closeButton.clicked.connect(this.close)
 
-  _pieMenu.show();
-
-  return _pieMenu;
+  // this.show();
 }
 
 
@@ -670,8 +670,8 @@ $.oPieMenu.prototype.show = function(parent){
  * @private
  */
 $.oPieMenu.prototype.drawSlice = function(minRadius){
-  if (typeof minRadius === 'undefined') minRadius = this._circle_margin;
-  var maxRadius = this.radius+this._circle_margin;
+  if (typeof minRadius === 'undefined') minRadius = this._circleMargin;
+  var maxRadius = this.radius+this._circleMargin;
   var index = 0;
   var linesColor = this.linesColor;
   var backgroundColor = this.backgroundColor;
@@ -690,7 +690,7 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
   var contactPath = this.getSlicePath(menuWidgetCenter, this.minAngle, this.maxAngle, minRadius, maxRadius);
 
   // create a widget to paint into
-  var _parent = this.menuWidget;
+  var _parent = this;
   var sliceWidget = new QWidget(_parent);
   sliceWidget.objectName = "slice";
   sliceWidget.setStyleSheet("background-color: rgba(0, 0, 0, 0%);");
@@ -743,7 +743,7 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
       sliceWidget.update();
       var indexWidget = self.widgets[index]
       if (indexWidget instanceof self.$.oPieSubMenu) indexWidget = indexWidget.menu.button;
-      indexWidget.setFocus(true);
+      // indexWidget.setFocus(true);
     }
   }
 
