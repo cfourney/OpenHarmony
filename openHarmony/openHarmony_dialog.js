@@ -518,9 +518,9 @@ $.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show
 
   QWidget.call(this, parent)
 
-  this._radius = radius;
-  this._minAngle = minAngle;
-  this._maxAngle = maxAngle;
+  this.radius = radius;
+  this.minAngle = minAngle;
+  this.maxAngle = maxAngle;
   this.position = position;
 
   // how wide outisde the icons is the slice drawn
@@ -531,52 +531,53 @@ $.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show
   this.backgroundColor = new QColor(40, 40, 40, 180);
   this.linesColor = new QColor(0,0,0,0);
 
-  this.buildWidget()
+  // add buildWidget call before show()
+  var showFunction = this.show
+  this.show = function(){
+    log("showing widget")
+    this.buildWidget()
+    showFunction()
+  }
 
   if (show) this.show();
 }
 $.oPieMenu.prototype = Object.create(QWidget.prototype);
 
 
-// $.oPieMenu.prototype.show = function(){
-//   this.$.log("showing widget");
-//   QWidget.prototype.show.call(this);
-// }
-
-/**
- * The top left point of the entire widget
- * @name $.oPieMenu#anchor
- * @type {$.oPoint}
- */
- Object.defineProperty($.oPieMenu.prototype, "radius", {
-  get: function(){
-    return this._radius;
-  }
-})
+// /**
+//  * The top left point of the entire widget
+//  * @name $.oPieMenu#anchor
+//  * @type {$.oPoint}
+//  */
+//  Object.defineProperty($.oPieMenu.prototype, "radius", {
+//   get: function(){
+//     return this._radius;
+//   }
+// })
 
 
-/**
- * The top left point of the entire widget
- * @name $.oPieMenu#anchor
- * @type {$.oPoint}
- */
- Object.defineProperty($.oPieMenu.prototype, "minAngle", {
-  get: function(){
-    return this._minAngle;
-  }
-})
+// /**
+//  * The top left point of the entire widget
+//  * @name $.oPieMenu#anchor
+//  * @type {$.oPoint}
+//  */
+//  Object.defineProperty($.oPieMenu.prototype, "minAngle", {
+//   get: function(){
+//     return this._minAngle;
+//   }
+// })
 
 
-/**
- * The top left point of the entire widget
- * @name $.oPieMenu#anchor
- * @type {$.oPoint}
- */
- Object.defineProperty($.oPieMenu.prototype, "maxAngle", {
-  get: function(){
-    return this._maxAngle;
-  }
-})
+// /**
+//  * The top left point of the entire widget
+//  * @name $.oPieMenu#anchor
+//  * @type {$.oPoint}
+//  */
+//  Object.defineProperty($.oPieMenu.prototype, "maxAngle", {
+//   get: function(){
+//     return this._maxAngle;
+//   }
+// })
 
 
 /**
@@ -623,11 +624,11 @@ Object.defineProperty($.oPieMenu.prototype, "circleWidth", {
 
 /**
  * Build and show the pie menu.
- * @param {$.oPieMenu}   [parent]    specify a parent oPieMenu for imbricated submenus
  */
-$.oPieMenu.prototype.buildWidget = function(parent){
+$.oPieMenu.prototype.buildWidget = function(){
+  log("oPieMenu buildWidget")
   // menu geometry
-  this.parent = parent;
+  // this.parent = parent;
 
   this.move(this.anchor.x, this.anchor.y);
   this.minimumHeight = this.circleHeight;
@@ -939,6 +940,10 @@ $.oPieMenu.prototype.hideButton = function(){
   _button.mouseReleaseEvent = false;
 }
 
+$.oPieMenu.prototype.toString = function(){
+  return "$.oPieMenu"
+}
+
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -966,16 +971,29 @@ $.oPieMenu.prototype.hideButton = function(){
  * @property    {string}              extraRadius              using a set radius between each submenu levels
  */
 $.oPieSubMenu = function(name, widgets) {
-  this.$.oPieMenu.call(this, name, this.widgets, '', '', '', '', false);
+  log("pieSubMenu init")
+  this.$.oPieMenu.call(this, name, widgets, '', '', '', '', false);
 
-  this.name = name;
-  this.widgets = widgets;
-  this.menu = "";
-  this.itemAngle = 0.06;
-  this.extraRadius = 80;
+  this.setParent = function(parent){
+    log("setting parent on subwidget");
+    this._parent = parent;
+    log(parent)
+  }
+
 }
 $.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
 
+
+/**
+ * The top left point of the entire widget
+ * @name $.oPieSubMenu#minAngle
+ * @type {$.oPoint}
+ */
+Object.defineProperty($.oPieSubMenu.prototype, "parent", {
+  get: function(){
+    return this._parent;
+  }
+})
 
 
 // /**
@@ -985,7 +1003,7 @@ $.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
 //  */
 //  Object.defineProperty($.oPieSubMenu.prototype, "minAngle", {
 //   get: function(){
-//     return this.parent.minAngle
+//     return this._parent.minAngle
 //   }
 // })
 
@@ -997,10 +1015,50 @@ $.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
 //  */
 //  Object.defineProperty($.oPieSubMenu.prototype, "maxAngle", {
 //   get: function(){
-//     return this.parent.maxAngle
+//     return this._parent.maxAngle
 //   }
 // })
 
+
+/**
+ * Function to initialise the widgets for the submenu
+ * @param  {int}           index        The index of the menu amongst the parent's widgets
+ * @param  {$.oPoint}      position     The position for the button calling the menu
+ * @param  {$.oPieMenu}    parent       The menu parent
+ * @private
+ * @return {QPushButton}        The button that calls the menu.
+ */
+$.oPieSubMenu.prototype.setParent = function(parent){
+  log("oPieSubMenu setParent")
+  this._parent = parent;
+  // var name = this.name;
+  // var angle = parent.getItemAngle(index);
+}
+
+
+/**
+ * Function to initialise the widgets for the submenu
+ * @param  {int}           index        The index of the menu amongst the parent's widgets
+ * @param  {$.oPoint}      position     The position for the button calling the menu
+ * @param  {$.oPieMenu}    parent       The menu parent
+ * @private
+ * @return {QPushButton}        The button that calls the menu.
+ */
+$.oPieSubMenu.prototype.buildWidget = function(){
+  log("oPieSubMenu buildWidget")
+  if (!this.hasOwnProperty("_parent")){
+    throw new Error("must set parent first before calling $.oPieMenu.buildWidget()")
+  }
+  parent = this._parent
+
+  // create the submenu on top of the main menu
+  this.radius = parent.radius;
+  this.minAngle = parent.minAngle;
+  this.maxAngle = parent.maxAngle;
+  this.position = parent.position;
+
+  $.oPieMenu.prototype.buildWidget.call(this);
+}
 
 // /**
 //  * Function to initialise the widgets for the submenu
@@ -1043,14 +1101,14 @@ $.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
  */
  Object.defineProperty($.oPieSubMenu.prototype, "anchor", {
   get: function(){
-    return this.parent.anchor
+    return this._parent.anchor
   }
 })
 
 
 Object.defineProperty($.oPieSubMenu.prototype, "center", {
   get: function(){
-    return this.parent.center
+    return this._parent.center
   }
 })
 
