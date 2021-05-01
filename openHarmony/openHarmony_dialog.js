@@ -488,43 +488,96 @@ function openMenu(){
   // and -0.5 is the bottom from the right side. 0.5 is the top of the circle.
   var menu = new $.oPieMenu("menu", widgets, -0.2, 1.2);
 
+  var backgroundGradient = new QRadialGradient (menu.center, maxRadius);
+  backgroundGradient.setColorAt(1, new QColor(backgroundColor.red(), backgroundColor.green(), backgroundColor.blue(), 255));
+  backgroundGradient.setColorAt(0, backgroundColor);
+
+  var sliceGradient = new QRadialGradient (menu.center, maxRadius);
+  sliceGradient.setColorAt(1, new QColor(sliceColor.red(), sliceColor.green(), sliceColor.blue(), 20));
+  sliceGradient.setColorAt(0, sliceColor);
+
+  menu.backgroundColor = backgroundGradient
+  menu.sliceColor = sliceGradient
+
   // we show it!
   menu.show();
 }
  */
 
-$.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show, sliceColor, backgroundColor, linesColor){
-  QWidget.call(this, this.$.app.mainWindow)
-
+$.oPieMenu = function( name, widgets, minAngle, maxAngle, radius, position, show, parent){
   this.name = name;
   this.widgets = widgets;
+  this.parent = parent;
 
   if (typeof minAngle === 'undefined') var minAngle = 0;
   if (typeof maxAngle === 'undefined') var maxAngle = 1;
   if (typeof radius === 'undefined') var radius = this.getMenuRadius();
   if (typeof position === 'undefined') var position = this.$.app.globalMousePosition;
   if (typeof show === 'undefined') var show = false;
-  if (typeof sliceColor === 'undefined') var sliceColor =new QColor(0, 200, 255, 200);
-  if (typeof backgroundColor === 'undefined') var backgroundColor = new QColor(40, 40, 40, 180);
-  if (typeof linesColor === 'undefined') var linesColor = new QColor(0,0,0,0);
+  if (typeof parent === 'undefined') var parent = this.$.app.mainWindow;
 
-  this.radius = radius;
-  this.minAngle = minAngle;
-  this.maxAngle = maxAngle;
+  QWidget.call(this, parent)
+
+  this._radius = radius;
+  this._minAngle = minAngle;
+  this._maxAngle = maxAngle;
   this.position = position;
-
-  // set these values before calling show() to customize the menu appearance
-  this.sliceColor = sliceColor;
-  this.backgroundColor = backgroundColor;
-  this.linesColor = linesColor;
 
   // how wide outisde the icons is the slice drawn
   this._circleMargin = 30;
+
+  // set these values before calling show() to customize the menu appearance
+  this.sliceColor = new QColor(0, 200, 255, 200);
+  this.backgroundColor = new QColor(40, 40, 40, 180);
+  this.linesColor = new QColor(0,0,0,0);
+
   this.buildWidget()
 
   if (show) this.show();
 }
 $.oPieMenu.prototype = Object.create(QWidget.prototype);
+
+
+// $.oPieMenu.prototype.show = function(){
+//   this.$.log("showing widget");
+//   QWidget.prototype.show.call(this);
+// }
+
+/**
+ * The top left point of the entire widget
+ * @name $.oPieMenu#anchor
+ * @type {$.oPoint}
+ */
+ Object.defineProperty($.oPieMenu.prototype, "radius", {
+  get: function(){
+    return this._radius;
+  }
+})
+
+
+/**
+ * The top left point of the entire widget
+ * @name $.oPieMenu#anchor
+ * @type {$.oPoint}
+ */
+ Object.defineProperty($.oPieMenu.prototype, "minAngle", {
+  get: function(){
+    return this._minAngle;
+  }
+})
+
+
+/**
+ * The top left point of the entire widget
+ * @name $.oPieMenu#anchor
+ * @type {$.oPoint}
+ */
+ Object.defineProperty($.oPieMenu.prototype, "maxAngle", {
+  get: function(){
+    return this._maxAngle;
+  }
+})
+
 
 /**
  * The top left point of the entire widget
@@ -540,7 +593,7 @@ Object.defineProperty($.oPieMenu.prototype, "anchor", {
 
 Object.defineProperty($.oPieMenu.prototype, "center", {
   get: function(){
-    return new this.$.oPoint(this.height/2, this.width/2)
+    return new this.$.oPoint(this.circleHeight/2, this.circleWidth/2)
   }
 })
 
@@ -574,19 +627,16 @@ Object.defineProperty($.oPieMenu.prototype, "circleWidth", {
  */
 $.oPieMenu.prototype.buildWidget = function(parent){
   // menu geometry
-  this._x = this.anchor.x;
-  this._y = this.anchor.y;
-  this._height = this.circleHeight;
-  this._width = this.circleWidth;
   this.parent = parent;
 
+  this.move(this.anchor.x, this.anchor.y);
+  this.minimumHeight = this.circleHeight;
+  this.minimumWidth = this.circleWidth;
+
   var flags = new Qt.WindowFlags(Qt.Popup| Qt.FramelessWindowHint);
-  this.setWindowFlags(flags);
   this.setStyleSheet("background-color: rgba(20, 20, 20, 85%);");
   this.setAttribute(Qt.WA_TranslucentBackground);
-
-  // var menuWidgetCenter = this.center;
-  // var closeButtonPosition = menuWidgetCenter;
+  this.setWindowFlags(flags);
 
   // // set position/dimensions to parent if present
   // if (typeof parent !== 'undefined'){
@@ -599,19 +649,23 @@ $.oPieMenu.prototype.buildWidget = function(parent){
   //   this.setParent(parent.menuWidget);
   // }
 
-  this.move(this._x, this._y);
-  this.minimumHeight = this._height;
-  this.minimumWidth = this._width;
-
   // arrange widgets into half a circle around the center
-  var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
+  var menuWidgetCenter = this.center;
+
+  // add close button
+  var closeIcon = specialFolders.resource + "/icons/brushpreset/defaultpresetellipse/ellipse03.svg"
+  var closeButton = new this.$.oPieButton(closeIcon, this);
+  closeButton.objectName = this.name+"_closeButton";
+  closeButton.cursor = new QCursor(Qt.PointingHandCursor);
+
+  closeButton.show();
+  closeButton.move(menuWidgetCenter.x-(closeButton.width/2), menuWidgetCenter.y-(closeButton.height/2));
+
 
   for (var i=0; i < this.widgets.length; i++){
     var widget = this.widgets[i];
     var _itemPosition = this.getItemPosition(i, this.radius, this.minAngle, this.maxAngle);
     var _widgetPosition = new this.$.oPoint(menuWidgetCenter.x + _itemPosition.x, menuWidgetCenter.y + _itemPosition.y);
-
-    // if (widget instanceof oPieSubMenu) widget = widget.init(i, _widgetPosition, this);
 
     widget.setParent(this);
     widget.show();
@@ -623,20 +677,6 @@ $.oPieMenu.prototype.buildWidget = function(parent){
   this.focusOutEvent = function(){
     log("focus out");
   }
-
-  // add close button
-  var closeIcon = specialFolders.resource + "/icons/brushpreset/defaultpresetellipse/ellipse03.svg"
-  var closeButton = new this.$.oPieButton(closeIcon, this);
-  // closeButton.text="close";
-  // closeButton.setStyleSheet("font-size:14px; font-weight:bold; background-color: rgba(0, 0, 0, 1)");
-  closeButton.cursor = new QCursor(Qt.PointingHandCursor);
-  // closeButton.minimumHeight = 50;
-  // closeButton.minimumWidth = 50;
-  // var menuWidgetCenter = this.center;
-  var closeButtonPosition = menuWidgetCenter;
-  closeButton.objectName = this.name+"_closeButton";
-  closeButton.show();
-  closeButton.move(closeButtonPosition.x-(closeButton.width/2), closeButtonPosition.y-(closeButton.height/2));
 
   // if (parent){
   //   // this is a submenu, so we set up the close button differently as it will show the button to open it again
@@ -659,8 +699,6 @@ $.oPieMenu.prototype.buildWidget = function(parent){
   // }
   // add close button actions
   closeButton.clicked.connect(this.close)
-
-  // this.show();
 }
 
 
@@ -673,35 +711,33 @@ $.oPieMenu.prototype.drawSlice = function(minRadius){
   if (typeof minRadius === 'undefined') minRadius = this._circleMargin;
   var maxRadius = this.radius+this._circleMargin;
   var index = 0;
-  var linesColor = this.linesColor;
-  var backgroundColor = this.backgroundColor;
-  // var backgroundGradient = new QRadialGradient (new QPointF(this._height/2, this._width/2), maxRadius);
-  // backgroundGradient.setColorAt(1, new QColor(backgroundColor.red(), backgroundColor.green(), backgroundColor.blue(), 255));
-  // backgroundGradient.setColorAt(0, backgroundColor);
-  var sliceColor = this.sliceColor;
-  // var sliceGradient = new QRadialGradient (new QPointF(this._height/2, this._width/2), maxRadius);
-  // sliceGradient.setColorAt(1, new QColor(sliceColor.red(), sliceColor.green(), sliceColor.blue(), 20));
-  // sliceGradient.setColorAt(0, sliceColor);
+
 
   // get the slice and background geometry
-  var menuWidgetCenter = new this.$.oPoint(this._height/2, this._width/2);
+  var menuWidgetCenter = this.center;
   var angleSlice = this.getItemAngleRange(index);
   var slicePath = this.getSlicePath(menuWidgetCenter, angleSlice[0], angleSlice[1], minRadius, maxRadius);
   var contactPath = this.getSlicePath(menuWidgetCenter, this.minAngle, this.maxAngle, minRadius, maxRadius);
 
   // create a widget to paint into
-  var _parent = this;
-  var sliceWidget = new QWidget(_parent);
+  var sliceWidget = new QWidget(this);
   sliceWidget.objectName = "slice";
+  // make widget invisible
   sliceWidget.setStyleSheet("background-color: rgba(0, 0, 0, 0%);");
-  sliceWidget.move(0, 0);
-  sliceWidget.minimumHeight = this._height;
-  sliceWidget.minimumWidth = this._width;
+  var flags = new Qt.WindowFlags(Qt.FramelessWindowHint);
+  sliceWidget.setWindowFlags(flags)
+  sliceWidget.move(0,0);
+  sliceWidget.minimumHeight = this.height;
+  sliceWidget.minimumWidth = this.width;
   sliceWidget.lower();
 
   var sliceWidth = angleSlice[1]-angleSlice[0];
 
   // painting the slice on sliceWidget.update()
+  var sliceColor = this.sliceColor;
+  var backgroundColor = this.backgroundColor;
+  var linesColor = this.linesColor;
+
   sliceWidget.paintEvent = function(){
     var painter = new QPainter();
     painter.save();
@@ -930,45 +966,93 @@ $.oPieMenu.prototype.hideButton = function(){
  * @property    {string}              extraRadius              using a set radius between each submenu levels
  */
 $.oPieSubMenu = function(name, widgets) {
+  this.$.oPieMenu.call(this, name, this.widgets, '', '', '', '', false);
+
   this.name = name;
   this.widgets = widgets;
   this.menu = "";
   this.itemAngle = 0.06;
   this.extraRadius = 80;
 }
+$.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
 
+
+
+// /**
+//  * The top left point of the entire widget
+//  * @name $.oPieSubMenu#minAngle
+//  * @type {$.oPoint}
+//  */
+//  Object.defineProperty($.oPieSubMenu.prototype, "minAngle", {
+//   get: function(){
+//     return this.parent.minAngle
+//   }
+// })
+
+
+// /**
+//  * The top left point of the entire widget
+//  * @name $.oPieSubMenu#maxAngle
+//  * @type {$.oPoint}
+//  */
+//  Object.defineProperty($.oPieSubMenu.prototype, "maxAngle", {
+//   get: function(){
+//     return this.parent.maxAngle
+//   }
+// })
+
+
+// /**
+//  * Function to initialise the widgets for the submenu
+//  * @param  {int}           index        The index of the menu amongst the parent's widgets
+//  * @param  {$.oPoint}      position     The position for the button calling the menu
+//  * @param  {$.oPieMenu}    parent       The menu parent
+//  * @private
+//  * @return {QPushButton}        The button that calls the menu.
+//  */
+// $.oPieSubMenu.prototype.buildWidget = function(parent){
+//   // super.call(this, parent);
+//   // var name = this.name;
+//   // var angle = parent.getItemAngle(index);
+
+//   // submenu widgets calculate their range from to go on both sides of the button, at a fixed angle
+//   // (in order to keep the span of submenu options centered around the menu button)
+//   var widgetNum = this.widgets.length/2;
+//   var minAngle = angle-widgetNum*this.itemAngle;
+//   var maxAngle = angle+widgetNum*this.itemAngle;
+//   var radius = parent.radius+this.extraRadius;
+
+//   // create the menu
+//   this.$.oPieMenu.call(this, name, this.widgets, minAngle, maxAngle, radius, position, false, parent);
+//   // this.menu = new this.$.oPieMenu(name, this.widgets, minAngle, maxAngle, radius, position, false);
+
+//   // initialise the button to open the menu
+//   icon_file = specialFolders.resource + "/icons/toolbar/menu.svg"
+//   this.button = new this.$.oPieButton(icon_file, self);
+//   // this.button.text = name;
+//   // this.button.mouseTracking = true;
+//   // this.showButton(parent);
+
+//   // return this.menu.button;
+// }
 
 /**
- * Function to initialise the widgets for the submenu
- * @param  {int}           index        The index of the menu amongst the parent's widgets
- * @param  {$.oPoint}      position     The position for the button calling the menu
- * @param  {$.oPieMenu}    parent       The menu parent
- * @private
- * @return {QPushButton}        The button that calls the menu.
+ * The top left point of the entire widget
+ * @name $.oPieSubMenu#anchor
+ * @type {$.oPoint}
  */
-$.oPieSubMenu.prototype.init = function(index, position, parent){
-  var name = this.name;
-  var angle = parent.getItemAngle(index);
+ Object.defineProperty($.oPieSubMenu.prototype, "anchor", {
+  get: function(){
+    return this.parent.anchor
+  }
+})
 
-  // submenu widgets calculate their range from to go on both sides of the button, at a fixed angle
-  // (in order to keep the span of submenu options centered around the menu button)
-  var widgetNum = this.widgets.length/2;
-  var minAngle = angle-widgetNum*this.itemAngle;
-  var maxAngle = angle+widgetNum*this.itemAngle;
-  var radius = parent.radius+this.extraRadius;
 
-  // create the menu
-  this.menu = new this.$.oPieMenu(name, this.widgets, minAngle, maxAngle, radius, position, false);
-
-  // initialise the button to open the menu
-  this.menu.button = new this.$.oPieButton("", parent.menuWidget);
-  this.menu.button.text = name;
-  this.menu.button.mouseTracking = true;
-  this.menu.showButton(parent);
-
-  return this.menu.button;
-}
-
+Object.defineProperty($.oPieSubMenu.prototype, "center", {
+  get: function(){
+    return this.parent.center
+  }
+})
 
 
 //////////////////////////////////////
@@ -993,6 +1077,7 @@ $.oPieSubMenu.prototype.init = function(index, position, parent){
  */
  $.oPieButton = function(iconFile, parent) {
   // if icon isnt provided
+  if (typeof parent === 'undefined') var parent = $.app.mainWindow
   if (typeof iconFile === 'undefined') var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
 
   QPushButton.call(this, parent);
@@ -1002,9 +1087,15 @@ $.oPieSubMenu.prototype.init = function(index, position, parent){
 
   UiLoader.setSvgIcon(this, iconFile)
   this.setIconSize(new QSize(this.minimumHeight,this.minimumWidth));
-  this.cursor=new QCursor(Qt.PointingHandCursor);
+  this.cursor = new QCursor(Qt.PointingHandCursor);
+
+  var styleSheet = "QPushButton{ background-color: rgba(0, 0, 0, 1%); }" +
+  "QPushButton:hover{ background-color: rgba(0, 200, 255, 80%); }"+
+  "QToolTip{ background-color: rgba(0, 255, 255, 100%); }"
+
+  this.setStyleSheet(styleSheet);
 }
-$.oPieButton.prototype = Object.create(QToolButton.prototype);
+$.oPieButton.prototype = Object.create(QPushButton.prototype);
 
 
 
@@ -1050,12 +1141,12 @@ $.oScriptButton = function(scriptFile, scriptFunction, parent) {
 
   this.$.oPieButton.call(this, iconFile, parent);
 
-  this.minimumHeight = 32;
-  this.minimumWidth = 32;
+  // this.minimumHeight = 32;
+  // this.minimumWidth = 32;
 
-  var icon = new QIcon(iconFile);
-  this.icon = icon;
-  this.setIconSize(new QSize(24, 24));
+  // var icon = new QIcon(iconFile);
+  // this.icon = icon;
+  // this.setIconSize(new QSize(24, 24));
 
   this.toolTip = this.scriptFunction;
 }
@@ -1089,9 +1180,7 @@ $.oScriptButton.prototype.mouseReleaseEvent = function(){
 
 
 $.oPrefButton = function(preferenceString, parent) {
-  QPushButton.call(this, "", parent);
   this.scriptFile = scriptFile;
-  this.scriptFunction = scriptFunction;
 
   // find an icon for the function in the script-icons folder
   var scriptFile = new this.$.oFile(scriptFile)
@@ -1105,13 +1194,6 @@ $.oPrefButton = function(preferenceString, parent) {
     var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
   }
 
-  this.minimumHeight = 32;
-  this.minimumWidth = 32;
-
-  var icon = new QIcon(iconFile);
-  this.icon = icon;
-  this.setIconSize(new QSize(24, 24));
-
-  this.toolTip = this.scriptFunction;
+  $.oPieButton.call(this, iconFile, parent);
 }
-$.oPrefButton.prototype = Object.create(QPushButton.prototype);
+$.oPrefButton.prototype = Object.create($.oPieButton.prototype);
