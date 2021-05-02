@@ -720,10 +720,13 @@ $.oPieMenu.prototype.drawSlice = function(){
     // on distance value change, if the distance is greater than the maxRadius, activate the widget
     if (distance != currentDistance && currentIndex >= 0 && currentIndex < pieMenu.widgets.length){
       currentDistance = distance;
+      var indexWidget = pieMenu.widgets[index];
+
       if (distance){
-        var indexWidget = pieMenu.widgets[index];
         log("activating widget "+index+ " " +indexWidget.hasOwnProperty("activate"))
         if (indexWidget.activate) indexWidget.activate();
+      }else{
+        if (indexWidget.deactivate) indexWidget.deactivate();
       }
     }
   }
@@ -979,7 +982,15 @@ Object.defineProperty($.oPieSubMenu.prototype, "maxRadius", {
  * @private
  */
 $.oPieSubMenu.prototype.activate = function(){
-  this.button.activate();
+  this.showMenu(true);
+}
+
+/**
+ * activate the menu button when activate() is called on the menu
+ * @private
+ */
+$.oPieSubMenu.prototype.deactivate = function(){
+  this.showMenu(false);
 }
 
 
@@ -1123,7 +1134,7 @@ $.oPieButton.prototype = Object.create(QPushButton.prototype);
 $.oPieButton.prototype.activate = function(){
   // reimplement to change the behavior when the button is activated
   log("activate")
-  // this.clicked.emit()
+  this.clicked()
 }
 
 
