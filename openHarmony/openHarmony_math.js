@@ -119,6 +119,19 @@ $.oPoint.prototype.translate = function( x, y, z){
 
 
 /**
+ * The distance between two points.
+ * @param {$.oPoint}     oPoint            the other point to get the distance to.s
+ * @returns
+ */
+$.oPoint.prototype.distance = function ( oPoint ){
+  var distanceX = oPoint.x-this.x;
+  var distanceY = oPoint.y-this.y;
+  var distanceZ = oPoint.z-this.z;
+
+  return Math.sqrt(distanceX*distanceX + distanceY*distanceY + distanceZ*distanceZ)
+}
+
+/**
  * Adds the input box to the bounds of the current $.oBox.
  * @param   {$.oPoint}       add_pt                The point to add to this point.
  *
