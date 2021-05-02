@@ -544,6 +544,12 @@ $.oPieMenu = function( name, widgets, show, minAngle, maxAngle, radius, position
     qWidgetShow()
   }
 
+  this.focusPolicy = Qt.StrongFocus;
+  this.focusOutEvent = function(){
+    log("focus out");
+    this.close()
+  }
+
   if (show) this.show();
 }
 $.oPieMenu.prototype = Object.create(QWidget.prototype);
@@ -606,7 +612,8 @@ $.oPieMenu.prototype.buildWidget = function(){
   this.minimumHeight = this._parent.height;
   this.minimumWidth = this._parent.width;
 
-  var flags = new Qt.WindowFlags(Qt.Popup| Qt.FramelessWindowHint);
+  var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint);
+  // var flags = new Qt.WindowFlags(Qt.Window|Qt.NoDropShadowWindowHint|Qt.FramelessWindowHint);
   this.setWindowFlags(flags);
   this.setStyleSheet("background-color: rgba(20, 20, 20, 85%);");
   this.setAttribute(Qt.WA_TranslucentBackground);
@@ -631,12 +638,6 @@ $.oPieMenu.prototype.buildWidget = function(){
 
   this.button.show();
   this.button.move(center.x - (this.button.width/2), center.y - (this.button.height/2));
-
-  this.focusPolicy = Qt.StrongFocus;
-  this.focusOutEvent = function(){
-    log("focus out");
-    this.close()
-  }
 }
 
 
@@ -708,25 +709,29 @@ $.oPieMenu.prototype.drawSlice = function(){
     var currentIndex = pieMenu.getIndexAtAngle(angle);
     var distance = position.translate(center.x,  center.y).distance(center) > pieMenu.maxRadius;
 
-    // on index value change, change the slice rotation and update slicewidget, as well as focus the widget
-    if (index != currentIndex && currentIndex >= 0 && currentIndex < pieMenu.widgets.length){
-      index = currentIndex;
-      sliceWidget.update();
-      var indexWidget = pieMenu.widgets[index];
-      if (indexWidget instanceof pieMenu.$.oPieSubMenu) indexWidget = indexWidget.button;
-      indexWidget.setFocus(true);
-    }
-
     // on distance value change, if the distance is greater than the maxRadius, activate the widget
-    if (distance != currentDistance && currentIndex >= 0 && currentIndex < pieMenu.widgets.length){
-      currentDistance = distance;
-      var indexWidget = pieMenu.widgets[index];
+    var distanceChanged = (distance != currentDistance)
+    var indexChanged = (index != currentIndex)
+    var indexWithinRange = (currentIndex >= 0 && currentIndex < pieMenu.widgets.length)
 
-      if (distance){
-        log("activating widget "+index+ " " +indexWidget.hasOwnProperty("activate"))
-        if (indexWidget.activate) indexWidget.activate();
-      }else{
-        if (indexWidget.deactivate) indexWidget.deactivate();
+    if (indexWithinRange){
+      var indexWidget = pieMenu.widgets[currentIndex];
+
+      if (indexChanged && !distance){
+        index = currentIndex;
+        sliceWidget.update();
+        // log(indexWidget)
+        indexWidget.setFocus(true);
+      }
+
+      if (distanceChanged){
+        currentDistance = distance;
+        if (distance){
+          // log("activating widget "+index+ " " +indexWidget.hasOwnProperty("activate"))
+          if (indexWidget.activate) indexWidget.activate();
+        }else{
+          if (indexWidget.deactivate) indexWidget.deactivate();
+        }
       }
     }
   }
@@ -924,6 +929,11 @@ $.oPieSubMenu = function(name, widgets) {
   this.itemAngle = 0.06;
   this.extraRadius = 80;
   this._parent = undefined;
+
+  this.focusOutEvent = function(){
+    log("focus out");
+    this.deactivate()
+  }
 }
 $.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
 
@@ -983,6 +993,7 @@ Object.defineProperty($.oPieSubMenu.prototype, "maxRadius", {
  */
 $.oPieSubMenu.prototype.activate = function(){
   this.showMenu(true);
+  this.setFocus(true)
 }
 
 /**
@@ -1020,6 +1031,8 @@ $.oPieSubMenu.prototype.move = function(x, y){
 $.oPieSubMenu.prototype.setParent = function(parent){
   $.oPieMenu.prototype.setParent.call(this, parent);
   this._parent = parent;
+  // log(this.windowType())
+  // log(this.parent().windowType())
   log(this.parent() instanceof QWidget);
   log(this._parent instanceof $.oPieMenu);
 }
@@ -1078,6 +1091,7 @@ $.oPieSubMenu.prototype.buildWidget = function(){
   this.maxAngle = angle+widgetNum*this.itemAngle;
 
   $.oPieMenu.prototype.buildWidget.call(this);
+  // this.setWindowFlags(Qt.WindowStaysOnTopHint)
 
   this.showMenu(false)
 }
