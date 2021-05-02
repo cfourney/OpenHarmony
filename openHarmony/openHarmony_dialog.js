@@ -572,25 +572,25 @@ Object.defineProperty($.oPieMenu.prototype, "anchor", {
 // })
 
 /**
- * The height of the entire widget
- * @name $.oPieMenu#height
+ * The min radius of the pie background
+ * @name $.oPieMenu#minRadius
  * @type {int}
  */
-Object.defineProperty($.oPieMenu.prototype, "circleHeight", {
+Object.defineProperty($.oPieMenu.prototype, "minRadius", {
   get: function(){
-    return 4*this.radius
+    return this._circleMargin;
   }
 })
 
 
 /**
- * The width of the entire widget
- * @name $.oPieMenu#width
+ * The max radius of the pie background
+ * @name $.oPieMenu#maxRadius
  * @type {int}
  */
-Object.defineProperty($.oPieMenu.prototype, "circleWidth", {
+Object.defineProperty($.oPieMenu.prototype, "maxRadius", {
   get: function(){
-    return 4*this.radius
+    return this.radius + this._circleMargin;
   }
 })
 
@@ -661,7 +661,7 @@ $.oPieMenu.prototype.buildWidget = function(){
   //   var closeCallBack = function(){
   //     this.close();
   //   }
-    this.slice = this.drawSlice();
+    this.slice = this.drawSlice(this._circleMargin);
   // }
   // add close button actions
   this.button.clicked.connect(this.close)
@@ -673,16 +673,14 @@ $.oPieMenu.prototype.buildWidget = function(){
  * @param {int}   [minRadius]      specify a minimum radius for the slice
  * @private
  */
-$.oPieMenu.prototype.drawSlice = function(minRadius){
-  if (typeof minRadius === 'undefined') minRadius = this._circleMargin;
-  var maxRadius = this.radius+this._circleMargin;
+$.oPieMenu.prototype.drawSlice = function(){
   var index = 0;
 
   // get the slice and background geometry
   var menuWidgetCenter = this.center;
   var angleSlice = this.getItemAngleRange(index);
-  var slicePath = this.getSlicePath(menuWidgetCenter, angleSlice[0], angleSlice[1], minRadius, maxRadius);
-  var contactPath = this.getSlicePath(menuWidgetCenter, this.minAngle, this.maxAngle, minRadius, maxRadius);
+  var slicePath = this.getSlicePath(menuWidgetCenter, angleSlice[0], angleSlice[1], this.minRadius, this.maxRadius);
+  var contactPath = this.getSlicePath(menuWidgetCenter, this.minAngle, this.maxAngle, this.minRadius, this.maxRadius);
 
   // create a widget to paint into
   var sliceWidget = new QWidget(this);
@@ -938,6 +936,8 @@ $.oPieSubMenu = function(name, widgets) {
   // min/max angle and radius will be set from parent during buildWidget()
   this.$.oPieMenu.call(this, name, widgets, false);
 
+  this.itemAngle = 0.06;
+  this.extraRadius = 80;
   // this.setParent = function(parent){
   //   log("setting parent on subwidget");
   //   this._parent = parent;
@@ -966,9 +966,32 @@ $.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
  */
  Object.defineProperty($.oPieSubMenu.prototype, "anchor", {
   get: function(){
-    var point = this.mapToGlobal(new QPoint(0,0));
-    log(point)
-    return new this.$.oPoint(point.x(), point.y())
+    var point = this._parent.anchor;
+    return new this.$.oPoint(point.x, point.y)
+  }
+})
+
+
+/**
+ * The min radius of the pie background
+ * @name $.oPieSubMenu#minRadius
+ * @type {int}
+ */
+ Object.defineProperty($.oPieSubMenu.prototype, "minRadius", {
+  get: function(){
+    return this._parent.maxRadius;
+  }
+})
+
+
+/**
+ * The max radius of the pie background
+ * @name $.oPieSubMenu#maxRadius
+ * @type {int}
+ */
+Object.defineProperty($.oPieSubMenu.prototype, "maxRadius", {
+  get: function(){
+    return this.minRadius + this.extraRadius;
   }
 })
 
@@ -983,7 +1006,7 @@ $.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
  */
  $.oPieSubMenu.prototype.move = function(x, y){
   log("oPieSubMenu move")
-  this.button.move(x, y)
+  // this.button.move(x, y)
   // this._parent = parent;
 }
 
@@ -1018,12 +1041,23 @@ $.oPieSubMenu.prototype.buildWidget = function(){
   }
   parent = this._parent
 
+  // submenu widgets calculate their range from to go on both sides of the button, at a fixed angle
+  // (in order to keep the span of submenu options centered around the menu button)
+  var widgetNum = this.widgets.length/2;
+  var angle = parent.getItemAngle(this.pieIndex);
+
+  log (this.pieIndex+" : "+angle)
+
+  var minAngle = angle-widgetNum*this.itemAngle;
+  var maxAngle = angle+widgetNum*this.itemAngle;
+  var radius = parent.radius+this.extraRadius;
+
   // create the submenu on top of the main menu
-  this.radius = parent.radius;
-  this.minAngle = parent.minAngle;
-  this.maxAngle = parent.maxAngle;
-  this.position = parent.position;
-  this.center = parent.center;
+  this.radius = radius;
+  this.minAngle = minAngle;
+  this.maxAngle = maxAngle;
+  // this.position = parent.position;
+  // this.center = parent.center;
 
 
   $.oPieMenu.prototype.buildWidget.call(this);
