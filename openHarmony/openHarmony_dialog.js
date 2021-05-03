@@ -1158,6 +1158,56 @@ $.oPieButton.prototype.setParent = function(parent){
 //////////////////////////////////////
 //                                  //
 //                                  //
+//      $.oToolButton class         //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for $.oToolButton
+ * @name          $.oToolButton
+ * @constructor
+ * @classdescription This subclass of QPushButton provides an easy way to create a button for a tool.
+ * This class is a subclass of QPushButton and all the methods from that class are available to modify this button.
+ * @param {string}   scriptFile               The path to the script file that will be launched
+ * @param {string}   scriptFunction           The function name to launch from the script
+ * @param {QWidget}  parent                   The parent QWidget for the button.
+ *
+ */
+ $.oToolButton = function(toolName, parent) {
+  this.toolName = toolName;
+
+  // find an icon for the function in the script-icons folder
+  var scriptIconsFolder = new this.$.oFolder(specialFolders.resource+"/drawingtool/");
+  var iconFiles = scriptIconsFolder.getFiles(toolName+".*");
+  if (iconFiles.length > 0){
+    var iconFile = iconFiles[0].path;
+  }else{
+    // choose default toonboom "missing icon" script icon
+    // currently svg icons seem unsupported?
+    var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg";
+  }
+
+  this.$.oPieButton.call(this, iconFile, parent);
+
+  // activate the tool on mouse click
+  this.activate = function(){
+    this.$.app.currentTool = toolName;
+  }
+
+  this.clicked.connect(this.activate);
+  this.toolTip = this.toolName;
+}
+$.oToolButton.prototype = Object.create($.oPieButton.prototype);
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
 //      $.oScriptButton class       //
 //                                  //
 //                                  //
@@ -1196,29 +1246,19 @@ $.oScriptButton = function(scriptFile, scriptFunction, parent) {
 
   this.$.oPieButton.call(this, iconFile, parent);
 
-  // this.minimumHeight = 32;
-  // this.minimumWidth = 32;
+  // run the script on mouse click
+  var _scriptFile = this.scriptFile;
+  var _scriptFunction = this.scriptFunction;
 
-  // var icon = new QIcon(iconFile);
-  // this.icon = icon;
-  // this.setIconSize(new QSize(24, 24));
+  this.activate = function(){
+    include(_scriptFile);
+    eval(_scriptFunction)();
+  }
 
+  this.clicked.connect(this.activate);
   this.toolTip = this.scriptFunction;
 }
 $.oScriptButton.prototype = Object.create($.oPieButton.prototype);
-
-
-
-/**
- * Runs the script on mouse Click
- * @private
- */
-$.oScriptButton.prototype.mouseReleaseEvent = function(){
-  var _scriptFile = this.scriptFile;
-  var _scriptFunction = this.scriptFunction;
-  include(_scriptFile);
-  eval(_scriptFunction)();
-}
 
 
 
@@ -1235,20 +1275,21 @@ $.oScriptButton.prototype.mouseReleaseEvent = function(){
 
 
 $.oPrefButton = function(preferenceString, parent) {
-  this.scriptFile = scriptFile;
+  this.preferenceString = preferenceString;
 
   // find an icon for the function in the script-icons folder
-  var scriptFile = new this.$.oFile(scriptFile)
-  var scriptIconsFolder = new this.$.oFolder(scriptFile.folder.path+"/script-icons");
-  var iconFiles = scriptIconsFolder.getFiles(scriptFunction+".*");
-  if (iconFiles.length > 0){
-    var iconFile = iconFiles[0].path;
-  }else{
-    // choose default toonboom "missing icon" script icon
-    // currently svg icons seem unsupported?
-    var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
+  var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg";
+  this.checkable = preferences.getBool(preferenceString, true);
+
+  this.activate = function(){
+    var value = preferences.getBool(preferenceString, true);
+    this.checked != value;
+    preferences.setBool(preferenceString, value);
   }
 
   $.oPieButton.call(this, iconFile, parent);
+
+  this.clicked.connect(this.activate);
+  this.toolTip = this.preferenceString;
 }
 $.oPrefButton.prototype = Object.create($.oPieButton.prototype);

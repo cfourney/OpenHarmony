@@ -208,8 +208,12 @@ Object.defineProperty($.oApp.prototype, 'currentTool', {
       return
     }
     if (typeof tool == "string"){
-      this.getToolByName(tool).activate();
-      return
+      try{
+        this.getToolByName(tool).activate();
+        return
+      }catch(err){
+        this.$.debug("'"+ tool + "' is not a valid tool name. Valid: "+this.tools.map(function(x){return x.name}).join(", "))
+      }
     }
     if (typeof tool == "number"){
       this.tools[tool].activate();
@@ -387,7 +391,7 @@ Object.defineProperty($.oApp.prototype, 'currentStencil', {
 $.oApp.prototype.getToolByName = function(toolName){
   var _tools  = this.tools;
   for (var i in _tools){
-    if (_tools[i].name == toolName) return _tools[i];
+    if (_tools[i].name.toLowerCase() == toolName.toLowerCase()) return _tools[i];
   }
   return null;
 }
