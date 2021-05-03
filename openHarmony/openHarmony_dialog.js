@@ -1180,7 +1180,7 @@ $.oPieButton.prototype.setParent = function(parent){
   this.toolName = toolName;
 
   // find an icon for the function in the script-icons folder
-  var scriptIconsFolder = new this.$.oFolder(specialFolders.resource+"/drawingtool/");
+  var scriptIconsFolder = new this.$.oFolder(specialFolders.resource+"/icons/drawingtool/");
   var iconFiles = scriptIconsFolder.getFiles(toolName+".*");
   if (iconFiles.length > 0){
     var iconFile = iconFiles[0].path;
