@@ -1,3 +1,4 @@
+"use strict"
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -511,7 +512,7 @@ $.oPieMenu = function( name, widgets, show, minAngle, maxAngle, radius, position
   if (typeof minAngle === 'undefined') var minAngle = 0;
   if (typeof maxAngle === 'undefined') var maxAngle = 1;
   if (typeof radius === 'undefined') var radius = this.getMenuRadius();
-  if (typeof position === 'undefined') var center = this.$.app.mousePosition;
+  if (typeof position === 'undefined') var position = this.$.app.globalMousePosition;
   if (typeof show === 'undefined') var show = false;
   if (typeof parent === 'undefined') var parent = this.$.app.mainWindow;
   this._parent = parent;
@@ -522,7 +523,7 @@ $.oPieMenu = function( name, widgets, show, minAngle, maxAngle, radius, position
   this.radius = radius;
   this.minAngle = minAngle;
   this.maxAngle = maxAngle;
-  this.center = center;
+  this.globalCenter = position;
 
   // how wide outisde the icons is the slice drawn
   this._circleMargin = 30;
@@ -537,18 +538,29 @@ $.oPieMenu = function( name, widgets, show, minAngle, maxAngle, radius, position
 
   // add buildWidget call before show(),
   // for some reason show() is not in QWidget.prototype ?
-  var qWidgetShow = this.show
+  this.qWidgetShow = this.show
   this.show = function(){
     log("showing widget")
     this.buildWidget()
-    qWidgetShow()
   }
 
   this.focusPolicy = Qt.StrongFocus;
   this.focusOutEvent = function(){
     log("focus out");
-    this.close()
+    this.deactivate()
   }
+
+  var menu = this
+  this.closeMenu = function(){
+    log("closing")
+    log(menu)
+    for (var i in menu.widgets){
+      menu.widgets[i].close()
+      if (menu.widgets[i].closeMenu) menu.widgets[i].closeMenu()
+    }
+    menu.close();
+  }
+  this.closeConnexion = this.button.clicked.connect(this.closeMenu)
 
   if (show) this.show();
 }
@@ -562,8 +574,20 @@ $.oPieMenu.prototype = Object.create(QWidget.prototype);
  */
 Object.defineProperty($.oPieMenu.prototype, "anchor", {
   get: function(){
-    var point = this._parent.mapToGlobal(new QPoint(0,0));
-    return new this.$.oPoint(point.x(), point.y())
+    var point = this.globalCenter.add(-this.center.x, -this.center.y);
+    return point;
+  }
+})
+
+
+/**
+ * The top left point of the entire widget
+ * @name $.oPieMenu#anchor
+ * @type {$.oPoint}
+ */
+Object.defineProperty($.oPieMenu.prototype, "center", {
+  get: function(){
+    return new this.$.oPoint(this.widgetSize/2, this.widgetSize/2)
   }
 })
 
@@ -591,13 +615,22 @@ Object.defineProperty($.oPieMenu.prototype, "maxRadius", {
   }
 })
 
+/**
+ * The max radius of the pie background
+ * @name $.oPieMenu#maxRadius
+ * @type {int}
+ */
+ Object.defineProperty($.oPieMenu.prototype, "widgetSize", {
+  get: function(){
+    return this.maxRadius*4;
+  }
+})
 
 $.oPieMenu.prototype.buildButton = function(){
   // add main button in constructor because it needs to exist before show()
   var icon = specialFolders.resource + "/icons/brushpreset/defaultpresetellipse/ellipse03.svg"
   button = new this.$.oPieButton(icon, "", this);
   button.objectName = this.name+"_button";
-  button.clicked.connect(this.close)
 
   return button;
 }
@@ -608,19 +641,19 @@ $.oPieMenu.prototype.buildButton = function(){
 $.oPieMenu.prototype.buildWidget = function(){
   log("oPieMenu buildWidget")
   // match the widget geometry with the main window/parent
-  this.move(this.anchor.x, this.anchor.y);
-  this.minimumHeight = this._parent.height;
-  this.minimumWidth = this._parent.width;
+  var anchor = this.anchor
+  this.move(this.x, anchor.y);
+  this.move(anchor.x, this.y);
+  this.minimumHeight = this.maximumHeight = this.widgetSize;
+  this.minimumWidth = this.maximumWidth = this.widgetSize;
 
-  var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint);
-  // var flags = new Qt.WindowFlags(Qt.Window|Qt.NoDropShadowWindowHint|Qt.FramelessWindowHint);
+  var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.WA_TransparentForMouseEvents);
   this.setWindowFlags(flags);
-  this.setStyleSheet("background-color: rgba(20, 20, 20, 85%);");
   this.setAttribute(Qt.WA_TranslucentBackground);
 
   // draw background pie slice
   this.slice = this.drawSlice();
-
+  this.qWidgetShow()
   // arrange widgets into half a circle around the center
   var center = this.center;
 
@@ -659,7 +692,7 @@ $.oPieMenu.prototype.drawSlice = function(){
   var sliceWidget = new QWidget(this);
   sliceWidget.objectName = "slice";
   // make widget background invisible
-  sliceWidget.setStyleSheet("background-color: rgba(0, 0, 0, 0%);");
+  sliceWidget.setStyleSheet("background-color: rgba(0, 0, 0, 0.5%);");
   var flags = new Qt.WindowFlags(Qt.FramelessWindowHint);
   sliceWidget.setWindowFlags(flags)
   sliceWidget.minimumHeight = this.height;
@@ -704,33 +737,36 @@ $.oPieMenu.prototype.drawSlice = function(){
   sliceWidget.mouseMoveEvent = function(mousePos){
     // work out the index based on relative position to the center
     var position = new pieMenu.$.oPoint(mousePos.x(), mousePos.y());
-    var angle = -position.translate(-center.x, -center.y).polarCoordinates.angle/Math.PI;
+    var angle = -position.add(-center.x, -center.y).polarCoordinates.angle/Math.PI;
     if (angle < (-0.5)) angle += 2; // our coordinates system uses continuous angle values with cutoff at the bottom (1.5/-0.5)
     var currentIndex = pieMenu.getIndexAtAngle(angle);
-    var distance = position.translate(center.x,  center.y).distance(center) > pieMenu.maxRadius;
+    var distance = position.distance(center);
 
     // on distance value change, if the distance is greater than the maxRadius, activate the widget
-    var distanceChanged = (distance != currentDistance)
     var indexChanged = (index != currentIndex)
     var indexWithinRange = (currentIndex >= 0 && currentIndex < pieMenu.widgets.length)
+    var distanceWithinRange = (distance > pieMenu.minRadius && distance < pieMenu.maxRadius)
+    var distanceChanged = (distanceWithinRange != currentDistance)
 
     if (indexWithinRange){
       var indexWidget = pieMenu.widgets[currentIndex];
 
-      if (indexChanged && !distance){
+      if (indexChanged && distance < pieMenu.maxRadius){
         index = currentIndex;
         sliceWidget.update();
-        // log(indexWidget)
         indexWidget.setFocus(true);
       }
 
       if (distanceChanged){
-        currentDistance = distance;
-        if (distance){
-          // log("activating widget "+index+ " " +indexWidget.hasOwnProperty("activate"))
+        currentDistance = distanceWithinRange;
+        if (distance > pieMenu.maxRadius){
+          // connect activating the button and closing the menu
           if (indexWidget.activate) indexWidget.activate();
-        }else{
+            }else{
           if (indexWidget.deactivate) indexWidget.deactivate();
+        }
+        if (distance < pieMenu.minRadius){
+          if (pieMenu.deactivate) pieMenu.deactivate();
         }
       }
     }
@@ -852,49 +888,6 @@ $.oPieMenu.prototype.getMenuRadius = function(){
 }
 
 
-// /**
-//  * Show the button that brings up the submenu
-//  * @param {$.oPieMenu}   parent
-//  * @private
-//  */
-// $.oPieMenu.prototype.showButton = function(parent){
-//   var _button = this.button;
-//   var self = this;
-
-//   var openMenuCallback = function(){
-//     self.menuWidget = self.show(parent);
-//     self.hideButton();
-//   }
-
-//   _button.mouseReleaseEvent = openMenuCallback;
-//   _button.show();
-//   if (_button.underMouse()){
-//     _button.leaveEvent = function(){
-//       _button.enterEvent = openMenuCallback;
-//       _button.leaveEvent = null;
-//     }
-//   }else{
-//     _button.enterEvent = openMenuCallback;
-//   }
-// // }
-
-
-// /**
-//  * Hide the button that brings up the submenu
-//  * @private
-//  */
-// $.oPieMenu.prototype.hideButton = function(){
-//   var _button = this.button;
-//   _button.hide();
-//   _button.enterEvent = null;
-//   _button.mouseReleaseEvent = false;
-// }
-
-// $.oPieMenu.prototype.toString = function(){
-//   return "$.oPieMenu"
-// }
-
-
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -930,10 +923,8 @@ $.oPieSubMenu = function(name, widgets) {
   this.extraRadius = 80;
   this._parent = undefined;
 
-  this.focusOutEvent = function(){
-    log("focus out");
-    this.deactivate()
-  }
+  this.focusOutEvent = function(){} // delete focusOutEvent response from submenu
+  this.button.clicked.disconnect(this.closeMenu)
 }
 $.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
 
@@ -957,8 +948,8 @@ Object.defineProperty($.oPieSubMenu.prototype, "parentMenu", {
  */
 Object.defineProperty($.oPieSubMenu.prototype, "anchor", {
   get: function(){
-    var point = this.parentMenu.anchor;
-    return new this.$.oPoint(point.x, point.y)
+    var center = this.parentMenu.globalCenter;
+    return center.add(-this.widgetSize/2, -this.widgetSize/2);
   }
 })
 
@@ -1001,6 +992,8 @@ $.oPieSubMenu.prototype.activate = function(){
  * @private
  */
 $.oPieSubMenu.prototype.deactivate = function(){
+  log("deactivate pieSubMenu")
+  log("showmenu: "+this.showMenu())
   this.showMenu(false);
 }
 
@@ -1015,8 +1008,12 @@ $.oPieSubMenu.prototype.deactivate = function(){
  */
 $.oPieSubMenu.prototype.move = function(x, y){
   log("oPieSubMenu move")
-  QWidget.prototype.move.call(this, this.parent().x, this.parent().y);
-  this.button.move(x+this.width/2-this.button.width/2, y+this.height/2-this.button.height/2 );
+  QWidget.prototype.move.call(this, this.anchor.x, this.anchor.y);
+  var buttonPos = new this.$.oPoint(x, y)
+  var parentAnchor = this.parentMenu.anchor;
+  var anchorDiff = parentAnchor.add(-this.anchor.x, -this.anchor.y)
+  var localPos = buttonPos.add(anchorDiff.x, anchorDiff.y)
+  this.button.move(localPos.x+this.widgetSize/2-this.button.width/2, localPos.y+this.widgetSize/2-this.button.height/2 );
 }
 
 
@@ -1031,8 +1028,6 @@ $.oPieSubMenu.prototype.move = function(x, y){
 $.oPieSubMenu.prototype.setParent = function(parent){
   $.oPieMenu.prototype.setParent.call(this, parent);
   this._parent = parent;
-  // log(this.windowType())
-  // log(this.parent().windowType())
   log(this.parent() instanceof QWidget);
   log(this._parent instanceof $.oPieMenu);
 }
@@ -1042,7 +1037,7 @@ $.oPieSubMenu.prototype.buildButton = function(){
   // add main button in constructor because it needs to exist before show()
   var menuIcon = specialFolders.resource + "/icons/toolbar/menu.svg";
   var closeIcon = specialFolders.resource + "/icons/toolbar/collapseopen.png";
-  var button = new this.$.oPieButton(menuIcon, "", this);
+  var button = new this.$.oPieButton(menuIcon, this.name, this);
   button.objectName = this.name+"_button";
 
   // create slots to show/hide submenu elements
@@ -1091,7 +1086,6 @@ $.oPieSubMenu.prototype.buildWidget = function(){
   this.maxAngle = angle+widgetNum*this.itemAngle;
 
   $.oPieMenu.prototype.buildWidget.call(this);
-  // this.setWindowFlags(Qt.WindowStaysOnTopHint)
 
   this.showMenu(false)
 }
