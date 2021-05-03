@@ -483,7 +483,17 @@ function openMenu(){
   // and 1.5 is the bottom from the right side. 0.5 is the top of the circle.
   var menu = new $.oPieMenu("menu", widgets, false, -0.2, 1.2);
 
-  log("not built yet")
+  // configurating the look of it
+  var backgroundGradient = new QRadialGradient (menu.center, maxRadius);
+  backgroundGradient.setColorAt(1, new QColor(backgroundColor.red(), backgroundColor.green(), backgroundColor.blue(), 255));
+  backgroundGradient.setColorAt(0, backgroundColor);
+
+  var sliceGradient = new QRadialGradient (menu.center, maxRadius);
+  sliceGradient.setColorAt(1, new QColor(sliceColor.red(), sliceColor.green(), sliceColor.blue(), 20));
+  sliceGradient.setColorAt(0, sliceColor);
+
+  menu.backgroundColor = backgroundGradient
+  menu.sliceColor = sliceGradient
 
   // we show it!
   menu.show();
@@ -1165,8 +1175,12 @@ $.oPieButton.prototype.setParent = function(parent){
   // find an icon for the function in the script-icons folder
   var scriptIconsFolder = new this.$.oFolder(specialFolders.resource+"/icons/drawingtool/");
   var iconFiles = scriptIconsFolder.getFiles(toolName+".*");
+  log(scriptIconsFolder)
+  log(iconFiles)
+
   if (iconFiles.length > 0){
     var iconFile = iconFiles[0].path;
+    log(iconFile)
   }else{
     // choose default toonboom "missing icon" script icon
     // currently svg icons seem unsupported?
