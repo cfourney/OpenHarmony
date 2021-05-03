@@ -540,27 +540,25 @@ $.oPieMenu = function( name, widgets, show, minAngle, maxAngle, radius, position
   // for some reason show() is not in QWidget.prototype ?
   this.qWidgetShow = this.show
   this.show = function(){
-    log("showing widget")
     this.buildWidget()
   }
 
   this.focusPolicy = Qt.StrongFocus;
   this.focusOutEvent = function(){
-    log("focus out");
     this.deactivate()
   }
 
+  // implement this function here to make it aware of the menu
   var menu = this
   this.closeMenu = function(){
-    log("closing")
-    log(menu)
     for (var i in menu.widgets){
       menu.widgets[i].close()
       if (menu.widgets[i].closeMenu) menu.widgets[i].closeMenu()
     }
     menu.close();
   }
-  this.closeConnexion = this.button.clicked.connect(this.closeMenu)
+  this.button.clicked.connect(this.closeMenu)
+  this.deactivate = this.closeMenu
 
   if (show) this.show();
 }
@@ -748,6 +746,7 @@ $.oPieMenu.prototype.drawSlice = function(){
     var distanceWithinRange = (distance > pieMenu.minRadius && distance < pieMenu.maxRadius)
     var distanceChanged = (distanceWithinRange != currentDistance)
 
+    // react to distance/angle change when the mouse moves on the pieMenu
     if (indexWithinRange){
       var indexWidget = pieMenu.widgets[currentIndex];
 
@@ -760,9 +759,19 @@ $.oPieMenu.prototype.drawSlice = function(){
       if (distanceChanged){
         currentDistance = distanceWithinRange;
         if (distance > pieMenu.maxRadius){
-          // connect activating the button and closing the menu
+          // activate the button and close the menu if widget isn't a submenu
           if (indexWidget.activate) indexWidget.activate();
-            }else{
+          if (!(indexWidget instanceof pieMenu.$.oPieSubMenu)) {
+            var menu = pieMenu
+            // walk back to the root menu widget to close it
+            while ((menu instanceof pieMenu.$.oPieSubMenu) && menu.parentMenu){
+              log(menu)
+              menu = menu.parentMenu;
+            }
+            if (menu) menu.closeMenu();
+          }
+        }else{
+          // cursor reentered the widget: close the subMenu
           if (indexWidget.deactivate) indexWidget.deactivate();
         }
         if (distance < pieMenu.minRadius){
@@ -921,24 +930,17 @@ $.oPieSubMenu = function(name, widgets) {
   // change these settings before calling show() to modify the look of the pieSubMenu
   this.itemAngle = 0.06;
   this.extraRadius = 80;
-  this._parent = undefined;
+  this.parentMenu = undefined;
 
   this.focusOutEvent = function(){} // delete focusOutEvent response from submenu
   this.button.clicked.disconnect(this.closeMenu)
+
+  this.deactivate = function(){
+    // override deactivate to hide the menu instead of closing it
+    this.showMenu(false);
+  }
 }
 $.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
-
-
-/**
- * The top left point of the entire widget
- * @name $.oPieSubMenu#minAngle
- * @type {$.oPoint}
- */
-Object.defineProperty($.oPieSubMenu.prototype, "parentMenu", {
-  get: function(){
-    return this._parent;
-  }
-})
 
 
 /**
@@ -987,16 +989,6 @@ $.oPieSubMenu.prototype.activate = function(){
   this.setFocus(true)
 }
 
-/**
- * activate the menu button when activate() is called on the menu
- * @private
- */
-$.oPieSubMenu.prototype.deactivate = function(){
-  log("deactivate pieSubMenu")
-  log("showmenu: "+this.showMenu())
-  this.showMenu(false);
-}
-
 
 /**
  * In order for pieSubMenus to behave like other pie widgets, we reimplement
@@ -1008,11 +1000,17 @@ $.oPieSubMenu.prototype.deactivate = function(){
  */
 $.oPieSubMenu.prototype.move = function(x, y){
   log("oPieSubMenu move")
+  // move the actual widget to its anchor, but move the button instead
   QWidget.prototype.move.call(this, this.anchor.x, this.anchor.y);
+
+  // calculate the actual position for the button as if it was a child of the pieMenu
+  // whereas it uses global coordinates
   var buttonPos = new this.$.oPoint(x, y)
   var parentAnchor = this.parentMenu.anchor;
   var anchorDiff = parentAnchor.add(-this.anchor.x, -this.anchor.y)
   var localPos = buttonPos.add(anchorDiff.x, anchorDiff.y)
+
+  // move() is used by the pieMenu with half the widget size to center the button, so we have to cancel it out
   this.button.move(localPos.x+this.widgetSize/2-this.button.width/2, localPos.y+this.widgetSize/2-this.button.height/2 );
 }
 
@@ -1027,12 +1025,15 @@ $.oPieSubMenu.prototype.move = function(x, y){
  */
 $.oPieSubMenu.prototype.setParent = function(parent){
   $.oPieMenu.prototype.setParent.call(this, parent);
-  this._parent = parent;
-  log(this.parent() instanceof QWidget);
-  log(this._parent instanceof $.oPieMenu);
+  this.parentMenu = parent;
 }
 
 
+/**
+ * build the main button for the menu
+ * @private
+ * @returns {$.oPieButton}
+ */
 $.oPieSubMenu.prototype.buildButton = function(){
   // add main button in constructor because it needs to exist before show()
   var menuIcon = specialFolders.resource + "/icons/toolbar/menu.svg";
@@ -1059,6 +1060,7 @@ $.oPieSubMenu.prototype.buildButton = function(){
 
   return button;
 }
+
 
 /**
  * Function to initialise the widgets for the submenu
@@ -1141,8 +1143,14 @@ $.oPieButton.prototype = Object.create(QPushButton.prototype);
 
 $.oPieButton.prototype.activate = function(){
   // reimplement to change the behavior when the button is activated
-  log("activate")
+  // by default, will execute whatever happens when button is clicked.
   this.clicked()
+}
+
+
+$.oPieButton.prototype.setParent = function(parent){
+  QPushButton.prototype.setParent.call(this, parent);
+  this.parentMenu = parent;
 }
 
 
