@@ -443,11 +443,8 @@ $.oProgressDialog.prototype.close = function(){
 // such as launching Harmony actions, or scripts, etc. Assign this function to a shortcut by creating a Harmony Package for it.
 
 function openMenu(){
-
   // make a callback factory for our buttons and provide access to the openHarmony object
-  var oh = $;
   function getCallback(message){
-    var $ = oh;
     var message = message;
     return function(){
       $.alert(message);
@@ -455,25 +452,22 @@ function openMenu(){
   }
 
   // we create a list of random widgets for our submenu
-  var subwidgets = [];
-  for (var i=0; i<5; i++){
-    var button = new QPushButton;
-    button.text = i;
-
-    var callback = getCallback("submenu button "+i);
-    button.clicked.connect(callback);
-
-    subwidgets.push(button);
-  }
+  var subwidgets = [
+    new $.oToolButton("select"),
+    new $.oToolButton("brush"),
+    new $.oToolButton("pencil"),
+    new $.oToolButton("eraser"),
+  ];
 
   // we initialise our submenu
-  var subMenu = new $.oPieSubMenu("more", subwidgets);
+  var subMenu = new $.oPieSubMenu("tools", subwidgets);
 
   // we create a list of random widgets for our main menu
   var widgets = [];
   for (var i=0; i<8; i++){
-    var button = new QPushButton;
-    button.text = i;
+    //var button = new QPushButton();
+    var button = new $.oPieButton();
+    button.toolTip = "button "+i;
 
     var callback = getCallback("button "+i);
     button.clicked.connect(callback);
@@ -482,29 +476,18 @@ function openMenu(){
   }
 
   // we swap one of our widgets for the submenu
-  widgets[3] = subMenu;
+  widgets[1] = subMenu;
 
   // we initialise our main menu. The numerical values are for the minimum and maximum angle of the
-  // circle in multiples of Pi. Going counter clockwise, 0 is right, 1 is left, 1.5 is the bottom from the left,
-  // and -0.5 is the bottom from the right side. 0.5 is the top of the circle.
-  var menu = new $.oPieMenu("menu", widgets, -0.2, 1.2);
+  // circle in multiples of Pi. Going clockwise, 0 is left, 1 is right, -0.5 is the bottom from the left,
+  // and 1.5 is the bottom from the right side. 0.5 is the top of the circle.
+  var menu = new $.oPieMenu("menu", widgets, false, -0.2, 1.2);
 
-  var backgroundGradient = new QRadialGradient (menu.center, maxRadius);
-  backgroundGradient.setColorAt(1, new QColor(backgroundColor.red(), backgroundColor.green(), backgroundColor.blue(), 255));
-  backgroundGradient.setColorAt(0, backgroundColor);
-
-  var sliceGradient = new QRadialGradient (menu.center, maxRadius);
-  sliceGradient.setColorAt(1, new QColor(sliceColor.red(), sliceColor.green(), sliceColor.blue(), 20));
-  sliceGradient.setColorAt(0, sliceColor);
-
-  menu.backgroundColor = backgroundGradient
-  menu.sliceColor = sliceGradient
+  log("not built yet")
 
   // we show it!
   menu.show();
-}
- */
-
+}*/
 $.oPieMenu = function( name, widgets, show, minAngle, maxAngle, radius, position, parent){
   this.name = name;
   this.widgets = widgets;
