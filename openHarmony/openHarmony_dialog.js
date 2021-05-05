@@ -443,57 +443,72 @@ $.oProgressDialog.prototype.close = function(){
 // such as launching Harmony actions, or scripts, etc. Assign this function to a shortcut by creating a Harmony Package for it.
 
 function openMenu(){
-  // make a callback factory for our buttons and provide access to the openHarmony object
-  function getCallback(message){
-    var message = message;
-    return function(){
-      $.alert(message);
-    }
-  }
+  MessageLog.clearLog()
 
-  // we create a list of random widgets for our submenu
-  var subwidgets = [
+  // we create a list of tool widgets for our submenu
+  var toolSubMenuWidgets = [
     new $.oToolButton("select"),
     new $.oToolButton("brush"),
     new $.oToolButton("pencil"),
     new $.oToolButton("eraser"),
   ];
-
   // we initialise our submenu
-  var subMenu = new $.oPieSubMenu("tools", subwidgets);
+  var toolSubMenu = new $.oPieSubMenu("tools", toolSubMenuWidgets);
 
-  // we create a list of random widgets for our main menu
-  var widgets = [];
-  for (var i=0; i<8; i++){
-    //var button = new QPushButton();
-    var button = new $.oPieButton();
-    button.toolTip = "button "+i;
+  // we create a list of tool widgets for our submenu
+  // (check out the scripts from http://raindropmoment.com and http://www.cartoonflow.com, they are great!)
+  var ScriptSubMenuWidgets = [
+    new $.oScriptButton(specialFolders.userScripts + "/CF_CopyPastePivots_1.0.1.js", "CF_CopyPastePivots" ),
+    new $.oScriptButton(specialFolders.userScripts + "/ANM_Paste_In_Place.js", "ANM_Paste_In_Place"),
+    new $.oScriptButton(specialFolders.userScripts + "/ANM_Set_Layer_Pivots_At_Center_Of_Drawings.js", "ANM_Set_Layer_Pivots_At_Center_Of_Drawings"),
+    new $.oScriptButton(specialFolders.userScripts + "/DEF_Copy_Deformation_Values_To_Resting.js", "DEF_Copy_Deformation_Values_To_Resting"),
+  ];
+  var scriptsSubMenu = new $.oPieSubMenu("scripts", ScriptSubMenuWidgets);
 
-    var callback = getCallback("button "+i);
-    button.clicked.connect(callback);
-
-    widgets.push(button);
+  // we create a list of color widgets for our submenu
+  var colorSubMenuWidgets = []
+  var currentPalette = $.scn.selectedPalette
+  var colors = currentPalette.colors
+  for (var i in colors){
+    colorSubMenuWidgets.push(new $.oColorButton(currentPalette.name, colors[i].name));
   }
+  var colorSubMenu = new $.oPieSubMenu("colors", colorSubMenuWidgets);
 
-  // we swap one of our widgets for the submenu
-  widgets[1] = subMenu;
+  onionSkinSlider = new QSlider(Qt.Horizontal)
+  onionSkinSlider.minimum = 0;
+	onionSkinSlider.maximum = 256;
+  onionSkinSlider.valueChanged.connect(function(value){
+    preferences.setDouble("DRAWING_ONIONSKIN_MAX_OPACITY",
+      value/256.0);
+    view.refreshViews();
+  })
+
+  // widgets that will appear in the main menu
+  var mainWidgets = [
+    onionSkinSlider,
+    toolSubMenu,
+    colorSubMenu,
+    scriptsSubMenu
+  ]
 
   // we initialise our main menu. The numerical values are for the minimum and maximum angle of the
-  // circle in multiples of Pi. Going clockwise, 0 is left, 1 is right, -0.5 is the bottom from the left,
-  // and 1.5 is the bottom from the right side. 0.5 is the top of the circle.
-  var menu = new $.oPieMenu("menu", widgets, false, -0.2, 1.2);
+  // circle in multiples of Pi. Going clockwise, 0 is right, 1 is left, -0.5 is the bottom from the right,
+  // and 1.5 is the bottom from the left side. 0.5 is the top of the circle.
+  var menu = new $.oPieMenu("menu", mainWidgets, false, -0.2, 1.2);
 
   // configurating the look of it
-  var backgroundGradient = new QRadialGradient (menu.center, maxRadius);
-  backgroundGradient.setColorAt(1, new QColor(backgroundColor.red(), backgroundColor.green(), backgroundColor.blue(), 255));
-  backgroundGradient.setColorAt(0, backgroundColor);
+  // var backgroundGradient = new QRadialGradient (menu.center, menu.maxRadius);
+  // var menuBg = menu.backgroundColor
+  // backgroundGradient.setColorAt(1, new QColor(menuBg.red(), menuBg.green(), menuBg.blue(), 255));
+  // backgroundGradient.setColorAt(0, menuBg);
 
-  var sliceGradient = new QRadialGradient (menu.center, maxRadius);
-  sliceGradient.setColorAt(1, new QColor(sliceColor.red(), sliceColor.green(), sliceColor.blue(), 20));
-  sliceGradient.setColorAt(0, sliceColor);
+  // var sliceGradient = new QRadialGradient (menu.center, menu.maxRadius);
+  // var menuColor = menu.sliceColor
+  // sliceGradient.setColorAt(1, new QColor(menuColor.red(), menuColor.green(), menuColor.blue(), 20));
+  // sliceGradient.setColorAt(0, menuColor);
 
-  menu.backgroundColor = backgroundGradient
-  menu.sliceColor = sliceGradient
+  // menu.backgroundColor = backgroundGradient
+  // menu.sliceColor = sliceGradient
 
   // we show it!
   menu.show();
@@ -633,8 +648,7 @@ $.oPieMenu.prototype.buildWidget = function(){
   log("oPieMenu buildWidget")
   // match the widget geometry with the main window/parent
   var anchor = this.anchor
-  this.move(this.x, anchor.y);
-  this.move(anchor.x, this.y);
+  this.move(anchor.x, anchor.y);
   this.minimumHeight = this.maximumHeight = this.widgetSize;
   this.minimumWidth = this.maximumWidth = this.widgetSize;
 
@@ -758,7 +772,6 @@ $.oPieMenu.prototype.drawSlice = function(){
             var menu = pieMenu
             // walk back to the root menu widget to close it
             while ((menu instanceof pieMenu.$.oPieSubMenu) && menu.parentMenu){
-              log(menu)
               menu = menu.parentMenu;
             }
             if (menu) menu.closeMenu();
@@ -772,10 +785,6 @@ $.oPieMenu.prototype.drawSlice = function(){
         }
       }
     }
-  }
-
-  sliceWidget.mouseDownEvent = function(mousePos){
-    log("mouse Down at "+mousePos)
   }
 
   return sliceWidget;
@@ -916,7 +925,6 @@ $.oPieMenu.prototype.getMenuRadius = function(){
  * @property    {string}              extraRadius              using a set radius between each submenu levels
  */
 $.oPieSubMenu = function(name, widgets) {
-  log("pieSubMenu init")
   // min/max angle and radius will be set from parent during buildWidget()
   this.$.oPieMenu.call(this, name, widgets, false);
 
@@ -992,7 +1000,6 @@ $.oPieSubMenu.prototype.activate = function(){
  * @private
  */
 $.oPieSubMenu.prototype.move = function(x, y){
-  log("oPieSubMenu move")
   // move the actual widget to its anchor, but move the button instead
   QWidget.prototype.move.call(this, this.anchor.x, this.anchor.y);
 
@@ -1064,8 +1071,7 @@ $.oPieSubMenu.prototype.buildButton = function(){
  * @return {QPushButton}        The button that calls the menu.
  */
 $.oPieSubMenu.prototype.buildWidget = function(){
-  log("oPieSubMenu buildWidget")
-  if (!this.hasOwnProperty("_parent")){
+  if (!this.parentMenu){
     throw new Error("must set parent first before calling $.oPieMenu.buildWidget()")
   }
   parentWidget = this.parentMenu;
@@ -1369,8 +1375,40 @@ $.oScriptButton.prototype = Object.create($.oPieButton.prototype);
 $.oPrefButton = function(preferenceString, text, parent) {
   this.preferenceString = preferenceString;
 
-  // find an icon for the function in the script-icons folder
   var iconFile = specialFolders.resource+"/icons/toolproperties/settings.svg";
+  this.checkable = true;
+  this.checked = preferences.getBool(preferenceString, true);
+
+  this.activate = function(){
+    var value = preferences.getBool(preferenceString, true);
+    this.checked != value;
+    preferences.setBool(preferenceString, value);
+  }
+
+  $.oPieButton.call(this, iconFile, text, parent);
+
+  this.toggled.connect(this.activate);
+  this.toolTip = this.preferenceString;
+}
+$.oPrefButton.prototype = Object.create($.oPieButton.prototype);
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//      $.oStencilButton class      //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+$.oStencilButton = function(stencilName, parent) {
+  this.stencilName = stencilName;
+
+  var iconFile = specialFolders.resource+"/icons/brushpreset/default.svg";
   this.checkable = true;
   this.checked = preferences.getBool(preferenceString, true);
 
