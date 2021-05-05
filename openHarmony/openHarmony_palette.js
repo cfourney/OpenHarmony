@@ -296,11 +296,27 @@ $.oPalette.prototype.addColor = function (name, type, colorData) {
  */
 $.oPalette.prototype.getColorById = function (id) {
   var _colors = this.colors;
-  var _ids = _colors.map(function (x) { return x.id })
-  if (_ids.indexOf(id) != -1) return _colors[_ids.indexOf(id)]
+  var _ids = _colors.map(function (x) { return x.id });
+  var _colorIndex = _ids.indexOf(id);
+  if (_colorIndex != -1) return _colors[_colorIndex]
   return null;
 }
 
+
+
+/**
+ * Gets a oColor object based on name. Warning: more than one color can have the same name in a palette, the first one found will be returned.
+ * @param   {string}     name           the color name for the color in the palette.
+ *
+ * @return: {oColor}     the found oColor object.
+ */
+ $.oPalette.prototype.getColorByName = function (name) {
+  var _colors = this.colors;
+  var _names = _colors.map(function (x) { return x.name })
+  var _colorIndex = _names.indexOf(name)
+  if (_colorIndex != -1) return _colors[_colorIndex]
+  return null;
+}
 
 
 /**

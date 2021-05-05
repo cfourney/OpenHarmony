@@ -479,7 +479,7 @@ Object.defineProperty($.oColor.prototype, 'type', {
 
     get : function(){
         var _color = this.colorObject;
-        if (_color.isTexture()) return "texture";
+        if (_color.isTexture) return "texture";
 
         switch (_color.colorType) {
             case PaletteObjectManager.Constants.ColorType.SOLID_COLOR:
