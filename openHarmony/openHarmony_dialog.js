@@ -1122,7 +1122,7 @@ $.oPieSubMenu.prototype.buildWidget = function(){
   this.pieIndex = undefined;
 
   UiLoader.setSvgIcon(this, iconFile)
-  this.setIconSize(new QSize(this.minimumHeight,this.minimumWidth));
+  this.setIconSize(new QSize(this.minimumWidth, this.minimumHeight));
   this.cursor = new QCursor(Qt.PointingHandCursor);
 
   var styleSheet = "QPushButton{ background-color: rgba(0, 0, 0, 1%); }" +
@@ -1200,6 +1200,101 @@ $.oPieButton.prototype.setParent = function(parent){
 $.oToolButton.prototype = Object.create($.oPieButton.prototype);
 
 
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//      $.oActionButton class       //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for $.oActionButton
+ * @name          $.oActionButton
+ * @constructor
+ * @classdescription This subclass of QPushButton provides an easy way to create a button for a tool.
+ * This class is a subclass of QPushButton and all the methods from that class are available to modify this button.
+ * @param {string}   scriptFile               The path to the script file that will be launched
+ * @param {string}   scriptFunction           The function name to launch from the script
+ * @param {QWidget}  parent                   The parent QWidget for the button.
+ *
+ */
+ $.oActionButton = function(actionName, responder, name, iconFile, parent) {
+  this.action = actionName;
+  this.responder = responder;
+
+  if (typeof name === 'name') var name = "action";
+
+  if (typeof icon === 'undefined') var iconFile = specialFolders.resource+"/icons/old/exec.png";
+
+  this.$.oPieButton.call(this, iconFile, name, parent);
+
+  // activate the tool on mouse click
+  this.activate = function(){
+    Action.perform(actionName, responder);
+  }
+
+  this.clicked.connect(this.activate);
+  this.toolTip = this.toolName;
+}
+$.oActionButton.prototype = Object.create($.oPieButton.prototype);
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//      $.oColorButton class        //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for $.oColorButton
+ * @name          $.oColorButton
+ * @constructor
+ * @classdescription This subclass of QPushButton provides an easy way to create a button for a tool.
+ * This class is a subclass of QPushButton and all the methods from that class are available to modify this button.
+ * @param {string}   scriptFile               The path to the script file that will be launched
+ * @param {string}   scriptFunction           The function name to launch from the script
+ * @param {QWidget}  parent                   The parent QWidget for the button.
+ *
+ */
+ $.oColorButton = function(paletteName, colorName, showName, parent) {
+  this.paletteName = paletteName;
+  this.colorName = colorName;
+
+  if (typeof showName === "undefined") var showName = false;
+
+  this.$.oPieButton.call(this, "", showName?colorName:"", parent);
+
+  var palette = this.$.scn.getPaletteByName(paletteName);
+  var color = palette.getColorByName(colorName);
+  var colorValue = color.value
+
+  var iconMap = new QPixmap(this.minimumHeight,this.minimumHeight)
+  iconMap.fill(new QColor(colorValue.r, colorValue.g, colorValue.b, colorValue.a))
+  var icon = new QIcon(iconMap);
+
+  this.icon = icon;
+
+  // activate the tool on mouse click
+  this.activate = function(){
+    this.$.scn.currentPalette = palette
+    palette.currentColor = color
+  }
+
+  this.clicked.connect(this.activate);
+  this.toolTip = this.paletteName + ": " + this.colorName;
+}
+$.oColorButton.prototype = Object.create($.oPieButton.prototype);
+
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -1238,10 +1333,10 @@ $.oScriptButton = function(scriptFile, scriptFunction, parent) {
   }else{
     // choose default toonboom "missing icon" script icon
     // currently svg icons seem unsupported?
-    var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
+    var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg";
   }
 
-  this.$.oPieButton.call(this, iconFile, parent);
+  this.$.oPieButton.call(this, iconFile, "", parent);
 
   // run the script on mouse click
   var _scriptFile = this.scriptFile;
@@ -1271,12 +1366,13 @@ $.oScriptButton.prototype = Object.create($.oPieButton.prototype);
 //////////////////////////////////////
 
 
-$.oPrefButton = function(preferenceString, parent) {
+$.oPrefButton = function(preferenceString, text, parent) {
   this.preferenceString = preferenceString;
 
   // find an icon for the function in the script-icons folder
-  var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg";
-  this.checkable = preferences.getBool(preferenceString, true);
+  var iconFile = specialFolders.resource+"/icons/toolproperties/settings.svg";
+  this.checkable = true;
+  this.checked = preferences.getBool(preferenceString, true);
 
   this.activate = function(){
     var value = preferences.getBool(preferenceString, true);
@@ -1284,9 +1380,9 @@ $.oPrefButton = function(preferenceString, parent) {
     preferences.setBool(preferenceString, value);
   }
 
-  $.oPieButton.call(this, iconFile, parent);
+  $.oPieButton.call(this, iconFile, text, parent);
 
-  this.clicked.connect(this.activate);
+  this.toggled.connect(this.activate);
   this.toolTip = this.preferenceString;
 }
 $.oPrefButton.prototype = Object.create($.oPieButton.prototype);
