@@ -655,6 +655,7 @@ $.oPieMenu.prototype.buildWidget = function(){
   var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.WA_TransparentForMouseEvents);
   this.setWindowFlags(flags);
   this.setAttribute(Qt.WA_TranslucentBackground);
+  this.setAttribute(Qt.WA_DeleteOnClose);
 
   // draw background pie slice
   this.slice = this.drawSlice();
@@ -1249,7 +1250,6 @@ $.oToolButton.prototype = Object.create($.oPieButton.prototype);
 $.oActionButton.prototype = Object.create($.oPieButton.prototype);
 
 
-
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -1359,8 +1359,6 @@ $.oScriptButton = function(scriptFile, scriptFunction, parent) {
 $.oScriptButton.prototype = Object.create($.oPieButton.prototype);
 
 
-
-
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -1393,7 +1391,6 @@ $.oPrefButton = function(preferenceString, text, parent) {
 $.oPrefButton.prototype = Object.create($.oPieButton.prototype);
 
 
-
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -1409,18 +1406,14 @@ $.oStencilButton = function(stencilName, parent) {
   this.stencilName = stencilName;
 
   var iconFile = specialFolders.resource+"/icons/brushpreset/default.svg";
-  this.checkable = true;
-  this.checked = preferences.getBool(preferenceString, true);
 
   this.activate = function(){
-    var value = preferences.getBool(preferenceString, true);
-    this.checked != value;
-    preferences.setBool(preferenceString, value);
+    $.app.currentStencil = stencilName;
   }
 
-  $.oPieButton.call(this, iconFile, text, parent);
+  $.oPieButton.call(this, iconFile, stencilName, parent);
 
-  this.toggled.connect(this.activate);
-  this.toolTip = this.preferenceString;
+  this.clicked.connect(this.activate);
+  this.toolTip = stencilName;
 }
-$.oPrefButton.prototype = Object.create($.oPieButton.prototype);
+$.oStencilButton.prototype = Object.create($.oPieButton.prototype);

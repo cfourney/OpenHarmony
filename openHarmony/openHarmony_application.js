@@ -377,6 +377,11 @@ Object.defineProperty($.oApp.prototype, 'stencils', {
 Object.defineProperty($.oApp.prototype, 'currentStencil', {
   get: function(){
     return this.stencils[PaletteManager.getCurrentPenstyleIndex()];
+  },
+  set: function(stencil){
+    if (stencil instanceof this.$.oStencil) var stencil = stencil.name
+    this.$.debug("Setting current pen: "+ stencil)
+    PenstyleManager.setCurrentPenstyleByName(stencil);
   }
 })
 
