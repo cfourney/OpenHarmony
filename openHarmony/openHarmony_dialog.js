@@ -645,7 +645,6 @@ $.oPieMenu.prototype.buildButton = function(){
  * Build and show the pie menu.
  */
 $.oPieMenu.prototype.buildWidget = function(){
-  log("oPieMenu buildWidget")
   // match the widget geometry with the main window/parent
   var anchor = this.anchor
   this.move(anchor.x, anchor.y);
@@ -1180,14 +1179,11 @@ $.oPieButton.prototype.setParent = function(parent){
   this.toolName = toolName;
 
   // find an icon for the function in the script-icons folder
-  var scriptIconsFolder = new this.$.oFolder(specialFolders.resource+"/icons/drawingtool/");
-  var iconFiles = scriptIconsFolder.getFiles(toolName+".*");
-  log(scriptIconsFolder)
-  log(iconFiles)
+  var scriptIconsFolder = new this.$.oFolder(specialFolders.resource+"/icons/drawingtool");
+  var iconFiles = scriptIconsFolder.getFiles(toolName.replace(" ", "").toLowerCase() + ".*");
 
   if (iconFiles.length > 0){
     var iconFile = iconFiles[0].path;
-    log(iconFile)
   }else{
     // choose default toonboom "missing icon" script icon
     // currently svg icons seem unsupported?
@@ -1235,13 +1231,23 @@ $.oToolButton.prototype = Object.create($.oPieButton.prototype);
 
   if (typeof name === 'name') var name = "action";
 
-  if (typeof icon === 'undefined') var iconFile = specialFolders.resource+"/icons/old/exec.png";
+  if (typeof iconFile === 'undefined') var iconFile = specialFolders.resource+"/icons/old/exec.png";
 
   this.$.oPieButton.call(this, iconFile, name, parent);
 
   // activate the tool on mouse click
   this.activate = function(){
-    Action.perform(actionName, responder);
+    if (responder){
+      // log("Validating : "+ actionName + " ? "+ Action.validate(actionName, responder).enabled)
+      if (Action.validate(actionName, responder).enabled){
+        Action.perform(actionName, responder);
+      }
+    }else{
+      if (Action.Validate(actionName).enabled){
+        Action.perform(actionName);
+      }
+    }
+    view.refreshViews();
   }
 
   this.clicked.connect(this.activate);
@@ -1370,10 +1376,10 @@ $.oScriptButton.prototype = Object.create($.oPieButton.prototype);
 //////////////////////////////////////
 
 
-$.oPrefButton = function(preferenceString, text, parent) {
+$.oPrefButton = function(preferenceString, iconFile, text, parent) {
   this.preferenceString = preferenceString;
 
-  var iconFile = specialFolders.resource+"/icons/toolproperties/settings.svg";
+  if (typeof iconFile === 'undefined') var iconFile = specialFolders.resource+"/icons/toolproperties/settings.svg";
   this.checkable = true;
   this.checked = preferences.getBool(preferenceString, true);
 
