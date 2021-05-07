@@ -421,14 +421,11 @@ $.oProgressDialog.prototype.close = function(){
  * @classdesc   A type of menu with nested levels that appear around the mouse
  * @param       {string}              name                    The name for this pie Menu.
  * @param       {QWidget[]}           [widgets]               The widgets to display in the menu.
+ * @param       {bool}                [show=false]            Whether to immediately show the dialog.
  * @param       {float}               [minAngle]              The low limit of the range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)
  * @param       {float}               [maxAngle]              The high limit of the  range of angles used by the menu, in multiples of PI (0 : left, 0.5 : top, 1 : right, -0.5 : bottom)
  * @param       {float}               [radius]                The radius of the menu.
  * @param       {$.oPoint}            [position]              The central position of the menu.
- * @param       {bool}                [show=false]            Whether to immediately show the dialog.
- * @param       {QColor}              [sliceColor]            The color of the slices. Can set to any fill type accepted by QBrush
- * @param       {QColor}              [backgroundColor]       The background of the menu. Can set to any fill type accepted by QBrush
- * @param       {QColor}              [linesColor]            The color of the lines.
  *
  * @property    {string}              name                    The name for this pie Menu.
  * @property    {QWidget[]}           widgets                 The widgets to display in the menu.
@@ -437,6 +434,9 @@ $.oProgressDialog.prototype.close = function(){
  * @property    {float}               radius                  The radius of the menu.
  * @property    {$.oPoint}            position                The central position of the menu or button position for imbricated menus.
  * @property    {QWidget}             menuWidget              The central position of the menu or button position for imbricated menus.
+ * @property    {QColor}              sliceColor              The color of the slices. Can set to any fill type accepted by QBrush
+ * @property    {QColor}              backgroundColor         The background of the menu. Can set to any fill type accepted by QBrush
+ * @property    {QColor}              linesColor              The color of the lines.
  * @example
 // This example function creates a menu full of generated push buttons with callbacks, but any type of widget can be added.
 // Normally it doesn't make sense to create buttons this way, and they will be created one by one to cater to specific needs,
@@ -589,8 +589,8 @@ Object.defineProperty($.oPieMenu.prototype, "anchor", {
 
 
 /**
- * The top left point of the entire widget
- * @name $.oPieMenu#anchor
+ * The center of the entire widget
+ * @name $.oPieMenu#center
  * @type {$.oPoint}
  */
 Object.defineProperty($.oPieMenu.prototype, "center", {
@@ -624,8 +624,8 @@ Object.defineProperty($.oPieMenu.prototype, "maxRadius", {
 })
 
 /**
- * The max radius of the pie background
- * @name $.oPieMenu#maxRadius
+ * The widget size of the pie background (it's a square so it's both the width and the height.)
+ * @name $.oPieMenu#widgetSize
  * @type {int}
  */
  Object.defineProperty($.oPieMenu.prototype, "widgetSize", {
@@ -634,6 +634,11 @@ Object.defineProperty($.oPieMenu.prototype, "maxRadius", {
   }
 })
 
+
+/**
+ * Builds the menu's main button.
+ * @returns {$.oPieButton}
+ */
 $.oPieMenu.prototype.buildButton = function(){
   // add main button in constructor because it needs to exist before show()
   var icon = specialFolders.resource + "/icons/brushpreset/defaultpresetellipse/ellipse03.svg"
@@ -645,7 +650,8 @@ $.oPieMenu.prototype.buildButton = function(){
 }
 
 /**
- * Build and show the pie menu.
+ * Build and show the pie menu and its widgets.
+ * @private
  */
 $.oPieMenu.prototype.buildWidget = function(){
   // match the widget geometry with the main window/parent
@@ -683,7 +689,7 @@ $.oPieMenu.prototype.buildWidget = function(){
 
 
 /**
- * draws a background transparent slice
+ * draws a background transparent slice and set up the mouse tracking.
  * @param {int}   [minRadius]      specify a minimum radius for the slice
  * @private
  */
@@ -918,6 +924,7 @@ $.oPieMenu.prototype.getMenuRadius = function(){
  * @property    {string}              menu                     The oPieMenu Object containing the widgets for the submenu
  * @property    {string}              itemAngle                a set angle for each items instead of spreading them across the entire circle
  * @property    {string}              extraRadius              using a set radius between each submenu levels
+ * @property    {$.oPieMenu}          parentMenu               the parent menu for this subMenu. Set during initialisation of the menu.
  */
 $.oPieSubMenu = function(name, widgets) {
   // min/max angle and radius will be set from parent during buildWidget()
@@ -1010,12 +1017,10 @@ $.oPieSubMenu.prototype.move = function(x, y){
 
 
 /**
- * Function to initialise the widgets for the submenu
- * @param  {int}           index        The index of the menu amongst the parent's widgets
- * @param  {$.oPoint}      position     The position for the button calling the menu
- * @param  {$.oPieMenu}    parent       The menu parent
+ * sets a parent and assigns it to this.parentMenu.
+ * using the normal setParent from QPushButton creates a weird bug
+ * where calling parent() returns a QWidget and not a $.oPieButton
  * @private
- * @return {QPushButton}        The button that calls the menu.
  */
 $.oPieSubMenu.prototype.setParent = function(parent){
   $.oPieMenu.prototype.setParent.call(this, parent);
@@ -1058,11 +1063,7 @@ $.oPieSubMenu.prototype.buildButton = function(){
 
 /**
  * Function to initialise the widgets for the submenu
- * @param  {int}           index        The index of the menu amongst the parent's widgets
- * @param  {$.oPoint}      position     The position for the button calling the menu
- * @param  {$.oPieMenu}    parent       The menu parent
  * @private
- * @return {QPushButton}        The button that calls the menu.
  */
 $.oPieSubMenu.prototype.buildWidget = function(){
   if (!this.parentMenu){
@@ -1104,7 +1105,9 @@ $.oPieSubMenu.prototype.buildWidget = function(){
  * @classdesc This subclass of QPushButton provides an easy way to create a button for a PieMenu.<br>
  *
  * This class is a subclass of QPushButton and all the methods from that class are available to modify this button.
-  * @param {string}   iconFile               The icon file for the button
+ * @param {string}   iconFile               The icon file for the button
+ * @param {string}   text                   A text to display next to the icon
+ * @param {QWidget}  parent                 The parent QWidget for the button. Automatically set during initialisation of the menu.
  *
  */
  $.oPieButton = function(iconFile, text, parent) {
@@ -1135,6 +1138,10 @@ $.oPieSubMenu.prototype.buildWidget = function(){
 }
 $.oPieButton.prototype = Object.create(QPushButton.prototype);
 
+
+/**
+ * Closes the parent menu of the button and all its subWidgets.
+ */
 $.oPieButton.prototype.closeMenu = function(){
   var menu = this.parentMenu;
   while (menu.parentMenu){
@@ -1153,6 +1160,12 @@ $.oPieButton.prototype.activate = function(){
 }
 
 
+/**
+ * sets a parent and assigns it to this.parentMenu.
+ * using the normal setParent from QPushButton creates a weird bug
+ * where calling parent() returns a QWidget and not a $.oPieButton
+ * @private
+ */
 $.oPieButton.prototype.setParent = function(parent){
   QPushButton.prototype.setParent.call(this, parent);
   this.parentMenu = parent;
@@ -1178,7 +1191,7 @@ $.oPieButton.prototype.setParent = function(parent){
  * This class is a subclass of QPushButton and all the methods from that class are available to modify this button.
  * @param {string}   toolName               The path to the script file that will be launched
  * @param {string}   scriptFunction           The function name to launch from the script
- * @param {QWidget}  parent                   The parent QWidget for the button.
+ * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  *
  */
  $.oToolButton = function(toolName, iconFile, parent) {
@@ -1230,7 +1243,7 @@ $.oToolButton.prototype.activate = function(){
  * @param {string}   responder                The responder for the action
  * @param {string}   text                     A text for the button display.
  * @param {string}   iconFile                 An icon path for the button.
- * @param {QWidget}  parent                   The parent QWidget for the button.
+ * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  */
  $.oActionButton = function(actionName, responder, text, iconFile, parent) {
   this.action = actionName;
@@ -1282,7 +1295,7 @@ $.oActionButton.prototype.activate = function(){
  * @param {string}   paletteName              The name of the palette that contains the color
  * @param {string}   colorName                The name of the color (if more than one is present, will pick the first match)
  * @param {bool}     showName                 Wether to display the name of the color on the button
- * @param {QWidget}  parent                   The parent QWidget for the button.
+ * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  *
  */
  $.oColorButton = function(paletteName, colorName, showName, parent) {
@@ -1340,7 +1353,7 @@ $.oColorButton.prototype.activate = function(){
  * This class is a subclass of QPushButton and all the methods from that class are available to modify this button.
  * @param {string}   scriptFile               The path to the script file that will be launched
  * @param {string}   scriptFunction           The function name to launch from the script
- * @param {QWidget}  parent                   The parent QWidget for the button.
+ * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  */
 $.oScriptButton = function(scriptFile, scriptFunction, parent) {
   this.scriptFile = scriptFile;
@@ -1390,7 +1403,7 @@ $.oScriptButton.prototype.activate = function(){
  * @param {string}   preferenceString         The name of the preference to show/change.
  * @param {string}   text                     A text for the button display.
  * @param {string}   iconFile                 An icon path for the button.
- * @param {QWidget}  parent                   The parent QWidget for the button.
+ * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  */
 $.oPrefButton = function(preferenceString, text, iconFile, parent) {
   this.preferenceString = preferenceString;
