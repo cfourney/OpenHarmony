@@ -637,6 +637,7 @@ $.oPieMenu.prototype.buildButton = function(){
   var icon = specialFolders.resource + "/icons/brushpreset/defaultpresetellipse/ellipse03.svg"
   button = new this.$.oPieButton(icon, "", this);
   button.objectName = this.name+"_button";
+  button.parentMenu = this;
 
   return button;
 }
@@ -766,16 +767,8 @@ $.oPieMenu.prototype.drawSlice = function(){
       if (distanceChanged){
         currentDistance = distanceWithinRange;
         if (distance > pieMenu.maxRadius){
-          // activate the button and close the menu if widget isn't a submenu
+          // activate the button
           if (indexWidget.activate) indexWidget.activate();
-          if (!(indexWidget instanceof pieMenu.$.oPieSubMenu)) {
-            var menu = pieMenu
-            // walk back to the root menu widget to close it
-            while ((menu instanceof pieMenu.$.oPieSubMenu) && menu.parentMenu){
-              menu = menu.parentMenu;
-            }
-            if (menu) menu.closeMenu();
-          }
         }else{
           // cursor reentered the widget: close the subMenu
           if (indexWidget.deactivate) indexWidget.deactivate();
@@ -1136,14 +1129,20 @@ $.oPieSubMenu.prototype.buildWidget = function(){
   "QToolTip{ background-color: rgba(0, 255, 255, 100%); }"
 
   this.setStyleSheet(styleSheet);
+  var button = this;
+  this.clicked.connect(function(){button.activate()})
 }
 $.oPieButton.prototype = Object.create(QPushButton.prototype);
 
 
 $.oPieButton.prototype.activate = function(){
   // reimplement to change the behavior when the button is activated
-  // by default, will execute whatever happens when button is clicked.
-  this.clicked()
+  // by default, will just close the menu.
+  var menu = this.parentMenu;
+  while (menu.parentMenu){
+    menu = menu.parentMenu;
+  }
+  menu.closeMenu()
 }
 
 
@@ -1192,16 +1191,15 @@ $.oPieButton.prototype.setParent = function(parent){
 
   this.$.oPieButton.call(this, iconFile, parent);
 
-  // activate the tool on mouse click
-  this.activate = function(){
-    this.$.app.currentTool = toolName;
-  }
-
-  this.clicked.connect(this.activate);
   this.toolTip = this.toolName;
 }
 $.oToolButton.prototype = Object.create($.oPieButton.prototype);
 
+
+$.oToolButton.prototype.activate = function(){
+  this.$.app.currentTool = this.toolName;
+  this.$.oPieButton.prototype.activate.call(this)
+}
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -1234,26 +1232,26 @@ $.oToolButton.prototype = Object.create($.oPieButton.prototype);
   if (typeof iconFile === 'undefined') var iconFile = specialFolders.resource+"/icons/old/exec.png";
 
   this.$.oPieButton.call(this, iconFile, name, parent);
-
-  // activate the tool on mouse click
-  this.activate = function(){
-    if (responder){
-      // log("Validating : "+ actionName + " ? "+ Action.validate(actionName, responder).enabled)
-      if (Action.validate(actionName, responder).enabled){
-        Action.perform(actionName, responder);
-      }
-    }else{
-      if (Action.Validate(actionName).enabled){
-        Action.perform(actionName);
-      }
-    }
-    view.refreshViews();
-  }
-
-  this.clicked.connect(this.activate);
   this.toolTip = this.toolName;
 }
 $.oActionButton.prototype = Object.create($.oPieButton.prototype);
+
+
+$.oActionButton.prototype.activate = function(){
+  log("activate action")
+  if (this.responder){
+    // log("Validating : "+ this.actionName + " ? "+ Action.validate(this.actionName, this.responder).enabled)
+    if (Action.validate(this.action, this.responder).enabled){
+      Action.perform(this.action, this.responder);
+    }
+  }else{
+    if (Action.Validate(this.action).enabled){
+      Action.perform(this.action);
+    }
+  }
+  view.refreshViews();
+  this.$.oPieButton.prototype.activate.call(this)
+}
 
 
 //////////////////////////////////////
@@ -1296,16 +1294,20 @@ $.oActionButton.prototype = Object.create($.oPieButton.prototype);
 
   this.icon = icon;
 
-  // activate the tool on mouse click
-  this.activate = function(){
-    this.$.scn.currentPalette = palette
-    palette.currentColor = color
-  }
-
-  this.clicked.connect(this.activate);
   this.toolTip = this.paletteName + ": " + this.colorName;
 }
 $.oColorButton.prototype = Object.create($.oPieButton.prototype);
+
+
+$.oColorButton.prototype.activate = function(){
+  var palette = this.$.scn.getPaletteByName(this.paletteName);
+  var color = palette.getColorByName(this.colorName);
+
+  this.$.scn.currentPalette = palette;
+  palette.currentColor = color;
+  this.$.oPieButton.prototype.activate.call(this)
+}
+
 
 
 //////////////////////////////////////
@@ -1350,20 +1352,15 @@ $.oScriptButton = function(scriptFile, scriptFunction, parent) {
 
   this.$.oPieButton.call(this, iconFile, "", parent);
 
-  // run the script on mouse click
-  var _scriptFile = this.scriptFile;
-  var _scriptFunction = this.scriptFunction;
-
-  this.activate = function(){
-    include(_scriptFile);
-    eval(_scriptFunction)();
-  }
-
-  this.clicked.connect(this.activate);
   this.toolTip = this.scriptFunction;
 }
 $.oScriptButton.prototype = Object.create($.oPieButton.prototype);
 
+$.oScriptButton.prototype.activate = function(){
+  include(this.scriptFile);
+  eval(this.scriptFunction)();
+  this.$.oPieButton.prototype.activate.call(this)
+}
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -1383,19 +1380,20 @@ $.oPrefButton = function(preferenceString, iconFile, text, parent) {
   this.checkable = true;
   this.checked = preferences.getBool(preferenceString, true);
 
-  this.activate = function(){
-    var value = preferences.getBool(preferenceString, true);
-    this.checked != value;
-    preferences.setBool(preferenceString, value);
-  }
-
   $.oPieButton.call(this, iconFile, text, parent);
 
-  this.toggled.connect(this.activate);
   this.toolTip = this.preferenceString;
 }
 $.oPrefButton.prototype = Object.create($.oPieButton.prototype);
 
+
+$.oPrefButton.prototype.activate = function(){
+  var value = preferences.getBool(this.preferenceString, true);
+  this.checked != value;
+  preferences.setBool(this.preferenceString, value);
+
+  this.$.oPieButton.prototype.activate.call(this)
+}
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -1413,13 +1411,14 @@ $.oStencilButton = function(stencilName, parent) {
 
   var iconFile = specialFolders.resource+"/icons/brushpreset/default.svg";
 
-  this.activate = function(){
-    $.app.currentStencil = stencilName;
-  }
-
   $.oPieButton.call(this, iconFile, stencilName, parent);
 
-  this.clicked.connect(this.activate);
   this.toolTip = stencilName;
 }
 $.oStencilButton.prototype = Object.create($.oPieButton.prototype);
+
+$.oStencilButton.prototype.activate = function(){
+  this.$.app.currentStencil = this.stencilName;
+
+  this.$.oPieButton.prototype.activate.call(this)
+}
