@@ -117,6 +117,40 @@ $.oPoint.prototype.translate = function( x, y, z){
   return this;
 }
 
+/**
+ * Translate the point by the provided values.
+ * @param   {int}       x                  the x value to move the point by.
+ * @param   {int}       y                  the y value to move the point by.
+ * @param   {int}       z                  the z value to move the point by.
+ *
+ * @return: { $.oPoint }                   Returns self (for inline addition).
+ */
+ $.oPoint.prototype.add = function( x, y, z ){
+  if (typeof x === 'undefined') var x = 0;
+  if (typeof y === 'undefined') var y = 0;
+  if (typeof z === 'undefined') var z = 0;
+
+  var x = this.x + x;
+  var y = this.y + y;
+  var z = this.z + z;
+
+  return new this.$.oPoint(x, y, z);
+}
+
+
+
+/**
+ * The distance between two points.
+ * @param {$.oPoint}     oPoint            the other point to get the distance to.s
+ * @returns
+ */
+$.oPoint.prototype.distance = function ( oPoint ){
+  var distanceX = oPoint.x-this.x;
+  var distanceY = oPoint.y-this.y;
+  var distanceZ = oPoint.z-this.z;
+
+  return Math.sqrt(distanceX*distanceX + distanceY*distanceY + distanceZ*distanceZ)
+}
 
 /**
  * Adds the input box to the bounds of the current $.oBox.

@@ -1279,7 +1279,7 @@ $.oStencil.getSettingsFromXml = function (xmlString) {
     var intValue = parseInt(value, 10);
     var floatValue = parseFloat(value);
     if (value == "true" || value == "false") {
-      value = !!value
+      value = !!value;
     } else if (!isNaN(floatValue)) {
       if (intValue == floatValue) {
         value = intValue;
@@ -1292,4 +1292,8 @@ $.oStencil.getSettingsFromXml = function (xmlString) {
   }
 
   return object;
+}
+
+$.oStencil.prototype.toString = function (){
+  return "$.oStencil: '" + this.name + "'"
 }
