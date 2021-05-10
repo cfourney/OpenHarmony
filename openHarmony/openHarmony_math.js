@@ -142,7 +142,7 @@ $.oPoint.prototype.translate = function( x, y, z){
 /**
  * The distance between two points.
  * @param {$.oPoint}     oPoint            the other point to get the distance to.s
- * @returns
+ * @returns {float}
  */
 $.oPoint.prototype.distance = function ( oPoint ){
   var distanceX = oPoint.x-this.x;
