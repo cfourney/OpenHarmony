@@ -525,8 +525,17 @@ $.oPieMenu = function( name, widgets, show, minAngle, maxAngle, radius, position
   if (typeof parent === 'undefined') var parent = this.$.app.mainWindow;
   this._parent = parent;
 
+  // close all previously opened piemenu widgets
+  var appWidgets = QApplication.allWidgets()
+  for (var i in appWidgets){
+    if (appWidgets[i].objectName.indexOf("pieMenu_") != -1){
+      // a menu was already open, we close it
+      appWidgets[i].close()
+    }
+  }
+
   QWidget.call(this, parent)
-  this.objectName = name;
+  this.objectName = "pieMenu_" + name;
 
   this.radius = radius;
   this.minAngle = minAngle;
@@ -556,13 +565,20 @@ $.oPieMenu = function( name, widgets, show, minAngle, maxAngle, radius, position
     this.deactivate()
   }
 
-  this.deactivate = this.closeMenu
-  this.button.clicked.connect(this.deactivate)
+  var menu = this;
+  this.button.clicked.connect(function(){return menu.deactivate()})
 
   if (show) this.show();
 }
 $.oPieMenu.prototype = Object.create(QWidget.prototype);
 
+
+/**
+ * function run when the menu button is clicked
+ */
+$.oPieMenu.prototype.deactivate = function(){
+  this.closeMenu()
+}
 
 /**
  * Closes the menu and all its subWidgets
@@ -777,7 +793,7 @@ $.oPieMenu.prototype.drawSlice = function(){
         if (distance > pieMenu.maxRadius){
           // activate the button
           if (indexWidget.activate) indexWidget.activate();
-        }else{
+        }else if (distance < pieMenu.minRadius){
           // cursor reentered the widget: close the subMenu
           if (indexWidget.deactivate) indexWidget.deactivate();
         }
@@ -888,8 +904,8 @@ $.oPieMenu.prototype.getItemPosition = function(index){
  */
 $.oPieMenu.prototype.getMenuRadius = function(){
   var itemsNumber = this.widgets.length
-  var _maxRadius = 200;
-  var _minRadius = 30;
+  var _maxRadius = UiLoader.dpiScale(200);
+  var _minRadius = UiLoader.dpiScale(30);
   var _speed = 10; // the higher the value, the slower the progression
 
   // hyperbolic tangent function to determin the radius
@@ -927,23 +943,28 @@ $.oPieMenu.prototype.getMenuRadius = function(){
  * @property    {$.oPieMenu}          parentMenu               the parent menu for this subMenu. Set during initialisation of the menu.
  */
 $.oPieSubMenu = function(name, widgets) {
+  this.menuIcon = specialFolders.resource + "/icons/toolbar/menu.svg";
+  this.closeIcon = specialFolders.resource + "/icons/toolbar/collapseopen.png";
+
   // min/max angle and radius will be set from parent during buildWidget()
   this.$.oPieMenu.call(this, name, widgets, false);
 
   // change these settings before calling show() to modify the look of the pieSubMenu
   this.itemAngle = 0.06;
-  this.extraRadius = 80;
+  this.extraRadius = UiLoader.dpiScale(80);
   this.parentMenu = undefined;
 
   this.focusOutEvent = function(){} // delete focusOutEvent response from submenu
-
-  this.deactivate = function(){
-    // override deactivate to hide the menu instead of closing it
-    this.showMenu(false);
-  }
 }
 $.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
 
+
+/**
+ * function called when main button is clicked
+ */
+$.oPieSubMenu.prototype.deactivate = function(){
+  this.toggleMenu()
+}
 
 /**
  * The top left point of the entire widget
@@ -1035,31 +1056,33 @@ $.oPieSubMenu.prototype.setParent = function(parent){
  */
 $.oPieSubMenu.prototype.buildButton = function(){
   // add main button in constructor because it needs to exist before show()
-  var menuIcon = specialFolders.resource + "/icons/toolbar/menu.svg";
-  var closeIcon = specialFolders.resource + "/icons/toolbar/collapseopen.png";
-  var button = new this.$.oPieButton(menuIcon, this.name, this);
+  var button = new this.$.oPieButton(this.menuIcon, this.name, this);
   button.objectName = this.name+"_button";
-
-  // create slots to show/hide submenu elements
-  var menu = this;
-  this.showMenu = function(visibility){
-    menu.slice.visible = visibility;
-    for (var i in this.widgets){
-      menu.widgets[i].visible = visibility;
-      var icon = visibility?closeIcon:menuIcon;
-      UiLoader.setSvgIcon(button, icon);
-    }
-  }
-
-  this.toggleMenu = function(){
-    menu.showMenu(!menu.slice.visible);
-  }
-
-  button.clicked.connect(this.toggleMenu);
 
   return button;
 }
 
+
+/**
+ * Shows or hides the menu itself (not the button)
+ * @param {*} visibility
+ */
+$.oPieSubMenu.prototype.showMenu = function(visibility){
+  this.slice.visible = visibility;
+  for (var i in this.widgets){
+    this.widgets[i].visible = visibility;
+  }
+  var icon = visibility?this.closeIcon:this.menuIcon;
+  UiLoader.setSvgIcon(this.button, icon);
+}
+
+
+/**
+ * toggles the display of the menu
+ */
+$.oPieSubMenu.prototype.toggleMenu = function(){
+  this.showMenu(!this.slice.visible);
+}
 
 /**
  * Function to initialise the widgets for the submenu
@@ -1144,7 +1167,7 @@ $.oPieButton.prototype = Object.create(QPushButton.prototype);
  */
 $.oPieButton.prototype.closeMenu = function(){
   var menu = this.parentMenu;
-  while (menu.parentMenu){
+  while (menu && menu.parentMenu){
     menu = menu.parentMenu;
   }
   menu.closeMenu()
