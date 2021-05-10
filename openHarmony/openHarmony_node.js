@@ -173,7 +173,8 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
             // if attribute has animation, passed value must be a frame object
             var _subAttrs = attr.subAttributes;
 
-            if (_subAttrs.length == 0){
+            // setting the attribute directly if no subattributes are present, or if value is a color (exception)
+            if (_subAttrs.length == 0 || attr.type == "COLOR"){
                 if (attr.column != null) {
                     if (!(newValue instanceof oFrame)) {
                         // throw new Error("must pass an oFrame object to set an animated attribute")
