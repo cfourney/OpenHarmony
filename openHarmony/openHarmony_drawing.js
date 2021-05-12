@@ -444,6 +444,21 @@ $.oDrawing.prototype.setAsActiveDrawing = function (artLayer) {
 
 
 /**
+ * Duplicates the drawing to the given frame, and renames the drawing with the given name.
+ * @param {int}      [frame]     the frame at which to create the drawing. By default, the current frame.
+ * @param {string}   [newName]   A new name for the drawing. By default, the name will be the number of the frame.
+ * @returns {$.oDrawing}   the newly created drawing
+ */
+$.oDrawing.prototype.duplicate = function(frame, newName){
+  var _element = this.element
+  if (typeof frame ==='undefined') var frame = this.$.scn.currentFrame;
+  if (typeof newName === 'undefined') var newName = frame;
+  var newDrawing = _element.addDrawing(frame, newName, this.path)
+  return newDrawing;
+}
+
+
+/**
  * Copies the contents of the Drawing into the clipboard
  * @param {oDrawing.ART_LAYER} [artLayer]    Specify to only copy the contents of the specified artLayer
  */
