@@ -526,16 +526,18 @@ $.oPieMenu = function( name, widgets, show, minAngle, maxAngle, radius, position
   this._parent = parent;
 
   // close all previously opened piemenu widgets
-  var appWidgets = QApplication.allWidgets()
-  for (var i in appWidgets){
-    if (appWidgets[i].objectName.indexOf("pieMenu_") != -1){
+  if (!$._piemenu) $._piemenu = []
+  while ($._piemenu.length){
+    var pie = $._piemenu.pop();
+    if (pie){
       // a menu was already open, we close it
-      appWidgets[i].close()
+      pie.closeMenu()
     }
   }
 
   QWidget.call(this, parent)
   this.objectName = "pieMenu_" + name;
+  $._piemenu.push(this)
 
   this.radius = radius;
   this.minAngle = minAngle;
