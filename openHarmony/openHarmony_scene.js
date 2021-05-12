@@ -668,7 +668,7 @@ Object.defineProperty($.oScene.prototype, 'activeDrawing', {
     var _curDrawing = Tools.getToolSettings().currentDrawing;
     if (!_curDrawing) return null;
 
-    var _element = this.getElementById(_curDrawing.elementId);
+    var _element = this.selectedNodes[0].element;
     var _drawings = _element.drawings;
     for (var i in _drawings){
       if (_drawings[i].id == _curDrawing.drawingId) return _drawings[i];
