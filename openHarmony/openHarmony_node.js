@@ -380,16 +380,7 @@ Object.defineProperty($.oNode.prototype, 'name', {
 Object.defineProperty($.oNode.prototype, 'group', {
     get : function(){
          return this.scene.getNodeByPath( node.parentNode(this.path) )
-    }/*,
-
-    // moved this into its own function oNode.moveToGroup()
-    set : function(newPath){
-        if (newPath instanceof oGroupNode) newPath = newPath.path;
-        // TODO: make moveNode() method?
-        var _name = this.name;
-        node.moveToGroup(this.path, newPath);
-        this.path = newPath + '/' + _name;
-    }*/
+    }
 });
 
 
@@ -404,11 +395,7 @@ Object.defineProperty( $.oNode.prototype, 'parent', {
       if( this.root ){ return false; }
 
       return this.scene.getNodeByPath( node.parentNode( this.path ) );
-    }/*,
-
-    set : function(newPath){
-        // TODO: make moveNode() method?
-    }*/
+    }
 });
 
 
@@ -454,6 +441,25 @@ Object.defineProperty($.oNode.prototype, 'isRoot', {
     get : function(){
          return this.path == "Top"
     }
+});
+
+
+
+/**
+ * The list of backdrops which contain this node.
+ * @name $.oNode#containingBackdrops
+ * @readonly
+ * @type {$.oBackdrop[]}
+ */
+ Object.defineProperty($.oNode.prototype, 'containingBackdrops', {
+  get : function(){
+    var _backdrops = this.parent.backdrops;
+    var _path = this.path;
+    return _backdrops.filter(function(x){
+      var _nodePaths = x.nodes.map(function(x){return x.path});
+      return _nodePaths.indexOf(_path) != -1;
+    })
+  }
 });
 
 
@@ -714,7 +720,7 @@ Object.defineProperty($.oNode.prototype, 'linkedInNodes', {
 
 
 /**
- * The list of nodes connected to the inport of this node, in order of inport.
+ * The list of nodes connected to the inport of this node, in order of inport. Similar to oNode.inNodes
  * @name $.oNode#ins
  * @readonly
  * @type {$.oNode[]}
@@ -727,7 +733,7 @@ Object.defineProperty($.oNode.prototype, 'ins', {
 
 
 /**
- * The list of nodes connected to the outport of this node, in order of outport and links.
+ * The list of nodes connected to the outport of this node, in order of outport and links. Similar to oNode.outNodes
  * @name $.oNode#outs
  * @readonly
  * @type {$.oNode[][]}
@@ -1759,6 +1765,35 @@ Object.defineProperty($.oDrawingNode.prototype, "usedColorIds", {
 
 
 /**
+ * An array of the colors contained within the drawings displayed by the node, found in the palettes.
+ * @name $.oDrawingNode#usedColors
+ * @type {$.oColor[]}
+ */
+Object.defineProperty($.oDrawingNode.prototype, "usedColors", {
+  get : function(){
+    // get unique Color Ids
+    var _ids = this.usedColorIds;
+
+    // look in both element and scene palettes
+    var _palettes = this.palettes.concat(this.$.scn.palettes);
+
+    var _usedColors = _ids.map(function(id){
+      for (var j in _palettes){
+        var _color = _palettes[j].getColorById(id);
+        // color found
+        if (_color){
+          return _color;
+        }
+      }
+      throw new Error("Missing color found for id: "+id+". Color doesn't belong to any palette in the scene or element.");
+    })
+
+    return _usedColors;
+  }
+})
+
+
+/**
  * The drawing.element keyframes.
  * @name $.oDrawingNode#timings
  * @type {oFrames[]}
@@ -2523,8 +2558,11 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
     var _scene = this.scene;
     var _nodes = selection.selectedNodes().map(function(x){return _scene.$node(x)});
     for (var i in _nodes){
-     // _nodes[i].x += nodePosition.x;
-     // _nodes[i].y += nodePosition.y;
+      // only move the root nodes
+      if (_nodes[i].parent.path != this.path) continue
+
+      _nodes[i].x += nodePosition.x;
+      _nodes[i].y += nodePosition.y;
     }
   }
 
