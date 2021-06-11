@@ -384,6 +384,28 @@ $.oBox.prototype.include = function(box){
   if (box.bottom > this.bottom) this.bottom = box.bottom;
 }
 
+
+/**
+ * Checks wether the box contains another $.oBox.
+ * @param   {$.oBox}       box                The $.oBox to check for.
+ * @param   {bool}         [partial=false]    wether to accept partially contained boxes.
+ */
+$.oBox.prototype.contains = function(box, partial){
+  if (typeof partial === 'undefined') var partial = false;
+
+  var fitLeft = (box.left >= this.left);
+  var fitTop = (box.top >= this.top);
+  var fitRight =(box.right <= this.right);
+  var fitBottom = (box.bottom <= this.bottom);
+
+  if (partial){
+    return (fitLeft || fitRight) && (fitTop || fitBottom);
+  }else{
+    return fitLeft && fitRight && fitTop && fitBottom;
+  }
+
+}
+
 /**
  * Adds the bounds of the nodes to the current $.oBox.
  * @param   {oNode[]}       oNodeArray                An array of nodes to include in the box.
