@@ -429,7 +429,6 @@ Object.defineProperty($.oScene.prototype, 'unsaved', {
 });
 
 
-
 /**
  * The root group of the scene.
  * @name $.oScene#root
@@ -444,9 +443,6 @@ Object.defineProperty($.oScene.prototype, 'root', {
 });
 
 
-
-
-
 /**
  * Contains the list of all the nodes present in the scene.
  * @name $.oScene#nodes
@@ -459,6 +455,7 @@ Object.defineProperty($.oScene.prototype, 'nodes', {
         return _topNode.subNodes( true );
     }
 });
+
 
 /**
  * Contains the list of columns present in the scene.
@@ -569,7 +566,7 @@ Object.defineProperty($.oScene.prototype, 'currentFrame', {
 
 
 /**
- * Retrieve and change the selected frames. This is an array with the start frame and the end frame (non included)
+ * Retrieve and change the selection of nodes.
  * @name $.oScene#selectedNodes
  * @type {$.oNode[]}
  */
@@ -1403,34 +1400,19 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
  *
  * @return       {$.oLink[]}      An array of unique links existing between the nodes.
  */
-$.oScene.prototype.createPaletteFromNodes = function(nodes, paletteName, colorName){
+$.oScene.prototype.createPaletteFromNodes = function(nodes, paletteName, colorName, ignoreMissing){
   if (typeof paletteName === 'undefined') var paletteName = this.name;
   if (typeof colorName ==='undefined') var colorName = false;
 
   // get unique Color Ids
-  var _usedColorIds = [];
+  var _usedColors = {};
   for (var i in nodes){
-    var _ids = nodes[i].usedColorIds;
-    for (var j in _ids){
-      if (_usedColorIds.indexOf(_ids[j]) == -1) _usedColorIds.push(_ids[j]);
+    _colors = nodes[i].usedColors;
+    for (var j in _colors){
+      _usedColors[_colors[j].id] = _colors[j];
     }
   }
-
-  // find used Palettes and Colors
-  // find RGB values
-  var _palettes = this.palettes;
-  var _usedColors = new Array(_usedColorIds.length);
-
-  for (var i in _usedColorIds){
-    for (var j in _palettes){
-      var _color = _palettes[j].getColorById(_usedColorIds[i]);
-      // color found
-      if (_color){
-        _usedColors[i] = _color;
-        break;
-      }
-    }
-  }
+  _usedColors = Object.keys(_usedColors).map(function(x){return _usedColors[x]});
 
   // create single palette
   var _newPalette = this.addPalette(paletteName);
