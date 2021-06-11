@@ -577,7 +577,9 @@ Object.defineProperty($.oScene.prototype, 'selectedNodes', {
 
   set : function(nodesToSelect){
     selection.clearSelection ();
-    selection.addNodesToSelection(nodesToSelect.map(function(x){return x.path}));
+    for (var i in nodesToSelect){
+      selection.addNodeToSelection(nodesToSelect[i].path);
+    };
   }
 });
 
