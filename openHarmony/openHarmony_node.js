@@ -133,19 +133,12 @@ $.oNode.prototype.attributesBuildCache = function (){
 /**
  * Private function to create attributes setters and getters as properties of the node
  * @private
- * @return  {void}   Nothing returned.
  */
 $.oNode.prototype.setAttrGetterSetter = function (attr, context){
     if (typeof context === 'undefined') context = this;
     // this.$.debug("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name, this.$.DEBUG_LEVEL.LOG)
 
     var _keyword = attr.shortKeyword;
-
-    // MC Note : this seems to break the subattributes getter setter ?
-    // if( typeof( this[_keyword] ) !== 'undefined' ){
-      // Already exists in properties.
-      // return;
-    // }
 
     Object.defineProperty( context, _keyword, {
         enumerable : false,
@@ -215,37 +208,26 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
  * The derived path to the node.
  * @deprecated use oNode.path instead
  * @name $.oNode#fullPath
+ * @readonly
  * @type {string}
  */
 Object.defineProperty($.oNode.prototype, 'fullPath', {
     get : function( ){
       return this._path;
-    },
-
-    set : function( str_path ){
-      //A move and rename might be in order. . .  Manage this here.
-
-      this.$.debug( "ERROR - Setting oNode.fullPath is not supported yet: " + this._path, this.$.DEBUG_LEVEL.WARNING );
-      //throw "ERROR - changing the path is not supported yet."
     }
 });
 
 
 /**
- * The derived path to the node.
+ * The path of the node (includes all groups from 'Top' separated by forward slashes).
+ * To change the path of a node, use oNode.moveToGroup()
  * @name $.oNode#path
  * @type {string}
+ * @readonly
  */
 Object.defineProperty($.oNode.prototype, 'path', {
     get : function( ){
       return this._path;
-    },
-
-    set : function( str_path ){
-      //A move and rename might be in order. . .  Manage this here.
-
-      this.$.debug( "ERROR - Setting oNode.path is not supported yet: " + this._path, this.$.DEBUG_LEVEL.WARNING );
-      //throw "ERROR - changing the path is not supported yet."
     }
 });
 
@@ -266,6 +248,8 @@ Object.defineProperty( $.oNode.prototype, 'type', {
 /**
  * Is the node a group?
  * @name $.oNode#isGroup
+ * @readonly
+ * @deprecated check if the node is an instance of oGroupNode instead
  * @type {bool}
  */
 Object.defineProperty($.oNode.prototype, 'isGroup', {
@@ -276,9 +260,6 @@ Object.defineProperty($.oNode.prototype, 'isGroup', {
       }
 
       return node.isGroup( this.path );
-    },
-
-    set : function( bool_exist ){
     }
 });
 
@@ -287,6 +268,7 @@ Object.defineProperty($.oNode.prototype, 'isGroup', {
  * The $.oNode objects contained in this group. This is deprecated and was moved to oGroupNode
  * @DEPRECATED Use oGroupNode.children instead.
  * @name $.oNode#children
+ * @readonly
  * @type {$.oNode[]}
  */
 Object.defineProperty($.oNode.prototype, 'children', {
@@ -313,6 +295,7 @@ Object.defineProperty($.oNode.prototype, 'children', {
  * Does the node exist?
  * @name $.oNode#exists
  * @type {bool}
+ * @readonly
  */
 Object.defineProperty($.oNode.prototype, 'exists', {
     get : function(){
@@ -567,7 +550,7 @@ Object.defineProperty($.oNode.prototype, 'height', {
  * The list of oNodeLinks objects descibing the connections to the inport of this node, in order of inport.
  * @name $.oNode#inLinks
  * @readonly
- * @deprecated
+ * @deprecated returns $.oNodeLink instances but $.oLink is preferred. Use oNode.getInLinks() instead.
  * @type {$.oNodeLink[]}
  */
 Object.defineProperty($.oNode.prototype, 'inLinks', {
@@ -588,7 +571,7 @@ Object.defineProperty($.oNode.prototype, 'inLinks', {
  * @name $.oNode#inNodes
  * @readonly
  * @type {$.oNode[]}
- * @deprecated
+ * @deprecated returns $.oNodeLink instances but $.oLink is preferred. Use oNode.linkedInNodes instead.
 */
 Object.defineProperty($.oNode.prototype, 'inNodes', {
     get : function(){
@@ -622,7 +605,7 @@ Object.defineProperty($.oNode.prototype, 'inPorts', {
  * @name $.oNode#outNodes
  * @readonly
  * @type {$.oNode[][]}
- * @deprecated
+ * @deprecated  returns $.oNodeLink instances but $.oLink is preferred. Use oNode.linkedOutNodes instead.
 */
 Object.defineProperty($.oNode.prototype, 'outNodes', {
     get : function(){
@@ -664,7 +647,7 @@ Object.defineProperty($.oNode.prototype, 'outPorts', {
  * @name $.oNode#outLinks
  * @readonly
  * @type {$.oNodeLink[]}
- * @deprecated
+ * @deprecated  returns $.oNodeLink instances but $.oLink is preferred. Use oNode.getOutLinks instead.
  */
 Object.defineProperty($.oNode.prototype, 'outLinks', {
     get : function(){
@@ -724,6 +707,7 @@ Object.defineProperty($.oNode.prototype, 'linkedInNodes', {
  * @name $.oNode#ins
  * @readonly
  * @type {$.oNode[]}
+ * @deprecated alias for deprecated oNode.inNodes property
 */
 Object.defineProperty($.oNode.prototype, 'ins', {
     get : function(){
@@ -737,6 +721,7 @@ Object.defineProperty($.oNode.prototype, 'ins', {
  * @name $.oNode#outs
  * @readonly
  * @type {$.oNode[][]}
+ * @deprecated alias for deprecated oNode.outNodes property
 */
 Object.defineProperty($.oNode.prototype, 'outs', {
     get : function(){
@@ -774,7 +759,7 @@ Object.defineProperty($.oNode.prototype, 'attributes', {
 
 
 /**
- * The bounds of the node.
+ * The bounds of the node rectangle in the node view.
  * @name $.oNode#bounds
  * @readonly
  * @type {oBox}
@@ -787,7 +772,7 @@ Object.defineProperty( $.oNode.prototype, 'bounds', {
 
 
 /**
- * The linked columns associated with the node.
+ * The list of all columns linked across all the attributes of this node.
  * @name $.oNode#linkedColumns
  * @readonly
  * @type {oColumn[]}
@@ -1200,7 +1185,7 @@ $.oNode.prototype.timelineIndex = function(timeline){
 }
 
 
- /**
+/**
  * obtains the nodes contained in the group, allows recursive search. This method is deprecated and was moved to oGroupNode
  * @DEPRECATED
  * @param   {bool}   recurse           Whether to recurse internally for nodes within children groups.
@@ -1458,8 +1443,6 @@ $.oNode.prototype.getAttributeByColumnName = function( columnName ){
 
     if( t_attrib.column && t_attrib.column.uniqueName == columnName) return t_attrib;
   }
-
-  return false;
   // return attribs;
 }
 
@@ -1479,20 +1462,12 @@ $.oNode.prototype.getAttributesColumnCache = function( obj_lut ){
       for( var t=0;t<t_attrib.subAttributes.length;t++ ){
         var t_attr = t_attrib.subAttributes[t];
         if( t_attr.column ){
-          // if( !obj_lut[ t_attr.column.uniqueName ] ){
-            // obj_lut[ t_attr.column.uniqueName ] = [];
-          // }
-          // obj_lut[ t_attr.column.uniqueName ].push( { "node":this, "attribute":t_attr } );
           obj_lut[ t_attr.column.uniqueName ] = { "node":this, "attribute":t_attr };
         }
       }
     }
 
     if( t_attrib.column ){
-      // if( !obj_lut[ t_attr.column.uniqueName ] ){
-        // obj_lut[ t_attr.column.uniqueName ] = [];
-      // }
-      // obj_lut[ t_attr.column.uniqueName ].push( { "node":this, "attribute":t_attr } );
       obj_lut[ t_attr.column.uniqueName ] = { "node":this, "attribute":t_attr };
     }
   }

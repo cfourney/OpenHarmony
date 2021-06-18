@@ -150,14 +150,10 @@ Object.defineProperty($.oColumn.prototype, 'selected', {
           }
         }
 
-        //Also look through the timeline.
-        System.println( "TODO: Also look through the timeline" );
-
         return false;
     },
-
     set : function(){
-      throw "Setting oColumn.selected is not yet implemented."
+      selection.addColumnToSelection(this.uniqueName);
     }
 });
 
@@ -602,4 +598,12 @@ $.oDrawingColumn.prototype.removeUnexposedDrawings = function(){
     this.$.debug("removing drawing "+_drawings[i].name+" of column "+this.name+"? "+(_displayedDrawings.indexOf(_drawings[i].name) == -1), this.$.DEBUG_LEVEL.LOG);
     if (_displayedDrawings.indexOf(_drawings[i].name) == -1) _drawings[i].remove();
   }
+}
+
+
+/**
+ * @private
+ */
+ $.oDrawingColumn.prototype.toString = function(){
+  return "<$.oDrawingColumn '"+this.name+"'>";
 }
