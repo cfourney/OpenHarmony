@@ -1179,14 +1179,27 @@ $.oNode.prototype.moveToGroup = function(group){
 
 
 /**
- * Retrieves the nodes index in the timeline provided.
- * @param   {oTimeline}   timeline            The timeline object to search the nodes index.
+ * Retrieves the node layer in the timeline provided.
+ * @param   {oTimeline}   [timeline]     Optional: the timeline object to search the column Layer. (by default, grabs the current timeline)
+ *
+ * @return  {int}    The index within that timeline.
+ */
+ $.oNode.prototype.getTimelineLayer = function(timeline){
+  if (typeof timeline === 'undefined') var timeline = this.$.scene.getTimeline();
+
+  var _nodeLayers = timeline.layers.map(function(x){return x.node.path});
+  return timeline.layers[_nodeLayers.indexOf(this.path)];
+}
+
+
+/**
+ * Retrieves the node index in the timeline provided.
+ * @param   {oTimeline}   [timeline]     Optional: the timeline object to search the column Layer. (by default, grabs the current timeline)
  *
  * @return  {int}    The index within that timeline.
  */
 $.oNode.prototype.timelineIndex = function(timeline){
-  var _timeline = timeline.nodesList;
-  return _timeline.indexOf(this.path);
+  return this.getTimelineLayer(timeline).layerIndex;
 }
 
 

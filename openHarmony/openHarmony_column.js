@@ -448,6 +448,27 @@ $.oColumn.prototype.setValue = function(newValue, frame){
 
 
 
+/**
+ * Retrieves the nodes index in the timeline provided.
+ * @param   {oTimeline}   [timeline]     Optional: the timeline object to search the column Layer. (by default, grabs the current timeline)
+ *
+ * @return  {int}    The index within that timeline.
+ */
+$.oColumn.prototype.getTimelineLayer = function(timeline){
+  if (typeof timeline === 'undefined') var timeline = this.$.scene.getTimeline();
+
+  var _columnNames = timeline.allLayers.map(function(x){return x.column?x.column.uniqueName:null});
+  return timeline.allLayers[_columnNames.indexOf(this.uniqueName)];
+}
+
+
+/**
+ * @private
+ */
+$.oColumn.prototype.toString = function(){
+  return "<$.oColumn '"+this.name+"'>"
+}
+
 
 //////////////////////////////////////
 //////////////////////////////////////
