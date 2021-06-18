@@ -2,7 +2,7 @@ name: Build documentation with JSCode
 on:
   push:
     branches: [ master ]
-
+    
 jobs:
   build_doc:
     runs-on: ubuntu-latest
@@ -23,6 +23,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+        git add docs/\*.html
         git commit -m "rebuilt doc" -a
         git push origin master
         
