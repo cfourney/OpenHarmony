@@ -3175,6 +3175,20 @@
             </span>
             <ul class="members itemMembers">
             
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oThread#complete"><a href="$.oThread.html#complete">complete</a></li>
+            
+                <li data-name="$.oThread#completedIndices"><a href="$.oThread.html#completedIndices">completedIndices</a></li>
+            
+                <li data-name="$.oThread#errors"><a href="$.oThread.html#errors">errors</a></li>
+            
+                <li data-name="$.oThread#errorsWithIndex"><a href="$.oThread.html#errorsWithIndex">errorsWithIndex</a></li>
+            
+                <li data-name="$.oThread#results"><a href="$.oThread.html#results">results</a></li>
+            
+                <li data-name="$.oThread#resultsWithIndex"><a href="$.oThread.html#resultsWithIndex">resultsWithIndex</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -3209,27 +3223,15 @@
             
             <span class="subtitle">Members</span>
             
-                <li data-name="$.oTimeline#complete"><a href="$.oTimeline.html#complete">complete</a></li>
-            
-                <li data-name="$.oTimeline#completedIndices"><a href="$.oTimeline.html#completedIndices">completedIndices</a></li>
-            
                 <li data-name="$.oTimeline#compositionLayers"><a href="$.oTimeline.html#compositionLayers">compositionLayers</a></li>
             
                 <li data-name="$.oTimeline#compositionLayersList"><a href="$.oTimeline.html#compositionLayersList">compositionLayersList</a></li>
-            
-                <li data-name="$.oTimeline#errors"><a href="$.oTimeline.html#errors">errors</a></li>
-            
-                <li data-name="$.oTimeline#errorsWithIndex"><a href="$.oTimeline.html#errorsWithIndex">errorsWithIndex</a></li>
             
                 <li data-name="$.oTimeline#layers"><a href="$.oTimeline.html#layers">layers</a></li>
             
                 <li data-name="$.oTimeline#nodes"><a href="$.oTimeline.html#nodes">nodes</a></li>
             
                 <li data-name="$.oTimeline#nodesList"><a href="$.oTimeline.html#nodesList">nodesList</a></li>
-            
-                <li data-name="$.oTimeline#results"><a href="$.oTimeline.html#results">results</a></li>
-            
-                <li data-name="$.oTimeline#resultsWithIndex"><a href="$.oTimeline.html#resultsWithIndex">resultsWithIndex</a></li>
             
                 <li data-name="$.oTimeline#selectedLayers"><a href="$.oTimeline.html#selectedLayers">selectedLayers</a></li>
             
@@ -3465,7 +3467,7 @@ It represents groups in the scene. From this class, it's possible to add nodes, 
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2093
+            openHarmony/openHarmony_node.js, line 2068
         </div>
         
     </div>
@@ -3760,7 +3762,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
 <dd>
     
     <div class="description">
-        The bounds of the node.
+        The bounds of the node rectangle in the node view.
     </div>
     
     
@@ -3977,7 +3979,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="exists">exists<span class="type-signature type bool">bool</span> </h4>
+        <h4 class="name" id="exists"><span class="type-signature ">readonly</span>exists<span class="type-signature type bool">bool</span> </h4>
     </div>
     
     
@@ -4022,7 +4024,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="fullPath">fullPath<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="fullPath"><span class="type-signature ">readonly</span>fullPath<span class="type-signature type string">string</span> </h4>
     </div>
     
     
@@ -4180,7 +4182,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
 
     
-        <dt class="important tag-deprecated">Deprecated</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>returns $.oNodeLink instances but $.oLink is preferred. Use oNode.getInLinks() instead.</li><ul></dd>
     
     
     
@@ -4227,7 +4229,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
 
     
-        <dt class="important tag-deprecated">Deprecated</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>returns $.oNodeLink instances but $.oLink is preferred. Use oNode.linkedInNodes instead.</li><ul></dd>
     
     
     
@@ -4319,6 +4321,8 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
 
     
+        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>alias for deprecated oNode.inNodes property</li><ul></dd>
+    
     
     
     
@@ -4343,7 +4347,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="isGroup">isGroup<span class="type-signature type bool">bool</span> </h4>
+        <h4 class="name" id="isGroup"><span class="type-signature ">readonly</span>isGroup<span class="type-signature type bool">bool</span> </h4>
     </div>
     
     
@@ -4363,6 +4367,8 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
     
 
+    
+        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>check if the node is an instance of oGroupNode instead</li><ul></dd>
     
     
     
@@ -4441,7 +4447,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
 <dd>
     
     <div class="description">
-        The linked columns associated with the node.
+        The list of all columns linked across all the attributes of this node.
     </div>
     
     
@@ -4859,7 +4865,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
 
     
-        <dt class="important tag-deprecated">Deprecated</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>returns $.oNodeLink instances but $.oLink is preferred. Use oNode.getOutLinks instead.</li><ul></dd>
     
     
     
@@ -4906,7 +4912,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
 
     
-        <dt class="important tag-deprecated">Deprecated</dt><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd>
+        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>returns $.oNodeLink instances but $.oLink is preferred. Use oNode.linkedOutNodes instead.</li><ul></dd>
     
     
     
@@ -4998,6 +5004,8 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
 
     
+        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>alias for deprecated oNode.outNodes property</li><ul></dd>
+    
     
     
     
@@ -5067,7 +5075,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="path">path<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="path"><span class="type-signature ">readonly</span>path<span class="type-signature type string">string</span> </h4>
     </div>
     
     
@@ -5075,7 +5083,8 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
 <dd>
     
     <div class="description">
-        The derived path to the node.
+        The path of the node (includes all groups from 'Top' separated by forward slashes).
+To change the path of a node, use oNode.moveToGroup()
     </div>
     
     
@@ -5395,7 +5404,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2200
+            openHarmony/openHarmony_node.js, line 2175
         </div>
         
     </div>
@@ -5540,7 +5549,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2586
+            openHarmony/openHarmony_node.js, line 2561
         </div>
         
     </div>
@@ -5916,7 +5925,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2667
+            openHarmony/openHarmony_node.js, line 2642
         </div>
         
     </div>
@@ -6355,7 +6364,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2406
+            openHarmony/openHarmony_node.js, line 2381
         </div>
         
     </div>
@@ -6615,7 +6624,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2439
+            openHarmony/openHarmony_node.js, line 2414
         </div>
         
     </div>
@@ -6913,7 +6922,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2246
+            openHarmony/openHarmony_node.js, line 2221
         </div>
         
     </div>
@@ -7058,7 +7067,7 @@ var drawingAttribute = myNode.getAttributeByName("DRAWING.ELEMENT");</code></pre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2355
+            openHarmony/openHarmony_node.js, line 2330
         </div>
         
     </div>
@@ -7316,7 +7325,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1516
+            openHarmony/openHarmony_node.js, line 1491
         </div>
         
     </div>
@@ -7517,7 +7526,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2270
+            openHarmony/openHarmony_node.js, line 2245
         </div>
         
     </div>
@@ -7671,7 +7680,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1232
+            openHarmony/openHarmony_node.js, line 1217
         </div>
         
     </div>
@@ -7864,7 +7873,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1257
+            openHarmony/openHarmony_node.js, line 1242
         </div>
         
     </div>
@@ -8055,7 +8064,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2233
+            openHarmony/openHarmony_node.js, line 2208
         </div>
         
     </div>
@@ -8215,7 +8224,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2293
+            openHarmony/openHarmony_node.js, line 2268
         </div>
         
     </div>
@@ -8377,7 +8386,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1306
+            openHarmony/openHarmony_node.js, line 1291
         </div>
         
     </div>
@@ -8518,7 +8527,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1535
+            openHarmony/openHarmony_node.js, line 1510
         </div>
         
     </div>
@@ -8784,7 +8793,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1338
+            openHarmony/openHarmony_node.js, line 1323
         </div>
         
     </div>
@@ -8939,7 +8948,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1434
+            openHarmony/openHarmony_node.js, line 1419
         </div>
         
     </div>
@@ -9086,7 +9095,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1398
+            openHarmony/openHarmony_node.js, line 1383
         </div>
         
     </div>
@@ -9233,7 +9242,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 895
+            openHarmony/openHarmony_node.js, line 880
         </div>
         
     </div>
@@ -9395,7 +9404,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1031
+            openHarmony/openHarmony_node.js, line 1016
         </div>
         
     </div>
@@ -9557,7 +9566,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 858
+            openHarmony/openHarmony_node.js, line 843
         </div>
         
     </div>
@@ -9704,7 +9713,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 877
+            openHarmony/openHarmony_node.js, line 862
         </div>
         
     </div>
@@ -9806,7 +9815,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 847
+            openHarmony/openHarmony_node.js, line 832
         </div>
         
     </div>
@@ -9924,7 +9933,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 967
+            openHarmony/openHarmony_node.js, line 952
         </div>
         
     </div>
@@ -10071,7 +10080,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1090
+            openHarmony/openHarmony_node.js, line 1075
         </div>
         
     </div>
@@ -10263,7 +10272,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2173
+            openHarmony/openHarmony_node.js, line 2148
         </div>
         
     </div>
@@ -10408,7 +10417,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2188
+            openHarmony/openHarmony_node.js, line 2163
         </div>
         
     </div>
@@ -10579,7 +10588,7 @@ Pass a value to recurse to look into the groups as well.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 990
+            openHarmony/openHarmony_node.js, line 975
         </div>
         
     </div>
@@ -10761,7 +10770,7 @@ Pass a value to recurse to look into the groups as well.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1010
+            openHarmony/openHarmony_node.js, line 995
         </div>
         
     </div>
@@ -10863,7 +10872,7 @@ Pass a value to recurse to look into the groups as well.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 978
+            openHarmony/openHarmony_node.js, line 963
         </div>
         
     </div>
@@ -11008,7 +11017,7 @@ Pass a value to recurse to look into the groups as well.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2974
+            openHarmony/openHarmony_node.js, line 2949
         </div>
         
     </div>
@@ -11236,7 +11245,7 @@ Pass a value to recurse to look into the groups as well.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2725
+            openHarmony/openHarmony_node.js, line 2700
         </div>
         
     </div>
@@ -11597,7 +11606,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 3023
+            openHarmony/openHarmony_node.js, line 2998
         </div>
         
     </div>
@@ -11895,7 +11904,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2532
+            openHarmony/openHarmony_node.js, line 2507
         </div>
         
     </div>
@@ -12195,7 +12204,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1128
+            openHarmony/openHarmony_node.js, line 1113
         </div>
         
     </div>
@@ -12411,7 +12420,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 919
+            openHarmony/openHarmony_node.js, line 904
         </div>
         
     </div>
@@ -12653,7 +12662,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1056
+            openHarmony/openHarmony_node.js, line 1041
         </div>
         
     </div>
@@ -12895,7 +12904,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1148
+            openHarmony/openHarmony_node.js, line 1133
         </div>
         
     </div>
@@ -13011,7 +13020,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2303
+            openHarmony/openHarmony_node.js, line 2278
         </div>
         
     </div>
@@ -13144,7 +13153,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1283
+            openHarmony/openHarmony_node.js, line 1268
         </div>
         
     </div>
@@ -13337,7 +13346,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1587
+            openHarmony/openHarmony_node.js, line 1562
         </div>
         
     </div>
@@ -13484,7 +13493,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1370
+            openHarmony/openHarmony_node.js, line 1355
         </div>
         
     </div>
@@ -13654,7 +13663,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1576
+            openHarmony/openHarmony_node.js, line 1551
         </div>
         
     </div>
@@ -13799,7 +13808,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2211
+            openHarmony/openHarmony_node.js, line 2186
         </div>
         
     </div>
@@ -13961,7 +13970,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1197
+            openHarmony/openHarmony_node.js, line 1182
         </div>
         
     </div>
@@ -14108,7 +14117,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1424
+            openHarmony/openHarmony_node.js, line 1409
         </div>
         
     </div>
@@ -14210,7 +14219,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 934
+            openHarmony/openHarmony_node.js, line 919
         </div>
         
     </div>
@@ -14357,7 +14366,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 954
+            openHarmony/openHarmony_node.js, line 939
         </div>
         
     </div>
@@ -14504,7 +14513,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1071
+            openHarmony/openHarmony_node.js, line 1056
         </div>
         
     </div>
@@ -14651,7 +14660,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1104
+            openHarmony/openHarmony_node.js, line 1089
         </div>
         
     </div>
@@ -14819,7 +14828,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2831
+            openHarmony/openHarmony_node.js, line 2806
         </div>
         
     </div>
@@ -15019,7 +15028,7 @@ function importCustomPSD(){
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Jun 18 2021 19:43:04 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Jun 18 2021 19:47:55 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
