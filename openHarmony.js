@@ -393,6 +393,66 @@ $.dialog      = new $.oDialog( );
 $.global      = this;
 
 
+//---- Self caching -----
+
+/**
+ * change this value to allow self caching across openHarmony when initialising objects.
+ * @name $#useCache
+ * @type {bool}
+ */
+$.useCache = false;
+
+
+/**
+ * function to call in constructors of classes so that instances of this class
+ * are cached and unique based on constructor arguments.
+ * @returns a cached class instance or null if no cached instance exists.
+ */
+$.getInstanceFromCache = function(){
+  if (!this.__proto__.hasOwnProperty("__cache__")) {
+    this.__proto__.__cache__ = {};
+  }
+  var _cache = this.__proto__.__cache__;
+
+  if (!this.$.useCache) return;
+
+  var key = [];
+  for (var i=0; i<arguments.length; i++){
+    try{
+      key.push(arguments[i]+"")
+    }catch(err){} // ignore arguments that can't be converted to string
+  }
+
+  if (_cache.hasOwnProperty(key)) {
+    this.$.log("instance returned from cache for "+key, this.$.DEBUG_LEVEL.ERROR)
+    return _cache[key];
+  }
+  this.$.log("creating new instance for "+key, this.$.DEBUG_LEVEL.ERROR)
+  _cache[key] = this;
+
+  this.constructor.invalidateCache = function(){
+    delete this.prototype.__cache__;
+  }
+  return
+}
+
+
+/**
+ * invalidate all cache for classes that are self caching.
+ * Will be run at each include('openHarmony.js') statement.
+ */
+$.clearOpenHarmonyCache = function(){
+  // clear cache at openHarmony loading.
+  for (var classItem in this.$){
+    var ohClass = this.$[classItem]
+    if (typeof ohClass === "function" && ohClass.prototype.hasOwnProperty('__cache__')){
+      ohClass.invalidateCache();
+    }
+  }
+}
+$.clearOpenHarmonyCache();
+
+
 //---- Instantiate Class $ DOM Access ------
 function addDOMAccess( target, item ){
   Object.defineProperty( target, '$', {
@@ -408,7 +468,7 @@ for( var classItem in $ ){
     try{
       addDOMAccess( $[classItem].prototype, $ );
     }catch(err){
-      $.debug( "Error extending DOM access to : " + classItem, $.DEBUG_LEVEL.ERROR );
+      $.debug( "Error extending DOM access to : " + classItem + ": "+err, $.DEBUG_LEVEL.ERROR );
     }
 
     //Also extend it to the global object.
