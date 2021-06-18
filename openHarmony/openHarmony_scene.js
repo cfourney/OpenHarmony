@@ -699,14 +699,7 @@ Object.defineProperty($.oScene.prototype, 'activeDrawing', {
  */
 $.oScene.prototype.getNodeByPath = function(fullPath){
     var _type = node.type(fullPath);
-    if (_type == "") return null; // TODO: remove this if we implement a .exists property for oNode
-
-    if( this.$.cache_oNode[fullPath] ){
-      //Check for consistent type.
-      if ( this.$.cache_oNode[fullPath].type == _type ){
-        return this.$.cache_oNode[fullPath];
-      }
-    }
+    if (_type == "") return null;
 
     var _node;
     switch(_type){
@@ -723,7 +716,6 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
         _node = new this.$.oNode( fullPath, this );
     }
 
-    this.$.cache_oNode[fullPath] = _node;
     return _node;
 }
 
