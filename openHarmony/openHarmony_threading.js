@@ -362,11 +362,15 @@ $.oThread.prototype.runSingleThreaded = function( ){
  * @param    {string}    bin          The path to the binary executable that will be launched.
  * @param    {string[]}  queryArgs    A string array of the different arguments given to the command.
  *
+ * @property {$.oSignal} readyRead    A $.oSignal that can be connected to a callback, emitted every time new messages are outputted by the oProcess. Signature: readyRead(stdout (string))
+ * @property {$.oSignal} finished     A $.oSignal that can be connected to a callback, emitted when the oProcess has finished. Signature: finished(returnCode(int), stdout(string))
  * @property {QProcess}  process      the QProcess object wrapped by the $.oProcess object.
  * @property {string}    bin          The path to the binary executable that will be launched.
- * @property    {string[]}  queryArgs    A string array of the different arguments given to the command.
+ * @property {string[]}  queryArgs    A string array of the different arguments given to the command.
  */
 $.oProcess = function(bin, queryArgs){
+  this.readyRead = new this.$.oSignal()
+  this.finished = new this.$.oSignal()
   this.bin = bin;
   this.queryArgs = queryArgs;
   this.process = new QProcess();
@@ -403,9 +407,26 @@ Object.defineProperty($.oProcess.prototype, 'readChannel', {
 
 
 /**
+ * kills the process instantly (useful for hanging processes, etc).
+ */
+$.oProcess.prototype.kill = function(){
+  if (!this.process) return;
+  this.process.kill()
+}
+
+/**
+ * Attempts to terminate the process execution by asking it to close itself.
+ */
+$.oProcess.prototype.terminate = function(){
+  if (!this.process) return;
+  this.process.terminate()
+}
+
+/**
  * Execute a process and read the result as a string.
  * @param {function} [readCallback]         User can provide a function to execute when new info can be read. This function's first argument will contain the available output from the process.
  * @param {function} [finishedCallback]     User can provide a function to execute when new process has finished
+ * @param {object} [context]     User can provide an object used as "this" in the callbacks (by default, the global scope)
  * @example
  * // This example from the openHarmony oScene.renderWriteNodes() function code
  * // uses the oProcess class to launch an async process and print its progress
@@ -497,19 +518,24 @@ $.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
 
   this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.LOG);
 
-  p.start(app, this.queryArgs);
-
   // start process and attach functions to "readyRead" and "finished" signals
-  var self = this;
-  if (typeof readCallback !== 'undefined'){
-    var onRead = function(){
-      var stdout = self.read();
-      readCallback(stdout);
-    }
-    p.readyRead.connect(onRead);
+  function onRead(){
+    var stdout = this.read();
+    this.readyRead.emit(stdout);
   }
-  if (typeof finishedCallback !== 'undefined') p["finished(int)"].connect(finishedCallback);
-  return p
+
+  function onFinished(returnCode){
+    var stdout = this.read();
+    this.finished.emit(returnCode, stdout);
+  }
+
+  p.readyRead.connect(this, onRead);
+  p["finished(int)"].connect(this, onFinished);
+
+  if (typeof readCallback !== 'undefined') this.readyRead.connect(readCallback);
+  if (typeof finishedCallback !== 'undefined') this.finished.connect(onFinished);
+
+  p.start(app, this.queryArgs);
 }
 
 
@@ -533,6 +559,7 @@ $.oProcess.prototype.read = function (){
   return output;
 }
 
+
 /**
  * Execute a process and waits for the end of the execution.
  * @return {string}   The lines as returned by the process.
@@ -548,12 +575,12 @@ $.oProcess.prototype.execute = function(){
 }
 
 
-
 /**
  * Execute a process as a separate application, which doesn't block the script execution and stops the script from interacting with it further.
  */
 $.oProcess.prototype.launchAndDetach = function(){
   QProcess.startDetached(this.bin, this.queryArgs);
+}
 
 
 
