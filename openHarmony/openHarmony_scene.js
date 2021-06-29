@@ -2058,6 +2058,7 @@ $.oScene.prototype.saveNewVersion = function(newVersionName, markAsDefault){
  * @param {int}    [resY]                       The vertical resolution of the render. Uses the scene resolution by default.
  * @param {string} [preRenderScript]            The path to the script to execute on the scene before doing the render
  * @param {string} [postRenderScript]           The path to the script to execute on the scene after the render is finished
+ * @return {$.oProcess} In case of using renderInBackground, will return the oProcess object doing the render
  */
 $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, endFrame, resX, resY, preRenderScript, postRenderScript){
   if (typeof renderInBackground === 'undefined') var renderInBackground = true;
@@ -2097,10 +2098,14 @@ $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, e
 
   this.$.log("Starting render of scene "+this.name);
   if (renderInBackground){
-    var length = endFrame - startFrame;
+    var length = endFrame - startFrame + 1;
 
     var progressDialogue = new this.$.oProgressDialog("Rendering : ",length,"Render Write Nodes", true);
-    var self = this;
+
+    var cancelRender = function(){
+      p.kill();
+      this.$.alert("Render was canceled.")
+    }
 
     var renderProgress = function(message){
       // reporting progress to log window
@@ -2110,21 +2115,34 @@ $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, e
         matches.push(match[1]);
       }
       if (matches.length!=0){
-        var progress = parseInt(matches.pop(),10)
-        progressDialogue.label = "Rendering Frame: "+progress+"/"+length
+        var progress = parseInt(matches.pop(), 10);
+        progressDialogue.label = "Rendering Frame: " + progress + "/" + length;
         progressDialogue.value = progress;
-        var percentage = Math.round(progress/length*100);
-        self.$.log("render : "+percentage+"% complete");
+        var percentage = Math.round(progress/length * 100);
+        this.$.log("render : " + percentage + "% complete");
       }
     }
 
     var renderFinished = function(exitCode){
-      progressDialogue.label = "Rendering Finished"
-      progressDialogue.value = length;
-      self.$.log(exitCode+" : render finished");
+      if (exitCode == 0){
+        // render success
+        progressDialogue.label = "Rendering Finished"
+        progressDialogue.value = length;
+        this.$.log(exitCode + " : render finished");
+      }else{
+        this.$.log(exitCode + " : render cancelled");
+      }
     }
 
-    p.launchAndRead(renderProgress, renderFinished);
+    for (var i in progressDialogue){
+      $.log(i)
+    }
+
+    progressDialogue.canceled.connect(this, cancelRender);
+    p.readyRead.connect(this, renderProgress);
+    p.finished.connect(this, renderFinished);
+    p.launchAndRead();
+    return p;
   }else{
     var readout  = p.execute();
     this.$.log("render finished");
