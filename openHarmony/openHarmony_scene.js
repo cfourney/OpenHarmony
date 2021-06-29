@@ -2134,10 +2134,6 @@ $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, e
       }
     }
 
-    for (var i in progressDialogue){
-      $.log(i)
-    }
-
     progressDialogue.canceled.connect(this, cancelRender);
     p.readyRead.connect(this, renderProgress);
     p.finished.connect(this, renderFinished);
