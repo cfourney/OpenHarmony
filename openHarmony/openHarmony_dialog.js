@@ -287,6 +287,7 @@ $.oProgressDialog = function( labelText, range, title, show ){
   if (show) this.show();
 }
 
+
 // legacy compatibility
 $.oDialog.Progress = $.oProgressDialog;
 
@@ -385,15 +386,16 @@ $.oProgressDialog.prototype.show = function(){
  */
 $.oProgressDialog.prototype.close = function(){
   this.value = this.range;
-  this.$.log("Progress : "+value+"/"+this._range)
+  this.$.log("Progress : "+this.value+"/"+this._range)
 
   if (this.$.batchMode) {
     this.$.debug("$.oProgressDialog not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
     return;
   }
 
-  this.progress.hide();
-  this.progress = false;
+  this.canceled.blocked = true;
+  this.progress.close();
+  this.canceled.blocked = false;
 }
 
 
