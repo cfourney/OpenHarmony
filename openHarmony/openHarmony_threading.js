@@ -367,6 +367,7 @@ $.oThread.prototype.runSingleThreaded = function( ){
  * @property {QProcess}  process      the QProcess object wrapped by the $.oProcess object.
  * @property {string}    bin          The path to the binary executable that will be launched.
  * @property {string[]}  queryArgs    A string array of the different arguments given to the command.
+ * @property {string}    log          The full log of all the messages outputted over the course of the process lifetime.
  */
 $.oProcess = function(bin, queryArgs){
   this.readyRead = new this.$.oSignal()
@@ -375,6 +376,7 @@ $.oProcess = function(bin, queryArgs){
   this.queryArgs = queryArgs;
   this.process = new QProcess();
   this.readChannel = "All";
+  this.log = "";
 }
 
 
@@ -426,7 +428,6 @@ $.oProcess.prototype.terminate = function(){
  * Execute a process and read the result as a string.
  * @param {function} [readCallback]         User can provide a function to execute when new info can be read. This function's first argument will contain the available output from the process.
  * @param {function} [finishedCallback]     User can provide a function to execute when new process has finished
- * @param {object} [context]     User can provide an object used as "this" in the callbacks (by default, the global scope)
  * @example
  * // This example from the openHarmony oScene.renderWriteNodes() function code
  * // uses the oProcess class to launch an async process and print its progress
@@ -525,8 +526,8 @@ $.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
   }
 
   function onFinished(returnCode){
-    var stdout = this.read();
-    this.finished.emit(returnCode, stdout);
+    var stdout = this.read(); // reading any extra messages issued since last read() call to add to log
+    this.finished.emit(returnCode, this.log);
   }
 
   p.readyRead.connect(this, onRead);
@@ -555,6 +556,8 @@ $.oProcess.prototype.read = function (){
   while(output.slice(-1)== "\n" || output.slice(-1)== "\r"){
     output = output.slice (0, -1);
   }
+
+  this.log += output;
 
   return output;
 }
