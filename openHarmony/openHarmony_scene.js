@@ -709,6 +709,9 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
       case "PEG" :
         _node = new this.$.oPegNode( fullPath, this );
         break;
+      case "COLOR_OVERRIDE_TVG" :
+        _node = new this.$.oColorOverrideNode( fullPath, this );
+        break;
       case "GROUP" :
         _node = new this.$.oGroupNode( fullPath, this );
         break;
@@ -1252,7 +1255,7 @@ $.oScene.prototype.getTimeline = function(display){
 
 
 /**
- * Gets a palette by the name.
+ * Gets a scene palette by the name.
  * @param   {string}   name            The palette name to query and find.
  *
  * @return  {$.oPalette}                 The oPalette found given the query.
