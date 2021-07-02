@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Global</title>
+    <title>Class: oLayer</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -3769,7 +3769,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="global.html">Global</h1>
+        <h1 class="page-title" data-filename="$.oLayer.html">Class: oLayer</h1>
         
 
 
@@ -3778,8 +3778,12 @@
     
 <header>
     <h2>
+        <span class="ancestors"><a href="$.html">$</a>.</span>
     
+    oLayer
     </h2>
+    
+        <div class="class-description">The $.oLayer class represents a single line in the timeline.</div>
     
 </header>  
 
@@ -3789,9 +3793,203 @@
     
     
         
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="oLayer">
+            
+            new $.oLayer<span class="signature">(oTimelineObject, layerIndex)</span>
+        </h4>
+    
         
+        <div class="tag-source">
+            openHarmony/openHarmony_timeline.js, line 64
+        </div>
         
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Constructor for $.oLayer class
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>oTimelineObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oTimeline</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The timeline associated to this layer.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>layerIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The index of the layer on the timeline (all layers included, node and columns).</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The index of the layer on the timeline.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>timeline</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oTimeline</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The timeline associated to this layer.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>node</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oNode</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The node associated to the layer.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -3815,8 +4013,20 @@
     
 </dl>
 
-        
-        
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
     
     </div>
     
@@ -3837,13 +4047,106 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="polarCoordinatesanobjectcontaining%7Bangle(float),radius(float)%7Dvaluesthatrepresentspolarcoordinates(angleinradians)forthepoint'sxandyvalue(znotyetsupported)">$.oPoint#polarCoordinates
-an object containing {angle (float), radius (float)} values that represents polar coordinates (angle in radians) for the point's x and y value (z not yet supported)</h4>
+        <h4 class="name" id="name"><span class="type-signature ">readonly</span>name<span class="type-signature type string">string</span> </h4>
     </div>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        The name of this layer/node.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="parent">parent<span class="type-signature type $.olayer"><a href="$.oLayer.html">$.oLayer</a></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        the parent layer for this layer in the timeline. Returns the root group if layer is top level.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="selected"><span class="type-signature ">readonly</span>selected<span class="type-signature type bool">bool</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        wether or not the layer is selected.
+    </div>
     
     
     
@@ -3878,365 +4181,6 @@ an object containing {angle (float), radius (float)} values that represents pola
         </dl>
     
     
-    
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl>
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="oh_anim_smartKey">
-            
-            oh_anim_smartKey<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            tools/OpenHarmony_basic/openHarmony_anim_tools.js, line 17
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Smart key button. Only adds a key if a column already exists. Maintains sections that are tweens and other sections that are stop-motion/holds.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="oh_rigging_addBackdropToSelected">
-            
-            oh_rigging_addBackdropToSelected<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            tools/OpenHarmony_basic/openHarmony_rigging_tools.js, line 141
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Adds a backdrop with specified color, to selected nodes in the node-view.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="oh_rigging_addCenterWeightedPeg">
-            
-            oh_rigging_addCenterWeightedPeg<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            tools/OpenHarmony_basic/openHarmony_rigging_tools.js, line 91
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Adds a peg with a pivot at the center of the selected drawings module(s).
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="oh_rigging_removeUnnecesaryPaletteFiles">
-            
-            oh_rigging_removeUnnecesaryPaletteFiles<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            tools/OpenHarmony_basic/openHarmony_rigging_tools.js, line 17
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Finds and removes all unnecessary asset files from the filesystem.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="oh_rigging_setSelectedPegPivotWithClick">
-            
-            oh_rigging_setSelectedPegPivotWithClick<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            tools/OpenHarmony_basic/openHarmony_rigging_tools.js, line 380
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Sets the peg's pivot based on a clicked position in the interface.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        </dl>
     
     
     

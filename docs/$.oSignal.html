@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Global</title>
+    <title>Class: oSignal</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -3769,7 +3769,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="global.html">Global</h1>
+        <h1 class="page-title" data-filename="$.oSignal.html">Class: oSignal</h1>
         
 
 
@@ -3778,8 +3778,14 @@
     
 <header>
     <h2>
+        <span class="ancestors"><a href="$.html">$</a>.</span>
     
+    oSignal
     </h2>
+    
+        <div class="class-description">A Qt like custom signal that can be defined, connected and emitted.
+As this signal is not actually threaded, the connected callbacks will be executed
+directly when the signal is emited, and the rest of the code will execute after.</div>
     
 </header>  
 
@@ -3789,63 +3795,36 @@
     
     
         
-        
-        
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-        
-        
-    
-    </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        <h3 class="subsection-title">Members</h3>
-        
-        <dl>
-            
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="polarCoordinatesanobjectcontaining%7Bangle(float),radius(float)%7Dvaluesthatrepresentspolarcoordinates(angleinradians)forthepoint'sxandyvalue(znotyetsupported)">$.oPoint#polarCoordinates
-an object containing {angle (float), radius (float)} values that represents polar coordinates (angle in radians) for the point's x and y value (z not yet supported)</h4>
-    </div>
+        <h4 class="name" id="oSignal">
+            
+            new $.oSignal<span class="signature">()</span>
+        </h4>
     
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_threading.js, line 601
+        </div>
+        
+    </div>
+
     
 </dt>
 <dd>
     
     
+    <div class="description">
+        The constructor for $.oSignal.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
     
 <dl class="details">
     
@@ -3873,9 +3852,31 @@ an object containing {angle (float), radius (float)} values that represents pola
 
     
     
+
+    
+
+    
+    
+    
+    
+    
+    
+    
 </dd>
 
-        </dl>
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -3885,14 +3886,14 @@ an object containing {angle (float), radius (float)} values that represents pola
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oh_anim_smartKey">
+        <h4 class="name" id="connect">
             
-            oh_anim_smartKey<span class="signature">()</span>
+            connect<span class="signature">(context, slot)</span>
         </h4>
     
         
         <div class="tag-source">
-            tools/OpenHarmony_basic/openHarmony_anim_tools.js, line 17
+            openHarmony/openHarmony_threading.js, line 622
         </div>
         
     </div>
@@ -3903,7 +3904,7 @@ an object containing {angle (float), radius (float)} values that represents pola
     
     
     <div class="description">
-        Smart key button. Only adds a key if a column already exists. Maintains sections that are tweens and other sections that are stop-motion/holds.
+        Register the calling object and the slot.
     </div>
     
 
@@ -3911,6 +3912,74 @@ an object containing {angle (float), radius (float)} values that represents pola
     
     
     
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>slot</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -3956,14 +4025,14 @@ an object containing {angle (float), radius (float)} values that represents pola
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oh_rigging_addBackdropToSelected">
+        <h4 class="name" id="disconnect">
             
-            oh_rigging_addBackdropToSelected<span class="signature">()</span>
+            disconnect<span class="signature">(<span class="optional">slot</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            tools/OpenHarmony_basic/openHarmony_rigging_tools.js, line 141
+            openHarmony/openHarmony_threading.js, line 636
         </div>
         
     </div>
@@ -3974,7 +4043,7 @@ an object containing {angle (float), radius (float)} values that represents pola
     
     
     <div class="description">
-        Adds a backdrop with specified color, to selected nodes in the node-view.
+        Remove a connection registered with this Signal.
     </div>
     
 
@@ -3982,6 +4051,58 @@ an object containing {angle (float), radius (float)} values that represents pola
     
     
     
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>slot</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                the function to disconnect from the signal. If not specified, all connexions will be removed.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -4027,14 +4148,14 @@ an object containing {angle (float), radius (float)} values that represents pola
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oh_rigging_addCenterWeightedPeg">
+        <h4 class="name" id="emit">
             
-            oh_rigging_addCenterWeightedPeg<span class="signature">()</span>
+            emit<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            tools/OpenHarmony_basic/openHarmony_rigging_tools.js, line 91
+            openHarmony/openHarmony_threading.js, line 653
         </div>
         
     </div>
@@ -4045,149 +4166,7 @@ an object containing {angle (float), radius (float)} values that represents pola
     
     
     <div class="description">
-        Adds a peg with a pivot at the center of the selected drawings module(s).
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="oh_rigging_removeUnnecesaryPaletteFiles">
-            
-            oh_rigging_removeUnnecesaryPaletteFiles<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            tools/OpenHarmony_basic/openHarmony_rigging_tools.js, line 17
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Finds and removes all unnecessary asset files from the filesystem.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="oh_rigging_setSelectedPegPivotWithClick">
-            
-            oh_rigging_setSelectedPegPivotWithClick<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            tools/OpenHarmony_basic/openHarmony_rigging_tools.js, line 380
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Sets the peg's pivot based on a clicked position in the interface.
+        Call the slot function using the provided context and and any arguments.
     </div>
     
 
