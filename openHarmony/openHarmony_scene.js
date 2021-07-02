@@ -699,14 +699,7 @@ Object.defineProperty($.oScene.prototype, 'activeDrawing', {
  */
 $.oScene.prototype.getNodeByPath = function(fullPath){
     var _type = node.type(fullPath);
-    if (_type == "") return null; // TODO: remove this if we implement a .exists property for oNode
-
-    if( this.$.cache_oNode[fullPath] ){
-      //Check for consistent type.
-      if ( this.$.cache_oNode[fullPath].type == _type ){
-        return this.$.cache_oNode[fullPath];
-      }
-    }
+    if (_type == "") return null;
 
     var _node;
     switch(_type){
@@ -716,6 +709,9 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
       case "PEG" :
         _node = new this.$.oPegNode( fullPath, this );
         break;
+      case "COLOR_OVERRIDE_TVG" :
+        _node = new this.$.oColorOverrideNode( fullPath, this );
+        break;
       case "GROUP" :
         _node = new this.$.oGroupNode( fullPath, this );
         break;
@@ -723,7 +719,6 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
         _node = new this.$.oNode( fullPath, this );
     }
 
-    this.$.cache_oNode[fullPath] = _node;
     return _node;
 }
 
@@ -1260,18 +1255,30 @@ $.oScene.prototype.getTimeline = function(display){
 
 
 /**
- * Gets a palette by the name.
+ * Gets a scene palette by the name.
  * @param   {string}   name            The palette name to query and find.
  *
  * @return  {$.oPalette}                 The oPalette found given the query.
  */
 $.oScene.prototype.getPaletteByName = function(name){
-    var _paletteList = PaletteObjectManager.getScenePaletteList();
-    for (var i=0; i<_paletteList.numPalettes; i++){
-        var _palette = _paletteList.getPaletteByIndex(i);
-        if (_palette.getName() == name) return new this.$.oPalette(_palette, _paletteList);
-    }
-    return null;
+  var _palettes = this.palettes;
+  for (var i in _palettes){
+    if (_palettes[i].name == name) return _palettes[i];
+  }
+  return null;
+}
+
+/**
+ * Gets a scene palette by the path of the plt file.
+ * @param   {string}   path              The palette path to find.
+ * @return  {$.oPalette}                 The oPalette or null if not found.
+ */
+$.oScene.prototype.getPaletteByPath = function(path){
+  var _palettes = this.palettes;
+  for (var i in _palettes){
+    if (_palettes[i].path.path == path) return _palettes[i];
+  }
+  return null;
 }
 
 
@@ -2066,6 +2073,7 @@ $.oScene.prototype.saveNewVersion = function(newVersionName, markAsDefault){
  * @param {int}    [resY]                       The vertical resolution of the render. Uses the scene resolution by default.
  * @param {string} [preRenderScript]            The path to the script to execute on the scene before doing the render
  * @param {string} [postRenderScript]           The path to the script to execute on the scene after the render is finished
+ * @return {$.oProcess} In case of using renderInBackground, will return the oProcess object doing the render
  */
 $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, endFrame, resX, resY, preRenderScript, postRenderScript){
   if (typeof renderInBackground === 'undefined') var renderInBackground = true;
@@ -2105,10 +2113,14 @@ $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, e
 
   this.$.log("Starting render of scene "+this.name);
   if (renderInBackground){
-    var length = endFrame - startFrame;
+    var length = endFrame - startFrame + 1;
 
     var progressDialogue = new this.$.oProgressDialog("Rendering : ",length,"Render Write Nodes", true);
-    var self = this;
+
+    var cancelRender = function(){
+      p.kill();
+      this.$.alert("Render was canceled.")
+    }
 
     var renderProgress = function(message){
       // reporting progress to log window
@@ -2118,21 +2130,30 @@ $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, e
         matches.push(match[1]);
       }
       if (matches.length!=0){
-        var progress = parseInt(matches.pop(),10)
-        progressDialogue.label = "Rendering Frame: "+progress+"/"+length
+        var progress = parseInt(matches.pop(), 10);
+        progressDialogue.label = "Rendering Frame: " + progress + "/" + length;
         progressDialogue.value = progress;
-        var percentage = Math.round(progress/length*100);
-        self.$.log("render : "+percentage+"% complete");
+        var percentage = Math.round(progress/length * 100);
+        this.$.log("render : " + percentage + "% complete");
       }
     }
 
     var renderFinished = function(exitCode){
-      progressDialogue.label = "Rendering Finished"
-      progressDialogue.value = length;
-      self.$.log(exitCode+" : render finished");
+      if (exitCode == 0){
+        // render success
+        progressDialogue.label = "Rendering Finished"
+        progressDialogue.value = length;
+        this.$.log(exitCode + " : render finished");
+      }else{
+        this.$.log(exitCode + " : render cancelled");
+      }
     }
 
-    p.launchAndRead(renderProgress, renderFinished);
+    progressDialogue.canceled.connect(this, cancelRender);
+    p.readyRead.connect(this, renderProgress);
+    p.finished.connect(this, renderFinished);
+    p.launchAndRead();
+    return p;
   }else{
     var readout  = p.execute();
     this.$.log("render finished");

@@ -362,15 +362,21 @@ $.oThread.prototype.runSingleThreaded = function( ){
  * @param    {string}    bin          The path to the binary executable that will be launched.
  * @param    {string[]}  queryArgs    A string array of the different arguments given to the command.
  *
+ * @property {$.oSignal} readyRead    A $.oSignal that can be connected to a callback, emitted every time new messages are outputted by the oProcess. Signature: readyRead(stdout (string))
+ * @property {$.oSignal} finished     A $.oSignal that can be connected to a callback, emitted when the oProcess has finished. Signature: finished(returnCode(int), stdout(string))
  * @property {QProcess}  process      the QProcess object wrapped by the $.oProcess object.
  * @property {string}    bin          The path to the binary executable that will be launched.
- * @property    {string[]}  queryArgs    A string array of the different arguments given to the command.
+ * @property {string[]}  queryArgs    A string array of the different arguments given to the command.
+ * @property {string}    log          The full log of all the messages outputted over the course of the process lifetime.
  */
 $.oProcess = function(bin, queryArgs){
+  this.readyRead = new this.$.oSignal()
+  this.finished = new this.$.oSignal()
   this.bin = bin;
   this.queryArgs = queryArgs;
   this.process = new QProcess();
   this.readChannel = "All";
+  this.log = "";
 }
 
 
@@ -401,6 +407,22 @@ Object.defineProperty($.oProcess.prototype, 'readChannel', {
   }
 });
 
+
+/**
+ * kills the process instantly (useful for hanging processes, etc).
+ */
+$.oProcess.prototype.kill = function(){
+  if (!this.process) return;
+  this.process.kill()
+}
+
+/**
+ * Attempts to terminate the process execution by asking it to close itself.
+ */
+$.oProcess.prototype.terminate = function(){
+  if (!this.process) return;
+  this.process.terminate()
+}
 
 /**
  * Execute a process and read the result as a string.
@@ -497,19 +519,24 @@ $.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
 
   this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.LOG);
 
-  p.start(app, this.queryArgs);
-
   // start process and attach functions to "readyRead" and "finished" signals
-  var self = this;
-  if (typeof readCallback !== 'undefined'){
-    var onRead = function(){
-      var stdout = self.read();
-      readCallback(stdout);
-    }
-    p.readyRead.connect(onRead);
+  function onRead(){
+    var stdout = this.read();
+    this.readyRead.emit(stdout);
   }
-  if (typeof finishedCallback !== 'undefined') p["finished(int)"].connect(finishedCallback);
-  return p
+
+  function onFinished(returnCode){
+    var stdout = this.read(); // reading any extra messages issued since last read() call to add to log
+    this.finished.emit(returnCode, this.log);
+  }
+
+  p.readyRead.connect(this, onRead);
+  p["finished(int)"].connect(this, onFinished);
+
+  if (typeof readCallback !== 'undefined') this.readyRead.connect(readCallback);
+  if (typeof finishedCallback !== 'undefined') this.finished.connect(onFinished);
+
+  p.start(app, this.queryArgs);
 }
 
 
@@ -530,8 +557,11 @@ $.oProcess.prototype.read = function (){
     output = output.slice (0, -1);
   }
 
+  this.log += output;
+
   return output;
 }
+
 
 /**
  * Execute a process and waits for the end of the execution.
@@ -548,10 +578,107 @@ $.oProcess.prototype.execute = function(){
 }
 
 
-
 /**
  * Execute a process as a separate application, which doesn't block the script execution and stops the script from interacting with it further.
  */
 $.oProcess.prototype.launchAndDetach = function(){
   QProcess.startDetached(this.bin, this.queryArgs);
 }
+
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//         $.oSignal class          //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for $.oSignal.
+ * @name        $.oSignal
+ * @classdesc
+ * A Qt like custom signal that can be defined, connected and emitted.
+ * As this signal is not actually threaded, the connected callbacks will be executed
+ * directly when the signal is emited, and the rest of the code will execute after.
+ * @constructor
+ */
+$.oSignal = function(type){
+  // this.emitType = type;
+  this.connexions = [];
+  this.blocked = false;
+}
+
+
+/**
+ * Register the calling object and the slot.
+ * @param {object} context
+ * @param {function} slot
+ */
+$.oSignal.prototype.connect = function (context, slot){
+  // support slot.connect(callback) synthax
+  if (typeof slot === 'undefined'){
+    var slot = context;
+    var context = null;
+  }
+  this.connexions.push ({context: context, slot:slot});
+}
+
+
+/**
+ * Remove a connection registered with this Signal.
+ * @param {function} [slot] the function to disconnect from the signal. If not specified, all connexions will be removed.
+ */
+$.oSignal.prototype.disconnect = function(slot){
+  if (typeof slot === "undefined"){
+    this.connexions = [];
+    return
+  }
+
+  for (var i in this.connexions){
+    if (this.connexions[i].slot == slot){
+      this.connexions.splice(i, 1);
+    }
+  }
+}
+
+
+/**
+ * Call the slot function using the provided context and and any arguments.
+ */
+$.oSignal.prototype.emit = function () {
+  if (this.blocked) return;
+
+  // if (!(value instanceof this.type)){ // can't make it work for primitives, might try to fix later?
+  //   throw new error ("Signal can't emit type "+ (typeof value) + ". Must be : " + this.type)
+  // }
+
+  var args = [];
+  for (var i=0; i<arguments.length; i++){
+    args.push(arguments[i]);
+  }
+
+  this.$.debug("emiting signal with "+ args, this.$.DEBUG_LEVEL.LOG);
+
+  for (var i in this.connexions){
+    var context = this.connexions[i].context;
+    var slot = this.connexions[i].slot;
+
+    // support connecting signals to each other
+    if (slot instanceof this.$.oSignal){
+      slot.emit.apply(context, args)
+    }else{
+      slot.apply(context, args);
+    }
+  }
+}
+
+
+$.oSignal.prototype.toString = function(){
+  return "Signal";
+}
+

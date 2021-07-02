@@ -60,7 +60,10 @@ include(specialFolders.userScripts+"/TB_orderNetworkUp.js");       // for older 
  * Constructor for $.oNode class
  * @classdesc
  * The oNode class represents a node in the Harmony scene. <br>
- * It holds the value of its position in the node view, and functions to link to other nodes, as well as set the attributes of the node.<br>
+ * It holds the value of its position in the node view, and functions to link to other nodes, as well as set the attributes of the node.<br><br>
+ * It uses a cache system, so a node for a given path will only be created once. <br>
+ * If the nodes change path through other means than the openHarmony functions during the execution of the script, use oNode.invalidateCache() to create new nodes again.<br><br>
+ * This constructor should not be invoqued by users, who should use $.scene.getNodeByPath() or $.scene.root.getNodeByName() instead.
  * @constructor
  * @param   {string}         path                          Path to the node in the network.
  * @param   {$.oScene}         [oSceneObject]                  Access to the oScene object of the DOM.
@@ -97,15 +100,17 @@ include(specialFolders.userScripts+"/TB_orderNetworkUp.js");       // for older 
  * var attributes = myNode.attributes;
  */
 $.oNode = function( path, oSceneObject ){
-    this._path = path;
-    this.type  = node.type(this.path);
-    this.scene = (typeof oSceneObject === 'undefined')?this.$.scene:oSceneObject;
+  var instance = this.$.getInstanceFromCache.call(this, path);
+  if (instance) return instance;
 
-    this._type = 'node';
+  this._path = path;
+  this.type  = node.type(this.path);
+  this.scene = (typeof oSceneObject === 'undefined')?this.$.scene:oSceneObject;
 
-    this.refreshAttributes();
+  this._type = 'node';
+
+  this.refreshAttributes();
 }
-
 
 /**
  * Initialize the attribute cache.
@@ -1174,14 +1179,27 @@ $.oNode.prototype.moveToGroup = function(group){
 
 
 /**
- * Retrieves the nodes index in the timeline provided.
- * @param   {oTimeline}   timeline            The timeline object to search the nodes index.
+ * Retrieves the node layer in the timeline provided.
+ * @param   {oTimeline}   [timeline]     Optional: the timeline object to search the column Layer. (by default, grabs the current timeline)
+ *
+ * @return  {int}    The index within that timeline.
+ */
+ $.oNode.prototype.getTimelineLayer = function(timeline){
+  if (typeof timeline === 'undefined') var timeline = this.$.scene.getTimeline();
+
+  var _nodeLayers = timeline.layers.map(function(x){return x.node.path});
+  return timeline.layers[_nodeLayers.indexOf(this.path)];
+}
+
+
+/**
+ * Retrieves the node index in the timeline provided.
+ * @param   {oTimeline}   [timeline]     Optional: the timeline object to search the column Layer. (by default, grabs the current timeline)
  *
  * @return  {int}    The index within that timeline.
  */
 $.oNode.prototype.timelineIndex = function(timeline){
-  var _timeline = timeline.nodesList;
-  return _timeline.indexOf(this.path);
+  return this.getTimelineLayer(timeline).layerIndex;
 }
 
 
@@ -1597,34 +1615,13 @@ $.oNode.prototype.refreshAttributes = function( ){
  */
 $.oPegNode = function( path, oSceneObject ) {
     if (node.type(path) != 'PEG') throw "'path' parameter must point to a 'PEG' type node";
-    this.$.oNode.call( this, path, oSceneObject );
+    var instance = this.$.oNode.call( this, path, oSceneObject );
+    if (instance) return instance;
 
     this._type = 'pegNode';
 }
-
-// extends $.oNode and can use its methods
 $.oPegNode.prototype = Object.create( $.oNode.prototype );
-
-//CF NOTE: Use Separate is ambiguous, as scale, and position can be separate too. Perhaps useSeparate is distinct for position, and rotationUseSeparate otherwise?
-// MC Node: Agreed. Do we even want this class? Right now I can't think of anything to put in here...
-
- /*
- * Whether the position is separate.
- * @Deprecated
- * @name $.oPegNode#useSeparate
- * @type {bool}
- */
- /*
-Object.defineProperty($.oPegNode.prototype, "useSeparate", {
-    get : function(){
-
-    },
-
-    set : function( _value ){
-        // TODO: when swapping from one to the other, copy key values and link new columns if missing
-    }
-})*/
-
+$.oPegNode.prototype.constructor = $.oPegNode;
 
 
 
@@ -1670,13 +1667,13 @@ Object.defineProperty($.oPegNode.prototype, "useSeparate", {
 $.oDrawingNode = function(path, oSceneObject) {
     // $.oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'READ') throw "'path' parameter must point to a 'READ' type node";
-    this.$.oNode.call(this, path, oSceneObject);
+    var instance = this.$.oNode.call(this, path, oSceneObject);
+    if (instance) return instance;
 
     this._type = 'drawingNode';
 }
-
 $.oDrawingNode.prototype = Object.create($.oNode.prototype);
-
+$.oDrawingNode.prototype.constructor = $.oDrawingNode;
 
 
 /**
@@ -2028,6 +2025,83 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
   return [];
 }
 
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//    $.oColorOverrideNode class    //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+/**
+ * Constructor for the $.oColorOverrideNode class
+ * @classdesc
+ * $.oColorOverrideNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>
+ * It represents color overrides in the scene.
+ * @constructor
+ * @augments   $.oNode
+ * @param   {string}         path                          Path to the node in the network.
+ * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
+ */
+ $.oColorOverrideNode = function(path, oSceneObject) {
+  // $.oDrawingNode can only represent a node of type 'READ'
+  if (node.type(path) != 'COLOR_OVERRIDE_TVG') throw "'path' parameter must point to a 'COLOR_OVERRIDE_TVG' type node";
+  var instance = this.$.oNode.call(this, path, oSceneObject);
+  if (instance) return instance;
+
+  this._type = 'colorOverrideNode';
+  this._coObject = node.getColorOverride(path)
+}
+$.oColorOverrideNode.prototype = Object.create($.oNode.prototype);
+$.oColorOverrideNode.prototype.constructor = $.oColorOverrideNode;
+
+
+/**
+ * The list of palette overrides in this color override node
+ * @name $.oColorOverrideNode#palettes
+ * @type {$.oPalette []}
+ * @readonly
+ */
+Object.defineProperty($.oColorOverrideNode.prototype, "palettes", {
+  get: function(){
+    this.$.log("getting palettes")
+    if (!this._palettes){
+      this._palettes = [];
+
+      var _numPalettes = this._coObject.getNumPalettes();
+      this.$.log(_numPalettes)
+      for (var i=0; i<_numPalettes; i++){
+        var _palettePath = this._coObject.palettePath(i) + ".plt";
+        this.$.log(_palettePath)
+        var _palette = this.$.scn.getPaletteByPath(_palettePath);
+        if (_palette) this._palettes.push(_palette);
+      }
+    }
+
+    return this._palettes;
+  }
+})
+
+/**
+ * Add a new palette to the palette list (for now, only supports scene palettes)
+ * @param {$.oPalette} palette
+*/
+$.oColorOverrideNode.prototype.addPalette = function(palette){
+  var _palettes = this.palettes // init palettes cache to add to it
+
+  this._coObject.addPalette(palette.path.path);
+  this._palettes.push(palette);
+}
+
+/**
+ * Removes a palette to the palette list (for now, only supports scene palettes)
+ * @param {$.oPalette} palette
+ */
+$.oColorOverrideNode.prototype.removePalette = function(palette){
+  this._coObject.removePalette(palette.path.path);
+}
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -2068,12 +2142,13 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
 $.oGroupNode = function(path, oSceneObject) {
     // $.oDrawingNode can only represent a node of type 'READ'
     if (node.type(path) != 'GROUP') throw "'path' parameter must point to a 'GROUP' type node";
-    this.$.oNode.call(this, path, oSceneObject);
+    var instance = this.$.oNode.call(this, path, oSceneObject);
+    if (instance) return instance;
 
     this._type = 'groupNode';
 }
 $.oGroupNode.prototype = Object.create($.oNode.prototype);
-
+$.oGroupNode.prototype.constructor = $.oGroupNode;
 
 /**
  * The multiport in node of the group.

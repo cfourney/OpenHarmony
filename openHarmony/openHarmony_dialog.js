@@ -264,6 +264,7 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
  * @name        $.oProgressDialog
  * @constructor
  * @classdesc   An simple progress dialog to display the progress of a task.
+ * To react to the user clicking the cancel button, connect a function to $.oProgressDialog.canceled() signal
  * @param       {string}              labelText                  The path to the folder.
  * @param       {string}              [range=100]                The path to the folder.
  * @param       {string}              [title]                    The title of the dialog
@@ -281,10 +282,11 @@ $.oProgressDialog = function( labelText, range, title, show ){
   this._title = title;
   this._labelText = labelText;
 
-  if (show) this.show();
+  this.canceled = new this.$.oSignal();
 
-  this.cancelled = false;
+  if (show) this.show();
 }
+
 
 // legacy compatibility
 $.oDialog.Progress = $.oProgressDialog;
@@ -318,7 +320,6 @@ Object.defineProperty( $.oProgressDialog.prototype, 'range', {
     set: function( val ){
       this._range = val;
       if (!this.$.batchMode) this.progress.setRange( 0, val );
-      //QCoreApplication.processEvents();
     }
 });
 
@@ -340,15 +341,17 @@ Object.defineProperty( $.oProgressDialog.prototype, 'value', {
       }else {
         this.progress.value = val;
       }
-      //QCoreApplication.processEvents();
+
+      // update the widget appearance
+      QCoreApplication.processEvents();
     }
 });
 
 
 /**
- * Whether the Progress Dialog was cancelled by the user
+ * Whether the Progress Dialog was cancelled by the user.
  * @name $.oProgressDialog#cancelled
- * @type {int}
+ * @deprecated use $.oProgressDialog.wasCanceled to get the cancel status, or connect a function to the "canceled" signal.
  */
 Object.defineProperty( $.oProgressDialog.prototype, 'cancelled', {
   get: function(){
@@ -375,15 +378,7 @@ $.oProgressDialog.prototype.show = function(){
 
   this.progress.show();
 
-  {
-    //CANCEL EVENT.
-    var prog = this;
-    var canceled = function(){
-      prog.cancelled = true;
-    }
-    this.progress["canceled()"].connect( this, canceled );
-  }
-
+  this.progress["canceled()"].connect( this, function(){this.wasCanceled = true; this.canceled.emit()} );
 }
 
 /**
@@ -391,15 +386,16 @@ $.oProgressDialog.prototype.show = function(){
  */
 $.oProgressDialog.prototype.close = function(){
   this.value = this.range;
-  this.$.log("Progress : "+value+"/"+this._range)
+  this.$.log("Progress : "+this.value+"/"+this._range)
 
   if (this.$.batchMode) {
     this.$.debug("$.oProgressDialog not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
     return;
   }
 
-  this.progress.hide();
-  this.progress = false;
+  this.canceled.blocked = true;
+  this.progress.close();
+  this.canceled.blocked = false;
 }
 
 

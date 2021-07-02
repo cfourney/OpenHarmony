@@ -84,6 +84,9 @@
  * doc.nodes[0].attributes.position.y.column = myColumn;  // now position.x and position.y will share the same animation on the node.
  */
 $.oColumn = function( uniqueName, oAttributeObject ){
+  var instance = this.$.getInstanceFromCache.call(this, uniqueName);
+  if (instance) return instance;
+
   this._type = "column";
 
   this.uniqueName = uniqueName;
@@ -445,6 +448,27 @@ $.oColumn.prototype.setValue = function(newValue, frame){
 
 
 
+/**
+ * Retrieves the nodes index in the timeline provided.
+ * @param   {oTimeline}   [timeline]     Optional: the timeline object to search the column Layer. (by default, grabs the current timeline)
+ *
+ * @return  {int}    The index within that timeline.
+ */
+$.oColumn.prototype.getTimelineLayer = function(timeline){
+  if (typeof timeline === 'undefined') var timeline = this.$.scene.getTimeline();
+
+  var _columnNames = timeline.allLayers.map(function(x){return x.column?x.column.uniqueName:null});
+  return timeline.allLayers[_columnNames.indexOf(this.uniqueName)];
+}
+
+
+/**
+ * @private
+ */
+$.oColumn.prototype.toString = function(){
+  return "<$.oColumn '"+this.name+"'>"
+}
+
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -469,15 +493,17 @@ $.oColumn.prototype.setValue = function(newValue, frame){
  * @property {$.oAttribute}            attributeObject             The attribute object that the column is attached to.
  */
 $.oDrawingColumn = function( uniqueName, oAttributeObject ) {
-    // $.oDrawingColumn can only represent a column of type 'DRAWING'
+  // $.oDrawingColumn can only represent a column of type 'DRAWING'
     if (column.type(uniqueName) != 'DRAWING') throw new Error("'uniqueName' parameter must point to a 'DRAWING' type node");
     //MessageBox.information("getting an instance of $.oDrawingColumn for column : "+uniqueName)
-    $.oColumn.call(this, uniqueName, oAttributeObject);
+    var instance = $.oColumn.call(this, uniqueName, oAttributeObject);
+    if (instance) return instance;
 }
 
 
 // extends $.oColumn and can use its methods
 $.oDrawingColumn.prototype = Object.create($.oColumn.prototype);
+$.oDrawingColumn.prototype.constructor = $.oColumn;
 
 
 /**

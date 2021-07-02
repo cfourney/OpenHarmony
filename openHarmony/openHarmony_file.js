@@ -60,8 +60,14 @@
 $.oFolder = function(path){
     this._type = "folder";
     this._path = fileMapper.toNativePath(path).split("\\").join("/");
-    // if (this.path.slice(-1) == "/") this.path += this.path.slice(0, -1);
 
+    // fix lowercase drive letter
+    var path_components = this._path.split("/");
+    if (path_components[0] && about.isWindowsArch()){
+      // local path that starts with a drive letter
+      path_components[0] = path_components[0].toUpperCase()
+      this._path = path_components.join("/");
+    }
 }
 
 
@@ -460,8 +466,16 @@ $.oFolder.prototype.toString = function(){
  * @property    {string}             path                     The path to the file.
  */
 $.oFile = function(path){
-    this._type = "file";
-    this._path = fileMapper.toNativePath(path).split('\\').join('/');
+  this._type = "file";
+  this._path = fileMapper.toNativePath(path).split('\\').join('/');
+
+  // fix lowercase drive letter
+  var path_components = this._path.split("/");
+  if (path_components[0] && about.isWindowsArch()){
+    // local path that starts with a drive letter
+    path_components[0] = path_components[0].toUpperCase()
+    this._path = path_components.join("/");
+  }
 }
 
 
