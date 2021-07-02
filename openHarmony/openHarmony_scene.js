@@ -1258,12 +1258,24 @@ $.oScene.prototype.getTimeline = function(display){
  * @return  {$.oPalette}                 The oPalette found given the query.
  */
 $.oScene.prototype.getPaletteByName = function(name){
-    var _paletteList = PaletteObjectManager.getScenePaletteList();
-    for (var i=0; i<_paletteList.numPalettes; i++){
-        var _palette = _paletteList.getPaletteByIndex(i);
-        if (_palette.getName() == name) return new this.$.oPalette(_palette, _paletteList);
-    }
-    return null;
+  var _palettes = this.palettes;
+  for (var i in _palettes){
+    if (_palettes[i].name == name) return _palettes[i];
+  }
+  return null;
+}
+
+/**
+ * Gets a scene palette by the path of the plt file.
+ * @param   {string}   path              The palette path to find.
+ * @return  {$.oPalette}                 The oPalette or null if not found.
+ */
+$.oScene.prototype.getPaletteByPath = function(path){
+  var _palettes = this.palettes;
+  for (var i in _palettes){
+    if (_palettes[i].path.path == path) return _palettes[i];
+  }
+  return null;
 }
 
 
