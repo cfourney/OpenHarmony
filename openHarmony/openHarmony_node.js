@@ -1768,7 +1768,7 @@ Object.defineProperty($.oDrawingNode.prototype, "usedColors", {
 /**
  * The drawing.element keyframes.
  * @name $.oDrawingNode#timings
- * @type {oFrames[]}
+ * @type {$.oFrames[]}
  * @example
  * // The timings hold the keyframes that display the drawings across time.
  *
@@ -1796,7 +1796,7 @@ Object.defineProperty($.oDrawingNode.prototype, "timings", {
 /**
  * The element palettes linked to the node.
  * @name $.oDrawingNode#palettes
- * @type {oPalette[]}
+ * @type {$.oPalette[]}
  */
 Object.defineProperty($.oDrawingNode.prototype, "palettes", {
   get : function(){
@@ -2061,7 +2061,7 @@ $.oColorOverrideNode.prototype.constructor = $.oColorOverrideNode;
 /**
  * The list of palette overrides in this color override node
  * @name $.oColorOverrideNode#palettes
- * @type {$.oPalette []}
+ * @type {$.oPalette[]}
  * @readonly
  */
 Object.defineProperty($.oColorOverrideNode.prototype, "palettes", {
