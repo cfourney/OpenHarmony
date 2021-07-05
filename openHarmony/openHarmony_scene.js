@@ -1152,6 +1152,8 @@ $.oScene.prototype.addColumn = function( type, name, oElementObject ){
     System.println( "CREATING COLUMN: "+type );
     column.add(_columnName, type);
 
+    if (column.type(_columnName)!= type) throw new Error ("Couldn't create column with name '"+name+"' and type "+type)
+
     var _column = new this.$.oColumn( _columnName );
 
     if (type == "DRAWING" && typeof oElementObject !== 'undefined'){
@@ -1186,6 +1188,8 @@ $.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType
     name = name.split(" ").join("_");
 
     var _id = element.add(name, scanType, fieldGuide, _fileFormat, _vectorFormat);
+    if (_id <0) throw new Error("Couldn't create an element with settings {name:'"+name+"', imageFormat:"+ imageFormat+", fieldGuide:"+fieldGuide+", scanType:"+scanType+"}")
+
     var _element = new this.$.oElement( _id )
 
     return _element;
