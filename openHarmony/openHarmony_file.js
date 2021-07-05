@@ -728,21 +728,15 @@ $.oFile.prototype.copy = function( destfolder, copyName, overwrite){
     var _dest = new PermanentFile(destfolder+"/"+_fileName);
 
     if (_dest.exists() && !overwrite){
-        this.$.debug("Destination file "+destfolder+"/"+_fileName+" exists and will not be overwritten. Can't copy file.", this.DEBUG_LEVEL.ERROR);
-        return false;
+        throw new Error("Destination file "+destfolder+"/"+_fileName+" exists and will not be overwritten. Can't copy file.", this.DEBUG_LEVEL.ERROR);
     }
 
     this.$.debug("copying "+_file.path()+" to "+_dest.path(), this.$.DEBUG_LEVEL.LOG)
 
-    try{
-      var success = _file.copy(_dest);
-      if (!success) throw new Error ();
-    }catch(err){
-      this.$.debug("Copy of file "+_file.path()+" to location "+_dest.path()+" has failed.", this.$.DEBUG_LEVEL.ERROR)
-    }
+    var success = _file.copy(_dest);
+    if (!success) throw new Error ("Copy of file "+_file.path()+" to location "+_dest.path()+" has failed.", this.$.DEBUG_LEVEL.ERROR)
 
-    if (success) return new this.$.oFile(_dest.path());
-    return false;
+    return new this.$.oFile(_dest.path());
 }
 
 
