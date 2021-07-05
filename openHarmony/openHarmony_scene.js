@@ -1149,7 +1149,6 @@ $.oScene.prototype.addColumn = function( type, name, oElementObject ){
     }
 
     this.$.debug( "CREATING THE COLUMN: " + name, this.$.DEBUG_LEVEL.LOG );
-    System.println( "CREATING COLUMN: "+type );
     column.add(_columnName, type);
 
     if (column.type(_columnName)!= type) throw new Error ("Couldn't create column with name '"+name+"' and type "+type)
@@ -1185,7 +1184,8 @@ $.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType
     var _fileFormat = (imageFormat == "TVG")?"SCAN":imageFormat;
     var _vectorFormat = (imageFormat == "TVG")?imageFormat:"None";
 
-    name = name.split(" ").join("_");
+    // sanitize input to graciously handle forbidden characters
+    name = name.replace(/[ \?\:\|\'\"\\\/\*\(\)\[\]\{\}\`]/g, "_");
 
     var _id = element.add(name, scanType, fieldGuide, _fileFormat, _vectorFormat);
     if (_id <0) throw new Error("Couldn't create an element with settings {name:'"+name+"', imageFormat:"+ imageFormat+", fieldGuide:"+fieldGuide+", scanType:"+scanType+"}")
