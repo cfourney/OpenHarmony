@@ -3037,7 +3037,7 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
   var _elementName = _imageFile.name;
 
   var _element = this.scene.addElement(_elementName, _imageFile.extension.toUpperCase());
-  var _column = this.scene.addColumn(_elementName, "DRAWING", _element);
+  var _column = this.scene.addColumn("DRAWING", _elementName, _element);
   _element.column = _column;
 
   if (_imageFile.exists) {
