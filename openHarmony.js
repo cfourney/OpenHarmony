@@ -324,7 +324,7 @@ $.cache_oNode = {};
  * @see $.endUndo
  */
 $.beginUndo = function( undoName ){
-  //Using epoch as the temp name.
+  if ($.batchMode) return
   if (typeof undoName === 'undefined') var undoName = ''+((new Date()).getTime());
   if (!$.hasOwnProperty("undoStackSize")) $.undoStackSize = 0;
   if ($.undoStackSize == 0) scene.beginUndoRedoAccum( undoName );
@@ -349,6 +349,8 @@ $.cancelUndo = function( ){
  * @see $.beginUndo
  */
 $.endUndo = function( ){
+  if ($.batchMode) return
+
   if (!$.hasOwnProperty("undoStackSize")) $.undoStackSize = 1;
   $.undoStackSize--;
   if ($.undoStackSize == 0)   scene.endUndoRedoAccum();
