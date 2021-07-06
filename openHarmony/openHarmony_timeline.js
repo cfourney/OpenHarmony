@@ -401,7 +401,7 @@ Object.defineProperty($.oColumnLayer.prototype, "nodeLayer", {
  *
  * @property {string}     display    The display node's path.
  */
-$.oTimeline = function( display){
+$.oTimeline = function(display){
   if (typeof display === 'undefined') var display = this.$.scn.defaultDisplay;
   if (display instanceof this.$.oNode) display = display.path;
 
@@ -423,7 +423,7 @@ Object.defineProperty($.oTimeline.prototype, 'layers', {
 
 
 /**
- * Gets the list of all layers in timeline, nodes and columns.
+ * Gets the list of all layers in timeline, nodes and columns. In batchmode, will only return the nodes, not the sublayers.
  * @name $.oTimeline#allLayers
  * @type {$.oLayer[]}
  */
@@ -432,18 +432,23 @@ Object.defineProperty($.oTimeline.prototype, 'allLayers', {
     if (!this._layers){
       var _layers = [];
 
-      for( var i=0; i<Timeline.numLayers; i++ ){
-        if (Timeline.layerIsNode(i)){
-          var _layer = new this.$.oNodeLayer(this, i);
-          if (_layer.node.type == "READ")
-          var _layer = new this.$.oDrawingLayer(this, i);
-        }else if (Timeline.layerIsColumn(i)) {
-          var _layer = new this.$.oColumnLayer(this, i);
-        }else{
-          var _layer = new this.$.oLayer(this, i);
+      if (!$.batchMode){
+        for( var i=0; i < Timeline.numLayers; i++ ){
+          if (Timeline.layerIsNode(i)){
+            var _layer = new this.$.oNodeLayer(this, i);
+            if (_layer.node.type == "READ")
+            var _layer = new this.$.oDrawingLayer(this, i);
+          }else if (Timeline.layerIsColumn(i)) {
+            var _layer = new this.$.oColumnLayer(this, i);
+          }else{
+            var _layer = new this.$.oLayer(this, i);
+          }
+          _layers.push(_layer);
         }
-        _layers.push(_layer);
+      } else {
+        print("$.batchmode so we can't return layers");
       }
+
       this._layers = _layers;
     }
     return this._layers;
@@ -486,7 +491,8 @@ Object.defineProperty($.oTimeline.prototype, 'compositionLayers', {
 Object.defineProperty($.oTimeline.prototype, 'nodes', {
   get : function(){
     var _timeline = this.compositionLayersList;
-    var _scene    = this.$.scene;
+    print(_timeline)
+    var _scene = this.$.scene;
 
     _timeline = _timeline.map( function(x){return _scene.getNodeByPath(x)} );
 
@@ -517,6 +523,7 @@ Object.defineProperty($.oTimeline.prototype, 'nodesList', {
 Object.defineProperty($.oTimeline.prototype, 'compositionLayersList', {
   get : function(){
     var _composition = this.composition
+    print(_composition)
     var _timeline = [];
 
     for (var i in _composition){
@@ -534,6 +541,10 @@ Object.defineProperty($.oTimeline.prototype, 'compositionLayersList', {
  */
 Object.defineProperty($.oTimeline.prototype, "composition", {
   get: function(){
+    print("getting composition for display: "+this.display)
+    print(compositionOrder.buildDefaultCompositionOrder())
+    print(compositionOrder.buildDefaultCompositionOrderForDisplay(this.display))
+    print("composition ok")
     return compositionOrder.buildCompositionOrderForDisplay(this.display);
   }
 })

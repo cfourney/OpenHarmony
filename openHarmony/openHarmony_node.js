@@ -1194,7 +1194,10 @@ $.oNode.prototype.moveToGroup = function(group){
   if (typeof timeline === 'undefined') var timeline = this.$.scene.getTimeline();
 
   var _nodeLayers = timeline.layers.map(function(x){return x.node.path});
-  return timeline.layers[_nodeLayers.indexOf(this.path)];
+  if (_nodeLayers.indexOf(this.path)<timeline.layers.length && _nodeLayers.indexOf(this.path)>0){
+    return timeline.layers[_nodeLayers.indexOf(this.path)];
+  }
+  return null
 }
 
 
@@ -1205,7 +1208,11 @@ $.oNode.prototype.moveToGroup = function(group){
  * @return  {int}    The index within that timeline.
  */
 $.oNode.prototype.timelineIndex = function(timeline){
-  return this.getTimelineLayer(timeline).layerIndex;
+  if (this.getTimelineLayer(timeline)){
+    return this.getTimelineLayer(timeline).layerIndex;
+  }else{
+    return -1;
+  }
 }
 
 

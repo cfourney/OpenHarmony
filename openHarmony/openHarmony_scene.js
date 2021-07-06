@@ -1253,7 +1253,6 @@ $.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg
  * @return {$.oTimeline}    The timelne object given the display.
  */
 $.oScene.prototype.getTimeline = function(display){
-    if (typeof display === 'undefined') var display = '';
     return new this.$.oTimeline( display, this );
 }
 
