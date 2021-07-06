@@ -1208,11 +1208,10 @@ $.oNode.prototype.moveToGroup = function(group){
  * @return  {int}    The index within that timeline.
  */
 $.oNode.prototype.timelineIndex = function(timeline){
-  if (this.getTimelineLayer(timeline)){
-    return this.getTimelineLayer(timeline).layerIndex;
-  }else{
-    return -1;
-  }
+  if (typeof timeline === 'undefined') var timeline = $.scn.getTimeline();
+
+  var _layer = this.getTimelineLayer(timeline);
+  return _layer?_layer.layerIndex:-1;
 }
 
 
@@ -2535,8 +2534,7 @@ $.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeN
 
     // moves nodes into the created group and recreates their hierarchy and links
     if (includeNodes.length > 0){
-      var _timeline = this.scene.getTimeline();
-      includeNodes = includeNodes.sort(function(a, b){return a.timelineIndex(_timeline)-b.timelineIndex(_timeline)})
+      includeNodes = includeNodes.sort(function(a, b){return a.timelineIndex()-b.timelineIndex()})
 
       log(includeNodes)
 
