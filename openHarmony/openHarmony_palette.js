@@ -176,16 +176,12 @@ Object.defineProperty($.oPalette.prototype, 'element', {
  * The palette path on disk.
  * @name $.oPalette#path
  * @type {$.oFile}
+ * @readonly
  */
 Object.defineProperty($.oPalette.prototype, 'path', {
   get: function () {
     var _path = this.paletteObject.getPath();
     return new this.$.oFile(_path + "/" + this.name + ".plt");
-  },
-
-  set: function (newPath) {
-    // TODO: move palette file then unlink and relink the palette ? Or provide a move() method
-    throw new ReferenceError("setting oPalette.path not yet implemented.");
   }
 })
 
