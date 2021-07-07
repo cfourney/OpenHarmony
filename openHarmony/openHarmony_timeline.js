@@ -64,7 +64,13 @@
 $.oLayer = function( oTimelineObject, layerIndex){
   this.timeline = oTimelineObject;
   this.index = layerIndex;
-  this.node = this.$.scn.getNodeByPath(Timeline.layerToNode(this.index));
+
+  // the Timeline class isn't available in batchmode
+  if (this.$.batchMode){
+    this.node = this.timeline.nodes[this.index];
+  } else {
+    this.$.scn.getNodeByPath(Timeline.layerToNode(this.index));
+  }
 }
 
 
@@ -189,6 +195,8 @@ Object.defineProperty($.oNodeLayer.prototype, "layerIndex", {
  */
 Object.defineProperty($.oNodeLayer.prototype, "selected", {
   get: function(){
+    if ($.batchMode) return this.node.selected;
+
     var selectionLength = Timeline.numLayerSel
     for (var i=0; i<selectionLength; i++){
       if (Timeline.selToLayer(i) == this.index) return true;
@@ -436,8 +444,7 @@ Object.defineProperty($.oTimeline.prototype, 'allLayers', {
         for( var i=0; i < Timeline.numLayers; i++ ){
           if (Timeline.layerIsNode(i)){
             var _layer = new this.$.oNodeLayer(this, i);
-            if (_layer.node.type == "READ")
-            var _layer = new this.$.oDrawingLayer(this, i);
+            if (_layer.node.type == "READ") var _layer = new this.$.oDrawingLayer(this, i);
           }else if (Timeline.layerIsColumn(i)) {
             var _layer = new this.$.oColumnLayer(this, i);
           }else{
@@ -446,7 +453,11 @@ Object.defineProperty($.oTimeline.prototype, 'allLayers', {
           _layers.push(_layer);
         }
       } else {
-        print("$.batchmode so we can't return layers");
+        var _tl = this;
+        var _layers = this.nodes.map(function(x, index){
+          if (x.type == "READ") return new _tl.$.oDrawingLayer(_tl, index);
+          return new _tl.$.oNodeLayer(_tl, index)
+        })
       }
 
       this._layers = _layers;
@@ -491,7 +502,6 @@ Object.defineProperty($.oTimeline.prototype, 'compositionLayers', {
 Object.defineProperty($.oTimeline.prototype, 'nodes', {
   get : function(){
     var _timeline = this.compositionLayersList;
-    print(_timeline)
     var _scene = this.$.scene;
 
     _timeline = _timeline.map( function(x){return _scene.getNodeByPath(x)} );
@@ -522,13 +532,8 @@ Object.defineProperty($.oTimeline.prototype, 'nodesList', {
  */
 Object.defineProperty($.oTimeline.prototype, 'compositionLayersList', {
   get : function(){
-    var _composition = this.composition
-    print(_composition)
-    var _timeline = [];
-
-    for (var i in _composition){
-        _timeline.push( _composition[i].node )
-    }
+    var _composition = this.composition;
+    var _timeline = _composition.map(function(x){return x.node})
 
     return _timeline;
   }
@@ -541,10 +546,6 @@ Object.defineProperty($.oTimeline.prototype, 'compositionLayersList', {
  */
 Object.defineProperty($.oTimeline.prototype, "composition", {
   get: function(){
-    print("getting composition for display: "+this.display)
-    print(compositionOrder.buildDefaultCompositionOrder())
-    print(compositionOrder.buildDefaultCompositionOrderForDisplay(this.display))
-    print("composition ok")
     return compositionOrder.buildCompositionOrderForDisplay(this.display);
   }
 })
@@ -556,10 +557,10 @@ Object.defineProperty($.oTimeline.prototype, "composition", {
  * @deprecated oTimeline.composition is now always refreshed when accessed.
  */
 $.oTimeline.prototype.refresh = function( ){
-  if (node.type(this.display) == '') {
+  if (!node.type(this.display)) {
       this.composition = compositionOrder.buildDefaultCompositionOrder();
   }else{
-      this.composition = compositionOrder.buildCompositionOrderForDisplay(display);
+      this.composition = compositionOrder.buildCompositionOrderForDisplay(this.display);
   }
 }
 
