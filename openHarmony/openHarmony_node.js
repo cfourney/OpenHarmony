@@ -2083,10 +2083,8 @@ Object.defineProperty($.oColorOverrideNode.prototype, "palettes", {
       this._palettes = [];
 
       var _numPalettes = this._coObject.getNumPalettes();
-      this.$.log(_numPalettes)
       for (var i=0; i<_numPalettes; i++){
         var _palettePath = this._coObject.palettePath(i) + ".plt";
-        this.$.log(_palettePath)
         var _palette = this.$.scn.getPaletteByPath(_palettePath);
         if (_palette) this._palettes.push(_palette);
       }
