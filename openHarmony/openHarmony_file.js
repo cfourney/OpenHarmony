@@ -305,20 +305,15 @@ $.oFolder.prototype.getFolders = function( filter ){
  * @return: { bool }                         The existence of the newly created folder.
  */
 $.oFolder.prototype.create = function(){
-    if( this.exists ){
-      this.$.debug("folder "+this.path+" already exists and will not be created", this.$.DEBUG_LEVEL.WARNING)
-      return true;
-    }
+  if( this.exists ){
+    this.$.debug("folder "+this.path+" already exists and will not be created", this.$.DEBUG_LEVEL.WARNING)
+    return true;
+  }
 
-    var dir = new QDir(this.path);
-    //dir.path = this.path;
-    try{
-      dir.mkpath(this.path);
-      return this.exists;
-    }catch(err){
-      this.$.debug(err+" ", this.$.DEBUG_LEVEL.ERROR)
-      return false;
-    }
+  var dir = new QDir(this.path);
+
+  dir.mkpath(this.path);
+  if (!this.exists) throw new Error ("folder " + this.path + " could not be created.")
 }
 
 
@@ -371,7 +366,7 @@ $.oFolder.prototype.move = function( destFolderPath, overwrite ){
 
         return true;
     }catch (err){
-        throw new Error ("Couldn't move folder "+this.path+" to new address "+destPath);
+        throw new Error ("Couldn't move folder "+this.path+" to new address "+destPath + ": " + err);
     }
 }
 
@@ -389,7 +384,7 @@ $.oFolder.prototype.moveToFolder = function( destFolderPath, overwrite ){
   var folder = destFolderPath.path;
   var name = this.name;
 
-  destFolderPath.move(folder+"/"+name, overwrite);
+  this.move(folder+"/"+name, overwrite);
 }
 
 
@@ -399,6 +394,8 @@ $.oFolder.prototype.moveToFolder = function( destFolderPath, overwrite ){
  */
 $.oFolder.prototype.rename = function(newName){
   var destFolderPath = this.folder.path+"/"+newName
+  if ((new this.$.oFolder(destFolderPath)).exists) throw new Error("Can't rename folder "+this.path + " to "+newName+", a folder already exists at this location")
+
   this.move(destFolderPath)
 }
 
