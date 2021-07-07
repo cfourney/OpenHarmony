@@ -175,6 +175,56 @@ Object.defineProperty($.oDrawing.prototype, 'pivot', {
 })
 
 
+/**
+ * @name $.oDrawing#strokes
+ * @type {$.oStroke[]}
+ */
+ Object.defineProperty($.oDrawing.prototype, 'strokes', {
+  get: function () {
+    var _strokes = [];
+    for (var i in this.artLayers) {
+      _strokes = _strokes.concat(this.artLayers[i].strokes);
+    }
+
+    return _strokes;
+  }
+})
+
+
+/**
+ * The contours contained amongst all the shapes of the artLayer.
+ * @name $.oDrawing#contours
+ * @type {$.oContour[]}
+ */
+ Object.defineProperty($.oDrawing.prototype, 'contours', {
+  get: function () {
+    var _contours = []
+
+    for (var i in this.artLayers) {
+      _contours = _contours.concat(this.artLayers[i].contours)
+    }
+
+    return _contours
+  }
+})
+
+
+/**
+ * @name $.oDrawing#shapes
+ * @type {$.oShape[]}
+ */
+ Object.defineProperty($.oDrawing.prototype, 'shapes', {
+  get: function () {
+    var _shapes = [];
+    for (var i in this.artLayers) {
+      _shapes = _shapes.concat(this.artLayers[i].shapes);
+    }
+
+    return _shapes;
+  }
+})
+
+
 
 /**
  * The bounding box of the drawing, in drawing space coordinates. (null if the drawing is empty.)
@@ -362,7 +412,9 @@ Object.defineProperty($.oDrawing.prototype, 'selectedStrokes', {
  */
 Object.defineProperty($.oDrawing.prototype, 'drawingData', {
   get: function () {
-    var _data = Drawing.query.getData(this._key);
+    var _data = Drawing.query.getData({drawing: this._key});
+    // log("Drawing data for "+JSON.stringify(this._key)+": "+JSON.stringify(_data, null,  "  "))
+    if (!_data) throw new Error("Data unavailable for drawing "+this.name)
     return _data;
   }
 })
@@ -627,9 +679,8 @@ Object.defineProperty($.oArtLayer.prototype, 'name', {
 })
 
 
-
 /**
- * The shapes contained on the drawing.
+ * The shapes contained on the artLayer.
  * @name $.oArtLayer#shapes
  * @type {$.oShape[]}
  */
@@ -646,7 +697,7 @@ Object.defineProperty($.oArtLayer.prototype, 'shapes', {
 
 
 /**
- * The shapes contained on the drawing.
+ * The strokes contained amongst all the shapes of the artLayer.
  * @name $.oArtLayer#strokes
  * @type {$.oStroke[]}
  */
@@ -663,6 +714,24 @@ Object.defineProperty($.oArtLayer.prototype, 'strokes', {
   }
 })
 
+
+/**
+ * The contours contained amongst all the shapes of the artLayer.
+ * @name $.oArtLayer#contours
+ * @type {$.oContour[]}
+ */
+Object.defineProperty($.oArtLayer.prototype, 'contours', {
+  get: function () {
+    var _contours = [];
+
+    var _shapes = this.shapes;
+    for (var i in _shapes) {
+      _contours = _contours.concat(_shapes[i].contours);
+    }
+
+    return _contours;
+  }
+})
 
 
 /**
@@ -714,6 +783,28 @@ Object.defineProperty($.oArtLayer.prototype, 'selectedStrokes', {
     }
 
     return _strokes;
+  }
+})
+
+
+
+/**
+ * the currently selected strokes on the ArtLayer.
+ * @name $.oArtLayer#selectedStrokes
+ * @type {$.oStroke[]}
+ */
+Object.defineProperty($.oArtLayer.prototype, 'drawingData', {
+  get: function () {
+    var _data = this._drawing.drawingData
+    for (var i in _data.arts){
+      if (_data.arts[i].art == this._layerIndex) {
+        // log(this.name + " data: "+JSON.stringify(_data.arts[i], null, ". "))
+        return _data.arts[i];
+      }
+    }
+
+    this.$.log("layer art " + this.name + " not found in data, returning default")
+    return {art:this._layerIndex, artName:this.name, layers:[], colors: []};
   }
 })
 
@@ -817,7 +908,7 @@ $.oArtLayer.prototype.drawLine = function(startPoint, endPoint, lineStyle){
  */
 $.oArtLayer.prototype.clear = function(){
   var _shapes = this.shapes;
-  this.$.debug(_shapes, this.$.DEBUG_LEVEL.DEBUG)
+  this.$.debug(_shapes, this.$.DEBUG_LEVEL.DEBUG);
   for (var i=_shapes.length - 1; i>=0; i--){
     _shapes[i].deleteShape();
   }
@@ -938,6 +1029,22 @@ Object.defineProperty($.oShape.prototype, '_key', {
 })
 
 /**
+ * The underlying data describing the shape.
+ * @name $.oShape#_data
+ * @type {$.oShape[]}
+ * @readonly
+ * @private
+ */
+Object.defineProperty($.oShape.prototype, '_data', {
+  get: function () {
+    log("getting shape _data")
+    log(JSON.stringify(this.artLayer.drawingData.layers[this.index], null, ". "))
+    return this.artLayer.drawingData.layers[this.index];
+  }
+})
+
+
+/**
  * The strokes making up the shape.
  * @name $.oShape#strokes
  * @type {$.oShape[]}
@@ -952,6 +1059,24 @@ Object.defineProperty($.oShape.prototype, 'strokes', {
       this._strokes = _strokes;
     }
     return this._strokes;
+  }
+})
+
+/**
+ * The contours (colored areas) making up the shape.
+ * @name $.oShape#contours
+ * @type {$.oContour[]}
+ * @readonly
+ */
+ Object.defineProperty($.oShape.prototype, 'contours', {
+  get: function () {
+    if (!this.hasOwnProperty("_contours")) {
+      var _data = this._data
+      var _shape = this;
+      var _contours = _data.contours.map(function (x, idx) { return new this.$.oContour(idx, x, _shape) })
+      this._contours = _contours;
+    }
+    return this._contours;
   }
 })
 
@@ -996,6 +1121,36 @@ $.oShape.prototype.getStrokeByIndex = function (index) {
 }
 
 
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//         $.oContour class         //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for the $.oContour class. These types of objects are not supported for harmony versions < 16
+ * @constructor
+ * @classdesc  The $.oStroke class models the strokes that make up the shapes visible on the Drawings.
+ * @param {int}       index             The index of the stroke in the shape.
+ * @param {object}    strokeObject      The stroke object descriptor that contains the info for the stroke
+ * @param {oShape}    oShapeObject      The parent oShape
+ *
+ * @property {int}          index       the index of the stroke in the parent shape
+ * @property {$.oShape}     shape       the shape that contains this stroke
+ * @property {$.oArtLayer}  artLayer    the art layer that contains this stroke
+ */
+ $.oContour = function (index, contourObject, oShapeObject) {
+  this.index = index
+  this.shape = oShapeObject
+  this.artLayer = oShapeObject.artLayer;
+  this._data = contourObject;
+}
+
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -1024,7 +1179,7 @@ $.oStroke = function (index, strokeObject, oShapeObject) {
   this.index = index
   this.shape = oShapeObject
   this.artLayer = oShapeObject.artLayer;
-  this._stroke = strokeObject;
+  this._data = strokeObject;
 }
 
 
@@ -1039,7 +1194,7 @@ Object.defineProperty($.oStroke.prototype, "path", {
     // path vertices get cached
     if (!this.hasOwnProperty("_path")){
       var _stroke = this;
-      var _path = this._stroke.path.map(function(point, index){
+      var _path = this._data.path.map(function(point, index){
         return new _stroke.$.oVertex(_stroke, point.x, point.y, point.onCurve, index);
       })
 
@@ -1096,7 +1251,7 @@ Object.defineProperty($.oStroke.prototype, "segments", {
 Object.defineProperty($.oStroke.prototype, "index", {
   get: function () {
     this.$.debug("stroke object : "+JSON.stringify(this._stroke, null, "  "), this.$.DEBUG_LEVEL.DEBUG)
-    return this._stroke.strokeIndex
+    return this._data.strokeIndex
   }
 })
 
@@ -1108,11 +1263,11 @@ Object.defineProperty($.oStroke.prototype, "index", {
  */
 Object.defineProperty($.oStroke.prototype, "style", {
   get: function () {
-    if (this._stroke.invisible){
+    if (this._data.invisible){
       return null;
     }
-    var _thickness = this._stroke.thickness;
-    var _colorId = this._stroke.pencilColorId;
+    var _thickness = this._data.thickness;
+    var _colorId = this._data.pencilColorId;
 
     return new this.$.oLineStyle(_colorId, _thickness.minThickness, _thickness.maxThickness, _thickness.thicknessPath);
   }
@@ -1241,12 +1396,12 @@ $.oStroke.prototype.addPoints = function (pointsToAdd) {
 $.oStroke.prototype.updateDefinition = function(){
   var _key = this.artLayer._key;
   var strokes = Drawing.query.getStrokes(_key);
-  this._stroke = strokes.layers[this.shape.index].strokes[this.index];
+  this._data = strokes.layers[this.shape.index].strokes[this.index];
 
   // remove cache for path
   delete this._path;
 
-  return this._stroke;
+  return this._data;
 }
 
 
@@ -1261,7 +1416,7 @@ $.oStroke.prototype.getPointPosition = function(point){
     points: [point]
   }
   var strokePoint = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
-  if (!strokePoint) return 0
+  if (!strokePoint) return 0;
 
   return strokePoint.t;
 }
