@@ -115,10 +115,10 @@ Object.defineProperty($.oPalette.prototype, 'name', {
     this.$.debug("renaming palette " + this.name + " to " + newName, this.$.DEBUG_LEVEL.LOG)
     var _paletteFile = this.path;
     var _newPath = _paletteFile.folder + "/" + newName;
-    var _move = _paletteFile.move(_newPath + ".plt", true);
-    if (!_move) {
-      this.$.debug("couldn't rename palette " + this.path + " to " + newName, this.$.DEBUG_LEVEL.ERROR)
-      return;
+    try{
+      _paletteFile.move(_newPath + ".plt", true);
+    }catch(err) {
+      throw new Error ("couldn't rename palette " + this.path + " to " + newName + ": "+ err)
     }
 
     var _list = this._paletteList;
@@ -127,7 +127,6 @@ Object.defineProperty($.oPalette.prototype, 'name', {
 
     var _paletteObject = _list.insertPalette(_newPath.replace(".plt", ""), this.index);
     this.paletteObject = _paletteObject;
-
   }
 })
 
@@ -343,3 +342,7 @@ $.oPalette.prototype.remove = function (removeFile) {
   return success;
 }
 
+
+$.oPalette.prototype.toString = function(){
+  return this.path.path || this.name;
+}
