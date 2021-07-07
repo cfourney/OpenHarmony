@@ -1336,15 +1336,22 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
 
 /**
  * Imports a palette to the scene palette list and into the specified storage location.
- * @param   {string}         path                          The palette file to import.
- * @param   {string}         name                          The name for the palette.
- * @param   {string}         index                         Index at which to insert the palette.
- * @param   {string}         paletteStorage                Storage type: environment, job, scene, element, external.
- * @param   {$.oElement}     storeInElement                The element to store the palette in. If paletteStorage is set to "external", provide a destination folder for the palette here.
+ * @param   {string}      path               The palette file to import.
+ * @param   {string}      name               The name for the palette.
+ * @param   {string}      index              Index at which to insert the palette.
+ * @param   {string}      paletteStorage     Storage type: environment, job, scene, element, external.
+ * @param   {$.oElement}  storeInElement     The element to store the palette in. If paletteStorage is set to "external", provide a destination folder for the palette here.
  *
  * @return {$.oPalette}   oPalette with provided name.
  */
-$.oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement){
+$.oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement, forceCopy){
+  var _paletteFile = new this.$.oFile(filename);
+  if (!_paletteFile.exists){
+    throw new Error ("Cannot import palette from file "+filename+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
+  }
+
+  if (typeof name === 'undefined') var name = _paletteFile.name;
+
   var _list = PaletteObjectManager.getScenePaletteList();
   if  (typeof index === 'undefined') var index = _list.numPalettes;
   if  (typeof paletteStorage === 'undefined') var paletteStorage = "scene";
@@ -1353,14 +1360,6 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
     if (paletteStorage == "external") throw new Error("Element parameter should point to storage path if palette destination is External")
     if (paletteStorage == "element") throw new Error("Element parameter cannot be omitted if palette destination is Element")
     var storeInElement = 1;
-  }
-
-  var _paletteFile = new this.$.oFile(filename);
-  if (typeof name === 'undefined') var name = _paletteFile.name;
-
-  if (!_paletteFile.exists){
-    this.$.debug("Error: cannot import palette from file "+filename+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
-    return null;
   }
 
   var _location = this.$.oPalette.location;
@@ -1384,19 +1383,19 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
 
   var paletteFolder = new this.$.oFolder(paletteFolder);
 
-  if (!paletteFolder.exists && !paletteFolder.create()) {
-    this.$.debug("Error: couldn't create missing palette folder "+paletteFolder, this.$.DEBUG_LEVEL.ERROR);
-    return null;
+  if (!paletteFolder.exists){
+    try{
+      paletteFolder.create();
+    }catch(err){
+      throw new Error ("Couldn't create missing palette folder " + paletteFolder +": " + err);
+    }
   }
 
-  var _copy = _paletteFile.copy(paletteFolder.path, name, true);
-
-  if (!_copy) {
-    this.$.debug("Error: couldn't copy palette "+filename, this.$.DEBUG_LEVEL.ERROR);
-    return null;
+  if (_paletteFile.folder.path != paletteFolder.path) {
+    _paletteFile = _paletteFile.copy(paletteFolder.path, name, true);
   }
 
-  var _palette = _list.insertPalette(_copy.toonboomPath.replace(".plt", ""), index);
+  var _palette = _list.insertPalette(_paletteFile.toonboomPath.replace(".plt", ""), index);
 
   _newPalette = new this.$.oPalette(_palette, _list);
 
