@@ -798,7 +798,7 @@ $.oArtLayer.prototype.drawStroke = function(path, lineStyle, fillStyle){
     thickness: {
       "minThickness": lineStyle.minThickness,
       "maxThickness": lineStyle.maxThickness,
-      "thicknessPath": lineStyle.stencil
+      "thicknessPath": 0
     }
   }
 
@@ -816,6 +816,9 @@ $.oArtLayer.prototype.drawStroke = function(path, lineStyle, fillStyle){
         shaders: fillStyle,
         strokes: [strokeDesciption]
       }
+    ],
+    thicknessPaths:[
+      lineStyle.stencil.thicknessPath
     ]
   });
 };
@@ -884,16 +887,16 @@ $.oArtLayer.prototype.toString = function(){
  * The $.oLineStyle class describes a lineStyle used to describe the appearance of strokes and perform drawing operations. <br>
  * Initializing a $.oLineStyle without any parameters attempts to get the current pencil thickness settings and color.
  * @param {string}     colorId             the color Id to paint the line with.
- * @param {float}      minThickness        the minimum thickness of the line.
- * @param {float}      maxThickness        the maximum thickness of the line.
- * @param {$.oStencil} stencil             not supported yet.
+ * @param {$.oStencil} stencil             the stencil object representing the thickness keys
  */
-$.oLineStyle = function (colorId, minThickness, maxThickness, stencil) {
-  if (typeof stencil === 'undefined') var stencil = 0;
+$.oLineStyle = function (colorId, stencil) {
   if (typeof minThickness === 'undefined') var minThickness = PenstyleManager.getCurrentPenstyleMinimumSize();
   if (typeof maxThickness === 'undefined') {
     var maxThickness = PenstyleManager.getCurrentPenstyleMaximumSize();
     if (!maxThickness && !minThickness) maxThickness = 1;
+  }
+  if (typeof stencil === 'undefined') {
+    var stencil = new $.oStencil("", "pencil", {maxThickness:maxThickness, minThickness:minThickness, keys:[]});
   }
 
   if (typeof colorId === 'undefined'){
@@ -908,15 +911,33 @@ $.oLineStyle = function (colorId, minThickness, maxThickness, stencil) {
     }
   }
 
-  this.minThickness = minThickness;
-  this.maxThickness = maxThickness;
   this.colorId = colorId;
   this.stencil = stencil;
 
-  this.$.log(colorId+" "+minThickness+" "+maxThickness+" "+stencil)
+  this.$.log(colorId+" "+this.minThickness+" "+this.maxThickness+" "+stencil);
 }
 
 
+Object.defineProperty($.oLineStyle.prototype, "minThickness", {
+  get: function(){
+    return this.stencil.minThickness;
+  },
+
+  set: function(newMinThickness){
+    this.stencil.minThickness = newMinThickness;
+  }
+})
+
+
+Object.defineProperty($.oLineStyle.prototype, "maxThickness", {
+  get: function(){
+    return this.stencil.maxThickness;
+  },
+
+  set: function(newMaxThickness){
+    this.stencil.maxThickness = newMaxThickness;
+  }
+})
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -959,6 +980,7 @@ Object.defineProperty($.oShape.prototype, '_key', {
   }
 })
 
+
 /**
  * The underlying data describing the shape.
  * @name $.oShape#_data
@@ -969,7 +991,6 @@ Object.defineProperty($.oShape.prototype, '_key', {
 Object.defineProperty($.oShape.prototype, '_data', {
   get: function () {
     log("getting shape _data")
-    log(JSON.stringify(this.artLayer.drawingData.layers[this.index], null, ". "))
     return this.artLayer.drawingData.layers[this.index];
   }
 })
@@ -986,15 +1007,35 @@ Object.defineProperty($.oShape.prototype, 'strokes', {
     if (!this.hasOwnProperty("_strokes")) {
       var _strokeQuery = Drawing.query.getLayerStrokes(this._key).layers[0];
       var _shape = this;
-      var _strokes = _strokeQuery.strokes.map(function (x, idx) { return new this.$.oStroke(idx, x, _shape) })
+      var _strokes = _data.strokes.map(function (x, idx) { return new _shape.$.oStroke(idx, x, _shape) })
       this._strokes = _strokes;
     }
     return this._strokes;
   }
 })
 
+
 /**
- * The contours (colored areas) making up the shape.
+ * The stencils used by the shape.
+ * @name $.oShape#stencils
+ * @type {$.oStencil[]}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'stencils', {
+  get: function () {
+    if (!this.hasOwnProperty("_stencils")) {
+      var _data = this._data;
+      var _shape = this;
+      var _stencils = _data.thicknessPaths.map(function (x, idx) { return new _shape.$.oStencil("", "pencil", x) })
+      this._stencils = _stencils;
+    }
+    return this._stencils;
+  }
+})
+
+
+/**
+ * The contours (invisible strokes that can delimit colored areas) making up the shape.
  * @name $.oShape#contours
  * @type {$.oContour[]}
  * @readonly
@@ -1081,6 +1122,7 @@ $.oShape.prototype.getStrokeByIndex = function (index) {
 }
 
 
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -1156,10 +1198,10 @@ Object.defineProperty($.oStroke.prototype, "style", {
     if (this._data.invisible){
       return null;
     }
-    var _thickness = this._data.thickness;
     var _colorId = this._data.pencilColorId;
+    var _stencil = this.shape.stencils[this._data.thickness];
 
-    return new this.$.oLineStyle(_colorId, _thickness.minThickness, _thickness.maxThickness, _thickness.thicknessPath);
+    return new this.$.oLineStyle(_colorId, _stencil);
   }
 })
 
@@ -1436,16 +1478,35 @@ $.oStencil = function (name, type, thicknessPathObject) {
   this.thicknessPathObject = thicknessPathObject;
 }
 
+
+/**
+ * The minimum thickness of the line using this stencil
+ * @name $.oStencil#minThickness
+ * @type {float}
+ */
 Object.defineProperty($.oStencil.prototype, "minThickness", {
   get: function(){
     return this.thicknessPathObject.minThickness;
+  },
+  set: function(newMinThickness){
+    this.thicknessPathObject.minThickness = newMinThickness;
+    // TODO: also change in thicknessPath.keys
   }
 })
 
 
+/**
+ * The maximum thickness of the line using this stencil
+ * @name $.oStencil#maxThickness
+ * @type {float}
+ */
 Object.defineProperty($.oStencil.prototype, "maxThickness", {
   get: function(){
     return this.thicknessPathObject.maxThickness;
+  },
+  set: function(newMaxThickness){
+    this.thicknessPathObject.maxThickness = newMaxThickness;
+    // TODO: also change in thicknessPath.keys
   }
 })
 
