@@ -409,6 +409,8 @@ Object.defineProperty($.oDrawing.prototype, 'selectedStrokes', {
  * all the data from this drawing. For internal use.
  * @name $.oDrawing#drawingData
  * @type {Object}
+ * @readonly
+ * @private
  */
 Object.defineProperty($.oDrawing.prototype, 'drawingData', {
   get: function () {
@@ -789,22 +791,23 @@ Object.defineProperty($.oArtLayer.prototype, 'selectedStrokes', {
 
 
 /**
- * the currently selected strokes on the ArtLayer.
- * @name $.oArtLayer#selectedStrokes
+ * all the data from this artLayer. For internal use.
+ * @name $.oArtLayer#drawingData
  * @type {$.oStroke[]}
+ * @readonly
+ * @private
  */
 Object.defineProperty($.oArtLayer.prototype, 'drawingData', {
   get: function () {
     var _data = this._drawing.drawingData
     for (var i in _data.arts){
       if (_data.arts[i].art == this._layerIndex) {
-        // log(this.name + " data: "+JSON.stringify(_data.arts[i], null, ". "))
         return _data.arts[i];
       }
     }
 
-    this.$.log("layer art " + this.name + " not found in data, returning default")
-    return {art:this._layerIndex, artName:this.name, layers:[], colors: []};
+    // in case of empty layerArt, return a default object
+    return {art:this._layerIndex, artName:this.name, layers:[]};
   }
 })
 
@@ -1059,7 +1062,6 @@ Object.defineProperty($.oShape.prototype, '_key', {
  */
 Object.defineProperty($.oShape.prototype, '_data', {
   get: function () {
-    log("getting shape _data")
     return this.artLayer.drawingData.layers[this.index];
   }
 })
@@ -1074,7 +1076,7 @@ Object.defineProperty($.oShape.prototype, '_data', {
 Object.defineProperty($.oShape.prototype, 'strokes', {
   get: function () {
     if (!this.hasOwnProperty("_strokes")) {
-      var _strokeQuery = Drawing.query.getLayerStrokes(this._key).layers[0];
+      var _data = this._data;
       var _shape = this;
       var _strokes = _data.strokes.map(function (x, idx) { return new _shape.$.oStroke(idx, x, _shape) })
       this._strokes = _strokes;
@@ -1101,6 +1103,74 @@ Object.defineProperty($.oShape.prototype, 'stencils', {
     return this._stencils;
   }
 })
+
+
+/**
+ * The bounding box of the shape.
+ * @name $.oShape#bounds
+ * @type {$.oBox}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'bounds', {
+  get: function () {
+    var _data = this._data;
+    var _box = _data.box
+    var _bounds = new this.$.oBox(_box.x0,_box.y1, _box.x1, _box.y2);
+    return _bounds;
+  }
+})
+
+/**
+ * The x coordinate of the shape.
+ * @name $.oShape#x
+ * @type {float}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'x', {
+  get: function () {
+    return this.bounds.left;
+  }
+})
+
+
+/**
+ * The x coordinate of the shape.
+ * @name $.oShape#x
+ * @type {float}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'y', {
+  get: function () {
+    return this.bounds.top;
+  }
+})
+
+
+/**
+ * The width of the shape.
+ * @name $.oShape#width
+ * @type {float}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'width', {
+  get: function () {
+    return this.bounds.width;
+  }
+})
+
+
+/**
+ * The height coordinate of the shape.
+ * @name $.oShape#height
+ * @type {float}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'height', {
+  get: function () {
+    return this.bounds.height;
+  }
+})
+
 
 
 /**
@@ -1468,7 +1538,7 @@ $.oStroke.prototype.updateDefinition = function(){
  */
 $.oStroke.prototype.getPointPosition = function(point){
   var arg = {
-    path : this.path,
+    path : this._data.path,
     points: [point]
   }
   var strokePoint = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
@@ -1485,7 +1555,7 @@ $.oStroke.prototype.getPointPosition = function(point){
  */
 $.oStroke.prototype.getPointCoordinates = function(position){
   var arg = {
-    path : this.path,
+    path : this._data.path,
     params : [ position ]
  };
  var point = Drawing.geometry.evaluate(arg)[0];
@@ -1507,6 +1577,8 @@ $.oStroke.prototype.getClosestPoint = function (point){
   var _result = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
   return _result
 }
+
+
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -1540,7 +1612,7 @@ $.oStroke.prototype.getClosestPoint = function (point){
  */
 $.oVertex = function(stroke, x, y, onCurve, index){
   if (typeof onCurve === 'undefined') var onCurve = false;
-  if (typeof index === 'undefined') var index = -1;
+  if (typeof index === 'undefined') var index = stroke.getPointPosition({x:x, y:y});
 
   this.x = x;
   this.y = y;
@@ -1673,6 +1745,7 @@ $.oStencil = function (name, type, thicknessPathObject) {
   this.name = name;
   this.type = type;
   this.thicknessPathObject = thicknessPathObject;
+  // log("thicknessPath: " + JSON.stringify(this.thicknessPathObject))
 }
 
 
