@@ -1183,6 +1183,9 @@ Object.defineProperty($.oShape.prototype, 'height', {
   get: function () {
     if (!this.hasOwnProperty("_contours")) {
       var _data = this._data
+
+      if (!this._data.hasOwnProperty("contours")) return [];
+
       var _shape = this;
       var _contours = _data.contours.map(function (x, idx) { return new this.$.oContour(idx, x, _shape) })
       this._contours = _contours;
@@ -1256,10 +1259,85 @@ $.oShape.prototype.getStrokeByIndex = function (index) {
  * @property {$.oArtLayer}  artLayer    the art layer that contains this stroke
  */
  $.oContour = function (index, contourObject, oShapeObject) {
-  this.index = index
-  this.shape = oShapeObject
+  this.index = index;
+  this.shape = oShapeObject;
   this.artLayer = oShapeObject.artLayer;
   this._data = contourObject;
+}
+
+/**
+ * The points that make up the contour
+ * @name $.oContour#path
+ * @type {$.oPoint[]}
+ */
+Object.defineProperty($.oContour.prototype, "path", {
+  get: function () {
+    // path vertices get cached
+    if (!this.hasOwnProperty("_path")){
+      var _contour = this;
+      var _path = this._data.path.map(function(point, index){
+        return new _contour.$.oVertex(_contour, point.x, point.y, point.onCurve, index);
+      })
+
+      this._path = _path;
+    }
+    return this._path;
+  }
+})
+
+
+/**
+ * The info about the fill of this contour
+ * @name $.oContour#fill
+ * @type {$.oPoint[]}
+ */
+Object.defineProperty($.oContour.prototype, "fill", {
+  get: function () {
+    var _data = this._data;
+    return new this.$.oFillStyle(_data.colorId, _data.matrix);
+  }
+})
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//       $.oFillStyle class         //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for the $.oFillStyle class.
+ * @constructor
+ * @classdesc
+ * The $.oFillStyle class describes a fillStyle used to describe the appearance of filled in color areas and perform drawing operations. <br>
+ * Initializing a $.oFillStyle without any parameters attempts to get the current color id.
+ * @param {string}     colorId             the color Id to paint the line with.
+ * @param {object}     fillMatrix
+ */
+$.oFillStyle = function (colorId, fillMatrix) {
+  if (typeof fillMatrix === 'undefined') var fillMatrix = {}
+
+  if (typeof colorId === 'undefined'){
+    var _palette = this.$.scn.selectedPalette;
+    if (_palette) {
+      var _color = this.$.scn.selectedPalette.currentColor;
+      if (_color) {
+        var colorId = _color.id;
+      } else{
+        var colorId = "0000000000000003";
+      }
+    }
+  }
+
+  this.colorId = colorId;
+  this.fillMatrix = fillMatrix;
+
+  this.$.log(colorId+" "+JSON.stringify(this.fillMatrix))
 }
 
 
