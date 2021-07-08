@@ -358,7 +358,7 @@ Object.defineProperty($.oApp.prototype, 'stencils', {
       var stencils = [];
       var stencilXml;
       while(stencilXml = penRegex.exec(stencilsFile)){
-        var stencilObject = new this.$.oStencil(stencilXml[1]);
+        var stencilObject = this.$.oStencil.getFromXml(stencilXml[1]);
         stencils.push(stencilObject);
       }
       this._stencilsObject = stencils;
