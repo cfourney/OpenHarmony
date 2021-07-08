@@ -1207,7 +1207,30 @@ Object.defineProperty($.oShape.prototype, 'selected', {
     var _indices = _selection.map(function (x) { return x.index });
     return (_indices.indexOf(this.index) != -1)
   },
-  set: function () {
+  set: function (newSelectedState) {
+    var _key = this.artLayer._key;
+
+    var currentSelection = Drawing.selection.get(_key);
+    var config = {drawing:_key.drawing, art:_key.art};
+
+    if (newSelectedState){
+      // adding elements to selection
+      config.selectedLayers = currentSelection.selectedLayers.concat([this.index]);
+      config.selectedStrokes = currentSelection.selectedStrokes;
+    }else{
+      config.selectedLayers = currentSelection.selectedLayers;
+      config.selectedStrokes = currentSelection.selectedStrokes;
+
+      // remove current element from selection before setting again
+      for (var i=config.selectedLayers.length-1; i>=0; i--){
+        if (config.selectedLayers[i] == this.index) config.selectedLayers.splice(i, 1);
+      }
+      for (var i=config.selectedStrokes.length-1; i>=0; i--){
+        if (config.selectedStrokes[i].layer == this.index) config.selectedStrokes.splice(i, 1);
+      }
+    }
+
+    Drawing.selection.set(config);
   }
 })
 
