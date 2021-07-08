@@ -1611,14 +1611,57 @@ $.oVertex.prototype.toString = function(){
  * @param   {string}   xmlDescription        the part of the penstyles.xml file between <pen> tags that describe a stencils.
  * @property {string}  name                  the display name of the stencil
  * @property {string}  type                  the type of stencil
- * @property {Object}  mainBrushShape        the description of the shape of the stencil
+ * @property {Object}  thicknessPathObject   the description of the shape of the stencil
  */
-$.oStencil = function (xmlDescription) {
-  _settings = this.$.oStencil.getSettingsFromXml(xmlDescription);
-  this.type = _settings.style;
-  for (var i in _settings) {
-    this[i] = _settings[i];
+$.oStencil = function (name, type, thicknessPathObject) {
+  this.name = name;
+  this.type = type;
+  this.thicknessPathObject = thicknessPathObject;
+}
+
+Object.defineProperty($.oStencil.prototype, "minThickness", {
+  get: function(){
+    return this.thicknessPathObject.minThickness;
   }
+})
+
+
+Object.defineProperty($.oStencil.prototype, "maxThickness", {
+  get: function(){
+    return this.thicknessPathObject.maxThickness;
+  }
+})
+
+
+/**
+ * Parses the xml string of the stencil xml description to create an object with all the information from it.
+ * @private
+ */
+$.oStencil.getFromXml = function (xmlString) {
+  var object = this.prototype.$.oStencil.getSettingsFromXml(xmlString)
+
+  var maxThickness = object.mainBrushShape.sizeRange.maxValue
+  var minThickness = object.mainBrushShape.sizeRange.minPercentage * maxThickness
+
+  var thicknessPathObject = {
+    maxThickness:maxThickness,
+    minThickness:minThickness,
+    keys: [
+      {t:0},
+      {t:1}
+    ]
+  }
+
+  var _stencil = new this.$.oStencil(object.name, object.style, thicknessPathObject)
+  for (var i in object) {
+    try{
+      // attempt to set values from the object
+      _stencil[i] = _settings[i];
+    }catch(err){
+      this.$.log(err)
+    }
+  }
+  return _stencil;
 }
 
 
