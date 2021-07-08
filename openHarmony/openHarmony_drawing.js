@@ -1344,7 +1344,7 @@ $.oStroke.prototype.getIntersections = function (stroke){
 /**
  * Adds points on the stroke without moving them, at the distance specified (0=start vertice, 1=end vertice)
  * @param   {float[]}       pointsToAdd     an array of float value between 0 and 1 for each point to create
- * @returns {$.oVertex[]}   the points that were created
+ * @returns {$.oVertex[]}   the points that were created (if points already existed, they will be returned)
  * @example
 // get the selected stroke and create points where it intersects with the other two strokes
 var sel = $.scn.activeDrawing.selectedStrokes[0];
@@ -1363,30 +1363,44 @@ intersection2.stroke.addPoints([intersection2.strokePoint]);
 sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);
 */
 $.oStroke.prototype.addPoints = function (pointsToAdd) {
+  // calculate the points that will be created
+  var points = Drawing.geometry.insertPoints({path:this._data.path, params : pointsToAdd})
+
+  // find the newly added points amongst the returned values
+  for (var i in this.path){
+    var pathPoint = this.path[i];
+
+    // if point is found in path, it's not newly created
+    for (var j = points.length-1; j >=0; j--){
+      var point = points[j];
+      if (point.x == pathPoint.x && point.y == pathPoint.y) {
+        points.splice(j, 1);
+        break
+      }
+    }
+  }
+
+  // actually add the points
   var config = this.artLayer._key;
   config.label = "addPoint";
   config.strokes = [{layer:this.shape.index, strokeIndex:this.index, insertPoints: pointsToAdd }];
 
-  // get the list of the current fixed points
-  var fixedPoints = this.path.filter(function(x){return x.onCurve});
-
   DrawingTools.modifyStrokes(config);
-
-  // update the path
   this.updateDefinition();
 
-  // get the list of the current fixed points
-  var newFixedPoints = this.path.filter(function(x){return x.onCurve});
+  var newPoints = []
+  // find the points for the coordinates from the new path
+  for (var i in points){
+    var point = points[i];
 
-  // get the fixed points that didn't exist before
-  for (var i=newFixedPoints.length-1; i>=0; i--){
-    var newPoint = newFixedPoints[i];
-    for (var j in fixedPoints){
-      if (fixedPoints[j].x == newPoint.x && fixedPoints[j].y == newPoint.y) newFixedPoints.splice(i, 1);
+    for (var j in this.path){
+      var pathPoint = this.path[j];
+      if (point.x == pathPoint.x && point.y == pathPoint.y) newPoints.push(pathPoint);
     }
   }
 
-  return newFixedPoints;
+  if (newPoints.length != pointsToAdd.length) throw new Error ("some points in " + pointsToAdd + " were not created.")
+  return newPoints;
 }
 
 
