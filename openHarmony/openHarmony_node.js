@@ -2615,6 +2615,7 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
     var _nodes = destinationNodes;
   }else{
     log("pasting as new nodes")
+    var oldBackdrops = this.backdrops;
     copyPaste.pasteNewNodes(_tpl, _group, pasteOptions);
     var _scene = this.scene;
     var _nodes = selection.selectedNodes().map(function(x){return _scene.$node(x)});
@@ -2624,6 +2625,13 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
 
       _nodes[i].x += nodePosition.x;
       _nodes[i].y += nodePosition.y;
+    }
+
+    // move backdrops present in the template
+    var backdrops = this.backdrops.slice(oldBackdrops.length);
+    for (var i in backdrops){
+      backdrops[i].x += nodePosition.x;
+      backdrops[i].y += nodePosition.y;
     }
   }
 
