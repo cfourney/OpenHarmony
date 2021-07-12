@@ -1191,7 +1191,7 @@ $.oNode.prototype.moveToGroup = function(group){
  * @return  {int}    The index within that timeline.
  */
  $.oNode.prototype.getTimelineLayer = function(timeline){
-  if (typeof timeline === 'undefined') var timeline = this.$.scene.getTimeline();
+  if (typeof timeline === 'undefined') var timeline = this.$.scene.currentTimeline;
 
   var _nodeLayers = timeline.layers.map(function(x){return x.node.path});
   if (_nodeLayers.indexOf(this.path)<timeline.layers.length && _nodeLayers.indexOf(this.path)>0){
@@ -1208,10 +1208,10 @@ $.oNode.prototype.moveToGroup = function(group){
  * @return  {int}    The index within that timeline.
  */
 $.oNode.prototype.timelineIndex = function(timeline){
-  if (typeof timeline === 'undefined') var timeline = $.scn.getTimeline();
+  if (typeof timeline === 'undefined') var timeline = this.$.scene.currentTimeline;
 
-  var _layer = this.getTimelineLayer(timeline);
-  return _layer?_layer.layerIndex:-1;
+  var _nodes = timeline.compositionLayersList;
+  return _nodes.indexOf(this.path);
 }
 
 
@@ -2532,9 +2532,8 @@ $.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeN
 
     // moves nodes into the created group and recreates their hierarchy and links
     if (includeNodes.length > 0){
-      includeNodes = includeNodes.sort(function(a, b){return a.timelineIndex()-b.timelineIndex()})
+      includeNodes = includeNodes.sort(function(a, b){return a.timelineIndex()>=b.timelineIndex()?1:-1})
 
-      log(includeNodes)
 
       var _links = this.scene.getNodesLinks(includeNodes);
 
