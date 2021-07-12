@@ -682,6 +682,21 @@ Object.defineProperty($.oScene.prototype, 'activeDrawing', {
 });
 
 
+/**
+ * The current timeline using the default Display.
+ * @name $.oScene#currentTimeline
+ * @type {$.oTimeline}
+ * @readonly
+ */
+Object.defineProperty($.oScene.prototype, 'currentTimeline', {
+  get : function(){
+    if (!this.hasOwnProperty("_timeline")){
+      this._timeline = this.getTimeline();
+    }
+    return this._timeline;
+  }
+});
+
 
 
 
