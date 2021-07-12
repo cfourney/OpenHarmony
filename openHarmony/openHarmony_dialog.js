@@ -213,15 +213,19 @@ $.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptM
 
   if (getExisting){
     if (acceptMultiple){
-      var _files = QFileDialog.getOpenFileNames(0, text, startDirectory, filter)
+      var _files = QFileDialog.getOpenFileNames(0, text, startDirectory, filter);
     }else{
-      var _files = QFileDialog.getOpenFileName(0, text, startDirectory, filter)
+      var _files = QFileDialog.getOpenFileName(0, text, startDirectory, filter);
     }
   }else{
-    var _files = QFileDialog.getSaveFileName(0, text, startDirectory, filter)
+    var _files = QFileDialog.getSaveFileName(0, text, startDirectory, filter);
   }
 
-  this.$.debug(_files)
+  for (var i in _files){
+    _files[i] = _files[i].replace(/\\/g, "/");
+  }
+
+  this.$.debug(_files);
   return _files;
 }
 
