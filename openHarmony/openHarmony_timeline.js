@@ -64,14 +64,24 @@
 $.oLayer = function( oTimelineObject, layerIndex){
   this.timeline = oTimelineObject;
   this.index = layerIndex;
-
-  // the Timeline class isn't available in batchmode
-  if (this.$.batchMode){
-    this.node = this.timeline.nodes[this.index];
-  } else {
-    this.$.scn.getNodeByPath(Timeline.layerToNode(this.index));
-  }
 }
+
+
+/**
+ * The node associated to the layer.
+ * @name $.oLayer#node
+ * @type {$.oNode}
+ */
+Object.defineProperty($.oLayer.prototype, "node", {
+  get: function(){
+    if (this.$.batchMode){
+      _node = this.timeline.nodes[this.index];
+    } else {
+      _node = this.$.scn.getNodeByPath(Timeline.layerToNode(this.index));
+    }
+    return _node
+  }
+})
 
 
 /**
