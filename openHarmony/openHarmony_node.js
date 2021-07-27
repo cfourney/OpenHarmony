@@ -1245,11 +1245,15 @@ $.oNode.prototype.subNodes = function(recurse){
  * @return  {oPoint}   The resulting position of the node.
  */
 $.oNode.prototype.centerAbove = function( oNodeArray, xOffset, yOffset ){
-    // Defaults for optional parameters
+  if (!oNodeArray) throw new Error ("An array of nodes to center node '"+this.name+"' above must be provided.")
+
+  // Defaults for optional parameters
     if (typeof xOffset === 'undefined') var xOffset = 0;
     if (typeof yOffset === 'undefined') var yOffset = -30;
 
     // Works with nodes and nodes array
+    if (oNodeArray instanceof this.$.oNode) oNodeArray = [oNodeArray];
+    if (oNodeArray.filter(function(x){return !x}).length) throw new Error ("Can't center node '"+ this.name+ "' above nodes "+ oNodeArray + ", invalid nodes found.")
 
     var _box = new this.$.oBox();
     _box.includeNodes( oNodeArray );
@@ -1270,12 +1274,15 @@ $.oNode.prototype.centerAbove = function( oNodeArray, xOffset, yOffset ){
  * @return  {oPoint}   The resulting position of the node.
  */
 $.oNode.prototype.centerBelow = function( oNodeArray, xOffset, yOffset){
+    if (!oNodeArray) throw new Error ("An array of nodes to center node '"+this.name+"' below must be provided.")
+
     // Defaults for optional parameters
     if (typeof xOffset === 'undefined') var xOffset = 0;
     if (typeof yOffset === 'undefined') var yOffset = 30;
 
     // Works with nodes and nodes array
-    if (typeof oNodeArray === '$.oNode') oNodeArray = [oNodeArray];
+    if (oNodeArray instanceof this.$.oNode) oNodeArray = [oNodeArray];
+    if (oNodeArray.filter(function(x){return !x}).length) throw new Error ("Can't center node '"+ this.name+ "' below nodes "+ oNodeArray + ", invalid nodes found.")
 
     var _box = new this.$.oBox();
     _box.includeNodes(oNodeArray);
