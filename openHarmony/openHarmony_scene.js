@@ -1200,7 +1200,7 @@ $.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType
     var _vectorFormat = (imageFormat == "TVG")?imageFormat:"None";
 
     // sanitize input to graciously handle forbidden characters
-    name = name.replace(/[ \?\:\|\'\"\\\/\*\(\)\[\]\{\}\`]/g, "_");
+    name = name.replace(/[^A-Za-z\d_\- ]/g, "_");
 
     var _id = element.add(name, scanType, fieldGuide, _fileFormat, _vectorFormat);
     if (_id <0) throw new Error("Couldn't create an element with settings {name:'"+name+"', imageFormat:"+ imageFormat+", fieldGuide:"+fieldGuide+", scanType:"+scanType+"}")
