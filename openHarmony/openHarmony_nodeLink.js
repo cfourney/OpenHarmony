@@ -1267,6 +1267,11 @@ $.oLink.prototype.getValidLink = function(createOutPorts, createInPorts){
   var outPort = this._outPort;
   var inPort = this._inPort;
 
+  if (!start || !end) {
+    $.debug("A valid link can't be found: node missing in link "+this.toString(), this.$.DEBUG_LEVEL.ERROR)
+    return null;
+  }
+
   if (this.isMultiLevel) return null;
 
   var _link = new this.$.oLink(start, end, outPort, inPort);
@@ -1373,7 +1378,7 @@ $.oLink.prototype.disconnect = function(){
 $.oLink.prototype.findPorts = function(){
   // Unless some ports are specified, this will always find the first link and stop there. Provide more info in case of multiple links
 
-  if (this.outNode === undefined || this.inNode === undefined) {
+  if (!this.outNode|| !this.inNode) {
     this.$.debug("calling 'findPorts' for invalid link: "+this.outNode+" > "+this.inNode, this.$.DEBUG_LEVEL.ERROR);
     return false;
   }
