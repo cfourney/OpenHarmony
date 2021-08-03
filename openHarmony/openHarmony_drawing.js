@@ -269,7 +269,9 @@ Object.defineProperty($.oDrawing.prototype, 'activeArtLayer', {
     return this.artLayers[settings.activeArt]
   },
   set: function (newArtLayer) {
-    this.setAsActiveDrawing(newArtLayer._layerIndex);
+    var layers = this.$.oDrawing.ART_LAYER
+    var index = layers[newArtLayer.name.toUpperCase()]
+    this.setAsActiveDrawing(index);
   }
 })
 
