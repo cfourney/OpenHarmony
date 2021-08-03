@@ -650,7 +650,7 @@ Object.defineProperty($.oScene.prototype, "selectedShapes", {
 Object.defineProperty($.oScene.prototype, "selectedStrokes", {
   get : function(){
     var _currentDrawing = this.activeDrawing;
-    var _strokes = _currentDrawing.strokes;
+    var _strokes = _currentDrawing.selectedStrokes;
 
     return _strokes;
   }
