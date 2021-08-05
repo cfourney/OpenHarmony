@@ -2147,7 +2147,7 @@ $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, e
         matches.push(match[1]);
       }
       if (matches.length!=0){
-        var progress = parseInt(matches.pop(), 10);
+        var progress = parseInt(matches.pop(), 10) - startFrame;
         progressDialogue.label = "Rendering Frame: " + progress + "/" + length;
         progressDialogue.value = progress;
         var percentage = Math.round(progress/length * 100);
