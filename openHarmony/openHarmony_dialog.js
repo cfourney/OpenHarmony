@@ -287,8 +287,18 @@ $.oProgressDialog = function( labelText, range, title, show ){
   this._labelText = labelText;
 
   this.canceled = new this.$.oSignal();
+  this.wasCanceled = false;
 
-  if (show) this.show();
+  if (!this.$.batchMode) {
+    this.progress = new QProgressDialog();
+    this.progress.title = this._title;
+    this.progress.setLabelText( this._labelText );
+    this.progress.setRange( 0, this._range );
+
+    this.progress["canceled()"].connect( this, function(){this.wasCanceled = true; this.canceled.emit()} );
+
+    if (show) this.show();
+  }
 }
 
 
@@ -359,7 +369,7 @@ Object.defineProperty( $.oProgressDialog.prototype, 'value', {
  */
 Object.defineProperty( $.oProgressDialog.prototype, 'cancelled', {
   get: function(){
-    return this.progress.wasCanceled();
+    return this.wasCanceled;
   }
 });
 
@@ -375,14 +385,7 @@ $.oProgressDialog.prototype.show = function(){
     return;
   }
 
-  this.progress = new QProgressDialog();
-  this.progress.title = this._title;
-  this.progress.setLabelText( this._labelText );
-  this.progress.setRange( 0, this._range );
-
   this.progress.show();
-
-  this.progress["canceled()"].connect( this, function(){this.wasCanceled = true; this.canceled.emit()} );
 }
 
 /**
