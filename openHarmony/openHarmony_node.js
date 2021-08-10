@@ -3083,6 +3083,29 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
 }
 
 
+/**
+ * imports an image as a tvg drawing.
+ * @param {$.oFile} path                         the image file to import
+ * @param {string} [alignment="ASIS"]            the alignment mode for the imported image
+ * @param {$.oPoint} [nodePosition={0,0,0}]      the position for the created node.
+ */
+$.oGroupNode.prototype.importImageAsTVG = function(path, alignment, nodePosition){
+  if (!(path instanceof this.$.oFile)) path = new this.$.oFile(path);
+
+  // convert image into TVG
+  var _bin = specialFolders.bin + "/utransform";
+
+  var _convertedFilePath = scene.tempProjectPathRemapped () + "/" + path.name+".tvg";
+  var _convertProcess = new this.$.oProcess(_bin, ["-outformat", "TVG", "-outfile", _convertedFilePath, path.path]);
+  _convertProcess.execute();
+
+  if (!path.exists) throw new Error ("Converting "+path+" to TVG has failed.");
+
+  var _imageNode = this.importImage(_convertedFilePath, alignment, nodePosition);
+  _imageNode.name = path.name;
+
+  return _imageNode;
+}
 
 
 /**
