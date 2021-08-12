@@ -3094,7 +3094,9 @@ $.oGroupNode.prototype.importImageAsTVG = function(path, alignment, nodePosition
   // convert image into TVG
   var _bin = specialFolders.bin + "/utransform";
 
-  var _convertedFilePath = scene.tempProjectPathRemapped () + "/" + path.name+".tvg";
+  var tempFolder = this.$.scn.tempFolder;
+
+  var _convertedFilePath = tempFolder.path + "/" + path.name+".tvg";
   var _convertProcess = new this.$.oProcess(_bin, ["-outformat", "TVG", "-outfile", _convertedFilePath, path.path]);
   _convertProcess.execute();
 
@@ -3143,7 +3145,7 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
   _qtNode.can_animate = false;
   _qtNode.alignment_rule = alignment;
 
-  var _tempFolder = scene.tempProjectPathRemapped () + "/movImport/" + _elementName;
+  var _tempFolder = this.tempFolder.path + "/movImport/" + _elementName;
   var _audioPath = _tempFolder + "/" + _elementName + ".wav"
 
   // setup import

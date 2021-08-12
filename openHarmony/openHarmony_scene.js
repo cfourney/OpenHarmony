@@ -123,6 +123,24 @@ Object.defineProperty($.oScene.prototype, 'paletteFolder', {
   }
 });
 
+
+/**
+ * The temporary folder where files are created before being saved.
+ * If the folder doesn't exist yet, it will be created.
+ * @name $.oScene#tempFolder
+ * @type {$.oFolder}
+ * @readonly
+ */
+Object.defineProperty($.oScene.prototype, 'tempFolder', {
+  get : function(){
+    if (!this.hasOwnProperty("_tempFolder")){
+      this._tempFolder = new this.$.oFolder(scene.tempProjectPathRemapped());
+      if (!this._tempFolder.exists) this._tempFolder.create()
+    }
+    return this._tempFolder;
+  }
+});
+
 /**
  * The name of the scene.
  * @name $.oScene#name
