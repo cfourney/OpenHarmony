@@ -61,12 +61,12 @@
  * @param   {attr}                     attributeObject            The internal harmony Attribute Object.
  * @param   {$.oAttribute}             parentAttribute            The parent attribute of the subattribute.
  *
- * @property {$.oNode}                 node                       The name of the drawing.
- * @property {attr}                    attributeObject            The element object associated to the element.
- * @property {string}                  keyword                    The name of the drawing.
- * @property {string}                  shortKeyword               The element object associated to the element.
- * @property {$.oAttribute}            parentAttribute            The element object associated to the element.
- * @property {$.oAttribute[]}          subAttributes              The subattributes, if any exist, of this attribute.
+ * @property {$.oNode}                 node                       The oNode this attribute belongs to.
+ * @property {attr}                    attributeObject            The internal harmony Attribute Object.
+ * @property {string}                  keyword                    The keyword describing this attribute. (always in lower case)
+ * @property {string}                  shortKeyword               The full keyword describing this attribute, including parent attributes separated with a "." (always in lower case)
+ * @property {$.oAttribute}            parentAttribute            The parent oAttribute object
+ * @property {$.oAttribute[]}          subAttributes              The subattributes of this attribute.
  * @example
  * // oAttribute objects can be grabbed from the node .attributes object with dot notation, by calling the attribute keyword in lowercase.
  *
@@ -76,6 +76,9 @@
  * var Xcolumn = Xattribute.column;                   // retrieve the linked column to the element (The object that holds the animation)
  *
  * Xattribute.setValue(5, 5);                         // sets the value to 5 at frame 5
+ *
+ * // attribute values can also be set directly on the node when not animated:
+ * myNode.position.x = 5;
  *
  */
 $.oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
