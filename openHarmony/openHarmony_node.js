@@ -1338,7 +1338,6 @@ $.oNode.prototype.clone = function( newName, newPosition ){
   for (var i in _attributes){
     var _clonedAttribute = _clonedNode.getAttributeByName(_attributes[i].keyword);
     _clonedAttribute.setToAttributeValue(_attributes[i]);
-    log(_clonedAttribute.column == null)
   }
 
   var palettes = this.palettes
@@ -2339,7 +2338,7 @@ $.oGroupNode.prototype.addOutPort = function(portNum, type){
 
   if (typeof portNum === 'undefined') var portNum = _outPorts;
   if (portNum > _outPorts) portNum = _outPorts;
-    this.$.log(portNum)
+
   var _type = (type=="transform")?"PEG":"none"
   var _dummyNode = this.addNode(_type, "dummy_add_port_node");
   var _MPO = this.multiportOut;
