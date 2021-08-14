@@ -3169,9 +3169,9 @@
             
                 <li data-name="$.oProgressDialog#cancelled"><a href="$.oProgressDialog.html#cancelled">cancelled</a></li>
             
-                <li data-name="$.oProgressDialog#range"><a href="$.oProgressDialog.html#range">range</a></li>
+                <li data-name="$.oProgressDialog#label"><a href="$.oProgressDialog.html#label">label</a></li>
             
-                <li data-name="$.oProgressDialog#text"><a href="$.oProgressDialog.html#text">text</a></li>
+                <li data-name="$.oProgressDialog#range"><a href="$.oProgressDialog.html#range">range</a></li>
             
                 <li data-name="$.oProgressDialog#value"><a href="$.oProgressDialog.html#value">value</a></li>
             
@@ -3798,7 +3798,8 @@
     </h2>
     
         <div class="class-description">An simple progress dialog to display the progress of a task.
-To react to the user clicking the cancel button, connect a function to $.oProgressDialog.canceled() signal</div>
+To react to the user clicking the cancel button, connect a function to $.oProgressDialog.canceled() signal.
+When $.batchmode is true, the progress will be outputed as a "Progress : value/range" string to the Harmony stdout.</div>
     
 </header>  
 
@@ -3812,7 +3813,7 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
     <div class="nameContainer">
         <h4 class="name" id="oProgressDialog">
             
-            new $.oProgressDialog<span class="signature">(labelText, <span class="optional">range</span>, <span class="optional">title</span>, <span class="optional">show</span>)</span>
+            new $.oProgressDialog<span class="signature">(<span class="optional">labelText</span>, <span class="optional">range</span>, <span class="optional">title</span>, <span class="optional">show</span>)</span>
         </h4>
     
         
@@ -3882,11 +3883,13 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
             <td class="description last">
                 
                     
+                        <span class="optional">optional</span>
+                    
                     
                         
                     
                 
-                The path to the folder.</td>
+                The text displayed above the progress bar.</td>
         </tr>
 	
 	
@@ -3922,7 +3925,7 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
                         
                     
                 
-                The path to the folder.</td>
+                The maximum value that represents a full progress bar.</td>
         </tr>
 	
 	
@@ -4030,7 +4033,7 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
 	
         <tr>
             
-                <td class="name"><code>cancelled</code></td>
+                <td class="name"><code>wasCanceled</code></td>
             
             
             <td class="type">
@@ -4047,6 +4050,29 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
             
             
             <td class="description last">Whether the progress bar was cancelled.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>canceled</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oSignal.html">$.oSignal</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A Signal emited when the dialog is canceled. Can be connected to a callback.</td>
         </tr>
 	
 	
@@ -4157,7 +4183,7 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="range">range<span class="type-signature type int">int</span> </h4>
+        <h4 class="name" id="label">label<span class="type-signature type string">string</span> </h4>
     </div>
     
     
@@ -4165,7 +4191,7 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
 <dd>
     
     <div class="description">
-        The range of the window.
+        The text displayed by the window.
     </div>
     
     
@@ -4202,7 +4228,7 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="text">text<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="range">range<span class="type-signature type int">int</span> </h4>
     </div>
     
     
@@ -4210,7 +4236,7 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
 <dd>
     
     <div class="description">
-        The text of the window.
+        The maximum value that can be displayed by the progress dialog (equivalent to "finished")
     </div>
     
     
@@ -4255,7 +4281,7 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
 <dd>
     
     <div class="description">
-        The current value of the window.
+        The current value of the progress bar. Setting this to the value of 'range' will close the dialog.
     </div>
     
     
@@ -4305,7 +4331,7 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 394
+            openHarmony/openHarmony_dialog.js, line 396
         </div>
         
     </div>
@@ -4376,7 +4402,7 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_dialog.js, line 382
+            openHarmony/openHarmony_dialog.js, line 384
         </div>
         
     </div>
@@ -4455,7 +4481,7 @@ To react to the user clicking the cancel button, connect a function to $.oProgre
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Aug 12 2021 14:24:00 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat Aug 14 2021 20:35:07 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
