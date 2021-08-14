@@ -268,13 +268,15 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
  * @name        $.oProgressDialog
  * @constructor
  * @classdesc   An simple progress dialog to display the progress of a task.
- * To react to the user clicking the cancel button, connect a function to $.oProgressDialog.canceled() signal
- * @param       {string}              labelText                  The path to the folder.
- * @param       {string}              [range=100]                The path to the folder.
+ * To react to the user clicking the cancel button, connect a function to $.oProgressDialog.canceled() signal.
+ * When $.batchmode is true, the progress will be outputed as a "Progress : value/range" string to the Harmony stdout.
+ * @param       {string}              [labelText]                The text displayed above the progress bar.
+ * @param       {string}              [range=100]                The maximum value that represents a full progress bar.
  * @param       {string}              [title]                    The title of the dialog
  * @param       {bool}                [show=false]               Whether to immediately show the dialog.
  *
- * @property    {bool}                cancelled                  Whether the progress bar was cancelled.
+ * @property    {bool}                wasCanceled                Whether the progress bar was cancelled.
+ * @property    {$.oSignal}           canceled                   A Signal emited when the dialog is canceled. Can be connected to a callback.
  */
 $.oProgressDialog = function( labelText, range, title, show ){
   if (typeof title === 'undefined') var title = "Progress";
@@ -307,8 +309,8 @@ $.oDialog.Progress = $.oProgressDialog;
 
 
 /**
- * The text of the window.
- * @name $.oProgressDialog#text
+ * The text displayed by the window.
+ * @name $.oProgressDialog#label
  * @type {string}
  */
 Object.defineProperty( $.oProgressDialog.prototype, 'label', {
@@ -323,7 +325,7 @@ Object.defineProperty( $.oProgressDialog.prototype, 'label', {
 
 
 /**
- * The range of the window.
+ * The maximum value that can be displayed by the progress dialog (equivalent to "finished")
  * @name $.oProgressDialog#range
  * @type {int}
  */
@@ -339,7 +341,7 @@ Object.defineProperty( $.oProgressDialog.prototype, 'range', {
 
 
 /**
- * The current value of the window.
+ * The current value of the progress bar. Setting this to the value of 'range' will close the dialog.
  * @name $.oProgressDialog#value
  * @type {int}
  */
