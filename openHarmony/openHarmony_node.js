@@ -2167,7 +2167,7 @@ $.oGroupNode.prototype = Object.create($.oNode.prototype);
 $.oGroupNode.prototype.constructor = $.oGroupNode;
 
 /**
- * The multiport in node of the group.
+ * The multiport in node of the group. If one doesn't exist, it will be created.
  * @name $.oGroupNode#multiportIn
  * @readonly
  * @type {$.oNode}
@@ -2182,7 +2182,7 @@ Object.defineProperty($.oGroupNode.prototype, "multiportIn", {
 
 
 /**
- * The multiport out node of the group.
+ * The multiport out node of the group. If one doesn't exist, it will be created.
  * @name $.oGroupNode#multiportOut
  * @readonly
  * @type {$.oNode}
