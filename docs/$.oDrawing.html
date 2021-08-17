@@ -1341,6 +1341,10 @@
             
                 <li data-name="$.oDrawing#selectedStrokes"><a href="$.oDrawing.html#selectedStrokes">selectedStrokes</a></li>
             
+                <li data-name="$.oDrawing#shapes"><a href="$.oDrawing.html#shapes">shapes</a></li>
+            
+                <li data-name="$.oDrawing#strokes"><a href="$.oDrawing.html#strokes">strokes</a></li>
+            
                 <li data-name="$.oDrawing#underlay"><a href="$.oDrawing.html#underlay">underlay</a></li>
             
             </ul>
@@ -4128,7 +4132,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="artLayers">artLayers<span class="type-signature type array.<$.oartlayer>">Array.&lt;<a href="$.oArtLayer.html">$.oArtLayer</a>></span> </h4>
+        <h4 class="name" id="artLayers"><span class="type-signature ">readonly</span>artLayers<span class="type-signature type array.<$.oartlayer>">Array.&lt;<a href="$.oArtLayer.html">$.oArtLayer</a>></span> </h4>
     </div>
     
     
@@ -4173,7 +4177,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="boundingBox">boundingBox<span class="type-signature type $.obox"><a href="$.oBox.html">$.oBox</a></span> </h4>
+        <h4 class="name" id="boundingBox"><span class="type-signature ">readonly</span>boundingBox<span class="type-signature type $.obox"><a href="$.oBox.html">$.oBox</a></span> </h4>
     </div>
     
     
@@ -4218,7 +4222,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="colorArt">colorArt<span class="type-signature type $.oartlayer"><a href="$.oArtLayer.html">$.oArtLayer</a></span> </h4>
+        <h4 class="name" id="colorArt"><span class="type-signature ">readonly</span>colorArt<span class="type-signature type $.oartlayer"><a href="$.oArtLayer.html">$.oArtLayer</a></span> </h4>
     </div>
     
     
@@ -4308,7 +4312,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="id">id<span class="type-signature type int">int</span> </h4>
+        <h4 class="name" id="id"><span class="type-signature ">readonly</span>id<span class="type-signature type int">int</span> </h4>
     </div>
     
     
@@ -4398,7 +4402,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="lineArt">lineArt<span class="type-signature type $.oartlayer"><a href="$.oArtLayer.html">$.oArtLayer</a></span> </h4>
+        <h4 class="name" id="lineArt"><span class="type-signature ">readonly</span>lineArt<span class="type-signature type $.oartlayer"><a href="$.oArtLayer.html">$.oArtLayer</a></span> </h4>
     </div>
     
     
@@ -4488,7 +4492,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="overlay">overlay<span class="type-signature type $.oartlayer"><a href="$.oArtLayer.html">$.oArtLayer</a></span> </h4>
+        <h4 class="name" id="overlay"><span class="type-signature ">readonly</span>overlay<span class="type-signature type $.oartlayer"><a href="$.oArtLayer.html">$.oArtLayer</a></span> </h4>
     </div>
     
     
@@ -4533,7 +4537,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="path">path<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="path"><span class="type-signature ">readonly</span>path<span class="type-signature type string">string</span> </h4>
     </div>
     
     
@@ -4713,7 +4717,97 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="underlay">underlay<span class="type-signature type $.oartlayer"><a href="$.oArtLayer.html">$.oArtLayer</a></span> </h4>
+        <h4 class="name" id="shapes"><span class="type-signature ">readonly</span>shapes<span class="type-signature type array.<$.oshape>">Array.&lt;<a href="$.oShape.html">$.oShape</a>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        the shapes contained amongst all artLayers of this drawing.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="strokes"><span class="type-signature ">readonly</span>strokes<span class="type-signature type array.<$.ostroke>">Array.&lt;<a href="$.oStroke.html">$.oStroke</a>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        the strokes contained amongst all artLayers of this drawing.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="underlay"><span class="type-signature ">readonly</span>underlay<span class="type-signature type $.oartlayer"><a href="$.oArtLayer.html">$.oArtLayer</a></span> </h4>
     </div>
     
     
@@ -4771,7 +4865,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 467
+            openHarmony/openHarmony_drawing.js, line 512
         </div>
         
     </div>
@@ -4894,7 +4988,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 454
+            openHarmony/openHarmony_drawing.js, line 499
         </div>
         
     </div>
@@ -5076,7 +5170,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 348
+            openHarmony/openHarmony_drawing.js, line 393
         </div>
         
     </div>
@@ -5172,7 +5266,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 336
+            openHarmony/openHarmony_drawing.js, line 381
         </div>
         
     </div>
@@ -5317,7 +5411,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 487
+            openHarmony/openHarmony_drawing.js, line 532
         </div>
         
     </div>
@@ -5440,7 +5534,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 403
+            openHarmony/openHarmony_drawing.js, line 448
         </div>
         
     </div>
@@ -5511,7 +5605,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 370
+            openHarmony/openHarmony_drawing.js, line 415
         </div>
         
     </div>
@@ -5582,7 +5676,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 422
+            openHarmony/openHarmony_drawing.js, line 467
         </div>
         
     </div>
@@ -5735,7 +5829,7 @@ Doesn't work in batch mode.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 508
+            openHarmony/openHarmony_drawing.js, line 553
         </div>
         
     </div>
@@ -5887,7 +5981,7 @@ Doesn't work in batch mode. This function modifies the selection.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 540
+            openHarmony/openHarmony_drawing.js, line 585
         </div>
         
     </div>
@@ -5966,7 +6060,7 @@ Doesn't work in batch mode. This function modifies the selection.
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat Aug 14 2021 20:48:10 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Aug 17 2021 17:35:09 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
