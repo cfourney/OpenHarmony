@@ -165,6 +165,7 @@ $.debug = function( obj, level ){
   if( level > this.debug_level ) return;
 
   try{
+    if (typeof obj !== 'object') throw new Error();
     this.log(JSON.stringify(obj));
   }catch(err){
     this.log(obj);
