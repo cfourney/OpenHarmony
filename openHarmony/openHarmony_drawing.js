@@ -130,6 +130,7 @@ Object.defineProperty($.oDrawing.prototype, 'name', {
 /**
  * The internal Id used to identify drawings.
  * @name $.oDrawing#id
+ * @readonly
  * @type {int}
  */
 Object.defineProperty($.oDrawing.prototype, 'id', {
@@ -142,6 +143,7 @@ Object.defineProperty($.oDrawing.prototype, 'id', {
 /**
  * The folder path of the drawing on the filesystem.
  * @name $.oDrawing#path
+ * @readonly
  * @type {string}
  */
 Object.defineProperty($.oDrawing.prototype, 'path', {
@@ -177,6 +179,7 @@ Object.defineProperty($.oDrawing.prototype, 'pivot', {
 /**
  * The bounding box of the drawing, in drawing space coordinates. (null if the drawing is empty.)
  * @name $.oDrawing#boundingBox
+ * @readonly
  * @type {$.oBox}
  */
 Object.defineProperty($.oDrawing.prototype, 'boundingBox', {
@@ -199,6 +202,7 @@ Object.defineProperty($.oDrawing.prototype, 'boundingBox', {
 /**
  * Access the underlay art layer's content through this object.
  * @name $.oDrawing#underlay
+ * @readonly
  * @type {$.oArtLayer}
  */
 Object.defineProperty($.oDrawing.prototype, 'underlay', {
@@ -211,6 +215,7 @@ Object.defineProperty($.oDrawing.prototype, 'underlay', {
 /**
  * Access the color art layer's content through this object.
  * @name $.oDrawing#colorArt
+ * @readonly
  * @type {$.oArtLayer}
  */
 Object.defineProperty($.oDrawing.prototype, 'colorArt', {
@@ -223,6 +228,7 @@ Object.defineProperty($.oDrawing.prototype, 'colorArt', {
 /**
  * Access the line art layer's content through this object.
  * @name $.oDrawing#lineArt
+ * @readonly
  * @type {$.oArtLayer}
  */
 Object.defineProperty($.oDrawing.prototype, 'lineArt', {
@@ -235,6 +241,7 @@ Object.defineProperty($.oDrawing.prototype, 'lineArt', {
 /**
  * Access the overlay art layer's content through this object.
  * @name $.oDrawing#overlay
+ * @readonly
  * @type {$.oArtLayer}
  */
 Object.defineProperty($.oDrawing.prototype, 'overlay', {
@@ -247,11 +254,49 @@ Object.defineProperty($.oDrawing.prototype, 'overlay', {
 /**
  * The list of artLayers of this drawing.
  * @name $.oDrawing#artLayers
+ * @readonly
  * @type {$.oArtLayer[]}
  */
 Object.defineProperty($.oDrawing.prototype, 'artLayers', {
   get: function () {
     return this._artLayers;
+  }
+})
+
+
+
+/**
+ * the shapes contained amongst all artLayers of this drawing.
+ * @name $.oDrawing#shapes
+ * @readonly
+ * @type {$.oShape[]}
+ */
+Object.defineProperty($.oDrawing.prototype, 'shapes', {
+  get: function () {
+    var _shapes = [];
+    for (var i in this.artLayers) {
+      _shapes = _shapes.concat(this.artLayers[i].shapes);
+    }
+
+    return _shapes;
+  }
+})
+
+
+/**
+ * the strokes contained amongst all artLayers of this drawing.
+ * @name $.oDrawing#strokes
+ * @readonly
+ * @type {$.oStroke[]}
+ */
+Object.defineProperty($.oDrawing.prototype, 'strokes', {
+  get: function () {
+    var _strokes = [];
+    for (var i in this.artLayers) {
+      _strokes = _strokes.concat(this.artLayers[i].strokes);
+    }
+
+    return _strokes;
   }
 })
 
@@ -607,14 +652,14 @@ Object.defineProperty($.oArtLayer.prototype, 'shapes', {
  */
 Object.defineProperty($.oArtLayer.prototype, 'strokes', {
   get: function () {
-    var _strokes = []
+    var _strokes = [];
 
-    var _shapes = this.shapes
+    var _shapes = this.shapes;
     for (var i in _shapes) {
-      _strokes = _strokes.concat(_shapes[i].strokes)
+      _strokes = _strokes.concat(_shapes[i].strokes);
     }
 
-    return _strokes
+    return _strokes;
   }
 })
 
@@ -629,7 +674,7 @@ Object.defineProperty($.oArtLayer.prototype, 'boundingBox', {
   get: function () {
     var _box = Drawing.query.getBox(this._key);
 
-    log(JSON.stringify(this._key) + ': ' + JSON.stringify(_box))
+    this.$.debug(JSON.stringify(this._key) + ': ' + JSON.stringify(_box), this.DEBUG_LEVEL.DEBUG);
 
     if (_box.empty) return null;
 
