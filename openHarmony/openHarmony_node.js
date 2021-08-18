@@ -198,8 +198,9 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
                     _value = newValue.value;
                 }
 
+                // setting non animated attribute value
                 for (var i in _subAttrs){
-                    // ignore the getter setters by setting each subAttr individually, and only set the ones that exist in the provided object
+                    // set each subAttr individually based on corresponding values in the provided object
                     var _keyword = _subAttrs[i].shortKeyword;
                     if (_value.hasOwnProperty(_keyword)) _subAttrs[i].setValue(_value[_keyword], _frame);
                 }
@@ -1624,13 +1625,15 @@ $.oNode.prototype.refreshAttributes = function( ){
 //////////////////////////////////////
 
 /**
- * The peg module base class for the node.
+ * Constructor for the $.oPegNode class
+ * @classdesc
+ * $.oPegNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>
+ * It represents peg nodes in the scene.
  * @constructor
  * @augments   $.oNode
  * @classdesc  Peg Moudle Class
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
  */
 $.oPegNode = function( path, oSceneObject ) {
     if (node.type(path) != 'PEG') throw "'path' parameter must point to a 'PEG' type node";
@@ -1654,11 +1657,11 @@ $.oPegNode.prototype.constructor = $.oPegNode;
 //////////////////////////////////////
 //////////////////////////////////////
 
-//CFNote: DrawingNode is incorrect in terms of Harmony-- its actually a 'Read' module.
-
 /**
- * The constructor for the scene object.
- * @classdesc  The drawing node base class.
+ * Constructor for the $.oDrawingNode class
+ * @classdesc
+ * $.oDrawingNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>
+ * It represents 'read' nodes or Drawing nodes in the scene.
  * @constructor
  * @augments   $.oNode
  * @param   {string}         path                          Path to the node in the network.
