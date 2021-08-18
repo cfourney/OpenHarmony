@@ -2047,6 +2047,167 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
   return [];
 }
 
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//   $.oTransformSwitchNode class   //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+/**
+ * Constructor for the $.oTransformSwitchNode class
+ * @classdesc
+ * $.oTransformSwitchNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>
+ * It represents transform switches in the scene.
+ * @constructor
+ * @augments   $.oNode
+ * @param   {string}         path            Path to the node in the network.
+ * @param   {oScene}         oSceneObject    Access to the oScene object of the DOM.
+ * @property {$.oTransformNamesObject} names An array-like object with static indices (starting at 0) for each transformation name, which can be retrieved/set directly.
+ * @example
+ * // Assuming the existence of a Deformation group applied to a 'Drawing' node at the root of the scene
+ * var myNode = $.scn.getNodeByPath("Top/Deformation-Drawing/Transformation-Switch");
+ *
+ * myNode.names[0] = "B";                              // setting the value for the first transform drawing name to "B"
+ *
+ * var drawingNames = ["A", "B", "C"]                  // example of iterating over the existing names to set/retrieve them
+ * for (var i in myNode.names){
+ *   $.log(i+": "+myNode.names[i]);
+ *   $.log(myNode.names[i] = drawingNames[i]);
+ * }
+ *
+ * $.log("length: " + myNode.names.length)             // the number of names
+ * $.log("names: " + myNode.names)                     // prints the list of names
+ * $.log("indexOf 'B': " + myNode.names.indexOf("B"))  // can use methods from Array
+ */
+$.oTransformSwitchNode = function( path, oSceneObject ) {
+  if (node.type(path) != 'TransformationSwitch') throw "'path' parameter ("+path+") must point to a 'TransformationSwitch' type node. Got: "+node.type(path);
+  var instance = this.$.oNode.call( this, path, oSceneObject );
+  if (instance) return instance;
+
+  this._type = 'transformSwitchNode';
+  this.names = new this.$.oTransformNamesObject(this);
+}
+$.oTransformSwitchNode.prototype = Object.create( $.oNode.prototype );
+$.oTransformSwitchNode.prototype.constructor = $.oTransformSwitchNode;
+
+
+/**
+ * Constructor for the $.oTransformNamesObject class
+ * @classdesc
+ * $.oTransformNamesObject is an array like object with static length that exposes getter setters for
+ * each transformation name used by the oTransformSwitchNode. It can use the same methods as any array.
+ * @constructor
+ * @param {$.oTransformSwitchNode} instance the transform Node instance using this object
+ * @property {int} length the number of valid elements in the object.
+ */
+$.oTransformNamesObject = function(transformSwitchNode){
+  Object.defineProperty(this, "transformSwitchNode", {
+    enumerable:false,
+    get: function(){
+      return transformSwitchNode;
+    },
+  })
+
+  $.log("creating "+this.length+" getter setters")
+  for (var i=0; i<this.length; i++){
+    this.createGetterSetter(i);
+  }
+}
+$.oTransformNamesObject.prototype = Object.create(Array.prototype);
+
+
+/**
+ * @private
+ * creates a $.oTransformSwitch.names property with an index for each name to get/set the name value
+ */
+Object.defineProperty($.oTransformNamesObject.prototype, "createGetterSetter", {
+  enumerable:false,
+  value: function(index){
+    var attrName = "transformation_" + (index+1);
+    var transformNode = this.transformSwitchNode;
+
+    Object.defineProperty(this, index, {
+      enumerable:true,
+      configurable:true,
+      get: function(){
+        return transformNode.transformationnames[attrName];
+      },
+      set: function(newName){
+        newName = newName+""; // convert to string
+        log("setting "+attrName+" to drawing "+newName+" on "+transformNode.path)
+        if (newName instanceof this.$.oDrawing) newName = newName.name;
+        transformNode.transformationnames[attrName] = newName;
+      }
+    })
+  }
+})
+
+
+/**
+ * @name $.oTransformNamesObject#length
+ * @type {int}
+ * The length of the array of names on the oTransformSwitchNode node. Corresponds to the transformationnames.size subAttribute.
+ */
+ Object.defineProperty($.oTransformNamesObject.prototype, "length", {
+  enumerable:false,
+  get: function(){
+    return this.transformSwitchNode.transformationnames.size;
+  },
+})
+
+
+/**
+ * A string representation of the names list
+ * @private
+ */
+Object.defineProperty($.oTransformNamesObject.prototype, "toString", {
+  enumerable:false,
+  value: function(){
+    return this.join(",");
+  }
+})
+
+
+/**
+ * @private
+ */
+$.oTransformSwitchNode.prototype.refreshNames = function(){
+  this.refreshAttributes();
+  this.names = new this.$.oTransformNamesObject(this);
+  return this.names;
+}
+
+
+/**
+ * Links this node's inport to the given module, at the inport and outport indices.
+ * Refreshes attributes to update for the changes of connected transformation.
+ * @param   {$.oNode}   nodeToLink             The node to link this one's inport to.
+ * @param   {int}       [ownPort]              This node's inport to connect.
+ * @param   {int}       [destPort]             The target node's outport to connect.
+ * @param   {bool}      [createPorts]          Whether to create new ports on the nodes.
+ *
+ * @return  {bool}    The result of the link, if successful.
+ */
+$.oTransformSwitchNode.prototype.linkInNode = function(nodeToLink, ownPort, destPort, createPorts){
+  this.$.oNode.prototype.linkInNode.apply(this, arguments);
+  this.refreshNames()
+}
+
+/**
+ * Searches for and unlinks the $.oNode object from this node's inNodes.
+ * @param   {$.oNode}   oNodeObject            The node to link this one's inport to.
+ * @return  {bool}    The result of the unlink. Refreshes attributes to update for the changes of connected transformation.
+ */
+$.oTransformSwitchNode.prototype.unlinkInNode = function( oNodeObject ){
+  this.$.oNode.prototype.unlinkInNode.apply(this, arguments);
+  this.refreshNames()
+}
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //

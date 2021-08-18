@@ -745,6 +745,9 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
       case "COLOR_OVERRIDE_TVG" :
         _node = new this.$.oColorOverrideNode( fullPath, this );
         break;
+      case "TransformationSwitch" :
+        _node = new this.$.oTransformSwitchNode( fullPath, this );
+        break;
       case "GROUP" :
         _node = new this.$.oGroupNode( fullPath, this );
         break;
