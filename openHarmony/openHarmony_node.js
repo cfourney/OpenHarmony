@@ -2426,30 +2426,11 @@ $.oGroupNode.prototype.addNode = function( type, name, nodePosition ){
   // Defaults for optional parameters
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
   if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
+  if (typeof name !== 'string') name = name+"";
 
-  // increment name if a node with the same name already exists
-  var _name = name.split("_");
-  var _count = parseInt(_name.pop(), 10);
-
-  // get name without suffix
-  if (isNaN(_count)) { // check for NaN value -> no number already added
-    _name = name;
-    _count = 0;
-  } else {
-    _name = _name.join("_");
-  }
-
-  // loop to increment until we get a node name that is free
   var _group = this.path;
-  var _nodePath = _group + "/" + _name;
 
-  while (node.type(_nodePath)){
-    _count++;
-    name = _name + "_" + _count;
-    _nodePath = _group + "/" + name;
-  }
-
-  // create node and return result (this sanitizes the name, so we only create the oNode with the returned value)
+  // create node and return result (this sanitizes/increments the name, so we only create the oNode with the returned value)
   var _path = node.add(_group, name, type, nodePosition.x, nodePosition.y, nodePosition.z);
   _node = this.scene.getNodeByPath(_path);
 
