@@ -395,7 +395,7 @@ $.oDrawing.prototype.getVisibleFrames = function () {
   var _column = _element.column;
 
   if (!_column) {
-    this.$.log("Column missing: can't get visible frames for  drawing " + this.name + " of element " + _element.name);
+    this.$.debug("Column missing: can't get visible frames for  drawing " + this.name + " of element " + _element.name, this.$.DEBUG_LEVEL.ERROR);
     return null;
   }
 
@@ -417,7 +417,7 @@ $.oDrawing.prototype.remove = function () {
   var _column = _element.column;
 
   if (!_column) {
-    this.$.log("Column missing: impossible to delete drawing " + this.name + " of element " + _element.name);
+    this.$.debug("Column missing: impossible to delete drawing " + this.name + " of element " + _element.name, this.$.DEBUG_LEVEL.ERROR);
     return;
   }
 
@@ -758,7 +758,7 @@ $.oArtLayer.prototype.drawStroke = function(path, lineStyle, fillStyle){
     }
   }
 
-  log(JSON.stringify(_lineStyle))
+  this.$.debug(JSON.stringify(_lineStyle), this.$.DEBUG_LEVEL.DEBUG)
 
   var strokeDesciption = _lineStyle;
   strokeDesciption.path = path;
@@ -797,7 +797,6 @@ $.oArtLayer.prototype.clear = function(){
   var _shapes = this.shapes;
   this.$.debug(_shapes, this.$.DEBUG_LEVEL.DEBUG)
   for (var i=_shapes.length - 1; i>=0; i--){
-    print(i)
     _shapes[i].deleteShape();
   }
 }
@@ -870,7 +869,7 @@ $.oLineStyle = function (colorId, minThickness, maxThickness, stencil) {
   this.colorId = colorId;
   this.stencil = stencil;
 
-  this.$.log(colorId+" "+minThickness+" "+maxThickness+" "+stencil)
+  this.$.debug(colorId+" "+minThickness+" "+maxThickness+" "+stencil, this.$.DEBUG_LEVEL.DEBUG)
 }
 
 
@@ -1033,7 +1032,7 @@ Object.defineProperty($.oStroke.prototype, "path", {
  */
 Object.defineProperty($.oStroke.prototype, "index", {
   get: function () {
-    log("stroke object : "+JSON.stringify(this._stroke, null, "  "))
+    this.$.debug("stroke object : "+JSON.stringify(this._stroke, null, "  "), this.$.DEBUG_LEVEL.DEBUG)
     return this._stroke.strokeIndex
   }
 })
