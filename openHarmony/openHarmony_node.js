@@ -2468,33 +2468,33 @@ $.oGroupNode.prototype.addNode = function( type, name, nodePosition ){
  */
 
 $.oGroupNode.prototype.addDrawingNode = function( name, nodePosition, oElementObject, drawingColumn){
-    // add drawing column and element if not passed as parameters
-    this.$.beginUndo("oH_addDrawingNode_"+name);
+  // add drawing column and element if not passed as parameters
+  this.$.beginUndo("oH_addDrawingNode_"+name);
 
-    // Defaults for optional parameters
-    if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
-    if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
+  // Defaults for optional parameters
+  if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+  if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
 
-    // creating the node first to get the "safe name" returned by harmony
-    var _node = this.addNode("READ", name, nodePosition);
+  // creating the node first to get the "safe name" returned by harmony
+  var _node = this.addNode("READ", name, nodePosition);
 
-    if (typeof oElementObject === 'undefined') var oElementObject = this.scene.addElement(_node.name);
-    if (typeof drawingColumn === 'undefined'){
-      // first look for a column in the element
-      if (!oElementObject.column) {
-        var drawingColumn = this.scene.addColumn("DRAWING", _node.name, oElementObject);
-      }else{
-        var drawingColumn = oElementObject.column;
-      }
+  if (typeof oElementObject === 'undefined') var oElementObject = this.scene.addElement(_node.name);
+  if (typeof drawingColumn === 'undefined'){
+    // first look for a column in the element
+    if (!oElementObject.column) {
+      var drawingColumn = this.scene.addColumn("DRAWING", _node.name, oElementObject);
+    }else{
+      var drawingColumn = oElementObject.column;
     }
+  }
 
-    // setup the node
-    // setup animate mode/separate based on preferences?
-    _node.attributes.drawing.element.column = drawingColumn;
+  // setup the node
+  // setup animate mode/separate based on preferences?
+  _node.attributes.drawing.element.column = drawingColumn;
 
-    this.$.endUndo();
+  this.$.endUndo();
 
-    return _node;
+  return _node;
 }
 
 
