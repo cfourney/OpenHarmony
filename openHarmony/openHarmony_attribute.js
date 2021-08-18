@@ -649,14 +649,22 @@ $.oAttribute.prototype.setValue = function (value, frame) {
 }
 
 
-// MCNote: I think it would be good practice if functions had verbs in their names and properties were noun. it makes it easier to remember if you need to pass parameters or even include empty brackets
-// for example: doc.selection   vs doc.getSelection();
 /**
  * Gets the value of the attribute at the given frame.
  * @param   {int}        frame                 The frame at which to set the value, if not set, assumes 1
- *
+ * @deprecated use oAttribute.getValue(frame) instead (see: function names as verbs)
  * @return {object}      The value of the attribute in the native format of that attribute (contextual to the attribute).
  */
 $.oAttribute.prototype.value = function(frame){
   return this.getValue( frame );
+}
+
+
+/**
+ * @private
+ * Represents an oAttribute object in string form
+ * @returns {string}
+ */
+$.oAttribute.prototype.toString = function(){
+  return "[object oAttribute - keyword: "+this.keyword+(this.subAttributes.length?" - subAttributes: "+this.subAttributes.map(function(x){return x.shortKeyword}):"")+"]";
 }
