@@ -164,6 +164,20 @@ $.oPoint.prototype.pointAdd = function( add_pt ){
 }
 
 /**
+ * Adds the point to the coordinates of the current oPoint and returns a new oPoint with the result.
+ * @param {$.oPoint}   oPoint                The point to add to this point.
+ * @returns {$.oPoint}
+ */
+$.oPoint.prototype.addPoint = function( point ){
+  var x = this.x + point.x;
+  var y = this.y + point.y;
+  var z = this.z + point.z;
+
+  return new this.$.oPoint(x, y, z);
+}
+
+
+/**
  * Subtracts the point to the coordinates of the current oPoint.
  * @param   {$.oPoint}       sub_pt                The point to subtract to this point.
  * @returns { $.oPoint }                           Returns itself (for inline addition).
@@ -174,6 +188,20 @@ $.oPoint.prototype.pointSubtract = function( sub_pt ){
   this.z -= sub_pt.z;
 
   return this;
+}
+
+
+/**
+ * Subtracts the point to the coordinates of the current oPoint and returns a new oPoint with the result.
+ * @param {$.oPoint}   point                The point to subtract to this point.
+ * @returns {$.oPoint} a new independant oPoint.
+ */
+$.oPoint.prototype.subtractPoint = function( point ){
+  var x = this.x - point.x;
+  var y = this.y - point.y;
+  var z = this.z - point.z;
+
+  return new this.$.oPoint(x, y, z);
 }
 
 /**
