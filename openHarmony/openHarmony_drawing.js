@@ -1278,6 +1278,20 @@ Object.defineProperty($.oVertex.prototype, 'strokePosition', {
 
 
 /**
+ * The position of the point on the drawing, in oPoint object form
+ * @name $.oVertex#position
+ * @type {oPoint}
+ * @readonly
+ */
+Object.defineProperty($.oVertex.prototype, 'position', {
+  get: function(){
+    var _position = new this.$.oPoint(this.x, this.y, 0);
+    return _position;
+  }
+})
+
+
+/**
  * @private
  */
 $.oVertex.prototype.toString = function(){
