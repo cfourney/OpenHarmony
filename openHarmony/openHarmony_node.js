@@ -1609,9 +1609,7 @@ $.oNode.prototype.refreshAttributes = function( ){
     var _attributes = this.attributes
     for (var i in _attributes){
       var _attr = _attributes[i];
-      if( !this.hasOwnProperty( _attr.shortKeyword ) ){
-        this.setAttrGetterSetter(_attr);
-      }
+      this.setAttrGetterSetter(_attr);
     }
 }
 
