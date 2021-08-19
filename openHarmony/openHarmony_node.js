@@ -2114,7 +2114,6 @@ $.oTransformNamesObject = function(transformSwitchNode){
     },
   })
 
-  $.log("creating "+this.length+" getter setters")
   this.refresh();
 }
 $.oTransformNamesObject.prototype = Object.create(Array.prototype);
@@ -2138,7 +2137,7 @@ Object.defineProperty($.oTransformNamesObject.prototype, "createGetterSetter", {
       },
       set: function(newName){
         newName = newName+""; // convert to string
-        log("setting "+attrName+" to drawing "+newName+" on "+transformNode.path)
+        this.$.debug("setting "+attrName+" to drawing "+newName+" on "+transformNode.path, this.$.DEBUG_LEVEL.DEBUG)
         if (newName instanceof this.$.oDrawing) newName = newName.name;
         transformNode.transformationnames[attrName] = newName;
       }
@@ -2178,9 +2177,7 @@ Object.defineProperty($.oTransformNamesObject.prototype, "toString", {
 Object.defineProperty($.oTransformNamesObject.prototype, "refresh", {
   enumerable:false,
   value:function(){
-    $.log("creating "+this.length+" getter setters")
     for (var i in this){
-      log("deleting "+i);
       delete this[i];
     }
     for (var i=0; i<this.length; i++){
@@ -2265,7 +2262,7 @@ $.oColorOverrideNode.prototype.constructor = $.oColorOverrideNode;
  */
 Object.defineProperty($.oColorOverrideNode.prototype, "palettes", {
   get: function(){
-    this.$.log("getting palettes")
+    this.$.debug("getting palettes", this.$.DEBUG_LEVEL.LOG)
     if (!this._palettes){
       this._palettes = [];
 
@@ -2781,7 +2778,6 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
     copyPaste.paste(_tpl, destinationNodes.map(function(x){return x.path}), 0, 999, pasteOptions);
     var _nodes = destinationNodes;
   }else{
-    log("pasting as new nodes")
     var oldBackdrops = this.backdrops;
     copyPaste.pasteNewNodes(_tpl, _group, pasteOptions);
     var _scene = this.scene;
