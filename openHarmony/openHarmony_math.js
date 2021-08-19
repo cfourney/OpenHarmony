@@ -103,7 +103,7 @@ Object.defineProperty( $.oPoint.prototype, 'polarCoordinates', {
  * @param   {int}       y                  the y value to move the point by.
  * @param   {int}       z                  the z value to move the point by.
  *
- * @return: { $.oPoint }                   Returns self (for inline addition).
+ * @returns { $.oPoint }                   Returns self (for inline addition).
  */
 $.oPoint.prototype.translate = function( x, y, z){
   if (typeof x === 'undefined') var x = 0;
@@ -137,26 +137,23 @@ $.oPoint.prototype.translate = function( x, y, z){
   return new this.$.oPoint(x, y, z);
 }
 
-
-
 /**
  * The distance between two points.
- * @param {$.oPoint}     oPoint            the other point to get the distance to.s
+ * @param {$.oPoint}     point            the other point to calculate the distance from.
  * @returns {float}
  */
-$.oPoint.prototype.distance = function ( oPoint ){
-  var distanceX = oPoint.x-this.x;
-  var distanceY = oPoint.y-this.y;
-  var distanceZ = oPoint.z-this.z;
+$.oPoint.prototype.distance = function ( point ){
+  var distanceX = point.x-this.x;
+  var distanceY = point.y-this.y;
+  var distanceZ = point.z-this.z;
 
   return Math.sqrt(distanceX*distanceX + distanceY*distanceY + distanceZ*distanceZ)
 }
 
 /**
- * Adds the input box to the bounds of the current $.oBox.
+ * Adds the point to the coordinates of the current oPoint.
  * @param   {$.oPoint}       add_pt                The point to add to this point.
- *
- * @return: { $.oPoint }                           Returns self (for inline addition).
+ * @returns { $.oPoint }                           Returns itself (for inline addition).
  */
 $.oPoint.prototype.pointAdd = function( add_pt ){
   this.x += add_pt.x;
@@ -167,10 +164,9 @@ $.oPoint.prototype.pointAdd = function( add_pt ){
 }
 
 /**
- * Subtracts the input box to the bounds of the current $.oBox.
+ * Subtracts the point to the coordinates of the current oPoint.
  * @param   {$.oPoint}       sub_pt                The point to subtract to this point.
- *
- * @return: { $.oPoint }                           Returns self (for inline addition).
+ * @returns { $.oPoint }                           Returns itself (for inline addition).
  */
 $.oPoint.prototype.pointSubtract = function( sub_pt ){
   this.x -= sub_pt.x;
@@ -184,7 +180,7 @@ $.oPoint.prototype.pointSubtract = function( sub_pt ){
  * Multiply all coordinates by this value.
  * @param   {float}       float_val                Multiply all coordinates by this value.
  *
- * @return: { $.oPoint }                           Returns self (for inline addition).
+ * @returns { $.oPoint }                           Returns itself (for inline addition).
  */
 $.oPoint.prototype.multiply = function( float_val ){
   this.x *= float_val;
@@ -198,7 +194,7 @@ $.oPoint.prototype.multiply = function( float_val ){
  * Divides all coordinates by this value.
  * @param   {float}       float_val                Divide all coordinates by this value.
  *
- * @return: { $.oPoint }                           Returns self (for inline addition).
+ * @returns { $.oPoint }                           Returns itself (for inline addition).
  */
 $.oPoint.prototype.divide = function( float_val ){
   this.x /= float_val;
@@ -212,14 +208,14 @@ $.oPoint.prototype.divide = function( float_val ){
  * Find average of provided points.
  * @param   {$.oPoint[]}       point_array         The array of points to get the average.
  *
- * @return: { $.oPoint }                           Returns the $.oPoint average of provided points.
+ * @returns { $.oPoint }                           Returns the $.oPoint average of provided points.
  */
 $.oPoint.prototype.pointAverage = function( point_array ){
   var _avg = new this.$.oPoint( 0.0, 0.0, 0.0 );
-  for( var x=0;x<point_array.length;x++ ){
-    _avg.pointAdd( point_array[x] );
+  for (var x=0; x<point_array.length; x++) {
+    _avg.pointAdd(point_array[x]);
   }
-  _avg.divide( point_array.length );
+  _avg.divide(point_array.length);
 
   return _avg;
 }
@@ -247,8 +243,9 @@ $.oPoint.prototype.convertToDrawingSpace = function () {
 
 /**
  * Uses the scene settings to convert this as a worldspace point into an OpenGL point, used in underlying transformation operations in Harmony.
+ * @returns nothing
  */
-$.oPoint.convertToOpenGL = function(){
+$.oPoint.prototype.convertToOpenGL = function(){
 
   var qpt = scene.toOGL( new Point3d( this.x, this.y, this.z ) );
 
@@ -260,9 +257,10 @@ $.oPoint.convertToOpenGL = function(){
 
 
 /**
- * Uses the scene settings to convert this as an OpenGL point into a Harmony worldspace point, used in all displayed modules and Harmony coordinates.
+ * Uses the scene settings to convert this as an OpenGL point into a Harmony worldspace point.
+ * @returns nothing
  */
-$.oPoint.convertToWorldspace = function(){
+$.oPoint.prototype.convertToWorldspace = function(){
 
   var qpt = scene.fromOGL( new Point3d( this.x, this.y, this.z ) );
 
