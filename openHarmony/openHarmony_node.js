@@ -146,7 +146,7 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
     var _keyword = attr.shortKeyword;
 
     Object.defineProperty( context, _keyword, {
-        enumerable : false,
+        enumerable : true,
         configurable : true,
         get : function(){
             // MessageLog.trace("getting attribute "+attr.keyword+". animated: "+(attr.column != null))
@@ -158,6 +158,9 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
                 var _value =  attr.getValue();
             }else{
                 // if there are subattributes, create getter setters for each on the returned object
+                // this means every result of attr.getValue must be an object.
+                // For attributes that have a string return value, attr.getValue() actually returns a fake string object
+                // which is an object with a value property and a toString() method returning the value.
                 var _value = (attr.column != null)?new this.$.oList(attr.frames, 1):attr.getValue();
                 for (var i in _subAttrs){
                     this.setAttrGetterSetter( _subAttrs[i], _value );
@@ -2114,9 +2117,7 @@ $.oTransformNamesObject = function(transformSwitchNode){
   })
 
   $.log("creating "+this.length+" getter setters")
-  for (var i=0; i<this.length; i++){
-    this.createGetterSetter(i);
-  }
+  this.refresh();
 }
 $.oTransformNamesObject.prototype = Object.create(Array.prototype);
 
@@ -2176,10 +2177,27 @@ Object.defineProperty($.oTransformNamesObject.prototype, "toString", {
 /**
  * @private
  */
+Object.defineProperty($.oTransformNamesObject.prototype, "refresh", {
+  enumerable:false,
+  value:function(){
+    $.log("creating "+this.length+" getter setters")
+    for (var i in this){
+      log("deleting "+i);
+      delete this[i];
+    }
+    for (var i=0; i<this.length; i++){
+      this.createGetterSetter(i);
+    }
+  }
+})
+
+
+/**
+ * @private
+ */
 $.oTransformSwitchNode.prototype.refreshNames = function(){
   this.refreshAttributes();
-  this.names = new this.$.oTransformNamesObject(this);
-  return this.names;
+  this.names.refresh();
 }
 
 
