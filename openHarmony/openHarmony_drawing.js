@@ -1208,8 +1208,8 @@ $.oStroke.prototype.getPointCoordinates = function(position){
 
 
 /**
- *
- * @param {*} point
+ * projects a point onto a stroke and returns the closest point belonging to the stroke.
+ * @param {object} point
  */
 $.oStroke.prototype.getClosestPoint = function (point){
   var arg = {
@@ -1218,8 +1218,7 @@ $.oStroke.prototype.getClosestPoint = function (point){
   };
 
   var _result = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
-
-
+  return _result
 }
 
 //////////////////////////////////////
@@ -1265,9 +1264,10 @@ $.oVertex = function(stroke, x, y, onCurve, index){
 
 
 /**
- * The position of the point on the curve, from
+ * The position of the point on the curve, from 0 to the maximum number of points
  * @name $.oVertex#strokePosition
  * @type {float}
+ * @readonly
  */
 Object.defineProperty($.oVertex.prototype, 'strokePosition', {
   get: function(){
@@ -1281,7 +1281,7 @@ Object.defineProperty($.oVertex.prototype, 'strokePosition', {
  * @private
  */
 $.oVertex.prototype.toString = function(){
- return "oVertex : { index:"+this.index+", x: "+this.x+", y: "+this.y+", onCurve: "+this.onCurve+", position: "+this.strokePosition+" }"
+ return "oVertex : { index:"+this.index+", x: "+this.x+", y: "+this.y+", onCurve: "+this.onCurve+", strokePosition: "+this.strokePosition+" }"
 }
 
 
