@@ -778,6 +778,28 @@ $.oArtLayer.prototype.drawStroke = function(path, lineStyle, fillStyle){
 
 
 /**
+ * Draws a rectangle on the artLayer
+ * @param {float}     x
+ * @param {float}     y
+ * @param {float}     width
+ * @param {float}     height
+ * @param {$.oLineStyle} lineStyle
+ */
+$.oArtLayer.prototype.drawRectangle = function(x, y, width, height, lineStyle){
+  var path = [
+    {x:x,y:y,onCurve:true},
+    {x:x+width,y:y,onCurve:true},
+    {x:x+width,y:y+height,onCurve:true},
+    {x:x,y:y+height,onCurve:true},
+    {x:x,y:y,onCurve:true}
+  ];
+
+  this.drawStroke(path, lineStyle);
+}
+
+
+
+/**
  * Draws a line on the artLayer
  * @param {$.oPoint}     startPoint
  * @param {$.oPoint}     endPoint
