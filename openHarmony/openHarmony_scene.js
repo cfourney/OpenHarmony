@@ -351,6 +351,32 @@ Object.defineProperty($.oScene.prototype, 'center', {
 });
 
 
+/**
+ * The amount of drawing units represented by 1 field on the horizontal axis.
+ * @name $.oScene#fieldVectorResolutionX
+ * @type {double}
+ * @readonly
+ */
+Object.defineProperty($.oScene.prototype, 'fieldVectorResolutionX', {
+  get : function(){
+      return scene.numberOfUnitsX();
+  }
+});
+
+
+/**
+ * The amount of drawing units represented by 1 field on the vertical axis.
+ * @name $.oScene#fieldVectorResolutionY
+ * @type {double}
+ * @readonly
+ */
+Object.defineProperty($.oScene.prototype, 'fieldVectorResolutionY', {
+  get : function(){
+    var verticalResolution = 1875 // the amount of drawing units for the max vertical field value
+    var unit = verticalResolution/unitsY
+  }
+});
+
 
 /**
  * The horizontal resolution.
