@@ -787,6 +787,19 @@ Object.defineProperty( $.oNode.prototype, 'bounds', {
 
 
 /**
+ * The transformation matrix of the node at the currentFrame.
+ * @name $.oNode#matrix
+ * @readonly
+ * @type {oMatrix}
+*/
+Object.defineProperty( $.oNode.prototype, 'matrix', {
+  get : function(){
+    return this.getMatrixAtFrame(this.scene.currentFrame);
+  }
+});
+
+
+/**
  * The list of all columns linked across all the attributes of this node.
  * @name $.oNode#linkedColumns
  * @readonly
@@ -1186,6 +1199,16 @@ $.oNode.prototype.moveToGroup = function(group){
 
     this.$.endUndo();
   }
+}
+
+
+/**
+ * Get the transformation matrix for the node at the given frame
+ * @param {int} frameNumber
+ * @returns {oMatrix}  the matrix object
+ */
+$.oNode.prototype.getMatrixAtFrame = function (frameNumber){
+  return new this.$.oMatrix(node.getMatrix(this.path, frameNumber));
 }
 
 
