@@ -266,7 +266,19 @@ Object.defineProperty($.oScene.prototype, 'framerate', {
 
 
 /**
- * The horizontal aspect ratio.
+ * The Field unit aspect ratio as a coefficient (width/height).
+ * @name $.oScene#unitsAspectRatio
+ * @type {double}
+ */
+ Object.defineProperty($.oScene.prototype, 'unitsAspectRatio', {
+  get : function(){
+    return this.aspectRatioX/this.aspectRatioY;
+  }
+});
+
+
+/**
+ * The horizontal aspect ratio of Field units.
  * @name $.oScene#aspectRatioX
  * @type {double}
  */
@@ -280,7 +292,7 @@ Object.defineProperty($.oScene.prototype, 'aspectRatioX', {
 });
 
 /**
- * The vertical aspect ratio.
+ * The vertical aspect ratio of Field units.
  * @name $.oScene#aspectRatioY
  * @type {double}
  */
@@ -294,7 +306,7 @@ Object.defineProperty($.oScene.prototype, 'aspectRatioY', {
 });
 
 /**
- * The horizontal unit count.
+ * The horizontal Field unit count.
  * @name $.oScene#unitsX
  * @type {double}
  */
@@ -308,7 +320,7 @@ Object.defineProperty($.oScene.prototype, 'unitsX', {
 });
 
 /**
- * The vertical unit count.
+ * The vertical Field unit count.
  * @name $.oScene#unitsY
  * @type {double}
  */
@@ -322,7 +334,7 @@ Object.defineProperty($.oScene.prototype, 'unitsY', {
 });
 
 /**
- * The depth unit count.
+ * The depth Field unit count.
  * @name $.oScene#unitsZ
  * @type {double}
  */
@@ -359,7 +371,9 @@ Object.defineProperty($.oScene.prototype, 'center', {
  */
 Object.defineProperty($.oScene.prototype, 'fieldVectorResolutionX', {
   get : function(){
-      return scene.numberOfUnitsX();
+    var yUnit = this.fieldVectorResolutionY;
+    var unit = yUnit * this.unitsAspectRatio;
+    return unit
   }
 });
 
@@ -373,13 +387,14 @@ Object.defineProperty($.oScene.prototype, 'fieldVectorResolutionX', {
 Object.defineProperty($.oScene.prototype, 'fieldVectorResolutionY', {
   get : function(){
     var verticalResolution = 1875 // the amount of drawing units for the max vertical field value
-    var unit = verticalResolution/unitsY
+    var unit = verticalResolution/12; // the vertical number of units on drawings is always 12 regardless of $.scn.unitsY
+    return unit
   }
 });
 
 
 /**
- * The horizontal resolution.
+ * The horizontal resolution in pixels (for rendering).
  * @name $.oScene#resolutionX
  * @readonly
  * @type {int}
@@ -391,7 +406,7 @@ Object.defineProperty($.oScene.prototype, 'resolutionX', {
 });
 
 /**
- * The vertical resolution.
+ * The vertical resolution in pixels (for rendering).
  * @name $.oScene#resolutionY
  * @type {int}
  */
@@ -402,7 +417,7 @@ Object.defineProperty($.oScene.prototype, 'resolutionY', {
 });
 
 /**
- * The default horizontal resolution.
+ * The default horizontal resolution in pixels.
  * @name $.oScene#defaultResolutionX
  * @type {int}
  */
@@ -416,7 +431,7 @@ Object.defineProperty($.oScene.prototype, 'defaultResolutionX', {
 });
 
 /**
- * The default vertical resolution.
+ * The default vertical resolution in pixels.
  * @name $.oScene#defaultResolutionY
  * @type {int}
  */
