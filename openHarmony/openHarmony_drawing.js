@@ -1079,6 +1079,19 @@ Object.defineProperty($.oStroke.prototype, "style", {
 
 
 /**
+ * wether the stroke is a closed shape.
+ * @name $.oStroke#closed
+ * @type {$.oLineStyle}
+ */
+Object.defineProperty($.oStroke.prototype, "closed", {
+  get: function () {
+    var _path = this.path;
+    return _path[_path.length-1].strokePosition == 0;
+  }
+})
+
+
+/**
  * The intersections on this stroke. Each intersection is an object with stroke ($.oStroke), point($.oPoint), strokePoint(float) and ownPoint(float)
  * One of these objects describes an intersection by giving the stroke it intersects with, the coordinates of the intersection and two values which represent the place on the stroke at which the point is placed, with a value between 0 (start) and 1(end)
  * @param  {$.oStroke}   [stroke]       Specify a stroke to find intersections specific to it. If no stroke is specified,
