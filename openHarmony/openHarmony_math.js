@@ -39,7 +39,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-/* TODO, CURVES, SPLINES */
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -250,27 +249,26 @@ $.oPoint.prototype.pointAverage = function( point_array ){
 
 
 /**
- * Converts a Drawing point coordinate into a scene coordinate, as used by pegs
+ * Converts a Drawing point coordinate into a scene coordinate, as used by pegs (since drawings are 2D, z is untouched)
  * @returns {$.oPoint}
  */
 $.oPoint.prototype.convertToSceneCoordinates = function () {
-  var _point = scene.fromOGL( new Point3d( this.x/1875, this.y/1875, this.z ) );
-  return new this.$.oPoint(_point.x, _point.y, _point.z)
+  return new this.$.oPoint(this.x/this.$.scene.fieldVectorResolutionX, this.y/this.$.scene.fieldVectorResolutionY, this.z);
 }
 
 
 /**
- * Converts a scene coordinate point into a Drawing space coordinate, as used by Drawing tools and $.oShape
+ * Converts a scene coordinate point into a Drawing space coordinate, as used by Drawing tools and $.oShape (since drawings are 2D, z is untouched)
  * @returns {$.oPoint}
  */
 $.oPoint.prototype.convertToDrawingSpace = function () {
-  var _point = scene.toOGL( new Point3d( this.x, this.y, this.z ) );
-  return new this.$.oPoint(_point.x*1875, _point.y*1875, _point.z)
+  return new this.$.oPoint(this.x * this.$.scene.fieldVectorResolutionX, this.y * this.$.scene.fieldVectorResolutionY, this.z);
 }
 
 
 /**
  * Uses the scene settings to convert this as a worldspace point into an OpenGL point, used in underlying transformation operations in Harmony.
+ * OpenGL units have a square aspect ratio and go from -1 to 1 vertically in the camera field.
  * @returns nothing
  */
 $.oPoint.prototype.convertToOpenGL = function(){
@@ -447,7 +445,9 @@ $.oBox.prototype.includeNodes = function(oNodeArray){
   }
 }
 
-
+/**
+ * @private
+ */
 $.oBox.prototype.toString = function(){
   return "{top:"+this.top+", right:"+this.right+", bottom:"+this.bottom+", left:"+this.left+"}"
 }
