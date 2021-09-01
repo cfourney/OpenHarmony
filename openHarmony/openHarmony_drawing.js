@@ -1328,13 +1328,12 @@ Object.defineProperty($.oVertex.prototype, 'position', {
 
 
 /**
- * The angle of the curve going through this vertex.
- * In case of an angular vertex, the orientation will be considered the direction of the right hand bezier handle/line.
- * @name $.oVertex#orientation
- * @type {oPoint}
+ * The angle of the curve going through this vertex, compared to the x axis, counterclockwise.
+ * @name $.oVertex#angleRight
+ * @type {float} the angle in degrees, or null if the stroke is open ended on the right.
  * @readonly
  */
-Object.defineProperty($.oVertex.prototype, 'orientation', {
+Object.defineProperty($.oVertex.prototype, 'angleRight', {
   get: function(){
     var _index = this.index+1;
     var _path = this.stroke.path;
@@ -1342,15 +1341,47 @@ Object.defineProperty($.oVertex.prototype, 'orientation', {
     // get the next point by looping around if the stroke is closed
     if (_index >= _path.length){
       if (this.stroke.closed){
-        var _nextPoint = _path[0];
+        var _nextPoint = _path[1];
       }else{
-        var _nextPoint = _path[_index-2];
+        return null;
       }
     }else{
       var _nextPoint = _path[_index];
     }
+
     var vector = this.$.oVector.fromPoints(this, _nextPoint);
-    return vector.degreesAngle;
+    var angle = vector.degreesAngle;
+    // if (angle < 0) angle += 360 //ensuring only positive values
+    return angle
+  }
+})
+
+
+/**
+ * The angle of the line or bezier handle on the left of this vertex, compared to the x axis, counterclockwise.
+ * @name $.oVertex#angleLeft
+ * @type {float} the angle in degrees, or null if the stroke is open ended on the left.
+ * @readonly
+ */
+Object.defineProperty($.oVertex.prototype, 'angleLeft', {
+  get: function(){
+    var _index = this.index-1;
+    var _path = this.stroke.path;
+
+    // get the next point by looping around if the stroke is closed
+    if (_index < 0){
+      if (this.stroke.closed){
+        var _nextPoint = _path[_path.length-2]; //first and last points are the same when the stroke is closed
+      }else{
+        return null;
+      }
+    }else{
+      var _nextPoint = _path[_index];
+    }
+
+    var vector = this.$.oVector.fromPoints(this, _nextPoint);
+    var angle = vector.degreesAngle;
+    // if (angle < 0) angle += 360 //ensuring only positive values
   }
 })
 
