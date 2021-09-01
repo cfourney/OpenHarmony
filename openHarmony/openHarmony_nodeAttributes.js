@@ -35,10 +35,13 @@ function formatAttribute(attr, theNode){
   var type = attr.typeName().toLowerCase();
   var name = attr.name();
   var defaultValue = node.getTextAttr(theNode, 1, keyword).replace(".0000", "");
-  if (defaultValue.indexOf(" ") != -1) defaultValue = "'"+defaultValue+"'";
+  if (type == "generic_enum") {
+    var addBrackets = true;
+    defaultValue = '"'+defaultValue+'"';
+  }
   if (defaultValue == "N") defaultValue = "false";
   if (defaultValue == "Y") defaultValue = "true";
-  var message = "@property {"+type+"}  "+keyword.toLowerCase()+((defaultValue)?"="+defaultValue:"")+"   - "+name+"."
+  var message = "@property {"+type+"}  "+(addBrackets?"[":"")+keyword.toLowerCase()+((defaultValue!="")?"="+defaultValue:"")+(addBrackets?"]":"")+"  - "+name+"."
   return message;
 }
 */
@@ -64,11 +67,15 @@ function formatAttribute(attr, theNode){
  * // refer to the node type on this page to find out what properties can be set with what synthax for each Node Type.
  */
 
+ T: 19:38:24.024 /**
+ * Attributes associated to Node types
+ * @class NodeTypes
+ */
 
 /**
  * Attributes present in the node of type: 'MasterController'
  * @name  NodeTypes#MasterController
- * @property {string}  specs_editor='<specs>
+ * @property {string}  specs_editor=<specs>
   <ports>
     <in type="IMAGE"/>
     <out type="IMAGE"/>
@@ -76,14 +83,14 @@ function formatAttribute(attr, theNode){
   <attributes>
   </attributes>
 </specs>
-'   - Specifications.
+   - Specifications.
  * @property {file_editor}  script_editor   - .
  * @property {file_editor}  init_script   - .
  * @property {file_editor}  cleanup_script   - .
  * @property {file_editor}  ui_script   - .
  * @property {string}  ui_data   - .
  * @property {file_library}  files   - .
- * @property {generic_enum}  show_controls_mode=Normal   - Show Controls Mode.
+ * @property {generic_enum}  [show_controls_mode="Normal"]   - Show Controls Mode.
  */
 
 
@@ -122,7 +129,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'BoneModule'
  * @name  NodeTypes#Stick
- * @property {generic_enum}  influencetype=Infinite   - Influence Type.
+ * @property {generic_enum}  [influencetype="Infinite"]   - Influence Type.
  * @property {double}  influencefade=0.5000   - Influence Fade Radius.
  * @property {bool}  symmetric=true   - Symmetric Ellipse of Influence.
  * @property {double}  transversalradius=1   - Transversal Influence Radius Left.
@@ -138,7 +145,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'CurveModule'
  * @name  NodeTypes#Curve
  * @property {bool}  localreferential=true   - Apply Parent Transformation.
- * @property {generic_enum}  influencetype=Infinite   - Influence Type.
+ * @property {generic_enum}  [influencetype="Infinite"]   - Influence Type.
  * @property {double}  influencefade=0.5000   - Influence Fade Radius.
  * @property {bool}  symmetric=true   - Symmetric Ellipse of Influence.
  * @property {double}  transversalradius=1   - Transversal Influence Radius Left.
@@ -169,7 +176,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'BendyBoneModule'
  * @name  NodeTypes#Bone
- * @property {generic_enum}  influencetype=Infinite   - Influence Type.
+ * @property {generic_enum}  [influencetype="Infinite"]   - Influence Type.
  * @property {double}  influencefade=0.5000   - Influence Fade Radius.
  * @property {bool}  symmetric=true   - Symmetric Ellipse of Influence.
  * @property {double}  transversalradius=1   - Transversal Influence Radius Left.
@@ -199,7 +206,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'ShapeRender'
  * @name  NodeTypes#Shape-Render
- * @property {generic_enum}  edgetype='Hard Edge'   - Edge Type.
+ * @property {generic_enum}  [edgetype="Hard Edge"]   - Edge Type.
  * @property {double}  scale=25   - Scale.
  * @property {double}  discretizationscale=5   - Discretization Scale.
  * @property {double}  preblur=0   - Pre-Blur.
@@ -210,7 +217,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'NormalFloat'
  * @name  NodeTypes#Normal-Map-Converter
- * @property {generic_enum}  conversiontype=Genarts   - Conversion Type.
+ * @property {generic_enum}  [conversiontype="Genarts"]   - Conversion Type.
  * @property {double}  offset=0   - Offset.
  * @property {double}  length=1   - Length.
  * @property {bool}  invertred=false   - Invert Red.
@@ -263,7 +270,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'ArticulationModule'
  * @name  NodeTypes#Articulation
- * @property {generic_enum}  influencetype=Infinite   - Influence Type.
+ * @property {generic_enum}  [influencetype="Infinite"]   - Influence Type.
  * @property {double}  influencefade=0.5000   - Influence Fade Radius.
  * @property {bool}  symmetric=true   - Symmetric Ellipse of Influence.
  * @property {double}  transversalradius=1   - Transversal Influence Radius Left.
@@ -292,7 +299,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'ParticleBaker'
  * @name  NodeTypes#Particle-Baker
  * @property {int}  maxnumparticles=10000   - Maximum Number of Particles.
- * @property {generic_enum}  simulationquality=Normal   - Simulation Quality.
+ * @property {generic_enum}  [simulationquality="Normal"]   - Simulation Quality.
  * @property {int}  seed=0   - Seed.
  * @property {int}  transientframes=0   - Number of Pre-roll Frames.
  * @property {bool}  moveage=false   - Age Particles.
@@ -312,7 +319,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'ParticleVisualizer'
  * @name  NodeTypes#Particle-Visualizer
  * @property {bool}  forcedots=false   - Force to Render as Dots.
- * @property {generic_enum}  sortingstrategy='Back to Front'   - Rendering Order.
+ * @property {generic_enum}  [sortingstrategy="Back to Front"]   - Rendering Order.
  * @property {bool}  fixalpha=true   - Fix Output Alpha.
  * @property {bool}  useviewscaling=true   - Scale Particle System Using Parent Peg.
  * @property {double}  globalsize=1   - Global Scaling Factor.
@@ -322,7 +329,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'FreeFormDeformation'
  * @name  NodeTypes#Free-Form-Deformer
- * @property {generic_enum}  deformationquality='Very High'   - Deformation Quality.
+ * @property {generic_enum}  [deformationquality="Very High"]   - Deformation Quality.
  */
 
 
@@ -336,7 +343,7 @@ function formatAttribute(attr, theNode){
  * @property {double}  elevationscale=1   - Elevation Multiplier.
  * @property {double}  elevationsmoothness=1   - Elevation Smoothness Multiplier.
  * @property {bool}  generatenormals=true   - Generate Normals.
- * @property {generic_enum}  normalquality=Low   - Normal Map Quality.
+ * @property {generic_enum}  [normalquality="Low"]   - Normal Map Quality.
  * @property {bool}  usetruckfactor=false   - Consider Truck Factor.
  * @property {string}  colorinformation   - Colour Information.
  */
@@ -346,16 +353,16 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'PointConstraint3'
  * @name  NodeTypes#Three-Points-Constraints
  * @property {double}  active=100   - Active.
- * @property {generic_enum}  flattentype='Allow 3D Transform'   - Flatten Type.
- * @property {generic_enum}  transformtype=Translate   - Transform Type.
- * @property {generic_enum}  primaryport=Right   - Primary Port.
+ * @property {generic_enum}  [flattentype="Allow 3D Transform"]   - Flatten Type.
+ * @property {generic_enum}  [transformtype="Translate"]   - Transform Type.
+ * @property {generic_enum}  [primaryport="Right"]   - Primary Port.
  */
 
 
 /**
  * Attributes present in the node of type: 'GROUP'
  * @name  NodeTypes#Group
- * @property {string}  editor='<editor dockable="true" title="Script" winPreferred="640x460" linuxPreferred="640x480">
+ * @property {string}  editor=<editor dockable="true" title="Script" winPreferred="640x460" linuxPreferred="640x480">
   <tab title="Editor" expand="true">
     <attr name="EDITOR"/>
   </tab>
@@ -369,7 +376,7 @@ function formatAttribute(attr, theNode){
   </tab>
 </editor>
 
-'   - .
+   - .
  * @property {string}  target_composite   - Target Composite.
  * @property {string}  timeline_module   - Substitute Node in Timeline.
  * @property {bool}  mask=false   - Mask Flag.
@@ -396,14 +403,14 @@ function formatAttribute(attr, theNode){
  * @property {bool}  mirror=true   - Mirror.
  * @property {double}  ratio=2   - Mirror Front/Back Ratio.
  * @property {simple_bezier}  radius=(Curve)   - Radius.
- * @property {generic_enum}  quality=High   - Quality.
+ * @property {generic_enum}  [quality="High"]   - Quality.
  */
 
 
 /**
  * Attributes present in the node of type: 'SCRIPT_MODULE'
  * @name  NodeTypes#ScriptModule
- * @property {string}  specs_editor='<specs>
+ * @property {string}  specs_editor=<specs>
   <ports>
     <in type="IMAGE"/>
     <out type="IMAGE"/>
@@ -411,7 +418,7 @@ function formatAttribute(attr, theNode){
   <attributes>
   </attributes>
 </specs>
-'   - Specifications.
+   - Specifications.
  * @property {file_editor}  script_editor   - .
  * @property {file_editor}  init_script   - .
  * @property {file_editor}  cleanup_script   - .
@@ -486,7 +493,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  sparkle_color.green=255   - Green.
  * @property {int}  sparkle_color.blue=255   - Blue.
  * @property {int}  sparkle_color.alpha=128   - Alpha.
- * @property {generic_enum}  sparkle_color.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [sparkle_color.preferred_ui="Separate"]   - Preferred Editor.
  */
 
 
@@ -495,7 +502,7 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#Weighted-Deform
  * @property {double}  blend=0   - Pre-Blend Amount.
  * @property {double}  postblend=0   - Post-Blend Amount.
- * @property {generic_enum}  deformationquality='Very High'   - Deformation Quality.
+ * @property {generic_enum}  [deformationquality="Very High"]   - Deformation Quality.
  */
 
 
@@ -508,19 +515,19 @@ function formatAttribute(attr, theNode){
  * @property {int}  textcolor.green=255   - Green.
  * @property {int}  textcolor.blue=255   - Blue.
  * @property {int}  textcolor.alpha=255   - Alpha.
- * @property {generic_enum}  textcolor.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [textcolor.preferred_ui="Separate"]   - Preferred Editor.
  * @property {color}  backgroundcolor=ff000000   - Background colour.
  * @property {int}  backgroundcolor.red=0   - Red.
  * @property {int}  backgroundcolor.green=0   - Green.
  * @property {int}  backgroundcolor.blue=0   - Blue.
  * @property {int}  backgroundcolor.alpha=255   - Alpha.
- * @property {generic_enum}  backgroundcolor.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [backgroundcolor.preferred_ui="Separate"]   - Preferred Editor.
  * @property {int}  size=36   - Size.
  * @property {int}  frameoffset=0   - Frame Offset.
  * @property {bool}  drawframenumber=true   - Frame Number.
  * @property {bool}  drawtimecode=true   - Time code.
- * @property {string}  printinfo='Environment %e Job %j Scene %s'   - Scene Name.
- * @property {generic_enum}  alignment=Left   - Alignment.
+ * @property {string}  printinfo=Environment %e Job %j Scene %s   - Scene Name.
+ * @property {generic_enum}  [alignment="Left"]   - Alignment.
  * @property {int}  font=Arial   - Font.
  */
 
@@ -529,7 +536,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'TransformLimit'
  * @name  NodeTypes#Transformation-Limit
  * @property {double}  active=100   - Active.
- * @property {generic_enum}  switchtype='Active Value'   - Switch Effects.
+ * @property {generic_enum}  [switchtype="Active Value"]   - Switch Effects.
  * @property {double}  tx=100   - Translate X.
  * @property {double}  ty=100   - Translate Y.
  * @property {double}  tz=100   - Translate Z.
@@ -541,9 +548,9 @@ function formatAttribute(attr, theNode){
  * @property {bool}  uniformscale=false   - Uniform Scale.
  * @property {double}  pignore=0   - Ignore Parents.
  * @property {string}  parentname   - Parent's Name.
- * @property {generic_enum}  flattentype='Allow 3D Translate'   - Flatten Type.
- * @property {generic_enum}  skewtype='Skew Optimized for Rotation'   - Skew Type.
- * @property {generic_enum}  flipaxis='Allow Flip on X-Axis'   - Flip Axis.
+ * @property {generic_enum}  [flattentype="Allow 3D Translate"]   - Flatten Type.
+ * @property {generic_enum}  [skewtype="Skew Optimized for Rotation"]   - Skew Type.
+ * @property {generic_enum}  [flipaxis="Allow Flip on X-Axis"]   - Flip Axis.
  * @property {position_2d}  pos   - Control Position.
  * @property {bool}  pos.separate=On   - Separate.
  * @property {double}  pos.x=0   - Pos x.
@@ -555,7 +562,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'SCRIPT_MODULE'
  * @name  NodeTypes#Maya-Batch-Render
- * @property {string}  specs_editor='
+ * @property {string}  specs_editor=
 <specs>
   <ports>
     <in type="IMAGE"/>
@@ -565,7 +572,7 @@ function formatAttribute(attr, theNode){
     <attr type="string" name="renderer" value="" tooltip="If this attribute is not set, then the MayaBatchRender node will use the default renderer specified in the Maya file. If this attribute is set, then it forces the use of a specific renderer other than the default. The following renderers are currently supported: 'renderMan' (renderMan version 22.0 or higher), 'renderManRIS' or 'RIS' (renderMan version 21.x or earlier), 'renderManReyes' or 'reyes' (renderMan version 20.x or earlier), 'arnold', 'mentalRay', 'mayaSoftware' or 'maya'. Note that those values are case insensitive."/>
   </attributes>
 </specs>
-'   - Specifications.
+   - Specifications.
  * @property {file_editor}  script_editor   - .
  * @property {file_editor}  init_script   - .
  * @property {file_editor}  cleanup_script   - .
@@ -581,7 +588,7 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#Field-Chart
  * @property {bool}  enable_3d=false   - Enable 3D.
  * @property {bool}  face_camera=false   - Face Camera.
- * @property {generic_enum}  camera_alignment=None   - Camera Alignment.
+ * @property {generic_enum}  [camera_alignment="None"]   - Camera Alignment.
  * @property {position_3d}  offset   - Position.
  * @property {bool}  offset.separate=On   - Separate.
  * @property {double}  offset.x=0   - Pos x.
@@ -643,44 +650,44 @@ function formatAttribute(attr, theNode){
  * @property {bool}  read_line_art=true   - Line Art Enabled.
  * @property {bool}  read_color_art=true   - Colour Art Enabled.
  * @property {bool}  read_underlay=true   - Underlay Art Enabled.
- * @property {generic_enum}  overlay_art_drawing_mode=Vector   - Overlay Art Type.
- * @property {generic_enum}  line_art_drawing_mode=Vector   - Line Art Type.
- * @property {generic_enum}  color_art_drawing_mode=Vector   - Colour Art Type.
- * @property {generic_enum}  underlay_art_drawing_mode=Vector   - Underlay Art Type.
+ * @property {generic_enum}  [overlay_art_drawing_mode="Vector"]   - Overlay Art Type.
+ * @property {generic_enum}  [line_art_drawing_mode="Vector"]   - Line Art Type.
+ * @property {generic_enum}  [color_art_drawing_mode="Vector"]   - Colour Art Type.
+ * @property {generic_enum}  [underlay_art_drawing_mode="Vector"]   - Underlay Art Type.
  * @property {bool}  pencil_line_deformation_preserve_thickness=false   - Preserve Line Thickness.
- * @property {generic_enum}  pencil_line_deformation_quality=Low   - Pencil Lines Quality.
+ * @property {generic_enum}  [pencil_line_deformation_quality="Low"]   - Pencil Lines Quality.
  * @property {int}  pencil_line_deformation_smooth=1   - Pencil Lines Smoothing.
  * @property {double}  pencil_line_deformation_fit_error=3   - Fit Error.
  * @property {bool}  read_color=true   - Colour.
  * @property {bool}  read_transparency=true   - Transparency.
- * @property {generic_enum}  color_transformation=Linear   - Colour Space.
+ * @property {generic_enum}  [color_transformation="Linear"]   - Colour Space.
  * @property {string}  color_space   - Colour Space.
- * @property {generic_enum}  apply_matte_to_color='Premultiplied with Black'   - Transparency Type.
+ * @property {generic_enum}  [apply_matte_to_color="Premultiplied with Black"]   - Transparency Type.
  * @property {bool}  enable_line_texture=true   - Enable Line Texture.
- * @property {generic_enum}  antialiasing_quality=Medium   - Antialiasing Quality.
+ * @property {generic_enum}  [antialiasing_quality="Medium"]   - Antialiasing Quality.
  * @property {double}  antialiasing_exponent=1   - Antialiasing Exponent.
  * @property {double}  opacity=100   - Opacity.
- * @property {generic_enum}  texture_filter='Nearest (Filtered)'   - Texture Filter.
+ * @property {generic_enum}  [texture_filter="Nearest (Filtered)"]   - Texture Filter.
  * @property {bool}  adjust_pencil_thickness=false   - Adjust Pencil Lines Thickness.
  * @property {bool}  normal_line_art_thickness=true   - Normal Thickness.
- * @property {generic_enum}  zoom_independent_line_art_thickness='Scale Independent'   - Scale Independent.
+ * @property {generic_enum}  [zoom_independent_line_art_thickness="Scale Independent"]   - Scale Independent.
  * @property {double}  mult_line_art_thickness=1   - Proportional.
  * @property {double}  add_line_art_thickness=0   - Constant.
  * @property {double}  min_line_art_thickness=0   - Minimum.
  * @property {double}  max_line_art_thickness=0   - Maximum.
- * @property {generic_enum}  use_drawing_pivot='Apply Embedded Pivot on Drawing Layer'   - Use Embedded Pivots.
+ * @property {generic_enum}  [use_drawing_pivot="Apply Embedded Pivot on Drawing Layer"]   - Use Embedded Pivots.
  * @property {bool}  flip_hor=false   - Flip Horizontal.
  * @property {bool}  flip_vert=false   - Flip Vertical.
  * @property {bool}  turn_before_alignment=false   - Turn Before Alignment.
  * @property {bool}  no_clipping=false   - No Clipping.
  * @property {int}  x_clip_factor=0   - Clipping Factor (x).
  * @property {int}  y_clip_factor=0   - Clipping Factor (y).
- * @property {generic_enum}  alignment_rule='Center First Page'   - Alignment Rule.
+ * @property {generic_enum}  [alignment_rule="Center First Page"]   - Alignment Rule.
  * @property {double}  morphing_velo=0   - Morphing Velocity.
  * @property {bool}  can_animate=true   - Animate Using Animation Tools.
  * @property {bool}  tile_horizontal=false   - Tile Horizontally.
  * @property {bool}  tile_vertical=false   - Tile Vertically.
- * @property {generic_enum}  size=12   - Size.
+ * @property {generic_enum}  [size="12"]   - Size.
  * @property {bool}  opaque=false   - Opaque.
  */
 
@@ -690,7 +697,7 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#Drawing
  * @property {bool}  enable_3d=false   - Enable 3D.
  * @property {bool}  face_camera=false   - Face Camera.
- * @property {generic_enum}  camera_alignment=None   - Camera Alignment.
+ * @property {generic_enum}  [camera_alignment="None"]   - Camera Alignment.
  * @property {position_3d}  offset   - Position.
  * @property {bool}  offset.separate=On   - Separate.
  * @property {double}  offset.x=0   - Pos x.
@@ -752,39 +759,39 @@ function formatAttribute(attr, theNode){
  * @property {bool}  read_line_art=true   - Line Art Enabled.
  * @property {bool}  read_color_art=true   - Colour Art Enabled.
  * @property {bool}  read_underlay=true   - Underlay Art Enabled.
- * @property {generic_enum}  overlay_art_drawing_mode=Vector   - Overlay Art Type.
- * @property {generic_enum}  line_art_drawing_mode=Vector   - Line Art Type.
- * @property {generic_enum}  color_art_drawing_mode=Vector   - Colour Art Type.
- * @property {generic_enum}  underlay_art_drawing_mode=Vector   - Underlay Art Type.
+ * @property {generic_enum}  [overlay_art_drawing_mode="Vector"]   - Overlay Art Type.
+ * @property {generic_enum}  [line_art_drawing_mode="Vector"]   - Line Art Type.
+ * @property {generic_enum}  [color_art_drawing_mode="Vector"]   - Colour Art Type.
+ * @property {generic_enum}  [underlay_art_drawing_mode="Vector"]   - Underlay Art Type.
  * @property {bool}  pencil_line_deformation_preserve_thickness=false   - Preserve Line Thickness.
- * @property {generic_enum}  pencil_line_deformation_quality=Low   - Pencil Lines Quality.
+ * @property {generic_enum}  [pencil_line_deformation_quality="Low"]   - Pencil Lines Quality.
  * @property {int}  pencil_line_deformation_smooth=1   - Pencil Lines Smoothing.
  * @property {double}  pencil_line_deformation_fit_error=3   - Fit Error.
  * @property {bool}  read_color=true   - Colour.
  * @property {bool}  read_transparency=true   - Transparency.
- * @property {generic_enum}  color_transformation=Linear   - Colour Space.
+ * @property {generic_enum}  [color_transformation="Linear"]   - Colour Space.
  * @property {string}  color_space   - Colour Space.
- * @property {generic_enum}  apply_matte_to_color='Premultiplied with Black'   - Transparency Type.
+ * @property {generic_enum}  [apply_matte_to_color="Premultiplied with Black"]   - Transparency Type.
  * @property {bool}  enable_line_texture=true   - Enable Line Texture.
- * @property {generic_enum}  antialiasing_quality=High   - Antialiasing Quality.
+ * @property {generic_enum}  [antialiasing_quality="High"]   - Antialiasing Quality.
  * @property {double}  antialiasing_exponent=1   - Antialiasing Exponent.
  * @property {double}  opacity=100   - Opacity.
- * @property {generic_enum}  texture_filter='Nearest (Filtered)'   - Texture Filter.
+ * @property {generic_enum}  [texture_filter="Nearest (Filtered)"]   - Texture Filter.
  * @property {bool}  adjust_pencil_thickness=false   - Adjust Pencil Lines Thickness.
  * @property {bool}  normal_line_art_thickness=true   - Normal Thickness.
- * @property {generic_enum}  zoom_independent_line_art_thickness='Scale Independent'   - Scale Independent.
+ * @property {generic_enum}  [zoom_independent_line_art_thickness="Scale Independent"]   - Scale Independent.
  * @property {double}  mult_line_art_thickness=1   - Proportional.
  * @property {double}  add_line_art_thickness=0   - Constant.
  * @property {double}  min_line_art_thickness=0   - Minimum.
  * @property {double}  max_line_art_thickness=0   - Maximum.
- * @property {generic_enum}  use_drawing_pivot='Apply Embedded Pivot on Drawing Layer'   - Use Embedded Pivots.
+ * @property {generic_enum}  [use_drawing_pivot="Apply Embedded Pivot on Drawing Layer"]   - Use Embedded Pivots.
  * @property {bool}  flip_hor=false   - Flip Horizontal.
  * @property {bool}  flip_vert=false   - Flip Vertical.
  * @property {bool}  turn_before_alignment=false   - Turn Before Alignment.
  * @property {bool}  no_clipping=false   - No Clipping.
  * @property {int}  x_clip_factor=0   - Clipping Factor (x).
  * @property {int}  y_clip_factor=0   - Clipping Factor (y).
- * @property {generic_enum}  alignment_rule='Center First Page'   - Alignment Rule.
+ * @property {generic_enum}  [alignment_rule="Center First Page"]   - Alignment Rule.
  * @property {double}  morphing_velo=0   - Morphing Velocity.
  * @property {bool}  can_animate=false   - Animate Using Animation Tools.
  * @property {bool}  tile_horizontal=false   - Tile Horizontally.
@@ -869,7 +876,7 @@ function formatAttribute(attr, theNode){
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {bool}  bidirectional=true   - Bidirectional.
- * @property {generic_enum}  precision='Medium 8'   - Precision.
+ * @property {generic_enum}  [precision="Medium 8"]   - Precision.
  * @property {double}  blurriness=0   - Blurriness.
  * @property {double}  fall_off=0   - Fall Off.
  * @property {double}  spiral=0   - Custom.
@@ -878,7 +885,7 @@ function formatAttribute(attr, theNode){
  * @property {double}  focus.x=0   - Pos x.
  * @property {double}  focus.y=0   - Pos y.
  * @property {point_2d}  focus.2dpoint   - Point.
- * @property {generic_enum}  smoothness=Quadratic   - Variation.
+ * @property {generic_enum}  [smoothness="Quadratic"]   - Variation.
  * @property {double}  quality=1   - Quality.
  * @property {bool}  legacy=false   - Legacy.
  */
@@ -907,12 +914,12 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'COMPOSITE'
  * @name  NodeTypes#Composite
- * @property {generic_enum}  composite_mode='Pass Through'   - Mode.
+ * @property {generic_enum}  [composite_mode="Pass Through"]   - Mode.
  * @property {bool}  flatten_output=false   - Flatten Output.
  * @property {bool}  flatten_vector=false   - Vector Flatten Output.
  * @property {bool}  composite_2d=false   - 2D.
  * @property {bool}  composite_3d=false   - 3D.
- * @property {generic_enum}  output_z=Leftmost   - Output Z.
+ * @property {generic_enum}  [output_z="Leftmost"]   - Output Z.
  * @property {int}  output_z_input_port=1   - Port For Output Z.
  * @property {bool}  apply_focus=true   - Apply Focus.
  * @property {double}  multiplier=1   - Focus Multiplier.
@@ -924,8 +931,8 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'CastShadow'
  * @name  NodeTypes#Cast-Shadow
- * @property {generic_enum}  lighttype=Point   - Light Type.
- * @property {generic_enum}  shadetype=Smooth   - Shading Type.
+ * @property {generic_enum}  [lighttype="Point"]   - Light Type.
+ * @property {generic_enum}  [shadetype="Smooth"]   - Shading Type.
  * @property {double}  anglebias=0   - Angle Bias.
  * @property {double}  shadowdarkness=100   - Shadow Darkness.
  * @property {double}  shadowlength=0   - Shadow Length.
@@ -949,7 +956,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  color.green=0   - Green.
  * @property {int}  color.blue=0   - Blue.
  * @property {int}  color.alpha=255   - Alpha.
- * @property {generic_enum}  color.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [color.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  useimagecolor=false   - Use Image Colour.
  * @property {double}  imagecolorweight=50   - Image Colour Intensity.
  * @property {bool}  usetruckfactor=true   - Consider Truck Factor.
@@ -961,12 +968,12 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'PRECOMP'
  * @name  NodeTypes#Pre-render-Cache
- * @property {generic_enum}  composite_mode='As Bitmap'   - Mode.
+ * @property {generic_enum}  [composite_mode="As Bitmap"]   - Mode.
  * @property {bool}  flatten_output=true   - Flatten Output.
  * @property {bool}  flatten_vector=false   - Vector Flatten Output.
  * @property {bool}  composite_2d=false   - 2D.
  * @property {bool}  composite_3d=false   - 3D.
- * @property {generic_enum}  output_z=Leftmost   - Output Z.
+ * @property {generic_enum}  [output_z="Leftmost"]   - Output Z.
  * @property {int}  output_z_input_port=1   - Port For Output Z.
  * @property {bool}  apply_focus=true   - Apply Focus.
  * @property {double}  multiplier=1   - Focus Multiplier.
@@ -1023,7 +1030,7 @@ function formatAttribute(attr, theNode){
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {double}  black_radius=0   - Black radius.
  * @property {double}  white_radius=0   - White radius.
- * @property {generic_enum}  quality=High   - Quality.
+ * @property {generic_enum}  [quality="High"]   - Quality.
  * @property {bool}  keep_inside_source_image=false   - Keep inside source image.
  */
 
@@ -1033,7 +1040,7 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#Layer-Selector
  * @property {bool}  flatten=false   - Flatten.
  * @property {bool}  apply_to_matte_ports=false   - Apply to Matte Ports on Input Effects.
- * @property {generic_enum}  antialiasing_quality=Ignore   - Antialiasing Quality.
+ * @property {generic_enum}  [antialiasing_quality="Ignore"]   - Antialiasing Quality.
  * @property {double}  antialiasing_exponent=1   - Antialiasing Exponent.
  * @property {bool}  read_overlay=false   - Read Overlay.
  * @property {bool}  read_lineart=true   - Read LineArt.
@@ -1063,7 +1070,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  color.green=255   - Green.
  * @property {int}  color.blue=255   - Blue.
  * @property {int}  color.alpha=255   - Alpha.
- * @property {generic_enum}  color.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [color.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  */
 
@@ -1074,7 +1081,7 @@ function formatAttribute(attr, theNode){
  * @property {bool}  autorange=true   - Automatic Range Detection.
  * @property {int}  rangestart=1   -     Start.
  * @property {int}  rangeend=1   -     End.
- * @property {generic_enum}  looptype=Repeat   - Loop Type.
+ * @property {generic_enum}  [looptype="Repeat"]   - Loop Type.
  */
 
 
@@ -1139,8 +1146,8 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'COLOR_FADE'
  * @name  NodeTypes#Colour-Fade
  * @property {double}  fadefactor=100   - Fade.
- * @property {generic_enum}  colorspace=RGB   - Colour Interpolation.
- * @property {generic_enum}  hueinterpolation=Linear   - Hue Interpolation.
+ * @property {generic_enum}  [colorspace="RGB"]   - Colour Interpolation.
+ * @property {generic_enum}  [hueinterpolation="Linear"]   - Hue Interpolation.
  */
 
 
@@ -1192,13 +1199,13 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'COMPOSITE_GENERIC'
  * @name  NodeTypes#Composite-Generic
- * @property {generic_enum}  color_operation='Apply With Alpha'   - Colour Operation.
+ * @property {generic_enum}  [color_operation="Apply With Alpha"]   - Colour Operation.
  * @property {double}  intensity_color_red=1   - Intensity Red.
  * @property {double}  intensity_color_blue=1   - Intensity Blue.
  * @property {double}  intensity_color_green=1   - Intensity Green.
  * @property {double}  opacity=100   - Opacity.
- * @property {generic_enum}  alpha_operation=Apply   - Alpha Operation.
- * @property {generic_enum}  output_z=Leftmost   - Output Z.
+ * @property {generic_enum}  [alpha_operation="Apply"]   - Alpha Operation.
+ * @property {generic_enum}  [output_z="Leftmost"]   - Output Z.
  * @property {int}  output_z_input_port=1   - Port For Output Z.
  */
 
@@ -1208,7 +1215,7 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#Colour-Art
  * @property {bool}  flatten=false   - Flatten.
  * @property {bool}  apply_to_matte_ports=false   - Apply to Matte Ports on Input Effects.
- * @property {generic_enum}  antialiasing_quality=Ignore   - Antialiasing Quality.
+ * @property {generic_enum}  [antialiasing_quality="Ignore"]   - Antialiasing Quality.
  * @property {double}  antialiasing_exponent=1   - Antialiasing Exponent.
  */
 
@@ -1218,7 +1225,7 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#Underlay-Layer
  * @property {bool}  flatten=false   - Flatten.
  * @property {bool}  apply_to_matte_ports=false   - Apply to Matte Ports on Input Effects.
- * @property {generic_enum}  antialiasing_quality=Ignore   - Antialiasing Quality.
+ * @property {generic_enum}  [antialiasing_quality="Ignore"]   - Antialiasing Quality.
  * @property {double}  antialiasing_exponent=1   - Antialiasing Exponent.
  */
 
@@ -1254,7 +1261,7 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#Line-Art
  * @property {bool}  flatten=false   - Flatten.
  * @property {bool}  apply_to_matte_ports=false   - Apply to Matte Ports on Input Effects.
- * @property {generic_enum}  antialiasing_quality=Ignore   - Antialiasing Quality.
+ * @property {generic_enum}  [antialiasing_quality="Ignore"]   - Antialiasing Quality.
  * @property {double}  antialiasing_exponent=1   - Antialiasing Exponent.
  */
 
@@ -1264,7 +1271,7 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#Overlay-Layer
  * @property {bool}  flatten=false   - Flatten.
  * @property {bool}  apply_to_matte_ports=false   - Apply to Matte Ports on Input Effects.
- * @property {generic_enum}  antialiasing_quality=Ignore   - Antialiasing Quality.
+ * @property {generic_enum}  [antialiasing_quality="Ignore"]   - Antialiasing Quality.
  * @property {double}  antialiasing_exponent=1   - Antialiasing Exponent.
  */
 
@@ -1288,7 +1295,7 @@ function formatAttribute(attr, theNode){
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {bool}  bidirectional=true   - Bidirectional.
- * @property {generic_enum}  precision='Medium 8'   - Precision.
+ * @property {generic_enum}  [precision="Medium 8"]   - Precision.
  * @property {bool}  repeat_edge_pixels=false   - Repeat Edge Pixels.
  * @property {bool}  directional=false   - Directional.
  * @property {double}  angle=0   - Angle.
@@ -1308,7 +1315,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  color.green=0   - Green.
  * @property {int}  color.blue=0   - Blue.
  * @property {int}  color.alpha=255   - Alpha.
- * @property {generic_enum}  color.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [color.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  pre_multiplied_alpha=true   - Pre-multiplied Alpha.
  * @property {double}  key_difference_weighting=50   - Key Weight.
  * @property {double}  edge_key_threshold=0   - Background Bias.
@@ -1321,7 +1328,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  spill_color.green=0   - Green.
  * @property {int}  spill_color.blue=0   - Blue.
  * @property {int}  spill_color.alpha=255   - Alpha.
- * @property {generic_enum}  spill_color.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [spill_color.preferred_ui="Separate"]   - Preferred Editor.
  * @property {double}  matte_clip_black=0   - Clip Black.
  * @property {double}  matte_clip_white=100   - Clip White.
  * @property {bool}  invert_matte=false   - Invert Output Matte.
@@ -1331,10 +1338,10 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'CHANNEL_SWAP'
  * @name  NodeTypes#Channel-Swap
- * @property {generic_enum}  redchannelselection=Red   - Red Channel From.
- * @property {generic_enum}  greenchannelselection=Green   - Green Channel From.
- * @property {generic_enum}  bluechannelselection=Blue   - Blue Channel From.
- * @property {generic_enum}  alphachannelselection=Alpha   - Alpha Channel From.
+ * @property {generic_enum}  [redchannelselection="Red"]   - Red Channel From.
+ * @property {generic_enum}  [greenchannelselection="Green"]   - Green Channel From.
+ * @property {generic_enum}  [bluechannelselection="Blue"]   - Blue Channel From.
+ * @property {generic_enum}  [alphachannelselection="Alpha"]   - Alpha Channel From.
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  */
 
@@ -1362,9 +1369,9 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'OpenGLPreview'
  * @name  NodeTypes#RenderPreview
- * @property {generic_enum}  refreshstrategy='Current Frame Only'   - Render.
- * @property {generic_enum}  scaling='Use Render Preview Setting'   - Preview Resolution.
- * @property {generic_enum}  renderstrategy='Use Previously Rendered'   - Outdated Images Mode.
+ * @property {generic_enum}  [refreshstrategy="Current Frame Only"]   - Render.
+ * @property {generic_enum}  [scaling="Use Render Preview Setting"]   - Preview Resolution.
+ * @property {generic_enum}  [renderstrategy="Use Previously Rendered"]   - Outdated Images Mode.
  * @property {push_button}  computeallimages   - Render Frames.
  */
 
@@ -1420,7 +1427,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'WRITE'
  * @name  NodeTypes#Write
- * @property {generic_enum}  export_to_movie='Output Drawings'   - Export to movie.
+ * @property {generic_enum}  [export_to_movie="Output Drawings"]   - Export to movie.
  * @property {string}  drawing_name=frames/final-   - Drawing name.
  * @property {string}  movie_path=frames/output   - Movie path.
  * @property {string}  movie_format=com.toonboom.quicktime.legacy   - Movie format setting.
@@ -1430,18 +1437,18 @@ function formatAttribute(attr, theNode){
  * @property {int}  leading_zeros=3   - Leading zeros.
  * @property {int}  start=1   - Start.
  * @property {string}  drawing_type=TGA   - Drawing type.
- * @property {enable}  enabling='Always Enabled'   - Enabling.
- * @property {generic_enum}  enabling.filter='Always Enabled'   - Filter.
+ * @property {enable}  enabling=Always Enabled   - Enabling.
+ * @property {generic_enum}  [enabling.filter="Always Enabled"]   - Filter.
  * @property {string}  enabling.filter_name   - Filter name.
  * @property {int}  enabling.filter_res_x=720   - X resolution.
  * @property {int}  enabling.filter_res_y=540   - Y resolution.
  * @property {bool}  script_movie=false   - Script Movie.
- * @property {string}  script_editor='// Following code will be called at the end of Write Node rendering
+ * @property {string}  script_editor=// Following code will be called at the end of Write Node rendering
 // operations to create a movie file from rendered images.
 
-// ...'   - Movie Generation Script.
+// ...   - Movie Generation Script.
  * @property {string}  color_space   - Colour Space.
- * @property {generic_enum}  composite_partitioning=Off   - Composite Partitioning.
+ * @property {generic_enum}  [composite_partitioning="Off"]   - Composite Partitioning.
  * @property {double}  z_partition_range=1   - Z Partition Range.
  * @property {bool}  clean_up_partition_folders=true   - Clean up partition folders.
  */
@@ -1450,7 +1457,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'MultiLayerWrite'
  * @name  NodeTypes#Multi-Layer-Write
- * @property {generic_enum}  export_to_movie='Output Drawings'   - Export to movie.
+ * @property {generic_enum}  [export_to_movie="Output Drawings"]   - Export to movie.
  * @property {string}  drawing_name=frames/final-   - Drawing name.
  * @property {string}  movie_path=frames/output   - Movie path.
  * @property {string}  movie_format=com.toonboom.quicktime.legacy   - Movie format setting.
@@ -1460,18 +1467,18 @@ function formatAttribute(attr, theNode){
  * @property {int}  leading_zeros=3   - Leading zeros.
  * @property {int}  start=1   - Start.
  * @property {string}  drawing_type=PSD   - Drawing type.
- * @property {enable}  enabling='Always Enabled'   - Enabling.
- * @property {generic_enum}  enabling.filter='Always Enabled'   - Filter.
+ * @property {enable}  enabling=Always Enabled   - Enabling.
+ * @property {generic_enum}  [enabling.filter="Always Enabled"]   - Filter.
  * @property {string}  enabling.filter_name   - Filter name.
  * @property {int}  enabling.filter_res_x=720   - X resolution.
  * @property {int}  enabling.filter_res_y=540   - Y resolution.
  * @property {bool}  script_movie=false   - Script Movie.
- * @property {string}  script_editor='// Following code will be called at the end of Write Node rendering
+ * @property {string}  script_editor=// Following code will be called at the end of Write Node rendering
 // operations to create a movie file from rendered images.
 
-// ...'   - Movie Generation Script.
+// ...   - Movie Generation Script.
  * @property {string}  color_space   - Colour Space.
- * @property {generic_enum}  composite_partitioning=Off   - Composite Partitioning.
+ * @property {generic_enum}  [composite_partitioning="Off"]   - Composite Partitioning.
  * @property {double}  z_partition_range=1   - Z Partition Range.
  * @property {bool}  clean_up_partition_folders=true   - Clean up partition folders.
  * @property {string}  input_names   - Input Names.
@@ -1486,7 +1493,7 @@ function formatAttribute(attr, theNode){
  * @property {double}  fallof_rate=0   - Falloff Rate.
  * @property {double}  angle=0   - Angle.
  * @property {double}  radius=0   - Radius.
- * @property {generic_enum}  direction_of_trail=Angle   - Direction of trail.
+ * @property {generic_enum}  [direction_of_trail="Angle"]   - Direction of trail.
  * @property {bool}  ignore_alpha=false   - Ignore Alpha.
  * @property {bool}  extra_final_blur=true   - Extra Final Blur.
  */
@@ -1496,7 +1503,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'TONE'
  * @name  NodeTypes#Tone
  * @property {bool}  truck_factor=true   - Truck Factor.
- * @property {generic_enum}  blur_type=Radial   - Blur Type.
+ * @property {generic_enum}  [blur_type="Radial"]   - Blur Type.
  * @property {double}  radius=2   - Radius.
  * @property {double}  directional_angle=0   - Directional Angle.
  * @property {double}  directional_falloff_rate=1   - Directional Falloff Rate.
@@ -1507,7 +1514,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  color.green=-100   - Green.
  * @property {int}  color.blue=-100   - Blue.
  * @property {int}  color.alpha=100   - Alpha.
- * @property {generic_enum}  color.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [color.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  multiplicative=false   - Multiplicative.
  * @property {double}  colour_gain=1   - Intensity.
  * @property {bool}  invert_matte_port=false   - Invert Matte.
@@ -1520,7 +1527,7 @@ function formatAttribute(attr, theNode){
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {bool}  bidirectional=true   - Bidirectional.
- * @property {generic_enum}  precision='Medium 8'   - Precision.
+ * @property {generic_enum}  [precision="Medium 8"]   - Precision.
  * @property {bool}  repeat_edge_pixels=false   - Repeat Edge Pixels.
  * @property {bool}  directional=false   - Directional.
  * @property {double}  angle=0   - Angle.
@@ -1535,7 +1542,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'HIGHLIGHT'
  * @name  NodeTypes#Highlight
  * @property {bool}  truck_factor=true   - Truck Factor.
- * @property {generic_enum}  blur_type=Radial   - Blur Type.
+ * @property {generic_enum}  [blur_type="Radial"]   - Blur Type.
  * @property {double}  radius=2   - Radius.
  * @property {double}  directional_angle=0   - Directional Angle.
  * @property {double}  directional_falloff_rate=1   - Directional Falloff Rate.
@@ -1546,7 +1553,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  color.green=100   - Green.
  * @property {int}  color.blue=100   - Blue.
  * @property {int}  color.alpha=100   - Alpha.
- * @property {generic_enum}  color.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [color.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  multiplicative=false   - Multiplicative.
  * @property {double}  colour_gain=1   - Intensity.
  * @property {bool}  invert_matte_port=false   - Invert Matte.
@@ -1557,7 +1564,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'MATTE_BLUR'
  * @name  NodeTypes#Matte-Blur
  * @property {bool}  truck_factor=true   - Truck Factor.
- * @property {generic_enum}  blur_type=Radial   - Blur Type.
+ * @property {generic_enum}  [blur_type="Radial"]   - Blur Type.
  * @property {double}  radius=0   - Radius.
  * @property {double}  directional_angle=0   - Directional Angle.
  * @property {double}  directional_falloff_rate=1   - Directional Falloff Rate.
@@ -1568,7 +1575,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  color.green=255   - Green.
  * @property {int}  color.blue=255   - Blue.
  * @property {int}  color.alpha=255   - Alpha.
- * @property {generic_enum}  color.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [color.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  multiplicative=false   - Multiplicative.
  * @property {double}  colour_gain=1   - Intensity.
  */
@@ -1579,7 +1586,7 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#Peg
  * @property {bool}  enable_3d=false   - Enable 3D.
  * @property {bool}  face_camera=false   - Face Camera.
- * @property {generic_enum}  camera_alignment=None   - Camera Alignment.
+ * @property {generic_enum}  [camera_alignment="None"]   - Camera Alignment.
  * @property {position_3d}  position   - Position.
  * @property {bool}  position.separate=On   - Separate.
  * @property {double}  position.x=0   - Pos x.
@@ -1637,7 +1644,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'GLOW'
  * @name  NodeTypes#Glow
  * @property {bool}  truck_factor=true   - Truck Factor.
- * @property {generic_enum}  blur_type=Radial   - Blur Type.
+ * @property {generic_enum}  [blur_type="Radial"]   - Blur Type.
  * @property {double}  radius=0   - Radius.
  * @property {double}  directional_angle=0   - Directional Angle.
  * @property {double}  directional_falloff_rate=1   - Directional Falloff Rate.
@@ -1648,7 +1655,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  color.green=100   - Green.
  * @property {int}  color.blue=100   - Blue.
  * @property {int}  color.alpha=255   - Alpha.
- * @property {generic_enum}  color.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [color.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  multiplicative=false   - Multiplicative.
  * @property {double}  colour_gain=1   - Intensity.
  */
@@ -1657,8 +1664,8 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'BLEND_MODE_MODULE'
  * @name  NodeTypes#Blending
- * @property {generic_enum}  blend_mode=Normal   - Blend Mode.
- * @property {generic_enum}  flash_blend_mode=Normal   - SWF Blend Mode.
+ * @property {generic_enum}  [blend_mode="Normal"]   - Blend Mode.
+ * @property {generic_enum}  [flash_blend_mode="Normal"]   - SWF Blend Mode.
  */
 
 
@@ -1668,7 +1675,7 @@ function formatAttribute(attr, theNode){
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {double}  radius=0   - Radius.
- * @property {generic_enum}  quality=High   - Quality.
+ * @property {generic_enum}  [quality="High"]   - Quality.
  */
 
 
@@ -1682,7 +1689,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'ORTHOLOCK'
  * @name  NodeTypes#OrthoLock
- * @property {generic_enum}  rotation_axis='X and Y Axes'   - Rotation Axis.
+ * @property {generic_enum}  [rotation_axis="X and Y Axes"]   - Rotation Axis.
  * @property {double}  max_angle=0   - Max Angle.
  */
 
@@ -1696,7 +1703,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  color.green=255   - Green.
  * @property {int}  color.blue=255   - Blue.
  * @property {int}  color.alpha=255   - Alpha.
- * @property {generic_enum}  color.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [color.preferred_ui="Separate"]   - Preferred Editor.
  * @property {double}  chroma_key_minimum=0   - Black Point.
  * @property {double}  chroma_key_maximum=255   - White Point.
  * @property {double}  chroma_key_filter_intensity=1   - Blur Passes.
@@ -1726,7 +1733,7 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#Gradient
  * @property {int}  depth=0   - Depth.
  * @property {bool}  invert_matte_port=false   - Invert Matte.
- * @property {generic_enum}  type=Linear   - Gradient Type.
+ * @property {generic_enum}  [type="Linear"]   - Gradient Type.
  * @property {position_2d}  0   - Position 0.
  * @property {bool}  0.separate=On   - Separate.
  * @property {double}  0.x=0   - Pos x.
@@ -1742,13 +1749,13 @@ function formatAttribute(attr, theNode){
  * @property {int}  color0.green=0   - Green.
  * @property {int}  color0.blue=0   - Blue.
  * @property {int}  color0.alpha=255   - Alpha.
- * @property {generic_enum}  color0.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [color0.preferred_ui="Separate"]   - Preferred Editor.
  * @property {color}  color1=ffffffff   - Colour 1.
  * @property {int}  color1.red=255   - Red.
  * @property {int}  color1.green=255   - Green.
  * @property {int}  color1.blue=255   - Blue.
  * @property {int}  color1.alpha=255   - Alpha.
- * @property {generic_enum}  color1.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [color1.preferred_ui="Separate"]   - Preferred Editor.
  * @property {double}  offset_z=0   - Offset Z.
  */
 
@@ -1792,13 +1799,13 @@ function formatAttribute(attr, theNode){
  * @property {int}  gridcolor.green=0   - Green.
  * @property {int}  gridcolor.blue=0   - Blue.
  * @property {int}  gridcolor.alpha=255   - Alpha.
- * @property {generic_enum}  gridcolor.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [gridcolor.preferred_ui="Separate"]   - Preferred Editor.
  * @property {color}  bgcolor=ffffffff   - Color.
  * @property {int}  bgcolor.red=255   - Red.
  * @property {int}  bgcolor.green=255   - Green.
  * @property {int}  bgcolor.blue=255   - Blue.
  * @property {int}  bgcolor.alpha=255   - Alpha.
- * @property {generic_enum}  bgcolor.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [bgcolor.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  opaque=false   - Fill.
  * @property {bool}  fitvertical=true   - Fit Vertical.
  */
@@ -1807,8 +1814,8 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'Turbulence'
  * @name  NodeTypes#Turbulence
- * @property {generic_enum}  fractal_type='Fractional Brownian'   - Fractal Type.
- * @property {generic_enum}  noise_type=Perlin   - Noise Type.
+ * @property {generic_enum}  [fractal_type="Fractional Brownian"]   - Fractal Type.
+ * @property {generic_enum}  [noise_type="Perlin"]   - Noise Type.
  * @property {locked}  frequency   - Frequency.
  * @property {bool}  frequency.separate=Off   - Separate.
  * @property {doublevb}  frequency.xyfrequency=1   - Frequency xy.
@@ -1835,7 +1842,7 @@ function formatAttribute(attr, theNode){
  * @property {double}  lacunarity=2   - Sub Scaling.
  * @property {double}  octaves=1   - Complexity.
  * @property {bool}  pinning=false   - Pinning.
- * @property {generic_enum}  deformationquality=Medium   - Deformation Quality.
+ * @property {generic_enum}  [deformationquality="Medium"]   - Deformation Quality.
  */
 
 
@@ -1843,7 +1850,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'PointConstraintMulti'
  * @name  NodeTypes#Multi-Points-Constraint
  * @property {double}  active=100   - Active.
- * @property {generic_enum}  flattentype='Allow 3D Transform'   - Flatten Type.
+ * @property {generic_enum}  [flattentype="Allow 3D Transform"]   - Flatten Type.
  * @property {bool}  convexhull=false   - Ignore Internal Points.
  * @property {bool}  allowpersp=false   - Allow Perspective Transform.
  */
@@ -1891,9 +1898,9 @@ function formatAttribute(attr, theNode){
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  * @property {bool}  truck_factor=true   - Truck Factor.
  * @property {double}  radius=4   - Radius.
- * @property {generic_enum}  quality=High   - Quality.
+ * @property {generic_enum}  [quality="High"]   - Quality.
  * @property {bool}  composite_src_image=true   - Composite with Source Image.
- * @property {generic_enum}  blend_mode=Screen   - Blend Mode.
+ * @property {generic_enum}  [blend_mode="Screen"]   - Blend Mode.
  */
 
 
@@ -1915,13 +1922,13 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'ToneShader'
  * @name  NodeTypes#Tone-Shader
- * @property {generic_enum}  lighttype=Directional   - Light Type.
+ * @property {generic_enum}  [lighttype="Directional"]   - Light Type.
  * @property {double}  floodangle=90   - Cone Angle.
  * @property {double}  floodsharpness=0   - Diffusion.
  * @property {double}  floodradius=2000   - Falloff.
  * @property {double}  pointelevation=200   - Light Source Elevation.
  * @property {double}  anglethreshold=90   - Surface Reflectivity.
- * @property {generic_enum}  shadetype=Smooth   - Shading Type.
+ * @property {generic_enum}  [shadetype="Smooth"]   - Shading Type.
  * @property {double}  bias=0.1000   - Bias.
  * @property {double}  exponent=2   - Abruptness.
  * @property {color}  lightcolor=ff646464   - Light Colour.
@@ -1929,7 +1936,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  lightcolor.green=100   - Green.
  * @property {int}  lightcolor.blue=100   - Blue.
  * @property {int}  lightcolor.alpha=255   - Alpha.
- * @property {generic_enum}  lightcolor.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [lightcolor.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  flatten=true   - Flatten Fx.
  * @property {bool}  useimagecolor=false   - Use image Colour.
  * @property {double}  imagecolorweight=50   - Image Colour Intensity.
@@ -1948,7 +1955,7 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#Deformation-Composite
  * @property {bool}  outputmatrixonly=false   - Output Kinematic Only.
  * @property {bool}  outputselectedonly=false   - Output Selected Port Only.
- * @property {generic_enum}  outputkinematicchainselector=Rightmost   - Output Kinematic Chain.
+ * @property {generic_enum}  [outputkinematicchainselector="Rightmost"]   - Output Kinematic Chain.
  * @property {int}  outputkinematicchain=1   - Output Kinematic Chain Selection.
  */
 
@@ -1958,23 +1965,23 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#Animated-Matte-Generator
  * @property {double}  snapradius=15   - Drag-to-Snap Distance.
  * @property {bool}  snapoutlinesonly=false   - Snap to Outlines Only.
- * @property {generic_enum}  outputtype=Feathered   - Type.
+ * @property {generic_enum}  [outputtype="Feathered"]   - Type.
  * @property {double}  outputinterpolation=0   - Interpolation Factor.
  * @property {color}  insidecolor=ffffffff   - Inside Colour.
  * @property {int}  insidecolor.red=255   - Red.
  * @property {int}  insidecolor.green=255   - Green.
  * @property {int}  insidecolor.blue=255   - Blue.
  * @property {int}  insidecolor.alpha=255   - Alpha.
- * @property {generic_enum}  insidecolor.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [insidecolor.preferred_ui="Separate"]   - Preferred Editor.
  * @property {color}  outsidecolor=ffffffff   - Outside Colour.
  * @property {int}  outsidecolor.red=255   - Red.
  * @property {int}  outsidecolor.green=255   - Green.
  * @property {int}  outsidecolor.blue=255   - Blue.
  * @property {int}  outsidecolor.alpha=255   - Alpha.
- * @property {generic_enum}  outsidecolor.preferred_ui=Separate   - Preferred Editor.
- * @property {generic_enum}  interpolationmode=Distance   - Interpolation Mode.
- * @property {generic_enum}  colorinterpolation=Constant   - Colour Interpolation.
- * @property {generic_enum}  alphamapping=Linear   - Alpha Mapping.
+ * @property {generic_enum}  [outsidecolor.preferred_ui="Separate"]   - Preferred Editor.
+ * @property {generic_enum}  [interpolationmode="Distance"]   - Interpolation Mode.
+ * @property {generic_enum}  [colorinterpolation="Constant"]   - Colour Interpolation.
+ * @property {generic_enum}  [alphamapping="Linear"]   - Alpha Mapping.
  * @property {int}  colorlutdomain=100   - Colour LUT Domain.
  * @property {int}  alphalutdomain=100   - Alpha LUT Domain.
  * @property {double}  colorgamma=1   - Colour Gamma.
@@ -2268,8 +2275,8 @@ function formatAttribute(attr, theNode){
  * @name  NodeTypes#TurbulentNoise
  * @property {int}  depth=0   - Depth.
  * @property {bool}  invert_matte_port=false   - Invert Matte.
- * @property {generic_enum}  fractal_type='Fractional Brownian'   - Fractal Type.
- * @property {generic_enum}  noise_type=Perlin   - Noise Type.
+ * @property {generic_enum}  [fractal_type="Fractional Brownian"]   - Fractal Type.
+ * @property {generic_enum}  [noise_type="Perlin"]   - Noise Type.
  * @property {locked}  frequency   - Frequency.
  * @property {bool}  frequency.separate=Off   - Separate.
  * @property {doublevb}  frequency.xyfrequency=0   - Frequency xy.
@@ -2827,7 +2834,7 @@ function formatAttribute(attr, theNode){
  * @property {point_2d}  origin.2dpoint   - Point.
  * @property {double}  width=12   - Width.
  * @property {double}  height=12   - Height.
- * @property {generic_enum}  deformationquality='Very High'   - Deformation Quality.
+ * @property {generic_enum}  [deformationquality="Very High"]   - Deformation Quality.
  */
 
 
@@ -2860,9 +2867,9 @@ function formatAttribute(attr, theNode){
  * @property {double}  skewcontrol=0   - Skew Modifier.
  * @property {double}  smooth=0   - Smoothing.
  * @property {double}  balance=0   - Point Balance.
- * @property {generic_enum}  flattentype='Allow 3D Transform'   - Flatten Type.
- * @property {generic_enum}  transformtype=Translate   - Transform Type.
- * @property {generic_enum}  primaryport=Right   - Primary Port.
+ * @property {generic_enum}  [flattentype="Allow 3D Transform"]   - Flatten Type.
+ * @property {generic_enum}  [transformtype="Translate"]   - Transform Type.
+ * @property {generic_enum}  [primaryport="Right"]   - Primary Port.
  */
 
 
@@ -2904,7 +2911,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'SurfaceNormal'
  * @name  NodeTypes#Surface-Normal
- * @property {generic_enum}  normalquality=Low   - Surface Normal Quality.
+ * @property {generic_enum}  [normalquality="Low"]   - Surface Normal Quality.
  */
 
 
@@ -2917,7 +2924,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  colour1.green=255   - Green.
  * @property {int}  colour1.blue=255   - Blue.
  * @property {int}  colour1.alpha=255   - Alpha.
- * @property {generic_enum}  colour1.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [colour1.preferred_ui="Separate"]   - Preferred Editor.
  * @property {double}  blur1=0   - Blur 1.
  * @property {double}  threshold2=40   - Threshold 2.
  * @property {color}  colour2=ffffffff   - Colour 2.
@@ -2925,7 +2932,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  colour2.green=255   - Green.
  * @property {int}  colour2.blue=255   - Blue.
  * @property {int}  colour2.alpha=255   - Alpha.
- * @property {generic_enum}  colour2.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [colour2.preferred_ui="Separate"]   - Preferred Editor.
  * @property {double}  blur2=0   - Blur 2.
  * @property {double}  threshold3=20   - Threshold 3.
  * @property {color}  colour3=ffffffff   - Colour 3.
@@ -2933,7 +2940,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  colour3.green=255   - Green.
  * @property {int}  colour3.blue=255   - Blue.
  * @property {int}  colour3.alpha=255   - Alpha.
- * @property {generic_enum}  colour3.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [colour3.preferred_ui="Separate"]   - Preferred Editor.
  * @property {double}  blur3=0   - Blur 3.
  * @property {double}  threshold4=20   - Threshold 4.
  * @property {color}  colour4=ffffffff   - Colour 4.
@@ -2941,7 +2948,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  colour4.green=255   - Green.
  * @property {int}  colour4.blue=255   - Blue.
  * @property {int}  colour4.alpha=255   - Alpha.
- * @property {generic_enum}  colour4.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [colour4.preferred_ui="Separate"]   - Preferred Editor.
  * @property {double}  blur4=0   - Blur 4.
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  */
@@ -3005,13 +3012,13 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'LightShader'
  * @name  NodeTypes#Light-Shader
- * @property {generic_enum}  lighttype=Directional   - Light Type.
+ * @property {generic_enum}  [lighttype="Directional"]   - Light Type.
  * @property {double}  floodangle=90   - Cone Angle.
  * @property {double}  floodsharpness=0   - Diffusion.
  * @property {double}  floodradius=2000   - Falloff.
  * @property {double}  pointelevation=200   - Light Source Elevation.
  * @property {double}  anglethreshold=90   - Surface Reflectivity.
- * @property {generic_enum}  shadetype=Smooth   - Shading Type.
+ * @property {generic_enum}  [shadetype="Smooth"]   - Shading Type.
  * @property {double}  bias=0.1000   - Bias.
  * @property {double}  exponent=2   - Abruptness.
  * @property {color}  lightcolor=ffc8c8c8   - Light Colour.
@@ -3019,7 +3026,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  lightcolor.green=200   - Green.
  * @property {int}  lightcolor.blue=200   - Blue.
  * @property {int}  lightcolor.alpha=255   - Alpha.
- * @property {generic_enum}  lightcolor.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [lightcolor.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  flatten=true   - Flatten Fx.
  * @property {bool}  useimagecolor=false   - Use image Colour.
  * @property {double}  imagecolorweight=50   - Image Colour Intensity.
@@ -3036,14 +3043,14 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'DeformationRootModule'
  * @name  NodeTypes#Deformation-Root
- * @property {generic_enum}  deformationquality='Very High'   - Quality.
+ * @property {generic_enum}  [deformationquality="Very High"]   - Quality.
  */
 
 
 /**
  * Attributes present in the node of type: 'DeformationSwitchModule'
  * @name  NodeTypes#Deformation-Switch
- * @property {generic_enum}  vectorquality='Very High'   - Vector Quality.
+ * @property {generic_enum}  [vectorquality="Very High"]   - Vector Quality.
  * @property {double}  fadeexponent=3   - Influence Fade Exponent.
  * @property {bool}  fadeinside=false   - Fade Inside Zones.
  * @property {int}  enabledeformation=1   - Enable Deformation.
@@ -3172,31 +3179,31 @@ function formatAttribute(attr, theNode){
  * @property {double}  ageatbirth=0   - Age at Birth.
  * @property {double}  ageatbirthstd=0   - Age at Birth Standard Deviation.
  * @property {double}  mass=1   - Particles Mass.
- * @property {generic_enum}  typechoosingstrategy='Sequentially Assign Type Number'   - Type Generation Strategy.
+ * @property {generic_enum}  [typechoosingstrategy="Sequentially Assign Type Number"]   - Type Generation Strategy.
  * @property {int}  particletype0=1   - Particle Type 0.
  * @property {int}  particletype1=1   - Particle Type 1.
  * @property {double}  particlesize=1   - Size over Age.
  * @property {bool}  overridevelocity=false   - Align Initial Velocity.
- * @property {generic_enum}  blend_mode=Normal   - Blend Mode.
+ * @property {generic_enum}  [blend_mode="Normal"]   - Blend Mode.
  * @property {double}  blendintensity=100   - Blend Intensity.
- * @property {generic_enum}  colouringstrategy='Use Drawing Colour'   - Colouring Strategy.
+ * @property {generic_enum}  [colouringstrategy="Use Drawing Colour"]   - Colouring Strategy.
  * @property {color}  particlecolour=ffffffff   - Colour.
  * @property {int}  particlecolour.red=255   - Red.
  * @property {int}  particlecolour.green=255   - Green.
  * @property {int}  particlecolour.blue=255   - Blue.
  * @property {int}  particlecolour.alpha=255   - Alpha.
- * @property {generic_enum}  particlecolour.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [particlecolour.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  alignwithdirection=true   - Align with Direction.
  * @property {bool}  userotation=false   - Use Rotation of Particle.
  * @property {bool}  directionalscale=false   - Directional Scale.
  * @property {double}  directionalscalefactor=1   - Directional Scale Exponent Factor.
  * @property {bool}  keepvolume=true   - Keep Volume.
- * @property {generic_enum}  blur='No Blur'   - Blur.
+ * @property {generic_enum}  [blur="No Blur"]   - Blur.
  * @property {double}  blurintensity=1   - Blur Intensity.
  * @property {double}  blurfallof=0.5000   - Falloff Rate.
  * @property {bool}  flipwithdirectionx=false   - Flip X Axis to Match Direction.
  * @property {bool}  flipwithdirectiony=false   - Flip Y Axis to Match Direction.
- * @property {generic_enum}  alignwithdirectionaxis='Positive X'   - Axis to Align.
+ * @property {generic_enum}  [alignwithdirectionaxis="Positive X"]   - Axis to Align.
  */
 
 
@@ -3238,7 +3245,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'ParticleOrbit'
  * @name  NodeTypes#Orbit
  * @property {int}  trigger=1   - Trigger.
- * @property {generic_enum}  strategy='Around Point'   - Orbit Type.
+ * @property {generic_enum}  [strategy="Around Point"]   - Orbit Type.
  * @property {double}  magnitude=1   - Magnitude.
  * @property {double}  v0x=0   - Point X.
  * @property {double}  v0y=0   - Point Y.
@@ -3267,7 +3274,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'Particle3dRegion'
  * @name  NodeTypes#3D-Region
- * @property {generic_enum}  shapetype=Sphere   - Type.
+ * @property {generic_enum}  [shapetype="Sphere"]   - Type.
  * @property {double}  sizex=6   - Width.
  * @property {double}  sizey=6   - Height.
  * @property {double}  sizez=6   - Depth.
@@ -3288,7 +3295,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'ParticleRandom'
  * @name  NodeTypes#Random-Parameter
  * @property {int}  trigger=1   - Trigger.
- * @property {generic_enum}  parametertorandomize=Speed   - Parameter.
+ * @property {generic_enum}  [parametertorandomize="Speed"]   - Parameter.
  */
 
 
@@ -3325,7 +3332,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  trigger=1   - Trigger.
  * @property {double}  w0=0   - Minimum.
  * @property {double}  w1=5   - Maximum.
- * @property {generic_enum}  axisstrategy='Constant Axis'   - Axis Type.
+ * @property {generic_enum}  [axisstrategy="Constant Axis"]   - Axis Type.
  * @property {double}  v0x=0   - Axis0 X.
  * @property {double}  v0y=0   - Axis0 Y.
  * @property {double}  v0z=1   - Axis0 Z.
@@ -3358,7 +3365,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'ParticleVelocity'
  * @name  NodeTypes#Velocity
  * @property {int}  trigger=1   - Trigger.
- * @property {generic_enum}  velocitytype='Constant Speed'   - Velocity Type.
+ * @property {generic_enum}  [velocitytype="Constant Speed"]   - Velocity Type.
  * @property {double}  v0x=1   - X.
  * @property {double}  v0y=0   - Y.
  * @property {double}  v0z=0   - Z.
@@ -3374,7 +3381,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'ParticleSize'
  * @name  NodeTypes#Size
  * @property {int}  trigger=1   - Trigger.
- * @property {generic_enum}  sizestrategy='Constant Size'   - Size Type.
+ * @property {generic_enum}  [sizestrategy="Constant Size"]   - Size Type.
  * @property {double}  particlesize=1   - Size.
  */
 
@@ -3382,7 +3389,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'ParticlePlanarRegion'
  * @name  NodeTypes#Planar-Region
- * @property {generic_enum}  shapetype=Rectangle   - Shape Type.
+ * @property {generic_enum}  [shapetype="Rectangle"]   - Shape Type.
  * @property {double}  sizex=12   - Width.
  * @property {double}  sizey=12   - Height.
  * @property {double}  x1=0   - X.
@@ -3410,33 +3417,33 @@ function formatAttribute(attr, theNode){
  * @property {double}  ageatbirth=0   - Age at Birth.
  * @property {double}  ageatbirthstd=0   - Age at Birth Standard Deviation.
  * @property {double}  mass=1   - Particles Mass.
- * @property {generic_enum}  typechoosingstrategy='Sequentially Assign Type Number'   - Type Generation Strategy.
+ * @property {generic_enum}  [typechoosingstrategy="Sequentially Assign Type Number"]   - Type Generation Strategy.
  * @property {int}  particletype0=1   - Particle Type 0.
  * @property {int}  particletype1=1   - Particle Type 1.
  * @property {double}  particlesize=1   - Size over Age.
  * @property {bool}  overridevelocity=false   - Align Initial Velocity.
- * @property {generic_enum}  blend_mode=Normal   - Blend Mode.
+ * @property {generic_enum}  [blend_mode="Normal"]   - Blend Mode.
  * @property {double}  blendintensity=100   - Blend Intensity.
- * @property {generic_enum}  colouringstrategy='Use Drawing Colour'   - Colouring Strategy.
+ * @property {generic_enum}  [colouringstrategy="Use Drawing Colour"]   - Colouring Strategy.
  * @property {color}  particlecolour=ffffffff   - Colour.
  * @property {int}  particlecolour.red=255   - Red.
  * @property {int}  particlecolour.green=255   - Green.
  * @property {int}  particlecolour.blue=255   - Blue.
  * @property {int}  particlecolour.alpha=255   - Alpha.
- * @property {generic_enum}  particlecolour.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [particlecolour.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  alignwithdirection=true   - Align with Direction.
  * @property {bool}  userotation=false   - Use Rotation of Particle.
  * @property {bool}  directionalscale=false   - Directional Scale.
  * @property {double}  directionalscalefactor=1   - Directional Scale Exponent Factor.
  * @property {bool}  keepvolume=true   - Keep Volume.
- * @property {generic_enum}  blur='No Blur'   - Blur.
+ * @property {generic_enum}  [blur="No Blur"]   - Blur.
  * @property {double}  blurintensity=1   - Blur Intensity.
  * @property {double}  blurfallof=0.5000   - Falloff Rate.
  * @property {bool}  flipwithdirectionx=false   - Flip X Axis to Match Direction.
  * @property {bool}  flipwithdirectiony=false   - Flip Y Axis to Match Direction.
- * @property {generic_enum}  alignwithdirectionaxis='Positive X'   - Axis to Align.
- * @property {generic_enum}  renderingstrategy='Use Particle Type'   - Rendering Strategy.
- * @property {generic_enum}  cycletype='No Cycle'   - Cycling.
+ * @property {generic_enum}  [alignwithdirectionaxis="Positive X"]   - Axis to Align.
+ * @property {generic_enum}  [renderingstrategy="Use Particle Type"]   - Rendering Strategy.
+ * @property {generic_enum}  [cycletype="No Cycle"]   - Cycling.
  * @property {int}  cyclesize=5   - Number of Drawings in Cycle.
  * @property {int}  numberofparticles=100   - Number of Particles.
  * @property {double}  probabilityofgeneratingparticles=100   - Probability of Generating Any Particles.
@@ -3473,8 +3480,8 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'LensFlare'
  * @name  NodeTypes#LensFlare
- * @property {generic_enum}  blend_mode=Normal   - Blend Mode.
- * @property {generic_enum}  flash_blend_mode=Normal   - SWF Blend Mode.
+ * @property {generic_enum}  [blend_mode="Normal"]   - Blend Mode.
+ * @property {generic_enum}  [flash_blend_mode="Normal"]   - SWF Blend Mode.
  * @property {bool}  usergba=false   - Blend Mode: Normal/Screen.
  * @property {bool}  brightenable=true   - On/Off.
  * @property {double}  brightness=100   - Intensity.
@@ -3483,11 +3490,11 @@ function formatAttribute(attr, theNode){
  * @property {int}  brightcolor.green=255   - Green.
  * @property {int}  brightcolor.blue=255   - Blue.
  * @property {int}  brightcolor.alpha=255   - Alpha.
- * @property {generic_enum}  brightcolor.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [brightcolor.preferred_ui="Separate"]   - Preferred Editor.
  * @property {double}  positionx=6   - PositionX.
  * @property {double}  positiony=6   - PositionY.
  * @property {double}  positionz=0   - PositionZ.
- * @property {generic_enum}  flareconfig='Type 1'   - Flare Type.
+ * @property {generic_enum}  [flareconfig="Type 1"]   - Flare Type.
  * @property {bool}  enable1=true   - Enable/Disable.
  * @property {double}  size1=0.7500   - Size.
  * @property {double}  position1=0   - Position.
@@ -3554,9 +3561,9 @@ function formatAttribute(attr, theNode){
  * @property {int}  frame_color.green=255   - Green.
  * @property {int}  frame_color.blue=255   - Blue.
  * @property {int}  frame_color.alpha=255   - Alpha.
- * @property {generic_enum}  frame_color.preferred_ui=Separate   - Preferred Editor.
- * @property {enable}  enabling='Always Enabled'   - Enabling.
- * @property {generic_enum}  enabling.filter='Always Enabled'   - Filter.
+ * @property {generic_enum}  [frame_color.preferred_ui="Separate"]   - Preferred Editor.
+ * @property {enable}  enabling=Always Enabled   - Enabling.
+ * @property {generic_enum}  [enabling.filter="Always Enabled"]   - Filter.
  * @property {string}  enabling.filter_name   - Filter name.
  * @property {int}  enabling.filter_res_x=720   - X resolution.
  * @property {int}  enabling.filter_res_y=540   - Y resolution.
@@ -3569,7 +3576,7 @@ function formatAttribute(attr, theNode){
  * @property {bool}  invert_matte_port=true   - Invert Matte.
  * @property {double}  bias=0.5000   - Bias.
  * @property {double}  tension=1   - Tension.
- * @property {generic_enum}  type=Curve   - Type.
+ * @property {generic_enum}  [type="Curve"]   - Type.
  * @property {bool}  use_z=true   - Use Z for Composition Order.
  * @property {bool}  a_over_b=true   - A Over B.
  * @property {bool}  spread_a=false   - Spread A.
@@ -3579,7 +3586,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'DeformTransformOut'
  * @name  NodeTypes#Point-Kinematic-Output
- * @property {generic_enum}  sample='One-Point Sampling'   - Sampling Type.
+ * @property {generic_enum}  [sample="One-Point Sampling"]   - Sampling Type.
  * @property {position_2d}  pivot1   - Main Position Tracker.
  * @property {bool}  pivot1.separate=Off   - Separate.
  * @property {double}  pivot1.x=0   - Pos x.
@@ -3616,7 +3623,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  color.green=0   - Green.
  * @property {int}  color.blue=0   - Blue.
  * @property {int}  color.alpha=255   - Alpha.
- * @property {generic_enum}  color.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [color.preferred_ui="Separate"]   - Preferred Editor.
  * @property {double}  imagecolorweight=50   - Image Colour Intensity.
  * @property {bool}  invert_matte_port=false   - Invert Matte.
  */
@@ -3626,7 +3633,7 @@ function formatAttribute(attr, theNode){
  * Attributes present in the node of type: 'SHADOW'
  * @name  NodeTypes#Shadow
  * @property {bool}  truck_factor=true   - Truck Factor.
- * @property {generic_enum}  blur_type=Radial   - Blur Type.
+ * @property {generic_enum}  [blur_type="Radial"]   - Blur Type.
  * @property {double}  radius=2   - Radius.
  * @property {double}  directional_angle=0   - Directional Angle.
  * @property {double}  directional_falloff_rate=1   - Directional Falloff Rate.
@@ -3637,7 +3644,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  color.green=-100   - Green.
  * @property {int}  color.blue=-100   - Blue.
  * @property {int}  color.alpha=100   - Alpha.
- * @property {generic_enum}  color.preferred_ui=Separate   - Preferred Editor.
+ * @property {generic_enum}  [color.preferred_ui="Separate"]   - Preferred Editor.
  * @property {bool}  multiplicative=false   - Multiplicative.
  * @property {double}  colour_gain=1   - Intensity.
  */
