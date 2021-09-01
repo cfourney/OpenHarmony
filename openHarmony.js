@@ -390,9 +390,9 @@ $.getPreferences = function( ){
 }
 
 //---- Attach Helpers ------
-$.network     = new $.oNetwork( );
-$.utils       = new $.oUtils( );
-$.dialog      = new $.oDialog( );
+$.network     = new $.oNetwork();
+$.utils       = $.oUtils;
+$.dialog      = new $.oDialog();
 $.global      = this;
 
 
