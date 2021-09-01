@@ -35,13 +35,13 @@ function formatAttribute(attr, theNode){
   var type = attr.typeName().toLowerCase();
   var name = attr.name();
   var defaultValue = node.getTextAttr(theNode, 1, keyword).replace(".0000", "");
-  if (type == "generic_enum") {
+  if (type == "generic_enum" || defaultValue.indexOf(" ") != -1) {
     var addBrackets = true;
     defaultValue = '"'+defaultValue+'"';
   }
   if (defaultValue == "N") defaultValue = "false";
   if (defaultValue == "Y") defaultValue = "true";
-  var message = "@property {"+type+"}  "+(addBrackets?"[":"")+keyword.toLowerCase()+((defaultValue!="")?"="+defaultValue:"")+(addBrackets?"]":"")+"  - "+name+"."
+  var message = "@property {"+type+"}  "+(addBrackets?"[":"")+keyword.toLowerCase()+((defaultValue!="")?"="+defaultValue:"")+(addBrackets?"]":"")+"   - "+name+"."
   return message;
 }
 */
@@ -67,15 +67,10 @@ function formatAttribute(attr, theNode){
  * // refer to the node type on this page to find out what properties can be set with what synthax for each Node Type.
  */
 
- T: 19:38:24.024 /**
- * Attributes associated to Node types
- * @class NodeTypes
- */
-
 /**
  * Attributes present in the node of type: 'MasterController'
  * @name  NodeTypes#MasterController
- * @property {string}  specs_editor=<specs>
+ * @property {string}  [specs_editor="<specs>
   <ports>
     <in type="IMAGE"/>
     <out type="IMAGE"/>
@@ -83,7 +78,7 @@ function formatAttribute(attr, theNode){
   <attributes>
   </attributes>
 </specs>
-   - Specifications.
+"]   - Specifications.
  * @property {file_editor}  script_editor   - .
  * @property {file_editor}  init_script   - .
  * @property {file_editor}  cleanup_script   - .
@@ -362,7 +357,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'GROUP'
  * @name  NodeTypes#Group
- * @property {string}  editor=<editor dockable="true" title="Script" winPreferred="640x460" linuxPreferred="640x480">
+ * @property {string}  [editor="<editor dockable="true" title="Script" winPreferred="640x460" linuxPreferred="640x480">
   <tab title="Editor" expand="true">
     <attr name="EDITOR"/>
   </tab>
@@ -376,7 +371,7 @@ function formatAttribute(attr, theNode){
   </tab>
 </editor>
 
-   - .
+"]   - .
  * @property {string}  target_composite   - Target Composite.
  * @property {string}  timeline_module   - Substitute Node in Timeline.
  * @property {bool}  mask=false   - Mask Flag.
@@ -410,7 +405,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'SCRIPT_MODULE'
  * @name  NodeTypes#ScriptModule
- * @property {string}  specs_editor=<specs>
+ * @property {string}  [specs_editor="<specs>
   <ports>
     <in type="IMAGE"/>
     <out type="IMAGE"/>
@@ -418,7 +413,7 @@ function formatAttribute(attr, theNode){
   <attributes>
   </attributes>
 </specs>
-   - Specifications.
+"]   - Specifications.
  * @property {file_editor}  script_editor   - .
  * @property {file_editor}  init_script   - .
  * @property {file_editor}  cleanup_script   - .
@@ -526,7 +521,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  frameoffset=0   - Frame Offset.
  * @property {bool}  drawframenumber=true   - Frame Number.
  * @property {bool}  drawtimecode=true   - Time code.
- * @property {string}  printinfo=Environment %e Job %j Scene %s   - Scene Name.
+ * @property {string}  [printinfo="Environment %e Job %j Scene %s"]   - Scene Name.
  * @property {generic_enum}  [alignment="Left"]   - Alignment.
  * @property {int}  font=Arial   - Font.
  */
@@ -562,7 +557,7 @@ function formatAttribute(attr, theNode){
 /**
  * Attributes present in the node of type: 'SCRIPT_MODULE'
  * @name  NodeTypes#Maya-Batch-Render
- * @property {string}  specs_editor=
+ * @property {string}  [specs_editor="
 <specs>
   <ports>
     <in type="IMAGE"/>
@@ -572,7 +567,7 @@ function formatAttribute(attr, theNode){
     <attr type="string" name="renderer" value="" tooltip="If this attribute is not set, then the MayaBatchRender node will use the default renderer specified in the Maya file. If this attribute is set, then it forces the use of a specific renderer other than the default. The following renderers are currently supported: 'renderMan' (renderMan version 22.0 or higher), 'renderManRIS' or 'RIS' (renderMan version 21.x or earlier), 'renderManReyes' or 'reyes' (renderMan version 20.x or earlier), 'arnold', 'mentalRay', 'mayaSoftware' or 'maya'. Note that those values are case insensitive."/>
   </attributes>
 </specs>
-   - Specifications.
+"]   - Specifications.
  * @property {file_editor}  script_editor   - .
  * @property {file_editor}  init_script   - .
  * @property {file_editor}  cleanup_script   - .
@@ -1437,16 +1432,16 @@ function formatAttribute(attr, theNode){
  * @property {int}  leading_zeros=3   - Leading zeros.
  * @property {int}  start=1   - Start.
  * @property {string}  drawing_type=TGA   - Drawing type.
- * @property {enable}  enabling=Always Enabled   - Enabling.
+ * @property {enable}  [enabling="Always Enabled"]   - Enabling.
  * @property {generic_enum}  [enabling.filter="Always Enabled"]   - Filter.
  * @property {string}  enabling.filter_name   - Filter name.
  * @property {int}  enabling.filter_res_x=720   - X resolution.
  * @property {int}  enabling.filter_res_y=540   - Y resolution.
  * @property {bool}  script_movie=false   - Script Movie.
- * @property {string}  script_editor=// Following code will be called at the end of Write Node rendering
+ * @property {string}  [script_editor="// Following code will be called at the end of Write Node rendering
 // operations to create a movie file from rendered images.
 
-// ...   - Movie Generation Script.
+// ..."]   - Movie Generation Script.
  * @property {string}  color_space   - Colour Space.
  * @property {generic_enum}  [composite_partitioning="Off"]   - Composite Partitioning.
  * @property {double}  z_partition_range=1   - Z Partition Range.
@@ -1467,16 +1462,16 @@ function formatAttribute(attr, theNode){
  * @property {int}  leading_zeros=3   - Leading zeros.
  * @property {int}  start=1   - Start.
  * @property {string}  drawing_type=PSD   - Drawing type.
- * @property {enable}  enabling=Always Enabled   - Enabling.
+ * @property {enable}  [enabling="Always Enabled"]   - Enabling.
  * @property {generic_enum}  [enabling.filter="Always Enabled"]   - Filter.
  * @property {string}  enabling.filter_name   - Filter name.
  * @property {int}  enabling.filter_res_x=720   - X resolution.
  * @property {int}  enabling.filter_res_y=540   - Y resolution.
  * @property {bool}  script_movie=false   - Script Movie.
- * @property {string}  script_editor=// Following code will be called at the end of Write Node rendering
+ * @property {string}  [script_editor="// Following code will be called at the end of Write Node rendering
 // operations to create a movie file from rendered images.
 
-// ...   - Movie Generation Script.
+// ..."]   - Movie Generation Script.
  * @property {string}  color_space   - Colour Space.
  * @property {generic_enum}  [composite_partitioning="Off"]   - Composite Partitioning.
  * @property {double}  z_partition_range=1   - Z Partition Range.
@@ -1768,10 +1763,6 @@ function formatAttribute(attr, theNode){
  * @property {double}  brightcontrast_brightness_adjustment=0   - Brightness.
  * @property {double}  brightcontrast_contrast_adjustment=0   - Contrast.
  * @property {bool}  brightcontrast_legacy_contrast=false   - Legacy Contrast.
- * @property {compatibility}  bright_pixel_adjustement=0   - Brightness.
- * @property {compatibility}  dark_pixel_adjustement=0   - Contrast.
- * @property {compatibility}  b=0   - Brightness.
- * @property {compatibility}  c=0   - Contrast.
  */
 
 
@@ -3562,7 +3553,7 @@ function formatAttribute(attr, theNode){
  * @property {int}  frame_color.blue=255   - Blue.
  * @property {int}  frame_color.alpha=255   - Alpha.
  * @property {generic_enum}  [frame_color.preferred_ui="Separate"]   - Preferred Editor.
- * @property {enable}  enabling=Always Enabled   - Enabling.
+ * @property {enable}  [enabling="Always Enabled"]   - Enabling.
  * @property {generic_enum}  [enabling.filter="Always Enabled"]   - Filter.
  * @property {string}  enabling.filter_name   - Filter name.
  * @property {int}  enabling.filter_res_x=720   - X resolution.
