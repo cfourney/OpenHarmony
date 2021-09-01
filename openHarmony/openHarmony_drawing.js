@@ -758,7 +758,7 @@ $.oArtLayer.prototype.drawStroke = function(path, lineStyle, fillStyle){
     }
   }
 
-  this.$.debug(JSON.stringify(_lineStyle), this.$.DEBUG_LEVEL.DEBUG)
+  // this.$.debug(JSON.stringify(_lineStyle), this.$.DEBUG_LEVEL.DEBUG)
 
   var strokeDesciption = _lineStyle;
   strokeDesciption.path = path;
@@ -891,7 +891,7 @@ $.oLineStyle = function (colorId, minThickness, maxThickness, stencil) {
   this.colorId = colorId;
   this.stencil = stencil;
 
-  this.$.debug(colorId+" "+minThickness+" "+maxThickness+" "+stencil, this.$.DEBUG_LEVEL.DEBUG)
+  // this.$.debug(colorId+" "+minThickness+" "+maxThickness+" "+stencil, this.$.DEBUG_LEVEL.DEBUG)
 }
 
 
@@ -960,6 +960,7 @@ Object.defineProperty($.oShape.prototype, 'strokes', {
  * Retrieve the selected status of each shape.
  * @name $.oShape#selected
  * @type {bool}
+ * @readonly
  */
 Object.defineProperty($.oShape.prototype, 'selected', {
   get: function () {
@@ -1322,6 +1323,34 @@ Object.defineProperty($.oVertex.prototype, 'position', {
   get: function(){
     var _position = new this.$.oPoint(this.x, this.y, 0);
     return _position;
+  }
+})
+
+
+/**
+ * The angle of the curve going through this vertex.
+ * In case of an angular vertex, the orientation will be considered the direction of the right hand bezier handle/line.
+ * @name $.oVertex#orientation
+ * @type {oPoint}
+ * @readonly
+ */
+Object.defineProperty($.oVertex.prototype, 'orientation', {
+  get: function(){
+    var _index = this.index+1;
+    var _path = this.stroke.path;
+
+    // get the next point by looping around if the stroke is closed
+    if (_index >= _path.length){
+      if (this.stroke.closed){
+        var _nextPoint = _path[0];
+      }else{
+        var _nextPoint = _path[_index-2];
+      }
+    }else{
+      var _nextPoint = _path[_index];
+    }
+    var vector = this.$.oVector.fromPoints(this, _nextPoint);
+    return vector.degreesAngle;
   }
 })
 
