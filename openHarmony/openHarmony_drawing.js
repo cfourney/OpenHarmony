@@ -984,6 +984,7 @@ $.oShape.prototype.deleteShape = function(){
   DrawingTools.deleteLayers(this._key);
 }
 
+
 /**
  * Gets a stroke from this shape by its index
  * @param {int} index
@@ -1028,9 +1029,10 @@ $.oStroke = function (index, strokeObject, oShapeObject) {
 
 
 /**
- * The points that make up the stroke
+ * The $.oVertex (including bezier handles) making up the complete path of the stroke.
  * @name $.oStroke#path
- * @type {$.oPoint[]}
+ * @type {$.oVertex[]}
+ * @readonly
  */
 Object.defineProperty($.oStroke.prototype, "path", {
   get: function () {
@@ -1066,7 +1068,7 @@ Object.defineProperty($.oStroke.prototype, "points", {
 /**
  * The index of the stroke in the shape
  * @name $.oStroke#index
- * @type {$.oPoint[]}
+ * @type {int}
  */
 Object.defineProperty($.oStroke.prototype, "index", {
   get: function () {
@@ -1097,7 +1099,7 @@ Object.defineProperty($.oStroke.prototype, "style", {
 /**
  * wether the stroke is a closed shape.
  * @name $.oStroke#closed
- * @type {$.oLineStyle}
+ * @type {bool}
  */
 Object.defineProperty($.oStroke.prototype, "closed", {
   get: function () {
@@ -1397,6 +1399,7 @@ Object.defineProperty($.oVertex.prototype, 'angleLeft', {
     var vector = this.$.oVector.fromPoints(this, _nextPoint);
     var angle = vector.degreesAngle;
     // if (angle < 0) angle += 360 //ensuring only positive values
+    return angle
   }
 })
 
