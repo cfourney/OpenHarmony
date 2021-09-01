@@ -531,31 +531,91 @@ $.oMatrix.prototype.toString = function(){
 //////////////////////////////////////
 
 
+/**
+ * The $.oVector constructor.
+ * @constructor
+ * @classdesc The $.oVector is a subclass of the native Vector3d object from Harmony. It has the same methods and properties plus the ones listed here.
+ * @param {float} x a x coordinate for this vector.
+ * @param {float} y a y coordinate for this vector.
+ * @param {float} [z=0] a z coordinate for this vector. If ommited, will be set to 0 and vector will be 2D.
+ */
 $.oVector = function(x, y, z){
+  Vector3d.constructor.call(this);
   if (typeof z === "undefined") var z = 0;
-  this._vector = vector3D(x, y, z)
+  this.x = x;
+  this.y = y;
+  this.z = z;
+}
+$.oVector.prototype = Object.create(Vector3d.prototype);
+
+
+/**
+ * @static
+ * A function of the oVector class (not oVector objects) that gives a vector from two points.
+ */
+$.oVector.fromPoints = function(pointA, pointB){
+  return new $.oVector(pointB.x-pointA.x, pointB.y-pointA.y, pointB.z-pointA.z);
 }
 
 
-$.oVector.prototype.normalize = function(){
-  this._vector.normalize()
-
-  return this
-}
-
+/**
+ * Adds another vector to this one.
+ * @param {$.oVector} vector2
+ * @returns {$.oVector} returns itself.
+ */
 $.oVector.prototype.add = function (vector2){
-  x = this._vector.x
-  y = this._vector.y
-  z = this._vector.z
+  this.x += vector2.x;
+  this.y += vector2.y;
+  this.z += vector2.z;
 
-  this._vector = vector3D(x+vector2.x, y+vector2.y, z+vector2.z)
-
-  return this
+  return this;
 }
 
+
+/**
+ * Multiply this vector coordinates by a number (scalar multiplication)
+ * @param {float} num
+ * @returns {$.oVector} returns itself
+ */
 $.oVector.prototype.multiply = function(num){
-  this._vector = vector3D(num*vector2.x, num*vector2.y, num*vector2.z)
+  this.x = num*this.x;
+  this.y = num*this.y;
+  this.z = num*this.z;
+
+  return this;
 }
 
 
+/**
+ * The angle of this vector in radians.
+ * @name $.oVector#angle
+ * @type {float}
+ * @readonly
+ */
+Object.defineProperty($.oVector.prototype, "angle", {
+  get: function(){
+    return Math.atan2(this.y, this.x);
+  }
+})
+
+
+/**
+ * The angle of this vector in degrees.
+ * @name $.oVector#degreesAngle
+ * @type {float}
+ * @readonly
+ */
+Object.defineProperty($.oVector.prototype, "degreesAngle", {
+  get: function(){
+    return this.angle * (180 / Math.PI);
+  }
+})
+
+
+/**
+ * @private
+ */
+$.oVector.prototype.toString = function(){
+  return "<$.oVector ["+this.x+", "+this.y+", "+this.z+"]>";
+}
 
