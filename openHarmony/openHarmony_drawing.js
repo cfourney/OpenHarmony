@@ -1049,6 +1049,21 @@ Object.defineProperty($.oStroke.prototype, "path", {
 
 
 /**
+ * The oVertex that are on the stroke (Bezier handles exluded.)
+ * The first is repeated at the last position when the stroke is closed.
+ * @name $.oStroke#points
+ * @type {$.oVertex[]}
+ * @readonly
+ */
+Object.defineProperty($.oStroke.prototype, "points", {
+  get: function () {
+    return this.path.filter(function(x){return x.onCurve});
+  }
+})
+
+
+
+/**
  * The index of the stroke in the shape
  * @name $.oStroke#index
  * @type {$.oPoint[]}
