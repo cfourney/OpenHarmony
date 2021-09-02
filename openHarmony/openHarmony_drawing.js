@@ -758,7 +758,7 @@ $.oArtLayer.prototype.drawStroke = function(path, lineStyle, fillStyle){
     }
   }
 
-  this.$.debug(JSON.stringify(_lineStyle), this.$.DEBUG_LEVEL.DEBUG)
+  // this.$.debug(JSON.stringify(_lineStyle), this.$.DEBUG_LEVEL.DEBUG)
 
   var strokeDesciption = _lineStyle;
   strokeDesciption.path = path;
@@ -775,6 +775,28 @@ $.oArtLayer.prototype.drawStroke = function(path, lineStyle, fillStyle){
     ]
   });
 };
+
+
+/**
+ * Draws a rectangle on the artLayer
+ * @param {float}     x
+ * @param {float}     y
+ * @param {float}     width
+ * @param {float}     height
+ * @param {$.oLineStyle} lineStyle
+ */
+$.oArtLayer.prototype.drawRectangle = function(x, y, width, height, lineStyle){
+  var path = [
+    {x:x,y:y,onCurve:true},
+    {x:x+width,y:y,onCurve:true},
+    {x:x+width,y:y+height,onCurve:true},
+    {x:x,y:y+height,onCurve:true},
+    {x:x,y:y,onCurve:true}
+  ];
+
+  this.drawStroke(path, lineStyle);
+}
+
 
 
 /**
@@ -869,7 +891,7 @@ $.oLineStyle = function (colorId, minThickness, maxThickness, stencil) {
   this.colorId = colorId;
   this.stencil = stencil;
 
-  this.$.debug(colorId+" "+minThickness+" "+maxThickness+" "+stencil, this.$.DEBUG_LEVEL.DEBUG)
+  // this.$.debug(colorId+" "+minThickness+" "+maxThickness+" "+stencil, this.$.DEBUG_LEVEL.DEBUG)
 }
 
 
@@ -938,6 +960,7 @@ Object.defineProperty($.oShape.prototype, 'strokes', {
  * Retrieve the selected status of each shape.
  * @name $.oShape#selected
  * @type {bool}
+ * @readonly
  */
 Object.defineProperty($.oShape.prototype, 'selected', {
   get: function () {
@@ -960,6 +983,7 @@ Object.defineProperty($.oShape.prototype, 'selected', {
 $.oShape.prototype.deleteShape = function(){
   DrawingTools.deleteLayers(this._key);
 }
+
 
 /**
  * Gets a stroke from this shape by its index
@@ -1005,9 +1029,10 @@ $.oStroke = function (index, strokeObject, oShapeObject) {
 
 
 /**
- * The points that make up the stroke
+ * The $.oVertex (including bezier handles) making up the complete path of the stroke.
  * @name $.oStroke#path
- * @type {$.oPoint[]}
+ * @type {$.oVertex[]}
+ * @readonly
  */
 Object.defineProperty($.oStroke.prototype, "path", {
   get: function () {
@@ -1026,9 +1051,47 @@ Object.defineProperty($.oStroke.prototype, "path", {
 
 
 /**
+ * The oVertex that are on the stroke (Bezier handles exluded.)
+ * The first is repeated at the last position when the stroke is closed.
+ * @name $.oStroke#points
+ * @type {$.oVertex[]}
+ * @readonly
+ */
+Object.defineProperty($.oStroke.prototype, "points", {
+  get: function () {
+    return this.path.filter(function(x){return x.onCurve});
+  }
+})
+
+
+/**
+ * The segments making up the stroke. Each segment is a slice of the path, starting and stopping with oVertex present on the curve, and includes the bezier handles oVertex.
+ * @name $.oStroke#segments
+ * @type {$.oVertex[][]}
+ * @readonly
+ */
+Object.defineProperty($.oStroke.prototype, "segments", {
+  get: function () {
+    var _points = this.points;
+    var _path = this.path;
+    var _segments = [];
+
+    for (var i=0; i<_points.length-1; i++){
+      var _indexStart = _points[i].index;
+      var _indexStop = _points[i+1].index;
+      var _segment = _path.slice(_indexStart, _indexStop+1);
+      _segments.push(_segment);
+    }
+
+    return _segments;
+  }
+})
+
+
+/**
  * The index of the stroke in the shape
  * @name $.oStroke#index
- * @type {$.oPoint[]}
+ * @type {int}
  */
 Object.defineProperty($.oStroke.prototype, "index", {
   get: function () {
@@ -1052,6 +1115,19 @@ Object.defineProperty($.oStroke.prototype, "style", {
     var _colorId = this._stroke.pencilColorId;
 
     return new this.$.oLineStyle(_colorId, _thickness.minThickness, _thickness.maxThickness, _thickness.thicknessPath);
+  }
+})
+
+
+/**
+ * wether the stroke is a closed shape.
+ * @name $.oStroke#closed
+ * @type {bool}
+ */
+Object.defineProperty($.oStroke.prototype, "closed", {
+  get: function () {
+    var _path = this.path;
+    return _path[_path.length-1].strokePosition == 0;
   }
 })
 
@@ -1208,8 +1284,8 @@ $.oStroke.prototype.getPointCoordinates = function(position){
 
 
 /**
- *
- * @param {*} point
+ * projects a point onto a stroke and returns the closest point belonging to the stroke.
+ * @param {object} point
  */
 $.oStroke.prototype.getClosestPoint = function (point){
   var arg = {
@@ -1218,8 +1294,7 @@ $.oStroke.prototype.getClosestPoint = function (point){
   };
 
   var _result = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
-
-
+  return _result
 }
 
 //////////////////////////////////////
@@ -1265,9 +1340,10 @@ $.oVertex = function(stroke, x, y, onCurve, index){
 
 
 /**
- * The position of the point on the curve, from
+ * The position of the point on the curve, from 0 to the maximum number of points
  * @name $.oVertex#strokePosition
  * @type {float}
+ * @readonly
  */
 Object.defineProperty($.oVertex.prototype, 'strokePosition', {
   get: function(){
@@ -1278,10 +1354,84 @@ Object.defineProperty($.oVertex.prototype, 'strokePosition', {
 
 
 /**
+ * The position of the point on the drawing, in oPoint object form
+ * @name $.oVertex#position
+ * @type {oPoint}
+ * @readonly
+ */
+Object.defineProperty($.oVertex.prototype, 'position', {
+  get: function(){
+    var _position = new this.$.oPoint(this.x, this.y, 0);
+    return _position;
+  }
+})
+
+
+/**
+ * The angle of the curve going through this vertex, compared to the x axis, counterclockwise.
+ * @name $.oVertex#angleRight
+ * @type {float} the angle in degrees, or null if the stroke is open ended on the right.
+ * @readonly
+ */
+Object.defineProperty($.oVertex.prototype, 'angleRight', {
+  get: function(){
+    var _index = this.index+1;
+    var _path = this.stroke.path;
+
+    // get the next point by looping around if the stroke is closed
+    if (_index >= _path.length){
+      if (this.stroke.closed){
+        var _nextPoint = _path[1];
+      }else{
+        return null;
+      }
+    }else{
+      var _nextPoint = _path[_index];
+    }
+
+    var vector = this.$.oVector.fromPoints(this, _nextPoint);
+    var angle = vector.degreesAngle;
+    // if (angle < 0) angle += 360 //ensuring only positive values
+    return angle
+  }
+})
+
+
+/**
+ * The angle of the line or bezier handle on the left of this vertex, compared to the x axis, counterclockwise.
+ * @name $.oVertex#angleLeft
+ * @type {float} the angle in degrees, or null if the stroke is open ended on the left.
+ * @readonly
+ */
+Object.defineProperty($.oVertex.prototype, 'angleLeft', {
+  get: function(){
+    var _index = this.index-1;
+    var _path = this.stroke.path;
+
+    // get the next point by looping around if the stroke is closed
+    if (_index < 0){
+      if (this.stroke.closed){
+        var _nextPoint = _path[_path.length-2]; //first and last points are the same when the stroke is closed
+      }else{
+        return null;
+      }
+    }else{
+      var _nextPoint = _path[_index];
+    }
+
+    var vector = this.$.oVector.fromPoints(this, _nextPoint);
+    var angle = vector.degreesAngle;
+    // if (angle < 0) angle += 360 //ensuring only positive values
+    return angle
+  }
+})
+
+
+/**
  * @private
  */
 $.oVertex.prototype.toString = function(){
- return "oVertex : { index:"+this.index+", x: "+this.x+", y: "+this.y+", onCurve: "+this.onCurve+", position: "+this.strokePosition+" }"
+ return "oVertex : { index:"+this.index+", x: "+this.x+", y: "+this.y+", onCurve: "+this.onCurve+", strokePosition: "+this.strokePosition+" }"
 }
 
 

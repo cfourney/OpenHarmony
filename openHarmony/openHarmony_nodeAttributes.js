@@ -8,11 +8,11 @@ function traceAll(){
 
   for (var i in nodes){
     var message = [
-      "Attributes present in the node of type: '" + node.type(nodes[i])+"'",
-      "@name  NodeTypes#"+ node.getName(nodes[i])
+      "Attributes present in the node : " + node.getName(nodes[i]),
+      "@name  NodeTypes#"+ node.type(nodes[i])
     ]
-    message = message.concat(node.getAttrList( nodes[i], 1).map(function(x){return traceAttributes(x, nodes[i])}));
-    message = ("\n"+docstringStart+"\n * ")+message.join("\n * ")+("\n "+docstringEnd+"\n");
+    message = message.concat(node.getAttrList( nodes[i], 1).map(function(x){return traceAttributes(x, nodes[i]));
+    message = ("\n "+docstringStart+"\n * ")+message.join("\n * ")+("\n "+docstringEnd+"\n");
     globalMessage.push(message);
   }
 
@@ -27,25 +27,20 @@ function traceAttributes(attribute, theNode){
       message = message.concat(traceAttributes(subattributes[i], theNode));
     }
   }
-  return message.join("\n * ")
+  return message
 }
 
 function formatAttribute(attr, theNode){
   var keyword = attr.fullKeyword();
   var type = attr.typeName().toLowerCase();
   var name = attr.name();
-  var defaultValue = node.getTextAttr(theNode, 1, keyword).replace(".0000", "");
-  if (type == "generic_enum" || defaultValue.indexOf(" ") != -1) {
-    var addBrackets = true;
-    defaultValue = '"'+defaultValue+'"';
-  }
+  var defaultValue = node.getTextAttr(theNode, 1, keyword).split(" ").join("_").replace(".0000", "");
   if (defaultValue == "N") defaultValue = "false";
   if (defaultValue == "Y") defaultValue = "true";
-  var message = "@property {"+type+"}  "+(addBrackets?"[":"")+keyword.toLowerCase()+((defaultValue!="")?"="+defaultValue:"")+(addBrackets?"]":"")+"   - "+name+"."
+  var message = "@property {"+type+"}  "+keyword.toLowerCase()+((defaultValue)?"="+defaultValue:"")+"   - "+name+"."
   return message;
 }
 */
-
 
 /**
  * Attributes associated to Node types.<br>These are the types to specify when creating a node, and the corresponding usual node name when creating directly through Harmony's interface. The attributes displayed here can be set and manipulated by calling the displayed names.

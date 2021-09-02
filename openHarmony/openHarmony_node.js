@@ -146,7 +146,7 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
     var _keyword = attr.shortKeyword;
 
     Object.defineProperty( context, _keyword, {
-        enumerable : false,
+        enumerable : true,
         configurable : true,
         get : function(){
             // MessageLog.trace("getting attribute "+attr.keyword+". animated: "+(attr.column != null))
@@ -158,6 +158,9 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
                 var _value =  attr.getValue();
             }else{
                 // if there are subattributes, create getter setters for each on the returned object
+                // this means every result of attr.getValue must be an object.
+                // For attributes that have a string return value, attr.getValue() actually returns a fake string object
+                // which is an object with a value property and a toString() method returning the value.
                 var _value = (attr.column != null)?new this.$.oList(attr.frames, 1):attr.getValue();
                 for (var i in _subAttrs){
                     this.setAttrGetterSetter( _subAttrs[i], _value );
@@ -198,8 +201,9 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
                     _value = newValue.value;
                 }
 
+                // setting non animated attribute value
                 for (var i in _subAttrs){
-                    // ignore the getter setters by setting each subAttr individually, and only set the ones that exist in the provided object
+                    // set each subAttr individually based on corresponding values in the provided object
                     var _keyword = _subAttrs[i].shortKeyword;
                     if (_value.hasOwnProperty(_keyword)) _subAttrs[i].setValue(_value[_keyword], _frame);
                 }
@@ -783,6 +787,19 @@ Object.defineProperty( $.oNode.prototype, 'bounds', {
 
 
 /**
+ * The transformation matrix of the node at the currentFrame.
+ * @name $.oNode#matrix
+ * @readonly
+ * @type {oMatrix}
+*/
+Object.defineProperty( $.oNode.prototype, 'matrix', {
+  get : function(){
+    return this.getMatrixAtFrame(this.scene.currentFrame);
+  }
+});
+
+
+/**
  * The list of all columns linked across all the attributes of this node.
  * @name $.oNode#linkedColumns
  * @readonly
@@ -1182,6 +1199,16 @@ $.oNode.prototype.moveToGroup = function(group){
 
     this.$.endUndo();
   }
+}
+
+
+/**
+ * Get the transformation matrix for the node at the given frame
+ * @param {int} frameNumber
+ * @returns {oMatrix}  the matrix object
+ */
+$.oNode.prototype.getMatrixAtFrame = function (frameNumber){
+  return new this.$.oMatrix(node.getMatrix(this.path, frameNumber));
 }
 
 
@@ -1605,9 +1632,7 @@ $.oNode.prototype.refreshAttributes = function( ){
     var _attributes = this.attributes
     for (var i in _attributes){
       var _attr = _attributes[i];
-      if( !this.hasOwnProperty( _attr.shortKeyword ) ){
-        this.setAttrGetterSetter(_attr);
-      }
+      this.setAttrGetterSetter(_attr);
     }
 }
 
@@ -1624,13 +1649,15 @@ $.oNode.prototype.refreshAttributes = function( ){
 //////////////////////////////////////
 
 /**
- * The peg module base class for the node.
+ * Constructor for the $.oPegNode class
+ * @classdesc
+ * $.oPegNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>
+ * It represents peg nodes in the scene.
  * @constructor
  * @augments   $.oNode
  * @classdesc  Peg Moudle Class
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
- * <br> The constructor for the scene object, new this.$.oScene($) to create a scene with DOM access.
  */
 $.oPegNode = function( path, oSceneObject ) {
     if (node.type(path) != 'PEG') throw "'path' parameter must point to a 'PEG' type node";
@@ -1654,11 +1681,11 @@ $.oPegNode.prototype.constructor = $.oPegNode;
 //////////////////////////////////////
 //////////////////////////////////////
 
-//CFNote: DrawingNode is incorrect in terms of Harmony-- its actually a 'Read' module.
-
 /**
- * The constructor for the scene object.
- * @classdesc  The drawing node base class.
+ * Constructor for the $.oDrawingNode class
+ * @classdesc
+ * $.oDrawingNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>
+ * It represents 'read' nodes or Drawing nodes in the scene.
  * @constructor
  * @augments   $.oNode
  * @param   {string}         path                          Path to the node in the network.
@@ -2044,6 +2071,179 @@ $.oDrawingNode.prototype.getContourCurves = function( count, frame ){
   return [];
 }
 
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//   $.oTransformSwitchNode class   //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+/**
+ * Constructor for the $.oTransformSwitchNode class
+ * @classdesc
+ * $.oTransformSwitchNode is a subclass of $.oNode and implements the same methods and properties as $.oNode. <br>
+ * It represents transform switches in the scene.
+ * @constructor
+ * @augments   $.oNode
+ * @param   {string}         path            Path to the node in the network.
+ * @param   {oScene}         oSceneObject    Access to the oScene object of the DOM.
+ * @property {$.oTransformNamesObject} names An array-like object with static indices (starting at 0) for each transformation name, which can be retrieved/set directly.
+ * @example
+ * // Assuming the existence of a Deformation group applied to a 'Drawing' node at the root of the scene
+ * var myNode = $.scn.getNodeByPath("Top/Deformation-Drawing/Transformation-Switch");
+ *
+ * myNode.names[0] = "B";                              // setting the value for the first transform drawing name to "B"
+ *
+ * var drawingNames = ["A", "B", "C"]                  // example of iterating over the existing names to set/retrieve them
+ * for (var i in myNode.names){
+ *   $.log(i+": "+myNode.names[i]);
+ *   $.log(myNode.names[i] = drawingNames[i]);
+ * }
+ *
+ * $.log("length: " + myNode.names.length)             // the number of names
+ * $.log("names: " + myNode.names)                     // prints the list of names
+ * $.log("indexOf 'B': " + myNode.names.indexOf("B"))  // can use methods from Array
+ */
+$.oTransformSwitchNode = function( path, oSceneObject ) {
+  if (node.type(path) != 'TransformationSwitch') throw "'path' parameter ("+path+") must point to a 'TransformationSwitch' type node. Got: "+node.type(path);
+  var instance = this.$.oNode.call( this, path, oSceneObject );
+  if (instance) return instance;
+
+  this._type = 'transformSwitchNode';
+  this.names = new this.$.oTransformNamesObject(this);
+}
+$.oTransformSwitchNode.prototype = Object.create( $.oNode.prototype );
+$.oTransformSwitchNode.prototype.constructor = $.oTransformSwitchNode;
+
+
+/**
+ * Constructor for the $.oTransformNamesObject class
+ * @classdesc
+ * $.oTransformNamesObject is an array like object with static length that exposes getter setters for
+ * each transformation name used by the oTransformSwitchNode. It can use the same methods as any array.
+ * @constructor
+ * @param {$.oTransformSwitchNode} instance the transform Node instance using this object
+ * @property {int} length the number of valid elements in the object.
+ */
+$.oTransformNamesObject = function(transformSwitchNode){
+  Object.defineProperty(this, "transformSwitchNode", {
+    enumerable:false,
+    get: function(){
+      return transformSwitchNode;
+    },
+  })
+
+  this.refresh();
+}
+$.oTransformNamesObject.prototype = Object.create(Array.prototype);
+
+
+/**
+ * @private
+ * creates a $.oTransformSwitch.names property with an index for each name to get/set the name value
+ */
+Object.defineProperty($.oTransformNamesObject.prototype, "createGetterSetter", {
+  enumerable:false,
+  value: function(index){
+    var attrName = "transformation_" + (index+1);
+    var transformNode = this.transformSwitchNode;
+
+    Object.defineProperty(this, index, {
+      enumerable:true,
+      configurable:true,
+      get: function(){
+        return transformNode.transformationnames[attrName];
+      },
+      set: function(newName){
+        newName = newName+""; // convert to string
+        this.$.debug("setting "+attrName+" to drawing "+newName+" on "+transformNode.path, this.$.DEBUG_LEVEL.DEBUG)
+        if (newName instanceof this.$.oDrawing) newName = newName.name;
+        transformNode.transformationnames[attrName] = newName;
+      }
+    })
+  }
+})
+
+
+/**
+ * @name $.oTransformNamesObject#length
+ * @type {int}
+ * The length of the array of names on the oTransformSwitchNode node. Corresponds to the transformationnames.size subAttribute.
+ */
+ Object.defineProperty($.oTransformNamesObject.prototype, "length", {
+  enumerable:false,
+  get: function(){
+    return this.transformSwitchNode.transformationnames.size;
+  },
+})
+
+
+/**
+ * A string representation of the names list
+ * @private
+ */
+Object.defineProperty($.oTransformNamesObject.prototype, "toString", {
+  enumerable:false,
+  value: function(){
+    return this.join(",");
+  }
+})
+
+
+/**
+ * @private
+ */
+Object.defineProperty($.oTransformNamesObject.prototype, "refresh", {
+  enumerable:false,
+  value:function(){
+    for (var i in this){
+      delete this[i];
+    }
+    for (var i=0; i<this.length; i++){
+      this.createGetterSetter(i);
+    }
+  }
+})
+
+
+/**
+ * @private
+ */
+$.oTransformSwitchNode.prototype.refreshNames = function(){
+  this.refreshAttributes();
+  this.names.refresh();
+}
+
+
+/**
+ * Links this node's inport to the given module, at the inport and outport indices.
+ * Refreshes attributes to update for the changes of connected transformation.
+ * @param   {$.oNode}   nodeToLink             The node to link this one's inport to.
+ * @param   {int}       [ownPort]              This node's inport to connect.
+ * @param   {int}       [destPort]             The target node's outport to connect.
+ * @param   {bool}      [createPorts]          Whether to create new ports on the nodes.
+ *
+ * @return  {bool}    The result of the link, if successful.
+ */
+$.oTransformSwitchNode.prototype.linkInNode = function(nodeToLink, ownPort, destPort, createPorts){
+  this.$.oNode.prototype.linkInNode.apply(this, arguments);
+  this.refreshNames()
+}
+
+/**
+ * Searches for and unlinks the $.oNode object from this node's inNodes.
+ * @param   {$.oNode}   oNodeObject            The node to link this one's inport to.
+ * @return  {bool}    The result of the unlink. Refreshes attributes to update for the changes of connected transformation.
+ */
+$.oTransformSwitchNode.prototype.unlinkInNode = function( oNodeObject ){
+  this.$.oNode.prototype.unlinkInNode.apply(this, arguments);
+  this.refreshNames()
+}
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -2085,7 +2285,7 @@ $.oColorOverrideNode.prototype.constructor = $.oColorOverrideNode;
  */
 Object.defineProperty($.oColorOverrideNode.prototype, "palettes", {
   get: function(){
-    this.$.log("getting palettes")
+    this.$.debug("getting palettes", this.$.DEBUG_LEVEL.LOG)
     if (!this._palettes){
       this._palettes = [];
 
@@ -2423,30 +2623,11 @@ $.oGroupNode.prototype.addNode = function( type, name, nodePosition ){
   // Defaults for optional parameters
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
   if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
+  if (typeof name !== 'string') name = name+"";
 
-  // increment name if a node with the same name already exists
-  var _name = name.split("_");
-  var _count = parseInt(_name.pop(), 10);
-
-  // get name without suffix
-  if (isNaN(_count)) { // check for NaN value -> no number already added
-    _name = name;
-    _count = 0;
-  } else {
-    _name = _name.join("_");
-  }
-
-  // loop to increment until we get a node name that is free
   var _group = this.path;
-  var _nodePath = _group + "/" + _name;
 
-  while (node.type(_nodePath)){
-    _count++;
-    name = _name + "_" + _count;
-    _nodePath = _group + "/" + name;
-  }
-
-  // create node and return result (this sanitizes the name, so we only create the oNode with the returned value)
+  // create node and return result (this sanitizes/increments the name, so we only create the oNode with the returned value)
   var _path = node.add(_group, name, type, nodePosition.x, nodePosition.y, nodePosition.z);
   _node = this.scene.getNodeByPath(_path);
 
@@ -2465,33 +2646,33 @@ $.oGroupNode.prototype.addNode = function( type, name, nodePosition ){
  */
 
 $.oGroupNode.prototype.addDrawingNode = function( name, nodePosition, oElementObject, drawingColumn){
-    // add drawing column and element if not passed as parameters
-    this.$.beginUndo("oH_addDrawingNode_"+name);
+  // add drawing column and element if not passed as parameters
+  this.$.beginUndo("oH_addDrawingNode_"+name);
 
-    // Defaults for optional parameters
-    if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
-    if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
+  // Defaults for optional parameters
+  if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+  if (typeof name === 'undefined') var name = type[0]+type.slice(1).toLowerCase();
 
-    // creating the node first to get the "safe name" returned by harmony
-    var _node = this.addNode("READ", name, nodePosition);
+  // creating the node first to get the "safe name" returned by harmony
+  var _node = this.addNode("READ", name, nodePosition);
 
-    if (typeof oElementObject === 'undefined') var oElementObject = this.scene.addElement(_node.name);
-    if (typeof drawingColumn === 'undefined'){
-      // first look for a column in the element
-      if (!oElementObject.column) {
-        var drawingColumn = this.scene.addColumn("DRAWING", _node.name, oElementObject);
-      }else{
-        var drawingColumn = oElementObject.column;
-      }
+  if (typeof oElementObject === 'undefined') var oElementObject = this.scene.addElement(_node.name);
+  if (typeof drawingColumn === 'undefined'){
+    // first look for a column in the element
+    if (!oElementObject.column) {
+      var drawingColumn = this.scene.addColumn("DRAWING", _node.name, oElementObject);
+    }else{
+      var drawingColumn = oElementObject.column;
     }
+  }
 
-    // setup the node
-    // setup animate mode/separate based on preferences?
-    _node.attributes.drawing.element.column = drawingColumn;
+  // setup the node
+  // setup animate mode/separate based on preferences?
+  _node.attributes.drawing.element.column = drawingColumn;
 
-    this.$.endUndo();
+  this.$.endUndo();
 
-    return _node;
+  return _node;
 }
 
 
@@ -2620,7 +2801,6 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
     copyPaste.paste(_tpl, destinationNodes.map(function(x){return x.path}), 0, 999, pasteOptions);
     var _nodes = destinationNodes;
   }else{
-    log("pasting as new nodes")
     var oldBackdrops = this.backdrops;
     copyPaste.pasteNewNodes(_tpl, _group, pasteOptions);
     var _scene = this.scene;
