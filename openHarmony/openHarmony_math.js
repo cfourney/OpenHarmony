@@ -534,19 +534,75 @@ $.oMatrix.prototype.toString = function(){
 /**
  * The $.oVector constructor.
  * @constructor
- * @classdesc The $.oVector is a subclass of the native Vector3d object from Harmony. It has the same methods and properties plus the ones listed here.
+ * @classdesc The $.oVector is a replacement for the Vector3d objects of Harmony.
  * @param {float} x a x coordinate for this vector.
  * @param {float} y a y coordinate for this vector.
  * @param {float} [z=0] a z coordinate for this vector. If ommited, will be set to 0 and vector will be 2D.
  */
 $.oVector = function(x, y, z){
-  Vector3d.constructor.call(this);
-  if (typeof z === "undefined") var z = 0;
-  this.x = x;
-  this.y = y;
-  this.z = z;
+  if (typeof z === "undefined" || isNaN(z)) var z = 0;
+
+  // since Vector3d doesn't have a prototype, we need to cheat to subclass it.
+  this._vector = new Vector3d(x, y, z);
 }
-$.oVector.prototype = Object.create(Vector3d.prototype);
+
+
+/**
+ * The X Coordinate of the vector.
+ * @name $.oVector#x
+ * @type {float}
+ */
+Object.defineProperty($.oVector.prototype, "x", {
+  get: function(){
+    return this._vector.x;
+  },
+  set: function(newX){
+    this._vector.x = newX;
+  }
+})
+
+
+/**
+ * The Y Coordinate of the vector.
+ * @name $.oVector#y
+ * @type {float}
+ */
+Object.defineProperty($.oVector.prototype, "y", {
+  get: function(){
+    return this._vector.y;
+  },
+  set: function(newY){
+    this._vector.y = newY;
+  }
+})
+
+
+/**
+ * The Z Coordinate of the vector.
+ * @name $.oVector#z
+ * @type {float}
+ */
+Object.defineProperty($.oVector.prototype, "z", {
+  get: function(){
+    return this._vector.z;
+  },
+  set: function(newX){
+    this._vector.z = newX;
+  }
+})
+
+
+/**
+ * The length of the vector.
+ * @name $.oVector#length
+ * @type {float}
+ * @readonly
+ */
+Object.defineProperty($.oVector.prototype, "length", {
+  get: function(){
+    return this._vector.length();
+  }
+})
 
 
 /**
@@ -582,6 +638,46 @@ $.oVector.prototype.multiply = function(num){
   this.y = num*this.y;
   this.z = num*this.z;
 
+  return this;
+}
+
+
+/**
+ * The dot product of the two vectors
+ * @param {$.oVector} vector2 a vector object.
+ * @returns {float} the resultant vector from the dot product of the two vectors.
+ */
+$.oVector.prototype.dot = function(vector2){
+  var _dot = this._vector.dot(new Vector3d(vector2.x, vector2.y, vector2.z));
+  return _dot;
+}
+
+/**
+ * The cross product of the two vectors
+ * @param {$.oVector} vector2 a vector object.
+ * @returns {$.oVector} the resultant vector from the dot product of the two vectors.
+ */
+$.oVector.prototype.cross = function(vector2){
+  var _cross = this._vector.cross(new Vector3d(vector2.x, vector2.y, vector2.z));
+  return new this.$.oVector(_cross.x, _cross.y, _cross.z);
+}
+
+/**
+ * The projected vectors resulting from the operation
+ * @param {$.oVector} vector2 a vector object.
+ * @returns {$.oVector} the resultant vector from the projection of the current vector.
+ */
+$.oVector.prototype.project = function(vector2){
+  var _projection = this._vector.project(new Vector3d(vector2.x, vector2.y, vector2.z));
+  return new this.$.oVector(_projection.x, _projection.y, _projection.z);
+}
+
+/**
+ * Normalize the vector.
+ * @returns {$.oVector} returns itself after normalization.
+ */
+$.oVector.prototype.normalize = function(){
+  this._vector.normalize();
   return this;
 }
 
