@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oPreferences</title>
+    <title>Class: oVector</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -4123,7 +4123,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oPreferences.html">Class: oPreferences</h1>
+        <h1 class="page-title" data-filename="$.oVector.html">Class: oVector</h1>
         
 
 
@@ -4134,11 +4134,10 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a>.</span>
     
-    oPreferences
+    oVector
     </h2>
     
-        <div class="class-description">Provides access to getting/setting preferenes as an object interface.<br>All preferences that have been written to the file are accessible as properties of this class.<br>
-Alternatively, new preferences can be retrieved with the .get function.</div>
+        <div class="class-description">The $.oVector is a replacement for the Vector3d objects of Harmony.</div>
     
 </header>  
 
@@ -4150,14 +4149,14 @@ Alternatively, new preferences can be retrieved with the .get function.</div>
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oPreferences">
+        <h4 class="name" id="oVector">
             
-            new $.oPreferences<span class="signature">()</span>
+            new $.oVector<span class="signature">(x, y, <span class="optional">z</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_preferences.js, line 64
+            openHarmony/openHarmony_math.js, line 542
         </div>
         
     </div>
@@ -4168,7 +4167,7 @@ Alternatively, new preferences can be retrieved with the .get function.</div>
     
     
     <div class="description">
-        The constructor for the $.preferences class.
+        The $.oVector constructor.
     </div>
     
 
@@ -4176,6 +4175,130 @@ Alternatively, new preferences can be retrieved with the .get function.</div>
     
     
     
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                a x coordinate for this vector.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                a y coordinate for this vector.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>z</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                a z coordinate for this vector. If ommited, will be set to 0 and vector will be 2D.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -4214,17 +4337,6 @@ Alternatively, new preferences can be retrieved with the .get function.</div>
     
     
     
-    
-        <h5>Example</h5>
-        
-
-    
-    <pre class="prettyprint"><code>var pref = $.getPreferences();
-pref.create( "MyNewPreferenceName", "MyPreferenceValue" );
-pref["MyNewPreferenceName"];     // Provides: MyPreferenceValue
-pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
-    
-
     
 </dd>
 
@@ -4248,7 +4360,7 @@ pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="create">create</h4>
+        <h4 class="name" id="angle"><span class="type-signature ">readonly</span>angle<span class="type-signature type float">float</span> </h4>
     </div>
     
     
@@ -4256,7 +4368,7 @@ pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
 <dd>
     
     <div class="description">
-        Creates a new preferences based on name and value.<br><b>Note- A new preference isn't actively written into the Harmony's preference file until created and the application closed. Use preference.get for newly created preferences.</b>
+        The angle of this vector in radians.
     </div>
     
     
@@ -4293,7 +4405,7 @@ pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="get">get</h4>
+        <h4 class="name" id="degreesAngle"><span class="type-signature ">readonly</span>degreesAngle<span class="type-signature type float">float</span> </h4>
     </div>
     
     
@@ -4301,7 +4413,7 @@ pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
 <dd>
     
     <div class="description">
-        Retrieves a preference and attempts to identify its type automatically.<br>This is generally useful for accessing newly created preferences that have not been written to disk.
+        The angle of this vector in degrees.
     </div>
     
     
@@ -4332,20 +4444,185 @@ pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
 
     
     
-        <h5>Example</h5>
+</dd>
+
         
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="length"><span class="type-signature ">readonly</span>length<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The length of the vector.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
     
-    <pre class="prettyprint"><code>var pref = $.getPreferences();
-pref.create( "MyNewPreferenceName", "MyPreferenceValue" );
-//This new preference won't be available in the file until Harmony closes.
-//So if preferences are reinstantiated, it won't be readily available -- but it can still be retrieved with get.
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-var pref2 = $.getPreferences(); 
-pref["MyNewPreferenceName"];     // Provides: undefined -- its not in the Harmony preference file.
-pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue, its still available </code></pre>
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="x">x<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The X Coordinate of the vector.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
     
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="y">y<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The Y Coordinate of the vector.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="z">z<span class="type-signature type float">float</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The Z Coordinate of the vector.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
     
 </dd>
 
@@ -4359,14 +4636,81 @@ pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue, its still avail
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="refresh">
+        <h4 class="name" id=".fromPoints">
             
-            refresh<span class="signature">()</span>
+            <span class="type-signature static">static</span>$.oVector.fromPoints<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_preferences.js, line 72
+            openHarmony/openHarmony_math.js, line 612
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="add">
+            
+            add<span class="signature">(vector2)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oVector.html">$.oVector</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_math.js, line 622
         </div>
         
     </div>
@@ -4377,8 +4721,587 @@ pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue, its still avail
     
     
     <div class="description">
-        Refreshes the preferences by re-reading the preference file and ingesting their values appropriately. They are then available as properties of this class.<br>
-<b>Note, any new preferences will not be available as properties until Harmony saves the preference file at exit. In order to reference new preferences, use the get function.
+        Adds another vector to this one.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>vector2</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oVector.html">$.oVector</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oVector.html">$.oVector</a>
+                        
+                    
+            </td>
+            <td class="description last">returns itself.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="cross">
+            
+            cross<span class="signature">(vector2)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oVector.html">$.oVector</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_math.js, line 660
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The cross product of the two vectors
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>vector2</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oVector.html">$.oVector</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                a vector object.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oVector.html">$.oVector</a>
+                        
+                    
+            </td>
+            <td class="description last">the resultant vector from the dot product of the two vectors.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="dot">
+            
+            dot<span class="signature">(vector2)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{float}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_math.js, line 650
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The dot product of the two vectors
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>vector2</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oVector.html">$.oVector</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                a vector object.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        float
+                        
+                    
+            </td>
+            <td class="description last">the resultant vector from the dot product of the two vectors.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="multiply">
+            
+            multiply<span class="signature">(num)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oVector.html">$.oVector</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_math.js, line 636
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Multiply this vector coordinates by a number (scalar multiplication)
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>num</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oVector.html">$.oVector</a>
+                        
+                    
+            </td>
+            <td class="description last">returns itself</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="normalize">
+            
+            normalize<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oVector.html">$.oVector</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_math.js, line 679
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Normalize the vector.
     </div>
     
 
@@ -4422,6 +5345,180 @@ pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue, its still avail
     
     
     
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oVector.html">$.oVector</a>
+                        
+                    
+            </td>
+            <td class="description last">returns itself after normalization.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="project">
+            
+            project<span class="signature">(vector2)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oVector.html">$.oVector</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_math.js, line 670
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The projected vectors resulting from the operation
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>vector2</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oVector.html">$.oVector</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                a vector object.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oVector.html">$.oVector</a>
+                        
+                    
+            </td>
+            <td class="description last">the resultant vector from the projection of the current vector.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
     
     
     

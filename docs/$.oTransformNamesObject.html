@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oPreferences</title>
+    <title>Class: oTransformNamesObject</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -4123,7 +4123,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oPreferences.html">Class: oPreferences</h1>
+        <h1 class="page-title" data-filename="$.oTransformNamesObject.html">Class: oTransformNamesObject</h1>
         
 
 
@@ -4134,11 +4134,11 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a>.</span>
     
-    oPreferences
+    oTransformNamesObject
     </h2>
     
-        <div class="class-description">Provides access to getting/setting preferenes as an object interface.<br>All preferences that have been written to the file are accessible as properties of this class.<br>
-Alternatively, new preferences can be retrieved with the .get function.</div>
+        <div class="class-description">$.oTransformNamesObject is an array like object with static length that exposes getter setters for
+each transformation name used by the oTransformSwitchNode. It can use the same methods as any array.</div>
     
 </header>  
 
@@ -4150,14 +4150,14 @@ Alternatively, new preferences can be retrieved with the .get function.</div>
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oPreferences">
+        <h4 class="name" id="oTransformNamesObject">
             
-            new $.oPreferences<span class="signature">()</span>
+            new $.oTransformNamesObject<span class="signature">(instance)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_preferences.js, line 64
+            openHarmony/openHarmony_node.js, line 2132
         </div>
         
     </div>
@@ -4168,7 +4168,7 @@ Alternatively, new preferences can be retrieved with the .get function.</div>
     
     
     <div class="description">
-        The constructor for the $.preferences class.
+        Constructor for the $.oTransformNamesObject class
     </div>
     
 
@@ -4177,9 +4177,105 @@ Alternatively, new preferences can be retrieved with the .get function.</div>
     
     
     
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>instance</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oTransformSwitchNode.html">$.oTransformSwitchNode</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                the transform Node instance using this object</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
     
     
 <dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>length</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">the number of valid elements in the object.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
     
         
     
@@ -4214,17 +4310,6 @@ Alternatively, new preferences can be retrieved with the .get function.</div>
     
     
     
-    
-        <h5>Example</h5>
-        
-
-    
-    <pre class="prettyprint"><code>var pref = $.getPreferences();
-pref.create( "MyNewPreferenceName", "MyPreferenceValue" );
-pref["MyNewPreferenceName"];     // Provides: MyPreferenceValue
-pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
-    
-
     
 </dd>
 
@@ -4248,7 +4333,7 @@ pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="create">create</h4>
+        <h4 class="name" id="length">length<span class="type-signature type int">int</span> </h4>
     </div>
     
     
@@ -4256,7 +4341,7 @@ pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
 <dd>
     
     <div class="description">
-        Creates a new preferences based on name and value.<br><b>Note- A new preference isn't actively written into the Harmony's preference file until created and the application closed. Use preference.get for newly created preferences.</b>
+        The length of the array of names on the oTransformSwitchNode node. Corresponds to the transformationnames.size subAttribute.
     </div>
     
     
@@ -4286,148 +4371,12 @@ pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue</code></pre>
 </dl>
 
     
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="get">get</h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Retrieves a preference and attempts to identify its type automatically.<br>This is generally useful for accessing newly created preferences that have not been written to disk.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-        <h5>Example</h5>
-        
-
-    
-    <pre class="prettyprint"><code>var pref = $.getPreferences();
-pref.create( "MyNewPreferenceName", "MyPreferenceValue" );
-//This new preference won't be available in the file until Harmony closes.
-//So if preferences are reinstantiated, it won't be readily available -- but it can still be retrieved with get.
-
-var pref2 = $.getPreferences(); 
-pref["MyNewPreferenceName"];     // Provides: undefined -- its not in the Harmony preference file.
-pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue, its still available </code></pre>
-    
-
     
 </dd>
 
         </dl>
     
     
-    
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl>
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="refresh">
-            
-            refresh<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_preferences.js, line 72
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Refreshes the preferences by re-reading the preference file and ingesting their values appropriately. They are then available as properties of this class.<br>
-<b>Note, any new preferences will not be available as properties until Harmony saves the preference file at exit. In order to reference new preferences, use the get function.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        </dl>
     
     
     
