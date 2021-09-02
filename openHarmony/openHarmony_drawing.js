@@ -1064,6 +1064,29 @@ Object.defineProperty($.oStroke.prototype, "points", {
 })
 
 
+/**
+ * The segments making up the stroke. Each segment is a slice of the path, starting and stopping with oVertex present on the curve, and includes the bezier handles oVertex.
+ * @name $.oStroke#segments
+ * @type {$.oVertex[][]}
+ * @readonly
+ */
+Object.defineProperty($.oStroke.prototype, "segments", {
+  get: function () {
+    var _points = this.points;
+    var _path = this.path;
+    var _segments = [];
+
+    for (var i=0; i<_points.length-1; i++){
+      var _indexStart = _points[i].index;
+      var _indexStop = _points[i+1].index;
+      var _segment = _path.slice(_indexStart, _indexStop+1);
+      _segments.push(_segment);
+    }
+
+    return _segments;
+  }
+})
+
 
 /**
  * The index of the stroke in the shape
