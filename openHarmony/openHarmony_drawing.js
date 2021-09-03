@@ -176,57 +176,6 @@ Object.defineProperty($.oDrawing.prototype, 'pivot', {
 
 
 /**
- * @name $.oDrawing#strokes
- * @type {$.oStroke[]}
- */
- Object.defineProperty($.oDrawing.prototype, 'strokes', {
-  get: function () {
-    var _strokes = [];
-    for (var i in this.artLayers) {
-      _strokes = _strokes.concat(this.artLayers[i].strokes);
-    }
-
-    return _strokes;
-  }
-})
-
-
-/**
- * The contours contained amongst all the shapes of the artLayer.
- * @name $.oDrawing#contours
- * @type {$.oContour[]}
- */
- Object.defineProperty($.oDrawing.prototype, 'contours', {
-  get: function () {
-    var _contours = []
-
-    for (var i in this.artLayers) {
-      _contours = _contours.concat(this.artLayers[i].contours)
-    }
-
-    return _contours
-  }
-})
-
-
-/**
- * @name $.oDrawing#shapes
- * @type {$.oShape[]}
- */
- Object.defineProperty($.oDrawing.prototype, 'shapes', {
-  get: function () {
-    var _shapes = [];
-    for (var i in this.artLayers) {
-      _shapes = _shapes.concat(this.artLayers[i].shapes);
-    }
-
-    return _shapes;
-  }
-})
-
-
-
-/**
  * The bounding box of the drawing, in drawing space coordinates. (null if the drawing is empty.)
  * @name $.oDrawing#boundingBox
  * @readonly
@@ -349,6 +298,25 @@ Object.defineProperty($.oDrawing.prototype, 'strokes', {
     return _strokes;
   }
 })
+
+
+/**
+ * The contours contained amongst all the shapes of the artLayer.
+ * @name $.oDrawing#contours
+ * @type {$.oContour[]}
+ */
+ Object.defineProperty($.oDrawing.prototype, 'contours', {
+  get: function () {
+    var _contours = []
+
+    for (var i in this.artLayers) {
+      _contours = _contours.concat(this.artLayers[i].contours)
+    }
+
+    return _contours
+  }
+})
+
 
 
 /**
