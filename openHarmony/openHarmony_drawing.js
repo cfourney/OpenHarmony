@@ -1736,9 +1736,9 @@ $.oContour.prototype = Object.create($.oStroke.prototype)
 
 
 /**
- * The info about the fill of this contour
+ * The information about the fill of this contour
  * @name $.oContour#fill
- * @type {$.oPoint[]}
+ * @type {$.oFillStyle}
  */
 Object.defineProperty($.oContour.prototype, "fill", {
   get: function () {
