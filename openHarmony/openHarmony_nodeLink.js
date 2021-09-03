@@ -1256,6 +1256,21 @@ Object.defineProperty($.oLink.prototype, 'isMultiLevel', {
 
 
 /**
+ * Compares the start and end nodes groups to see if the path traverses several groups or not.
+ * @name $.oLink#isMultiLevel
+ * @readonly
+ * @type {bool}
+ */
+Object.defineProperty($.oLink.prototype, 'waypoints', {
+  get : function(){
+    if (!this.linked) return []
+    var _waypoints = waypoint.getAllWaypointsAbove (this.inNode, this.inPort)
+    return _waypoints;
+  }
+});
+
+
+/**
  * Get a link that can be connected by working out ports that can be used. If a link already exists, it will be returned.
  * @return {$.oLink} A separate $.oLink object that can be connected. Null if none could be constructed.
  */

@@ -175,7 +175,6 @@ Object.defineProperty($.oDrawing.prototype, 'pivot', {
 })
 
 
-
 /**
  * The bounding box of the drawing, in drawing space coordinates. (null if the drawing is empty.)
  * @name $.oDrawing#boundingBox
@@ -302,6 +301,25 @@ Object.defineProperty($.oDrawing.prototype, 'strokes', {
 
 
 /**
+ * The contours contained amongst all the shapes of the artLayer.
+ * @name $.oDrawing#contours
+ * @type {$.oContour[]}
+ */
+ Object.defineProperty($.oDrawing.prototype, 'contours', {
+  get: function () {
+    var _contours = []
+
+    for (var i in this.artLayers) {
+      _contours = _contours.concat(this.artLayers[i].contours)
+    }
+
+    return _contours
+  }
+})
+
+
+
+/**
  * the currently active art layer of this drawing.
  * @name $.oDrawing#activeArtLayer
  * @type {$.oArtLayer}
@@ -356,13 +374,34 @@ Object.defineProperty($.oDrawing.prototype, 'selectedStrokes', {
 
 
 /**
+ * the selected shapes on this drawing
+ * @name $.oDrawing#selectedContours
+ * @type {$.oShape}
+ */
+Object.defineProperty($.oDrawing.prototype, 'selectedContours', {
+  get: function () {
+    var _selectedContours = [];
+    for (var i in this.artLayers) {
+      _selectedContours = _selectedContours.concat(this.artLayers[i].selectedContours);
+    }
+
+    return _selectedContours;
+  }
+})
+
+
+/**
  * all the data from this drawing. For internal use.
  * @name $.oDrawing#drawingData
  * @type {Object}
+ * @readonly
+ * @private
  */
 Object.defineProperty($.oDrawing.prototype, 'drawingData', {
   get: function () {
-    var _data = Drawing.query.getData(this._key);
+    var _data = Drawing.query.getData({drawing: this._key});
+    // log("Drawing data for "+JSON.stringify(this._key)+": "+JSON.stringify(_data, null,  "  "))
+    if (!_data) throw new Error("Data unavailable for drawing "+this.name)
     return _data;
   }
 })
@@ -627,26 +666,28 @@ Object.defineProperty($.oArtLayer.prototype, 'name', {
 })
 
 
-
 /**
- * The shapes contained on the drawing.
+ * The shapes contained on the artLayer.
  * @name $.oArtLayer#shapes
  * @type {$.oShape[]}
  */
 Object.defineProperty($.oArtLayer.prototype, 'shapes', {
   get: function () {
-    var _shapesNum = Drawing.query.getNumberOfLayers(this._key);
-    var _shapes = [];
-    for (var i = 0; i < _shapesNum; i++) {
-      _shapes.push(this.getShapeByIndex(i));
+    if (!this.hasOwnProperty("_shapes")){
+      var _shapesNum = Drawing.query.getNumberOfLayers(this._key);
+      var _shapes = [];
+      for (var i = 0; i < _shapesNum; i++) {
+        _shapes.push(this.getShapeByIndex(i));
+      }
+      this._shapes = _shapes;
     }
-    return _shapes;
+    return this._shapes;
   }
 })
 
 
 /**
- * The shapes contained on the drawing.
+ * The strokes contained amongst all the shapes of the artLayer.
  * @name $.oArtLayer#strokes
  * @type {$.oStroke[]}
  */
@@ -663,6 +704,24 @@ Object.defineProperty($.oArtLayer.prototype, 'strokes', {
   }
 })
 
+
+/**
+ * The contours contained amongst all the shapes of the artLayer.
+ * @name $.oArtLayer#contours
+ * @type {$.oContour[]}
+ */
+Object.defineProperty($.oArtLayer.prototype, 'contours', {
+  get: function () {
+    var _contours = [];
+
+    var _shapes = this.shapes;
+    for (var i in _shapes) {
+      _contours = _contours.concat(_shapes[i].contours);
+    }
+
+    return _contours;
+  }
+})
 
 
 /**
@@ -719,6 +778,48 @@ Object.defineProperty($.oArtLayer.prototype, 'selectedStrokes', {
 
 
 /**
+ * the currently selected contours on the ArtLayer.
+ * @name $.oArtLayer#selectedContours
+ * @type {$.oContour[]}
+ */
+Object.defineProperty($.oArtLayer.prototype, 'selectedContours', {
+  get: function () {
+    var _shapes = this.selectedShapes;
+    var _contours = [];
+
+    for (var i in _shapes) {
+      _contours = _contours.concat(_shapes[i].contours);
+    }
+
+    return _contours;
+  }
+})
+
+
+
+/**
+ * all the data from this artLayer. For internal use.
+ * @name $.oArtLayer#drawingData
+ * @type {$.oStroke[]}
+ * @readonly
+ * @private
+ */
+Object.defineProperty($.oArtLayer.prototype, 'drawingData', {
+  get: function () {
+    var _data = this._drawing.drawingData
+    for (var i in _data.arts){
+      if (_data.arts[i].art == this._layerIndex) {
+        return _data.arts[i];
+      }
+    }
+
+    // in case of empty layerArt, return a default object
+    return {art:this._layerIndex, artName:this.name, layers:[]};
+  }
+})
+
+
+/**
  * Draws a circle on the artLayer.
  * @param {$.oPoint}       center         The center of the circle
  * @param {float}          radius         The radius of the circle
@@ -733,47 +834,78 @@ $.oArtLayer.prototype.drawCircle = function(center, radius, lineStyle, fillStyle
   };
   var _path = Drawing.geometry.createCircle(arg);
 
-  this.drawStroke(_path, lineStyle, fillStyle);
+  this.drawShape(_path, lineStyle, fillStyle);
 }
+
+/**
+ * Draws the given path on the artLayer.
+ * @param {$.oVertex[]}    path         an array of $.oVertex objects that describe a path.
+ * @param {$.oLineStyle}   [lineStyle]  the line style to draw with. (By default, will use the current stencil selection)
+ * @param {$.oFillStyle}   [fillStyle]  the fill information for the path. (By default, will use the current palette selection)
+ * @param {bool}   [polygon]            Wether bezier handles should be created for the points in the path (ignores "onCurve" properties of oVertex from path)
+ * @param {bool}   [createUnderneath]   Wether the new shape will appear on top or underneath the contents of the layer.
+ */
+$.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, createUnderneath){
+  if (typeof fillStyle === 'undefined') var fillStyle = new this.$.oFillStyle();
+  if (typeof lineStyle === 'undefined') var lineStyle = new this.$.oLineStyle();
+  if (typeof polygon === 'undefined') var polygon = false;
+  if (typeof createUnderneath === 'undefined') var createUnderneath = false;
+
+  var _lineStyle = {};
+
+  if (lineStyle){
+    _lineStyle.pencilColorId = lineStyle.colorId;
+    _lineStyle.thickness = {
+      "minThickness": lineStyle.minThickness,
+      "maxThickness": lineStyle.maxThickness,
+      "thicknessPath": 0
+    };
+  }
+
+  if (fillStyle) _lineStyle.shaderLeft = 0;
+  if (polygon) _lineStyle.polygon = true;
+  _lineStyle.under = createUnderneath ;
+  _lineStyle.stroke = !!lineStyle;
+
+  var strokeDesciption = _lineStyle;
+  strokeDesciption.path = path;
+  strokeDesciption.closed = !!fillStyle;
+
+  var shapeDescription = {}
+  if (fillStyle) shapeDescription.shaders = [{ colorId : fillStyle.colorId }]
+  shapeDescription.strokes = [strokeDesciption]
+  if (lineStyle) shapeDescription.thicknessPaths = [lineStyle.stencil.thicknessPath]
+
+  var config = {
+    label: "draw shape",
+    drawing: this._key.drawing,
+    art: this._key.art,
+    layers: [shapeDescription]
+  };
+
+  log(JSON.stringify(config, null, "  "))
+
+  DrawingTools.createLayers(config)
+};
 
 
 /**
  * Draws the given path on the artLayer.
  * @param {$.oVertex[]}    path          an array of $.oVertex objects that describe a path.
  * @param {$.oLineStyle}   lineStyle     the line style to draw with.
- * @param {object}         fillStyle     the fill information for the path.
  */
-$.oArtLayer.prototype.drawStroke = function(path, lineStyle, fillStyle){
-  if (typeof fillStyle === 'undefined') var fillStyle = []
-  if (typeof lineStyle === 'undefined') var lineStyle = new this.$.oLineStyle();
+$.oArtLayer.prototype.drawStroke = function(path, lineStyle){
+  this.drawShape(path, lineStyle, null)
+};
 
-  var _lineStyle = {
-    shaderLeft: 0,
-    stroke: true,
-    pencilColorId: lineStyle.colorId,
-    thickness: {
-      "minThickness": lineStyle.minThickness,
-      "maxThickness": lineStyle.maxThickness,
-      "thicknessPath": lineStyle.stencil
-    }
-  }
 
-  // this.$.debug(JSON.stringify(_lineStyle), this.$.DEBUG_LEVEL.DEBUG)
-
-  var strokeDesciption = _lineStyle;
-  strokeDesciption.path = path;
-
-  DrawingTools.createLayers({
-    label: "draw stroke",
-    drawing: this._key.drawing,
-    art: this._key.art,
-    layers: [
-      {
-        shaders: fillStyle,
-        strokes: [strokeDesciption]
-      }
-    ]
-  });
+/**
+ * Draws the given path on the artLayer.
+ * @param {$.oVertex[]}    path          an array of $.oVertex objects that describe a path.
+ * @param {$.oFillStyle}   fillStyle     the line style to draw with.
+ */
+$.oArtLayer.prototype.drawContour = function(path, fillStyle){
+  this.drawShape(path, null, fillStyle)
 };
 
 
@@ -817,7 +949,7 @@ $.oArtLayer.prototype.drawLine = function(startPoint, endPoint, lineStyle){
  */
 $.oArtLayer.prototype.clear = function(){
   var _shapes = this.shapes;
-  this.$.debug(_shapes, this.$.DEBUG_LEVEL.DEBUG)
+  this.$.debug(_shapes, this.$.DEBUG_LEVEL.DEBUG);
   for (var i=_shapes.length - 1; i>=0; i--){
     _shapes[i].deleteShape();
   }
@@ -862,16 +994,16 @@ $.oArtLayer.prototype.toString = function(){
  * The $.oLineStyle class describes a lineStyle used to describe the appearance of strokes and perform drawing operations. <br>
  * Initializing a $.oLineStyle without any parameters attempts to get the current pencil thickness settings and color.
  * @param {string}     colorId             the color Id to paint the line with.
- * @param {float}      minThickness        the minimum thickness of the line.
- * @param {float}      maxThickness        the maximum thickness of the line.
- * @param {$.oStencil} stencil             not supported yet.
+ * @param {$.oStencil} stencil             the stencil object representing the thickness keys
  */
-$.oLineStyle = function (colorId, minThickness, maxThickness, stencil) {
-  if (typeof stencil === 'undefined') var stencil = 0;
+$.oLineStyle = function (colorId, stencil) {
   if (typeof minThickness === 'undefined') var minThickness = PenstyleManager.getCurrentPenstyleMinimumSize();
   if (typeof maxThickness === 'undefined') {
     var maxThickness = PenstyleManager.getCurrentPenstyleMaximumSize();
     if (!maxThickness && !minThickness) maxThickness = 1;
+  }
+  if (typeof stencil === 'undefined') {
+    var stencil = new $.oStencil("", "pencil", {maxThickness:maxThickness, minThickness:minThickness, keys:[]});
   }
 
   if (typeof colorId === 'undefined'){
@@ -886,14 +1018,43 @@ $.oLineStyle = function (colorId, minThickness, maxThickness, stencil) {
     }
   }
 
-  this.minThickness = minThickness;
-  this.maxThickness = maxThickness;
   this.colorId = colorId;
   this.stencil = stencil;
 
   // this.$.debug(colorId+" "+minThickness+" "+maxThickness+" "+stencil, this.$.DEBUG_LEVEL.DEBUG)
 }
 
+
+/**
+ * The minimum thickness of the line using this lineStyle
+ * @name $.oLineStyle#minThickness
+ * @type {float}
+ */
+Object.defineProperty($.oLineStyle.prototype, "minThickness", {
+  get: function(){
+    return this.stencil.minThickness;
+  },
+
+  set: function(newMinThickness){
+    this.stencil.minThickness = newMinThickness;
+  }
+})
+
+
+/**
+ * The minimum thickness of the line using this lineStyle
+ * @name $.oLineStyle#maxThickness
+ * @type {float}
+ */
+Object.defineProperty($.oLineStyle.prototype, "maxThickness", {
+  get: function(){
+    return this.stencil.maxThickness;
+  },
+
+  set: function(newMaxThickness){
+    this.stencil.maxThickness = newMaxThickness;
+  }
+})
 
 
 //////////////////////////////////////
@@ -937,6 +1098,21 @@ Object.defineProperty($.oShape.prototype, '_key', {
   }
 })
 
+
+/**
+ * The underlying data describing the shape.
+ * @name $.oShape#_data
+ * @type {$.oShape[]}
+ * @readonly
+ * @private
+ */
+Object.defineProperty($.oShape.prototype, '_data', {
+  get: function () {
+    return this.artLayer.drawingData.layers[this.index];
+  }
+})
+
+
 /**
  * The strokes making up the shape.
  * @name $.oShape#strokes
@@ -946,12 +1122,123 @@ Object.defineProperty($.oShape.prototype, '_key', {
 Object.defineProperty($.oShape.prototype, 'strokes', {
   get: function () {
     if (!this.hasOwnProperty("_strokes")) {
-      var _strokeQuery = Drawing.query.getLayerStrokes(this._key).layers[0];
+      var _data = this._data;
+
+      if (!_data.hasOwnProperty("strokes")) return [];
+
       var _shape = this;
-      var _strokes = _strokeQuery.strokes.map(function (x, idx) { return new this.$.oStroke(idx, x, _shape) })
+      var _strokes = _data.strokes.map(function (x, idx) { return new _shape.$.oStroke(idx, x, _shape) })
       this._strokes = _strokes;
     }
     return this._strokes;
+  }
+})
+
+
+/**
+ * The contours (invisible strokes that can delimit colored areas) making up the shape.
+ * @name $.oShape#contours
+ * @type {$.oContour[]}
+ * @readonly
+ */
+ Object.defineProperty($.oShape.prototype, 'contours', {
+  get: function () {
+    if (!this.hasOwnProperty("_contours")) {
+      var _data = this._data
+
+      if (!_data.hasOwnProperty("contours")) return [];
+
+      var _shape = this;
+      var _contours = _data.contours.map(function (x, idx) { return new this.$.oContour(idx, x, _shape) })
+      this._contours = _contours;
+    }
+    return this._contours;
+  }
+})
+
+
+/**
+ * The stencils used by the shape.
+ * @name $.oShape#stencils
+ * @type {$.oStencil[]}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'stencils', {
+  get: function () {
+    if (!this.hasOwnProperty("_stencils")) {
+      var _data = this._data;
+      var _shape = this;
+      var _stencils = _data.thicknessPaths.map(function (x) { return new _shape.$.oStencil("", "pencil", x) })
+      this._stencils = _stencils;
+    }
+    return this._stencils;
+  }
+})
+
+
+/**
+ * The bounding box of the shape.
+ * @name $.oShape#bounds
+ * @type {$.oBox}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'bounds', {
+  get: function () {
+    var _data = this._data;
+    var _box = _data.box;
+    var _bounds = new this.$.oBox(_box.x0,_box.y1, _box.x1, _box.y2);
+    return _bounds;
+  }
+})
+
+/**
+ * The x coordinate of the shape.
+ * @name $.oShape#x
+ * @type {float}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'x', {
+  get: function () {
+    return this.bounds.left;
+  }
+})
+
+
+/**
+ * The x coordinate of the shape.
+ * @name $.oShape#x
+ * @type {float}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'y', {
+  get: function () {
+    return this.bounds.top;
+  }
+})
+
+
+/**
+ * The width of the shape.
+ * @name $.oShape#width
+ * @type {float}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'width', {
+  get: function () {
+    return this.bounds.width;
+  }
+})
+
+
+/**
+ * The height coordinate of the shape.
+ * @name $.oShape#height
+ * @type {float}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'height', {
+  get: function () {
+    return this.bounds.height;
   }
 })
 
@@ -964,13 +1251,55 @@ Object.defineProperty($.oShape.prototype, 'strokes', {
  */
 Object.defineProperty($.oShape.prototype, 'selected', {
   get: function () {
-    var _selection = this._drawingLayer._selectedShapes;
+    var _selection = this.artLayer._selectedShapes;
     var _indices = _selection.map(function (x) { return x.index });
     return (_indices.indexOf(this.index) != -1)
   },
-  set: function () {
+  set: function (newSelectedState) {
+    var _key = this.artLayer._key;
+
+    var currentSelection = Drawing.selection.get(_key);
+    var config = {drawing:_key.drawing, art:_key.art};
+
+    if (newSelectedState){
+      // adding elements to selection
+      config.selectedLayers = currentSelection.selectedLayers.concat([this.index]);
+      config.selectedStrokes = currentSelection.selectedStrokes;
+    }else{
+      config.selectedLayers = currentSelection.selectedLayers;
+      config.selectedStrokes = currentSelection.selectedStrokes;
+
+      // remove current element from selection before setting again
+      for (var i=config.selectedLayers.length-1; i>=0; i--){
+        if (config.selectedLayers[i] == this.index) config.selectedLayers.splice(i, 1);
+      }
+      for (var i=config.selectedStrokes.length-1; i>=0; i--){
+        if (config.selectedStrokes[i].layer == this.index) config.selectedStrokes.splice(i, 1);
+      }
+    }
+
+    Drawing.selection.set(config);
   }
 })
+
+
+/**
+ * Deletes the shape from its artlayer.
+ * Updates the index of all other oShapes on the artLayer in order to
+ * keep tracking all of them without having to query the drawing again.
+ */
+$.oShape.prototype.remove = function(){
+  DrawingTools.deleteLayers(this._key);
+
+  // update shapes list for this artLayer
+  var shapes = this.artLayer.shapes
+  for (var i in shapes){
+    if (i > this.index){
+      shapes[i].index--;
+    }
+  }
+  shapes.splice(this.index, 1);
+}
 
 
 /**
@@ -979,9 +1308,10 @@ Object.defineProperty($.oShape.prototype, 'selected', {
  * that isn't at the end of the list of shapes from this layer
  * might render other shape objects from this layer obsolete.
  * Get them again with artlayer.shapes.
+ * @deprecated use oShape.remove instead
  */
 $.oShape.prototype.deleteShape = function(){
-  DrawingTools.deleteLayers(this._key);
+  this.remove()
 }
 
 
@@ -996,6 +1326,60 @@ $.oShape.prototype.getStrokeByIndex = function (index) {
 }
 
 
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//       $.oFillStyle class         //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for the $.oFillStyle class.
+ * @constructor
+ * @classdesc
+ * The $.oFillStyle class describes a fillStyle used to describe the appearance of filled in color areas and perform drawing operations. <br>
+ * Initializing a $.oFillStyle without any parameters attempts to get the current color id.
+ * @param {string}     colorId             the color Id to paint the line with.
+ * @param {object}     fillMatrix
+ */
+$.oFillStyle = function (colorId, fillMatrix) {
+  if (typeof fillMatrix === 'undefined') var fillMatrix = {
+    "ox": 1,
+    "oy": 1,
+    "xx": 1,
+    "xy": 0,
+    "yx": 0,
+    "yy": 1
+  }
+
+  if (typeof colorId === 'undefined'){
+    var _palette = this.$.scn.selectedPalette;
+    if (_palette) {
+      var _color = this.$.scn.selectedPalette.currentColor;
+      if (_color) {
+        var colorId = _color.id;
+      } else{
+        var colorId = "0000000000000003";
+      }
+    }
+  }
+
+  this.colorId = colorId;
+  this.fillMatrix = fillMatrix;
+
+  this.$.log("new fill created: " + colorId + " " + JSON.stringify(this.fillMatrix))
+}
+
+
+$.oFillStyle.prototype.toString = function(){
+  return "<oFillStyle colorId:"+this.colorId+", matrix:"+JSON.stringify(this.fillMatrix)+">";
+}
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -1024,7 +1408,7 @@ $.oStroke = function (index, strokeObject, oShapeObject) {
   this.index = index
   this.shape = oShapeObject
   this.artLayer = oShapeObject.artLayer;
-  this._stroke = strokeObject;
+  this._data = strokeObject;
 }
 
 
@@ -1039,7 +1423,7 @@ Object.defineProperty($.oStroke.prototype, "path", {
     // path vertices get cached
     if (!this.hasOwnProperty("_path")){
       var _stroke = this;
-      var _path = this._stroke.path.map(function(point, index){
+      var _path = this._data.path.map(function(point, index){
         return new _stroke.$.oVertex(_stroke, point.x, point.y, point.onCurve, index);
       })
 
@@ -1096,7 +1480,7 @@ Object.defineProperty($.oStroke.prototype, "segments", {
 Object.defineProperty($.oStroke.prototype, "index", {
   get: function () {
     this.$.debug("stroke object : "+JSON.stringify(this._stroke, null, "  "), this.$.DEBUG_LEVEL.DEBUG)
-    return this._stroke.strokeIndex
+    return this._data.strokeIndex
   }
 })
 
@@ -1108,13 +1492,13 @@ Object.defineProperty($.oStroke.prototype, "index", {
  */
 Object.defineProperty($.oStroke.prototype, "style", {
   get: function () {
-    if (this._stroke.invisible){
+    if (this._data.invisible){
       return null;
     }
-    var _thickness = this._stroke.thickness;
-    var _colorId = this._stroke.pencilColorId;
+    var _colorId = this._data.pencilColorId;
+    var _stencil = this.shape.stencils[this._data.thickness];
 
-    return new this.$.oLineStyle(_colorId, _thickness.minThickness, _thickness.maxThickness, _thickness.thicknessPath);
+    return new this.$.oLineStyle(_colorId, _stencil);
   }
 })
 
@@ -1189,7 +1573,7 @@ $.oStroke.prototype.getIntersections = function (stroke){
 /**
  * Adds points on the stroke without moving them, at the distance specified (0=start vertice, 1=end vertice)
  * @param   {float[]}       pointsToAdd     an array of float value between 0 and 1 for each point to create
- * @returns {$.oVertex[]}   the points that were created
+ * @returns {$.oVertex[]}   the points that were created (if points already existed, they will be returned)
  * @example
 // get the selected stroke and create points where it intersects with the other two strokes
 var sel = $.scn.activeDrawing.selectedStrokes[0];
@@ -1208,30 +1592,44 @@ intersection2.stroke.addPoints([intersection2.strokePoint]);
 sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);
 */
 $.oStroke.prototype.addPoints = function (pointsToAdd) {
+  // calculate the points that will be created
+  var points = Drawing.geometry.insertPoints({path:this._data.path, params : pointsToAdd})
+
+  // find the newly added points amongst the returned values
+  for (var i in this.path){
+    var pathPoint = this.path[i];
+
+    // if point is found in path, it's not newly created
+    for (var j = points.length-1; j >=0; j--){
+      var point = points[j];
+      if (point.x == pathPoint.x && point.y == pathPoint.y) {
+        points.splice(j, 1);
+        break
+      }
+    }
+  }
+
+  // actually add the points
   var config = this.artLayer._key;
   config.label = "addPoint";
   config.strokes = [{layer:this.shape.index, strokeIndex:this.index, insertPoints: pointsToAdd }];
 
-  // get the list of the current fixed points
-  var fixedPoints = this.path.filter(function(x){return x.onCurve});
-
   DrawingTools.modifyStrokes(config);
-
-  // update the path
   this.updateDefinition();
 
-  // get the list of the current fixed points
-  var newFixedPoints = this.path.filter(function(x){return x.onCurve});
+  var newPoints = []
+  // find the points for the coordinates from the new path
+  for (var i in points){
+    var point = points[i];
 
-  // get the fixed points that didn't exist before
-  for (var i=newFixedPoints.length-1; i>=0; i--){
-    var newPoint = newFixedPoints[i];
-    for (var j in fixedPoints){
-      if (fixedPoints[j].x == newPoint.x && fixedPoints[j].y == newPoint.y) newFixedPoints.splice(i, 1);
+    for (var j in this.path){
+      var pathPoint = this.path[j];
+      if (point.x == pathPoint.x && point.y == pathPoint.y) newPoints.push(pathPoint);
     }
   }
 
-  return newFixedPoints;
+  if (newPoints.length != pointsToAdd.length) throw new Error ("some points in " + pointsToAdd + " were not created.")
+  return newPoints;
 }
 
 
@@ -1241,12 +1639,12 @@ $.oStroke.prototype.addPoints = function (pointsToAdd) {
 $.oStroke.prototype.updateDefinition = function(){
   var _key = this.artLayer._key;
   var strokes = Drawing.query.getStrokes(_key);
-  this._stroke = strokes.layers[this.shape.index].strokes[this.index];
+  this._data = strokes.layers[this.shape.index].strokes[this.index];
 
   // remove cache for path
   delete this._path;
 
-  return this._stroke;
+  return this._data;
 }
 
 
@@ -1257,11 +1655,11 @@ $.oStroke.prototype.updateDefinition = function(){
  */
 $.oStroke.prototype.getPointPosition = function(point){
   var arg = {
-    path : this.path,
+    path : this._data.path,
     points: [point]
   }
   var strokePoint = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
-  if (!strokePoint) return 0
+  if (!strokePoint) return 0;
 
   return strokePoint.t;
 }
@@ -1274,7 +1672,7 @@ $.oStroke.prototype.getPointPosition = function(point){
  */
 $.oStroke.prototype.getPointCoordinates = function(position){
   var arg = {
-    path : this.path,
+    path : this._data.path,
     params : [ position ]
  };
  var point = Drawing.geometry.evaluate(arg)[0];
@@ -1296,6 +1694,70 @@ $.oStroke.prototype.getClosestPoint = function (point){
   var _result = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
   return _result
 }
+
+
+/**
+ * @private
+ */
+ $.oStroke.prototype.toString = function(){
+  return "oStroke : { path:"+this.path+" }"
+ }
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//         $.oContour class         //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for the $.oContour class. These types of objects are not supported for harmony versions < 16
+ * @constructor
+ * @classdesc  The $.oContour class models the strokes that make up the shapes visible on the Drawings.<br>
+ * $.oContour is a subclass of $.oSroke and shares its properties, but represents a stroke with a fill.
+ * @extends $.oStroke
+ * @param {int}       index             The index of the contour in the shape.
+ * @param {object}    contourObject     The stroke object descriptor that contains the info for the stroke
+ * @param {oShape}    oShapeObject      The parent oShape
+ *
+ * @property {int}          index       the index of the stroke in the parent shape
+ * @property {$.oShape}     shape       the shape that contains this stroke
+ * @property {$.oArtLayer}  artLayer    the art layer that contains this stroke
+ */
+ $.oContour = function (index, contourObject, oShapeObject) {
+  this.$.oStroke.call(this, index, contourObject, oShapeObject)
+}
+$.oContour.prototype = Object.create($.oStroke.prototype)
+
+
+/**
+ * The info about the fill of this contour
+ * @name $.oContour#fill
+ * @type {$.oPoint[]}
+ */
+Object.defineProperty($.oContour.prototype, "fill", {
+  get: function () {
+    var _data = this._data;
+    return new this.$.oFillStyle(_data.colorId, _data.matrix);
+  }
+})
+
+
+
+/**
+ * @private
+ */
+$.oContour.prototype.toString = function(){
+  return "oContour : { path:"+this.path+", fill:"+fill+" }"
+}
+
+
+
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -1329,7 +1791,7 @@ $.oStroke.prototype.getClosestPoint = function (point){
  */
 $.oVertex = function(stroke, x, y, onCurve, index){
   if (typeof onCurve === 'undefined') var onCurve = false;
-  if (typeof index === 'undefined') var index = -1;
+  if (typeof index === 'undefined') var index = stroke.getPointPosition({x:x, y:y});
 
   this.x = x;
   this.y = y;
@@ -1456,14 +1918,77 @@ $.oVertex.prototype.toString = function(){
  * @param   {string}   xmlDescription        the part of the penstyles.xml file between <pen> tags that describe a stencils.
  * @property {string}  name                  the display name of the stencil
  * @property {string}  type                  the type of stencil
- * @property {Object}  mainBrushShape        the description of the shape of the stencil
+ * @property {Object}  thicknessPathObject   the description of the shape of the stencil
  */
-$.oStencil = function (xmlDescription) {
-  _settings = this.$.oStencil.getSettingsFromXml(xmlDescription);
-  this.type = _settings.style;
-  for (var i in _settings) {
-    this[i] = _settings[i];
+$.oStencil = function (name, type, thicknessPathObject) {
+  this.name = name;
+  this.type = type;
+  this.thicknessPathObject = thicknessPathObject;
+  // log("thicknessPath: " + JSON.stringify(this.thicknessPathObject))
+}
+
+
+/**
+ * The minimum thickness of the line using this stencil
+ * @name $.oStencil#minThickness
+ * @type {float}
+ */
+Object.defineProperty($.oStencil.prototype, "minThickness", {
+  get: function(){
+    return this.thicknessPathObject.minThickness;
+  },
+  set: function(newMinThickness){
+    this.thicknessPathObject.minThickness = newMinThickness;
+    // TODO: also change in thicknessPath.keys
   }
+})
+
+
+/**
+ * The maximum thickness of the line using this stencil
+ * @name $.oStencil#maxThickness
+ * @type {float}
+ */
+Object.defineProperty($.oStencil.prototype, "maxThickness", {
+  get: function(){
+    return this.thicknessPathObject.maxThickness;
+  },
+  set: function(newMaxThickness){
+    this.thicknessPathObject.maxThickness = newMaxThickness;
+    // TODO: also change in thicknessPath.keys
+  }
+})
+
+
+/**
+ * Parses the xml string of the stencil xml description to create an object with all the information from it.
+ * @private
+ */
+$.oStencil.getFromXml = function (xmlString) {
+  var object = this.prototype.$.oStencil.getSettingsFromXml(xmlString)
+
+  var maxThickness = object.mainBrushShape.sizeRange.maxValue
+  var minThickness = object.mainBrushShape.sizeRange.minPercentage * maxThickness
+
+  var thicknessPathObject = {
+    maxThickness:maxThickness,
+    minThickness:minThickness,
+    keys: [
+      {t:0},
+      {t:1}
+    ]
+  }
+
+  var _stencil = new this.$.oStencil(object.name, object.style, thicknessPathObject)
+  for (var i in object) {
+    try{
+      // attempt to set values from the object
+      _stencil[i] = _settings[i];
+    }catch(err){
+      this.$.log(err)
+    }
+  }
+  return _stencil;
 }
 
 
