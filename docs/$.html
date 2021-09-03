@@ -68,6 +68,8 @@
             
                 <li data-name="$.oUtils"><a href="$.html#.oUtils">oUtils</a></li>
             
+                <li data-name="$.toast"><a href="$.html#.toast">toast</a></li>
+            
                 <li data-name="$#alert"><a href="$.html#alert">alert</a></li>
             
                 <li data-name="$#alertBox"><a href="$.html#alertBox">alertBox</a></li>
@@ -1407,6 +1409,8 @@
                 <li data-name="$.oDialog#confirm"><a href="$.oDialog.html#confirm">confirm</a></li>
             
                 <li data-name="$.oDialog#prompt"><a href="$.oDialog.html#prompt">prompt</a></li>
+            
+                <li data-name="$.oDialog#toast"><a href="$.oDialog.html#toast">toast</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -5025,7 +5029,7 @@ var doc = scn;                      // "scn" isn't a function so this one isn't<
     
         
         <div class="tag-source">
-            openHarmony.js, line 447
+            openHarmony.js, line 458
         </div>
         
     </div>
@@ -5097,7 +5101,7 @@ Will be run at each include('openHarmony.js') statement.
     
         
         <div class="tag-source">
-            openHarmony.js, line 414
+            openHarmony.js, line 425
         </div>
         
     </div>
@@ -5197,6 +5201,239 @@ a cached class instance or null if no cached instance exists.
     
     
     
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".toast">
+            
+            <span class="type-signature static">static</span>$.toast<span class="signature">(labelText, <span class="optional">position</span>, <span class="optional">duration</span>, <span class="optional">color</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony.js, line 268
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Prompts with an toast alert. This is a small message that can't be clicked and only stays on the screen for the duration specified.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>labelText</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                The label/internal text of the dialog.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oPoint.html">$.oPoint</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The position on the screen where the toast will appear (by default, slightly under the middle of the screen).</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    2000
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The duration of the display (in milliseconds).</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>color</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oColorValue.html">$.oColorValue</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    "#000000"
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The color of the background (a 50% alpha value will be applied).</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -5615,7 +5852,7 @@ a cached class instance or null if no cached instance exists.
     
         
         <div class="tag-source">
-            openHarmony.js, line 318
+            openHarmony.js, line 329
         </div>
         
     </div>
@@ -5740,7 +5977,7 @@ If this function is called multiple time, only the first time will count.
     
         
         <div class="tag-source">
-            openHarmony.js, line 272
+            openHarmony.js, line 283
         </div>
         
     </div>
@@ -6042,7 +6279,7 @@ If this function is called multiple time, only the first time will count.
     
         
         <div class="tag-source">
-            openHarmony.js, line 287
+            openHarmony.js, line 298
         </div>
         
     </div>
@@ -6224,7 +6461,7 @@ If this function is called multiple time, only the first time will count.
     
         
         <div class="tag-source">
-            openHarmony.js, line 335
+            openHarmony.js, line 346
         </div>
         
     </div>
@@ -6676,7 +6913,7 @@ If this function is called multiple time, only the first time will count.
     
         
         <div class="tag-source">
-            openHarmony.js, line 344
+            openHarmony.js, line 355
         </div>
         
     </div>
@@ -6756,7 +6993,7 @@ If beginUndo function is called multiple time, each call must be matched with th
     
         
         <div class="tag-source">
-            openHarmony.js, line 299
+            openHarmony.js, line 310
         </div>
         
     </div>
@@ -6907,7 +7144,7 @@ If beginUndo function is called multiple time, each call must be matched with th
     
         
         <div class="tag-source">
-            openHarmony.js, line 383
+            openHarmony.js, line 394
         </div>
         
     </div>
@@ -7233,7 +7470,7 @@ If beginUndo function is called multiple time, each call must be matched with th
     
         
         <div class="tag-source">
-            openHarmony.js, line 261
+            openHarmony.js, line 272
         </div>
         
     </div>
@@ -7416,7 +7653,7 @@ If beginUndo function is called multiple time, each call must be matched with th
     
         
         <div class="tag-source">
-            openHarmony.js, line 371
+            openHarmony.js, line 382
         </div>
         
     </div>
@@ -7532,7 +7769,7 @@ If beginUndo function is called multiple time, each call must be matched with th
     
         
         <div class="tag-source">
-            openHarmony.js, line 360
+            openHarmony.js, line 371
         </div>
         
     </div>
@@ -7656,7 +7893,7 @@ If beginUndo function is called multiple time, each call must be matched with th
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Sep 03 2021 14:23:48 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Sep 03 2021 15:33:09 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
