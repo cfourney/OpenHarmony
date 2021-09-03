@@ -374,6 +374,23 @@ Object.defineProperty($.oDrawing.prototype, 'selectedStrokes', {
 
 
 /**
+ * the selected shapes on this drawing
+ * @name $.oDrawing#selectedContours
+ * @type {$.oShape}
+ */
+Object.defineProperty($.oDrawing.prototype, 'selectedContours', {
+  get: function () {
+    var _selectedContours = [];
+    for (var i in this.artLayers) {
+      _selectedContours = _selectedContours.concat(this.artLayers[i].selectedContours);
+    }
+
+    return _selectedContours;
+  }
+})
+
+
+/**
  * all the data from this drawing. For internal use.
  * @name $.oDrawing#drawingData
  * @type {Object}
@@ -753,6 +770,25 @@ Object.defineProperty($.oArtLayer.prototype, 'selectedStrokes', {
     }
 
     return _strokes;
+  }
+})
+
+
+/**
+ * the currently selected contours on the ArtLayer.
+ * @name $.oArtLayer#selectedContours
+ * @type {$.oContour[]}
+ */
+Object.defineProperty($.oArtLayer.prototype, 'selectedContours', {
+  get: function () {
+    var _shapes = this.selectedShapes;
+    var _contours = [];
+
+    for (var i in _shapes) {
+      _contours = _contours.concat(_shapes[i].contours);
+    }
+
+    return _contours;
   }
 })
 
