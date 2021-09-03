@@ -260,6 +260,8 @@ $.alertBox = function(){ return $.dialog.alertBox.apply( $.dialog, arguments ) }
 
 /**
  * Prompts with an toast alert. This is a small message that can't be clicked and only stays on the screen for the duration specified.
+ * @function
+ * @name    $#toast
  * @param   {string}         labelText          The label/internal text of the dialog.
  * @param   {$.oPoint}       [position]         The position on the screen where the toast will appear (by default, slightly under the middle of the screen).
  * @param   {float}          [duration=2000]    The duration of the display (in milliseconds).
