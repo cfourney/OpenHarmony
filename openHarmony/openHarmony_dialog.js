@@ -173,6 +173,58 @@ $.oDialog.prototype.alertBox = function( labelText, title, okButtonText ){
 }
 
 
+/**
+ * Prompts with an toast alert. This is a small message that can't be clicked and only stays on the screen for the duration specified.
+ * @param   {string}         labelText          The label/internal text of the dialog.
+ * @param   {$.oPoint}       [position]         The position on the screen where the toast will appear (by default, slightly under the middle of the screen).
+ * @param   {float}          [duration=2000]    The duration of the display (in milliseconds).
+ * @param   {$.oColorValue}  [color="#000000"]  The color of the background (a 50% alpha value will be applied).
+ */
+$.oDialog.prototype.toast = function(labelText, position, duration, color){
+  if (this.$.batchMode) {
+    this.$.debug("$.oDialog.alert not supported in batch mode", this.$.DEBUG_LEVEL.WARNING);
+    return;
+  }
+
+  if (typeof duration === 'undefined') var duration = 2000;
+  if (typeof color === 'undefined') var color = new $.oColorValue(0,0,0);
+  if (typeof position === 'undefined'){
+    var center = QApplication.desktop().screen().rect.center();
+    var position = new $.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
+  }
+
+  var toast = new QWidget()
+  var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.WA_TransparentForMouseEvents);
+  toast.setWindowFlags(flags);
+  toast.setAttribute(Qt.WA_TranslucentBackground);
+  toast.setAttribute(Qt.WA_DeleteOnClose);
+
+  var styleSheet = "QWidget {" +
+  "background-color: rgba("+color.r+", "+color.g+", "+color.b+", 50%); " +
+  "color: white; " +
+  "border-radius: "+UiLoader.dpiScale(10)+"px; " +
+  "padding: "+UiLoader.dpiScale(10)+"px; " +
+  "font-family: Arial; " +
+  "font-size: "+UiLoader.dpiScale(12)+"pt;}"
+
+  toast.setStyleSheet(styleSheet);
+
+  var layout = new QHBoxLayout(toast);
+  layout.addWidget(new QLabel(labelText), 0, Qt.AlignHCenter);
+
+  var timer = new QTimer()
+  timer.singleShot = true;
+  timer.timeout.connect(this, function(){
+    toast.close();
+  })
+
+  toast.show();
+
+  toast.move(position.x-toast.width/2, position.y);
+
+  timer.start(duration);
+}
+
 
 /**
  * Prompts for a user input.
