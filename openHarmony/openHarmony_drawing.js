@@ -1285,13 +1285,33 @@ Object.defineProperty($.oShape.prototype, 'selected', {
 
 /**
  * Deletes the shape from its artlayer.
+ * Updates the index of all other oShapes on the artLayer in order to
+ * keep tracking all of them without having to query the drawing again.
+ */
+$.oShape.prototype.remove = function(){
+  DrawingTools.deleteLayers(this._key);
+
+  // update shapes list for this artLayer
+  var shapes = this.artLayer.shapes
+  for (var i in shapes){
+    if (i > this.index){
+      shapes[i].index--;
+    }
+  }
+  shapes.splice(this.index, 1);
+}
+
+
+/**
+ * Deletes the shape from its artlayer.
  * Warning : Because shapes are referenced by index, deleting a shape
  * that isn't at the end of the list of shapes from this layer
  * might render other shape objects from this layer obsolete.
  * Get them again with artlayer.shapes.
+ * @deprecated use oShape.remove instead
  */
 $.oShape.prototype.deleteShape = function(){
-  DrawingTools.deleteLayers(this._key);
+  this.remove()
 }
 
 
