@@ -1084,11 +1084,36 @@ Object.defineProperty($.oShape.prototype, 'strokes', {
   get: function () {
     if (!this.hasOwnProperty("_strokes")) {
       var _data = this._data;
+
+      if (!_data.hasOwnProperty("strokes")) return [];
+
       var _shape = this;
       var _strokes = _data.strokes.map(function (x, idx) { return new _shape.$.oStroke(idx, x, _shape) })
       this._strokes = _strokes;
     }
     return this._strokes;
+  }
+})
+
+
+/**
+ * The contours (invisible strokes that can delimit colored areas) making up the shape.
+ * @name $.oShape#contours
+ * @type {$.oContour[]}
+ * @readonly
+ */
+ Object.defineProperty($.oShape.prototype, 'contours', {
+  get: function () {
+    if (!this.hasOwnProperty("_contours")) {
+      var _data = this._data
+
+      if (!_data.hasOwnProperty("contours")) return [];
+
+      var _shape = this;
+      var _contours = _data.contours.map(function (x, idx) { return new this.$.oContour(idx, x, _shape) })
+      this._contours = _contours;
+    }
+    return this._contours;
   }
 })
 
@@ -1179,29 +1204,6 @@ Object.defineProperty($.oShape.prototype, 'height', {
 })
 
 
-
-/**
- * The contours (invisible strokes that can delimit colored areas) making up the shape.
- * @name $.oShape#contours
- * @type {$.oContour[]}
- * @readonly
- */
- Object.defineProperty($.oShape.prototype, 'contours', {
-  get: function () {
-    if (!this.hasOwnProperty("_contours")) {
-      var _data = this._data
-
-      if (!this._data.hasOwnProperty("contours")) return [];
-
-      var _shape = this;
-      var _contours = _data.contours.map(function (x, idx) { return new this.$.oContour(idx, x, _shape) })
-      this._contours = _contours;
-    }
-    return this._contours;
-  }
-})
-
-
 /**
  * Retrieve the selected status of each shape.
  * @name $.oShape#selected
@@ -1265,68 +1267,6 @@ $.oShape.prototype.getStrokeByIndex = function (index) {
 }
 
 
-//////////////////////////////////////
-//////////////////////////////////////
-//                                  //
-//                                  //
-//         $.oContour class         //
-//                                  //
-//                                  //
-//////////////////////////////////////
-//////////////////////////////////////
-
-
-/**
- * The constructor for the $.oContour class. These types of objects are not supported for harmony versions < 16
- * @constructor
- * @classdesc  The $.oStroke class models the strokes that make up the shapes visible on the Drawings.
- * @param {int}       index             The index of the stroke in the shape.
- * @param {object}    strokeObject      The stroke object descriptor that contains the info for the stroke
- * @param {oShape}    oShapeObject      The parent oShape
- *
- * @property {int}          index       the index of the stroke in the parent shape
- * @property {$.oShape}     shape       the shape that contains this stroke
- * @property {$.oArtLayer}  artLayer    the art layer that contains this stroke
- */
- $.oContour = function (index, contourObject, oShapeObject) {
-  this.index = index;
-  this.shape = oShapeObject;
-  this.artLayer = oShapeObject.artLayer;
-  this._data = contourObject;
-}
-
-/**
- * The points that make up the contour
- * @name $.oContour#path
- * @type {$.oPoint[]}
- */
-Object.defineProperty($.oContour.prototype, "path", {
-  get: function () {
-    // path vertices get cached
-    if (!this.hasOwnProperty("_path")){
-      var _contour = this;
-      var _path = this._data.path.map(function(point, index){
-        return new _contour.$.oVertex(_contour, point.x, point.y, point.onCurve, index);
-      })
-
-      this._path = _path;
-    }
-    return this._path;
-  }
-})
-
-
-/**
- * The info about the fill of this contour
- * @name $.oContour#fill
- * @type {$.oPoint[]}
- */
-Object.defineProperty($.oContour.prototype, "fill", {
-  get: function () {
-    var _data = this._data;
-    return new this.$.oFillStyle(_data.colorId, _data.matrix);
-  }
-})
 
 
 //////////////////////////////////////
@@ -1378,6 +1318,9 @@ $.oFillStyle = function (colorId, fillMatrix) {
 }
 
 
+$.oFillStyle.prototype.toString = function(){
+  return "<oFillStyle colorId:"+this.colorId+", matrix:"+JSON.stringify(this.fillMatrix)+">";
+}
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -1692,6 +1635,68 @@ $.oStroke.prototype.getClosestPoint = function (point){
   var _result = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
   return _result
 }
+
+
+/**
+ * @private
+ */
+ $.oStroke.prototype.toString = function(){
+  return "oStroke : { path:"+this.path+" }"
+ }
+
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//         $.oContour class         //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for the $.oContour class. These types of objects are not supported for harmony versions < 16
+ * @constructor
+ * @classdesc  The $.oContour class models the strokes that make up the shapes visible on the Drawings.<br>
+ * $.oContour is a subclass of $.oSroke and shares its properties, but represents a stroke with a fill.
+ * @extends $.oStroke
+ * @param {int}       index             The index of the contour in the shape.
+ * @param {object}    contourObject     The stroke object descriptor that contains the info for the stroke
+ * @param {oShape}    oShapeObject      The parent oShape
+ *
+ * @property {int}          index       the index of the stroke in the parent shape
+ * @property {$.oShape}     shape       the shape that contains this stroke
+ * @property {$.oArtLayer}  artLayer    the art layer that contains this stroke
+ */
+ $.oContour = function (index, contourObject, oShapeObject) {
+  this.$.oStroke.call(this, index, contourObject, oShapeObject)
+}
+$.oContour.prototype = Object.create($.oStroke.prototype)
+
+
+/**
+ * The info about the fill of this contour
+ * @name $.oContour#fill
+ * @type {$.oPoint[]}
+ */
+Object.defineProperty($.oContour.prototype, "fill", {
+  get: function () {
+    var _data = this._data;
+    return new this.$.oFillStyle(_data.colorId, _data.matrix);
+  }
+})
+
+
+
+/**
+ * @private
+ */
+$.oContour.prototype.toString = function(){
+  return "oContour : { path:"+this.path+", fill:"+fill+" }"
+}
+
 
 
 
