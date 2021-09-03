@@ -673,12 +673,15 @@ Object.defineProperty($.oArtLayer.prototype, 'name', {
  */
 Object.defineProperty($.oArtLayer.prototype, 'shapes', {
   get: function () {
-    var _shapesNum = Drawing.query.getNumberOfLayers(this._key);
-    var _shapes = [];
-    for (var i = 0; i < _shapesNum; i++) {
-      _shapes.push(this.getShapeByIndex(i));
+    if (!this.hasOwnProperty("_shapes")){
+      var _shapesNum = Drawing.query.getNumberOfLayers(this._key);
+      var _shapes = [];
+      for (var i = 0; i < _shapesNum; i++) {
+        _shapes.push(this.getShapeByIndex(i));
+      }
+      this._shapes = _shapes;
     }
-    return _shapes;
+    return this._shapes;
   }
 })
 
