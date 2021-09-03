@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: oFolder</title>
+    <title>Class: oContour</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -4239,7 +4239,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.oFolder.html">Class: oFolder</h1>
+        <h1 class="page-title" data-filename="$.oContour.html">Class: oContour</h1>
         
 
 
@@ -4250,10 +4250,11 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a>.</span>
     
-    oFolder
+    oContour
     </h2>
     
-        <div class="class-description">$.oFolder Base Class</div>
+        <div class="class-description">The $.oContour class models the strokes that make up the shapes visible on the Drawings.<br>
+$.oContour is a subclass of $.oSroke and shares its properties, but represents a stroke with a fill.</div>
     
 </header>  
 
@@ -4265,14 +4266,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="oFolder">
+        <h4 class="name" id="oContour">
             
-            new $.oFolder<span class="signature">(path)</span>
+            new $.oContour<span class="signature">(index, contourObject, oShapeObject)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 60
+            openHarmony/openHarmony_drawing.js, line 1732
         </div>
         
     </div>
@@ -4283,7 +4284,7 @@
     
     
     <div class="description">
-        The $.oFolder helper class -- providing utilities for folder manipulation and access.
+        The constructor for the $.oContour class. These types of objects are not supported for harmony versions < 16
     </div>
     
 
@@ -4314,13 +4315,13 @@
 	
         <tr>
             
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>index</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">int</span>
 
 
             
@@ -4330,7 +4331,53 @@
             
             <td class="description last">
                 
-                The path to the folder.</td>
+                The index of the contour in the shape.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>contourObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The stroke object descriptor that contains the info for the stroke</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>oShapeObject</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oShape</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The parent oShape</td>
         </tr>
 	
 	
@@ -4368,13 +4415,13 @@
 	
         <tr>
             
-                <td class="name"><code>path</code></td>
+                <td class="name"><code>index</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">int</span>
 
 
             
@@ -4384,7 +4431,53 @@
             
             
             
-            <td class="description last">The path to the folder.</td>
+            <td class="description last">the index of the stroke in the parent shape</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>shape</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oShape.html">$.oShape</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">the shape that contains this stroke</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>artLayer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oArtLayer.html">$.oArtLayer</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">the art layer that contains this stroke</td>
         </tr>
 	
 	
@@ -4432,6 +4525,12 @@
     </div>
     
     
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li><a href="$.oStroke.html">$.oStroke</a></li>
+        </ul>
+    
     
     
     
@@ -4448,7 +4547,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="content">content<span class="type-signature type array.<$.ofile/$.ofolder>">Array.&lt;$.oFile/$.oFolder></span> </h4>
+        <h4 class="name" id="closed">closed<span class="type-signature type bool">bool</span> </h4>
     </div>
     
     
@@ -4456,7 +4555,7 @@
 <dd>
     
     <div class="description">
-        The content within the folder -- both folders and files.
+        wether the stroke is a closed shape.
     </div>
     
     
@@ -4493,7 +4592,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="exists">exists<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="fill">fill<span class="type-signature type array.<$.opoint>">Array.&lt;<a href="$.oPoint.html">$.oPoint</a>></span> </h4>
     </div>
     
     
@@ -4501,7 +4600,7 @@
 <dd>
     
     <div class="description">
-        The parent folder.
+        The info about the fill of this contour
     </div>
     
     
@@ -4538,7 +4637,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="files">files<span class="type-signature type array.<$.ofile>">Array.&lt;<a href="$.oFile.html">$.oFile</a>></span> </h4>
+        <h4 class="name" id="index">index<span class="type-signature type int">int</span> </h4>
     </div>
     
     
@@ -4546,54 +4645,7 @@
 <dd>
     
     <div class="description">
-        The files in the folder.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>use oFolder.getFiles() instead to specify filter</li><ul></dd>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="folder">folder<span class="type-signature type $.ofolder"><a href="$.oFolder.html">$.oFolder</a></span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The parent folder.
+        The index of the stroke in the shape
     </div>
     
     
@@ -4630,7 +4682,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="folders">folders<span class="type-signature type array.<$.ofile>">Array.&lt;<a href="$.oFile.html">$.oFile</a>></span> </h4>
+        <h4 class="name" id="path"><span class="type-signature ">readonly</span>path<span class="type-signature type array.<$.overtex>">Array.&lt;<a href="$.oVertex.html">$.oVertex</a>></span> </h4>
     </div>
     
     
@@ -4638,54 +4690,7 @@
 <dd>
     
     <div class="description">
-        The folders within this folder.
-    </div>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-        <dt class="important tag-deprecated">Deprecated</dt><dd><ul class="dummy"><li>oFolder.folder is the containing parent folder, it can't also mean the children folders</li><ul></dd>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="name">name<span class="type-signature type string">string</span> </h4>
-    </div>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The name of the folder.
+        The $.oVertex (including bezier handles) making up the complete path of the stroke.
     </div>
     
     
@@ -4722,7 +4727,7 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="path">path<span class="type-signature type string">string</span> </h4>
+        <h4 class="name" id="points"><span class="type-signature ">readonly</span>points<span class="type-signature type array.<$.overtex>">Array.&lt;<a href="$.oVertex.html">$.oVertex</a>></span> </h4>
     </div>
     
     
@@ -4730,7 +4735,98 @@
 <dd>
     
     <div class="description">
-        The path of the folder.  Setting a path doesn't move the file, only changes where the file object is pointing.
+        The oVertex that are on the stroke (Bezier handles exluded.)
+The first is repeated at the last position when the stroke is closed.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="segments"><span class="type-signature ">readonly</span>segments<span class="type-signature type array.<array.<$.overtex>>">Array.&lt;Array.&lt;<a href="$.oVertex.html">$.oVertex</a>>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The segments making up the stroke. Each segment is a slice of the path, starting and stopping with oVertex present on the curve, and includes the bezier handles oVertex.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="style">style<span class="type-signature type $.olinestyle"><a href="$.oLineStyle.html">$.oLineStyle</a></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The style of the stroke. null if the stroke is invisible
     </div>
     
     
@@ -4772,15 +4868,17 @@
         <dl>
             
 <dt>
-    <div class="nameContainer">
-        <h4 class="name" id="copy">
+    <div class="nameContainer inherited">
+        <h4 class="name" id="addPoints">
             
-            copy<span class="signature">(<span class="optional">folderPath</span>, <span class="optional">copyName</span>, <span class="optional">overwrite</span>)</span>
+                <span class="inherited"><a href="$.oStroke.html#addPoints">inherited</a></span>
+            
+            addPoints<span class="signature">(pointsToAdd)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;<a href="$.oVertex.html">$.oVertex</a>>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 326
+            openHarmony/openHarmony_drawing.js, line 1594
         </div>
         
     </div>
@@ -4791,7 +4889,7 @@
     
     
     <div class="description">
-        WIP Copy the folder and its contents to another path. WIP
+        Adds points on the stroke without moving them, at the distance specified (0=start vertice, 1=end vertice)
     </div>
     
 
@@ -4822,13 +4920,13 @@
 	
         <tr>
             
-                <td class="name"><code>folderPath</code></td>
+                <td class="name"><code>pointsToAdd</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Array.&lt;float></span>
 
 
             
@@ -4838,1423 +4936,12 @@
             
             <td class="description last">
                 
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The path to the folder location to copy to (CFNote: Should this not be a $.oFolder?)</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>copyName</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                The name of the folder to copy (CFNote: Should this be avoided and the folderPath be the full path?)</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>overwrite</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to overwrite the target.</td>
+                an array of float value between 0 and 1 for each point to create</td>
         </tr>
 	
 	
 	</tbody>
 </table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="create">
-            
-            create<span class="signature">()</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 307
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Creates the folder, if it doesn't already exist.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="get">
-            
-            get<span class="signature">(name)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 421
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Get the sub folder or file by name.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                The sub name of a folder or file within a directory.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getFiles">
-            
-            getFiles<span class="signature">(<span class="optional">filter</span>)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 236
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        get the files from the folder
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>filter</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Filter wildcards for the content of the folder.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="getFolders">
-            
-            getFolders<span class="signature">(<span class="optional">filter</span>)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 286
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        gets the folders inside the oFolder
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>filter</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Filter wildcards for the content of the folder.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="listFiles">
-            
-            listFiles<span class="signature">(<span class="optional">filter</span>)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 216
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Lists the file names contained inside the folder.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>filter</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Filter wildcards for the content of the folder.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="listFolders">
-            
-            listFolders<span class="signature">(<span class="optional">filter</span>)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 258
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        lists the folder names contained inside the folder.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>filter</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Filter wildcards for the content of the folder.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="move">
-            
-            move<span class="signature">(destFolderPath, <span class="optional">overwrite</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{bool}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 348
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Move this folder to the specified path.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>destFolderPath</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                The new complete path of the folder after the move</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>overwrite</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to overwrite the target.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-todo">TODO</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>implement with Robocopy</li>
-        </ul>
-    </dd>
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Type</th>
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    
-        <tr>
-            
-            <td class="type">
-            
-                        bool
-                        
-                    
-            </td>
-            <td class="description last">The result of the move.</td>
-        </tr>
-    
-    </tbody>
-</table>
-
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="moveToFolder">
-            
-            moveToFolder<span class="signature">(destFolderPath, <span class="optional">overwrite</span>)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 381
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Move this folder to a different parent folder, while retaining its content and base name.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Default</th>
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>destFolderPath</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                    
-                        
-                    
-                
-                The path of the destination to copy the folder into.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>overwrite</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Whether to overwrite the target. Default is false.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="remove">
-            
-            remove<span class="signature">(removeContents)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 407
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Deletes the folder.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>removeContents</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                Whether to check if the folder contains files before deleting.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="rename">
-            
-            rename<span class="signature">(newName)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 395
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Renames the folder
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>newName</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                </td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="toString">
-            
-            toString<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 441
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Used in converting the folder to a string value, provides the string-path.
-    </div>
-    
-
-    
-    
-    
-    
     
     
     
@@ -6310,16 +4997,700 @@
             
             <td class="type">
             
-                        string
+                        Array.&lt;<a href="$.oVertex.html">$.oVertex</a>>
                         
                     
             </td>
-            <td class="description last">The folder path's as a string.</td>
+            <td class="description last">the points that were created (if points already existed, they will be returned)</td>
         </tr>
     
     </tbody>
 </table>
 
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>// get the selected stroke and create points where it intersects with the other two strokes
+var sel = $.scn.activeDrawing.selectedStrokes[0];
+
+var intersections = sel.getIntersections();
+
+// get the two intersections
+var intersection1 = intersections[0];
+var intersection2 = intersections[1];
+
+// add the points at the intersections on the intersecting strokes
+intersection1.stroke.addPoints([intersection1.strokePoint]);
+intersection2.stroke.addPoints([intersection2.strokePoint]);
+
+// add the points on the stroke
+sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);</code></pre>
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getClosestPoint">
+            
+                <span class="inherited"><a href="$.oStroke.html#getClosestPoint">inherited</a></span>
+            
+            getClosestPoint<span class="signature">(point)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 1688
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        projects a point onto a stroke and returns the closest point belonging to the stroke.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>point</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getIntersections">
+            
+                <span class="inherited"><a href="$.oStroke.html#getIntersections">inherited</a></span>
+            
+            getIntersections<span class="signature">(<span class="optional">stroke</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;Object>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 1541
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The intersections on this stroke. Each intersection is an object with stroke ($.oStroke), point($.oPoint), strokePoint(float) and ownPoint(float)
+One of these objects describes an intersection by giving the stroke it intersects with, the coordinates of the intersection and two values which represent the place on the stroke at which the point is placed, with a value between 0 (start) and 1(end)
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>stroke</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oStroke.html">$.oStroke</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Specify a stroke to find intersections specific to it. If no stroke is specified,</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Array.&lt;Object>
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>// get the selected strokes on the active drawing
+var sel = $.scn.activeDrawing.selectedStrokes;
+
+for (var i in sel){
+  // get intersections with all other elements of the drawing
+	var intersections = sel[i].getIntersections();
+
+  for (var j in intersections){
+    log("intersection : " + j);
+    log("point : " + intersections[j].point);                    // the point coordinates
+    log("strokes index : " + intersections[j].stroke.index);     // the index of the intersecting strokes in their own shape
+    log("own point : " + intersections[j].ownPoint);             // how far the intersection is on the stroke itself
+    log("stroke point : " + intersections[j].strokePoint);       // how far the intersection is on the intersecting stroke
+  }
+}</code></pre>
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getPointCoordinates">
+            
+                <span class="inherited"><a href="$.oStroke.html#getPointCoordinates">inherited</a></span>
+            
+            getPointCoordinates<span class="signature">(position)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oVertex.html">$.oVertex</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 1673
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Get the coordinates of the point on the stroke from its position (from 0 to 1)
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>position</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oVertex.html">$.oVertex</a>
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getPointPosition">
+            
+                <span class="inherited"><a href="$.oStroke.html#getPointPosition">inherited</a></span>
+            
+            getPointPosition<span class="signature">(x)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{float}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 1656
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Gets the closest position of the point on the stroke (float value from 0 to 1) from a point with coordinates
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        float
+                        
+                    
+            </td>
+            <td class="description last">the position of the point on the stroke, between 0 and 1</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="updateDefinition">
+            
+                <span class="inherited"><a href="$.oStroke.html#updateDefinition">inherited</a></span>
+            
+            updateDefinition<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 1639
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        fetch the stroke information again to update it after modifications
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
     
     
     
@@ -6344,7 +5715,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Sep 03 2021 14:23:49 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Sep 03 2021 14:23:48 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

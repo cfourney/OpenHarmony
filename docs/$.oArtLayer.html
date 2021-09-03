@@ -727,7 +727,11 @@
             
                 <li data-name="$.oArtLayer#boundingBox"><a href="$.oArtLayer.html#boundingBox">boundingBox</a></li>
             
+                <li data-name="$.oArtLayer#contours"><a href="$.oArtLayer.html#contours">contours</a></li>
+            
                 <li data-name="$.oArtLayer#name"><a href="$.oArtLayer.html#name">name</a></li>
+            
+                <li data-name="$.oArtLayer#selectedContours"><a href="$.oArtLayer.html#selectedContours">selectedContours</a></li>
             
                 <li data-name="$.oArtLayer#selectedShapes"><a href="$.oArtLayer.html#selectedShapes">selectedShapes</a></li>
             
@@ -752,9 +756,13 @@
             
                 <li data-name="$.oArtLayer#drawCircle"><a href="$.oArtLayer.html#drawCircle">drawCircle</a></li>
             
+                <li data-name="$.oArtLayer#drawContour"><a href="$.oArtLayer.html#drawContour">drawContour</a></li>
+            
                 <li data-name="$.oArtLayer#drawLine"><a href="$.oArtLayer.html#drawLine">drawLine</a></li>
             
                 <li data-name="$.oArtLayer#drawRectangle"><a href="$.oArtLayer.html#drawRectangle">drawRectangle</a></li>
+            
+                <li data-name="$.oArtLayer#drawShape"><a href="$.oArtLayer.html#drawShape">drawShape</a></li>
             
                 <li data-name="$.oArtLayer#drawStroke"><a href="$.oArtLayer.html#drawStroke">drawStroke</a></li>
             
@@ -1288,6 +1296,58 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oContour">
+            <span class="title">
+                <a href="$.oContour.html">$.oContour</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oContour#closed"><a href="$.oContour.html#closed">closed</a></li>
+            
+                <li data-name="$.oContour#fill"><a href="$.oContour.html#fill">fill</a></li>
+            
+                <li data-name="$.oContour#index"><a href="$.oContour.html#index">index</a></li>
+            
+                <li data-name="$.oContour#path"><a href="$.oContour.html#path">path</a></li>
+            
+                <li data-name="$.oContour#points"><a href="$.oContour.html#points">points</a></li>
+            
+                <li data-name="$.oContour#segments"><a href="$.oContour.html#segments">segments</a></li>
+            
+                <li data-name="$.oContour#style"><a href="$.oContour.html#style">style</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oContour#addPoints"><a href="$.oContour.html#addPoints">addPoints</a></li>
+            
+                <li data-name="$.oContour#getClosestPoint"><a href="$.oContour.html#getClosestPoint">getClosestPoint</a></li>
+            
+                <li data-name="$.oContour#getIntersections"><a href="$.oContour.html#getIntersections">getIntersections</a></li>
+            
+                <li data-name="$.oContour#getPointCoordinates"><a href="$.oContour.html#getPointCoordinates">getPointCoordinates</a></li>
+            
+                <li data-name="$.oContour#getPointPosition"><a href="$.oContour.html#getPointPosition">getPointPosition</a></li>
+            
+                <li data-name="$.oContour#updateDefinition"><a href="$.oContour.html#updateDefinition">updateDefinition</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oDatabase">
             <span class="title">
                 <a href="$.oDatabase.html">$.oDatabase</a>
@@ -1373,7 +1433,7 @@
             
                 <li data-name="$.oDrawing#colorArt"><a href="$.oDrawing.html#colorArt">colorArt</a></li>
             
-                <li data-name="$.oDrawing#drawingData"><a href="$.oDrawing.html#drawingData">drawingData</a></li>
+                <li data-name="$.oDrawing#contours"><a href="$.oDrawing.html#contours">contours</a></li>
             
                 <li data-name="$.oDrawing#id"><a href="$.oDrawing.html#id">id</a></li>
             
@@ -1388,6 +1448,8 @@
                 <li data-name="$.oDrawing#path"><a href="$.oDrawing.html#path">path</a></li>
             
                 <li data-name="$.oDrawing#pivot"><a href="$.oDrawing.html#pivot">pivot</a></li>
+            
+                <li data-name="$.oDrawing#selectedContours"><a href="$.oDrawing.html#selectedContours">selectedContours</a></li>
             
                 <li data-name="$.oDrawing#selectedShapes"><a href="$.oDrawing.html#selectedShapes">selectedShapes</a></li>
             
@@ -1838,6 +1900,28 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.oFillStyle">
+            <span class="title">
+                <a href="$.oFillStyle.html">$.oFillStyle</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.oFolder">
             <span class="title">
                 <a href="$.oFolder.html">$.oFolder</a>
@@ -2217,6 +2301,12 @@
             </span>
             <ul class="members itemMembers">
             
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oLineStyle#maxThickness"><a href="$.oLineStyle.html#maxThickness">maxThickness</a></li>
+            
+                <li data-name="$.oLineStyle#minThickness"><a href="$.oLineStyle.html#minThickness">minThickness</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -2244,6 +2334,8 @@
                 <li data-name="$.oLink#inNode"><a href="$.oLink.html#inNode">inNode</a></li>
             
                 <li data-name="$.oLink#inPort"><a href="$.oLink.html#inPort">inPort</a></li>
+            
+                <li data-name="$.oLink#isMultiLevel"><a href="$.oLink.html#isMultiLevel">isMultiLevel</a></li>
             
                 <li data-name="$.oLink#isMultiLevel"><a href="$.oLink.html#isMultiLevel">isMultiLevel</a></li>
             
@@ -3363,6 +3455,8 @@
             
                 <li data-name="$.oScene#sceneName"><a href="$.oScene.html#sceneName">sceneName</a></li>
             
+                <li data-name="$.oScene#selectedContours"><a href="$.oScene.html#selectedContours">selectedContours</a></li>
+            
                 <li data-name="$.oScene#selectedFrames"><a href="$.oScene.html#selectedFrames">selectedFrames</a></li>
             
                 <li data-name="$.oScene#selectedNodes"><a href="$.oScene.html#selectedNodes">selectedNodes</a></li>
@@ -3525,9 +3619,23 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oShape#bounds"><a href="$.oShape.html#bounds">bounds</a></li>
+            
+                <li data-name="$.oShape#contours"><a href="$.oShape.html#contours">contours</a></li>
+            
+                <li data-name="$.oShape#height"><a href="$.oShape.html#height">height</a></li>
+            
                 <li data-name="$.oShape#selected"><a href="$.oShape.html#selected">selected</a></li>
             
+                <li data-name="$.oShape#stencils"><a href="$.oShape.html#stencils">stencils</a></li>
+            
                 <li data-name="$.oShape#strokes"><a href="$.oShape.html#strokes">strokes</a></li>
+            
+                <li data-name="$.oShape#width"><a href="$.oShape.html#width">width</a></li>
+            
+                <li data-name="$.oShape#x"><a href="$.oShape.html#x">x</a></li>
+            
+                <li data-name="$.oShape#x"><a href="$.oShape.html#x">x</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -3543,6 +3651,8 @@
                 <li data-name="$.oShape#deleteShape"><a href="$.oShape.html#deleteShape">deleteShape</a></li>
             
                 <li data-name="$.oShape#getStrokeByIndex"><a href="$.oShape.html#getStrokeByIndex">getStrokeByIndex</a></li>
+            
+                <li data-name="$.oShape#remove"><a href="$.oShape.html#remove">remove</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -3586,6 +3696,12 @@
                 
             </span>
             <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="$.oStencil#maxThickness"><a href="$.oStencil.html#maxThickness">maxThickness</a></li>
+            
+                <li data-name="$.oStencil#minThickness"><a href="$.oStencil.html#minThickness">minThickness</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -4156,7 +4272,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 609
+            openHarmony/openHarmony_drawing.js, line 648
         </div>
         
     </div>
@@ -4349,6 +4465,51 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="contours">contours<span class="type-signature type array.<$.ocontour>">Array.&lt;<a href="$.oContour.html">$.oContour</a>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The contours contained amongst all the shapes of the artLayer.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="name">name<span class="type-signature type string">string</span> </h4>
     </div>
     
@@ -4358,6 +4519,51 @@
     
     <div class="description">
         The name of the artLayer (lineArt, colorArt, etc)
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="selectedContours">selectedContours<span class="type-signature type array.<$.ocontour>">Array.&lt;<a href="$.oContour.html">$.oContour</a>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        the currently selected contours on the ArtLayer.
     </div>
     
     
@@ -4492,7 +4698,7 @@
 <dd>
     
     <div class="description">
-        The shapes contained on the drawing.
+        The shapes contained on the artLayer.
     </div>
     
     
@@ -4537,7 +4743,7 @@
 <dd>
     
     <div class="description">
-        The shapes contained on the drawing.
+        The strokes contained amongst all the shapes of the artLayer.
     </div>
     
     
@@ -4587,7 +4793,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 818
+            openHarmony/openHarmony_drawing.js, line 950
         </div>
         
     </div>
@@ -4658,7 +4864,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 728
+            openHarmony/openHarmony_drawing.js, line 829
         </div>
         
     </div>
@@ -4860,6 +5066,145 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="drawContour">
+            
+            drawContour<span class="signature">(path, fillStyle)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 907
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Draws the given path on the artLayer.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="$.oVertex.html">$.oVertex</a>></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                an array of $.oVertex objects that describe a path.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>fillStyle</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oFillStyle.html">$.oFillStyle</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                the line style to draw with.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="drawLine">
             
             drawLine<span class="signature">(startPoint, endPoint, lineStyle)</span>
@@ -4867,7 +5212,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 808
+            openHarmony/openHarmony_drawing.js, line 940
         </div>
         
     </div>
@@ -5029,7 +5374,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 788
+            openHarmony/openHarmony_drawing.js, line 920
         </div>
         
     </div>
@@ -5230,14 +5575,255 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="drawStroke">
+        <h4 class="name" id="drawShape">
             
-            drawStroke<span class="signature">(path, lineStyle, fillStyle)</span>
+            drawShape<span class="signature">(path, <span class="optional">lineStyle</span>, <span class="optional">fillStyle</span>, <span class="optional">polygon</span>, <span class="optional">createUnderneath</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 746
+            openHarmony/openHarmony_drawing.js, line 848
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Draws the given path on the artLayer.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="$.oVertex.html">$.oVertex</a>></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                an array of $.oVertex objects that describe a path.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>lineStyle</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oLineStyle.html">$.oLineStyle</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                the line style to draw with. (By default, will use the current stencil selection)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>fillStyle</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oFillStyle.html">$.oFillStyle</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                the fill information for the path. (By default, will use the current palette selection)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>polygon</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Wether bezier handles should be created for the points in the path (ignores "onCurve" properties of oVertex from path)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>createUnderneath</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Wether the new shape will appear on top or underneath the contents of the layer.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="drawStroke">
+            
+            drawStroke<span class="signature">(path, lineStyle)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 897
         </div>
         
     </div>
@@ -5322,29 +5908,6 @@
         </tr>
 	
 	
-	
-        <tr>
-            
-                <td class="name"><code>fillStyle</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                the fill information for the path.</td>
-        </tr>
-	
-	
 	</tbody>
 </table>
     
@@ -5399,7 +5962,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 833
+            openHarmony/openHarmony_drawing.js, line 965
         </div>
         
     </div>
@@ -5552,7 +6115,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Sep 02 2021 13:25:05 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Sep 03 2021 14:23:48 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
