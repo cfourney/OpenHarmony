@@ -921,23 +921,27 @@ $.oArtLayer.prototype.drawContour = function(path, fillStyle){
 
 
 /**
- * Draws a rectangle on the artLayer
- * @param {float}     x
- * @param {float}     y
- * @param {float}     width
- * @param {float}     height
- * @param {$.oLineStyle} lineStyle
+ * Draws a rectangle on the artLayer.
+ * @param {float}        x          the x coordinate of the top left corner.
+ * @param {float}        y          the y coordinate of the top left corner.
+ * @param {float}        width      the width of the rectangle.
+ * @param {float}        height     the height of the rectangle.
+ * @param {$.oLineStyle} lineStyle  a line style to use for the rectangle stroke.
+ * @param {$.oFillStyle} fillStyle  a fill style to use for the rectange fill.
+ * @returns {$.oShape} the shape containing the added stroke.
  */
-$.oArtLayer.prototype.drawRectangle = function(x, y, width, height, lineStyle){
+$.oArtLayer.prototype.drawRectangle = function(x, y, width, height, lineStyle, fillStyle){
+  if (typeof fillStyle === 'undefined') var fillStyle = null;
+
   var path = [
     {x:x,y:y,onCurve:true},
     {x:x+width,y:y,onCurve:true},
-    {x:x+width,y:y+height,onCurve:true},
-    {x:x,y:y+height,onCurve:true},
+    {x:x+width,y:y-height,onCurve:true},
+    {x:x,y:y-height,onCurve:true},
     {x:x,y:y,onCurve:true}
   ];
 
-  this.drawStroke(path, lineStyle);
+  return this.drawShape(path, lineStyle, fillStyle);
 }
 
 
