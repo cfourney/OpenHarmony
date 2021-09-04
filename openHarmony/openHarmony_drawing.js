@@ -400,7 +400,6 @@ Object.defineProperty($.oDrawing.prototype, 'selectedContours', {
 Object.defineProperty($.oDrawing.prototype, 'drawingData', {
   get: function () {
     var _data = Drawing.query.getData({drawing: this._key});
-    // log("Drawing data for "+JSON.stringify(this._key)+": "+JSON.stringify(_data, null,  "  "))
     if (!_data) throw new Error("Data unavailable for drawing "+this.name)
     return _data;
   }
@@ -967,7 +966,7 @@ $.oArtLayer.prototype.clear = function(){
   var _shapes = this.shapes;
   this.$.debug(_shapes, this.$.DEBUG_LEVEL.DEBUG);
   for (var i=_shapes.length - 1; i>=0; i--){
-    _shapes[i].deleteShape();
+    _shapes[i].remove();
   }
 }
 
@@ -1326,7 +1325,7 @@ $.oShape.prototype.remove = function(){
  * @deprecated use oShape.remove instead
  */
 $.oShape.prototype.deleteShape = function(){
-  this.remove()
+  this.remove();
 }
 
 
@@ -1423,8 +1422,8 @@ $.oFillStyle.prototype.toString = function(){
  * @property {$.oArtLayer}  artLayer    the art layer that contains this stroke
  */
 $.oStroke = function (index, strokeObject, oShapeObject) {
-  this.index = index
-  this.shape = oShapeObject
+  this.index = index;
+  this.shape = oShapeObject;
   this.artLayer = oShapeObject.artLayer;
   this._data = strokeObject;
 }
@@ -1445,7 +1444,7 @@ Object.defineProperty($.oStroke.prototype, "path", {
         return new _stroke.$.oVertex(_stroke, point.x, point.y, point.onCurve, index);
       })
 
-      this._path = _path
+      this._path = _path;
     }
     return this._path;
   }
@@ -1497,8 +1496,8 @@ Object.defineProperty($.oStroke.prototype, "segments", {
  */
 Object.defineProperty($.oStroke.prototype, "index", {
   get: function () {
-    this.$.debug("stroke object : "+JSON.stringify(this._stroke, null, "  "), this.$.DEBUG_LEVEL.DEBUG)
-    return this._data.strokeIndex
+    this.$.debug("stroke object : "+JSON.stringify(this._stroke, null, "  "), this.$.DEBUG_LEVEL.DEBUG);
+    return this._data.strokeIndex;
   }
 })
 
@@ -1560,12 +1559,12 @@ $.oStroke.prototype.getIntersections = function (stroke){
   if (typeof stroke !== 'undefined'){
     // get intersection with provided stroke only
     var _key = { "path0": [{ path: this.path }], "path0": [{ path: stroke.path }] };
-    var intersections = Drawing.query.getIntersections(_key)[0]
+    var intersections = Drawing.query.getIntersections(_key)[0];
   }else{
     // get all intersections on the stroke
     var _drawingKey = this.artLayer._key;
     var _key = { "drawing": _drawingKey.drawing, "art": _drawingKey.art, "paths": [{ path: this.path }] };
-    var intersections = Drawing.query.getIntersections(_key)[0]
+    var intersections = Drawing.query.getIntersections(_key)[0];
   }
 
   var result = [];
@@ -1574,12 +1573,12 @@ $.oStroke.prototype.getIntersections = function (stroke){
     var _stroke = _shape.getStrokeByIndex(intersections[i].strokeIndex);
 
     for (var j in intersections[i].intersections){
-      var points = intersections[i].intersections[j]
+      var points = intersections[i].intersections[j];
 
       var point = new this.$.oVertex(this, points.x0, points.y0, true);
       var intersection = { stroke: _stroke, point: point, ownPoint: points.t0, strokePoint: points.t1 };
 
-      result.push(intersection)
+      result.push(intersection);
     }
   }
 
@@ -1611,7 +1610,7 @@ sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);
 */
 $.oStroke.prototype.addPoints = function (pointsToAdd) {
   // calculate the points that will be created
-  var points = Drawing.geometry.insertPoints({path:this._data.path, params : pointsToAdd})
+  var points = Drawing.geometry.insertPoints({path:this._data.path, params : pointsToAdd});
 
   // find the newly added points amongst the returned values
   for (var i in this.path){
@@ -1635,7 +1634,7 @@ $.oStroke.prototype.addPoints = function (pointsToAdd) {
   DrawingTools.modifyStrokes(config);
   this.updateDefinition();
 
-  var newPoints = []
+  var newPoints = [];
   // find the points for the coordinates from the new path
   for (var i in points){
     var point = points[i];
@@ -1646,7 +1645,7 @@ $.oStroke.prototype.addPoints = function (pointsToAdd) {
     }
   }
 
-  if (newPoints.length != pointsToAdd.length) throw new Error ("some points in " + pointsToAdd + " were not created.")
+  if (newPoints.length != pointsToAdd.length) throw new Error ("some points in " + pointsToAdd + " were not created.");
   return newPoints;
 }
 
@@ -1674,11 +1673,11 @@ $.oStroke.prototype.updateDefinition = function(){
  */
 $.oStroke.prototype.getPointPosition = function(point){
   var arg = {
-    path : this._data.path,
+    path : this.path,
     points: [point]
   }
   var strokePoint = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
-  if (!strokePoint) return 0;
+  if (!strokePoint) return -1;
 
   return strokePoint.t;
 }
@@ -1692,12 +1691,12 @@ $.oStroke.prototype.getPointPosition = function(point){
  */
 $.oStroke.prototype.getPointCoordinates = function(position){
   var arg = {
-    path : this._data.path,
+    path : this.path,
     params : [ position ]
- };
- var point = Drawing.geometry.evaluate(arg)[0];
+  };
+  var point = Drawing.geometry.evaluate(arg)[0];
 
-  return new $.oVertex(this, point.x, point.y, true);
+  return new $.oPoint(point.x, point.y);
 }
 
 
