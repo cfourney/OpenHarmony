@@ -1260,10 +1260,9 @@ Object.defineProperty($.oShape.prototype, 'height', {
 
 
 /**
- * Retrieve the selected status of each shape.
+ * Retrieve and set the selected status of each shape.
  * @name $.oShape#selected
  * @type {bool}
- * @readonly
  */
 Object.defineProperty($.oShape.prototype, 'selected', {
   get: function () {
@@ -1588,7 +1587,7 @@ $.oStroke.prototype.getIntersections = function (stroke){
 
 /**
  * Adds points on the stroke without moving them, at the distance specified (0=start vertice, 1=end vertice)
- * @param   {float[]}       pointsToAdd     an array of float value between 0 and 1 for each point to create
+ * @param   {float[]}       pointsToAdd     an array of float value between 0 and the number of current points on the curve
  * @returns {$.oVertex[]}   the points that were created (if points already existed, they will be returned)
  * @example
 // get the selected stroke and create points where it intersects with the other two strokes
@@ -1650,7 +1649,8 @@ $.oStroke.prototype.addPoints = function (pointsToAdd) {
 
 
 /**
- * fetch the stroke information again to update it after modifications
+ * fetch the stroke information again to update it after modifications.
+ * @returns {object} the data definition of the stroke, for internal use.
  */
 $.oStroke.prototype.updateDefinition = function(){
   var _key = this.artLayer._key;
@@ -1665,9 +1665,9 @@ $.oStroke.prototype.updateDefinition = function(){
 
 
 /**
- * Gets the closest position of the point on the stroke (float value from 0 to 1) from a point with coordinates
- * @param {int}  x
- * @return {float}   the position of the point on the stroke, between 0 and 1
+ * Gets the closest position of the point on the stroke (float value) from a point with x and y coordinates.
+ * @param {oPoint}  point
+ * @return {float}  the strokePosition of the point on the stroke (@see $.oVertex#strokePosition)
  */
 $.oStroke.prototype.getPointPosition = function(point){
   var arg = {
@@ -1682,9 +1682,10 @@ $.oStroke.prototype.getPointPosition = function(point){
 
 
 /**
- * Get the coordinates of the point on the stroke from its position (from 0 to 1)
+ * Get the coordinates of the point on the stroke from its strokePosition (@see $.oVertex#strokePosition).
+ * Only works until a distance of 600 drawing vector units.
  * @param {float}  position
- * @return {$.oVertex}
+ * @return {$.oPoint} an oPoint object containing the coordinates.
  */
 $.oStroke.prototype.getPointCoordinates = function(position){
   var arg = {
@@ -1699,7 +1700,9 @@ $.oStroke.prototype.getPointCoordinates = function(position){
 
 /**
  * projects a point onto a stroke and returns the closest point belonging to the stroke.
- * @param {object} point
+ * Only works until a distance of 600 drawing vector units.
+ * @param {$.oPoint} point
+ * @returns {$.oPoint}
  */
 $.oStroke.prototype.getClosestPoint = function (point){
   var arg = {
@@ -1849,7 +1852,7 @@ Object.defineProperty($.oVertex.prototype, 'strokePosition', {
 
 
 /**
- * The position of the point on the drawing, in oPoint object form
+ * The position of the point on the drawing, as an oPoint
  * @name $.oVertex#position
  * @type {oPoint}
  * @readonly
