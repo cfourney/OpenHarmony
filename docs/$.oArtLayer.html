@@ -1340,6 +1340,8 @@
             
                 <li data-name="$.oContour#getPointCoordinates"><a href="$.oContour.html#getPointCoordinates">getPointCoordinates</a></li>
             
+                <li data-name="$.oContour#getPointDistance"><a href="$.oContour.html#getPointDistance">getPointDistance</a></li>
+            
                 <li data-name="$.oContour#getPointPosition"><a href="$.oContour.html#getPointPosition">getPointPosition</a></li>
             
                 <li data-name="$.oContour#updateDefinition"><a href="$.oContour.html#updateDefinition">updateDefinition</a></li>
@@ -3762,6 +3764,8 @@
             
                 <li data-name="$.oStroke#getPointCoordinates"><a href="$.oStroke.html#getPointCoordinates">getPointCoordinates</a></li>
             
+                <li data-name="$.oStroke#getPointDistance"><a href="$.oStroke.html#getPointDistance">getPointDistance</a></li>
+            
                 <li data-name="$.oStroke#getPointPosition"><a href="$.oStroke.html#getPointPosition">getPointPosition</a></li>
             
                 <li data-name="$.oStroke#updateDefinition"><a href="$.oStroke.html#updateDefinition">updateDefinition</a></li>
@@ -4276,7 +4280,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 648
+            openHarmony/openHarmony_drawing.js, line 647
         </div>
         
     </div>
@@ -4797,7 +4801,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 950
+            openHarmony/openHarmony_drawing.js, line 965
         </div>
         
     </div>
@@ -4863,7 +4867,7 @@
     <div class="nameContainer">
         <h4 class="name" id="drawCircle">
             
-            drawCircle<span class="signature">(center, radius, <span class="optional">lineStyle</span>, <span class="optional">fillStyle</span>)</span>
+            drawCircle<span class="signature">(center, radius, <span class="optional">lineStyle</span>, <span class="optional">fillStyle</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oShape.html">$.oShape</a>}</span>
         </h4>
     
         
@@ -4900,6 +4904,8 @@
 		<th>Type</th>
 		
 		
+		<th>Default</th>
+		
 		
 		<th class="last">Description</th>
 	</tr>
@@ -4922,6 +4928,10 @@
             
             </td>
             
+            
+                <td class="default">
+                
+                </td>
             
             
             <td class="description last">
@@ -4951,6 +4961,10 @@
             </td>
             
             
+                <td class="default">
+                
+                </td>
+            
             
             <td class="description last">
                 
@@ -4978,6 +4992,10 @@
             
             </td>
             
+            
+                <td class="default">
+                
+                </td>
             
             
             <td class="description last">
@@ -5009,6 +5027,12 @@
             </td>
             
             
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
             
             <td class="description last">
                 
@@ -5019,7 +5043,7 @@
                         
                     
                 
-                The fill information to fill the circle with. currently WIP</td>
+                The fill information to fill the circle with.</td>
         </tr>
 	
 	
@@ -5062,6 +5086,35 @@
     
     
     
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oShape.html">$.oShape</a>
+                        
+                    
+            </td>
+            <td class="description last">the created shape containing the circle.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
     
     
 </dd>
@@ -5072,12 +5125,12 @@
     <div class="nameContainer">
         <h4 class="name" id="drawContour">
             
-            drawContour<span class="signature">(path, fillStyle)</span>
+            drawContour<span class="signature">(path, fillStyle)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oShape.html">$.oShape</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 907
+            openHarmony/openHarmony_drawing.js, line 917
         </div>
         
     </div>
@@ -5088,7 +5141,7 @@
     
     
     <div class="description">
-        Draws the given path on the artLayer.
+        Draws the given path on the artLayer as a contour.
     </div>
     
 
@@ -5158,7 +5211,7 @@
             
             <td class="description last">
                 
-                the line style to draw with.</td>
+                the fill style to draw with.</td>
         </tr>
 	
 	
@@ -5201,6 +5254,35 @@
     
     
     
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oShape.html">$.oShape</a>
+                        
+                    
+            </td>
+            <td class="description last">the shape newly created from the path.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
     
     
 </dd>
@@ -5211,12 +5293,12 @@
     <div class="nameContainer">
         <h4 class="name" id="drawLine">
             
-            drawLine<span class="signature">(startPoint, endPoint, lineStyle)</span>
+            drawLine<span class="signature">(startPoint, endPoint, lineStyle)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oShape.html">$.oShape</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 940
+            openHarmony/openHarmony_drawing.js, line 955
         </div>
         
     </div>
@@ -5363,6 +5445,35 @@
     
     
     
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oShape.html">$.oShape</a>
+                        
+                    
+            </td>
+            <td class="description last">the shape containing the added line.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
     
     
 </dd>
@@ -5373,12 +5484,12 @@
     <div class="nameContainer">
         <h4 class="name" id="drawRectangle">
             
-            drawRectangle<span class="signature">(x, y, width, height, lineStyle)</span>
+            drawRectangle<span class="signature">(x, y, width, height, lineStyle, fillStyle)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oShape.html">$.oShape</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 920
+            openHarmony/openHarmony_drawing.js, line 932
         </div>
         
     </div>
@@ -5389,7 +5500,7 @@
     
     
     <div class="description">
-        Draws a rectangle on the artLayer
+        Draws a rectangle on the artLayer.
     </div>
     
 
@@ -5436,7 +5547,7 @@
             
             <td class="description last">
                 
-                </td>
+                the x coordinate of the top left corner.</td>
         </tr>
 	
 	
@@ -5459,7 +5570,7 @@
             
             <td class="description last">
                 
-                </td>
+                the y coordinate of the top left corner.</td>
         </tr>
 	
 	
@@ -5482,7 +5593,7 @@
             
             <td class="description last">
                 
-                </td>
+                the width of the rectangle.</td>
         </tr>
 	
 	
@@ -5505,7 +5616,7 @@
             
             <td class="description last">
                 
-                </td>
+                the height of the rectangle.</td>
         </tr>
 	
 	
@@ -5528,7 +5639,30 @@
             
             <td class="description last">
                 
-                </td>
+                a line style to use for the rectangle stroke.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>fillStyle</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oFillStyle.html">$.oFillStyle</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                a fill style to use for the rectange fill.</td>
         </tr>
 	
 	
@@ -5571,6 +5705,35 @@
     
     
     
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oShape.html">$.oShape</a>
+                        
+                    
+            </td>
+            <td class="description last">the shape containing the added stroke.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
     
     
 </dd>
@@ -5586,7 +5749,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 848
+            openHarmony/openHarmony_drawing.js, line 850
         </div>
         
     </div>
@@ -5769,7 +5932,7 @@
                         
                     
                 
-                Wether the new shape will appear on top or underneath the contents of the layer.</td>
+                Wether the new shape will appear on top or underneath the contents of the layer. (not working yet)</td>
         </tr>
 	
 	
@@ -5822,12 +5985,12 @@
     <div class="nameContainer">
         <h4 class="name" id="drawStroke">
             
-            drawStroke<span class="signature">(path, lineStyle)</span>
+            drawStroke<span class="signature">(path, lineStyle)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oShape.html">$.oShape</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 897
+            openHarmony/openHarmony_drawing.js, line 906
         </div>
         
     </div>
@@ -5951,6 +6114,35 @@
     
     
     
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oShape.html">$.oShape</a>
+                        
+                    
+            </td>
+            <td class="description last">the shape containing the added stroke.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
     
     
 </dd>
@@ -5966,7 +6158,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 965
+            openHarmony/openHarmony_drawing.js, line 980
         </div>
         
     </div>
@@ -6119,7 +6311,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Sep 03 2021 16:02:57 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat Sep 04 2021 20:35:18 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

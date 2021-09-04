@@ -1340,6 +1340,8 @@
             
                 <li data-name="$.oContour#getPointCoordinates"><a href="$.oContour.html#getPointCoordinates">getPointCoordinates</a></li>
             
+                <li data-name="$.oContour#getPointDistance"><a href="$.oContour.html#getPointDistance">getPointDistance</a></li>
+            
                 <li data-name="$.oContour#getPointPosition"><a href="$.oContour.html#getPointPosition">getPointPosition</a></li>
             
                 <li data-name="$.oContour#updateDefinition"><a href="$.oContour.html#updateDefinition">updateDefinition</a></li>
@@ -3762,6 +3764,8 @@
             
                 <li data-name="$.oStroke#getPointCoordinates"><a href="$.oStroke.html#getPointCoordinates">getPointCoordinates</a></li>
             
+                <li data-name="$.oStroke#getPointDistance"><a href="$.oStroke.html#getPointDistance">getPointDistance</a></li>
+            
                 <li data-name="$.oStroke#getPointPosition"><a href="$.oStroke.html#getPointPosition">getPointPosition</a></li>
             
                 <li data-name="$.oStroke#updateDefinition"><a href="$.oStroke.html#updateDefinition">updateDefinition</a></li>
@@ -4277,7 +4281,7 @@ $.oContour is a subclass of $.oSroke and shares its properties, but represents a
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 1732
+            openHarmony/openHarmony_drawing.js, line 1776
         </div>
         
     </div>
@@ -4882,7 +4886,7 @@ The first is repeated at the last position when the stroke is closed.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 1594
+            openHarmony/openHarmony_drawing.js, line 1611
         </div>
         
     </div>
@@ -4940,7 +4944,7 @@ The first is repeated at the last position when the stroke is closed.
             
             <td class="description last">
                 
-                an array of float value between 0 and 1 for each point to create</td>
+                an array of float value between 0 and the number of current points on the curve</td>
         </tr>
 	
 	
@@ -5046,12 +5050,12 @@ sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);</code></pre>
             
                 <span class="inherited"><a href="$.oStroke.html#getClosestPoint">inherited</a></span>
             
-            getClosestPoint<span class="signature">(point)</span>
+            getClosestPoint<span class="signature">(point)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oPoint.html">$.oPoint</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 1688
+            openHarmony/openHarmony_drawing.js, line 1709
         </div>
         
     </div>
@@ -5063,6 +5067,7 @@ sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);</code></pre>
     
     <div class="description">
         projects a point onto a stroke and returns the closest point belonging to the stroke.
+Only works until a distance of 600 drawing vector units.
     </div>
     
 
@@ -5099,7 +5104,7 @@ sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);</code></pre>
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><a href="$.oPoint.html">$.oPoint</a></span>
 
 
             
@@ -5152,6 +5157,35 @@ sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);</code></pre>
     
     
     
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oPoint.html">$.oPoint</a>
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
     
     
 </dd>
@@ -5169,7 +5203,7 @@ sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 1541
+            openHarmony/openHarmony_drawing.js, line 1558
         </div>
         
     </div>
@@ -5341,12 +5375,12 @@ for (var i in sel){
             
                 <span class="inherited"><a href="$.oStroke.html#getPointCoordinates">inherited</a></span>
             
-            getPointCoordinates<span class="signature">(position)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oVertex.html">$.oVertex</a>}</span>
+            getPointCoordinates<span class="signature">(position)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oPoint.html">$.oPoint</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 1673
+            openHarmony/openHarmony_drawing.js, line 1692
         </div>
         
     </div>
@@ -5357,7 +5391,8 @@ for (var i in sel){
     
     
     <div class="description">
-        Get the coordinates of the point on the stroke from its position (from 0 to 1)
+        Get the coordinates of the point on the stroke from its strokePosition (@see $.oVertex#strokePosition).
+Only works until a distance of 600 drawing vector units.
     </div>
     
 
@@ -5465,11 +5500,11 @@ for (var i in sel){
             
             <td class="type">
             
-                        <a href="$.oVertex.html">$.oVertex</a>
+                        <a href="$.oPoint.html">$.oPoint</a>
                         
                     
             </td>
-            <td class="description last"></td>
+            <td class="description last">an oPoint object containing the coordinates.</td>
         </tr>
     
     </tbody>
@@ -5484,16 +5519,16 @@ for (var i in sel){
             
 <dt>
     <div class="nameContainer inherited">
-        <h4 class="name" id="getPointPosition">
+        <h4 class="name" id="getPointDistance">
             
-                <span class="inherited"><a href="$.oStroke.html#getPointPosition">inherited</a></span>
+                <span class="inherited"><a href="$.oStroke.html#getPointDistance">inherited</a></span>
             
-            getPointPosition<span class="signature">(x)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{float}</span>
+            getPointDistance<span class="signature">(point)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{float}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 1656
+            openHarmony/openHarmony_drawing.js, line 1729
         </div>
         
     </div>
@@ -5504,7 +5539,8 @@ for (var i in sel){
     
     
     <div class="description">
-        Gets the closest position of the point on the stroke (float value from 0 to 1) from a point with coordinates
+        projects a point onto a stroke and returns the distance between the point and the stroke.
+Only works until a distance of 600 drawing vector units.
     </div>
     
 
@@ -5535,13 +5571,13 @@ for (var i in sel){
 	
         <tr>
             
-                <td class="name"><code>x</code></td>
+                <td class="name"><code>point</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type"><a href="$.oPoint.html">$.oPoint</a></span>
 
 
             
@@ -5616,7 +5652,154 @@ for (var i in sel){
                         
                     
             </td>
-            <td class="description last">the position of the point on the stroke, between 0 and 1</td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getPointPosition">
+            
+                <span class="inherited"><a href="$.oStroke.html#getPointPosition">inherited</a></span>
+            
+            getPointPosition<span class="signature">(point)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{float}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_drawing.js, line 1674
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Gets the closest position of the point on the stroke (float value) from a point with x and y coordinates.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>point</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">oPoint</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        float
+                        
+                    
+            </td>
+            <td class="description last">the strokePosition of the point on the stroke (@see $.oVertex#strokePosition)</td>
         </tr>
     
     </tbody>
@@ -5635,12 +5818,12 @@ for (var i in sel){
             
                 <span class="inherited"><a href="$.oStroke.html#updateDefinition">inherited</a></span>
             
-            updateDefinition<span class="signature">()</span>
+            updateDefinition<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{object}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 1639
+            openHarmony/openHarmony_drawing.js, line 1657
         </div>
         
     </div>
@@ -5651,7 +5834,7 @@ for (var i in sel){
     
     
     <div class="description">
-        fetch the stroke information again to update it after modifications
+        fetch the stroke information again to update it after modifications.
     </div>
     
 
@@ -5696,6 +5879,35 @@ for (var i in sel){
     
     
     
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        object
+                        
+                    
+            </td>
+            <td class="description last">the data definition of the stroke, for internal use.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
     
     
 </dd>
@@ -5719,7 +5931,7 @@ for (var i in sel){
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Sep 03 2021 16:02:57 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sat Sep 04 2021 20:35:18 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
