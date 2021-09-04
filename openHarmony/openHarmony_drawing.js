@@ -1674,7 +1674,7 @@ $.oStroke.prototype.updateDefinition = function(){
 $.oStroke.prototype.getPointPosition = function(point){
   var arg = {
     path : this.path,
-    points: [point]
+    points: [{x:point.x, y:point.y}]
   }
   var strokePoint = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
   if (!strokePoint) return -1;
@@ -1709,7 +1709,7 @@ $.oStroke.prototype.getPointCoordinates = function(position){
 $.oStroke.prototype.getClosestPoint = function (point){
   var arg = {
     path : this.path,
-    points: [point]
+    points: [{x:point.x, y:point.y}]
   };
 
   // returns an array of length 1 with an object containing
@@ -1729,7 +1729,7 @@ $.oStroke.prototype.getClosestPoint = function (point){
 $.oStroke.prototype.getPointDistance = function (point){
   var arg = {
     path : this.path,
-    points: [point]
+    points: [{x:point.x, y:point.y}]
   };
 
   // returns an array of length 1 with an object containing
