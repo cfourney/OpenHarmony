@@ -400,7 +400,6 @@ Object.defineProperty($.oDrawing.prototype, 'selectedContours', {
 Object.defineProperty($.oDrawing.prototype, 'drawingData', {
   get: function () {
     var _data = Drawing.query.getData({drawing: this._key});
-    // log("Drawing data for "+JSON.stringify(this._key)+": "+JSON.stringify(_data, null,  "  "))
     if (!_data) throw new Error("Data unavailable for drawing "+this.name)
     return _data;
   }
@@ -824,9 +823,12 @@ Object.defineProperty($.oArtLayer.prototype, 'drawingData', {
  * @param {$.oPoint}       center         The center of the circle
  * @param {float}          radius         The radius of the circle
  * @param {$.oLineStyle}   [lineStyle]    Provide a $.oLineStyle object to specify how the line will look
- * @param {object}         [fillStyle]    The fill information to fill the circle with. currently WIP
- */
+ * @param {object}         [fillStyle=null]    The fill information to fill the circle with.
+ * @returns {$.oShape}  the created shape containing the circle.
+*/
 $.oArtLayer.prototype.drawCircle = function(center, radius, lineStyle, fillStyle){
+  if (typeof fillStyle === 'undefined') var fillStyle = null;
+
   var arg = {
     x: center.x,
     y: center.y,
@@ -834,7 +836,7 @@ $.oArtLayer.prototype.drawCircle = function(center, radius, lineStyle, fillStyle
   };
   var _path = Drawing.geometry.createCircle(arg);
 
-  this.drawShape(_path, lineStyle, fillStyle);
+  return this.drawShape(_path, lineStyle, fillStyle);
 }
 
 /**
@@ -843,13 +845,15 @@ $.oArtLayer.prototype.drawCircle = function(center, radius, lineStyle, fillStyle
  * @param {$.oLineStyle}   [lineStyle]  the line style to draw with. (By default, will use the current stencil selection)
  * @param {$.oFillStyle}   [fillStyle]  the fill information for the path. (By default, will use the current palette selection)
  * @param {bool}   [polygon]            Wether bezier handles should be created for the points in the path (ignores "onCurve" properties of oVertex from path)
- * @param {bool}   [createUnderneath]   Wether the new shape will appear on top or underneath the contents of the layer.
+ * @param {bool}   [createUnderneath]   Wether the new shape will appear on top or underneath the contents of the layer. (not working yet)
  */
 $.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, createUnderneath){
   if (typeof fillStyle === 'undefined') var fillStyle = new this.$.oFillStyle();
   if (typeof lineStyle === 'undefined') var lineStyle = new this.$.oLineStyle();
   if (typeof polygon === 'undefined') var polygon = false;
   if (typeof createUnderneath === 'undefined') var createUnderneath = false;
+
+  var index = this.shapes.length;
 
   var _lineStyle = {};
 
@@ -864,7 +868,7 @@ $.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, 
 
   if (fillStyle) _lineStyle.shaderLeft = 0;
   if (polygon) _lineStyle.polygon = true;
-  _lineStyle.under = createUnderneath ;
+  _lineStyle.under = createUnderneath;
   _lineStyle.stroke = !!lineStyle;
 
   var strokeDesciption = _lineStyle;
@@ -883,9 +887,13 @@ $.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, 
     layers: [shapeDescription]
   };
 
-  log(JSON.stringify(config, null, "  "))
+  // log(JSON.stringify(config, null, "  "))
 
-  DrawingTools.createLayers(config)
+  var layers = DrawingTools.createLayers(config);
+
+  var newShape = this.getShapeByIndex(index);
+  this._shapes.push(newShape);
+  return newShape;
 };
 
 
@@ -893,40 +901,46 @@ $.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, 
  * Draws the given path on the artLayer.
  * @param {$.oVertex[]}    path          an array of $.oVertex objects that describe a path.
  * @param {$.oLineStyle}   lineStyle     the line style to draw with.
+ * @returns {$.oShape} the shape containing the added stroke.
  */
 $.oArtLayer.prototype.drawStroke = function(path, lineStyle){
-  this.drawShape(path, lineStyle, null)
+  return this.drawShape(path, lineStyle, null);
 };
 
 
 /**
- * Draws the given path on the artLayer.
+ * Draws the given path on the artLayer as a contour.
  * @param {$.oVertex[]}    path          an array of $.oVertex objects that describe a path.
- * @param {$.oFillStyle}   fillStyle     the line style to draw with.
+ * @param {$.oFillStyle}   fillStyle     the fill style to draw with.
+ * @returns {$.oShape} the shape newly created from the path.
  */
 $.oArtLayer.prototype.drawContour = function(path, fillStyle){
-  this.drawShape(path, null, fillStyle)
+  return this.drawShape(path, null, fillStyle);
 };
 
 
 /**
- * Draws a rectangle on the artLayer
- * @param {float}     x
- * @param {float}     y
- * @param {float}     width
- * @param {float}     height
- * @param {$.oLineStyle} lineStyle
+ * Draws a rectangle on the artLayer.
+ * @param {float}        x          the x coordinate of the top left corner.
+ * @param {float}        y          the y coordinate of the top left corner.
+ * @param {float}        width      the width of the rectangle.
+ * @param {float}        height     the height of the rectangle.
+ * @param {$.oLineStyle} lineStyle  a line style to use for the rectangle stroke.
+ * @param {$.oFillStyle} fillStyle  a fill style to use for the rectange fill.
+ * @returns {$.oShape} the shape containing the added stroke.
  */
-$.oArtLayer.prototype.drawRectangle = function(x, y, width, height, lineStyle){
+$.oArtLayer.prototype.drawRectangle = function(x, y, width, height, lineStyle, fillStyle){
+  if (typeof fillStyle === 'undefined') var fillStyle = null;
+
   var path = [
     {x:x,y:y,onCurve:true},
     {x:x+width,y:y,onCurve:true},
-    {x:x+width,y:y+height,onCurve:true},
-    {x:x,y:y+height,onCurve:true},
+    {x:x+width,y:y-height,onCurve:true},
+    {x:x,y:y-height,onCurve:true},
     {x:x,y:y,onCurve:true}
   ];
 
-  this.drawStroke(path, lineStyle);
+  return this.drawShape(path, lineStyle, fillStyle);
 }
 
 
@@ -936,11 +950,12 @@ $.oArtLayer.prototype.drawRectangle = function(x, y, width, height, lineStyle){
  * @param {$.oPoint}     startPoint
  * @param {$.oPoint}     endPoint
  * @param {$.oLineStyle} lineStyle
+ * @returns {$.oShape} the shape containing the added line.
  */
 $.oArtLayer.prototype.drawLine = function(startPoint, endPoint, lineStyle){
   var path = [{x:startPoint.x,y:startPoint.y,onCurve:true},{x:endPoint.x,y:endPoint.y,onCurve:true}];
 
-  this.drawStroke(path, lineStyle);
+  return this.drawShape(path, lineStyle, null);
 }
 
 
@@ -951,7 +966,7 @@ $.oArtLayer.prototype.clear = function(){
   var _shapes = this.shapes;
   this.$.debug(_shapes, this.$.DEBUG_LEVEL.DEBUG);
   for (var i=_shapes.length - 1; i>=0; i--){
-    _shapes[i].deleteShape();
+    _shapes[i].remove();
   }
 }
 
@@ -1244,10 +1259,9 @@ Object.defineProperty($.oShape.prototype, 'height', {
 
 
 /**
- * Retrieve the selected status of each shape.
+ * Retrieve and set the selected status of each shape.
  * @name $.oShape#selected
  * @type {bool}
- * @readonly
  */
 Object.defineProperty($.oShape.prototype, 'selected', {
   get: function () {
@@ -1311,7 +1325,7 @@ $.oShape.prototype.remove = function(){
  * @deprecated use oShape.remove instead
  */
 $.oShape.prototype.deleteShape = function(){
-  this.remove()
+  this.remove();
 }
 
 
@@ -1326,6 +1340,9 @@ $.oShape.prototype.getStrokeByIndex = function (index) {
 }
 
 
+$.oShape.prototype.toString = function (){
+  return "<oShape index:"+this.index+", layer:"+this.artLayer.name+", drawing:'"+this.artLayer._drawing.name+"'>"
+}
 
 
 //////////////////////////////////////
@@ -1405,8 +1422,8 @@ $.oFillStyle.prototype.toString = function(){
  * @property {$.oArtLayer}  artLayer    the art layer that contains this stroke
  */
 $.oStroke = function (index, strokeObject, oShapeObject) {
-  this.index = index
-  this.shape = oShapeObject
+  this.index = index;
+  this.shape = oShapeObject;
   this.artLayer = oShapeObject.artLayer;
   this._data = strokeObject;
 }
@@ -1427,7 +1444,7 @@ Object.defineProperty($.oStroke.prototype, "path", {
         return new _stroke.$.oVertex(_stroke, point.x, point.y, point.onCurve, index);
       })
 
-      this._path = _path
+      this._path = _path;
     }
     return this._path;
   }
@@ -1479,8 +1496,8 @@ Object.defineProperty($.oStroke.prototype, "segments", {
  */
 Object.defineProperty($.oStroke.prototype, "index", {
   get: function () {
-    this.$.debug("stroke object : "+JSON.stringify(this._stroke, null, "  "), this.$.DEBUG_LEVEL.DEBUG)
-    return this._data.strokeIndex
+    this.$.debug("stroke object : "+JSON.stringify(this._stroke, null, "  "), this.$.DEBUG_LEVEL.DEBUG);
+    return this._data.strokeIndex;
   }
 })
 
@@ -1542,12 +1559,12 @@ $.oStroke.prototype.getIntersections = function (stroke){
   if (typeof stroke !== 'undefined'){
     // get intersection with provided stroke only
     var _key = { "path0": [{ path: this.path }], "path0": [{ path: stroke.path }] };
-    var intersections = Drawing.query.getIntersections(_key)[0]
+    var intersections = Drawing.query.getIntersections(_key)[0];
   }else{
     // get all intersections on the stroke
     var _drawingKey = this.artLayer._key;
     var _key = { "drawing": _drawingKey.drawing, "art": _drawingKey.art, "paths": [{ path: this.path }] };
-    var intersections = Drawing.query.getIntersections(_key)[0]
+    var intersections = Drawing.query.getIntersections(_key)[0];
   }
 
   var result = [];
@@ -1556,12 +1573,12 @@ $.oStroke.prototype.getIntersections = function (stroke){
     var _stroke = _shape.getStrokeByIndex(intersections[i].strokeIndex);
 
     for (var j in intersections[i].intersections){
-      var points = intersections[i].intersections[j]
+      var points = intersections[i].intersections[j];
 
       var point = new this.$.oVertex(this, points.x0, points.y0, true);
       var intersection = { stroke: _stroke, point: point, ownPoint: points.t0, strokePoint: points.t1 };
 
-      result.push(intersection)
+      result.push(intersection);
     }
   }
 
@@ -1572,7 +1589,7 @@ $.oStroke.prototype.getIntersections = function (stroke){
 
 /**
  * Adds points on the stroke without moving them, at the distance specified (0=start vertice, 1=end vertice)
- * @param   {float[]}       pointsToAdd     an array of float value between 0 and 1 for each point to create
+ * @param   {float[]}       pointsToAdd     an array of float value between 0 and the number of current points on the curve
  * @returns {$.oVertex[]}   the points that were created (if points already existed, they will be returned)
  * @example
 // get the selected stroke and create points where it intersects with the other two strokes
@@ -1593,7 +1610,7 @@ sel.addPoints([intersection1.ownPoint, intersection2.ownPoint]);
 */
 $.oStroke.prototype.addPoints = function (pointsToAdd) {
   // calculate the points that will be created
-  var points = Drawing.geometry.insertPoints({path:this._data.path, params : pointsToAdd})
+  var points = Drawing.geometry.insertPoints({path:this._data.path, params : pointsToAdd});
 
   // find the newly added points amongst the returned values
   for (var i in this.path){
@@ -1617,7 +1634,7 @@ $.oStroke.prototype.addPoints = function (pointsToAdd) {
   DrawingTools.modifyStrokes(config);
   this.updateDefinition();
 
-  var newPoints = []
+  var newPoints = [];
   // find the points for the coordinates from the new path
   for (var i in points){
     var point = points[i];
@@ -1628,13 +1645,14 @@ $.oStroke.prototype.addPoints = function (pointsToAdd) {
     }
   }
 
-  if (newPoints.length != pointsToAdd.length) throw new Error ("some points in " + pointsToAdd + " were not created.")
+  if (newPoints.length != pointsToAdd.length) throw new Error ("some points in " + pointsToAdd + " were not created.");
   return newPoints;
 }
 
 
 /**
- * fetch the stroke information again to update it after modifications
+ * fetch the stroke information again to update it after modifications.
+ * @returns {object} the data definition of the stroke, for internal use.
  */
 $.oStroke.prototype.updateDefinition = function(){
   var _key = this.artLayer._key;
@@ -1649,59 +1667,85 @@ $.oStroke.prototype.updateDefinition = function(){
 
 
 /**
- * Gets the closest position of the point on the stroke (float value from 0 to 1) from a point with coordinates
- * @param {int}  x
- * @return {float}   the position of the point on the stroke, between 0 and 1
+ * Gets the closest position of the point on the stroke (float value) from a point with x and y coordinates.
+ * @param {oPoint}  point
+ * @return {float}  the strokePosition of the point on the stroke (@see $.oVertex#strokePosition)
  */
 $.oStroke.prototype.getPointPosition = function(point){
   var arg = {
-    path : this._data.path,
-    points: [point]
+    path : this.path,
+    points: [{x:point.x, y:point.y}]
   }
   var strokePoint = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
-  if (!strokePoint) return 0;
+  if (!strokePoint) return -1;
 
   return strokePoint.t;
 }
 
 
 /**
- * Get the coordinates of the point on the stroke from its position (from 0 to 1)
+ * Get the coordinates of the point on the stroke from its strokePosition (@see $.oVertex#strokePosition).
+ * Only works until a distance of 600 drawing vector units.
  * @param {float}  position
- * @return {$.oVertex}
+ * @return {$.oPoint} an oPoint object containing the coordinates.
  */
 $.oStroke.prototype.getPointCoordinates = function(position){
   var arg = {
-    path : this._data.path,
+    path : this.path,
     params : [ position ]
- };
- var point = Drawing.geometry.evaluate(arg)[0];
+  };
+  var point = Drawing.geometry.evaluate(arg)[0];
 
-  return new $.oVertex(this, point.x, point.y, true);
+  return new $.oPoint(point.x, point.y);
 }
 
 
 /**
  * projects a point onto a stroke and returns the closest point belonging to the stroke.
- * @param {object} point
+ * Only works until a distance of 600 drawing vector units.
+ * @param {$.oPoint} point
+ * @returns {$.oPoint}
  */
 $.oStroke.prototype.getClosestPoint = function (point){
   var arg = {
     path : this.path,
-    points: [ point ]
+    points: [{x:point.x, y:point.y}]
   };
 
+  // returns an array of length 1 with an object containing
+  // the original query and a "closestPoint" key that contains the information.
+  var _result = Drawing.geometry.getClosestPoint(arg)[0];
+
+  return new $.oPoint(_result.closestPoint.x, _result.closestPoint.y);
+}
+
+
+/**
+ * projects a point onto a stroke and returns the distance between the point and the stroke.
+ * Only works until a distance of 600 drawing vector units.
+ * @param {$.oPoint} point
+ * @returns {float}
+ */
+$.oStroke.prototype.getPointDistance = function (point){
+  var arg = {
+    path : this.path,
+    points: [{x:point.x, y:point.y}]
+  };
+
+  // returns an array of length 1 with an object containing
+  // the original query and a "closestPoint" key that contains the information.
   var _result = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
-  return _result
+
+  return _result.distance;
 }
 
 
 /**
  * @private
  */
- $.oStroke.prototype.toString = function(){
-  return "oStroke : { path:"+this.path+" }"
- }
+$.oStroke.prototype.toString = function(){
+  return "<oStroke: path:"+this.path+">"
+}
 
 
 //////////////////////////////////////
@@ -1753,7 +1797,7 @@ Object.defineProperty($.oContour.prototype, "fill", {
  * @private
  */
 $.oContour.prototype.toString = function(){
-  return "oContour : { path:"+this.path+", fill:"+fill+" }"
+  return "<oContour path:"+this.path+", fill:"+fill+">"
 }
 
 
@@ -1816,7 +1860,7 @@ Object.defineProperty($.oVertex.prototype, 'strokePosition', {
 
 
 /**
- * The position of the point on the drawing, in oPoint object form
+ * The position of the point on the drawing, as an oPoint
  * @name $.oVertex#position
  * @type {oPoint}
  * @readonly
