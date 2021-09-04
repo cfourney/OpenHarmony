@@ -824,9 +824,12 @@ Object.defineProperty($.oArtLayer.prototype, 'drawingData', {
  * @param {$.oPoint}       center         The center of the circle
  * @param {float}          radius         The radius of the circle
  * @param {$.oLineStyle}   [lineStyle]    Provide a $.oLineStyle object to specify how the line will look
- * @param {object}         [fillStyle]    The fill information to fill the circle with. currently WIP
- */
+ * @param {object}         [fillStyle=null]    The fill information to fill the circle with.
+ * @returns {$.oShape}  the created shape containing the circle.
+*/
 $.oArtLayer.prototype.drawCircle = function(center, radius, lineStyle, fillStyle){
+  if (typeof fillStyle === 'undefined') var fillStyle = null;
+
   var arg = {
     x: center.x,
     y: center.y,
@@ -834,7 +837,7 @@ $.oArtLayer.prototype.drawCircle = function(center, radius, lineStyle, fillStyle
   };
   var _path = Drawing.geometry.createCircle(arg);
 
-  this.drawShape(_path, lineStyle, fillStyle);
+  return this.drawShape(_path, lineStyle, fillStyle);
 }
 
 /**
@@ -843,13 +846,15 @@ $.oArtLayer.prototype.drawCircle = function(center, radius, lineStyle, fillStyle
  * @param {$.oLineStyle}   [lineStyle]  the line style to draw with. (By default, will use the current stencil selection)
  * @param {$.oFillStyle}   [fillStyle]  the fill information for the path. (By default, will use the current palette selection)
  * @param {bool}   [polygon]            Wether bezier handles should be created for the points in the path (ignores "onCurve" properties of oVertex from path)
- * @param {bool}   [createUnderneath]   Wether the new shape will appear on top or underneath the contents of the layer.
+ * @param {bool}   [createUnderneath]   Wether the new shape will appear on top or underneath the contents of the layer. (not working yet)
  */
 $.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, createUnderneath){
   if (typeof fillStyle === 'undefined') var fillStyle = new this.$.oFillStyle();
   if (typeof lineStyle === 'undefined') var lineStyle = new this.$.oLineStyle();
   if (typeof polygon === 'undefined') var polygon = false;
   if (typeof createUnderneath === 'undefined') var createUnderneath = false;
+
+  var index = this.shapes.length;
 
   var _lineStyle = {};
 
@@ -864,7 +869,7 @@ $.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, 
 
   if (fillStyle) _lineStyle.shaderLeft = 0;
   if (polygon) _lineStyle.polygon = true;
-  _lineStyle.under = createUnderneath ;
+  _lineStyle.under = createUnderneath;
   _lineStyle.stroke = !!lineStyle;
 
   var strokeDesciption = _lineStyle;
@@ -883,9 +888,13 @@ $.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, 
     layers: [shapeDescription]
   };
 
-  log(JSON.stringify(config, null, "  "))
+  // log(JSON.stringify(config, null, "  "))
 
-  DrawingTools.createLayers(config)
+  var layers = DrawingTools.createLayers(config);
+
+  var newShape = this.getShapeByIndex(index);
+  this._shapes.push(newShape);
+  return newShape;
 };
 
 
@@ -893,19 +902,21 @@ $.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, 
  * Draws the given path on the artLayer.
  * @param {$.oVertex[]}    path          an array of $.oVertex objects that describe a path.
  * @param {$.oLineStyle}   lineStyle     the line style to draw with.
+ * @returns {$.oShape} the shape containing the added stroke.
  */
 $.oArtLayer.prototype.drawStroke = function(path, lineStyle){
-  this.drawShape(path, lineStyle, null)
+  return this.drawShape(path, lineStyle, null);
 };
 
 
 /**
- * Draws the given path on the artLayer.
+ * Draws the given path on the artLayer as a contour.
  * @param {$.oVertex[]}    path          an array of $.oVertex objects that describe a path.
- * @param {$.oFillStyle}   fillStyle     the line style to draw with.
+ * @param {$.oFillStyle}   fillStyle     the fill style to draw with.
+ * @returns {$.oShape} the shape newly created from the path.
  */
 $.oArtLayer.prototype.drawContour = function(path, fillStyle){
-  this.drawShape(path, null, fillStyle)
+  return this.drawShape(path, null, fillStyle);
 };
 
 
@@ -936,11 +947,12 @@ $.oArtLayer.prototype.drawRectangle = function(x, y, width, height, lineStyle){
  * @param {$.oPoint}     startPoint
  * @param {$.oPoint}     endPoint
  * @param {$.oLineStyle} lineStyle
+ * @returns {$.oShape} the shape containing the added line.
  */
 $.oArtLayer.prototype.drawLine = function(startPoint, endPoint, lineStyle){
   var path = [{x:startPoint.x,y:startPoint.y,onCurve:true},{x:endPoint.x,y:endPoint.y,onCurve:true}];
 
-  this.drawStroke(path, lineStyle);
+  return this.drawShape(path, lineStyle, null);
 }
 
 
