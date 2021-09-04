@@ -1710,9 +1710,15 @@ $.oStroke.prototype.getPointCoordinates = function(position){
 $.oStroke.prototype.getClosestPoint = function (point){
   var arg = {
     path : this.path,
-    points: [ point ]
+    points: [point]
   };
 
+  // returns an array of length 1 with an object containing
+  // the original query and a "closestPoint" key that contains the information.
+  var _result = Drawing.geometry.getClosestPoint(arg)[0];
+
+  return new $.oPoint(_result.closestPoint.x, _result.closestPoint.y);
+}
 
 
 /**
