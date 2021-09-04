@@ -1341,6 +1341,9 @@ $.oShape.prototype.getStrokeByIndex = function (index) {
 }
 
 
+$.oShape.prototype.toString = function (){
+  return "<oShape index:"+this.index+", layer:"+this.artLayer.name+", drawing:'"+this.artLayer._drawing.name+"'>"
+}
 
 
 //////////////////////////////////////
@@ -1735,9 +1738,9 @@ $.oStroke.prototype.getPointDistance = function (point){
 /**
  * @private
  */
- $.oStroke.prototype.toString = function(){
-  return "oStroke : { path:"+this.path+" }"
- }
+$.oStroke.prototype.toString = function(){
+  return "<oStroke: path:"+this.path+">"
+}
 
 
 //////////////////////////////////////
@@ -1789,7 +1792,7 @@ Object.defineProperty($.oContour.prototype, "fill", {
  * @private
  */
 $.oContour.prototype.toString = function(){
-  return "oContour : { path:"+this.path+", fill:"+fill+" }"
+  return "<oContour path:"+this.path+", fill:"+fill+">"
 }
 
 
