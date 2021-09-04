@@ -1707,8 +1707,25 @@ $.oStroke.prototype.getClosestPoint = function (point){
     points: [ point ]
   };
 
+
+
+/**
+ * projects a point onto a stroke and returns the distance between the point and the stroke.
+ * Only works until a distance of 600 drawing vector units.
+ * @param {$.oPoint} point
+ * @returns {float}
+ */
+$.oStroke.prototype.getPointDistance = function (point){
+  var arg = {
+    path : this.path,
+    points: [point]
+  };
+
+  // returns an array of length 1 with an object containing
+  // the original query and a "closestPoint" key that contains the information.
   var _result = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
-  return _result
+
+  return _result.distance;
 }
 
 
