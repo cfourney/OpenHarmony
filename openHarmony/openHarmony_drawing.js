@@ -1528,6 +1528,8 @@ Object.defineProperty($.oStroke.prototype, "style", {
 Object.defineProperty($.oStroke.prototype, "closed", {
   get: function () {
     var _path = this.path;
+    $.log(_path)
+    $.log(_path[_path.length-1].strokePosition)
     return _path[_path.length-1].strokePosition == 0;
   }
 })
@@ -1925,7 +1927,7 @@ Object.defineProperty($.oVertex.prototype, 'angleLeft', {
       var _nextPoint = _path[_index];
     }
 
-    var vector = this.$.oVector.fromPoints(this, _nextPoint);
+    var vector = this.$.oVector.fromPoints(_nextPoint, this);
     var angle = vector.degreesAngle;
     // if (angle < 0) angle += 360 //ensuring only positive values
     return angle
