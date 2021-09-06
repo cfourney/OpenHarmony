@@ -832,6 +832,12 @@ Object.defineProperty($.oNode.prototype, 'canCreateInPorts', {
             "MultiLayerWrite",
             "TransformGate",
             "TransformationSwitch",
+            "DeformationCompositeModule",
+            "MATTE_COMPOSITE",
+            "COMPOSITE_GENERIC",
+            "ParticleBkerComposite",
+            "ParticleSystemComposite",
+            "ParticleRegionComposite",
             "PointConstraintMulti",
             "MULTIPORT_OUT"]
             .indexOf(this.type) != -1;
