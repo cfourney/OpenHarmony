@@ -1677,7 +1677,7 @@ $.oStroke.prototype.getPointPosition = function(point){
     points: [{x:point.x, y:point.y}]
   }
   var strokePoint = Drawing.geometry.getClosestPoint(arg)[0].closestPoint;
-  if (!strokePoint) return -1;
+  if (!strokePoint) return 0; // the only time this fails is when the point is the origin of the stroke
 
   return strokePoint.t;
 }
