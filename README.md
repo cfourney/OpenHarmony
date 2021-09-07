@@ -89,16 +89,37 @@ As time goes by, more functions will be added and the documentation will also ge
 -----
 ## Installation
 
-To install:
+#### simple install:
 - download the zip from [the releases page](https://github.com/cfourney/OpenHarmony/releases/),
+- unzip the contents to [your scripts folder](https://docs.toonboom.com/help/harmony-17/advanced/scripting/import-script.html).
+
+#### advanced install (for developers):
+- clone the repository to the location of your choice
+
+ -- or --
+
+- download the zip from [the releases page](https://github.com/cfourney/OpenHarmony/releases/)
 - unzip the contents where you want to store the library,
+
+ -- then --
+
 - run `install.bat`.
 
 This last step will tell Harmony where to look to load the library, by setting the environment variable `LIB_OPENHARMONY_PATH` to the current folder.
 
 It will then create a `openHarmony.js` file into the user scripts folder which calls the files from the folder from the `LIB_OPENHARMONY_PATH` variable, so that scripts can make direct use of it without having to worry about where openHarmony is stored.
 
-If you don't need a remote location for the library, you can also unzip the entire download into your user script folder.
+##### Troubleshooting:
+- to test if the library is correctly installed, open the `Script Editor` window and type:
+```javascript
+include ("openHarmony.js");
+$.alert("hello world");
+```
+Run the script, and if there is an error (for ex `MAX_REENTRENCY `), check that the file `openHarmony.js` exists in the script folder, and contains only the line:
+```javascript
+include(System.getenv('LIB_OPENHARMONY_PATH')+'openHarmony.js');
+```
+Check that the environment variable `LIB_OPENHARMONY_PATH` is set correctly to the remote folder.
 
 -----
 ## Let's get technical. I can code, and want to contribute, where do I start?
@@ -143,6 +164,11 @@ This library was created by Mathieu Chaptel and Chris Fourney.
 
 If you're using openHarmony, and are noticing things that you would like to see in the library, please feel free to contribute to the code directly, or send us feedback through Github. This project will only be as good as people working together can make it, and we need every piece of code and feedback we can get, and would love to hear from you!
 
+-----
+## Community
+
+Join the discord community for help with the library and to contribute:
+https://discord.gg/kgT38MG
 
 -----
 ## Acknowledgements
