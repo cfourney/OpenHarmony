@@ -162,7 +162,7 @@ Object.defineProperty($.oScene.prototype, 'name', {
  */
 Object.defineProperty($.oScene.prototype, 'online', {
   get : function(){
-    return scene.currentJob() != "Digital";
+    return about.isDatabaseMode()
   }
 });
 
