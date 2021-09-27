@@ -285,12 +285,12 @@ $.prompt = function(){ return $.dialog.prompt.apply( $.dialog, arguments ) };
 /**
  * Prompts with a file selector window
  * @function
- * @name    $#browseForFile
- * @param   {string}           [text="Select a file:"]       The title of the confirmation dialog.
- * @param   {string}           [filter="*"]                  The filter for the file type and/or file name that can be selected. Accepts wildcard character "*".
- * @param   {string}           [getExisting=true]            Whether to select an existing file or a save location
- * @param   {string}           [acceptMultiple=false]        Whether or not selecting more than one file is ok. Is ignored if getExisting is false.
- * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
+ * @name $#browseForFile
+ * @param {string} [text="Select a file:"] The title of the file select dialog.
+ * @param {string} [filter="*"]            The filter for the file type and/or file name that can be selected. Accepts wildcard character "*".
+ * @param {string} [getExisting=true]      Whether to select an existing file or a save location
+ * @param {string} [acceptMultiple=false]  Whether or not selecting more than one file is ok. Is ignored if getExisting is false.
+ * @param {string} [startDirectory]        The directory showed at the opening of the dialog.
  *
  * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
  */
@@ -300,9 +300,9 @@ $.browseForFile = function(){ return $.dialog.browseForFile.apply( $.dialog, arg
 /**
  * Prompts with a folder selector window.
  * @function
- * @name    $#browseForFolder
- * @param   {string}           [text]                        The title of the confirmation dialog.
- * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
+ * @name $#browseForFolder
+ * @param {string} [text]                The title of the confirmation dialog.
+ * @param {string} [startDirectory]      The directory showed at the opening of the dialog.
  *
  * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled
  */

@@ -491,8 +491,8 @@ Object.defineProperty($.oScene.prototype, 'unsaved', {
 /**
  * The root group of the scene.
  * @name $.oScene#root
- * @readonly
  * @type {$.oGroupNode}
+ * @readonly
  */
 Object.defineProperty($.oScene.prototype, 'root', {
     get : function(){
