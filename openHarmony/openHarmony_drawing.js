@@ -542,6 +542,15 @@ $.oDrawing.prototype.duplicate = function(frame, newName){
   return newDrawing;
 }
 
+/**
+ * Replaces a color Id present on the drawing by another.
+ * @param {string} currentId
+ * @param {string} newId
+ */
+$.oDrawing.prototype.replaceColorId = function (currentId, newId){
+  DrawingTools.recolorDrawing( this._key, [{from:currentId, to:newId}]);
+}
+
 
 /**
  * Copies the contents of the Drawing into the clipboard
@@ -1171,6 +1180,26 @@ Object.defineProperty($.oShape.prototype, 'strokes', {
   }
 })
 
+
+/**
+ * The fills styles contained in the shape
+ * @name $.oShape#fills
+ * @type {$.oFillStyle[]}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'fills', {
+  get: function () {
+    if (!this.hasOwnProperty("_fills")) {
+      var _data = this._data
+
+      if (!_data.hasOwnProperty("contours")) return [];
+
+      var _fills = _data.contours.map(function (x) { return new this.$.oFillStyle(x.colorId, x.matrix) })
+      this._fills = _fills;
+    }
+    return this._fills;
+  }
+})
 
 /**
  * The stencils used by the shape.
