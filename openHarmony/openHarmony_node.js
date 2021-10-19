@@ -1772,12 +1772,11 @@ Object.defineProperty($.oDrawingNode.prototype, "timingColumn", {
 Object.defineProperty($.oDrawingNode.prototype, "usedColorIds", {
   get : function(){
     // this.$.log("used colors in node : "+this.name)
-    var _timings = this.timings;
+    var _drawings = this.element.drawings;
     var _colors = [];
 
-    for (var i in _timings){
-      var _drawingColors = DrawingTools.getDrawingUsedColors({node: this.path, frame: _timings[i].frameNumber});
-      // this.$.log(this.path+" frame: "+_timings[i].frameNumber+" has colors: "+_drawingColors)
+    for (var i in _drawings){
+      var _drawingColors = _drawings[i].usedColorIds;
       for (var c in _drawingColors){
         if (_colors.indexOf(_drawingColors[c]) == -1) _colors.push(_drawingColors[c]);
       }

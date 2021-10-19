@@ -176,6 +176,19 @@ Object.defineProperty($.oDrawing.prototype, 'pivot', {
 
 
 /**
+ * The color Ids present on the drawing.
+ * @name $.oDrawing#usedColorIds
+ * @type {string[]}
+ */
+Object.defineProperty($.oDrawing.prototype, 'usedColorIds', {
+  get: function () {
+    var _colorIds = DrawingTools.getDrawingUsedColors(this._key);
+    return _colorIds;
+  }
+})
+
+
+/**
  * The bounding box of the drawing, in drawing space coordinates. (null if the drawing is empty.)
  * @name $.oDrawing#boundingBox
  * @readonly
