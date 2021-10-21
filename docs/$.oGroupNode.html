@@ -1467,6 +1467,8 @@
             
                 <li data-name="$.oDrawing#underlay"><a href="$.oDrawing.html#underlay">underlay</a></li>
             
+                <li data-name="$.oDrawing#usedColorIds"><a href="$.oDrawing.html#usedColorIds">usedColorIds</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -1491,6 +1493,8 @@
                 <li data-name="$.oDrawing#refreshPreview"><a href="$.oDrawing.html#refreshPreview">refreshPreview</a></li>
             
                 <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
+            
+                <li data-name="$.oDrawing#replaceColorId"><a href="$.oDrawing.html#replaceColorId">replaceColorId</a></li>
             
                 <li data-name="$.oDrawing#setAsActiveDrawing"><a href="$.oDrawing.html#setAsActiveDrawing">setAsActiveDrawing</a></li>
             
@@ -2850,6 +2854,10 @@
             
                 <li data-name="$.oPalette#addColor"><a href="$.oPalette.html#addColor">addColor</a></li>
             
+                <li data-name="$.oPalette#addGradient"><a href="$.oPalette.html#addGradient">addGradient</a></li>
+            
+                <li data-name="$.oPalette#addTexture"><a href="$.oPalette.html#addTexture">addTexture</a></li>
+            
                 <li data-name="$.oPalette#getColorById"><a href="$.oPalette.html#getColorById">getColorById</a></li>
             
                 <li data-name="$.oPalette#getColorByName"><a href="$.oPalette.html#getColorByName">getColorByName</a></li>
@@ -3629,6 +3637,8 @@
             
                 <li data-name="$.oShape#contours"><a href="$.oShape.html#contours">contours</a></li>
             
+                <li data-name="$.oShape#fills"><a href="$.oShape.html#fills">fills</a></li>
+            
                 <li data-name="$.oShape#height"><a href="$.oShape.html#height">height</a></li>
             
                 <li data-name="$.oShape#selected"><a href="$.oShape.html#selected">selected</a></li>
@@ -4281,7 +4291,7 @@ It represents groups in the scene. From this class, it's possible to add nodes, 
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2365
+            openHarmony/openHarmony_node.js, line 2364
         </div>
         
     </div>
@@ -6263,7 +6273,7 @@ To change the path of a node, use oNode.moveToGroup()
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2473
+            openHarmony/openHarmony_node.js, line 2472
         </div>
         
     </div>
@@ -6408,7 +6418,7 @@ To change the path of a node, use oNode.moveToGroup()
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2847
+            openHarmony/openHarmony_node.js, line 2846
         </div>
         
     </div>
@@ -6784,7 +6794,7 @@ To change the path of a node, use oNode.moveToGroup()
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2928
+            openHarmony/openHarmony_node.js, line 2927
         </div>
         
     </div>
@@ -7223,7 +7233,7 @@ To change the path of a node, use oNode.moveToGroup()
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2654
+            openHarmony/openHarmony_node.js, line 2653
         </div>
         
     </div>
@@ -7483,7 +7493,7 @@ To change the path of a node, use oNode.moveToGroup()
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2695
+            openHarmony/openHarmony_node.js, line 2694
         </div>
         
     </div>
@@ -7781,7 +7791,7 @@ To change the path of a node, use oNode.moveToGroup()
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2519
+            openHarmony/openHarmony_node.js, line 2518
         </div>
         
     </div>
@@ -7926,7 +7936,7 @@ To change the path of a node, use oNode.moveToGroup()
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2628
+            openHarmony/openHarmony_node.js, line 2627
         </div>
         
     </div>
@@ -8385,7 +8395,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2543
+            openHarmony/openHarmony_node.js, line 2542
         </div>
         
     </div>
@@ -8923,7 +8933,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2506
+            openHarmony/openHarmony_node.js, line 2505
         </div>
         
     </div>
@@ -9083,7 +9093,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2566
+            openHarmony/openHarmony_node.js, line 2565
         </div>
         
     </div>
@@ -11278,7 +11288,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2446
+            openHarmony/openHarmony_node.js, line 2445
         </div>
         
     </div>
@@ -11423,7 +11433,7 @@ peg.centerAbove(drawingNode);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2461
+            openHarmony/openHarmony_node.js, line 2460
         </div>
         
     </div>
@@ -12172,12 +12182,12 @@ Pass a value to recurse to look into the groups as well.
     <div class="nameContainer">
         <h4 class="name" id="importImage">
             
-            importImage<span class="signature">(path, <span class="optional">alignment</span>, <span class="optional">nodePosition</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;<a href="$.oNode.html">$.oNode</a>>}</span>
+            importImage<span class="signature">(path, <span class="optional">alignment</span>, <span class="optional">nodePosition</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oNode.html">$.oNode</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 3235
+            openHarmony/openHarmony_node.js, line 3234
         </div>
         
     </div>
@@ -12379,11 +12389,11 @@ Pass a value to recurse to look into the groups as well.
             
             <td class="type">
             
-                        Array.&lt;<a href="$.oNode.html">$.oNode</a>>
+                        <a href="$.oNode.html">$.oNode</a>
                         
                     
             </td>
-            <td class="description last">The nodes that have been updated/created</td>
+            <td class="description last">The node for the imported image</td>
         </tr>
     
     </tbody>
@@ -12405,7 +12415,7 @@ Pass a value to recurse to look into the groups as well.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 3278
+            openHarmony/openHarmony_node.js, line 3277
         </div>
         
     </div>
@@ -12604,7 +12614,7 @@ Pass a value to recurse to look into the groups as well.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2986
+            openHarmony/openHarmony_node.js, line 2985
         </div>
         
     </div>
@@ -12965,7 +12975,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 3309
+            openHarmony/openHarmony_node.js, line 3308
         </div>
         
     </div>
@@ -13263,7 +13273,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2786
+            openHarmony/openHarmony_node.js, line 2785
         </div>
         
     </div>
@@ -14379,7 +14389,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2576
+            openHarmony/openHarmony_node.js, line 2575
         </div>
         
     </div>
@@ -15167,7 +15177,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2484
+            openHarmony/openHarmony_node.js, line 2483
         </div>
         
     </div>
@@ -16194,7 +16204,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 3092
+            openHarmony/openHarmony_node.js, line 3091
         </div>
         
     </div>
@@ -16394,7 +16404,7 @@ function importCustomPSD(){
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Sep 10 2021 17:17:32 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Oct 21 2021 17:17:01 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

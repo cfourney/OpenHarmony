@@ -1467,6 +1467,8 @@
             
                 <li data-name="$.oDrawing#underlay"><a href="$.oDrawing.html#underlay">underlay</a></li>
             
+                <li data-name="$.oDrawing#usedColorIds"><a href="$.oDrawing.html#usedColorIds">usedColorIds</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -1491,6 +1493,8 @@
                 <li data-name="$.oDrawing#refreshPreview"><a href="$.oDrawing.html#refreshPreview">refreshPreview</a></li>
             
                 <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
+            
+                <li data-name="$.oDrawing#replaceColorId"><a href="$.oDrawing.html#replaceColorId">replaceColorId</a></li>
             
                 <li data-name="$.oDrawing#setAsActiveDrawing"><a href="$.oDrawing.html#setAsActiveDrawing">setAsActiveDrawing</a></li>
             
@@ -2850,6 +2854,10 @@
             
                 <li data-name="$.oPalette#addColor"><a href="$.oPalette.html#addColor">addColor</a></li>
             
+                <li data-name="$.oPalette#addGradient"><a href="$.oPalette.html#addGradient">addGradient</a></li>
+            
+                <li data-name="$.oPalette#addTexture"><a href="$.oPalette.html#addTexture">addTexture</a></li>
+            
                 <li data-name="$.oPalette#getColorById"><a href="$.oPalette.html#getColorById">getColorById</a></li>
             
                 <li data-name="$.oPalette#getColorByName"><a href="$.oPalette.html#getColorByName">getColorByName</a></li>
@@ -3628,6 +3636,8 @@
                 <li data-name="$.oShape#bounds"><a href="$.oShape.html#bounds">bounds</a></li>
             
                 <li data-name="$.oShape#contours"><a href="$.oShape.html#contours">contours</a></li>
+            
+                <li data-name="$.oShape#fills"><a href="$.oShape.html#fills">fills</a></li>
             
                 <li data-name="$.oShape#height"><a href="$.oShape.html#height">height</a></li>
             
@@ -7421,7 +7431,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1963
+            openHarmony/openHarmony_node.js, line 1962
         </div>
         
     </div>
@@ -7604,7 +7614,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1904
+            openHarmony/openHarmony_node.js, line 1903
         </div>
         
     </div>
@@ -7735,7 +7745,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2006
+            openHarmony/openHarmony_node.js, line 2005
         </div>
         
     </div>
@@ -8129,7 +8139,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 2049
+            openHarmony/openHarmony_node.js, line 2048
         </div>
         
     </div>
@@ -8311,7 +8321,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1868
+            openHarmony/openHarmony_node.js, line 1867
         </div>
         
     </div>
@@ -10220,7 +10230,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1880
+            openHarmony/openHarmony_node.js, line 1879
         </div>
         
     </div>
@@ -11020,7 +11030,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1939
+            openHarmony/openHarmony_node.js, line 1938
         </div>
         
     </div>
@@ -11975,7 +11985,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1926
+            openHarmony/openHarmony_node.js, line 1925
         </div>
         
     </div>
@@ -13130,7 +13140,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1950
+            openHarmony/openHarmony_node.js, line 1949
         </div>
         
     </div>
@@ -13275,7 +13285,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 1991
+            openHarmony/openHarmony_node.js, line 1990
         </div>
         
     </div>
@@ -13441,7 +13451,7 @@ myNode.drawing.element = {frameNumber: 6, value: timings[1].value} // setting th
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Sep 10 2021 17:17:32 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Oct 21 2021 17:17:01 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

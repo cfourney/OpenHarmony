@@ -1467,6 +1467,8 @@
             
                 <li data-name="$.oDrawing#underlay"><a href="$.oDrawing.html#underlay">underlay</a></li>
             
+                <li data-name="$.oDrawing#usedColorIds"><a href="$.oDrawing.html#usedColorIds">usedColorIds</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
             
@@ -1491,6 +1493,8 @@
                 <li data-name="$.oDrawing#refreshPreview"><a href="$.oDrawing.html#refreshPreview">refreshPreview</a></li>
             
                 <li data-name="$.oDrawing#remove"><a href="$.oDrawing.html#remove">remove</a></li>
+            
+                <li data-name="$.oDrawing#replaceColorId"><a href="$.oDrawing.html#replaceColorId">replaceColorId</a></li>
             
                 <li data-name="$.oDrawing#setAsActiveDrawing"><a href="$.oDrawing.html#setAsActiveDrawing">setAsActiveDrawing</a></li>
             
@@ -2850,6 +2854,10 @@
             
                 <li data-name="$.oPalette#addColor"><a href="$.oPalette.html#addColor">addColor</a></li>
             
+                <li data-name="$.oPalette#addGradient"><a href="$.oPalette.html#addGradient">addGradient</a></li>
+            
+                <li data-name="$.oPalette#addTexture"><a href="$.oPalette.html#addTexture">addTexture</a></li>
+            
                 <li data-name="$.oPalette#getColorById"><a href="$.oPalette.html#getColorById">getColorById</a></li>
             
                 <li data-name="$.oPalette#getColorByName"><a href="$.oPalette.html#getColorByName">getColorByName</a></li>
@@ -3628,6 +3636,8 @@
                 <li data-name="$.oShape#bounds"><a href="$.oShape.html#bounds">bounds</a></li>
             
                 <li data-name="$.oShape#contours"><a href="$.oShape.html#contours">contours</a></li>
+            
+                <li data-name="$.oShape#fills"><a href="$.oShape.html#fills">fills</a></li>
             
                 <li data-name="$.oShape#height"><a href="$.oShape.html#height">height</a></li>
             
@@ -4915,12 +4925,12 @@
     <div class="nameContainer">
         <h4 class="name" id="addColor">
             
-            addColor<span class="signature">()</span>
+            addColor<span class="signature">(name, colorValue)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_palette.js, line 278
+            openHarmony/openHarmony_palette.js, line 280
         </div>
         
     </div>
@@ -4931,7 +4941,7 @@
     
     
     <div class="description">
-        Not yet implemented.
+        Adds a solid color to the palette
     </div>
     
 
@@ -4939,6 +4949,398 @@
     
     
     
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                the display name for the newly created color</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>colorValue</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="$.oColorValue.html">$.oColorValue</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                a $.oColorValue object describing the color</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="addGradient">
+            
+            addGradient<span class="signature">(name, colorValues, radial)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_palette.js, line 307
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Adds a gradient to the palette, using the passed values
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>colorValues</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                an object with keys between 0 and 1 containing a colorValue for each "tack". ex: {0: new $.oColorValue("000000ff"), 1:new $.oColorValue("ffffffff")}</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>radial</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="addTexture">
+            
+            addTexture<span class="signature">(name, texturePath, tiled)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_palette.js, line 293
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Adds a texture swatch to the palette
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>texturePath</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>tiled</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                Wether the texture will be tiled or not</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -4991,7 +5393,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_palette.js, line 290
+            openHarmony/openHarmony_palette.js, line 330
         </div>
         
     </div>
@@ -5107,7 +5509,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_palette.js, line 306
+            openHarmony/openHarmony_palette.js, line 345
         </div>
         
     </div>
@@ -5223,7 +5625,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_palette.js, line 321
+            openHarmony/openHarmony_palette.js, line 360
         </div>
         
     </div>
@@ -5347,7 +5749,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Sep 10 2021 17:17:32 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Oct 21 2021 17:17:01 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
