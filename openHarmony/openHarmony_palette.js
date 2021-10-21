@@ -273,12 +273,52 @@ Object.defineProperty($.oPalette.prototype, 'currentColor', {
 // $.oPalette Class methods
 
 /**
- * Not yet implemented.
+ * Adds a solid color to the palette
+ * @param {string}        name        the display name for the newly created color
+ * @param {$.oColorValue} colorValue  a $.oColorValue object describing the color
  */
-$.oPalette.prototype.addColor = function (name, type, colorData) {
-  throw new ReferenceError("oPalette.addColor not yet implemented.");
+$.oPalette.prototype.addColor = function (name, colorValue) {
+  var colorData = {r : colorValue.r, g: colorValue.g, b: colorValue.b, a : colorValue.a };
+  this.paletteObject.createNewSolidColor(name, colorData);
+
+  return this.colors.slice(-1)[0];
 }
 
+/**
+ * Adds a texture swatch to the palette
+ * @param {string} name
+ * @param {string} texturePath
+ * @param {bool} tiled  Wether the texture will be tiled or not
+ */
+$.oPalette.prototype.addTexture = function (name, texturePath, tiled) {
+  if (typeof texturePath === this.$.oFile) texturePath = texturePath.path;
+  this.paletteObject.createNewTexture(name, texturePath, tiled);
+
+  return this.colors.slice(-1)[0];
+}
+
+
+/**
+ * Adds a gradient to the palette, using the passed values
+ * @param {string} name
+ * @param {object} colorValues an object with keys between 0 and 1 containing a colorValue for each "tack". ex: {0: new $.oColorValue("000000ff"), 1:new $.oColorValue("ffffffff")}
+ * @param {bool} radial
+ */
+$.oPalette.prototype.addGradient = function (name, colorValues, radial) {
+  if (typeof radial === 'undefined') var radial = false;
+
+  var types = PaletteObjectManager.Constants.ColorType;
+  var type = radial?types.RADIAL_GRADIENT:types.LINEAR_GRADIENT;
+  var gradient = []
+  for (var i in colorValues){
+    var color = colorValues[i];
+    var tack = {t:parseFloat(i, 10), r:color.r, g:color.g, b:color.b, a:color.a};
+    gradient.push[tack];
+  }
+
+  this.paletteObject.createNewColor(type, name, gradient);
+  return this.colors.slice(-1)[0];
+}
 
 
 /**
@@ -294,7 +334,6 @@ $.oPalette.prototype.getColorById = function (id) {
   if (_colorIndex != -1) return _colors[_colorIndex]
   return null;
 }
-
 
 
 /**

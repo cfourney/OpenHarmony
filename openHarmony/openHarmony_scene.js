@@ -491,8 +491,8 @@ Object.defineProperty($.oScene.prototype, 'unsaved', {
 /**
  * The root group of the scene.
  * @name $.oScene#root
- * @readonly
  * @type {$.oGroupNode}
+ * @readonly
  */
 Object.defineProperty($.oScene.prototype, 'root', {
     get : function(){
@@ -1666,11 +1666,11 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
 
 /**
  * export a template from the specified nodes.
- * @param   {$.oNodes[]}       nodes                                          The path of the TPL file to import.
- * @param   {bool}             [exportPath]                                   Whether to extend the exposures of the content imported.
- * @param   {string}           [exportPalettesMode]                           can have the values : "usedOnly", "all", "createPalette"
- * @param   {string}           [renameUsedColors]                             if creating a palette, optionally set here the name for the colors (they will have a number added to each)
- * @param   {copyOptions}      [copyOptions]                                  An object containing paste options as per Harmony's standard paste options.
+ * @param   {$.oNodes[]}  nodes                             The list of nodes included in the template.
+ * @param   {bool}        [exportPath]                      The path of the TPL file to export.
+ * @param   {string}      [exportPalettesMode='usedOnly']   can have the values : "usedOnly", "all", "createPalette"
+ * @param   {string}      [renameUsedColors=]               if creating a palette, optionally set here the name for the colors (they will have a number added to each)
+ * @param   {copyOptions} [copyOptions]                     An object containing paste options as per Harmony's standard paste options.
  *
  * @return {bool}         The success of the export.
  * @todo turn exportPalettesMode into an enum?

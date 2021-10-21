@@ -1772,12 +1772,11 @@ Object.defineProperty($.oDrawingNode.prototype, "timingColumn", {
 Object.defineProperty($.oDrawingNode.prototype, "usedColorIds", {
   get : function(){
     // this.$.log("used colors in node : "+this.name)
-    var _timings = this.timings;
+    var _drawings = this.element.drawings;
     var _colors = [];
 
-    for (var i in _timings){
-      var _drawingColors = DrawingTools.getDrawingUsedColors({node: this.path, frame: _timings[i].frameNumber});
-      // this.$.log(this.path+" frame: "+_timings[i].frameNumber+" has colors: "+_drawingColors)
+    for (var i in _drawings){
+      var _drawingColors = _drawings[i].usedColorIds;
       for (var c in _drawingColors){
         if (_colors.indexOf(_drawingColors[c]) == -1) _colors.push(_drawingColors[c]);
       }
@@ -3226,11 +3225,11 @@ $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
 
 /**
  * Import a generic image format (PNG, JPG, TGA etc) as a read node.
- * @param   {string}       path                          The image file to import.
- * @param   {string}         [alignment="ASIS"]            Alignment type.
- * @param   {$.oPoint}       [nodePosition={0,0,0}]        The position for the node to be placed in the node view.
+ * @param {string} path The image file to import.
+ * @param {string} [alignment="ASIS"] Alignment type.
+ * @param {$.oPoint} [nodePosition={0,0,0}] The position for the node to be placed in the node view.
  *
- * @return  {$.oNode[]}    The nodes that have been updated/created
+ * @return  {$.oNode}    The node for the imported image
  */
 $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
   if (typeof alignment === 'undefined') var alignment = "ASIS"; // create an enum for alignments?

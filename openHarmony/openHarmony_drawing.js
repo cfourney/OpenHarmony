@@ -176,6 +176,19 @@ Object.defineProperty($.oDrawing.prototype, 'pivot', {
 
 
 /**
+ * The color Ids present on the drawing.
+ * @name $.oDrawing#usedColorIds
+ * @type {string[]}
+ */
+Object.defineProperty($.oDrawing.prototype, 'usedColorIds', {
+  get: function () {
+    var _colorIds = DrawingTools.getDrawingUsedColors(this._key);
+    return _colorIds;
+  }
+})
+
+
+/**
  * The bounding box of the drawing, in drawing space coordinates. (null if the drawing is empty.)
  * @name $.oDrawing#boundingBox
  * @readonly
@@ -540,6 +553,15 @@ $.oDrawing.prototype.duplicate = function(frame, newName){
   if (typeof newName === 'undefined') var newName = frame;
   var newDrawing = _element.addDrawing(frame, newName, this.path)
   return newDrawing;
+}
+
+/**
+ * Replaces a color Id present on the drawing by another.
+ * @param {string} currentId
+ * @param {string} newId
+ */
+$.oDrawing.prototype.replaceColorId = function (currentId, newId){
+  DrawingTools.recolorDrawing( this._key, [{from:currentId, to:newId}]);
 }
 
 
@@ -1171,6 +1193,26 @@ Object.defineProperty($.oShape.prototype, 'strokes', {
   }
 })
 
+
+/**
+ * The fills styles contained in the shape
+ * @name $.oShape#fills
+ * @type {$.oFillStyle[]}
+ * @readonly
+ */
+Object.defineProperty($.oShape.prototype, 'fills', {
+  get: function () {
+    if (!this.hasOwnProperty("_fills")) {
+      var _data = this._data
+
+      if (!_data.hasOwnProperty("contours")) return [];
+
+      var _fills = _data.contours.map(function (x) { return new this.$.oFillStyle(x.colorId, x.matrix) })
+      this._fills = _fills;
+    }
+    return this._fills;
+  }
+})
 
 /**
  * The stencils used by the shape.

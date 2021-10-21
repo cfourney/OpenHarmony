@@ -518,57 +518,58 @@ Object.defineProperty($.oColor.prototype, 'selected', {
 
 
 /**
- * Takes a string or array of strings for gradients and filename for textures. Instead of passing rgba objects, it accepts "#rrggbbaa" hex strings for convenience.<br>set gradients, provide an array of {string color, double position} objects that define a gradient scale.
+ * Takes a string or array of strings for gradients and filename for textures. Instead of passing rgba objects, it accepts "#rrggbbaa" hex strings for convenience.<br>set gradients, provide an object with keys from 0 to 1 for the position of each color.<br>(ex: {0: new $.oColorValue("000000ff"), 1:new $.oColorValue("ffffffff")}).
  * @name $.oColor#value
- * @type {object}
+ * @type {$.oColorValue}
  */
 Object.defineProperty($.oColor.prototype, 'value', {
-    get : function(){
-        var _color = this.colorObject;
-        switch(this.type){
-            case "solid":
-                return new this.$.oColorValue(_color.colorData)
-            case "texture":
-                // TODO: no way to return the texture file name?
-            case "gradient":
-            case "radial gradient":
-                var _gradientArray = _color.colorData;
-                var _value = [];
-                for (var i = 0; i<_gradientArray.length; i++){
-                    var _tack = {}
-                    _tack.color = new this.$.oColorValue(_gradientArray[i]).toString()
-                    _tack.position = _gradientArray[i].t
-                    _value.push(_tack)
-                }
-                return _value;
-            default:
-        }
-    },
+  get : function(){
+    var _color = this.colorObject;
 
-    set : function(newValue){
-        var _color = this.colorObject;
-        switch(this.type){
-            case "solid":
-                _color.setColorData(newValue);
-                break;
-            case "texture":
-                // TODO: need to copy the file into the folder first?
-                _color.setTextureFile(newValue);
-                break;
-            case "gradient":
-            case "radial gradient":
-                var _gradientArray = newValue;
-                var _value = [];
-                for (var i = 0; i<_gradientArray.length; i++){
-                    var _tack = new this.$.oColorValue(_gradientArray[i].color)
-                    _tack.t = _gradientArray[i]. position
-                    _value.push()
-                }
-                _color.setColorData(_value);
-                break;
-            default:
-        };
+    switch(this.type){
+      case "solid":
+        return new this.$.oColorValue(_color.colorData);
+      case "texture":
+        return this.palette.path.parent.path + this.palette.name+"_textures/" + this.id + ".tga";
+      case "gradient":
+      case "radial gradient":
+        var _gradientArray = _color.colorData;
+        var _value = {};
+        for (var i in _gradientArray){
+          var _data = _gradientArray[i];
+          _value[_gradientArray[i].t] = new this.$.oColorValue(_data.r, _data.g, _data.b, _data.a);
+        }
+        return _value;
+      default:
     }
+  },
+
+  set : function(newValue){
+    var _color = this.colorObject;
+
+    switch(this.type){
+      case "solid":
+        _value = new $.oColorValue(newValue);
+        _color.setColorData(_value);
+        break;
+      case "texture":
+        // TODO: need to copy the file into the folder first?
+        _color.setTextureFile(newValue);
+        break;
+      case "gradient":
+      case "radial gradient":
+        var _value = [];
+        var _gradient = newValue;
+        for (var i  in _gradient){
+          var _color = _gradient[i];
+          var _tack = {r:_color.r, g:_color.g, b:_color.b, a:_color.a, t:parseFloat(i, 10)}
+          _value.push(_tack);
+        }
+        _color.setColorData(_value);
+        break;
+      default:
+    };
+  }
 });
 
 
