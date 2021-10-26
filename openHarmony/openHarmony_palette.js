@@ -90,13 +90,7 @@ $.oPalette.location = {
 Object.defineProperty($.oPalette.prototype, 'id', {
   get: function () {
     return this.paletteObject.id;
-  },
-
-  set: function (newId) {
-    // TODO: same as rename maybe? or hardcode the palette ID and reimport it as a file?
-    throw "Not yet implemented.";
   }
-
 })
 
 
@@ -329,9 +323,9 @@ $.oPalette.prototype.addGradient = function (name, colorValues, radial) {
  */
 $.oPalette.prototype.getColorById = function (id) {
   var _colors = this.colors;
-  var _ids = _colors.map(function (x) { return x.id });
-  var _colorIndex = _ids.indexOf(id);
-  if (_colorIndex != -1) return _colors[_colorIndex]
+  for (var i in _colors){
+    if (_colors[i].id == id) return _colors[i];
+  }
   return null;
 }
 

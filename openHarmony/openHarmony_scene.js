@@ -1747,7 +1747,6 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
   // this.$.alert ("exporting now selection :"+this.selectedFrames+"\n\n"+this.selectedNodes.join("\n")+"\n\n to folder : "+_folder+"/"+_name)
 
   try{
-  // THIS CRASHES OCCASIONALLY AND I DONT KNOW WHY :(
     var success = copyPaste.createTemplateFromSelection (_name, _folder);
     if (success == "") throw new Error("export failed")
   }catch(error){

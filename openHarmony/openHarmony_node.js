@@ -1800,13 +1800,21 @@ Object.defineProperty($.oDrawingNode.prototype, "usedColors", {
     // look in both element and scene palettes
     var _palettes = this.palettes.concat(this.$.scn.palettes);
 
+    // build a palette/id list to speedup massive palettes/palette lists
+    var _colorIds = {}
+    for (var i in _palettes){
+      var _palette = _palettes[i];
+      var _colors = _palette.colors;
+      _colorIds[_palette.name] = {};
+      for (var j in _colors){
+        _colorIds[_palette.name][_colors[j].id] = _colors[j];
+      }
+    }
+
+    // for each id on the drawing, identify the corresponding color
     var _usedColors = _ids.map(function(id){
-      for (var j in _palettes){
-        var _color = _palettes[j].getColorById(id);
-        // color found
-        if (_color){
-          return _color;
-        }
+      for (var paletteName in _colorIds){
+        if (_colorIds[paletteName][id]) return _colorIds[paletteName][id];
       }
       throw new Error("Missing color found for id: "+id+". Color doesn't belong to any palette in the scene or element.");
     })
@@ -1877,19 +1885,17 @@ $.oDrawingNode.prototype.getDrawingAtFrame = function(frameNumber){
  * @return  {$.oPalette[]}   The palettes that contain the color IDs used by the drawings of the node.
  */
 $.oDrawingNode.prototype.getUsedPalettes = function(){
-  var _palettes = this.scene.palettes;
+  var _palettes = {};
   var _usedPalettes = [];
 
-  var _usedColorIds = this.usedColorIds;
-  for (var i in _usedColorIds){
-    for (var j in _palettes){
-      var _color = _palettes[j].getColorById(_usedColorIds[i]);
-      // color found
-      if (_color){
-        if (_usedPalettes.indexOf(_palettes[j]) == -1) _usedPalettes.push(_palettes[j]);
-        break;
-      }
-    }
+  var _usedColors = this.usedColors;
+  // build an object of palettes under ids as keys to remove duplicates
+  for (var i in _usedColors){
+    var _palette = _usedColors[i].palette;
+    _palettes[_palette.id] = _palette;
+  }
+  for (var i in _palettes){
+    _usedPalettes.push(_palettes[i]);
   }
 
   return _usedPalettes;
