@@ -259,6 +259,15 @@ Object.defineProperty($.oColumn.prototype, 'stepSection', {
 // $.oColumn Class methods
 
 /**
+ * Deletes the column from the scene. The column must be unlinked from any attribute first.
+ */
+$.oColumn.prototype.remove = function(){
+  column.removeUnlinkedFunctionColumn(this.name);
+  if (this.type) throw new Error("Couldn't remove column "+this.name+", unlink it from any attribute first.")
+}
+
+
+/**
  * Extends the exposure of the drawing's keyframes given the provided arguments.
  * @deprecated Use oDrawingColumn.extendExposures instead.
  * @param   {$.oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
@@ -466,7 +475,7 @@ $.oColumn.prototype.getTimelineLayer = function(timeline){
  * @private
  */
 $.oColumn.prototype.toString = function(){
-  return "<$.oColumn '"+this.name+"'>"
+  return "[object $.oColumn '"+this.name+"']"
 }
 
 
@@ -573,7 +582,6 @@ $.oDrawingColumn.prototype.duplicate = function(newAttribute, duplicateElement) 
 
   return _duplicateColumn;
 }
-
 
 
 /**
