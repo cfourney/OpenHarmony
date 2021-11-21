@@ -2160,8 +2160,8 @@ $.oTransformNamesObject.prototype = Object.create(Array.prototype);
 
 
 /**
- * @private
  * creates a $.oTransformSwitch.names property with an index for each name to get/set the name value
+ * @private
  */
 Object.defineProperty($.oTransformNamesObject.prototype, "createGetterSetter", {
   enumerable:false,
@@ -2187,9 +2187,9 @@ Object.defineProperty($.oTransformNamesObject.prototype, "createGetterSetter", {
 
 
 /**
+ * The length of the array of names on the oTransformSwitchNode node. Corresponds to the transformationnames.size subAttribute.
  * @name $.oTransformNamesObject#length
  * @type {int}
- * The length of the array of names on the oTransformSwitchNode node. Corresponds to the transformationnames.size subAttribute.
  */
  Object.defineProperty($.oTransformNamesObject.prototype, "length", {
   enumerable:false,

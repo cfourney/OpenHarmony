@@ -727,8 +727,8 @@ $.oAttribute.prototype.value = function(frame){
 
 
 /**
- * @private
  * Represents an oAttribute object in string form
+ * @private
  * @returns {string}
  */
 $.oAttribute.prototype.toString = function(){
