@@ -1118,11 +1118,11 @@ $.oShape = function (index, oArtLayerObject) {
 
 
 /**
- * @private
+ * the toonboom key object identifying this shape.
  * @name $.oShape#_key
  * @type {object}
+ * @private
  * @readonly
- * the toonboom key object identifying this shape.
  */
 Object.defineProperty($.oShape.prototype, '_key', {
   get: function () {
@@ -1593,7 +1593,7 @@ Object.defineProperty($.oStroke.prototype, "closed", {
     var _bounds = new this.$.oBox();
     // since Harmony doesn't allow natively to calculate the bounding box of a string,
     // we convert the bezier into a series of points and calculate the box from it
-    var points = Drawing.geometry.discretize({precision: 01, path : this.path});
+    var points = Drawing.geometry.discretize({precision: 1, path : this.path});
     for (var j in points){
       var point = points [j]
       var pointBox = new this.$.oBox(point.x, point.y, point.x, point.y);
@@ -1960,8 +1960,9 @@ Object.defineProperty($.oVertex.prototype, 'position', {
 
 /**
  * The angle of the curve going through this vertex, compared to the x axis, counterclockwise.
+ * (In degrees, or null if the stroke is open ended on the right.)
  * @name $.oVertex#angleRight
- * @type {float} the angle in degrees, or null if the stroke is open ended on the right.
+ * @type {float}
  * @readonly
  */
 Object.defineProperty($.oVertex.prototype, 'angleRight', {
@@ -1990,8 +1991,9 @@ Object.defineProperty($.oVertex.prototype, 'angleRight', {
 
 /**
  * The angle of the line or bezier handle on the left of this vertex, compared to the x axis, counterclockwise.
+ * (In degrees, or null if the stroke is open ended on the left.)
  * @name $.oVertex#angleLeft
- * @type {float} the angle in degrees, or null if the stroke is open ended on the left.
+ * @type {float}
  * @readonly
  */
 Object.defineProperty($.oVertex.prototype, 'angleLeft', {
