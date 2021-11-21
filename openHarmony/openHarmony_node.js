@@ -177,8 +177,7 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
             // setting the attribute directly if no subattributes are present, or if value is a color (exception)
             if (_subAttrs.length == 0 || attr.type == "COLOR"){
                 if (attr.column != null) {
-                    if (!(newValue instanceof oFrame)) {
-                        // throw new Error("must pass an oFrame object to set an animated attribute")
+                    if (!newValue.hasOwnProperty("frameNumber")) {
                         // fallback to set frame 1
                         newValue = {value:newValue, frameNumber:1};
                     }
@@ -365,6 +364,8 @@ Object.defineProperty($.oNode.prototype, 'name', {
     // do the renaming and update the path
     node.rename(this.path, testName);
     this._path = _parent+'/'+testName;
+
+    this.refreshAttributes();
   }
 });
 
@@ -862,7 +863,7 @@ Object.defineProperty($.oNode.prototype, 'canCreateOutPorts', {
 
 /**
  * Returns the number of links connected to an in-port
- * @param   {int}      outPort      the number of the port to get links from.
+ * @param   {int}      inPort      the number of the port to get links from.
  */
 $.oNode.prototype.getInLinksNumber = function(inPort){
   if (this.inPorts < inPort) return null;
@@ -937,6 +938,7 @@ $.oNode.prototype.getFreeInPort = function(createNew){
  * @return  {bool}    The result of the link, if successful.
  */
 $.oNode.prototype.linkInNode = function( nodeToLink, ownPort, destPort, createPorts){
+  if (!(nodeToLink instanceof this.$.oNode)) throw new Error("Incorrect type for argument 'nodeToLink'. Must provide an $.oNode.")
 
   var _link = (new this.$.oLink(nodeToLink, this, destPort, ownPort)).getValidLink(createPorts, createPorts);
   if (_link == null) return;
@@ -1074,6 +1076,8 @@ $.oNode.prototype.getFreeOutPort = function(createNew){
  * @return  {bool}    The result of the link, if successful.
  */
 $.oNode.prototype.linkOutNode = function(nodeToLink, ownPort, destPort, createPorts){
+  if (!(nodeToLink instanceof this.$.oNode)) throw new Error("Incorrect type for argument 'nodeToLink'. Must provide an $.oNode.")
+
   var _link = (new this.$.oLink(this, nodeToLink, ownPort, destPort)).getValidLink(createPorts, createPorts)
   if (_link == null) return;
   this.$.debug("linking "+_link, this.$.DEBUG_LEVEL.LOG);
@@ -1202,6 +1206,8 @@ $.oNode.prototype.moveToGroup = function(group){
         this.unlinkOutPort(i, j);
       }
     }
+
+    this.refreshAttributes();
 
     this.$.endUndo();
   }
@@ -1694,8 +1700,8 @@ $.oPegNode.prototype.constructor = $.oPegNode;
  * It represents 'read' nodes or Drawing nodes in the scene.
  * @constructor
  * @augments   $.oNode
- * @param   {string}         path                          Path to the node in the network.
- * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
+ * @param   {string}           path                          Path to the node in the network.
+ * @param   {$.oScene}         oSceneObject                  Access to the oScene object of the DOM.
  * @example
  * // Drawing Nodes are more than a node, as they do not work without an associated Drawing column and element.
  * // adding a drawing node will automatically create a column and an element, unless they are provided as arguments.
@@ -1731,7 +1737,7 @@ $.oDrawingNode.prototype.constructor = $.oDrawingNode;
 /**
  * The element that holds the drawings displayed by the node.
  * @name $.oDrawingNode#element
- * @type {oElement}
+ * @type {$.oElement}
  */
 Object.defineProperty($.oDrawingNode.prototype, "element", {
   get : function(){
@@ -1748,8 +1754,8 @@ Object.defineProperty($.oDrawingNode.prototype, "element", {
 
 /**
  * The column that holds the drawings displayed by the node.
- * @name $.oDrawingNode#timingColumn
- * @type {oColumn}
+ * @name $.oDrawingNode.timingColumn
+ * @type {$.oDrawingColumn}
  */
 Object.defineProperty($.oDrawingNode.prototype, "timingColumn", {
   get : function(){
@@ -2732,7 +2738,6 @@ $.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeN
     // moves nodes into the created group and recreates their hierarchy and links
     if (includeNodes.length > 0){
       includeNodes = includeNodes.sort(function(a, b){return a.timelineIndex()>=b.timelineIndex()?1:-1})
-
 
       var _links = this.scene.getNodesLinks(includeNodes);
 
