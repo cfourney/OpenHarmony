@@ -1221,7 +1221,7 @@ $.oScene.prototype.addNode = function( type, name, group, nodePosition ){
 
 $.oScene.prototype.addColumn = function( type, name, oElementObject ){
     // Defaults for optional parameters
-    if( !type ){ return; }
+    if (!type) throw new Error ("Must provide a type when creating a new column.");
 
     if (typeof name === 'undefined'){
       if( column.generateAnonymousName ){
@@ -1253,7 +1253,6 @@ $.oScene.prototype.addColumn = function( type, name, oElementObject ){
         column.setElementIdOfDrawing(_column.uniqueName, oElementObject.id);
     }
 
-    //column.update();
     return _column;
 }
 
@@ -1298,7 +1297,7 @@ $.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType
  * @param   {object}     drawingColumn   The column to attach to the drawing module.
  * @param   {object}     options         The creation options, nothing available at this point.
 
- * @return {$.oNode}     The created node, or bool as false.
+ * @return {$.oDrawingNode}     The created node.
  */
 $.oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElementObject, drawingColumn, options ){
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
@@ -1321,9 +1320,9 @@ $.oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElemen
  * @param   {$.oPoint}   addComposite           Whether to add a composite.
  * @param   {bool}       addPeg                 Whether to add a peg.
  * @param   {string}     group                  The group in which the node is added.
- * @param   $.{oPoint}   nodePosition           The position for the node to be placed in the network.
+ * @param   {$.oPoint}   nodePosition           The position for the node to be placed in the network.
 
- * @return {$.oGroupNode}   The created node, or bool as false.
+ * @return {$.oGroupNode}   The created node.
  */
 $.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, group, nodePosition ){
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
@@ -1436,7 +1435,7 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
  *
  * @return {$.oPalette}   oPalette with provided name.
  */
-$.oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement, forceCopy){
+$.oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement){
   var _paletteFile = new this.$.oFile(filename);
   if (!_paletteFile.exists){
     throw new Error ("Cannot import palette from file "+filename+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
@@ -1503,7 +1502,7 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
  *
  * @return       {$.oLink[]}      An array of unique links existing between the nodes.
  */
-$.oScene.prototype.createPaletteFromNodes = function(nodes, paletteName, colorName, ignoreMissing){
+$.oScene.prototype.createPaletteFromNodes = function(nodes, paletteName, colorName){
   if (typeof paletteName === 'undefined') var paletteName = this.name;
   if (typeof colorName ==='undefined') var colorName = false;
 
@@ -1744,8 +1743,6 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
 
   this.$.debug("exporting selection :"+this.selectedFrames+"\n\n"+this.selectedNodes.join("\n")+"\n\n to folder : "+_folder+"/"+_name, this.$.DEBUG_LEVEL.LOG)
 
-  // this.$.alert ("exporting now selection :"+this.selectedFrames+"\n\n"+this.selectedNodes.join("\n")+"\n\n to folder : "+_folder+"/"+_name)
-
   try{
     var success = copyPaste.createTemplateFromSelection (_name, _folder);
     if (success == "") throw new Error("export failed")
@@ -1755,7 +1752,6 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
   }
 
   this.$.debug("export of template "+_name+" finished, cleaning palettes", this.$.DEBUG_LEVEL.LOG);
-  // this.$.alert ("export done - cleaning palettes")
 
   if (_readNodes.length > 0 && exportPalettesMode != "all"){
     // deleting the extra palettes from the exported template
@@ -1796,8 +1792,6 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
       }
     }
   }
-
-  // alert ("cleaned palettes")
 
   selection.clearSelection();
   return true;
