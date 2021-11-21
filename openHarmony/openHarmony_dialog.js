@@ -116,9 +116,9 @@ $.oDialog.prototype.alert = function( labelText, title, okButtonText ){
     return;
   }
 
-  if (typeof labelText === 'undefined')        var labelText = "Alert!";
-  if (typeof title === 'undefined')            var title = "Alert";
-  if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
+  if (typeof labelText === 'undefined') var labelText = "Alert!";
+  if (typeof title === 'undefined') var title = "Alert";
+  if (typeof okButtonText === 'undefined') var okButtonText = "OK";
 
   this.$.debug(labelText, this.$.DEBUG_LEVEL.LOG)
 
@@ -149,15 +149,15 @@ $.oDialog.prototype.alertBox = function( labelText, title, okButtonText ){
     return;
   }
 
-  if (typeof labelText === 'undefined')        var labelText = "Alert!";
-  if (typeof title === 'undefined')            var title = "Alert";
-  if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
+  if (typeof labelText === 'undefined') var labelText = "";
+  if (typeof title === 'undefined') var title = "";
+  if (typeof okButtonText === 'undefined') var okButtonText = "OK";
 
   this.$.debug(labelText, this.$.DEBUG_LEVEL.LOG)
 
   var d = new QDialog();
 
-  var label = new QPlainTextEdit(labelText);
+  var label = new QPlainTextEdit(labelText + "");
   label.readOnly = true;
 
   var button = new QPushButton(okButtonText);
