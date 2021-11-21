@@ -753,9 +753,6 @@ Object.defineProperty($.oArtLayer.prototype, 'contours', {
 Object.defineProperty($.oArtLayer.prototype, 'boundingBox', {
   get: function () {
     var _box = Drawing.query.getBox(this._key);
-
-    this.$.debug(JSON.stringify(this._key) + ': ' + JSON.stringify(_box), this.DEBUG_LEVEL.DEBUG);
-
     if (_box.empty) return null;
 
     var _boundingBox = new $.oBox(_box.x0, _box.y0, _box.x1, _box.y1);
@@ -909,7 +906,6 @@ $.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, 
     layers: [shapeDescription]
   };
 
-  // log(JSON.stringify(config, null, "  "))
 
   var layers = DrawingTools.createLayers(config);
 
@@ -1241,9 +1237,18 @@ Object.defineProperty($.oShape.prototype, 'stencils', {
  */
 Object.defineProperty($.oShape.prototype, 'bounds', {
   get: function () {
-    var _data = this._data;
-    var _box = _data.box;
-    var _bounds = new this.$.oBox(_box.x0,_box.y1, _box.x1, _box.y2);
+    var _bounds = new this.$.oBox();
+    var _contours = this.contours;
+    var _strokes = this.strokes;
+
+    for (var i in _contours){
+      _bounds.include(_contours[i].bounds);
+    }
+
+    for (var i in _strokes){
+      _bounds.include(_strokes[i].bounds);
+    }
+
     return _bounds;
   }
 })
@@ -1578,6 +1583,28 @@ Object.defineProperty($.oStroke.prototype, "closed", {
 
 
 /**
+ * The bounding box of the stroke.
+ * @name $.oStroke#bounds
+ * @type {$.oBox}
+ * @readonly
+ */
+ Object.defineProperty($.oStroke.prototype, 'bounds', {
+  get: function () {
+    var _bounds = new this.$.oBox();
+    // since Harmony doesn't allow natively to calculate the bounding box of a string,
+    // we convert the bezier into a series of points and calculate the box from it
+    var points = Drawing.geometry.discretize({precision: 01, path : this.path});
+    for (var j in points){
+      var point = points [j]
+      var pointBox = new this.$.oBox(point.x, point.y, point.x, point.y);
+      _bounds.include(pointBox);
+    }
+    return _bounds;
+  }
+})
+
+
+/**
  * The intersections on this stroke. Each intersection is an object with stroke ($.oStroke), point($.oPoint), strokePoint(float) and ownPoint(float)
  * One of these objects describes an intersection by giving the stroke it intersects with, the coordinates of the intersection and two values which represent the place on the stroke at which the point is placed, with a value between 0 (start) and 1(end)
  * @param  {$.oStroke}   [stroke]       Specify a stroke to find intersections specific to it. If no stroke is specified,
@@ -1817,7 +1844,7 @@ $.oStroke.prototype.toString = function(){
  * @property {$.oShape}     shape       the shape that contains this stroke
  * @property {$.oArtLayer}  artLayer    the art layer that contains this stroke
  */
- $.oContour = function (index, contourObject, oShapeObject) {
+$.oContour = function (index, contourObject, oShapeObject) {
   this.$.oStroke.call(this, index, contourObject, oShapeObject)
 }
 $.oContour.prototype = Object.create($.oStroke.prototype)
@@ -1836,6 +1863,20 @@ Object.defineProperty($.oContour.prototype, "fill", {
 })
 
 
+/**
+ * The bounding box of the contour.
+ * @name $.oContour#bounds
+ * @type {$.oBox}
+ * @readonly
+ */
+ Object.defineProperty($.oContour.prototype, 'bounds', {
+  get: function () {
+    var _data = this._data;
+    var _box = _data.box;
+    var _bounds = new this.$.oBox(_box.x0,_box.y0, _box.x1, _box.y1);
+    return _bounds;
+  }
+})
 
 /**
  * @private
