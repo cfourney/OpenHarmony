@@ -53,7 +53,7 @@
  * The constructor for the $.oAttribute class.
  * @classdesc
  * The $.oAttribute class holds the smart version of the parameter you can find in layer property.<br>
- * It is used internally to get and set values and link a oColumn to a parameter in order to animate it.<br>
+ * It is used internally to get and set values and link a oColumn to a parameter in order to animate it. (Users should never have to instantiate this class) <br>
  * For a list of attributes existing in each node type and their type, as well as examples of the values they can hold, refer to :<br>
  * {@link NodeType}.
  * @constructor
@@ -176,6 +176,18 @@ $.oAttribute.prototype.getSubAttributes_oldVersion = function (){
   return sub_attrs;
 }
 
+
+/**
+ * The display name of the attribute
+ * @name $.oAttribute#name
+ * @type {string}
+ */
+Object.defineProperty($.oAttribute.prototype, 'name', {
+  get: function(){
+    return this.attributeObject.name();
+  }
+})
+
 /**
  * The full keyword of the attribute.
  * @name $.oAttribute#keyword
@@ -223,27 +235,37 @@ Object.defineProperty($.oAttribute.prototype, 'type', {
  * The column attached to the attribute.
  * @name $.oAttribute#column
  * @type {$.oColumn}
+ * @example
+// link a new column to an attribute by setting this value:
+var myColumn = $.scn.addColumn("BEZIER");
+myNode.attributes.position.x.column = myColumn; // values contained in "myColumn" now define the animation of our peg's x position
+
+// to automatically create a column and link it to the attribute, use:
+myNode.attributes.position.x.addColumn(); // if the column exist already, it will just be returned.
+
+// to unlink a column, just set it to null/undefined:
+myNode.attributes.position.x.column = null; // values are no longer animated.
  */
 Object.defineProperty($.oAttribute.prototype, 'column', {
-    get : function(){
-        var _column = node.linkedColumn ( this.node.path, this._keyword );
-        if( _column && _column.length ){
-          return this.node.scene.$column( _column, this );
-        }else{
-          return null;
-        }
-    },
-
-    set : function(columnObject){
-        // unlink if provided with null value or empty string
-        if (columnObject == "" || columnObject == null){
-            node.unlinkAttr(this.node.path, this._keyword);
-        }else{
-            node.linkAttr(this.node.path, this._keyword, columnObject.uniqueName);
-            columnObject.attributeObject = this;
-            // TODO: transfer current value of attribute to a first key on the column if column is empty
-        }
+  get : function(){
+    var _column = node.linkedColumn ( this.node.path, this._keyword );
+    if( _column && _column.length ){
+      return this.node.scene.$column( _column, this );
+    }else{
+      return null;
     }
+  },
+
+  set : function(columnObject){
+    // unlink if provided with null value or empty string
+    if (!columnObject){
+      node.unlinkAttr(this.node.path, this._keyword);
+    }else{
+      node.linkAttr(this.node.path, this._keyword, columnObject.uniqueName);
+      columnObject.attributeObject = this;
+      // TODO: transfer current value of attribute to a first key on the column if column is empty
+    }
+  }
 });
 
 
@@ -560,10 +582,20 @@ $.oAttribute.prototype.getValue = function (frame) {
  * @param   {int}        [frame]               The frame at which to set the value, if not set, assumes 1
  */
 $.oAttribute.prototype.setValue = function (value, frame) {
-    var frame_set = true;
+    var _attr = this.attributeObject;
+    var _column = this.column;
+    var _type = this.type;
+    var _animate = false;
+
     if (typeof frame === 'undefined'){
-      frame     = 1;
-      frame_set = false;
+      var frame = 1;
+    } else if (!_column){
+      // generate a new column to be able to animate
+      _column = this.addColumn();
+    }
+
+    if( _column ){
+      _animate = true;
     }
 
     try{
@@ -571,22 +603,6 @@ $.oAttribute.prototype.setValue = function (value, frame) {
     }catch(err){
       this.$.debug("setting attr "+this._keyword+" at frame "+frame, this.$.DEBUG_LEVEL.LOG)
     };
-
-    var _attr = this.attributeObject;
-    var _column = this.column;
-    var _type = this.type;
-    var _animate = false;
-
-    if ( frame_set && _column == null ){
-        // generate a new column to be able to animate
-        var _doc = new this.$.oScene();
-        _column = _doc.addColumn();         //this might fail if the type is wrong (by default addColumn creates BEZIER columns)
-        this.column = _column;
-    }
-
-    if( _column ){
-      _animate = true;
-    }
 
     switch(_type){
         // TODO: sanitize input
@@ -627,25 +643,75 @@ $.oAttribute.prototype.setValue = function (value, frame) {
 
         case "ELEMENT" :
             _column = this.column;
+            value = (value instanceof this.$.oDrawing) ? value.name : value;
             column.setEntry(_column.uniqueName, 1, frame, value+"");
             break;
 
         case "QUATERNIONPATH" :
-            break;
-
-        //case "STRING" :
-        //  node.setTextAttr( this.node.path, this._keyword, frame, value);
+            // set quaternion paths as textattr until a better way is found
 
         default :
             try{
               _animate ? _attr.setValueAt( value, frame ) : _attr.setValue( value );
             }catch(err){
-              this.$.debug("setting text attr "+this._keyword+" value "+value+" as textAttr ", this.$.DEBUG_LEVEL.ERROR)
+              this.$.debug("error setting attr "+this._keyword+" value "+value+": "+err, this.$.DEBUG_LEVEL.DEBUG);
+              this.$.debug("setting text attr "+this._keyword+" value "+value+" as textAttr ", this.$.DEBUG_LEVEL.ERROR);
               node.setTextAttr( this.node.path, this._keyword, frame, value );
-
-              // throw new Error("Couldn't set attribute "+this.keyword+" to value "+value+". Incompatible type.")
             }
     }
+}
+
+
+/**
+ * Adds a column with a default name, based on the attribute type.
+ * If a column already exists, it returns it.
+ * @returns {$.oColumn} the created column
+ */
+$.oAttribute.prototype.addColumn = function(){
+  var _column = this.column;
+  if (_column) return _column;
+
+  if (this.hasSubAttributes){
+    throw new Error("Can't create columns for attribute "+this.fullKeyword+", column must be created for its subattributes.");
+  }
+
+  var _type = this.type;
+  var _columnType = "";
+  var _columnName = this.node.name+": "+this.name.replace(/\s/g, "_");
+
+  switch(_type){
+    case 'INT':
+    case 'DOUBLE':
+    case 'DOUBLEVB':
+      _columnType = "BEZIER";
+      break;
+
+    case "QUATERNIONPATH" :
+      _columnName = "QUARTERNION";
+      break;
+
+      case "PATH_3D" :
+      _columnName = "3DPATH";
+      break;
+
+    case "ELEMENT" :
+      _columnType = "DRAWING";
+      _columnName = this.node.name;
+      break;
+
+    default :
+      throw new Error("Can't create columns for attribute "+this.fullKeyword+", not supported by attribute type '"+_type+"'");
+  }
+
+  var _column = this.$.scn.addColumn(_columnType, _columnName);
+  this.column = _column;
+
+  if (!this.column) {
+    _column.remove();
+    throw new Error("Can't create columns for attribute "+this.fullKeyword+", animation not supported.");
+  }
+
+  return this.column;
 }
 
 
@@ -666,5 +732,5 @@ $.oAttribute.prototype.value = function(frame){
  * @returns {string}
  */
 $.oAttribute.prototype.toString = function(){
-  return "[object oAttribute - keyword: "+this.keyword+(this.subAttributes.length?" - subAttributes: "+this.subAttributes.map(function(x){return x.shortKeyword}):"")+"]";
+  return "[object $.oAttribute '"+this.keyword+(this.subAttributes.length?"' subAttributes: "+this.subAttributes.map(function(x){return x.shortKeyword}):"")+"]";
 }
