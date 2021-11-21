@@ -1318,8 +1318,6 @@ $.oLink.prototype.getValidLink = function(createOutPorts, createInPorts){
     }
   }
 
-  // this.$.log("succesfully created abstract link : "+_link)
-
   return _link;
 }
 
@@ -1330,7 +1328,6 @@ $.oLink.prototype.getValidLink = function(createOutPorts, createInPorts){
  */
 $.oLink.prototype.connect = function(){
   if (this._linked){
-    //this.$.debug("Nodes "+this._outNode+", "+this.inNode+" already linked", this.$.DEBUG_LEVEL.LOG);
     return true;
   }
 
@@ -1361,9 +1358,8 @@ $.oLink.prototype.connect = function(){
     return success;
 
   }catch(err){
-    // this.$.debug(err, this.$.DEBUG_LEVEL.ERROR)
     this.$.debug("linking nodes "+this._outNode+" to "+this._inNode+" through outPort: "+this._outPort+", inPort: "+this._inPort+", create outports: "+createOutPorts+", create inports:"+createInPorts, this.$.DEBUG_LEVEL.ERROR);
-    this.$.debug("linking nodes failed", this.$.DEBUG_LEVEL.ERROR);
+    this.$.debug("Error linking nodes: " +err, this.$.DEBUG_LEVEL.ERROR);
     return false;
   }
 }
