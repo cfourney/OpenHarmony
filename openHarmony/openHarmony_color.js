@@ -145,7 +145,7 @@ $.oColorValue.prototype.toHex = function (){
  */
 $.oColorValue.prototype.fromColorString = function (hexString){
     hexString = hexString.replace("#","");
-    if (hexString.length == 6) hexString+"ff";
+    if (hexString.length == 6) hexString += "ff";
     if (hexString.length != 8) throw new Error("incorrect color string format");
 
     this.$.debug( "HEX : " + hexString, this.$.DEBUG_LEVEL.LOG);
