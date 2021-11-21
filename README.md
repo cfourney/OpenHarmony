@@ -44,6 +44,10 @@ You can access a list of all the functions, how to use them, as well as examples
 
 https://cfourney.github.io/OpenHarmony/$.html
 
+To help you get started, here is a full example using the library to make and animate a small car, covering most of the basic features.
+
+https://github.com/cfourney/OpenHarmony/blob/master/examples/openHarmonyExample.js
+
 -----
 ## The OpenHarmony Document Object Model or DOM
 
@@ -120,6 +124,27 @@ Run the script, and if there is an error (for ex `MAX_REENTRENCY `), check that 
 include(System.getenv('LIB_OPENHARMONY_PATH')+'openHarmony.js');
 ```
 Check that the environment variable `LIB_OPENHARMONY_PATH` is set correctly to the remote folder.
+
+-----
+## How to add openHarmony to vscode intellisense for autocompletion
+
+Although not fully supported, you can get most of the autocompletion features to work by adding the following lines to a `jsconfig.json` file placed at the root of your working folder.
+The paths need to be relative which means the openHarmony source code must be placed directly in your developping environnement.
+
+For example, if your working folder contains the openHarmony source in a folder called `OpenHarmony` and your working scripts in a folder called `myScripts`, add these lines to the file:
+
+```javascript
+{
+  include : [
+    "OpenHarmony/*",
+    "OpenHarmony/openHarmony/*",
+    "myScripts/*",
+    "*"
+  ]
+}
+```
+
+[More information of vs code and jsconfig.json.](https://code.visualstudio.com/docs/nodejs/working-with-javascript)
 
 -----
 ## Let's get technical. I can code, and want to contribute, where do I start?
