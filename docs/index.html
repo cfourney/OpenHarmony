@@ -795,6 +795,8 @@
             
                 <li data-name="$.oAttribute#keyword"><a href="$.oAttribute.html#keyword">keyword</a></li>
             
+                <li data-name="$.oAttribute#name"><a href="$.oAttribute.html#name">name</a></li>
+            
                 <li data-name="$.oAttribute#shortKeyword"><a href="$.oAttribute.html#shortKeyword">shortKeyword</a></li>
             
                 <li data-name="$.oAttribute#type"><a href="$.oAttribute.html#type">type</a></li>
@@ -809,6 +811,8 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oAttribute#addColumn"><a href="$.oAttribute.html#addColumn">addColumn</a></li>
             
                 <li data-name="$.oAttribute#getKeyframes"><a href="$.oAttribute.html#getKeyframes">getKeyframes</a></li>
             
@@ -1252,6 +1256,8 @@
             
                 <li data-name="$.oColumn#getValue"><a href="$.oColumn.html#getValue">getValue</a></li>
             
+                <li data-name="$.oColumn#remove"><a href="$.oColumn.html#remove">remove</a></li>
+            
                 <li data-name="$.oColumn#removeDuplicateKeys"><a href="$.oColumn.html#removeDuplicateKeys">removeDuplicateKeys</a></li>
             
                 <li data-name="$.oColumn#setValue"><a href="$.oColumn.html#setValue">setValue</a></li>
@@ -1306,6 +1312,8 @@
             <ul class="members itemMembers">
             
             <span class="subtitle">Members</span>
+            
+                <li data-name="$.oContour#bounds"><a href="$.oContour.html#bounds">bounds</a></li>
             
                 <li data-name="$.oContour#closed"><a href="$.oContour.html#closed">closed</a></li>
             
@@ -1556,6 +1564,8 @@
             
                 <li data-name="$.oDrawingColumn#getValue"><a href="$.oDrawingColumn.html#getValue">getValue</a></li>
             
+                <li data-name="$.oDrawingColumn#remove"><a href="$.oDrawingColumn.html#remove">remove</a></li>
+            
                 <li data-name="$.oDrawingColumn#removeDuplicateKeys"><a href="$.oDrawingColumn.html#removeDuplicateKeys">removeDuplicateKeys</a></li>
             
                 <li data-name="$.oDrawingColumn#removeUnexposedDrawings"><a href="$.oDrawingColumn.html#removeUnexposedDrawings">removeUnexposedDrawings</a></li>
@@ -1614,6 +1624,8 @@
             <ul class="members itemMembers">
             
             <span class="subtitle">Members</span>
+            
+                <li data-name="$.oDrawingNode.timingColumn"><a href="$.oDrawingNode.html#.timingColumn">timingColumn</a></li>
             
                 <li data-name="$.oDrawingNode#attributes"><a href="$.oDrawingNode.html#attributes">attributes</a></li>
             
@@ -1680,8 +1692,6 @@
                 <li data-name="$.oDrawingNode#path"><a href="$.oDrawingNode.html#path">path</a></li>
             
                 <li data-name="$.oDrawingNode#selected"><a href="$.oDrawingNode.html#selected">selected</a></li>
-            
-                <li data-name="$.oDrawingNode#timingColumn"><a href="$.oDrawingNode.html#timingColumn">timingColumn</a></li>
             
                 <li data-name="$.oDrawingNode#timings"><a href="$.oDrawingNode.html#timings">timings</a></li>
             
@@ -3743,6 +3753,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oStroke#bounds"><a href="$.oStroke.html#bounds">bounds</a></li>
+            
                 <li data-name="$.oStroke#closed"><a href="$.oStroke.html#closed">closed</a></li>
             
                 <li data-name="$.oStroke#index"><a href="$.oStroke.html#index">index</a></li>
@@ -4308,6 +4320,8 @@
 <p>However, should you reach the limits of what openHarmony can offer at this time, you can always access the official API at any moment. Maybe you can submit a request and the missing parts will be added eventually, or you can even delve into the code and add the necessary functions yourself if you feel like it!</p>
 <p>You can access a list of all the functions, how to use them, as well as examples, from the online documentation:</p>
 <p>https://cfourney.github.io/OpenHarmony/$.html</p>
+<p>To help you get started, here is a full example using the library to make and animate a small car, covering most of the basic features.</p>
+<p>https://github.com/cfourney/OpenHarmony/blob/master/examples/openHarmonyExample.js</p>
 <hr>
 <h2>The OpenHarmony Document Object Model or DOM</h2>
 <p>OpenHarmony is based around the four principles of Object Oriented Programming: <em>Abstraction</em>, <em>Encapsulation</em>, <em>Inheritance</em>, <em>Polymorphism</em>.</p>
@@ -4364,6 +4378,21 @@ $.alert(&quot;hello world&quot;);
 <pre class="prettyprint source lang-javascript"><code>include(System.getenv('LIB_OPENHARMONY_PATH')+'openHarmony.js');
 </code></pre>
 <p>Check that the environment variable <code>LIB_OPENHARMONY_PATH</code> is set correctly to the remote folder.</p>
+<hr>
+<h2>How to add openHarmony to vscode intellisense for autocompletion</h2>
+<p>Although not fully supported, you can get most of the autocompletion features to work by adding the following lines to a <code>jsconfig.json</code> file placed at the root of your working folder.
+The paths need to be relative which means the openHarmony source code must be placed directly in your developping environnement.</p>
+<p>For example, if your working folder contains the openHarmony source in a folder called <code>OpenHarmony</code> and your working scripts in a folder called <code>myScripts</code>, add these lines to the file:</p>
+<pre class="prettyprint source lang-javascript"><code>{
+  include : [
+    &quot;OpenHarmony/*&quot;,
+    &quot;OpenHarmony/openHarmony/*&quot;,
+    &quot;myScripts/*&quot;,
+    &quot;*&quot;
+  ]
+}
+</code></pre>
+<p><a target="_blank" href="https://code.visualstudio.com/docs/nodejs/working-with-javascript">More information of vs code and jsconfig.json.</a></p>
 <hr>
 <h2>Let's get technical. I can code, and want to contribute, where do I start?</h2>
 <p>Reading and understanding the existing code, or at least the structure of the lib, is a great start, but not a requirement. You can simply start adding your classes to the $ object that is the root of the harmony lib, and start implementing. However, try to follow these guidelines as they are the underlying principles that make the library consistent:</p>
@@ -4438,7 +4467,7 @@ https://discord.gg/kgT38MG</p>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Oct 26 2021 16:29:03 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Nov 21 2021 19:31:18 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>

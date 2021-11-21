@@ -795,6 +795,8 @@
             
                 <li data-name="$.oAttribute#keyword"><a href="$.oAttribute.html#keyword">keyword</a></li>
             
+                <li data-name="$.oAttribute#name"><a href="$.oAttribute.html#name">name</a></li>
+            
                 <li data-name="$.oAttribute#shortKeyword"><a href="$.oAttribute.html#shortKeyword">shortKeyword</a></li>
             
                 <li data-name="$.oAttribute#type"><a href="$.oAttribute.html#type">type</a></li>
@@ -809,6 +811,8 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="$.oAttribute#addColumn"><a href="$.oAttribute.html#addColumn">addColumn</a></li>
             
                 <li data-name="$.oAttribute#getKeyframes"><a href="$.oAttribute.html#getKeyframes">getKeyframes</a></li>
             
@@ -1252,6 +1256,8 @@
             
                 <li data-name="$.oColumn#getValue"><a href="$.oColumn.html#getValue">getValue</a></li>
             
+                <li data-name="$.oColumn#remove"><a href="$.oColumn.html#remove">remove</a></li>
+            
                 <li data-name="$.oColumn#removeDuplicateKeys"><a href="$.oColumn.html#removeDuplicateKeys">removeDuplicateKeys</a></li>
             
                 <li data-name="$.oColumn#setValue"><a href="$.oColumn.html#setValue">setValue</a></li>
@@ -1306,6 +1312,8 @@
             <ul class="members itemMembers">
             
             <span class="subtitle">Members</span>
+            
+                <li data-name="$.oContour#bounds"><a href="$.oContour.html#bounds">bounds</a></li>
             
                 <li data-name="$.oContour#closed"><a href="$.oContour.html#closed">closed</a></li>
             
@@ -1556,6 +1564,8 @@
             
                 <li data-name="$.oDrawingColumn#getValue"><a href="$.oDrawingColumn.html#getValue">getValue</a></li>
             
+                <li data-name="$.oDrawingColumn#remove"><a href="$.oDrawingColumn.html#remove">remove</a></li>
+            
                 <li data-name="$.oDrawingColumn#removeDuplicateKeys"><a href="$.oDrawingColumn.html#removeDuplicateKeys">removeDuplicateKeys</a></li>
             
                 <li data-name="$.oDrawingColumn#removeUnexposedDrawings"><a href="$.oDrawingColumn.html#removeUnexposedDrawings">removeUnexposedDrawings</a></li>
@@ -1614,6 +1624,8 @@
             <ul class="members itemMembers">
             
             <span class="subtitle">Members</span>
+            
+                <li data-name="$.oDrawingNode.timingColumn"><a href="$.oDrawingNode.html#.timingColumn">timingColumn</a></li>
             
                 <li data-name="$.oDrawingNode#attributes"><a href="$.oDrawingNode.html#attributes">attributes</a></li>
             
@@ -1680,8 +1692,6 @@
                 <li data-name="$.oDrawingNode#path"><a href="$.oDrawingNode.html#path">path</a></li>
             
                 <li data-name="$.oDrawingNode#selected"><a href="$.oDrawingNode.html#selected">selected</a></li>
-            
-                <li data-name="$.oDrawingNode#timingColumn"><a href="$.oDrawingNode.html#timingColumn">timingColumn</a></li>
             
                 <li data-name="$.oDrawingNode#timings"><a href="$.oDrawingNode.html#timings">timings</a></li>
             
@@ -3743,6 +3753,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oStroke#bounds"><a href="$.oStroke.html#bounds">bounds</a></li>
+            
                 <li data-name="$.oStroke#closed"><a href="$.oStroke.html#closed">closed</a></li>
             
                 <li data-name="$.oStroke#index"><a href="$.oStroke.html#index">index</a></li>
@@ -4272,7 +4284,7 @@
     </h2>
     
         <div class="class-description">The $.oAttribute class holds the smart version of the parameter you can find in layer property.<br>
-It is used internally to get and set values and link a oColumn to a parameter in order to animate it.<br>
+It is used internally to get and set values and link a oColumn to a parameter in order to animate it. (Users should never have to instantiate this class) <br>
 For a list of attributes existing in each node type and their type, as well as examples of the values they can hold, refer to :<br>
 NodeType.</div>
     
@@ -4687,6 +4699,22 @@ myNode.position.x = 5;</code></pre>
 
     
     
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>// link a new column to an attribute by setting this value:
+var myColumn = $.scn.addColumn("BEZIER");
+myNode.attributes.position.x.column = myColumn; // values contained in "myColumn" now define the animation of our peg's x position
+
+// to automatically create a column and link it to the attribute, use:
+myNode.attributes.position.x.addColumn(); // if the column exist already, it will just be returned.
+
+// to unlink a column, just set it to null/undefined:
+myNode.attributes.position.x.column = null; // values are no longer animated.</code></pre>
+    
+
+    
 </dd>
 
         
@@ -4892,6 +4920,51 @@ myAttribute.setValue(myAttribute.defaultValue);</code></pre>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="name">name<span class="type-signature type string">string</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The display name of the attribute
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="shortKeyword">shortKeyword<span class="type-signature type string">string</span> </h4>
     </div>
     
@@ -4988,6 +5061,107 @@ myAttribute.setValue(myAttribute.defaultValue);</code></pre>
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="addColumn">
+            
+            addColumn<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oColumn.html">$.oColumn</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_attribute.js, line 670
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Adds a column with a default name, based on the attribute type.
+If a column already exists, it returns it.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="$.oColumn.html">$.oColumn</a>
+                        
+                    
+            </td>
+            <td class="description last">the created column</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="getKeyframes">
             
             getKeyframes<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;<a href="$.oFrame.html">$.oFrame</a>>}</span>
@@ -4995,7 +5169,7 @@ myAttribute.setValue(myAttribute.defaultValue);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_attribute.js, line 390
+            openHarmony/openHarmony_attribute.js, line 412
         </div>
         
     </div>
@@ -5095,7 +5269,7 @@ myAttribute.setValue(myAttribute.defaultValue);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_attribute.js, line 402
+            openHarmony/openHarmony_attribute.js, line 424
         </div>
         
     </div>
@@ -5197,7 +5371,7 @@ myAttribute.setValue(myAttribute.defaultValue);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_attribute.js, line 414
+            openHarmony/openHarmony_attribute.js, line 436
         </div>
         
     </div>
@@ -5297,7 +5471,7 @@ myAttribute.setValue(myAttribute.defaultValue);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_attribute.js, line 462
+            openHarmony/openHarmony_attribute.js, line 484
         </div>
         
     </div>
@@ -5442,7 +5616,7 @@ myAttribute.setValue(myAttribute.defaultValue);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_attribute.js, line 562
+            openHarmony/openHarmony_attribute.js, line 584
         </div>
         
     </div>
@@ -5593,7 +5767,7 @@ myAttribute.setValue(myAttribute.defaultValue);</code></pre>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_attribute.js, line 658
+            openHarmony/openHarmony_attribute.js, line 724
         </div>
         
     </div>
@@ -5748,7 +5922,7 @@ myAttribute.setValue(myAttribute.defaultValue);</code></pre>
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Oct 26 2021 16:29:03 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Sun Nov 21 2021 19:31:18 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
