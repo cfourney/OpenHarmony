@@ -324,16 +324,26 @@ $.oFolder.prototype.create = function(){
  * @param   {bool}     [overwrite]           Whether to overwrite the target.
  */
 $.oFolder.prototype.copy = function( folderPath, copyName, overwrite ){
+    // TODO: right now it wont overwrite any files. It copies the missing folders and files and leave the existing ones untouched
+    // TODO: it should propagate errors from the recursive copy and throw them before ending?
     if (typeof overwrite === 'undefined') var overwrite = false;
     if (typeof copyName === 'undefined') var copyName = this.name;
-    if (typeof folderPath === 'undefined') var folderPath = this.folder.path;
-
+    if (!(folderPath instanceof this.$.oFolder)) folderPath = new $.oFolder(folderPath);
     if (this.name == copyName && folderPath == this.folder.path) copyName += "_copy";
-
     var copyPath = folderPath+copyName;
 
-    // TODO: deep recursive copy file by file of the contents
-
+    var nextFolder = new $.oFolder(folderPath.path+"/"+copyName);
+    nextFolder.create();
+    var files = this.getFiles();
+    for(var index in files){
+      var targetFile = new $.oFile(nextFolder.path+"/"+files[index].fullName);
+      if(!targetFile.exists) files[index].copy( nextFolder, undefined, false);
+      else this.$.log("couldn't copy "+files[index].path+" to "+nextFolder.path);
+    }
+    var folders = this.getFolders();
+    for(var index in folders){
+      folders[index].copy( nextFolder, undefined, overwrite);
+    }
 }
 
 
