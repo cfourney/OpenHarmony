@@ -141,7 +141,7 @@ $.oNode.prototype.attributesBuildCache = function (){
  */
 $.oNode.prototype.setAttrGetterSetter = function (attr, context){
     if (typeof context === 'undefined') context = this;
-    // this.$.debug("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name, this.$.DEBUG_LEVEL.LOG)
+    // this.$.debug("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name, this.$.DEBUG_LEVEL.DEBUG)
 
     var _keyword = attr.shortKeyword;
 
@@ -170,7 +170,7 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
         },
 
         set : function(newValue){
-            // this.$.debug("setting attribute through getter setter "+attr.keyword+" to value: "+newValue, this.$.DEBUG_LEVEL.LOG)
+            // this.$.debug("setting attribute through getter setter "+attr.keyword+" to value: "+newValue, this.$.DEBUG_LEVEL.DEBUG)
             // if attribute has animation, passed value must be a frame object
             var _subAttrs = attr.subAttributes;
 
@@ -186,12 +186,11 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
                     return attr.setValue(newValue)
                 }
             }else{
-                var _frame = 1;
+                var _frame = undefined;
                 var _value = newValue;
                 // dealing with value being an object with frameNumber for animated values
                 if (attr.column != null) {
                     if (!(newValue instanceof oFrame)) {
-                        // throw new Error("must pass an oFrame object to set an animated attribute")
                         // fallback to set frame 1
                         newValue = {value:newValue, frameNumber:1};
                     }
@@ -3242,20 +3241,20 @@ $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
  *
  * @return  {$.oNode}    The node for the imported image
  */
-$.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
+$.oGroupNode.prototype.importImage = function( path, alignment, nodePosition, convertToTvg){
   if (typeof alignment === 'undefined') var alignment = "ASIS"; // create an enum for alignments?
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
 
   var _imageFile = (path instanceof this.$.oFile)?path:new this.$.oFile( path );
   var _elementName = _imageFile.name;
 
-  var _element = this.scene.addElement(_elementName, _imageFile.extension.toUpperCase());
+  var _elementType = convertToTvg?"TVG":_imageFile.extension.toUpperCase();
+  var _element = this.scene.addElement(_elementName, _elementType);
   var _column = this.scene.addColumn("DRAWING", _elementName, _element);
   _element.column = _column;
 
   if (_imageFile.exists) {
-    // scene.saveAll();
-    var _drawing = _element.addDrawing(1, 1, _imageFile.path);
+    var _drawing = _element.addDrawing(1, 1, _imageFile.path, convertToTvg);
   }else{
     this.$.debug("Image file to import "+_imageFile.path+" could not be found.", this.$.DEBUG_LEVEL.ERROR);
   }
@@ -3274,7 +3273,6 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
   _imageNode.attributes.drawing.element.column.extendExposures();
 
   // TODO how to display only one node with the whole file
-
   return _imageNode;
 }
 
@@ -3288,23 +3286,60 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition){
 $.oGroupNode.prototype.importImageAsTVG = function(path, alignment, nodePosition){
   if (!(path instanceof this.$.oFile)) path = new this.$.oFile(path);
 
-  // convert image into TVG
-  var _bin = specialFolders.bin + "/utransform";
-
-  var tempFolder = this.$.scn.tempFolder;
-
-  var _convertedFilePath = tempFolder.path + "/" + path.name+".tvg";
-  var _convertProcess = new this.$.oProcess(_bin, ["-outformat", "TVG", "-outfile", _convertedFilePath, path.path]);
-  _convertProcess.execute();
-
-  if (!path.exists) throw new Error ("Converting "+path+" to TVG has failed.");
-
-  var _imageNode = this.importImage(_convertedFilePath, alignment, nodePosition);
+  var _imageNode = this.importImage(_convertedFilePath, alignment, nodePosition, true);
   _imageNode.name = path.name;
 
   return _imageNode;
 }
 
+
+/**
+ * imports an image sequence as a node into the current group.
+ * @param {$.oFile[]} imagesPath           a list of paths to the images to import (can pass a list of strings or $.oFile)
+ * @param {number}    [exposureLength=1]   the number of frames each drawing should be exposed at. If set to 0/false, each drawing will use the numbering suffix of the file to set its frame.
+ * @param {boolean}   [convertToTvg=false] wether to convert the files to tvg during import
+ * @param {string}    [alignment="ASIS"]   the alignment to apply to the node
+ * @param {$.oPoint}  [nodePosition]       the position of the node in the nodeview
+ *
+ * @returns {$.oDrawingNode} the created node
+ */
+$.oGroupNode.prototype.importImageSequence = function(imagesPath, exposureLength, convertToTvg, alignment, nodePosition) {
+  if (typeof exposureLength === 'undefined') var exposureLength = 1;
+  if (typeof alignment === 'undefined') var alignment = "ASIS"; // create an enum for alignments?
+  if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+
+  // match anything but capture trailing numbers and separates punctuation preceeding it
+  var numberingRe = /(.*?)([\W_]+)?(\d*)$/i;
+
+  // infer the name from the first files name
+  var firstImage = imagesPath[0];
+  if (!(firstImage instanceof this.$.oFile)) firstImage = new this.$.oFile(firstImage);
+
+  // create a node to hold the image sequence
+  var name = firstImage.name.match(numberingRe)[1];
+  var drawingNode = this.importImage(firstImage, alignment, nodePosition, convertToTvg);
+  drawingNode.name = name;
+
+  for (var i in imagesPath){
+    var image = imagesPath[i];
+    if (!(image instanceof this.$.oFile)) image = new this.$.oFile(image);
+    var nameGroups = image.name.match(numberingRe);
+
+    if (!exposureLength && nameGroups[3]){
+      // use trailing number as frame number
+      var frame = parseInt(nameGroups[3],10);
+      var drawingName = nameGroups[3];
+    }else{
+      var frame = i * exposureLength + 1;
+      var drawingName = frame;
+    }
+
+    drawingNode.element.addDrawing(frame, drawingName, image, convertToTvg);
+  }
+  drawingNode.timingColumn.extendExposures();
+
+  return drawingNode;
+}
 
 /**
  * Imports a QT into the group
