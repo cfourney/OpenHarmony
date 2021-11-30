@@ -287,7 +287,7 @@ $.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptM
  * @param   {string}           [text]                        The title of the confirmation dialog.
  * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
  *
- * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled
+ * @return  {string}           The path of the selected folder, 'undefined' if the dialog is cancelled
  */
 $.oDialog.prototype.browseForFolder = function(text, startDirectory){
   if (this.$.batchMode) {

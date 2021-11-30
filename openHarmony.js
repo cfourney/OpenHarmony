@@ -304,7 +304,7 @@ $.browseForFile = function(){ return $.dialog.browseForFile.apply( $.dialog, arg
  * @param {string} [text]                The title of the confirmation dialog.
  * @param {string} [startDirectory]      The directory showed at the opening of the dialog.
  *
- * @return  {string[]}         The path of the selected folder, 'undefined' if the dialog is cancelled
+ * @return  {string}         The path of the selected folder, 'undefined' if the dialog is cancelled
  */
 $.browseForFolder = function(){ return $.dialog.browseForFolder.apply( $.dialog, arguments ) };
 
