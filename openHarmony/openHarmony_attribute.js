@@ -578,8 +578,8 @@ $.oAttribute.prototype.getValue = function (frame) {
 
 /**
  * Sets the value of the attribute at the given frame.
- * @param   {string}     value                 The value to set on the attribute.
- * @param   {int}        [frame]               The frame at which to set the value, if not set, assumes 1
+ * @param   {string}     value        The value to set on the attribute.
+ * @param   {int}        [frame=1]    The frame at which to set the value, if not set, assumes 1
  */
 $.oAttribute.prototype.setValue = function (value, frame) {
     var _attr = this.attributeObject;
@@ -587,9 +587,10 @@ $.oAttribute.prototype.setValue = function (value, frame) {
     var _type = this.type;
     var _animate = false;
 
-    if (typeof frame === 'undefined'){
+    if (!frame){
+      // we don't animate
       var frame = 1;
-    } else if (!_column){
+    }else if (!_column){
       // generate a new column to be able to animate
       _column = this.addColumn();
     }
@@ -621,7 +622,6 @@ $.oAttribute.prototype.setValue = function (value, frame) {
           // check if frame is tied to a column or an attribute
           var _frame = _column?(new this.$.oFrame(frame, this.column)):(new this.$.oFrame(frame, _attr));
           if (_column){
-            //this.$.log(_column.name+" "+_frame.frameNumber+" "+_frame.isKeyframe)
             if (!_frame.isKeyframe) _frame.isKeyframe = true;
             var _point = new this.$.oPathPoint (this.column, _frame);
             _point.set(value);
@@ -672,7 +672,7 @@ $.oAttribute.prototype.addColumn = function(){
   if (_column) return _column;
 
   if (this.hasSubAttributes){
-    throw new Error("Can't create columns for attribute "+this.fullKeyword+", column must be created for its subattributes.");
+    throw new Error("Can't create columns for attribute "+this.keyword+", column must be created for its subattributes.");
   }
 
   var _type = this.type;
@@ -700,7 +700,7 @@ $.oAttribute.prototype.addColumn = function(){
       break;
 
     default :
-      throw new Error("Can't create columns for attribute "+this.fullKeyword+", not supported by attribute type '"+_type+"'");
+      throw new Error("Can't create columns for attribute "+this.keyword+", not supported by attribute type '"+_type+"'");
   }
 
   var _column = this.$.scn.addColumn(_columnType, _columnName);
@@ -708,7 +708,7 @@ $.oAttribute.prototype.addColumn = function(){
 
   if (!this.column) {
     _column.remove();
-    throw new Error("Can't create columns for attribute "+this.fullKeyword+", animation not supported.");
+    throw new Error("Can't create columns for attribute "+this.keyword+", animation not supported.");
   }
 
   return this.column;
