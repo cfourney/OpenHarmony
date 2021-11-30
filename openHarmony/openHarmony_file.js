@@ -211,7 +211,7 @@ Object.defineProperty($.oFolder.prototype, 'content', {
  * Lists the file names contained inside the folder.
  * @param   {string}   [filter]               Filter wildcards for the content of the folder.
  *
- * @return: { string[] }                      The file content of folder.
+ * @returns {string[]}   The names of the files contained in the folder that match the filter.
  */
 $.oFolder.prototype.listFiles = function(filter){
     if (typeof filter === 'undefined') var filter = "*";
@@ -229,9 +229,9 @@ $.oFolder.prototype.listFiles = function(filter){
 
 /**
  * get the files from the folder
- * @param   {string}   [filter]                Filter wildcards for the content of the folder.
+ * @param   {string}   [filter]     Filter wildcards for the content of the folder.
  *
- * @return: { $.oFile[] }                      The file content of the folder.
+ * @returns {$.oFile[]}   A list of files contained in the folder as oFile objects.
  */
 $.oFolder.prototype.getFiles = function( filter ){
     if (typeof filter === 'undefined') var filter = "*";
@@ -251,9 +251,9 @@ $.oFolder.prototype.getFiles = function( filter ){
 
 /**
  * lists the folder names contained inside the folder.
- * @param   {string}   [filter]               Filter wildcards for the content of the folder.
+ * @param   {string}   [filter="*.*"]    Filter wildcards for the content of the folder.
  *
- * @return: { string[] }                      The file content of folder.
+ * @returns {string[]}  The names of the files contained in the folder that match the filter.
  */
 $.oFolder.prototype.listFolders = function(filter){
 
@@ -281,7 +281,6 @@ $.oFolder.prototype.listFolders = function(filter){
  * gets the folders inside the oFolder
  * @param   {string}   [filter]              Filter wildcards for the content of the folder.
  *
- * @return: { $.oFolder[] }                  The folder contents of the folder.
  */
 $.oFolder.prototype.getFolders = function( filter ){
     if (typeof filter === 'undefined') var filter = "*";
@@ -301,8 +300,7 @@ $.oFolder.prototype.getFolders = function( filter ){
 
  /**
  * Creates the folder, if it doesn't already exist.
- *
- * @return: { bool }                         The existence of the newly created folder.
+ * @returns { bool }      The existence of the newly created folder.
  */
 $.oFolder.prototype.create = function(){
   if( this.exists ){
