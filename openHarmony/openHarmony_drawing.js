@@ -425,16 +425,33 @@ Object.defineProperty($.oDrawing.prototype, 'drawingData', {
 
 /**
  * Import a given file into an existing drawing.
- * @param   {string}     file              The path to the file
+ * @param   {$.oFile} file                  The path to the file
+ * @param   {bool}    [convertToTvg=false]  Wether to convert the bitmap to the tvg format (this doesn't vectorise the drawing)
  *
- * @return { $.oDrawing }      The drawing found by the search
+ * @return { $.oFile }   the oFile object pointing to the drawing file after being it has been imported into the element folder.
  */
-$.oDrawing.prototype.importBitmap = function (file) {
+$.oDrawing.prototype.importBitmap = function (file, convertToTvg) {
   var _path = new this.$.oFile(this.path);
   if (!(file instanceof this.$.oFile)) file = new this.$.oFile(file);
+  if (!file.exists) throw new Error ("Can't import bitmap "+file.path+", file doesn't exist");
 
-  if (!file.exists) return false;
-  file.copy(_path.folder, _path.name, true);
+  if (convertToTvg && file.extension.toLowerCase() != "tvg"){
+    // use utransform binary to perform conversion
+    var _bin = specialFolders.bin + "/utransform";
+
+    var tempFolder = this.$.scn.tempFolder;
+
+    var _convertedFilePath = tempFolder.path + "/" + file.name + ".tvg";
+    var _convertProcess = new this.$.oProcess(_bin, ["-outformat", "TVG", "-debug", "-scale", "1", "-bboxtvgincrease","0" , "-outfile", _convertedFilePath, file.path]);
+    log(_convertProcess.execute())
+
+    var convertedFile = new this.$.oFile(_convertedFilePath);
+    if (!convertedFile.exists) throw new Error ("Converting " + file.path + " to TVG has failed.");
+
+    file = convertedFile;
+  }
+
+  return file.copy(_path.folder, _path.name, true);
 }
 
 
