@@ -485,13 +485,11 @@ $.oDrawing.prototype.remove = function () {
   var _column = _element.column;
 
   if (!_column) {
-    this.$.debug("Column missing: impossible to delete drawing " + this.name + " of element " + _element.name, this.$.DEBUG_LEVEL.ERROR);
-    return;
+    throw new Error ("Column missing: impossible to delete drawing " + this.name + " of element " + _element.name);
   }
 
   var _frames = _column.frames;
   var _lastFrame = _frames.pop();
-  // this.$.log(_lastFrame.frameNumber+": "+_lastFrame.value)
 
   var _thisDrawing = this;
 
