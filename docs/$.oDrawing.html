@@ -2236,6 +2236,8 @@
             
                 <li data-name="$.oGroupNode#importImageAsTVG"><a href="$.oGroupNode.html#importImageAsTVG">importImageAsTVG</a></li>
             
+                <li data-name="$.oGroupNode#importImageSequence"><a href="$.oGroupNode.html#importImageSequence">importImageSequence</a></li>
+            
                 <li data-name="$.oGroupNode#importPSD"><a href="$.oGroupNode.html#importPSD">importPSD</a></li>
             
                 <li data-name="$.oGroupNode#importQT"><a href="$.oGroupNode.html#importQT">importQT</a></li>
@@ -5437,7 +5439,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 572
+            openHarmony/openHarmony_drawing.js, line 587
         </div>
         
     </div>
@@ -5560,7 +5562,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 550
+            openHarmony/openHarmony_drawing.js, line 565
         </div>
         
     </div>
@@ -5742,7 +5744,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 444
+            openHarmony/openHarmony_drawing.js, line 461
         </div>
         
     </div>
@@ -5833,12 +5835,12 @@
     <div class="nameContainer">
         <h4 class="name" id="importBitmap">
             
-            importBitmap<span class="signature">(file)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oDrawing.html">$.oDrawing</a>}</span>
+            importBitmap<span class="signature">(file, <span class="optional">convertToTvg</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oFile.html">$.oFile</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 432
+            openHarmony/openHarmony_drawing.js, line 433
         </div>
         
     </div>
@@ -5870,6 +5872,8 @@
 		<th>Type</th>
 		
 		
+		<th>Default</th>
+		
 		
 		<th class="last">Description</th>
 	</tr>
@@ -5886,17 +5890,62 @@
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="$.oFile.html">$.oFile</a></span>
 
 
             
             </td>
             
             
+                <td class="default">
+                
+                </td>
+            
             
             <td class="description last">
                 
+                    
+                    
+                        
+                    
+                
                 The path to the file</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>convertToTvg</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Wether to convert the bitmap to the tvg format (this doesn't vectorise the drawing)</td>
         </tr>
 	
 	
@@ -5957,11 +6006,11 @@
             
             <td class="type">
             
-                        <a href="$.oDrawing.html">$.oDrawing</a>
+                        <a href="$.oFile.html">$.oFile</a>
                         
                     
             </td>
-            <td class="description last">The drawing found by the search</td>
+            <td class="description last">the oFile object pointing to the drawing file after being it has been imported into the element folder.</td>
         </tr>
     
     </tbody>
@@ -5983,7 +6032,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 592
+            openHarmony/openHarmony_drawing.js, line 607
         </div>
         
     </div>
@@ -6106,7 +6155,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 499
+            openHarmony/openHarmony_drawing.js, line 514
         </div>
         
     </div>
@@ -6177,7 +6226,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 466
+            openHarmony/openHarmony_drawing.js, line 483
         </div>
         
     </div>
@@ -6248,7 +6297,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 563
+            openHarmony/openHarmony_drawing.js, line 578
         </div>
         
     </div>
@@ -6387,7 +6436,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 518
+            openHarmony/openHarmony_drawing.js, line 533
         </div>
         
     </div>
@@ -6540,7 +6589,7 @@ Doesn't work in batch mode.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 613
+            openHarmony/openHarmony_drawing.js, line 628
         </div>
         
     </div>
@@ -6692,7 +6741,7 @@ Doesn't work in batch mode. This function modifies the selection.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_drawing.js, line 645
+            openHarmony/openHarmony_drawing.js, line 660
         </div>
         
     </div>
@@ -6771,7 +6820,7 @@ Doesn't work in batch mode. This function modifies the selection.
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Nov 26 2021 13:38:15 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Dec 01 2021 13:25:22 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
