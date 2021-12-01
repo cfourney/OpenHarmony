@@ -3356,51 +3356,60 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
   if (typeof extendScene === 'undefined') var extendScene = true;
   if (typeof importSound === 'undefined') var importSound = true;
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
-  // MessageLog.trace("importing QT file :"+filename)
 
   var _QTFile = (path instanceof this.$.oFile)?path:new this.$.oFile(path);
   if (!_QTFile.exists){
-    this.$.debug("Error: can't import Quicktime file "+_QTFile.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
-    return null;
+    throw new Error ("Import Quicktime failed: file "+_QTFile.path+" doesn't exist");
   }
 
-  this.$.beginUndo("oH_importQT_"+_QTFile.name);
+  var _movieName = _QTFile.name
+  this.$.beginUndo("oH_importQT_"+_movieName);
 
-  var _elementName = _QTFile.name;
+  var _element = this.scene.addElement(_movieName, "PNG");
+  var _elementName = _element.name;
 
-  var _element = this.scene.addElement(_elementName, "PNG");
-  var _qtNode = this.addDrawingNode(_elementName, nodePosition, _element);
-  var _column = _qtNode.attributes.drawing.element.column;
+  log("'"+_elementName+"'")
+
+  var _movieNode = this.addDrawingNode(_movieName, nodePosition, _element);
+  var _column = _movieNode.attributes.drawing.element.column;
   _element.column = _column;
 
   // setup the node
-  _qtNode.can_animate = false;
-  _qtNode.alignment_rule = alignment;
+  _movieNode.can_animate = false;
+  _movieNode.alignment_rule = alignment;
 
-  var _tempFolder = this.tempFolder.path + "/movImport/" + _elementName;
+  var _tempFolder = this.$.scn.tempFolder.path + "/movImport/" + _element.id;
   var _audioPath = _tempFolder + "/" + _elementName + ".wav"
 
-  // setup import
+  // progressDialog will display an infinite loading bar as we don't have precise feedback
+  var progressDialog = new this.$.oProgressDialog("Importing video...", 0, "Import Movie", true);
 
+  // setup import
   MovieImport.setMovieFilename(_QTFile.path);
   MovieImport.setImageFolder(_tempFolder);
-  MovieImport.setImagePrefix(_elementName);
+  MovieImport.setImagePrefix(_movieName);
   MovieImport.setAudioFile(_audioPath);
-  this.$.log("doing import");
+  this.$.log("converting movie file to pngs...");
   MovieImport.doImport();
-  this.$.log("import finished");
-  var QTlength = MovieImport.numberOfImages()-1;
+  this.$.log("conversion finished");
 
-  this.$.debug("number of images imported : "+QTlength, this.$.DEBUG_LEVEL.ERROR);
+  progressDialog.range = 100
+  progressDialog.value = 80;
 
-  if (extendScene) this.scene.length = QTlength;
+  var _movielength = MovieImport.numberOfImages()-1;
+
+  if (extendScene && this.scene.length < _movielength) this.scene.length = _movielength;
 
   // create expositions on the node
-  for (var i = 1; i <= QTlength; i++ ) {
-    // move the frame into the drawing
-    var _framePath = _tempFolder + '/'+_elementName+'-' + i + '.png';
-    var _drawing = _element.addDrawing(i, i, _framePath);
+  _tempFolder = new this.$.oFolder(_tempFolder);
+  _movFrames = _tempFolder.getFiles();
+
+  // create a drawing for each frame
+  for (var i=1; i<=_movFrames.length; i++) {
+    _element.addDrawing(i, i, _movFrames[i]);
   }
+
+  progressDialog.value = 95;
 
   // creating an audio column for the sound
   if (importSound && MovieImport.isAudioFileCreated() ){
@@ -3409,7 +3418,9 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
     column.importSound( _soundColumn.name, 1, _audioPath);
   }
 
+  progressDialog.value = 100;
+
   this.$.endUndo();
-  return _qtNode;
+  return _movieNode;
 }
 
