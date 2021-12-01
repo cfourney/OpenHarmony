@@ -42,11 +42,11 @@ However, should you reach the limits of what openHarmony can offer at this time,
 
 You can access a list of all the functions, how to use them, as well as examples, from the online documentation:
 
-https://cfourney.github.io/OpenHarmony/$.html
+[https://cfourney.github.io/OpenHarmony/$.html](https://cfourney.github.io/OpenHarmony/$.html)
 
 To help you get started, here is a full example using the library to make and animate a small car, covering most of the basic features.
 
-https://github.com/cfourney/OpenHarmony/blob/master/examples/openHarmonyExample.js
+[https://github.com/cfourney/OpenHarmony/blob/master/examples/openHarmonyExample.js](https://github.com/cfourney/OpenHarmony/blob/master/examples/openHarmonyExample.js)
 
 -----
 ## The OpenHarmony Document Object Model or DOM
@@ -131,7 +131,7 @@ Check that the environment variable `LIB_OPENHARMONY_PATH` is set correctly to t
 Although not fully supported, you can get most of the autocompletion features to work by adding the following lines to a `jsconfig.json` file placed at the root of your working folder.
 The paths need to be relative which means the openHarmony source code must be placed directly in your developping environnement.
 
-For example, if your working folder contains the openHarmony source in a folder called `OpenHarmony` and your working scripts in a folder called `myScripts`, add these lines to the file:
+For example, if your working folder contains the openHarmony source in a folder called `OpenHarmony` and your working scripts in a folder called `myScripts`, place the `jsconfig.json` file at the root of the folder and add these lines to the file:
 
 ```javascript
 {
@@ -144,7 +144,7 @@ For example, if your working folder contains the openHarmony source in a folder 
 }
 ```
 
-[More information of vs code and jsconfig.json.](https://code.visualstudio.com/docs/nodejs/working-with-javascript)
+[More information on vs code and jsconfig.json.](https://code.visualstudio.com/docs/nodejs/working-with-javascript)
 
 -----
 ## Let's get technical. I can code, and want to contribute, where do I start?
