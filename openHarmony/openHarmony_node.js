@@ -3362,13 +3362,11 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
     throw new Error ("Import Quicktime failed: file "+_QTFile.path+" doesn't exist");
   }
 
-  var _movieName = _QTFile.name
+  var _movieName = _QTFile.name;
   this.$.beginUndo("oH_importQT_"+_movieName);
 
   var _element = this.scene.addElement(_movieName, "PNG");
   var _elementName = _element.name;
-
-  log("'"+_elementName+"'")
 
   var _movieNode = this.addDrawingNode(_movieName, nodePosition, _element);
   var _column = _movieNode.attributes.drawing.element.column;
@@ -3379,7 +3377,7 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
   _movieNode.alignment_rule = alignment;
 
   var _tempFolder = this.$.scn.tempFolder.path + "/movImport/" + _element.id;
-  var _audioPath = _tempFolder + "/" + _elementName + ".wav"
+  var _audioPath = _tempFolder + "/" + _elementName + ".wav";
 
   // progressDialog will display an infinite loading bar as we don't have precise feedback
   var progressDialog = new this.$.oProgressDialog("Importing video...", 0, "Import Movie", true);
@@ -3393,20 +3391,17 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
   MovieImport.doImport();
   this.$.log("conversion finished");
 
-  progressDialog.range = 100
+  progressDialog.range = 100;
   progressDialog.value = 80;
 
-  var _movielength = MovieImport.numberOfImages()-1;
+  var _movielength = MovieImport.numberOfImages();
 
   if (extendScene && this.scene.length < _movielength) this.scene.length = _movielength;
 
-  // create expositions on the node
-  _tempFolder = new this.$.oFolder(_tempFolder);
-  _movFrames = _tempFolder.getFiles();
-
   // create a drawing for each frame
-  for (var i=1; i<=_movFrames.length; i++) {
-    _element.addDrawing(i, i, _movFrames[i]);
+  for (var i=1; i<=_movielength; i++) {
+    _drawingPath = _tempFolder + "/" + _movieName + "-" + i + ".png";
+    _element.addDrawing(i, i, _drawingPath);
   }
 
   progressDialog.value = 95;
