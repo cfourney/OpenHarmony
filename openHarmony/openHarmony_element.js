@@ -151,11 +151,12 @@ Object.defineProperty($.oElement.prototype, 'palettes', {
  * Adds a drawing to the element. Provide a filename to import an external file as a drawing.
  * @param   {int}        [atFrame]              The frame at which to add the drawing on the $.oDrawingColumn. Values < 1 create no exposure.
  * @param   {name}       [name]                 The name of the drawing to add.
- * @param   {string}     [filename]             The filename for the drawing to add.
+ * @param   {string}     [filename]             Optionally, a path for a drawing file to use for this drawing. Can pass an oFile object as well.
+ * @param   {bool}       [convertToTvg=false]   If the filename isn't a tvg file, specify if you want it converted (this doesn't vectorize the drawing).
  *
  * @return {$.oDrawing}      The added drawing
  */
-$.oElement.prototype.addDrawing = function( atFrame, name, filename ){
+$.oElement.prototype.addDrawing = function( atFrame, name, filename, convertToTvg ){
   if (typeof atFrame === 'undefined') var atFrame = 1;
   if (typeof filename === 'undefined') var filename = null;
   if (typeof name === 'undefined') var name = atFrame+'';
@@ -168,7 +169,7 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename ){
 
   var _drawing = new this.$.oDrawing( name, this );
 
-  if (_fileExists) _drawing.importBitmap(filename);
+  if (_fileExists) _drawing.importBitmap(filename, convertToTvg);
 
   // place drawing on the column at the provided frame
   if (this.column != null || this.column != undefined && atFrame >= 1){

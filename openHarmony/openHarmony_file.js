@@ -211,7 +211,7 @@ Object.defineProperty($.oFolder.prototype, 'content', {
  * Lists the file names contained inside the folder.
  * @param   {string}   [filter]               Filter wildcards for the content of the folder.
  *
- * @return: { string[] }                      The file content of folder.
+ * @returns {string[]}   The names of the files contained in the folder that match the filter.
  */
 $.oFolder.prototype.listFiles = function(filter){
     if (typeof filter === 'undefined') var filter = "*";
@@ -229,9 +229,9 @@ $.oFolder.prototype.listFiles = function(filter){
 
 /**
  * get the files from the folder
- * @param   {string}   [filter]                Filter wildcards for the content of the folder.
+ * @param   {string}   [filter]     Filter wildcards for the content of the folder.
  *
- * @return: { $.oFile[] }                      The file content of the folder.
+ * @returns {$.oFile[]}   A list of files contained in the folder as oFile objects.
  */
 $.oFolder.prototype.getFiles = function( filter ){
     if (typeof filter === 'undefined') var filter = "*";
@@ -251,9 +251,9 @@ $.oFolder.prototype.getFiles = function( filter ){
 
 /**
  * lists the folder names contained inside the folder.
- * @param   {string}   [filter]               Filter wildcards for the content of the folder.
+ * @param   {string}   [filter="*.*"]    Filter wildcards for the content of the folder.
  *
- * @return: { string[] }                      The file content of folder.
+ * @returns {string[]}  The names of the files contained in the folder that match the filter.
  */
 $.oFolder.prototype.listFolders = function(filter){
 
@@ -281,7 +281,7 @@ $.oFolder.prototype.listFolders = function(filter){
  * gets the folders inside the oFolder
  * @param   {string}   [filter]              Filter wildcards for the content of the folder.
  *
- * @return: { $.oFolder[] }                  The folder contents of the folder.
+ * @returns {$.oFolder[]}      A list of folders contained in the folder, as oFolder objects.
  */
 $.oFolder.prototype.getFolders = function( filter ){
     if (typeof filter === 'undefined') var filter = "*";
@@ -301,8 +301,7 @@ $.oFolder.prototype.getFolders = function( filter ){
 
  /**
  * Creates the folder, if it doesn't already exist.
- *
- * @return: { bool }                         The existence of the newly created folder.
+ * @returns { bool }      The existence of the newly created folder.
  */
 $.oFolder.prototype.create = function(){
   if( this.exists ){
@@ -318,32 +317,42 @@ $.oFolder.prototype.create = function(){
 
 
 /**
- * WIP Copy the folder and its contents to another path. WIP
- * @param   {string}   [folderPath]          The path to the folder location to copy to (CFNote: Should this not be a $.oFolder?)
- * @param   {string}   [copyName]            The name of the folder to copy (CFNote: Should this be avoided and the folderPath be the full path?)
- * @param   {bool}     [overwrite]           Whether to overwrite the target.
+ * Copy the folder and its contents to another path.
+ * @param   {string}   folderPath          The path to an existing folder in which to copy this folder. (Can provide an oFolder)
+ * @param   {string}   [copyName]          Optionally, a name for the folder copy, if different from the original
+ * @param   {bool}     [overwrite=false]   Whether to overwrite the files that are already present at the copy location.
+ * @returns {$.oFolder} the oFolder describing the newly created copy.
  */
 $.oFolder.prototype.copy = function( folderPath, copyName, overwrite ){
-    // TODO: right now it wont overwrite any files. It copies the missing folders and files and leave the existing ones untouched
-    // TODO: it should propagate errors from the recursive copy and throw them before ending?
-    if (typeof overwrite === 'undefined') var overwrite = false;
-    if (typeof copyName === 'undefined') var copyName = this.name;
-    if (!(folderPath instanceof this.$.oFolder)) folderPath = new $.oFolder(folderPath);
-    if (this.name == copyName && folderPath == this.folder.path) copyName += "_copy";
-    var copyPath = folderPath+copyName;
+  // TODO: it should propagate errors from the recursive copy and throw them before ending?
+  if (typeof overwrite === 'undefined') var overwrite = false;
+  if (typeof copyName === 'undefined' || !copyName) var copyName = this.name;
+  if (!(folderPath instanceof this.$.oFolder)) folderPath = new $.oFolder(folderPath);
+  if (this.name == copyName && folderPath == this.folder.path) copyName += "_copy";
 
-    var nextFolder = new $.oFolder(folderPath.path+"/"+copyName);
-    nextFolder.create();
-    var files = this.getFiles();
-    for(var index in files){
-      var targetFile = new $.oFile(nextFolder.path+"/"+files[index].fullName);
-      if(!targetFile.exists) files[index].copy( nextFolder, undefined, false);
-      else this.$.log("couldn't copy "+files[index].path+" to "+nextFolder.path);
+  if (!folderPath.exists) throw new Error("Target folder " + folderPath +" doesn't exist. Can't copy folder "+this.path)
+
+  var nextFolder = new $.oFolder(folderPath.path + "/" + copyName);
+  nextFolder.create();
+  var files = this.getFiles();
+  for (var i in files){
+    var _file = files[i];
+    var targetFile = new $.oFile(nextFolder.path + "/" + _file.fullName);
+
+    // deal with overwriting
+    if (targetFile.exists && !overwrite){
+      this.$.debug("File " + targetFile + " already exists, skipping copy of "+ _file, this.$.DEBUG_LEVEL.ERROR);
+      continue;
     }
-    var folders = this.getFolders();
-    for(var index in folders){
-      folders[index].copy( nextFolder, undefined, overwrite);
-    }
+
+    _file.copy(nextFolder, undefined, overwrite);
+  }
+  var folders = this.getFolders();
+  for (var i in folders){
+    folders[i].copy(nextFolder, undefined, overwrite);
+  }
+
+  return nextFolder;
 }
 
 
