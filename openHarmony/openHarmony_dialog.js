@@ -141,9 +141,10 @@ $.oDialog.prototype.alert = function( labelText, title, okButtonText ){
  * Prompts with an alert dialog with a text box which can be selected (informational).
  * @param   {string}           [labelText]                    The label/internal text of the dialog.
  * @param   {string}           [title]                        The title of the confirmation dialog.
- * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
+ * @param   {string}           [okButtonText="OK"]            The text on the OK button of the dialog.
+ * @param   {bool}             [htmlSupport=false]
  */
-$.oDialog.prototype.alertBox = function( labelText, title, okButtonText ){
+$.oDialog.prototype.alertBox = function( labelText, title, okButtonText, htmlSupport){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.alert not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
@@ -152,12 +153,17 @@ $.oDialog.prototype.alertBox = function( labelText, title, okButtonText ){
   if (typeof labelText === 'undefined') var labelText = "";
   if (typeof title === 'undefined') var title = "";
   if (typeof okButtonText === 'undefined') var okButtonText = "OK";
+  if (typeof htmlSupport === 'undefined') var htmlSupport = false;
 
   this.$.debug(labelText, this.$.DEBUG_LEVEL.LOG)
 
   var d = new QDialog();
 
-  var label = new QPlainTextEdit(labelText + "");
+  if (htmlSupport){
+    var label = new QTextEdit(labelText + "");
+  }else{
+    var label = new QPlainTextEdit(labelText + "");
+  }
   label.readOnly = true;
 
   var button = new QPushButton(okButtonText);
