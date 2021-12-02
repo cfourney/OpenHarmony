@@ -182,12 +182,16 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename, convertToTv
 
 /**
  * Gets a drawing object by the name.
- * @param   {string}     name              The name of the drawing to get.
+ * @param   {string}  name  The name of the drawing to get.
  *
- * @return { $.oDrawing }      The drawing found by the search
+ * @return  {$.oDrawing}      The drawing found by the search
  */
 $.oElement.prototype.getDrawingByName = function ( name ){
-    return new this.$.oDrawing( name, this );
+  var _drawings = this.drawings;
+  for (var i in _drawings){
+    if (_drawings[i].name == name) return _drawings[i];
+  }
+  return null;
 }
 
 
@@ -211,14 +215,14 @@ $.oElement.prototype.linkPalette = function ( oPaletteObject , listIndex){
 /**
  * If the palette passed as a parameter is linked to this element, it will be unlinked, and moved to the scene palette list.
  * @param {$.oPalette} oPaletteObject
+ * @return {bool} the success of the unlinking process.
  */
-$.oElement.prototype.unlinkPalette = function ( oPaletteObject) {
-  log(oPaletteObject.id)
+$.oElement.prototype.unlinkPalette = function (oPaletteObject) {
   var _palettes = this.palettes;
   var _ids = _palettes.map(function(x){return x.id});
   var _paletteId = oPaletteObject.id;
   var _paletteIndex = _ids.indexOf(_paletteId);
-  log(_paletteIndex)
+
   if (_paletteIndex == -1) return; // palette already isn't linked
 
   var _palette = _palettes[_paletteIndex];
