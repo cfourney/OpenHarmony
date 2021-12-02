@@ -3377,7 +3377,7 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
   _movieNode.alignment_rule = alignment;
 
   var _tempFolder = this.$.scn.tempFolder.path + "/movImport/" + _element.id;
-  var _audioPath = _tempFolder + "/" + _elementName + ".wav";
+  var _audioPath = _tempFolder + "/" + _movieName + ".wav";
 
   // progressDialog will display an infinite loading bar as we don't have precise feedback
   var progressDialog = new this.$.oProgressDialog("Importing video...", 0, "Import Movie", true);
@@ -3386,7 +3386,7 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
   MovieImport.setMovieFilename(_QTFile.path);
   MovieImport.setImageFolder(_tempFolder);
   MovieImport.setImagePrefix(_movieName);
-  MovieImport.setAudioFile(_audioPath);
+  if (importSound) MovieImport.setAudioFile(_audioPath);
   this.$.log("converting movie file to pngs...");
   MovieImport.doImport();
   this.$.log("conversion finished");
