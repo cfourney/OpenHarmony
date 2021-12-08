@@ -3377,7 +3377,7 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
   _movieNode.alignment_rule = alignment;
   
   // create the temp folder
-  var _tempFolder = new oFolder(this.$.scn.tempFolder.path + "/movImport/" + _element.id);
+  var _tempFolder = new this.$.oFolder(this.$.scn.tempFolder.path + "/movImport/" + _element.id);
   _tempFolder.create();
 
   var _tempFolderPath = _tempFolder.path;
