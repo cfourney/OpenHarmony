@@ -3398,7 +3398,11 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
   progressDialog.range = 100;
   progressDialog.value = 80;
 
-  var _movielength = MovieImport.numberOfImages();
+  //var _movielength = MovieImport.numberOfImages(); //returns 0 for some reason. can we count the files in the temp folder instead?
+  var _movielength = _tempFolder.content.length;
+  if (importSound) {
+    _movielength -= 1; // I'm assuming the wav was sucessfully created...
+  }
 
   if (extendScene && this.scene.length < _movielength) this.scene.length = _movielength;
 
