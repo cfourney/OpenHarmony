@@ -287,8 +287,14 @@ Object.defineProperty($.oApp.prototype, 'preferences', {
 
       var prefFile = (new oFile(specialFolders.resource+"/prefs.xml")).parseAsXml().children[0].children;
 
-      var userPrefFile = {objectName: "category", id: "user", children:(new oFile(specialFolders.userConfig + "/Harmony Premium-pref.xml")).parseAsXml().children[0].children};
-      prefFile.push(userPrefFile);
+      var userPrefFile = new oFile(specialFolders.userConfig + "/Harmony Premium-pref.xml")
+      // Harmony Pref file is called differently on the database userConfig
+      if (!userPrefFile.exists) userPrefFile = new oFile(specialFolders.userConfig + "/Harmony-pref.xml")
+
+      if (userPrefFile.exists){
+        var userPref = {objectName: "category", id: "user", children:userPrefFile.parseAsXml().children[0].children};
+        prefFile.push(userPref);
+      }
 
       for (var i in prefFile){
         if (prefFile[i].objectName != "category" || prefFile[i].id == "Storyboard") continue;
