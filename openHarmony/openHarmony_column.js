@@ -594,13 +594,14 @@ $.oDrawingColumn.prototype.renameAllByFrame = function(prefix, suffix){
   if (typeof suffix === 'undefined') var suffix = "";
 
   // get exposed drawings
-  var _displayedDrawings = this.getKeyframes();
+  var _displayedDrawings = this.getExposedDrawings();
   this.$.debug("Column "+this.name+" has drawings : "+_displayedDrawings.map(function(x){return x.value}), this.$.DEBUG_LEVEL.LOG);
 
   // remove duplicates
   var _seen = [];
   for (var i=0; i<_displayedDrawings.length; i++){
-    var _drawing = _displayedDrawings[i].value
+    var _drawing = _displayedDrawings[i].value;
+
     if (_seen.indexOf(_drawing.name) == -1){
       _seen.push(_drawing.name);
     }else{
@@ -624,7 +625,8 @@ $.oDrawingColumn.prototype.renameAllByFrame = function(prefix, suffix){
  * @param   {$.oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
  */
 $.oDrawingColumn.prototype.removeUnexposedDrawings = function(){
-  var _displayedDrawings = this.getKeyframes().map(function(x){return x.value.name});
+  var _element = this.element;
+  var _displayedDrawings = this.getExposedDrawings().map(function(x){return x.value.name;});
   var _element = this.element;
   var _drawings = _element.drawings;
 
@@ -632,6 +634,10 @@ $.oDrawingColumn.prototype.removeUnexposedDrawings = function(){
     this.$.debug("removing drawing "+_drawings[i].name+" of column "+this.name+"? "+(_displayedDrawings.indexOf(_drawings[i].name) == -1), this.$.DEBUG_LEVEL.LOG);
     if (_displayedDrawings.indexOf(_drawings[i].name) == -1) _drawings[i].remove();
   }
+}
+
+$.oDrawingColumn.prototype.getExposedDrawings = function (){
+  return this.keyframes.filter(function(x){return x.value != null});
 }
 
 
