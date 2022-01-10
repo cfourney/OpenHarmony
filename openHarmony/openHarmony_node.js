@@ -3018,7 +3018,7 @@ $.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addCo
   var _ySpacing = 30;
 
   var _element = this.scene.addElement(_elementName, "PSD");
-  var _column = this.scene.addColumn(_elementName, "DRAWING", _element);
+  var _column = this.scene.addColumn("DRAWING", _elementName, _element); // TYPE and NAME were switched around. The definition is addColumnn( type, name, oElementObject )
 
   // save scene otherwise PSD is copied correctly into the element
   // but the TGA for each layer are not generated
