@@ -3018,7 +3018,6 @@ $.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addCo
   var _ySpacing = 30;
 
   var _element = this.scene.addElement(_elementName, "PSD");
-  var _column = this.scene.addColumn(_elementName, "DRAWING", _element);
 
   // save scene otherwise PSD is copied correctly into the element
   // but the TGA for each layer are not generated
@@ -3042,18 +3041,37 @@ $.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addCo
     var _x = nodePosition.x - _layers.length/2*_xSpacing;
     var _y = nodePosition.y - _layers.length/2*_ySpacing;
 
-    // TODO: discover and generate the groups present in the PSD
-
     for (var i in _layers){
       // generate nodes and set them to show the element for each layer
-      var _layer = _layers[i].layer;
-      var _layerName = _layers[i].layerName.split(" ").join("_");
+      var _layer = _layers[i];
+      var _layerName = _layer.layerName.split(" ").join("_");
       var _nodePosition = new this.$.oPoint(_x+=_xSpacing, _y +=_ySpacing, 0);
 
-      //TODO: set into right group according to PSD organisation
-      // var _group = group; //"Top/"+_layers[i].layerPathComponents.join("/");
+      // get/build the group
+      var _group = this;
+      var _groupPathComponents = _layer.layerPathComponents;
+      var _destinationPath = this.path;
+      var _groupPeg = _peg;
+      var _groupComp = _comp;
 
-      var _node = this.addDrawingNode(_layerName, _nodePosition, _element)
+      // recursively creating groups if they are missing
+      for (var i in _groupPathComponents){
+        var _destinationPath = _destinationPath + "/" + _groupPathComponents[i];
+        var _nextGroup = this.$.scene.getNodeByPath(_destinationPath);
+
+        if (!_nextGroup){
+          _nextGroup = _group.addGroup(_groupPathComponents[i], true, true, [], _nodePosition);
+          if (_groupPeg) _nextGroup.linkInNode(_groupPeg);
+          if (_groupComp) _nextGroup.linkOutNode(_groupComp, 0, 0);
+        }
+        // store the peg/comp for next iteration or layer node
+        _group = _nextGroup;
+        _groupPeg = _group.multiportIn.linkedOutNodes[0];
+        _groupComp = _group.multiportOut.linkedInNodes[0];
+      }
+
+      var _column = this.scene.addColumn("DRAWING", _layerName, _element);
+      var _node = _group.addDrawingNode(_layerName, _nodePosition, _element, _column);
 
       _node.enabled = _layers[i].visible;
       _node.can_animate = false; // use general pref?
@@ -3062,11 +3080,11 @@ $.oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addCo
       _node.scale.x = _scale;
       _node.scale.y = _scale;
 
-      _node.attributes.drawing.element.setValue(_layer != ""?"1:"+_layer:1, 1);
-      _node.attributes.drawing.element.column.extendExposures();
+      _column.setValue(_layer.layer != ""?"1:"+_layer.layer:1, 1);
+      _column.extendExposures();
 
-      if (addPeg) _node.linkInNode(_peg);
-      if (addComposite) _node.linkOutNode(_comp, 0, 0);
+      if (_groupPeg) _node.linkInNode(_groupPeg);
+      if (_groupComp) _node.linkOutNode(_groupComp, 0, 0);
 
       _nodes.push(_node);
     }
@@ -3375,7 +3393,7 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
   // setup the node
   _movieNode.can_animate = false;
   _movieNode.alignment_rule = alignment;
-  
+
   // create the temp folder
   var _tempFolder = new this.$.oFolder(this.$.scn.tempFolder.path + "/movImport/" + _element.id);
   _tempFolder.create();
