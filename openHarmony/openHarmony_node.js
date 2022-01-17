@@ -3321,11 +3321,15 @@ $.oGroupNode.prototype.importImageAsTVG = function(path, alignment, nodePosition
  *
  * @returns {$.oDrawingNode} the created node
  */
-$.oGroupNode.prototype.importImageSequence = function(imagesPath, exposureLength, convertToTvg, alignment, nodePosition) {
+$.oGroupNode.prototype.importImageSequence = function(imagesPath, exposureLength, convertToTvg, alignment, nodePosition, extendScene) {
   if (typeof exposureLength === 'undefined') var exposureLength = 1;
   if (typeof alignment === 'undefined') var alignment = "ASIS"; // create an enum for alignments?
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
-
+  if (typeof extendScene === 'undefined') var extendScene = false;
+  
+  // Extend the scene?
+  if (extendScene && this.scene.length < imagesPath.length * exposureLength) this.scene.length = imagesPath.length * exposureLength;
+      
   // match anything but capture trailing numbers and separates punctuation preceeding it
   var numberingRe = /(.*?)([\W_]+)?(\d*)$/i;
 
