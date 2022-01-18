@@ -2834,6 +2834,24 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
       backdrops[i].x += nodePosition.x;
       backdrops[i].y += nodePosition.y;
     }
+    
+    // move waypoints in the top level of the template
+    for (var i in _nodes) {
+      var nodePorts = _nodes[i].outPorts;
+      for (var p = 0; p < nodePorts; p++) {
+        var theseWP = waypoint.childWaypoints(_nodes[i], p);
+        if (theseWP.length > 0) {
+          for (var w in theseWP) {
+            var x = waypoint.coordX(theseWP[w]);
+            var y = waypoint.coordY(theseWP[w]);
+            x += nodePosition.x;
+            y += nodePosition.y;
+            waypoint.setCoord(theseWP[w],x,y);
+          }
+        }
+      }
+    }
+    
   }
 
   this.$.endUndo();
