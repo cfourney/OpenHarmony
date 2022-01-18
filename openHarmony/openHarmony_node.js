@@ -3313,7 +3313,7 @@ $.oGroupNode.prototype.importImageAsTVG = function(path, alignment, nodePosition
 
 /**
  * imports an image sequence as a node into the current group.
- * @param {$.oFile[]} imagesPath           a list of paths to the images to import (can pass a list of strings or $.oFile)
+ * @param {$.oFile[]} imagePaths           a list of paths to the images to import (can pass a list of strings or $.oFile)
  * @param {number}    [exposureLength=1]   the number of frames each drawing should be exposed at. If set to 0/false, each drawing will use the numbering suffix of the file to set its frame.
  * @param {boolean}   [convertToTvg=false] wether to convert the files to tvg during import
  * @param {string}    [alignment="ASIS"]   the alignment to apply to the node
@@ -3321,39 +3321,69 @@ $.oGroupNode.prototype.importImageAsTVG = function(path, alignment, nodePosition
  *
  * @returns {$.oDrawingNode} the created node
  */
-$.oGroupNode.prototype.importImageSequence = function(imagesPath, exposureLength, convertToTvg, alignment, nodePosition) {
+$.oGroupNode.prototype.importImageSequence = function(imagePaths, exposureLength, convertToTvg, alignment, nodePosition, extendScene) {
   if (typeof exposureLength === 'undefined') var exposureLength = 1;
   if (typeof alignment === 'undefined') var alignment = "ASIS"; // create an enum for alignments?
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
 
+  if (typeof extendScene === 'undefined') var extendScene = false;
+
   // match anything but capture trailing numbers and separates punctuation preceeding it
   var numberingRe = /(.*?)([\W_]+)?(\d*)$/i;
 
-  // infer the name from the first files name
-  var firstImage = imagesPath[0];
-  if (!(firstImage instanceof this.$.oFile)) firstImage = new this.$.oFile(firstImage);
+  // sanitize imagePaths
+  imagePaths = imagePaths.map(function(x){
+    if (x instanceof this.$.oFile){
+      return x;
+    } else {
+      return new this.$.oFile(x);
+    }
+  })
+
+  var images = [];
+
+  if (!exposureLength) {
+  // figure out scene length based on exposure and extend the scene if needed
+    var sceneLength = 0;
+    var image = {frame:0, path:""};
+
+    for (var i in imagePaths){
+      var imagePath = imagePaths[i];
+      if (!(imagePath instanceof this.$.oFile)) imagePath = new this.$.oFile(imagePath);
+      var nameGroups = imagePath.name.match(numberingRe);
+
+      if (nameGroups[3]){
+        // use trailing number as frame number
+        var frameNumber = parseInt(nameGroups[3], 10);
+        if (frameNumber > sceneLength) sceneLength = frameNumber;
+
+        images.push({frame: frameNumber, path:imagePath});
+      }
+    }
+  } else {
+    // simply create a list of numbers based on exposure
+    images = imagePaths.map(function(x, index){
+      var frameNumber = index * exposureLength + 1;
+      return ({frame:frameNumber, path:x});
+    })
+    var sceneLength = images[images.length-1].frame + exposureLength - 1;
+  }
+
+  if (extendScene){
+    if (this.scene.length < sceneLength) this.scene.length = sceneLength;
+  }
 
   // create a node to hold the image sequence
-  var name = firstImage.name.match(numberingRe)[1];
+  var firstImage = imagePaths[0];
+  var name = firstImage.name.match(numberingRe)[1]; // match anything before trailing digits
   var drawingNode = this.importImage(firstImage, alignment, nodePosition, convertToTvg);
   drawingNode.name = name;
 
-  for (var i in imagesPath){
-    var image = imagesPath[i];
-    if (!(image instanceof this.$.oFile)) image = new this.$.oFile(image);
-    var nameGroups = image.name.match(numberingRe);
-
-    if (!exposureLength && nameGroups[3]){
-      // use trailing number as frame number
-      var frame = parseInt(nameGroups[3],10);
-      var drawingName = nameGroups[3];
-    }else{
-      var frame = i * exposureLength + 1;
-      var drawingName = frame;
-    }
-
-    drawingNode.element.addDrawing(frame, drawingName, image, convertToTvg);
+  for (var i in images){
+    var image = images[i];
+    drawingNode.element.addDrawing(image.frame, image.frame, image.path, convertToTvg);
   }
+
   drawingNode.timingColumn.extendExposures();
 
   return drawingNode;
