@@ -2129,7 +2129,7 @@ $.oScene.prototype.save = function( ){
  * @param {string} newPath    the new location for the scene (must be a folder path and not a .xstage)
  */
 $.oScene.prototype.saveAs = function(newPath){
-  if (!this.online) {
+  if (this.online) {
     this.$.debug("Can't use saveAs() in database mode.", this.$.DEBUG_LEVEL.ERROR);
     return;
   }
