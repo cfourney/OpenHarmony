@@ -2829,10 +2829,11 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
     }
 
     // move backdrops present in the template
-    var backdrops = this.backdrops.slice(oldBackdrops.length);
-    for (var i in backdrops){
-      backdrops[i].x += nodePosition.x;
-      backdrops[i].y += nodePosition.y;
+    var allBackdrops = this.backdrops;
+    var newBackdrops = allBackdrops.slice(0,allBackdrops.length - oldBackdrops.length);
+    for (var i in newBackdrops){
+      newBackdrops[i].x += nodePosition.x;
+      newBackdrops[i].y += nodePosition.y;
     }
     
     // move waypoints in the top level of the template
