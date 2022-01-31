@@ -3323,7 +3323,7 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition, co
 $.oGroupNode.prototype.importImageAsTVG = function(path, alignment, nodePosition){
   if (!(path instanceof this.$.oFile)) path = new this.$.oFile(path);
 
-  var _imageNode = this.importImage(_convertedFilePath, alignment, nodePosition, true);
+  var _imageNode = this.importImage(path, alignment, nodePosition, true);
   _imageNode.name = path.name;
 
   return _imageNode;
