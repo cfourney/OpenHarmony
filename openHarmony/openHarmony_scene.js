@@ -600,9 +600,9 @@ Object.defineProperty($.oScene.prototype, 'length', {
         var _length = frame.numberOf();
         var _toAdd = newLength-_length;
         if (_toAdd>0){
-            frame.insert(_length-1, _toAdd)
+            frame.insert(_length, _toAdd)
         }else{
-            frame.remove(_length-1, _toAdd)
+            frame.remove(_length-_toAdd, -_toAdd)
         }
     }
 });
