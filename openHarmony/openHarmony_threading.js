@@ -534,9 +534,9 @@ $.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
   if (about.isLinuxArch()) {
     p.start(this.bin, this.queryArgs);
   } else {
-    var directory = bin.join("/");
     var bin = this.bin.split("/");
     var app = bin.pop();
+    var directory = bin.join("/");
     p.setWorkingDirectory(directory);
     p.start(app, this.queryArgs);
   }
