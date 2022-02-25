@@ -2170,7 +2170,7 @@ $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, e
   if (typeof resY === 'undefined') var resY = this.resolutionY;
 
   this.save();
-  var harmonyBin = specialFolders.bin+"/HarmonyPremium.exe";
+  var harmonyBin = specialFolders.bin+"/HarmonyPremium";
 
   var args = ["-batch", "-frames", startFrame, endFrame, "-res", resX, resY, this.fov];
 
