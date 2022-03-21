@@ -881,11 +881,12 @@ $.oArtLayer.prototype.drawCircle = function(center, radius, lineStyle, fillStyle
  * @param {bool}   [polygon]            Wether bezier handles should be created for the points in the path (ignores "onCurve" properties of oVertex from path)
  * @param {bool}   [createUnderneath]   Wether the new shape will appear on top or underneath the contents of the layer. (not working yet)
  */
-$.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, createUnderneath){
+$.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, createUnderneath, masks){
   if (typeof fillStyle === 'undefined') var fillStyle = new this.$.oFillStyle();
   if (typeof lineStyle === 'undefined') var lineStyle = new this.$.oLineStyle();
   if (typeof polygon === 'undefined') var polygon = false;
   if (typeof createUnderneath === 'undefined') var createUnderneath = false;
+  if (typeof masks === 'undefined') var masks = [];
 
   var index = this.shapes.length;
 
@@ -921,6 +922,11 @@ $.oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, 
     layers: [shapeDescription]
   };
 
+  if (masks.length){
+    config.masks = {
+      path:masks,
+    }
+  }
 
   var layers = DrawingTools.createLayers(config);
 
@@ -1452,7 +1458,7 @@ $.oFillStyle = function (colorId, fillMatrix) {
   this.colorId = colorId;
   this.fillMatrix = fillMatrix;
 
-  this.$.log("new fill created: " + colorId + " " + JSON.stringify(this.fillMatrix))
+  //this.$.log("new fill created: " + colorId + " " + JSON.stringify(this.fillMatrix))
 }
 
 
