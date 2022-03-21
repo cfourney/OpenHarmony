@@ -510,7 +510,12 @@ $.oProcess.prototype.terminate = function(){
 $.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
   if (typeof timeOut === 'undefined') var timeOut = -1;
 
+  var bin = this.bin.split("/");
+	var app = bin.pop();
+	var directory = bin.join("\\");
+
   var p = this.process;
+	p.setWorkingDirectory(directory);
 
   this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.LOG);
 
@@ -518,6 +523,7 @@ $.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
   function onRead(){
     var stdout = this.read();
     this.readyRead.emit(stdout);
+    log(stdout)
   }
 
   function onFinished(returnCode){
@@ -531,15 +537,7 @@ $.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
   if (typeof readCallback !== 'undefined') this.readyRead.connect(readCallback);
   if (typeof finishedCallback !== 'undefined') this.finished.connect(onFinished);
 
-  if (about.isLinuxArch()) {
-    p.start(this.bin, this.queryArgs);
-  } else {
-    var bin = this.bin.split("/");
-    var app = bin.pop();
-    var directory = bin.join("/");
-    p.setWorkingDirectory(directory);
-    p.start(app, this.queryArgs);
-  }
+  p.start(app, this.queryArgs);
 }
 
 
@@ -572,11 +570,23 @@ $.oProcess.prototype.read = function (){
  */
 $.oProcess.prototype.execute = function(){
   this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.LOG);
+  var eventLoop = new QEventLoop()
+  var result = ""
+  var exitCode = null;
 
-  var p = this.process;
-	p.start( this.bin, this.queryArgs );
-	p.waitForFinished(-1);
-  var result = this.read();
+  this.finished.connect(this, function(code, output){
+    log("finished");
+
+    result = output;
+    exitCode = code;
+
+    eventLoop.exit();
+  })
+
+  this.launchAndRead();
+  eventLoop.exec()
+
+  this.exitCode = exitCode;
   return result;
 }
 
