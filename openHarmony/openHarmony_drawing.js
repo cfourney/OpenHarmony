@@ -1397,6 +1397,18 @@ $.oShape.prototype.deleteShape = function(){
 }
 
 
+$.oShape.prototype.copy = function(destination, offsetx, offsety){
+  if (typeof destination === undefined){
+    var destination = this.artLayer;
+  } else if (destination instanceof $.oDrawing){
+    // copy to the same artlayer as current if destination is a oDrawing (artLayer not specified)
+    destination = destination[this.artLayer.name];
+  }
+
+  //path, lineStyle, fillStyle, polygon, createUnderneath, masks
+  //var shape = destination.drawShape(this.path, this.lineStyle)
+}
+
 /**
  * Gets a stroke from this shape by its index
  * @param {int} index
