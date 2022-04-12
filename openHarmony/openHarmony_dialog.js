@@ -255,7 +255,7 @@ $.oDialog.prototype.prompt = function( labelText, title, prefilledText){
  * @param   {string}           [acceptMultiple=false]        Whether or not selecting more than one file is ok. Is ignored if getExisting is falses.
  * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
  *
- * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
+ * @return  {oFile[]}         The list of oFile objects, 'undefined' if the dialog is cancelled
  */
 $.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptMultiple, startDirectory){
   if (this.$.batchMode) {
@@ -279,8 +279,12 @@ $.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptM
     var _files = QFileDialog.getSaveFileName(0, text, startDirectory, filter);
   }
 
-  for (var i in _files){
-    _files[i] = _files[i].replace(/\\/g, "/");
+  if (Array.isArray(_files)) {
+    for (var i = 0; i < _files.length; i++) {
+      _files[i] = new oFile(_files[i].replace(/\\/g, "/"));
+    }
+  } else {
+    _files = new oFile(_files.replace(/\\/g, "/"));
   }
 
   this.$.debug(_files);
@@ -293,7 +297,7 @@ $.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptM
  * @param   {string}           [text]                        The title of the confirmation dialog.
  * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
  *
- * @return  {string}           The path of the selected folder, 'undefined' if the dialog is cancelled
+ * @return  {oFolder}          An oFolder object for the selected folder, 'undefined' if the dialog is cancelled
  */
 $.oDialog.prototype.browseForFolder = function(text, startDirectory){
   if (this.$.batchMode) {
@@ -306,6 +310,7 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
   var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory);
   _folder = _folder.split("\\").join("/");
   // this.$.alert(_folder)
+  _folder = new oFolder(_folder);
   return _folder;
 }
 
