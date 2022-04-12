@@ -510,12 +510,7 @@ $.oProcess.prototype.terminate = function(){
 $.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
   if (typeof timeOut === 'undefined') var timeOut = -1;
 
-  var bin = this.bin.split("/");
-	var app = bin.pop();
-	var directory = bin.join("\\");
-
   var p = this.process;
-	p.setWorkingDirectory(directory);
 
   this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.LOG);
 
@@ -536,7 +531,15 @@ $.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
   if (typeof readCallback !== 'undefined') this.readyRead.connect(readCallback);
   if (typeof finishedCallback !== 'undefined') this.finished.connect(onFinished);
 
-  p.start(app, this.queryArgs);
+  if (about.isLinuxArch()) {
+    p.start(this.bin, this.queryArgs);
+  } else {
+    var bin = this.bin.split("/");
+    var app = bin.pop();
+    var directory = bin.join("/");
+    p.setWorkingDirectory(directory);
+    p.start(app, this.queryArgs);
+  }
 }
 
 

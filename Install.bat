@@ -27,9 +27,9 @@ for /d %%D in ("%harmonyPrefsDir%\*Harmony*") do (
       REM creating a "openHarmony.js" file in script folders
       if not exist "!installDir!" mkdir "!installDir!"
 
-      cd !installDir!
       
       set "script=include(System.getenv('LIB_OPENHARMONY_PATH')+'openHarmony.js');" 
+      cd /d !installDir!
       echo !script!> openHarmony.js
     )
     echo ---- done. ----
