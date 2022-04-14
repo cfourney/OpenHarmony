@@ -2643,6 +2643,17 @@ $.oGroupNode.prototype.addNode = function( type, name, nodePosition ){
 
   var _group = this.path;
 
+  // get unique name if type is DISPLAY as all other types increment on their own
+  if (type == "DISPLAY"){
+    var num = 1;
+    var displayName = name;
+    while (this.$node(displayName)){
+      displayName = name + "_" + num;
+      num++;
+    }
+    name = displayName;
+  }
+
   // create node and return result (this sanitizes/increments the name, so we only create the oNode with the returned value)
   var _path = node.add(_group, name, type, nodePosition.x, nodePosition.y, nodePosition.z);
   _node = this.scene.getNodeByPath(_path);
