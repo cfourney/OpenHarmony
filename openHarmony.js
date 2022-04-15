@@ -310,6 +310,29 @@ $.browseForFolder = function(){ return $.dialog.browseForFolder.apply( $.dialog,
 
 
 /**
+ * Prompts with a file selector window
+ * @param   {string}           [text="Select a file:"]       The title of the file browser dialog.
+ * @param   {string}           [filter="*"]                  The filter for the file type and/or file name that can be selected. Accepts wildcard charater "*".
+ * @param   {string}           [getExisting=true]            Whether to select an existing file or a save location
+ * @param   {string}           [acceptMultiple=false]        Whether or not selecting more than one file is ok. Is ignored if getExisting is false.
+ * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
+ *
+ * @return  {oFile[]}           An oFile array, or 'undefined' if the dialog is cancelled
+ */
+$.chooseFile = function(){ return $.dialog.chooseFile.apply( $.dialog, arguments ) };
+
+
+/**
+ * Prompts with a browse for folder dialog.
+ * @param   {string}           [text]                        The title of the file browser dialog.
+ * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
+ *
+ * @return  {oFolder}           An oFolder for the selected folder, or undefined if dialog was cancelled
+ */
+ $.chooseFolder = function(){ return $.dialog.chooseFolder.apply( $.dialog, arguments ) };
+
+
+/**
  * Gets access to a widget from the Harmony Interface.
  * @function
  * @name    $#getHarmonyUIWidget

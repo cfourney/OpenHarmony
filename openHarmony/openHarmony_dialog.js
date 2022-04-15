@@ -310,6 +310,81 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
 }
 
 
+/**
+ * Prompts with a file selector window
+ * @param   {string}           [text="Select a file:"]       The title of the file browser dialog.
+ * @param   {string}           [filter="*"]                  The filter for the file type and/or file name that can be selected. Accepts wildcard charater "*".
+ * @param   {string}           [getExisting=true]            Whether to select an existing file or a save location
+ * @param   {string}           [acceptMultiple=false]        Whether or not selecting more than one file is ok. Is ignored if getExisting is false.
+ * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
+ *
+ * @return  {oFile[]}           An oFile array, or 'undefined' if the dialog is cancelled
+ */
+$.oDialog.prototype.chooseFile = function( text, filter, getExisting, acceptMultiple, startDirectory){
+  if (this.$.batchMode) {
+    this.$.debug("$.oDialog.chooseFile not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
+    return;
+  }
+
+  if (typeof text === 'undefined') var text = "Select a file:";
+  if (typeof filter === 'undefined') var filter = "*"
+  if (typeof getExisting === 'undefined') var getExisting = true;
+  if (typeof acceptMultiple === 'undefined') var acceptMultiple = false;
+
+
+  if (getExisting){
+    if (acceptMultiple){
+      var _chosen = QFileDialog.getOpenFileNames(0, text, startDirectory, filter);
+    }else{
+      var _chosen = QFileDialog.getOpenFileName(0, text, startDirectory, filter);
+    }
+  }else{
+    var _chosen = QFileDialog.getSaveFileName(0, text, startDirectory, filter);
+  }
+
+  // If acceptMultiple is true, we get an empty array on cancel, otherwise we get an empty string 
+  // length is 0 for both cases, but an empty array is truthy in my testing
+  if (_chosen.length) {
+    try {
+      _chosen = _chosen.map(function(thisFile){return new $.oFile(thisFile);});
+    } catch (err) {
+      // No "map" method means not an array
+      _chosen = [new $.oFile(_chosen)];
+    }
+  } else {
+    // User cancelled the dialog
+    return undefined;
+  }
+
+  this.$.debug(_chosen);
+  return _chosen;
+}
+
+
+/**
+ * Prompts with a browse for folder dialog.
+ * @param   {string}           [text]                        The title of the file browser dialog.
+ * @param   {string}           [startDirectory]              The directory showed at the opening of the dialog.
+ *
+ * @return  {oFolder}           An oFolder for the selected folder, or undefined if dialog was cancelled
+ */
+$.oDialog.prototype.chooseFolder = function(text, startDirectory){
+  if (this.$.batchMode) {
+    this.$.debug("$.oDialog.chooseFolder not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
+    return;
+  }
+
+  if (typeof text === 'undefined') var text = "Select a folder:";
+
+  var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory);
+  
+  if (_folder) {
+    return new $.oFolder(_folder);
+  } else {
+    return undefined;
+  }
+}
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
