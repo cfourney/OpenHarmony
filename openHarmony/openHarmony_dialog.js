@@ -344,18 +344,15 @@ $.oDialog.prototype.chooseFile = function( text, filter, getExisting, acceptMult
 
   // If acceptMultiple is true, we get an empty array on cancel, otherwise we get an empty string 
   // length is 0 for both cases, but an empty array is truthy in my testing
-  if (_chosen.length) {
-    try {
-      _chosen = _chosen.map(function(thisFile){return new $.oFile(thisFile);});
-    } catch (err) {
-      // No "map" method means not an array
-      _chosen = [new $.oFile(_chosen)];
-    }
-  } else {
-    // User cancelled the dialog
-    return undefined;
+  if (!_chosen.length) return undefined;
+	
+  try {
+    _chosen = _chosen.map(function(thisFile){return new $.oFile(thisFile);});
+  } catch (err) {
+    // No "map" method means not an array
+    _chosen = [new $.oFile(_chosen)];
   }
-
+	
   this.$.debug(_chosen);
   return _chosen;
 }
@@ -378,11 +375,9 @@ $.oDialog.prototype.chooseFolder = function(text, startDirectory){
 
   var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory);
   
-  if (_folder) {
-    return new $.oFolder(_folder);
-  } else {
-    return undefined;
-  }
+  if (!_folder) return undefined; // User cancelled
+	  
+  return new $.oFolder(_folder);
 }
 
 //////////////////////////////////////
