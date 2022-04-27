@@ -1359,6 +1359,143 @@ $.oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
 }
 
 
+/**
+ * Sorts the nodes above this node in a grid like manner, based on their links.
+ * @param   {int}     [verticalSpacing=120]   optional: The spacing between two rows of nodes.
+ * @param   {int}     [horizontalSpacing=40]   optional: The spacing between two nodes horizontally.
+ */
+$.oNode.prototype.orderAboveNodes = function(verticalSpacing, horizontalSpacing){
+  if (typeof verticalSpacing === 'undefined') var verticalSpacing = 120;
+  if (typeof horizontalSpacing === 'undefined') var horizontalSpacing = 40;
+
+  $.beginUndo()
+
+  var startNode = this;
+  var nodeHeights = {}
+
+  nodeHeights[startNode.path] = 0
+  var levels = [[startNode]];
+  var widestLevel = 0
+  var biggestWidth = 0
+
+  function getNodesWidth(nodes){
+    var width = 0;
+    for (var i in nodes){
+      var spacing = horizontalSpacing;
+      width += nodes[i].width + spacing;
+    }
+    return width;
+  }
+
+  // getting node heights in the hierarchy by counting the links from the base node
+  function getHeights(startNode, nodeHeights){
+    var nodeHeight = nodeHeights[startNode.path];
+    var newHeight = nodeHeight + 1;
+    if (!levels[newHeight]) levels[newHeight] = [];
+    var level = levels[newHeight];
+
+    for (var i in startNode.linkedInNodes){
+      var linkedNode = startNode.linkedInNodes[i];
+      if (!nodeHeights[linkedNode.path]) nodeHeights[linkedNode.path] = 0;
+      if (nodeHeights[linkedNode.path] < newHeight) nodeHeights[linkedNode.path] = newHeight;
+
+      var paths = level.map(function(x){return x.path}); // avoid duplicates
+      if (paths.indexOf(linkedNode.path) == -1) level.push(linkedNode);
+
+      getHeights(linkedNode, nodeHeights);
+    }
+  }
+
+  getHeights(startNode, nodeHeights);
+
+  // remove duplicate nodes present on the wrong levels
+  for (var i in levels){
+    var row = levels[i];
+    for (var j = row.length-1; j>=0; j--){
+      var levelNode = row[j];
+      var nodeHeight = nodeHeights[levelNode.path];
+      if (i != nodeHeight) row.splice(j, 1);
+    }
+  }
+
+  // getting widest row index and geometry
+  for (var i=1; i<levels.length; i++){
+    var row = levels[i];
+    row.reverse();
+
+    var totalWidth = getNodesWidth(row);
+
+    if (totalWidth > biggestWidth){
+      widestLevel = i;
+      biggestWidth = totalWidth;
+    }
+  }
+
+  // sort out widest level first
+  var row = levels[widestLevel];
+
+  var totalWidth = getNodesWidth(row);
+  var middle = startNode.bounds.center.x
+
+  var left = middle - totalWidth/2;
+  var top = startNode.bounds.top + widestLevel * (- verticalSpacing - startNode.height);
+
+  for (var j in row){
+    var aNode = row[j];
+    var xOffset = 0;
+    var nodes = row.slice(0, j);
+    xOffset = getNodesWidth(nodes);
+
+    aNode.x = left + xOffset;
+    aNode.y = top;
+  }
+
+  // keeping track of the nodes that can't be sorted
+  var failedUpSort = [];
+  var failedDownSort = [];
+
+  // sort up from widest level
+  for (var i = widestLevel+1; i<levels.length; i++){
+    var row = levels[i];
+    for (var j in row){
+      var belowNodes = row[j].linkedOutNodes;
+      if (!belowNodes.length){
+        failedUpSort.push(row[j]);
+      }else{
+        row[j].centerAbove(belowNodes, 0, -verticalSpacing);
+      }
+    }
+  }
+
+  // sort below widest level
+  for (var i = widestLevel-1; i>0; i--){
+    var row = levels[i];
+    for (var j in row){
+      var aboveNodes = row[j].linkedInNodes;
+      if (!aboveNodes.length){
+        failedDownSort.push(row[j]);
+      }else{
+        row[j].centerBelow(aboveNodes, 0, verticalSpacing);
+      }
+    }
+  }
+
+  // sort orphaned nodes by placing them on an inbetween level
+  for (var i in failedUpSort){
+    var sortNode = failedUpSort[i];s
+    sortNode.centerBelow(sortNode.linkedInNodes, 0, verticalSpacing/2);
+  }
+
+  // sort orphaned nodes
+  for (var i in failedDownSort){
+    var sortNode = failedDownSort[i];
+    sortNode.centerAbove(sortNode.linkedOutNodes, 0, -verticalSpacing/2);
+  }
+
+
+  $.endUndo()
+}
+
  /**
  * Create a clone of the node.
  * @param   {string}    newName              The new name for the cloned module.
@@ -2846,7 +2983,7 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
       newBackdrops[i].x += nodePosition.x;
       newBackdrops[i].y += nodePosition.y;
     }
-    
+
     // move waypoints in the top level of the template
     for (var i in _nodes) {
       var nodePorts = _nodes[i].outPorts;
@@ -2863,7 +3000,7 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
         }
       }
     }
-    
+
   }
 
   this.$.endUndo();
