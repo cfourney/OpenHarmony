@@ -1458,7 +1458,7 @@ $.oNode.prototype.orderAboveNodes = function(verticalSpacing, horizontalSpacing)
   for (var i = widestLevel+1; i<levels.length; i++){
     var row = levels[i];
     for (var j in row){
-      var belowNodes = row[j].linkedOutNodes;
+      var belowNodes = row[j].linkedOutNodes.filter(function(x){return nodeHeights[x.path] >= widestLevel});
       if (!belowNodes.length){
         failedUpSort.push(row[j]);
       }else{
@@ -1471,7 +1471,7 @@ $.oNode.prototype.orderAboveNodes = function(verticalSpacing, horizontalSpacing)
   for (var i = widestLevel-1; i>0; i--){
     var row = levels[i];
     for (var j in row){
-      var aboveNodes = row[j].linkedInNodes;
+      var aboveNodes = row[j].linkedInNodes.filter(function(x){return nodeHeights[x.path] <= widestLevel});
       if (!aboveNodes.length){
         failedDownSort.push(row[j]);
       }else{
