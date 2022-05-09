@@ -1061,7 +1061,7 @@ $.oNode.prototype.getOutLinks = function(){
 
 /**
  * Returns a free unconnected out-port
- * @param  {bool}  [createNew=true]  Whether to allow creation of new ports
+ * @param  {bool}  [createNew=false]  Whether to allow creation of new ports
  * @return {int} the port number that isn't connected
  */
 $.oNode.prototype.getFreeOutPort = function(createNew){
