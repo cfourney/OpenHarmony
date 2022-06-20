@@ -738,14 +738,21 @@ Object.defineProperty($.oScene.prototype, "selectedContours", {
  */
 Object.defineProperty($.oScene.prototype, 'activeDrawing', {
   get : function(){
-    var _curDrawing = Tools.getToolSettings().currentDrawing;
+    var _settings = Tools.getToolSettings();
+    var _drawingNodes = this.getSelectedNodesOfType("READ", false);;
+    if (!_drawingNodes.length) return null;
+    var _node = _drawingNodes[0];
+
+    if (!_settings.hasOwnProperty("currentDrawing")){
+      // fix for missing property in Harmony 21.1
+      var _frame = this.$.scn.currentFrame;
+      var _curDrawing = _node.attributes.drawing.element.getValue(_frame);
+    }else{
+      var _curDrawing = _settings.currentDrawing.drawingId;
+    }
     if (!_curDrawing) return null;
 
-    var _drawingNodes = this.getSelectedNodesOfType("READ", false);
-    if (!_drawingNodes.length) return null;
-
-    var _element = _drawingNodes[0].element;
-    return _element.getDrawingById(_curDrawing.drawingId);
+    return _node.element.getDrawingByName(_curDrawing);
   },
 
   set : function( newCurrentDrawing ){
