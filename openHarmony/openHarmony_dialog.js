@@ -342,17 +342,17 @@ $.oDialog.prototype.chooseFile = function( text, filter, getExisting, acceptMult
     var _chosen = QFileDialog.getSaveFileName(0, text, startDirectory, filter);
   }
 
-  // If acceptMultiple is true, we get an empty array on cancel, otherwise we get an empty string 
+  // If acceptMultiple is true, we get an empty array on cancel, otherwise we get an empty string
   // length is 0 for both cases, but an empty array is truthy in my testing
   if (!_chosen.length) return undefined;
-	
+
   try {
     _chosen = _chosen.map(function(thisFile){return new $.oFile(thisFile);});
   } catch (err) {
     // No "map" method means not an array
     _chosen = [new $.oFile(_chosen)];
   }
-	
+
   this.$.debug(_chosen);
   return _chosen;
 }
@@ -374,9 +374,9 @@ $.oDialog.prototype.chooseFolder = function(text, startDirectory){
   if (typeof text === 'undefined') var text = "Select a folder:";
 
   var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory);
-  
+
   if (!_folder) return undefined; // User cancelled
-	  
+
   return new $.oFolder(_folder);
 }
 
@@ -812,9 +812,17 @@ $.oPieMenu.prototype.buildWidget = function(){
   this.minimumHeight = this.maximumHeight = this.widgetSize;
   this.minimumWidth = this.maximumWidth = this.widgetSize;
 
-  var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.WA_TransparentForMouseEvents);
-  this.setWindowFlags(flags);
-  this.setAttribute(Qt.WA_TranslucentBackground);
+  if (this.$.app.version + this.$.app.minorVersion > 21){
+    // above Harmony 21.1
+    var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.NoDropShadowWindowHint);
+    this.setWindowFlags(flags);
+    this.setAttribute(Qt.WA_TransparentForMouseEvents);
+  } else {
+    var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.WA_TransparentForMouseEvents);
+    this.setWindowFlags(flags);
+  }
+
+  this.setAttribute(Qt.WA_TranslucentBackground, true);
   this.setAttribute(Qt.WA_DeleteOnClose);
 
   // draw background pie slice
@@ -859,8 +867,13 @@ $.oPieMenu.prototype.drawSlice = function(){
   sliceWidget.objectName = "slice";
   // make widget background invisible
   sliceWidget.setStyleSheet("background-color: rgba(0, 0, 0, 0.5%);");
-  var flags = new Qt.WindowFlags(Qt.FramelessWindowHint);
-  sliceWidget.setWindowFlags(flags)
+  if (this.$.app.version + this.$.app.minorVersion > 21){
+    var flags = new Qt.WindowFlags(Qt.FramelessWindowHint|Qt.NoDropShadowWindowHint);
+    sliceWidget.setAttribute(Qt.WA_TranslucentBackground);
+  }else{
+    var flags = new Qt.WindowFlags(Qt.FramelessWindowHint);
+  }
+  sliceWidget.setWindowFlags(flags);
   sliceWidget.minimumHeight = this.height;
   sliceWidget.minimumWidth = this.width;
   sliceWidget.lower();
