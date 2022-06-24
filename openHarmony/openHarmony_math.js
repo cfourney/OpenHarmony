@@ -362,6 +362,19 @@ $.oBox = function( left, top, right, bottom ){
 
 
 /**
+ * Wether this box is empty or not (boxes start as empty when initialized).
+ * @name $.oBox#isEmpty
+ * @type {bool}
+ */
+Object.defineProperty($.oBox.prototype, 'isEmpty', {
+  get : function(){
+    return this.top == Infinity && this.left == Infinity && right == -Infinity && bottom == -Infinity;
+  }
+})
+
+
+
+/**
  * The width of the box.
  * @name $.oBox#width
  * @type {float}
