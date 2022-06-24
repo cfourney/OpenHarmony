@@ -215,6 +215,20 @@ $.oElement.prototype.getDrawingByName = function ( name ){
 
 
 /**
+ * Gets a drawing object by the id.
+ * @param   {string}  id  The id of the drawing to get.
+ *
+ * @return  {$.oDrawing}      The drawing found by the search
+ */
+ $.oElement.prototype.getDrawingById = function ( id ){
+  var _drawings = this.drawings;
+  for (var i in _drawings){
+    if (_drawings[i].id == id) return _drawings[i];
+  }
+  return null;
+}
+
+/**
  * Link a provided palette to an element as an Element palette.
  * @param   {$.oPalette}    oPaletteObject              The oPalette object to link
  * @param   {int}           [listIndex]              The index in the element palette list at which to add the newly linked palette
