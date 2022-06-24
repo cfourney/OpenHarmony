@@ -825,6 +825,20 @@ $.oScene.prototype.getNodesByType = function(typeName){
 }
 
 /**
+ * Returns the selected nodes of a certain type in the entire scene.
+ * @param   {string[]}      types       The types of nodes that will be returned (if only one is provided, doesn't need to be an array)
+ * @param   {bool}        recuse        Wether to include nodes inside selected groups in selection.
+ *
+ * @return  {$.oNode[]}     The nodes found.
+ */
+ $.oScene.prototype.getSelectedNodesOfType = function(types, recurse){
+  if (!(types instanceof Array)) types = [types];
+  if (typeof recurse === "undefined") var recurse = false;
+  return this.getSelectedNodes(recurse).filter(function(x){return types.indexOf(x.type) != -1});
+}
+
+
+/**
  * Gets a column by the name.
  * @param  {string}             uniqueName               The unique name of the column as a string.
  * @param  {$.oAttribute}       oAttributeObject         The oAttributeObject owning the column.
