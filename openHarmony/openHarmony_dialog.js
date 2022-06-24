@@ -1353,8 +1353,9 @@ $.oPieButton.prototype.setParent = function(parent){
  * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  *
  */
- $.oToolButton = function(toolName, iconFile, parent) {
+ $.oToolButton = function(toolName, showName, iconFile, parent) {
   this.toolName = toolName;
+  if (typeof showName === "undefined") var showName = false;
 
   if (typeof iconFile === "undefined"){
     // find an icon for the function in the script-icons folder
@@ -1369,7 +1370,7 @@ $.oPieButton.prototype.setParent = function(parent){
       var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg";
     }
   }
-  this.$.oPieButton.call(this, iconFile, parent);
+  this.$.oPieButton.call(this, iconFile, showName?toolName:"", parent);
 
   this.toolTip = this.toolName;
 }
