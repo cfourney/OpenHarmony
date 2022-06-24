@@ -741,13 +741,11 @@ Object.defineProperty($.oScene.prototype, 'activeDrawing', {
     var _curDrawing = Tools.getToolSettings().currentDrawing;
     if (!_curDrawing) return null;
 
-    var _element = this.selectedNodes[0].element;
-    var _drawings = _element.drawings;
-    for (var i in _drawings){
-      if (_drawings[i].id == _curDrawing.drawingId) return _drawings[i];
-    }
+    var _drawingNodes = this.getSelectedNodesOfType("READ", false);
+    if (!_drawingNodes.length) return null;
 
-    return null
+    var _element = _drawingNodes[0].element;
+    return _element.getDrawingById(_curDrawing.drawingId);
   },
 
   set : function( newCurrentDrawing ){
@@ -814,7 +812,7 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
     return _node;
 }
 
- /**
+/**
  * Returns the nodes of a certain type in the entire scene.
  * @param   {string}      typeName       The name of the node.
  *
