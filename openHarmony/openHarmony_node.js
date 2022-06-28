@@ -1064,6 +1064,71 @@ $.oNode.prototype.getFreeOutPort = function(createNew){
   return _outPorts-1; // if no empty outPort can be found, return the last one
 }
 
+/**
+ * Traverses the node hierarchy up until if finds a node matching the condition.
+ * @param {function} condition a function returning true or false which can be used to find the node
+ * @param {bool} lookInsideGroups wether to consider the nodes inside connected groups
+ * @returns {$.oNode} the found node
+ */
+ $.oNode.prototype.findFirstInNodeMatching = function(condition, lookInsideGroups){
+  if (typeof lookInsideGroups === 'undefined') var lookInsideGroups = false;
+
+  var _linkedNodes = this.linkedInNodes;
+  if (!_linkedNodes.length) return null;
+
+  for (var i in _linkedNodes){
+    if (condition(_linkedNodes[i])) return _linkedNodes[i];
+  }
+  for (var i in _linkedNodes){
+    var _node = _linkedNodes[i].findFirstInNodeMatching(condition, lookInsideGroups);
+    if (_node) return _node;
+  }
+  return null;
+}
+
+
+/**
+ * Traverses the node hierarchy down until if finds a node matching the condition.
+ * @param {function} condition a function returning true or false which can be used to find the node
+ * @param {bool} lookInsideGroups wether to consider the nodes inside connected groups
+ * @returns {$.oNode} the found node
+ */
+ $.oNode.prototype.findFirstOutNodeMatching = function(condition, lookInsideGroups){
+  if (typeof lookInsideGroups === 'undefined') var lookInsideGroups = false;
+
+  var _linkedNodes = this.linkedOutNodes;
+  if (!_linkedNodes.length) return null;
+
+  for (var i in _linkedNodes){
+    if (condition(_linkedNodes[i])) return _linkedNodes[i];
+  }
+  for (var i in _linkedNodes){
+    var _node = _linkedNodes[i].findFirstOutNodeMatching(condition, lookInsideGroups);
+    if (_node) return _node;
+  }
+  return null;
+}
+
+
+/**
+ * Traverses the node hierarchy up until if finds a node of the given type.
+ * @param {string} type the type of node we are looking for
+ * @param {bool} lookInsideGroups wether to consider the nodes inside connected groups
+ * @returns {$.oNode} the found node
+ */
+$.oNode.prototype.findFirstInNodeOfType = function(type, lookInsideGroups){
+  return this.findFirstInNodeMatching(function(x){return x.type == type});
+}
+
+/**
+ * Traverses the node hierarchy down until if finds a node of the given type.
+ * @param {string} type the type of node we are looking for
+ * @param {bool} lookInsideGroups wether to consider the nodes inside connected groups
+ * @returns {$.oNode} the found node
+ */
+$.oNode.prototype.findFirstOutNodeOfType = function(type, lookInsideGroups){
+  return this.findFirstOutNodeMatching(function(x){return x.type == type});
+}
 
 /**
  * Links this node's out-port to the given module, at the inport and outport indices.
