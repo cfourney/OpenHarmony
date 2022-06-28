@@ -2911,6 +2911,10 @@ $.oGroupNode.prototype.addDrawingNode = function( name, nodePosition, oElementOb
   // setup the node
   // setup animate mode/separate based on preferences?
   _node.attributes.drawing.element.column = drawingColumn;
+  var _prefs = this.$.app.preferences
+  _node.can_animate = _prefs.ELEMENT_CAN_BE_ANIMATED_DEFAULT_VALUE;
+  _node.offset.separate = _prefs.READ_DEFAULT_SEPARATE_POSITION;
+  _node.scale.separate = _prefs.READ_DEFAULT_SEPARATE_SCALE;
 
   this.$.endUndo();
 
