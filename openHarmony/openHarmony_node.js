@@ -2059,7 +2059,7 @@ $.oDrawingNode.prototype.exposeAllDrawings = function(framesPerDrawing){
     frameNumber+=framesPerDrawing;
   }
 
-  var _column = this.attributes.drawing.element.column;
+  var _column = this.timingColumn;
   var _exposures = _column.getKeyframes();
   _column.extendExposures(_exposures, framesPerDrawing-1);
 }
@@ -2071,7 +2071,7 @@ $.oDrawingNode.prototype.exposeAllDrawings = function(framesPerDrawing){
  * @param {int} frameNum
  */
 $.oDrawingNode.prototype.showDrawingAtFrame = function(drawing, frameNum){
-  var _column = this.attributes.drawing.element.column;
+  var _column = this.timingColumn;
   _column.setValue(drawing.name, frameNum);
 }
 

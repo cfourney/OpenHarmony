@@ -368,7 +368,7 @@ $.oBox = function( left, top, right, bottom ){
  */
 Object.defineProperty($.oBox.prototype, 'isEmpty', {
   get : function(){
-    return this.top == Infinity && this.left == Infinity && right == -Infinity && bottom == -Infinity;
+    return this.top == Infinity && this.left == Infinity && this.right == -Infinity && this.bottom == -Infinity;
   }
 })
 
