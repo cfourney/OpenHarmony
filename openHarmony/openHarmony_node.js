@@ -2066,6 +2066,19 @@ $.oDrawingNode.prototype.exposeAllDrawings = function(framesPerDrawing){
 
 
 /**
+ * Adds a new empty drawing to the drawingNode at the given frame. Can specify a file for the drawing (to import it)
+ * @see $#oElement.addDrawing
+ * @param {int} [atFrame=1] The frame at which to add the drawing on the $.oDrawingColumn. Values < 1 create no exposure
+ * @param {string} [name] The name of the drawing to add.
+ * @param {string} [filename] Optionally, a path for a drawing file to use for this drawing. Can pass an oFile object as well.
+ * @param {bool} [convertToTvg=false] If the filename isn't a tvg file, specify if you want it converted (this doesn't vectorize the drawing).
+ */
+$.oDrawingNode.prototype.addDrawing = function(atFrame, name, filename, convertToTvg){
+  this.element.addDrawing(atFrame, name, filename, convertToTvg);
+}
+
+
+/**
  * Displays the given drawing at the given frame
  * @param {$.oDrawing} drawing
  * @param {int} frameNum
