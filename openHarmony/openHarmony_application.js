@@ -487,6 +487,28 @@ $.oApp.prototype.runMenuCommand = function(menuName, menuString){
   }
 }
 
+/**
+ * Some actions are only available while certain tools are active. Use this function to execute a custom function after setting a given tool active.
+ * @param {$.oTool}     tool      the tool object we want to use (also support tool names as string)
+ * @param {function}    func      the function to execute
+ * @param {object}      context   the context in which the function will execute
+ * @param {object[]}    arguments a list of arguments to pass to the function
+ * @return {}  return whatever the function passed returned.
+ */
+ $.oApp.prototype.doWithTool = function (tool, func, context, args){
+  if (typeof context === 'undefined') context = func;
+  if (typeof args === 'undefined') args = [];
+
+  var _curTool = this.currentTool;
+  this.currentTool = tool;
+  var value = func.apply(context, args);
+  this.currentTool = _curTool;
+
+  return value;
+}
+
+
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
