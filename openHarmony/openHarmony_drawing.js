@@ -1874,8 +1874,11 @@ $.oContour.prototype = Object.create($.oStroke.prototype)
  */
 Object.defineProperty($.oContour.prototype, "fill", {
   get: function () {
-    var _data = this._data;
-    return new this.$.oFillStyle(_data.colorId, _data.matrix);
+    if (!this._fill){
+      var _data = this._data;
+      this._fill = new this.$.oFillStyle(_data.colorId, _data.matrix);
+    }
+    return this._fill;
   }
 })
 
@@ -1899,7 +1902,7 @@ Object.defineProperty($.oContour.prototype, "fill", {
  * @private
  */
 $.oContour.prototype.toString = function(){
-  return "<oContour path:"+this.path+", fill:"+fill+">"
+  return "<oContour path:"+this.path+", fill:"+this.fill+">"
 }
 
 
