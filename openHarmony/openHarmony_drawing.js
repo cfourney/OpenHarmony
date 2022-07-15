@@ -683,6 +683,17 @@ $.oArtLayer = function (index, oDrawingObject) {
 }
 
 
+/**
+ * The drawing containing this artLayer
+ * @name $.oArtLayer#drawing
+ * @type {$.oDrawing}
+ */
+ Object.defineProperty($.oArtLayer.prototype, 'drawing', {
+  get: function(){
+    return this._drawing;
+  }
+})
+
 
 /**
  * The name of the artLayer (lineArt, colorArt, etc)
@@ -781,6 +792,23 @@ Object.defineProperty($.oArtLayer.prototype, 'selectedShapes', {
     var _shapes = Drawing.selection.get(this._key).selectedLayers;
     var _artLayer = this;
     return _shapes.map(function (x) { return _artLayer.getShapeByIndex(x) });
+  },
+
+  set: function(shapes) {
+    Action.perform("selectAll()", "cameraView");
+    var config = {drawing: this._key.drawing, art: this._key.art};
+    config.selectedLayers = shapes.map(function(x){return x.index});
+    config.selectedStrokes = []
+
+    for (var i in shapes){
+      var shape = shapes[i];
+      var strokesDescriptions = shape.strokes.map(function(x){return {stroke:true, strokeIndex:x.index, layer:shape.index}});
+      var contoursDescriptions = shape.contours.map(function(x){return {leftShader:true, strokeIndex:x.index, layer:shape.index}});
+      config.selectedStrokes = config.selectedStrokes.concat(strokesDescriptions);
+      config.selectedStrokes = config.selectedStrokes.concat(contoursDescriptions);
+    }
+
+    Drawing.selection.set(config);
   }
 })
 
@@ -801,6 +829,22 @@ Object.defineProperty($.oArtLayer.prototype, 'selectedStrokes', {
     }
 
     return _strokes;
+  },
+
+  set: function(strokes) {
+    // without this line, the setting of selection doesn't seem to work
+    Action.perform("selectAll()", "cameraView");
+    var config = {drawing: this._key.drawing, art: this._key.art};
+    // get a list of selected shapes indexes without duplicates
+    config.selectedLayers = strokes.map(function(x){return x.shape.index}).filter(function(x, i, array){return array.indexOf(x)==i});
+    config.selectedStrokes = [];
+
+    for (var i in strokes){
+      var stroke = strokes[i];
+      config.selectedStrokes.push({stroke:true, strokeIndex:stroke.index, layer:stroke.shape.index});
+    }
+
+    Drawing.selection.set(config);
   }
 })
 
@@ -820,6 +864,22 @@ Object.defineProperty($.oArtLayer.prototype, 'selectedContours', {
     }
 
     return _contours;
+  },
+
+  set: function(contours) {
+    // without this line, the setting of selection doesn't seem to work
+    Action.perform("selectAll()", "cameraView");
+    var config = {drawing: this._key.drawing, art: this._key.art};
+    // get a list of selected shapes indexes without duplicates
+    config.selectedLayers = contours.map(function(x){return x.shape.index}).filter(function(x, i, array){return array.indexOf(x)==i});
+    config.selectedStrokes = [];
+
+    for (var i in contours){
+      var contour = contours[i];
+      config.selectedStrokes.push({leftShader:true, strokeIndex:contour.index, layer:contour.shape.index});
+    }
+
+    Drawing.selection.set(config);
   }
 })
 
@@ -1446,8 +1506,6 @@ $.oFillStyle = function (colorId, fillMatrix) {
 
   this.colorId = colorId;
   this.fillMatrix = fillMatrix;
-
-  this.$.log("new fill created: " + colorId + " " + JSON.stringify(this.fillMatrix))
 }
 
 
