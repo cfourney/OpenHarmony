@@ -578,19 +578,30 @@ $.oDrawing.prototype.replaceColorId = function (currentId, newId){
  * Copies the contents of the Drawing into the clipboard
  * @param {oDrawing.ART_LAYER} [artLayer]    Specify to only copy the contents of the specified artLayer
  */
-$.oDrawing.prototype.copyContents = function (artLayer) {
-
+$.oDrawing.prototype.selectContents = function (artLayer) {
   var _current = this.setAsActiveDrawing(artLayer);
   if (!_current) {
     this.$.debug("Impossible to copy contents of drawing " + this.name + " of element " + _element.name + ", the drawing cannot be set as active.", this.DEBUG_LEVEL.ERROR);
     return;
   }
   ToolProperties.setApplyAllArts(!artLayer);
-  Action.perform("deselect()", "cameraView");
-  Action.perform("onActionChooseSelectTool()");
-  Action.perform("selectAll()", "cameraView");
 
-  if (Action.validate("copy()", "cameraView").enabled) Action.perform("copy()", "cameraView");
+  this.$.app.doWithTool("select", function(){
+    //Action.perform("onActionChooseSelectTool()", "drawingView,cameraView")
+    if (Action.validate("selectAll()", "cameraView").enabled) Action.perform("selectAll()", "cameraView");
+  }, this, [])
+}
+
+/**
+ * Copies the contents of the Drawing into the clipboard
+ * @param {oDrawing.ART_LAYER} [artLayer]    Specify to only copy the contents of the specified artLayer
+ */
+$.oDrawing.prototype.copyContents = function (artLayer) {
+  this.selectContents(artLayer);
+
+  this.$.app.doWithTool("select", function(){
+    if (Action.validate("copy()", "cameraView").enabled) Action.perform("copy()", "cameraView");
+  }, this, [])
 }
 
 
@@ -599,16 +610,43 @@ $.oDrawing.prototype.copyContents = function (artLayer) {
  * @param {oDrawing.ART_LAYER} [artLayer]    Specify to only paste the contents onto the specified artLayer
  */
 $.oDrawing.prototype.pasteContents = function (artLayer) {
+  this.paste(artLayer);
+}
 
+
+/**
+ * Pastes the contents of the clipboard into the Drawing
+ * @param {oDrawing.ART_LAYER} [artLayer]    Specify to only paste the contents onto the specified artLayer
+ */
+$.oDrawing.prototype.paste = function (artLayer) {
   var _current = this.setAsActiveDrawing(artLayer);
   if (!_current) {
     this.$.debug("Impossible to copy contents of drawing " + this.name + " of element " + _element.name + ", the drawing cannot be set as active.", this.DEBUG_LEVEL.ERROR);
     return;
   }
   ToolProperties.setApplyAllArts(!artLayer);
-  Action.perform("deselect()", "cameraView");
-  Action.perform("onActionChooseSelectTool()");
-  if (Action.validate("paste()", "cameraView").enabled) Action.perform("paste()", "cameraView");
+
+  this.$.app.doWithTool("select", function(){
+    Action.perform("deselect()", "cameraView");
+    if (Action.validate("paste()", "cameraView").enabled) Action.perform("paste()", "cameraView");
+  }, this, [])
+}
+
+
+/**
+ * Cuts the selected shapes from the Drawing
+ * @param {oDrawing.ART_LAYER} [artLayer]    Specify to only paste the contents onto the specified artLayer
+ */
+ $.oDrawing.prototype.cutSelection = function (artLayer) {
+  var _current = this.setAsActiveDrawing(artLayer);
+  if (!_current) {
+    this.$.debug("Impossible to cut contents of drawing " + this.name + " of element " + _element.name + ", the drawing cannot be set as active.", this.DEBUG_LEVEL.ERROR);
+    return;
+  }
+
+  this.$.app.doWithTool("select", function(){
+    if (Action.validate("cut()", "cameraView").enabled) Action.perform("cut()", "cameraView");
+  }, this, [])
 }
 
 
@@ -633,17 +671,17 @@ $.oDrawing.prototype.setLineEnds = function (endType, artLayer) {
 
   // apply to all arts only if art layer not specified
   ToolProperties.setApplyAllArts(!artLayer);
-  Action.perform("deselect()", "cameraView");
-  Action.perform("onActionChooseSelectTool()");
-  Action.perform("selectAll()", "cameraView");
+  this.selectContents(artLayer);
 
-  var widget = $.getHarmonyUIWidget("pencilShape", "frameBrushParameters");
-  if (widget) {
-    widget.onChangeTipStart(endType);
-    widget.onChangeTipEnd(endType);
-    widget.onChangeJoin(endType);
-  }
-  Action.perform("deselect()", "cameraView");
+  this.$.app.doWithTool("select", function(){
+    var widget = $.getHarmonyUIWidget("pencilShape", "frameBrushParameters");
+    if (widget) {
+      widget.onChangeTipStart(endType);
+      widget.onChangeTipEnd(endType);
+      widget.onChangeJoin(endType);
+    }
+    Action.perform("deselect()", "cameraView");
+  });
 }
 
 
@@ -905,6 +943,47 @@ Object.defineProperty($.oArtLayer.prototype, 'drawingData', {
     return {art:this._layerIndex, artName:this.name, layers:[]};
   }
 })
+
+
+/**
+ * Sets the current Artlayer as active
+ */
+$.oArtLayer.prototype.setAsActive = function () {
+  return this._drawing.setAsActiveDrawing(this.name);
+}
+
+
+/**
+ * Cuts the contents of the selection from the ArtLayer
+ */
+ $.oArtLayer.prototype.selectContents = function () {
+  this.drawing.selectContents(this.name);
+}
+
+
+
+/**
+ * Copies the contents of the Drawing into the clipboard
+ */
+ $.oArtLayer.prototype.copyContents = function () {
+  this.drawing.copyContents(this.name);
+}
+
+
+/**
+ * Cuts the contents of the selection from the ArtLayer
+ */
+$.oArtLayer.prototype.cutSelection = function () {
+  this.drawing.cutSelection(this.name);
+}
+
+
+/**
+ * Copies the contents of the Drawing into the clipboard
+ */
+ $.oArtLayer.prototype.paste = function () {
+  this.drawing.paste(this.name);
+}
 
 
 /**
