@@ -778,7 +778,8 @@ Object.defineProperty($.oScene.prototype, 'activeDrawing', {
     }
     if (!_curDrawing) return null;
 
-    return _node.element.getDrawingByName(_curDrawing);
+    var _element = this.getElementById(_curDrawing.elementId);
+    return _element.getDrawingById(_curDrawing.drawingId);
   },
 
   set : function( newCurrentDrawing ){
