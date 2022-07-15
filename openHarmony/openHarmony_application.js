@@ -200,24 +200,25 @@ Object.defineProperty($.oApp.prototype, 'tools', {
 Object.defineProperty($.oApp.prototype, 'currentTool', {
   get : function(){
     var _tool = Tools.getToolSettings().currentTool.id;
-    return _tool;
+    return this.tools[_tool];
   },
+
   set : function(tool){
-    if (tool instanceof this.$.oTool) {
-      tool.activate();
-      return
-    }
-    if (typeof tool == "string"){
-      try{
-        this.getToolByName(tool).activate();
-        return
-      }catch(err){
-        this.$.debug("'"+ tool + "' is not a valid tool name. Valid: "+this.tools.map(function(x){return x.name}).join(", "))
+    try{
+      switch(typeof tool){
+        case "string":
+          this.getToolByName(tool).activate();
+          break;
+
+        case "number":
+          this.tools[tool].activate();
+          break;
+
+        default:
+          if (tool instanceof this.$.oTool) tool.activate();
       }
-    }
-    if (typeof tool == "number"){
-      this.tools[tool].activate();
-      return
+    }catch(err){
+      this.$.debug("'"+ tool + "' is not a valid tool. Valid: "+this.tools.map(function(x){return x.name}).join(", "))
     }
   }
 });
