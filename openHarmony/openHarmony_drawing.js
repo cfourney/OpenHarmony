@@ -538,21 +538,13 @@ $.oDrawing.prototype.setAsActiveDrawing = function (artLayer) {
     return false;
   }
 
-  var _column = this.element.column;
-  if (!_column) {
-    this.$.debug("Column missing: impossible to set as active drawing " + this.name + " of element " + _element.name, this.$.DEBUG_LEVEL.ERROR);
-    return false;
+  Tools.setToolSettings({ currentDrawing: this._key });
+
+  if (artLayer){
+    // support artlayer names as argument instead of just enum values
+    if (typeof artLayer === "string") artLayer = $.oDrawing.ART_LAYER[artLayer.toUpperCase()];
+    DrawingTools.setCurrentArt(artLayer);
   }
-
-  var _frame = this.getVisibleFrames();
-  if (_frame.length == 0) {
-    this.$.debug("Drawing not exposed: impossible to set as active drawing " + this.name + " of element " + _element.name, this.$.DEBUG_LEVEL.ERROR);
-    return false;
-  }
-
-  DrawingTools.setCurrentDrawingFromColumnName(_column.uniqueName, _frame[0]);
-
-  if (artLayer) DrawingTools.setCurrentArt(artLayer);
 
   return true;
 }
@@ -689,6 +681,7 @@ $.oArtLayer = function (index, oDrawingObject) {
   //log(this._drawing._key)
   this._key = { "drawing": this._drawing._key, "art": index }
 }
+
 
 
 /**

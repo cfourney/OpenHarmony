@@ -741,10 +741,7 @@ Object.defineProperty($.oScene.prototype, 'activeDrawing', {
     var _curDrawing = Tools.getToolSettings().currentDrawing;
     if (!_curDrawing) return null;
 
-    var _drawingNodes = this.getSelectedNodesOfType("READ", false);
-    if (!_drawingNodes.length) return null;
-
-    var _element = _drawingNodes[0].element;
+    var _element = this.getElementById(_curDrawing.elementId);
     return _element.getDrawingById(_curDrawing.drawingId);
   },
 
