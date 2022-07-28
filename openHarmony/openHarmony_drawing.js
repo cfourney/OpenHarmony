@@ -440,11 +440,13 @@ $.oDrawing.prototype.importBitmap = function (file, convertToTvg) {
     var _bin = specialFolders.bin + "/utransform";
 
     var tempFolder = this.$.scn.tempFolder;
+    var res_x = this.$.scn.resolutionX
+    var res_y = this.$.scn.resolutionY
 
     var _convertedFilePath = tempFolder.path + "/" + file.name + ".tvg";
-    var _convertProcess = new this.$.oProcess(_bin, ["-outformat", "TVG", "-debug", "-scale", "1", "-bboxtvgincrease","0" , "-outfile", _convertedFilePath, file.path]);
+    var _convertProcess = new this.$.oProcess(_bin, ["-outformat", "TVG", "-debug", "-resolution", res_x, res_y, "-outfile", _convertedFilePath, file.path]);
     log(_convertProcess.execute())
-
+ 
     var convertedFile = new this.$.oFile(_convertedFilePath);
     if (!convertedFile.exists) throw new Error ("Converting " + file.path + " to TVG has failed.");
 
