@@ -3275,12 +3275,17 @@ $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
  * @param {string} path The image file to import.
  * @param {string} [alignment="ASIS"] Alignment type.
  * @param {$.oPoint} [nodePosition={0,0,0}] The position for the node to be placed in the node view.
+ * @param {bool} [convertToTvg=false] Convert image to TVG format.
+ * @param {string} [resized_axis="Y"] Resize image to fit with scene resolution in given axis.
  *
  * @return  {$.oNode}    The node for the imported image
  */
-$.oGroupNode.prototype.importImage = function( path, alignment, nodePosition, convertToTvg){
+$.oGroupNode.prototype.importImage = function( path, alignment, nodePosition, convertToTvg, resized_axis){
+
   if (typeof alignment === 'undefined') var alignment = "ASIS"; // create an enum for alignments?
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+  if (typeof convertToTvg === 'undefined') var convertToTvg = false;
+  if (typeof resized_axis === 'undefined') var resized_axis = "Y";
 
   var _imageFile = (path instanceof this.$.oFile)?path:new this.$.oFile( path );
   var _elementName = _imageFile.name;
@@ -3302,7 +3307,12 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition, co
   _imageNode.apply_matte_to_color = "Straight";
   _imageNode.alignment_rule = alignment;
 
-  var _scale = CELIO.getInformation(_imageFile.path).height/this.scene.defaultResolutionY;
+  var _scale = 1
+  if (resized_axis == "Y") {
+    _scale = this.scene.defaultResolutionY/CELIO.getInformation(_imageFile.path).height;
+  } else if (resized_axis == "X") {
+    _scale = this.scene.defaultResolutionX/CELIO.getInformation(_imageFile.path).width;
+  }
   _imageNode.scale.x = _scale;
   _imageNode.scale.y = _scale;
 
@@ -3337,16 +3347,17 @@ $.oGroupNode.prototype.importImageAsTVG = function(path, alignment, nodePosition
  * @param {boolean}   [convertToTvg=false] wether to convert the files to tvg during import
  * @param {string}    [alignment="ASIS"]   the alignment to apply to the node
  * @param {$.oPoint}  [nodePosition]       the position of the node in the nodeview
+ * @param {string} [resized_axis="Y"] Resize image to fit with scene resolution in given axis.
  *
  * @returns {$.oDrawingNode} the created node
  */
-$.oGroupNode.prototype.importImageSequence = function(imagePaths, exposureLength, convertToTvg, alignment, nodePosition, extendScene) {
+$.oGroupNode.prototype.importImageSequence = function(imagePaths, exposureLength, convertToTvg, alignment, nodePosition, extendScene, resized_axis) {
+  $.alert(resized_axis)
   if (typeof exposureLength === 'undefined') var exposureLength = 1;
   if (typeof alignment === 'undefined') var alignment = "ASIS"; // create an enum for alignments?
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
-
   if (typeof extendScene === 'undefined') var extendScene = false;
-
+  if (typeof resized_axis === 'undefined') var resized_axis = "Y";
   // match anything but capture trailing numbers and separates punctuation preceeding it
   var numberingRe = /(.*?)([\W_]+)?(\d*)$/i;
 
@@ -3395,7 +3406,7 @@ $.oGroupNode.prototype.importImageSequence = function(imagePaths, exposureLength
   // create a node to hold the image sequence
   var firstImage = imagePaths[0];
   var name = firstImage.name.match(numberingRe)[1]; // match anything before trailing digits
-  var drawingNode = this.importImage(firstImage, alignment, nodePosition, convertToTvg);
+  var drawingNode = this.importImage(firstImage, alignment, nodePosition, convertToTvg, resized_axis);
   drawingNode.name = name;
 
   for (var i in images){
