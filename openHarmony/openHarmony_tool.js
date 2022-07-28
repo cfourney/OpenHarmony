@@ -62,21 +62,21 @@
  * @example
  * // Access the list of currently existing tools by using the $.app object
  * var tools = $.app.tools;
- * 
+ *
  * // output the list of tools names and ids
  * for (var i in tools){
  *   log(i+" "+tools[i].name)
  * }
- * 
+ *
  * // To get a tool by name, use the $.app.getToolByName() function
  * var brushTool = $.app.getToolByName("Brush");
  * log (brushTool.name+" "+brushTool.id)            // Output: Brush 9
- * 
+ *
  * // it's also possible to activate a tool in several ways:
  * $.app.currentTool = 9;         // using the tool "id"
  * $.app.currentTool = brushTool  // by passing a oTool object
  * $.app.currentTool = "Brush"    // using the tool name
- * 
+ *
  * brushTool.activate()           // by using the activate function of the oTool class
  */
 $.oTool = function(id, name){
@@ -123,4 +123,9 @@ Object.defineProperty($.oTool, "stencils", {
  */
 $.oTool.prototype.activate = function(){
   Tools.setToolSettings({currentTool:{id:this.id}});
+}
+
+
+$.oTool.prototype.toString = function(){
+  return "< oTool '"+ this.name + "'>"
 }

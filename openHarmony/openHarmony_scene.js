@@ -741,13 +741,11 @@ Object.defineProperty($.oScene.prototype, 'activeDrawing', {
     var _curDrawing = Tools.getToolSettings().currentDrawing;
     if (!_curDrawing) return null;
 
-    var _element = this.selectedNodes[0].element;
-    var _drawings = _element.drawings;
-    for (var i in _drawings){
-      if (_drawings[i].id == _curDrawing.drawingId) return _drawings[i];
-    }
+    var _drawingNodes = this.getSelectedNodesOfType("READ", false);
+    if (!_drawingNodes.length) return null;
 
-    return null
+    var _element = _drawingNodes[0].element;
+    return _element.getDrawingById(_curDrawing.drawingId);
   },
 
   set : function( newCurrentDrawing ){
@@ -814,7 +812,7 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
     return _node;
 }
 
- /**
+/**
  * Returns the nodes of a certain type in the entire scene.
  * @param   {string}      typeName       The name of the node.
  *
@@ -823,6 +821,20 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
 $.oScene.prototype.getNodesByType = function(typeName){
   return this.root.getNodesByType(typeName, true);
 }
+
+/**
+ * Returns the selected nodes of a certain type in the entire scene.
+ * @param   {string[]}      types       The types of nodes that will be returned (if only one is provided, doesn't need to be an array)
+ * @param   {bool}        recuse        Wether to include nodes inside selected groups in selection.
+ *
+ * @return  {$.oNode[]}     The nodes found.
+ */
+ $.oScene.prototype.getSelectedNodesOfType = function(types, recurse){
+  if (!(types instanceof Array)) types = [types];
+  if (typeof recurse === "undefined") var recurse = false;
+  return this.getSelectedNodes(recurse).filter(function(x){return types.indexOf(x.type) != -1});
+}
+
 
 /**
  * Gets a column by the name.
@@ -1587,57 +1599,87 @@ $.oScene.prototype.getNodesLinks = function (nodes){
  * @return {$.oNode}        The resulting drawing node from the merge.
  */
 $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
+    this.$.beginUndo("oh_mergeNodes");
     // TODO: is there a way to do this without Action.perform?
     // pass a oNode object as argument for destination node instead of name/group?
-
-    if (typeof resultName === 'undefined') var resultName = nodes[0].name+"_merged"
-    if (typeof group === 'undefined') var group = nodes[0].group;
     if (typeof deleteMerged === 'undefined') var deleteMerged = true;
 
     // only merge READ nodes so we filter out other nodes from parameters
-    nodes = nodes.filter(function(x){return x.type == "READ"})
+    var drawingNodes = nodes.filter(function(x){return x.type == "READ"});
 
-    var _timeline = this.getTimeline()
-    nodes = nodes.sort(function(a, b){return a.timelineIndex(_timeline) - b.timelineIndex(_timeline)})
+    if (typeof resultName === 'undefined') var resultName = drawingNodes[0].name+"_merged";
+
+    if (!drawingNodes.length) return;
+
+    var _timeline = this.getTimeline();
+    drawingNodes = drawingNodes.sort(function(a, b){return a.timelineIndex(_timeline) - b.timelineIndex(_timeline)});
 
     // create a new destination node for the merged result
-    var _mergedNode = this.addDrawingNode(resultName);
+    var _group = drawingNodes[0].group;
 
     // connect the node to the scene base composite, TODO: handle better placement
     // also TODO: check that the composite is connected to the display currently active
     // also TODO: disable pegs that affect the nodes but that we don't want to merge
-    var _composite = this.nodes.filter(function(x){return x.type == "COMPOSITE"})[0]
+    //var inNodes = nodes.map(function(x){return x.linkedInNodes});
+
+    var selectedPaths = nodes.map(function(x){return x.path});
+
+    var _allNodes = this.nodes.filter(function(x){return ["GROUP", "COMPOSITE", "MULTIPORT_OUT"].indexOf(x.type) == -1});
+    var nodesEnabled = [];
+    for (var i in _allNodes){
+      // disable all nodes in the scene before merging unless given as argument
+      if (selectedPaths.indexOf(_allNodes[i].path) != -1) {
+        $.log(_allNodes[i].path+" " +selectedPaths.indexOf(_allNodes[i].path));
+        continue;
+      }
+      if (_allNodes[i].enabled){
+        nodesEnabled.push(_allNodes[i]);
+        _allNodes[i].enabled = false;
+      }
+    }
+
+    // creating destination node
+    var _mergedNode = _group.addDrawingNode(resultName);
+
+    var outNodes = [];
+    for (var i in drawingNodes){
+      outNodes = outNodes.concat(drawingNodes[i].linkedOutNodes);
+    }
+
+    var _composite = outNodes.filter(function(x){return x.type == "COMPOSITE"})[0];
+    if (!_composite) _composite = outNodes.filter(function(x){return x.type == "MULTIPORT_OUT"})[0];
 
     _mergedNode.linkOutNode(_composite);
 
     // get  the individual keys of all nodes
     var _keys = []
-    for (var i in nodes){
-        var _timings = nodes[i].timings;
+    for (var i in drawingNodes){
+        var _timings = drawingNodes[i].timings;
         var _frameNumbers = _keys.map(function (x){return x.frameNumber})
         for (var j in _timings){
             if (_frameNumbers.indexOf(_timings[j].frameNumber) == -1) _keys.push(_timings[j])
         }
     }
 
-
     // sort frame objects by frameNumber
     _keys = _keys.sort(function(a, b){return a.frameNumber - b.frameNumber})
 
-    // create an empty drawing for each exposure of the nodes to be merged
+    // create an empty drawing for each exposure of the nodes to be merged and copy the contents into it
+    Action.perform("onActionChooseSelectTool()", "cameraView");
+    ToolProperties.setApplyAllArts(true);
+
     for (var i in _keys){
-        var _frame = _keys[i].frameNumber
-        _mergedNode.element.addDrawing(_frame)
+        var _frame = _keys[i].frameNumber;
+        _mergedNode.element.addDrawing(_frame);
 
         // copy paste the content of each of the nodes onto the mergedNode
         // code inspired by Bake_Parent_to_Drawings v1.2 from Yu Ueda (raindropmoment.com)
         frame.setCurrent( _frame );
 
-        Action.perform("onActionChooseSelectTool()", "cameraView");
-        for (var j=nodes.length-1; j>=0; j--){
+        for (var j=drawingNodes.length-1; j>=0; j--){
             //if (nodes[j].attributes.drawing.element.frames[_frame].isBlank) continue;
 
-            DrawingTools.setCurrentDrawingFromNodeName( nodes[j].path, _frame );
+            DrawingTools.setCurrentDrawingFromNodeName( drawingNodes[j].path, _frame );
             Action.perform("selectAll()", "cameraView");
 
             // select all and check. If empty, operation ends for the current frame
@@ -1650,7 +1692,7 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
     }
 
     _mergedNode.attributes.drawing.element.column.extendExposures();
-    _mergedNode.placeAtCenter(nodes)
+    _mergedNode.placeAtCenter(drawingNodes)
 
     // connect to the same composite as the first node, at the same place
     // delete nodes that were merged if parameter is specified
@@ -1659,6 +1701,14 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
             nodes[i].remove();
         }
     }
+
+    // restore node enabled status
+    for (var i in nodesEnabled){
+      nodesEnabled[i].enabled = true;
+    }
+
+    this.$.endUndo();
+
     return _mergedNode;
 }
 

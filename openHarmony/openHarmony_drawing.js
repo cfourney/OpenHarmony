@@ -1733,7 +1733,7 @@ $.oStroke.prototype.addPoints = function (pointsToAdd) {
     }
   }
 
-  if (newPoints.length != pointsToAdd.length) throw new Error ("some points in " + pointsToAdd + " were not created.");
+  if (newPoints.length < pointsToAdd.length) throw new Error ("some points in " + pointsToAdd + " were not created.");
   return newPoints;
 }
 

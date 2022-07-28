@@ -1064,6 +1064,71 @@ $.oNode.prototype.getFreeOutPort = function(createNew){
   return _outPorts-1; // if no empty outPort can be found, return the last one
 }
 
+/**
+ * Traverses the node hierarchy up until if finds a node matching the condition.
+ * @param {function} condition a function returning true or false which can be used to find the node
+ * @param {bool} lookInsideGroups wether to consider the nodes inside connected groups
+ * @returns {$.oNode} the found node
+ */
+ $.oNode.prototype.findFirstInNodeMatching = function(condition, lookInsideGroups){
+  if (typeof lookInsideGroups === 'undefined') var lookInsideGroups = false;
+
+  var _linkedNodes = this.linkedInNodes;
+  if (!_linkedNodes.length) return null;
+
+  for (var i in _linkedNodes){
+    if (condition(_linkedNodes[i])) return _linkedNodes[i];
+  }
+  for (var i in _linkedNodes){
+    var _node = _linkedNodes[i].findFirstInNodeMatching(condition, lookInsideGroups);
+    if (_node) return _node;
+  }
+  return null;
+}
+
+
+/**
+ * Traverses the node hierarchy down until if finds a node matching the condition.
+ * @param {function} condition a function returning true or false which can be used to find the node
+ * @param {bool} lookInsideGroups wether to consider the nodes inside connected groups
+ * @returns {$.oNode} the found node
+ */
+ $.oNode.prototype.findFirstOutNodeMatching = function(condition, lookInsideGroups){
+  if (typeof lookInsideGroups === 'undefined') var lookInsideGroups = false;
+
+  var _linkedNodes = this.linkedOutNodes;
+  if (!_linkedNodes.length) return null;
+
+  for (var i in _linkedNodes){
+    if (condition(_linkedNodes[i])) return _linkedNodes[i];
+  }
+  for (var i in _linkedNodes){
+    var _node = _linkedNodes[i].findFirstOutNodeMatching(condition, lookInsideGroups);
+    if (_node) return _node;
+  }
+  return null;
+}
+
+
+/**
+ * Traverses the node hierarchy up until if finds a node of the given type.
+ * @param {string} type the type of node we are looking for
+ * @param {bool} lookInsideGroups wether to consider the nodes inside connected groups
+ * @returns {$.oNode} the found node
+ */
+$.oNode.prototype.findFirstInNodeOfType = function(type, lookInsideGroups){
+  return this.findFirstInNodeMatching(function(x){return x.type == type});
+}
+
+/**
+ * Traverses the node hierarchy down until if finds a node of the given type.
+ * @param {string} type the type of node we are looking for
+ * @param {bool} lookInsideGroups wether to consider the nodes inside connected groups
+ * @returns {$.oNode} the found node
+ */
+$.oNode.prototype.findFirstOutNodeOfType = function(type, lookInsideGroups){
+  return this.findFirstOutNodeMatching(function(x){return x.type == type});
+}
 
 /**
  * Links this node's out-port to the given module, at the inport and outport indices.
@@ -1358,6 +1423,143 @@ $.oNode.prototype.placeAtCenter = function( oNodeArray, xOffset, yOffset ){
     return new this.$.oPoint(this.x, this.y, this.z);
 }
 
+
+/**
+ * Sorts the nodes above this node in a grid like manner, based on their links.
+ * @param   {int}     [verticalSpacing=120]   optional: The spacing between two rows of nodes.
+ * @param   {int}     [horizontalSpacing=40]   optional: The spacing between two nodes horizontally.
+ */
+$.oNode.prototype.orderAboveNodes = function(verticalSpacing, horizontalSpacing){
+  if (typeof verticalSpacing === 'undefined') var verticalSpacing = 120;
+  if (typeof horizontalSpacing === 'undefined') var horizontalSpacing = 40;
+
+  $.beginUndo()
+
+  var startNode = this;
+  var nodeHeights = {}
+
+  nodeHeights[startNode.path] = 0
+  var levels = [[startNode]];
+  var widestLevel = 0
+  var biggestWidth = 0
+
+  function getNodesWidth(nodes){
+    var width = 0;
+    for (var i in nodes){
+      var spacing = horizontalSpacing;
+      width += nodes[i].width + spacing;
+    }
+    return width;
+  }
+
+  // getting node heights in the hierarchy by counting the links from the base node
+  function getHeights(startNode, nodeHeights){
+    var nodeHeight = nodeHeights[startNode.path];
+    var newHeight = nodeHeight + 1;
+    if (!levels[newHeight]) levels[newHeight] = [];
+    var level = levels[newHeight];
+
+    for (var i in startNode.linkedInNodes){
+      var linkedNode = startNode.linkedInNodes[i];
+      if (!nodeHeights[linkedNode.path]) nodeHeights[linkedNode.path] = 0;
+      if (nodeHeights[linkedNode.path] < newHeight) nodeHeights[linkedNode.path] = newHeight;
+
+      var paths = level.map(function(x){return x.path}); // avoid duplicates
+      if (paths.indexOf(linkedNode.path) == -1) level.push(linkedNode);
+
+      getHeights(linkedNode, nodeHeights);
+    }
+  }
+
+  getHeights(startNode, nodeHeights);
+
+  // remove duplicate nodes present on the wrong levels
+  for (var i in levels){
+    var row = levels[i];
+    for (var j = row.length-1; j>=0; j--){
+      var levelNode = row[j];
+      var nodeHeight = nodeHeights[levelNode.path];
+      if (i != nodeHeight) row.splice(j, 1);
+    }
+  }
+
+  // getting widest row index and geometry
+  for (var i=1; i<levels.length; i++){
+    var row = levels[i];
+    row.reverse();
+
+    var totalWidth = getNodesWidth(row);
+
+    if (totalWidth > biggestWidth){
+      widestLevel = i;
+      biggestWidth = totalWidth;
+    }
+  }
+
+  // sort out widest level first
+  var row = levels[widestLevel];
+
+  var totalWidth = getNodesWidth(row);
+  var middle = startNode.bounds.center.x
+
+  var left = middle - totalWidth/2;
+  var top = startNode.bounds.top + widestLevel * (- verticalSpacing - startNode.height);
+
+  for (var j in row){
+    var aNode = row[j];
+    var xOffset = 0;
+    var nodes = row.slice(0, j);
+    xOffset = getNodesWidth(nodes);
+
+    aNode.x = left + xOffset;
+    aNode.y = top;
+  }
+
+  // keeping track of the nodes that can't be sorted
+  var failedUpSort = [];
+  var failedDownSort = [];
+
+  // sort up from widest level
+  for (var i = widestLevel+1; i<levels.length; i++){
+    var row = levels[i];
+    for (var j in row){
+      var belowNodes = row[j].linkedOutNodes.filter(function(x){return nodeHeights[x.path] >= widestLevel});
+      if (!belowNodes.length){
+        failedUpSort.push(row[j]);
+      }else{
+        row[j].centerAbove(belowNodes, 0, -verticalSpacing);
+      }
+    }
+  }
+
+  // sort below widest level
+  for (var i = widestLevel-1; i>0; i--){
+    var row = levels[i];
+    for (var j in row){
+      var aboveNodes = row[j].linkedInNodes.filter(function(x){return nodeHeights[x.path] <= widestLevel});
+      if (!aboveNodes.length){
+        failedDownSort.push(row[j]);
+      }else{
+        row[j].centerBelow(aboveNodes, 0, verticalSpacing);
+      }
+    }
+  }
+
+  // sort orphaned nodes by placing them on an inbetween level
+  for (var i in failedUpSort){
+    var sortNode = failedUpSort[i];s
+    sortNode.centerBelow(sortNode.linkedInNodes, 0, verticalSpacing/2);
+  }
+
+  // sort orphaned nodes
+  for (var i in failedDownSort){
+    var sortNode = failedDownSort[i];
+    sortNode.centerAbove(sortNode.linkedOutNodes, 0, -verticalSpacing/2);
+  }
+
+
+  $.endUndo()
+}
 
  /**
  * Create a clone of the node.
@@ -1922,9 +2124,22 @@ $.oDrawingNode.prototype.exposeAllDrawings = function(framesPerDrawing){
     frameNumber+=framesPerDrawing;
   }
 
-  var _column = this.attributes.drawing.element.column;
+  var _column = this.timingColumn;
   var _exposures = _column.getKeyframes();
   _column.extendExposures(_exposures, framesPerDrawing-1);
+}
+
+
+/**
+ * Adds a new empty drawing to the drawingNode at the given frame. Can specify a file for the drawing (to import it)
+ * @see $#oElement.addDrawing
+ * @param {int} [atFrame=1] The frame at which to add the drawing on the $.oDrawingColumn. Values < 1 create no exposure
+ * @param {string} [name] The name of the drawing to add.
+ * @param {string} [filename] Optionally, a path for a drawing file to use for this drawing. Can pass an oFile object as well.
+ * @param {bool} [convertToTvg=false] If the filename isn't a tvg file, specify if you want it converted (this doesn't vectorize the drawing).
+ */
+$.oDrawingNode.prototype.addDrawing = function(atFrame, name, filename, convertToTvg){
+  this.element.addDrawing(atFrame, name, filename, convertToTvg);
 }
 
 
@@ -1934,7 +2149,7 @@ $.oDrawingNode.prototype.exposeAllDrawings = function(framesPerDrawing){
  * @param {int} frameNum
  */
 $.oDrawingNode.prototype.showDrawingAtFrame = function(drawing, frameNum){
-  var _column = this.attributes.drawing.element.column;
+  var _column = this.timingColumn;
   _column.setValue(drawing.name, frameNum);
 }
 
@@ -2643,6 +2858,17 @@ $.oGroupNode.prototype.addNode = function( type, name, nodePosition ){
 
   var _group = this.path;
 
+  // get unique name if type is DISPLAY as all other types increment on their own
+  if (type == "DISPLAY"){
+    var num = 1;
+    var displayName = name;
+    while (this.$node(displayName)){
+      displayName = name + "_" + num;
+      num++;
+    }
+    name = displayName;
+  }
+
   // create node and return result (this sanitizes/increments the name, so we only create the oNode with the returned value)
   var _path = node.add(_group, name, type, nodePosition.x, nodePosition.y, nodePosition.z);
   _node = this.scene.getNodeByPath(_path);
@@ -2685,6 +2911,10 @@ $.oGroupNode.prototype.addDrawingNode = function( name, nodePosition, oElementOb
   // setup the node
   // setup animate mode/separate based on preferences?
   _node.attributes.drawing.element.column = drawingColumn;
+  var _prefs = this.$.app.preferences
+  _node.can_animate = _prefs.ELEMENT_CAN_BE_ANIMATED_DEFAULT_VALUE;
+  _node.offset.separate = _prefs.READ_DEFAULT_SEPARATE_POSITION;
+  _node.scale.separate = _prefs.READ_DEFAULT_SEPARATE_SCALE;
 
   this.$.endUndo();
 
@@ -2835,7 +3065,7 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
       newBackdrops[i].x += nodePosition.x;
       newBackdrops[i].y += nodePosition.y;
     }
-    
+
     // move waypoints in the top level of the template
     for (var i in _nodes) {
       var nodePorts = _nodes[i].outPorts;
@@ -2852,7 +3082,7 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
         }
       }
     }
-    
+
   }
 
   this.$.endUndo();
