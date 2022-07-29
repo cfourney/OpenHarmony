@@ -12952,12 +12952,12 @@ Pass a value to recurse to look into the groups as well.
     <div class="nameContainer">
         <h4 class="name" id="importImage">
             
-            importImage<span class="signature">(path, <span class="optional">alignment</span>, <span class="optional">nodePosition</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oNode.html">$.oNode</a>}</span>
+            importImage<span class="signature">(path, <span class="optional">alignment</span>, <span class="optional">nodePosition</span>, <span class="optional">convertToTvg</span>, <span class="optional">resized_axis</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oNode.html">$.oNode</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 3511
+            openHarmony/openHarmony_node.js, line 3513
         </div>
         
     </div>
@@ -13102,6 +13102,78 @@ Pass a value to recurse to look into the groups as well.
         </tr>
 	
 	
+	
+        <tr>
+            
+                <td class="name"><code>convertToTvg</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Convert image to TVG format.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>resized_axis</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    "Y"
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Resize image to fit with scene resolution in given axis.</td>
+        </tr>
+	
+	
 	</tbody>
 </table>
     
@@ -13185,7 +13257,7 @@ Pass a value to recurse to look into the groups as well.
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 3553
+            openHarmony/openHarmony_node.js, line 3563
         </div>
         
     </div>
@@ -13379,12 +13451,12 @@ Pass a value to recurse to look into the groups as well.
     <div class="nameContainer">
         <h4 class="name" id="importImageSequence">
             
-            importImageSequence<span class="signature">(imagePaths, <span class="optional">exposureLength</span>, <span class="optional">convertToTvg</span>, <span class="optional">alignment</span>, <span class="optional">nodePosition</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oDrawingNode.html">$.oDrawingNode</a>}</span>
+            importImageSequence<span class="signature">(imagePaths, <span class="optional">exposureLength</span>, <span class="optional">convertToTvg</span>, <span class="optional">alignment</span>, <span class="optional">nodePosition</span>, <span class="optional">resized_axis</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.oDrawingNode.html">$.oDrawingNode</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 3573
+            openHarmony/openHarmony_node.js, line 3584
         </div>
         
     </div>
@@ -13596,6 +13668,42 @@ Pass a value to recurse to look into the groups as well.
                     
                 
                 the position of the node in the nodeview</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>resized_axis</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    "Y"
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Resize image to fit with scene resolution in given axis.</td>
         </tr>
 	
 	
@@ -14043,7 +14151,7 @@ function importCustomPSD(){
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_node.js, line 3651
+            openHarmony/openHarmony_node.js, line 3662
         </div>
         
     </div>
@@ -17641,7 +17749,7 @@ function importCustomPSD(){
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Jun 28 2022 17:07:23 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Jul 29 2022 08:17:44 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
