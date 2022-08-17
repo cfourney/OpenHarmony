@@ -518,6 +518,7 @@ $.oAttribute.prototype.getValue = function (frame) {
             _value = new this.$.oPoint(_value.x, _value.y)
             break;
 
+        case 'QUATERNION_PATH':
         case 'POSITION_3D':
             _value = _attr.pos3dValueAt(frame)
             _value = new this.$.oPoint(_value.x, _value.y, _value.z)
@@ -638,6 +639,7 @@ $.oAttribute.prototype.setValue = function (value, frame) {
             _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
             break;
 
+        case 'QUATERNION_PATH':
         case "POSITION_3D":
             value = Point3d(value.x, value.y, value.z);
             _animate ? _attr.setValueAt(value, frame) : _attr.setValue(value);
@@ -648,9 +650,6 @@ $.oAttribute.prototype.setValue = function (value, frame) {
             value = (value instanceof this.$.oDrawing) ? value.name : value;
             column.setEntry(_column.uniqueName, 1, frame, value+"");
             break;
-
-        case "QUATERNIONPATH" :
-            // set quaternion paths as textattr until a better way is found
 
         default :
             try{
