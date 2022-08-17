@@ -621,3 +621,7 @@ $.oFrame.prototype.extend = function( duration, replace ){
         _frames[startExtending+i].value = _value;
     }
 }
+
+$.oFrame.toString = function(){
+  return '<oFrame object COLUMN:'+this.column.name+' frameNumber:'+this.frameNumber + ' value:'+this.value;
+}
