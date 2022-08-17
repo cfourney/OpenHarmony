@@ -492,6 +492,19 @@ $.clearOpenHarmonyCache = function(){
 $.clearOpenHarmonyCache();
 
 
+//----- General Helpers --------------------
+
+/**
+ * Linear interpolation between two floating point numerical values
+ * @param {float} a   the first value to interpolate from
+ * @param {float} b   the second value to interpolate towards
+ * @param {float} t   a number between 0 (returns a) and 1 (returns b)
+ * @returns {float}  the value interpolated between a and b at the proportion t
+ */
+$.lerp = function(a, b, t){
+  return (1 - t) * a + t * b;
+}
+
 //---- Instantiate Class $ DOM Access ------
 function addDOMAccess( target, item ){
   Object.defineProperty( target, '$', {
