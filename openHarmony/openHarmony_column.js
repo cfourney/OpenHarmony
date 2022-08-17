@@ -222,6 +222,7 @@ Object.defineProperty($.oColumn.prototype, 'easeType', {
         switch(this.type){
             case "BEZIER":
                 return "BEZIER";
+            case "QUATERNION_PATH":
             case "3DPATH":
                 return column.velocityType( this.uniqueName );
             default:
@@ -283,7 +284,6 @@ $.oColumn.prototype.extendExposures = function( exposures, amount, replace){
     for (var i in exposures) {
         if (!exposures[i].isBlank) exposures[i].extend(amount, replace);
     }
-
 }
 
 
@@ -472,9 +472,63 @@ $.oColumn.prototype.getTimelineLayer = function(timeline){
 
 
 /**
+ * Create/Set a key at the given percentage between the surrounding keys. Requires the column to contain at least 2 keys.
+ * @param {int} percentage   a value between 0 and 100 representing the position between first and second key
+ * @param {int} frameNumber  the frame number to place the new value.
+ * @example
+ * // grab the current node and create a key at the current frame halfway between existing keys on all linked columns for this node.
+ * var selectedNode = $.scn.selectedNodes[0];
+ * var columns = _node.linkedColumns;
+ * var percentage = 50;
+ * var frameNumber = $.scn.currentFrame();
+ *
+ * for (var i in columns){
+ *   try{
+ *	   columns[i].interpolateValueAtFrame(percentage, frameNumber); // ommitting the arguments will create a key at 50% on current frame by default.
+ *   }catch(e){
+ *     // will output errors for columns with less than 2 keys or which type don't support interpolation (for ex, DRAWING)
+ *     $.log(e);
+ *   }
+ * }
+ */
+$.oColumn.prototype.interpolateValueAtFrame = function(percentage, frameNumber){
+  if (this.keyframes.length < 2) throw new Error("Can't interpolate, column "+this.name+" has less than two keys.");
+  if (typeof frameNumber === 'undefined') var frameNumber = this.$.scn.currentFrame;
+  if (typeof percentage === 'undefined') var percentage = 50;
+
+  $.log(frameNumber)
+  $.log(this.frames[frameNumber])
+  var _frame = this.frames[frameNumber];
+  var _leftKey = _frame.keyframeLeft;
+  var _rightKey = _frame.keyframeRight;
+
+  switch (this.type){
+    case "BEZIER":
+      var a = _leftKey.value;
+      var b = _rightKey.value;
+      _frame.value = this.$.lerp(a, b, percentage/100);
+      break;
+
+    case "3DPATH":
+      var a = _leftKey.value.position;
+      var b = _rightKey.value.position;
+      _frame.value = a.lerp(b, percentage/100);
+
+    case "QUATERNIONPATH":
+      var a = _leftKey.value;
+      var b = _rightKey.value;
+      _frame.value = a.lerp(b, percentage/100);
+      break;
+
+    default:
+      throw new Error("Interpolation not supported for column type "+this.type+".");
+  }
+}
+
+/**
  * @private
  */
-$.oColumn.prototype.toString = function(){
+ $.oColumn.prototype.toString = function(){
   return "[object $.oColumn '"+this.name+"']"
 }
 
