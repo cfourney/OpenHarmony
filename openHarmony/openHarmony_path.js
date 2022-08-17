@@ -59,9 +59,26 @@
  * @property {oFrame}                  frame                 The frame on which the point is placed.
  */
 $.oPathPoint = function(oColumnObject, oFrameObject){
-    this.column = oColumnObject;
-    this.frame = oFrameObject;
+  this.column = oColumnObject;
+  this.frame = oFrameObject;
 }
+
+/**
+ * The coordinates of the 3D path point as an oPoint
+ * @name $.oPathPoint#position
+ * @type {$.oPoint}
+ */
+Object.defineProperty($.oPathPoint.prototype, 'position', {
+  get: function(){
+    return new this.$.oPoint(this.x, this.y, this.z);
+  },
+
+  set : function (newPosition){
+    var _column = this.column.uniqueName;
+    var _index = this.pointIndex;
+    func.setPointPath3d (_column, _index, newPosition.x, newPosition.y, newPosition.z, this.tension, this.continuity, this.bias);
+  }
+})
 
 
 /**
