@@ -2644,6 +2644,19 @@ Object.defineProperty($.oGroupNode.prototype, "nodes", {
 });
 
 
+ /**
+ * All the nodes contained within the group, excluding multiports.
+ * @name $.oGroupNode#nodesNoMultiport
+ * @readonly
+ * @type {$.oNode[]}
+ */
+Object.defineProperty($.oGroupNode.prototype, "nodesNoMultiport", {
+  get : function() {
+    return this.nodes.filter(function(x){return x.type != "MULTIPORT_IN" && x.type != "MULTIPORT_OUT"})
+  }
+});
+
+
 
  /**
  * All the backdrops contained within the group.
