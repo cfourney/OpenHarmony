@@ -170,7 +170,7 @@ Object.defineProperty($.oFrame.prototype, 'isKeyframe', {
         }else{
           return false;   //No valid way to check for keys on a drawing without getTimesheetEntry
         }
-      }else if (['BEZIER', '3DPATH', 'EASE', 'QUATERNION'].indexOf(this.column.type) != -1){
+      }else if (['BEZIER', '3DPATH', 'EASE', 'QUATERNIONPATH'].indexOf(this.column.type) != -1){
         return column.isKeyFrame(_column, 1, this.frameNumber);
       }
       return false;
