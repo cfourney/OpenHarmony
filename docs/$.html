@@ -70,6 +70,8 @@
             
                 <li data-name="$.getInstanceFromCache"><a href="$.html#.getInstanceFromCache">getInstanceFromCache</a></li>
             
+                <li data-name="$.lerp"><a href="$.html#.lerp">lerp</a></li>
+            
                 <li data-name="$.oUtils"><a href="$.html#.oUtils">oUtils</a></li>
             
                 <li data-name="$#alert"><a href="$.html#alert">alert</a></li>
@@ -1272,6 +1274,8 @@
             
                 <li data-name="$.oColumn#getValue"><a href="$.oColumn.html#getValue">getValue</a></li>
             
+                <li data-name="$.oColumn#interpolateValueAtFrame"><a href="$.oColumn.html#interpolateValueAtFrame">interpolateValueAtFrame</a></li>
+            
                 <li data-name="$.oColumn#remove"><a href="$.oColumn.html#remove">remove</a></li>
             
                 <li data-name="$.oColumn#removeDuplicateKeys"><a href="$.oColumn.html#removeDuplicateKeys">removeDuplicateKeys</a></li>
@@ -1583,6 +1587,8 @@
                 <li data-name="$.oDrawingColumn#getTimelineLayer"><a href="$.oDrawingColumn.html#getTimelineLayer">getTimelineLayer</a></li>
             
                 <li data-name="$.oDrawingColumn#getValue"><a href="$.oDrawingColumn.html#getValue">getValue</a></li>
+            
+                <li data-name="$.oDrawingColumn#interpolateValueAtFrame"><a href="$.oDrawingColumn.html#interpolateValueAtFrame">interpolateValueAtFrame</a></li>
             
                 <li data-name="$.oDrawingColumn#remove"><a href="$.oDrawingColumn.html#remove">remove</a></li>
             
@@ -2952,6 +2958,8 @@
                 <li data-name="$.oPathPoint#lock"><a href="$.oPathPoint.html#lock">lock</a></li>
             
                 <li data-name="$.oPathPoint#pointIndex"><a href="$.oPathPoint.html#pointIndex">pointIndex</a></li>
+            
+                <li data-name="$.oPathPoint#position"><a href="$.oPathPoint.html#position">position</a></li>
             
                 <li data-name="$.oPathPoint#tension"><a href="$.oPathPoint.html#tension">tension</a></li>
             
@@ -5763,6 +5771,197 @@ a cached class instance or null if no cached instance exists.
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id=".lerp">
+            
+            <span class="type-signature static">static</span>$.lerp<span class="signature">(a, b, t)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{float}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony.js, line 504
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Linear interpolation between two floating point numerical values
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>a</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                the first value to interpolate from</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                the second value to interpolate towards</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>t</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">float</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                a number between 0 (returns a) and 1 (returns b)</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        float
+                        
+                    
+            </td>
+            <td class="description last">the value interpolated between a and b at the proportion t</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id=".oUtils">
             
             <span class="type-signature static">static</span>$.oUtils<span class="signature">()</span>
@@ -8481,7 +8680,7 @@ If beginUndo function is called multiple time, each call must be matched with th
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Jul 29 2022 08:17:43 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Aug 17 2022 13:10:18 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
