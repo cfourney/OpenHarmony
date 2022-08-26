@@ -1866,7 +1866,7 @@ $.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, 
 
   if (_group != null && _group instanceof this.$.oGroupNode){
     this.$.log("oScene.importTemplate is deprecated. Use oGroupNode.importTemplate instead")
-    var _node = _group.addNode(tplPath, destinationNodes, extendScene, nodePosition, pasteOptions )
+    var _nodes = _group.importTemplate(tplPath, destinationNodes, extendScene, nodePosition, pasteOptions);
     return _nodes;
   }else{
     throw new Error (group+" is an invalid group to import the template into.")
