@@ -419,6 +419,35 @@ $.oApp.prototype.getValidStencils = function (tool){
 }
 
 
+/**
+ * Calls a function from one of the menus of Harmony. Doesn't support submenus at the moment. Doesn't work in batch mode.
+ * @param {string} menuName         The name of the menu containing the action (must be a top level menu such as File, Edit etc)
+ * @param {string} menuString       The menu entry to trigger.
+ */
+$.oApp.prototype.runMenuCommand = function(menuName, menuString){
+  var menubar = this.mainWindow.menuBar();
+  var menus = menubar.children();
+
+  for (var i in menus) {
+    //Go through each menu option.
+    var menu = menus[i];
+
+    if (menu instanceof QMenu && menu.title == menuName) {
+      //We found the windows menu!
+      var menu_items = menu.children();
+
+      for (var j in menu_items) {
+        var action = menu_items[j];
+        if (action instanceof QAction && action.text.toLowerCase() == menuString.toLowerCase()) {//We found the drawing action in the Windos menu
+          action.trigger();  //Trigger the menu
+          System.processOneEvent();  //Allow Harmony to process one event (the above action) while stuck in JS
+          return;
+        }
+      }
+    }
+  }
+}
+
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
