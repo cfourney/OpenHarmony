@@ -250,23 +250,22 @@ $.oFolder.prototype.getFiles = function(filter){
 
 /**
  * lists the folder names contained inside the folder.
- * @param   {string}   [filter="*.*"]    Filter wildcards for the content of the folder.
+ * @param   {string|string[]} [filter="*"] Wildcard (globbing) filter that understands * and ? wildcards. Used to filter the contents of the folder.
  *
- * @returns {string[]}  The names of the files contained in the folder that match the filter.
+ * @returns {string[]}  Names of the files contained in the folder that match the namefilter(s).
  */
 $.oFolder.prototype.listFolders = function(filter){
-
     if (typeof filter === 'undefined') var filter = "*";
+    var _filter = typeof filter === "string" ? [filter] : filter;
 
-    var _dir = new QDir;
-    _dir.setPath(this.path);
+    var _dir = new QDir(this.path);
 
-    if (!_dir.exists){
+    if (!_dir.exists()){
       this.$.debug("can't get files from folder "+this.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
       return [];
     }
 
-    _dir.setNameFilters([filter]);
+    _dir.setNameFilters(_filter);
     _dir.setFilter(QDir.Dirs); //QDir.NoDotAndDotDot not supported?
     var _folders = _dir.entryList();
 
@@ -278,21 +277,16 @@ $.oFolder.prototype.listFolders = function(filter){
 
 /**
  * gets the folders inside the oFolder
- * @param   {string}   [filter]              Filter wildcards for the content of the folder.
+ * @param   {string|string[]} [filter="*"] Wildcard (globbing) filter that understands * and ? wildcards. Used to filter the contents of the folder.
  *
- * @returns {$.oFolder[]}      A list of folders contained in the folder, as oFolder objects.
+ * @returns {$.oFolder[]}  A list of folders contained in the folder that match the namefilter(s), as oFolder objects.
  */
-$.oFolder.prototype.getFolders = function( filter ){
-    if (typeof filter === 'undefined') var filter = "*";
-    // returns the list of $.oFile in a directory that match a filter
+$.oFolder.prototype.getFolders = function(filter){
 
-    var _path = this.path;
-
-    var _folders = [];
-    var _folders_list = this.listFolders(filter);
-    for( var i in _folders_list){
-      _folders.push( new this.$.oFolder(_path+'/'+_folders_list[i]));
-    }
+    var _folderList = this.listFolders(filter);
+    var _folders = _folderList.map(function(folderPath) {
+      return new this.$.oFolder(this.path+'/'+ folderPath);
+    }, this);
 
     return _folders;
 }
