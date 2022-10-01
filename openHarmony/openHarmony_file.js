@@ -208,18 +208,23 @@ Object.defineProperty($.oFolder.prototype, 'content', {
 
 
 /**
- * Lists the file names contained inside the folder.
- * @param   {string}   [filter]               Filter wildcards for the content of the folder.
+ * lists the file names contained inside the folder.
+ * @param   {string|string[]} [filter="*"] Wildcard (globbing) filter that understands * and ? wildcards. Used to filter the contents of the folder.
  *
- * @returns {string[]}   The names of the files contained in the folder that match the filter.
+ * @returns {string[]}  Names of the files contained in the folder that match the namefilter(s).
  */
 $.oFolder.prototype.listFiles = function(filter){
     if (typeof filter === 'undefined') var filter = "*";
+    var _filter = typeof filter === "string" ? [filter] : filter;
 
-    var _dir = new QDir;
-    _dir.setPath(this.path);
-    if (!_dir.exists) throw new Error("can't get files from folder "+this.path+" because it doesn't exist");
-    _dir.setNameFilters([filter]);
+    var _dir = new QDir(this.path);
+
+    if (!_dir.exists()){
+      this.$.debug("can't get files from folder "+this.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
+      return [];
+    }
+
+    _dir.setNameFilters(_filter);
     _dir.setFilter( QDir.Files);
     var _files = _dir.entryList();
 
@@ -229,21 +234,15 @@ $.oFolder.prototype.listFiles = function(filter){
 
 /**
  * get the files from the folder
- * @param   {string}   [filter]     Filter wildcards for the content of the folder.
+ * @param   {string|string[]} [filter="*"] Wildcard (globbing) filter that understands * and ? wildcards. Used to filter the contents of the folder.
  *
- * @returns {$.oFile[]}   A list of files contained in the folder as oFile objects.
+ * @returns {$.oFile[]}  A list of files contained in the folder that match the namefilter(s), as oFile objects.
  */
-$.oFolder.prototype.getFiles = function( filter ){
-    if (typeof filter === 'undefined') var filter = "*";
-    // returns the list of $.oFile in a directory that match a filter
-
-    var _path = this.path;
-
-    var _files = [];
-    var _file_list = this.listFiles(filter);
-    for( var i in _file_list){
-      _files.push( new this.$.oFile( _path+'/'+_file_list[i] ) );
-    }
+$.oFolder.prototype.getFiles = function(filter){
+    var _fileList = this.listFiles(filter);
+    var _files = _fileList.map(function(filePath) {
+      return new this.$.oFile(this.path + "/" + filePath);
+    }, this);
 
     return _files;
 }
