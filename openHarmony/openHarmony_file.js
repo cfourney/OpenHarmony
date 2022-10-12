@@ -260,7 +260,7 @@ function _oListFolderContents(path, contentType, filter) {
  * @returns {string[]}  Names of the files contained in the folder that match the namefilter(s).
  */
 $.oFolder.prototype.listFiles = function(filter){
-    return _oListFolderContents(this.path, _oFolderContentType.FILE, filter);
+  return _oListFolderContents(this.path, _oFolderContentType.FILE, filter);
 }
 
 
@@ -271,12 +271,12 @@ $.oFolder.prototype.listFiles = function(filter){
  * @returns {$.oFile[]}  A list of files contained in the folder that match the namefilter(s), as oFile objects.
  */
 $.oFolder.prototype.getFiles = function(filter){
-    var _fileList = this.listFiles(filter);
-    var _files = _fileList.map(function(filePath) {
-      return new this.$.oFile(this.path + "/" + filePath);
-    }, this);
+  var _fileList = this.listFiles(filter);
+  var _files = _fileList.map(function(filePath) {
+    return new this.$.oFile(this.path + "/" + filePath);
+  }, this);
 
-    return _files;
+  return _files;
 }
 
 
@@ -299,12 +299,12 @@ $.oFolder.prototype.listFolders = function(filter){
  */
 $.oFolder.prototype.getFolders = function(filter){
 
-    var _folderList = this.listFolders(filter);
-    var _folders = _folderList.map(function(folderPath) {
-      return new this.$.oFolder(this.path+'/'+ folderPath);
-    }, this);
+  var _folderList = this.listFolders(filter);
+  var _folders = _folderList.map(function(folderPath) {
+    return new this.$.oFolder(this.path + "/" + folderPath);
+  }, this);
 
-    return _folders;
+  return _folders;
 }
 
 
