@@ -208,27 +208,59 @@ Object.defineProperty($.oFolder.prototype, 'content', {
 
 
 /**
+ * Enum for the type of content to retrieve from the oFolder.
+ * @enum {QFlag}
+ */
+const _oFolderContentType = {
+  FOLDER: QDir.Filters(QDir.Dirs | QDir.NoDotAndDotDot),
+  FILE: QDir.Files
+}
+
+
+/**
+ * Lists the contents of the folder, filtered by the contentType and name filter(s).
+ * @param   {$.oFolder}            [path]             Path to the folder.
+ * @param   {_oFolderContentType}  [contentType]      Type of content to retrieve.
+ * @param   {string|string[]}      [filter="*"]       Single filter, or array of filters for the contents of the folder.
+ *
+ * @returns {string[]}   Names of the folder contents that match the filter and type provided.
+ */
+function _oListFolderContents(path, contentType, filter) {
+  // Undefined filters become a wildcard
+  // A single string filter becomes a single-item array
+  // Array of filters are unchanged.
+  var _filter;
+  if (typeof filter === "undefined") {
+    _filter = ["*"];
+  }
+  else if (typeof filter === "string") {
+    _filter = [filter];
+  }
+  else {
+    _filter = filter;
+  }
+
+  var _dir = new QDir(path);
+  if (!_dir.exists()){
+    this.$.debug("can't get files from folder "+path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
+    return [];
+  }
+
+  _dir.setNameFilters(_filter);
+  _dir.setFilter(contentType);
+
+  return _dir.entryList()
+}
+
+
+/**
  * lists the file names contained inside the folder.
  * @param   {string|string[]} [filter="*"] Wildcard (globbing) filter that understands * and ? wildcards. Used to filter the contents of the folder.
  *
  * @returns {string[]}  Names of the files contained in the folder that match the namefilter(s).
  */
 $.oFolder.prototype.listFiles = function(filter){
-    if (typeof filter === 'undefined') var filter = "*";
-    var _filter = typeof filter === "string" ? [filter] : filter;
-
-    var _dir = new QDir(this.path);
-
-    if (!_dir.exists()){
-      this.$.debug("can't get files from folder "+this.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
-      return [];
-    }
-
-    _dir.setNameFilters(_filter);
-    _dir.setFilter( QDir.Files);
-    var _files = _dir.entryList();
-
-    return _files;
+    return _oListFolderContents(this.path, _oFolderContentType.FILE, filter);
 }
 
 
@@ -255,23 +287,7 @@ $.oFolder.prototype.getFiles = function(filter){
  * @returns {string[]}  Names of the files contained in the folder that match the namefilter(s).
  */
 $.oFolder.prototype.listFolders = function(filter){
-    if (typeof filter === 'undefined') var filter = "*";
-    var _filter = typeof filter === "string" ? [filter] : filter;
-
-    var _dir = new QDir(this.path);
-
-    if (!_dir.exists()){
-      this.$.debug("can't get files from folder "+this.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
-      return [];
-    }
-
-    _dir.setNameFilters(_filter);
-    _dir.setFilter(QDir.Dirs); //QDir.NoDotAndDotDot not supported?
-    var _folders = _dir.entryList();
-
-    _folders = _folders.filter(function(x){return x!= "." && x!= ".."})
-
-    return _folders;
+  return _oListFolderContents(this.path, _oFolderContentType.FOLDER, filter);
 }
 
 
