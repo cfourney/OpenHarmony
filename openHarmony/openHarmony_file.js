@@ -211,7 +211,7 @@ Object.defineProperty($.oFolder.prototype, 'content', {
  * Enum for the type of content to retrieve from the oFolder.
  * @enum {QFlag}
  */
-const _oFolderContentType = {
+$.oFolder.prototype.contentType = {
   FOLDER: QDir.Filters(QDir.Dirs | QDir.NoDotAndDotDot),
   FILE: QDir.Files
 }
@@ -219,13 +219,22 @@ const _oFolderContentType = {
 
 /**
  * Lists the contents of the folder, filtered by the contentType and name filter(s).
- * @param   {$.oFolder}            [path]             Path to the folder.
- * @param   {_oFolderContentType}  [contentType]      Type of content to retrieve.
- * @param   {string|string[]}      [filter="*"]       Single filter, or array of filters for the contents of the folder.
+ * Primarily a helper function for listFile/listFolder, but can be called directly to provide custom filtering
+ * by providing QDir::Filters to the contentType parameter.
+ * @param   {$.oFolder.contentType} [contentType]      Type of content to retrieve.
+ * @param   {string|string[]}       [filter="*"]       Single filter, or array of filters for the contents of the folder.
+ * @example
+ * // List files with a case-sensitive filter. Will match l* and not L*
+ * var dir = new $.oFolder("/tmp/example");
+ * dir.listEntries(QDir.Filters(QDir.Files | QDir.CaseSensitive), "l*")
+ * @example
+ * // List files including hidden files.
+ * var dir = new $.oFolder("/tmp/example");
+ * dir.listEntries(QDir.Filters(QDir.Files | QDir.Hidden))
  *
  * @returns {string[]}   Names of the folder contents that match the filter and type provided.
  */
-function _oListFolderContents(path, contentType, filter) {
+$.oFolder.prototype.listEntries = function(contentType, filter) {
   // Undefined filters become a wildcard
   // A single string filter becomes a single-item array
   // Array of filters are unchanged.
@@ -240,7 +249,7 @@ function _oListFolderContents(path, contentType, filter) {
     _filter = filter;
   }
 
-  var _dir = new QDir(path);
+  var _dir = new QDir(this.path);
   if (!_dir.exists()){
     this.$.debug("can't get files from folder "+path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
     return [];
@@ -260,7 +269,7 @@ function _oListFolderContents(path, contentType, filter) {
  * @returns {string[]}  Names of the files contained in the folder that match the namefilter(s).
  */
 $.oFolder.prototype.listFiles = function(filter){
-  return _oListFolderContents(this.path, _oFolderContentType.FILE, filter);
+  return this.listEntries(this.contentType.FILE, filter);
 }
 
 
@@ -287,7 +296,7 @@ $.oFolder.prototype.getFiles = function(filter){
  * @returns {string[]}  Names of the files contained in the folder that match the namefilter(s).
  */
 $.oFolder.prototype.listFolders = function(filter){
-  return _oListFolderContents(this.path, _oFolderContentType.FOLDER, filter);
+  return this.listEntries(this.contentType.FOLDER, filter);
 }
 
 
