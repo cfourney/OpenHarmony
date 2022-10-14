@@ -1995,6 +1995,8 @@
             
                 <li data-name="$.oFolder#content"><a href="$.oFolder.html#content">content</a></li>
             
+                <li data-name="$.oFolder#ContentType"><a href="$.oFolder.html#ContentType">ContentType</a></li>
+            
                 <li data-name="$.oFolder#exists"><a href="$.oFolder.html#exists">exists</a></li>
             
                 <li data-name="$.oFolder#files"><a href="$.oFolder.html#files">files</a></li>
@@ -2027,6 +2029,8 @@
                 <li data-name="$.oFolder#getFiles"><a href="$.oFolder.html#getFiles">getFiles</a></li>
             
                 <li data-name="$.oFolder#getFolders"><a href="$.oFolder.html#getFolders">getFolders</a></li>
+            
+                <li data-name="$.oFolder#listEntries"><a href="$.oFolder.html#listEntries">listEntries</a></li>
             
                 <li data-name="$.oFolder#listFiles"><a href="$.oFolder.html#listFiles">listFiles</a></li>
             
@@ -4613,6 +4617,139 @@
             
 <dt>
     <div class="nameContainer">
+        <h4 class="name" id="ContentType">ContentType<span class="type-signature type qflag">QFlag</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Enum for the type of content to retrieve from the oFolder.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>FOLDER</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">QFlag</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+                <td class="default">
+                
+                    
+                
+                </td>
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>FILE</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">QFlag</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+                <td class="default">
+                
+                    QDir.Files
+                
+                </td>
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
         <h4 class="name" id="exists">exists<span class="type-signature type string">string</span> </h4>
     </div>
     
@@ -4900,7 +5037,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 326
+            openHarmony/openHarmony_file.js, line 344
         </div>
         
     </div>
@@ -5126,7 +5263,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 306
+            openHarmony/openHarmony_file.js, line 324
         </div>
         
     </div>
@@ -5226,7 +5363,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 440
+            openHarmony/openHarmony_file.js, line 458
         </div>
         
     </div>
@@ -5342,7 +5479,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 236
+            openHarmony/openHarmony_file.js, line 282
         </div>
         
     </div>
@@ -5374,6 +5511,8 @@
 		<th>Type</th>
 		
 		
+		<th>Default</th>
+		
 		
 		<th class="last">Description</th>
 	</tr>
@@ -5391,11 +5530,20 @@
             
                 
 <span class="param-type">string</span>
+|
+
+<span class="param-type">Array.&lt;string></span>
 
 
             
             </td>
             
+            
+                <td class="default">
+                
+                    "*"
+                
+                </td>
             
             
             <td class="description last">
@@ -5407,7 +5555,7 @@
                         
                     
                 
-                Filter wildcards for the content of the folder.</td>
+                Wildcard (globbing) filter that understands * and ? wildcards. Used to filter the contents of the folder.</td>
         </tr>
 	
 	
@@ -5472,7 +5620,7 @@
                         
                     
             </td>
-            <td class="description last">A list of files contained in the folder as oFile objects.</td>
+            <td class="description last">A list of files contained in the folder that match the namefilter(s), as oFile objects.</td>
         </tr>
     
     </tbody>
@@ -5494,7 +5642,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 286
+            openHarmony/openHarmony_file.js, line 309
         </div>
         
     </div>
@@ -5526,6 +5674,8 @@
 		<th>Type</th>
 		
 		
+		<th>Default</th>
+		
 		
 		<th class="last">Description</th>
 	</tr>
@@ -5543,11 +5693,20 @@
             
                 
 <span class="param-type">string</span>
+|
+
+<span class="param-type">Array.&lt;string></span>
 
 
             
             </td>
             
+            
+                <td class="default">
+                
+                    "*"
+                
+                </td>
             
             
             <td class="description last">
@@ -5559,7 +5718,7 @@
                         
                     
                 
-                Filter wildcards for the content of the folder.</td>
+                Wildcard (globbing) filter that understands * and ? wildcards. Used to filter the contents of the folder.</td>
         </tr>
 	
 	
@@ -5624,7 +5783,7 @@
                         
                     
             </td>
-            <td class="description last">A list of folders contained in the folder, as oFolder objects.</td>
+            <td class="description last">A list of folders contained in the folder that match the namefilter(s), as oFolder objects.</td>
         </tr>
     
     </tbody>
@@ -5639,14 +5798,14 @@
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="listFiles">
+        <h4 class="name" id="listEntries">
             
-            listFiles<span class="signature">(<span class="optional">filter</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;string>}</span>
+            listEntries<span class="signature">(<span class="optional">contentType</span>, <span class="optional">filter</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;string>}</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 216
+            openHarmony/openHarmony_file.js, line 237
         </div>
         
     </div>
@@ -5657,7 +5816,9 @@
     
     
     <div class="description">
-        Lists the file names contained inside the folder.
+        Lists the contents of the folder, filtered by the contentType and name filter(s).
+Primarily a helper function for listFile/listFolder, but can be called directly to provide custom filtering
+by providing QDir::Filters to the contentType parameter.
     </div>
     
 
@@ -5678,6 +5839,8 @@
 		<th>Type</th>
 		
 		
+		<th>Default</th>
+		
 		
 		<th class="last">Description</th>
 	</tr>
@@ -5688,18 +5851,22 @@
 	
         <tr>
             
-                <td class="name"><code>filter</code></td>
+                <td class="name"><code>contentType</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">$.oFolder.ContentType</span>
 
 
             
             </td>
             
+            
+                <td class="default">
+                
+                </td>
             
             
             <td class="description last">
@@ -5711,7 +5878,46 @@
                         
                     
                 
-                Filter wildcards for the content of the folder.</td>
+                Type of content to retrieve.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>filter</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">Array.&lt;string></span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    "*"
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Single filter, or array of filters for the contents of the folder.</td>
         </tr>
 	
 	
@@ -5776,7 +5982,187 @@
                         
                     
             </td>
-            <td class="description last">The names of the files contained in the folder that match the filter.</td>
+            <td class="description last">Names of the folder contents that match the filter and type provided.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Examples</h5>
+        
+
+    
+    <pre class="prettyprint"><code>// List files with a case-sensitive filter. Will match l* and not L*
+var dir = new $.oFolder("/tmp/example");
+dir.listEntries(QDir.Filters(QDir.Files | QDir.CaseSensitive), "l*")</code></pre>
+    
+
+
+    
+    <pre class="prettyprint"><code>// List files including hidden files.
+var dir = new $.oFolder("/tmp/example");
+dir.listEntries(QDir.Filters(QDir.Files | QDir.Hidden))</code></pre>
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="listFiles">
+            
+            listFiles<span class="signature">(<span class="optional">filter</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;string>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            openHarmony/openHarmony_file.js, line 271
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        lists the file names contained inside the folder.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>filter</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">Array.&lt;string></span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    "*"
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Wildcard (globbing) filter that understands * and ? wildcards. Used to filter the contents of the folder.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Array.&lt;string>
+                        
+                    
+            </td>
+            <td class="description last">Names of the files contained in the folder that match the namefilter(s).</td>
         </tr>
     
     </tbody>
@@ -5798,7 +6184,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 258
+            openHarmony/openHarmony_file.js, line 298
         </div>
         
     </div>
@@ -5849,6 +6235,9 @@
             
                 
 <span class="param-type">string</span>
+|
+
+<span class="param-type">Array.&lt;string></span>
 
 
             
@@ -5857,7 +6246,7 @@
             
                 <td class="default">
                 
-                    "*.*"
+                    "*"
                 
                 </td>
             
@@ -5871,7 +6260,7 @@
                         
                     
                 
-                Filter wildcards for the content of the folder.</td>
+                Wildcard (globbing) filter that understands * and ? wildcards. Used to filter the contents of the folder.</td>
         </tr>
 	
 	
@@ -5936,7 +6325,7 @@
                         
                     
             </td>
-            <td class="description last">The names of the files contained in the folder that match the filter.</td>
+            <td class="description last">Names of the files contained in the folder that match the namefilter(s).</td>
         </tr>
     
     </tbody>
@@ -5958,7 +6347,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 367
+            openHarmony/openHarmony_file.js, line 385
         </div>
         
     </div>
@@ -6157,7 +6546,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 400
+            openHarmony/openHarmony_file.js, line 418
         </div>
         
     </div>
@@ -6320,7 +6709,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 426
+            openHarmony/openHarmony_file.js, line 444
         </div>
         
     </div>
@@ -6436,7 +6825,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 414
+            openHarmony/openHarmony_file.js, line 432
         </div>
         
     </div>
@@ -6552,7 +6941,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_file.js, line 460
+            openHarmony/openHarmony_file.js, line 478
         </div>
         
     </div>
@@ -6660,7 +7049,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Sep 01 2022 13:35:41 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Oct 14 2022 19:55:19 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
