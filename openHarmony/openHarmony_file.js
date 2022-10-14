@@ -211,7 +211,7 @@ Object.defineProperty($.oFolder.prototype, 'content', {
  * Enum for the type of content to retrieve from the oFolder.
  * @enum {QFlag}
  */
-$.oFolder.prototype.contentType = {
+$.oFolder.prototype.ContentType = {
   FOLDER: QDir.Filters(QDir.Dirs | QDir.NoDotAndDotDot),
   FILE: QDir.Files
 }
@@ -221,7 +221,7 @@ $.oFolder.prototype.contentType = {
  * Lists the contents of the folder, filtered by the contentType and name filter(s).
  * Primarily a helper function for listFile/listFolder, but can be called directly to provide custom filtering
  * by providing QDir::Filters to the contentType parameter.
- * @param   {$.oFolder.contentType} [contentType]      Type of content to retrieve.
+ * @param   {$.oFolder.ContentType} [contentType]      Type of content to retrieve.
  * @param   {string|string[]}       [filter="*"]       Single filter, or array of filters for the contents of the folder.
  * @example
  * // List files with a case-sensitive filter. Will match l* and not L*
@@ -269,7 +269,7 @@ $.oFolder.prototype.listEntries = function(contentType, filter) {
  * @returns {string[]}  Names of the files contained in the folder that match the namefilter(s).
  */
 $.oFolder.prototype.listFiles = function(filter){
-  return this.listEntries(this.contentType.FILE, filter);
+  return this.listEntries(this.ContentType.FILE, filter);
 }
 
 
@@ -296,7 +296,7 @@ $.oFolder.prototype.getFiles = function(filter){
  * @returns {string[]}  Names of the files contained in the folder that match the namefilter(s).
  */
 $.oFolder.prototype.listFolders = function(filter){
-  return this.listEntries(this.contentType.FOLDER, filter);
+  return this.listEntries(this.ContentType.FOLDER, filter);
 }
 
 
