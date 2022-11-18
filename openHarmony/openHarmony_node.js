@@ -1130,6 +1130,32 @@ $.oNode.prototype.findFirstOutNodeOfType = function(type, lookInsideGroups){
   return this.findFirstOutNodeMatching(function(x){return x.type == type});
 }
 
+
+/**
+ * Traverses the node hierarchy up until if finds a node of the given type.
+ * @param {string} type the type of node we are looking for
+ * @param {bool} lookInsideGroups wether to consider the nodes inside connected groups
+ * @returns {$.oNode} the found node
+ */
+$.oNode.prototype.findFirstInLinkOfType = function(type){
+  var _inNode = this.findFirstInNodeMatching(function(x){return x.type == type})
+  if (_inNode) return new $.oLinkPath(_inNode, this);
+  return null;
+}
+
+
+/**
+ * Traverses the node hierarchy up until if finds a node of the given type.
+ * @param {string} type the type of node we are looking for
+ * @param {bool} lookInsideGroups wether to consider the nodes inside connected groups
+ * @returns {$.oNode} the found node
+ */
+$.oNode.prototype.findFirstOutLinkOfType = function(type){
+  var _outNode = this.findFirstOutNodeMatching(function(x){return x.type == type})
+  if (_outNode) return new $.oLinkPath(this, _outNode);
+  return null;
+}
+
 /**
  * Links this node's out-port to the given module, at the inport and outport indices.
  * @param   {$.oNode} nodeToLink             The node to link this one's outport to.
@@ -2928,6 +2954,7 @@ $.oGroupNode.prototype.addDrawingNode = function( name, nodePosition, oElementOb
   _node.can_animate = _prefs.ELEMENT_CAN_BE_ANIMATED_DEFAULT_VALUE;
   _node.offset.separate = _prefs.READ_DEFAULT_SEPARATE_POSITION;
   _node.scale.separate = _prefs.READ_DEFAULT_SEPARATE_SCALE;
+  _node.use_drawing_pivot = _prefs.READ_USE_DRAWING_PIVOT?"Apply Embedded Pivot on Drawing Layer":"Don't Use Embedded Pivot";
 
   this.$.endUndo();
 
@@ -3546,7 +3573,6 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition, co
 
   var _imageNode = this.addDrawingNode(_elementName, nodePosition, _element);
 
-  _imageNode.can_animate = false; // use general pref?
   _imageNode.apply_matte_to_color = "Straight";
   _imageNode.alignment_rule = alignment;
 
