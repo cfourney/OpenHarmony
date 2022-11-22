@@ -2163,9 +2163,10 @@ $.oDrawingNode.prototype.exposeAllDrawings = function(framesPerDrawing){
  * @param {string} [name] The name of the drawing to add.
  * @param {string} [filename] Optionally, a path for a drawing file to use for this drawing. Can pass an oFile object as well.
  * @param {bool} [convertToTvg=false] If the filename isn't a tvg file, specify if you want it converted (this doesn't vectorize the drawing).
+ * @return {$.oDrawing} the created drawing
  */
 $.oDrawingNode.prototype.addDrawing = function(atFrame, name, filename, convertToTvg){
-  this.element.addDrawing(atFrame, name, filename, convertToTvg);
+  return this.element.addDrawing(atFrame, name, filename, convertToTvg);
 }
 
 
