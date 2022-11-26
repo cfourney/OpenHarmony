@@ -194,15 +194,26 @@ $.oDialog.prototype.toast = function(labelText, position, duration, color){
 
   if (typeof duration === 'undefined') var duration = 2000;
   if (typeof color === 'undefined') var color = new $.oColorValue(0,0,0);
-  if (typeof position === 'undefined'){
-    var center = QApplication.desktop().screen().rect.center();
-    var position = new $.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
-  }
-
+  
   var toast = new QWidget()
-  var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.WA_TransparentForMouseEvents);
-  toast.setWindowFlags(flags);
-  toast.setAttribute(Qt.WA_TranslucentBackground);
+  if (this.$.app.version + this.$.app.minorVersion > 21){
+    // above Harmony 21.1
+    if (typeof position === 'undefined'){
+      var center = QApplication.desktop().availableGeometry.center();
+      var position = new $.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
+    }
+    var flags = new Qt.WindowFlags(Qt.Tool|Qt.FramelessWindowHint); // https://qtcentre.org/threads/71912-Qt-WA_TransparentForMouseEvents
+    toast.setWindowFlags(flags);
+    toast.setAttribute(Qt.WA_TranslucentBackground);
+  } else {
+    if (typeof position === 'undefined'){
+      var center = QApplication.desktop().screen().rect.center();
+      var position = new $.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
+    }
+    var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.WA_TransparentForMouseEvents);
+    toast.setWindowFlags(flags);
+    toast.setAttribute(Qt.WA_TranslucentBackground);
+  }
   toast.setAttribute(Qt.WA_DeleteOnClose);
 
   var styleSheet = "QWidget {" +
