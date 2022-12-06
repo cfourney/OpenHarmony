@@ -368,6 +368,22 @@ Object.defineProperty($.oNode.prototype, 'name', {
   }
 });
 
+/**
+ * The node's color.
+ * @name $.oNode#nodeColor
+ * @type {$.oColorValue}
+ */
+ Object.defineProperty($.oNode.prototype, 'nodeColor', {
+  get : function(){
+    var _nodecolor = node.getColor(this.path)
+    return new $.oColorValue({r:_nodecolor.r, g:_nodecolor.g, b:_nodecolor.b, a:_nodecolor.a})
+  },
+  set : function(nodeColor){
+
+    var _rgbacolor = new ColorRGBA(nodeColor.r, nodeColor.g, nodeColor.b, nodeColor.a)
+    node.setColor(this.path, _rgbacolor)
+  } 
+});
 
 /**
  * The group containing the node.
