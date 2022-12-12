@@ -369,20 +369,19 @@ Object.defineProperty($.oNode.prototype, 'name', {
 });
 
 /**
- * The node's color.
- * @name $.oNode#nodeColor
+ * The color of the node
+ * @name $.oNode#color
  * @type {$.oColorValue}
  */
- Object.defineProperty($.oNode.prototype, 'nodeColor', {
+ Object.defineProperty($.oNode.prototype, 'color', {
   get : function(){
-    var _nodecolor = node.getColor(this.path)
-    return new $.oColorValue({r:_nodecolor.r, g:_nodecolor.g, b:_nodecolor.b, a:_nodecolor.a})
+    var _color = node.getColor(this.path);
+    return new $.oColorValue({r:_color.r, g:_color.g, b:_color.b, a:_color.a});
   },
-  set : function(nodeColor){
-
-    var _rgbacolor = new ColorRGBA(nodeColor.r, nodeColor.g, nodeColor.b, nodeColor.a)
-    node.setColor(this.path, _rgbacolor)
-  } 
+  set : function(color){
+    var _rgbacolor = new ColorRGBA(color.r, color.g, color.b, color.a);
+    node.setColor(this.path, _rgbacolor);
+  }
 });
 
 /**
