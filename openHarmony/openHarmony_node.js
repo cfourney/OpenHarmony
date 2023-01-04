@@ -370,10 +370,10 @@ Object.defineProperty($.oNode.prototype, 'name', {
 
 /**
  * The color of the node
- * @name $.oNode#color
+ * @name $.oNode#nodeColor
  * @type {$.oColorValue}
  */
- Object.defineProperty($.oNode.prototype, 'color', {
+Object.defineProperty($.oNode.prototype, 'nodeColor', {
   get : function(){
     var _color = node.getColor(this.path);
     return new $.oColorValue({r:_color.r, g:_color.g, b:_color.b, a:_color.a});
