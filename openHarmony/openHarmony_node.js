@@ -3639,7 +3639,6 @@ $.oGroupNode.prototype.importImageAsTVG = function(path, alignment, nodePosition
  * @returns {$.oDrawingNode} the created node
  */
 $.oGroupNode.prototype.importImageSequence = function(imagePaths, exposureLength, convertToTvg, alignment, nodePosition, extendScene, resized_axis) {
-  $.alert(resized_axis)
   if (typeof exposureLength === 'undefined') var exposureLength = 1;
   if (typeof alignment === 'undefined') var alignment = "ASIS"; // create an enum for alignments?
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
