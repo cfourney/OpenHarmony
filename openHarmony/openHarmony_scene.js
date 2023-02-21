@@ -301,7 +301,7 @@ Object.defineProperty($.oScene.prototype, 'aspectRatioY', {
         return scene.unitsAspectRatioY();
     },
     set : function(val){
-        scene.setUnitsAspectRatio( this.aspectRatioY, val );
+        scene.setUnitsAspectRatio( this.aspectRatioX, val );
     }
 });
 
@@ -2065,23 +2065,25 @@ $.oScene.prototype.updatePSD = function( path, group, separateLayers ){
  * @param   {double}         scale                         The scale of the export compared to the scene resolution.
  * @param   {bool}           exportSound                   Whether to include the sound in the export.
  * @param   {bool}           exportPreviewArea             Whether to only export the preview area of the timeline.
- *
- * @return {bool}        The success of the export
- */
-$.oScene.prototype.exportQT = function( path, display, scale, exportSound, exportPreviewArea){
+ * @param   {bool}           createThumbnail               Whether to create a thumbnail at the first frame.
+*
+* @return {bool}        The success of the export
+*/
+$.oScene.prototype.exportQT = function (path, display, scale, exportSound, exportPreviewArea, createThumbnail){
   if (typeof display === 'undefined') var display = node.getName(node.getNodes(["DISPLAY"])[0]);
   if (typeof exportSound === 'undefined') var exportSound = true;
   if (typeof exportPreviewArea === 'undefined') var exportPreviewArea = false;
   if (typeof scale === 'undefined') var scale = 1;
+  if (typeof createThumbnail === 'undefined') var createThumbnail = true;
 
   if (display instanceof oNode) display = display.name;
 
   var _startFrame = exportPreviewArea?scene.getStartFrame():1;
-  var _stopFrame = exportPreviewArea?scene.getStopFrame():this.length-1;
-  var _resX = this.defaultResolutionX*scale
-  var _resY= this.defaultResolutionY*scale
-  return exporter.exportToQuicktime ("", _startFrame, _stopFrame, exportSound, _resX, _resY, path, display, true, 1);
-}
+  var _stopFrame = exportPreviewArea?scene.getStopFrame():this.length;
+  var _resX = this.defaultResolutionX*scale;
+  var _resY= this.defaultResolutionY*scale;
+  return exporter.exportToQuicktime("", _startFrame, _stopFrame, exportSound, _resX, _resY, path, display, createThumbnail, 1);
+};
 
 
 /**
