@@ -446,7 +446,7 @@ $.oDrawing.prototype.importBitmap = function (file, convertToTvg) {
     var _convertedFilePath = tempFolder.path + "/" + file.name + ".tvg";
     var _convertProcess = new this.$.oProcess(_bin, ["-outformat", "TVG", "-debug", "-resolution", res_x, res_y, "-outfile", _convertedFilePath, file.path]);
     log(_convertProcess.execute())
- 
+
     var convertedFile = new this.$.oFile(_convertedFilePath);
     if (!convertedFile.exists) throw new Error ("Converting " + file.path + " to TVG has failed.");
 
@@ -590,7 +590,7 @@ $.oDrawing.prototype.copyContents = function (artLayer) {
 
   var _current = this.setAsActiveDrawing(artLayer);
   if (!_current) {
-    this.$.debug("Impossible to copy contents of drawing " + this.name + " of element " + _element.name + ", the drawing cannot be set as active.", this.DEBUG_LEVEL.ERROR);
+    this.$.debug("Impossible to copy contents of drawing " + this.name + " of element " + _element.name + ", the drawing cannot be set as active.", this.$.DEBUG_LEVEL.ERROR);
     return;
   }
   ToolProperties.setApplyAllArts(!artLayer);
@@ -610,7 +610,7 @@ $.oDrawing.prototype.pasteContents = function (artLayer) {
 
   var _current = this.setAsActiveDrawing(artLayer);
   if (!_current) {
-    this.$.debug("Impossible to copy contents of drawing " + this.name + " of element " + _element.name + ", the drawing cannot be set as active.", this.DEBUG_LEVEL.ERROR);
+    this.$.debug("Impossible to copy contents of drawing " + this.name + " of element " + _element.name + ", the drawing cannot be set as active.", this.$.DEBUG_LEVEL.ERROR);
     return;
   }
   ToolProperties.setApplyAllArts(!artLayer);
@@ -629,13 +629,13 @@ $.oDrawing.prototype.pasteContents = function (artLayer) {
 */
 $.oDrawing.prototype.setLineEnds = function (endType, artLayer) {
   if (this.$.batchMode) {
-    this.$.debug("setting line ends not available in batch mode", this.DEBUG_LEVEL.ERROR);
+    this.$.debug("setting line ends not available in batch mode", this.$.DEBUG_LEVEL.ERROR);
     return;
   }
 
   var _current = this.setAsActiveDrawing(artLayer);
   if (!_current) {
-    this.$.debug("Impossible to change line ends on drawing " + this.name + " of element " + _element.name + ", the drawing cannot be set as active.", this.DEBUG_LEVEL.ERROR);
+    this.$.debug("Impossible to change line ends on drawing " + this.name + " of element " + _element.name + ", the drawing cannot be set as active.", this.$.DEBUG_LEVEL.ERROR);
     return;
   }
 
