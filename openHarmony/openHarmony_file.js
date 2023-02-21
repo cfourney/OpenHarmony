@@ -251,7 +251,7 @@ $.oFolder.prototype.listEntries = function(contentType, filter) {
 
   var _dir = new QDir(this.path);
   if (!_dir.exists()){
-    this.$.debug("can't get files from folder "+path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
+    this.$.debug("can't get files from folder "+this.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
     return [];
   }
 
@@ -394,7 +394,7 @@ $.oFolder.prototype.move = function( destFolderPath, overwrite ){
         throw new Error("destination file "+dir.path+" exists and will not be overwritten. Can't move folder.");
 
     var path = fileMapper.toNativePath(this.path);
-    var destPath = fileMapper.toNativePath(dir.path+"/");
+    var destPath = fileMapper.toNativePath(dir.path);
 
     var destDir = new Dir;
     try {
@@ -643,7 +643,7 @@ $.oFile.prototype.read = function() {
       return string;
     }
   } catch (err) {
-    this.$.debug(err, this.DEBUG_LEVEL.ERROR)
+    this.$.debug(err, this.$.DEBUG_LEVEL.ERROR)
     return null
   }
 }
@@ -762,7 +762,7 @@ $.oFile.prototype.copy = function( destfolder, copyName, overwrite){
     var _dest = new PermanentFile(destfolder+"/"+_fileName);
 
     if (_dest.exists() && !overwrite){
-        throw new Error("Destination file "+destfolder+"/"+_fileName+" exists and will not be overwritten. Can't copy file.", this.DEBUG_LEVEL.ERROR);
+        throw new Error("Destination file "+destfolder+"/"+_fileName+" exists and will not be overwritten. Can't copy file.", this.$.DEBUG_LEVEL.ERROR);
     }
 
     this.$.debug("copying "+_file.path()+" to "+_dest.path(), this.$.DEBUG_LEVEL.LOG)
