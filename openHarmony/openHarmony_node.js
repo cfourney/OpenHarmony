@@ -3712,14 +3712,16 @@ $.oGroupNode.prototype.importImageSequence = function(imagePaths, exposureLength
  * @param   {bool}           [extendScene=true]            Whether to extend the scene to the duration of the QT.
  * @param   {string}         [alignment="ASIS"]            Alignment type.
  * @param   {$.oPoint}       [nodePosition]                The position for the node to be placed in the network.
+ * @param {bool}             [convertToTvg=false]          Convert movie frames to TVG format.
  *
  * @return {$.oNode}        The imported Quicktime Node.
  */
-$.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alignment, nodePosition){
+$.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alignment, nodePosition, convertToTvg){
   if (typeof alignment === 'undefined') var alignment = "ASIS";
   if (typeof extendScene === 'undefined') var extendScene = true;
   if (typeof importSound === 'undefined') var importSound = true;
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
+  if (typeof convertToTvg === 'undefined') var convertToTvg = false;
 
   var _QTFile = (path instanceof this.$.oFile)?path:new this.$.oFile(path);
   if (!_QTFile.exists){
@@ -3729,7 +3731,11 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
   var _movieName = _QTFile.name;
   this.$.beginUndo("oH_importQT_"+_movieName);
 
-  var _element = this.scene.addElement(_movieName, "PNG");
+  var imageFormat = "PNG"
+  if (convertToTvg) {
+    imageFormat = "TVG"
+  }
+  var _element = this.scene.addElement(_movieName, imageFormat);
   var _elementName = _element.name;
 
   var _movieNode = this.addDrawingNode(_movieName, nodePosition, _element);
@@ -3755,7 +3761,7 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
   MovieImport.setImageFolder(_tempFolder);
   MovieImport.setImagePrefix(_movieName);
   if (importSound) MovieImport.setAudioFile(_audioPath);
-  this.$.log("converting movie file to pngs...");
+  this.$.log("converting movie file to images...");
   MovieImport.doImport();
   this.$.log("conversion finished");
 
@@ -3769,7 +3775,7 @@ $.oGroupNode.prototype.importQT = function( path, importSound, extendScene, alig
   // create a drawing for each frame
   for (var i=1; i<=_movielength; i++) {
     _drawingPath = _tempFolder + "/" + _movieName + "-" + i + ".png";
-    _element.addDrawing(i, i, _drawingPath);
+    _element.addDrawing(i, i, _drawingPath, convertToTvg);
   }
 
   progressDialog.value = 95;

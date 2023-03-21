@@ -2091,19 +2091,21 @@ $.oScene.prototype.exportQT = function (path, display, scale, exportSound, expor
  * @Deprecated
  * @param   {string}         path                          The quicktime file to import.
  * @param   {string}         group                         The group to import the QT into.
+ * @param   {bool}           importSound                   Whether to import the sound
  * @param   {$.oPoint}       nodePosition                  The position for the node to be placed in the network.
  * @param   {bool}           extendScene                   Whether to extend the scene to the duration of the QT.
  * @param   {string}         alignment                     Alignment type.
+ * @param   {bool}           convertToTvg                  Convert movie frames to TVG format.
  *
  * @return {$.oNode}        The imported Quicktime Node.
  */
-$.oScene.prototype.importQT = function( path, group, importSound, nodePosition, extendScene, alignment ){
+$.oScene.prototype.importQT = function( path, group, importSound, nodePosition, extendScene, alignment, convertToTvg ){
   if (typeof group === 'undefined') var group = this.root;
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
 
   if (_group != null && _group instanceof this.$.oGroupNode){
     this.$.log("oScene.importQT is deprecated. Use oGroupNode.importQTs instead")
-    var _node = _group.importQT(path, importSound, extendScene, alignment, nodePosition)
+    var _node = _group.importQT(path, importSound, extendScene, alignment, nodePosition, convertToTvg)
     return _node;
   }else{
     throw new Error (group+" is an invalid group to import a QT file to.")
