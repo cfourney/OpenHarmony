@@ -687,7 +687,7 @@ $.oAttribute.prototype.addColumn = function(){
       _columnType = "BEZIER";
       break;
 
-    case "QUATERNIONPATH" :
+    case "QUATERNION_PATH" :
       _columnName = "QUARTERNION";
       break;
 
