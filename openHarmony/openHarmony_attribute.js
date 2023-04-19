@@ -688,11 +688,11 @@ $.oAttribute.prototype.addColumn = function(){
       break;
 
     case "QUATERNION_PATH" :
-      _columnName = "QUARTERNION";
+      _columnType = "QUARTERNION";
       break;
 
       case "PATH_3D" :
-      _columnName = "3DPATH";
+      _columnType = "3DPATH";
       break;
 
     case "ELEMENT" :
