@@ -528,6 +528,21 @@ for( var classItem in $ ){
   }
 }
 
-
 // Add global access to $ object
 this.__proto__.$ = $
+
+// protect harmony namespace from overwrites by recreating all properties as non configurable
+for (var i in this.__proto__){
+  Object.defineProperty( this, i, {
+    configurable: false,
+    enumerable: true,
+    get: function(){
+      var objectName = i;
+      return function(){return this.__proto__[objectName];};
+    }(),
+    set: function(){
+      var objectName = i;
+      return function(){throw new Error(objectName+" is a protected object from Harmony API. Cannot overwrite.");};
+    }(),
+  });
+}
