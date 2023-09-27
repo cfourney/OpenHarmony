@@ -3563,21 +3563,31 @@ $.oGroupNode.prototype.updatePSD = function( path, separateLayers ){
  * @param {$.oPoint} [nodePosition={0,0,0}] The position for the node to be placed in the node view.
  * @param {bool} [convertToTvg=false] Convert image to TVG format.
  * @param {string} [resized_axis="Y"] Resize image to fit with scene resolution in given axis.
+ * @param {bool} [actualPixels=false] Set field guide of element so that 1 image pixel = 1 project pixel
  *
  * @return  {$.oNode}    The node for the imported image
  */
-$.oGroupNode.prototype.importImage = function( path, alignment, nodePosition, convertToTvg, resized_axis){
+$.oGroupNode.prototype.importImage = function( path, alignment, nodePosition, convertToTvg, resized_axis, actualPixels){
 
   if (typeof alignment === 'undefined') var alignment = "ASIS"; // create an enum for alignments?
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
   if (typeof convertToTvg === 'undefined') var convertToTvg = false;
   if (typeof resized_axis === 'undefined') var resized_axis = "Y";
+  if (typeof actualPixels === 'undefined') var actualPixels = false;
 
   var _imageFile = (path instanceof this.$.oFile)?path:new this.$.oFile( path );
   var _elementName = _imageFile.name;
 
+  var _fields = undefined;
+  if (actualPixels) {
+    var _imageheight = CELIO.getInformation(_imageFile.path).height;
+    var _sceneHeight = this.scene.resolutionY;
+    var _sceneFields = this.scene.unitsY; // or maybe this should just be 12. I've never used non-default field values
+    _fields = _sceneFields * (_imageheight/_sceneHeight);
+  }
+
   var _elementType = convertToTvg?"TVG":_imageFile.extension.toUpperCase();
-  var _element = this.scene.addElement(_elementName, _elementType);
+  var _element = this.scene.addElement(_elementName, _elementType, _fields);
   var _column = this.scene.addColumn("DRAWING", _elementName, _element);
   _element.column = _column;
 
