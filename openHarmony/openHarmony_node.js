@@ -3582,7 +3582,7 @@ $.oGroupNode.prototype.importImage = function( path, alignment, nodePosition, co
   if (actualPixels) {
     var _imageheight = CELIO.getInformation(_imageFile.path).height;
     var _sceneHeight = this.scene.resolutionY;
-    var _sceneFields = this.scene.unitsY; // or maybe this should just be 12. I've never used non-default field values
+    var _sceneFields = this.scene.unitsY / 2 // "12 fields is 12 from centre to edge, so func returns 24"
     _fields = _sceneFields * (_imageheight/_sceneHeight);
   }
 
