@@ -551,8 +551,11 @@ $.oAttribute.prototype.getValue = function (frame) {
             _value = column.getEntry(_column.uniqueName, 1, frame);
 
             // Convert to an instance of oDrawing, with a safety in case of psd import
-            _drawing = _column.element.getDrawingByName(_value);
-            if (_drawing) _value = _drawing;
+            _drawing = this.node.element.getDrawingByName(_value);
+
+            if (_drawing) {
+              _value = _drawing;
+            }
             break;
 
         // TODO: How does QUATERNION_PATH work? subcolumns I imagine
