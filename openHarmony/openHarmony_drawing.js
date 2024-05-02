@@ -154,7 +154,12 @@ Object.defineProperty($.oDrawing.prototype, 'id', {
  */
 Object.defineProperty($.oDrawing.prototype, 'path', {
   get: function () {
-    return fileMapper.toNativePath(Drawing.filename(this.element.id, this.name))
+    var _file = new this.$.oFile(Drawing.filename(this.element.id, this.name));
+    if (this._key.layer){
+      var _fileName = _file.name.replace(this.element.name, this._key.layer);
+      var _file = new this.$.oFile(_file.folder.path + "/" + _fileName +"."+_file.extension);
+    }
+    return _file.path;
   }
 })
 
