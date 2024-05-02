@@ -139,14 +139,14 @@ $.oNode.prototype.attributesBuildCache = function (){
  * Private function to create attributes setters and getters as properties of the node
  * @private
  */
-$.oNode.prototype.setAttrGetterSetter = function (attr, context){
+$.oNode.prototype.setAttrGetterSetter = function (attr, context, oNodeObject){
     if (typeof context === 'undefined') context = this;
     // this.$.debug("Setting getter setters for attribute: "+attr.keyword+" of node: "+this.name, this.$.DEBUG_LEVEL.DEBUG)
 
     var _keyword = attr.shortKeyword;
 
     Object.defineProperty( context, _keyword, {
-        enumerable : true,
+        enumerable : false,
         configurable : true,
         get : function(){
             // MessageLog.trace("getting attribute "+attr.keyword+". animated: "+(attr.column != null))
@@ -161,9 +161,10 @@ $.oNode.prototype.setAttrGetterSetter = function (attr, context){
                 // this means every result of attr.getValue must be an object.
                 // For attributes that have a string return value, attr.getValue() actually returns a fake string object
                 // which is an object with a value property and a toString() method returning the value.
-                var _value = (attr.column != null)?new this.$.oList(attr.frames, 1):attr.getValue();
+                var _value = (attr.column != null)?new oNodeObject.$.oList(attr.frames, 1):attr.getValue();
+                //var _value = (attr.column != null)? attr.frames:attr.getValue();
                 for (var i in _subAttrs){
-                    this.setAttrGetterSetter( _subAttrs[i], _value );
+                  oNodeObject.setAttrGetterSetter( _subAttrs[i], _value, oNodeObject);
                 }
             }
             return _value;
@@ -1886,7 +1887,7 @@ $.oNode.prototype.refreshAttributes = function( ){
     var _attributes = this.attributes
     for (var i in _attributes){
       var _attr = _attributes[i];
-      this.setAttrGetterSetter(_attr);
+      this.setAttrGetterSetter(_attr, this, this);
     }
 }
 
@@ -1984,7 +1985,8 @@ $.oDrawingNode.prototype.constructor = $.oDrawingNode;
 Object.defineProperty($.oDrawingNode.prototype, "element", {
   get : function(){
     var _column = this.attributes.drawing.element.column;
-    return ( new this.$.oElement( node.getElementId(this.path), _column ) );
+    var _synchedLayer = this.attributes.drawing.element.layer;
+    return ( new this.$.oElement( node.getElementId(this.path), _synchedLayer.getValue(), _column ) );
   },
 
   set : function( oElementObject ){

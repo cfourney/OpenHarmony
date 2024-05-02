@@ -59,17 +59,23 @@
  * @property {int}                   name                       The name of the drawing.
  * @property {$.oElement}            element                    The element object associated to the element.
  */
-$.oDrawing = function (name, oElementObject) {
+$.oDrawing = function (name, synchedLayer, oElementObject) {
   this._type = "drawing";
   this._name = name;
   this.element = oElementObject;
 
-  this._key = Drawing.Key({
-    elementId: oElementObject.id,
-    exposure: name
-  });
-
-  //log(JSON.stringify(this._key))
+  if (synchedLayer){
+    this._key = Drawing.Key({
+      elementId: oElementObject.id,
+      exposure: name,
+      layer: synchedLayer
+    });
+  }else{
+    this._key = Drawing.Key({
+      elementId: oElementObject.id,
+      exposure: name
+    });  
+  }
 
   this._overlay = new this.$.oArtLayer(3, this);
   this._lineArt = new this.$.oArtLayer(2, this);

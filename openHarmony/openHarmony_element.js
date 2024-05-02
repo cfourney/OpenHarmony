@@ -59,9 +59,11 @@
  * @property {int}                  id                          The element ID.
  * @property {$.oColumn}            oColumnObject               The column object associated to the element.
  */
-$.oElement = function( id, oColumnObject){
+$.oElement = function( id, synchedLayer, oColumnObject){
+  if (typeof synchedLayer === 'undefined') synchedLayer = null;
   this._type = "element";
 
+  this._synchedLayer = synchedLayer;
   this.id = id;
   this.column = oColumnObject;
 }
@@ -106,7 +108,7 @@ Object.defineProperty($.oElement.prototype, 'drawings', {
     var _drawingsNumber = Drawing.numberOf(this.id);
     var _drawings = [];
     for (var i=0; i<_drawingsNumber; i++){
-      _drawings.push( new this.$.oDrawing(Drawing.name(this.id, i), this) );
+      _drawings.push( new this.$.oDrawing(Drawing.name(this.id, i), this._synchedLayer, this) );
     }
     return _drawings;
   }
