@@ -598,7 +598,7 @@ $.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replac
     // if amount is undefined, extend function below will automatically fill empty frames
     if (typeof exposures === 'undefined') var exposures = this.getKeyframes();
 
-    this.$.debug("extendingExposures "+exposures.map(function(x){return x.frameNumber})+" by "+amount, this.$.DEBUG_LEVEL.DEBUG)
+    //this.$.debug("extendingExposures "+exposures.map(function(x){return x.frameNumber})+" by "+amount, this.$.DEBUG_LEVEL.DEBUG)
 
     // can't extend blank exposures, so we remove them from the list to extend
     exposures = exposures.filter(function(x){return !x.isBlank})
