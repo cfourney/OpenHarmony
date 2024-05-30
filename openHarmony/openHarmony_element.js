@@ -188,7 +188,7 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename, convertToTv
   var _fileExists = filename.exists;
   Drawing.create (this.id, name, _fileExists, true);
 
-  var _drawing = new this.$.oDrawing( name, this );
+  var _drawing = new this.$.oDrawing( name, this._synchedLayer, this );
 
   if (_fileExists) _drawing.importBitmap(filename, convertToTvg);
 
