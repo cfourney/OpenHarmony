@@ -596,7 +596,13 @@ Object.defineProperty($.oDrawingColumn.prototype, 'element', {
  */
 $.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace){
     // if amount is undefined, extend function below will automatically fill empty frames
-    if (typeof exposures === 'undefined') var exposures = this.getKeyframes();
+
+    if (typeof exposures === 'undefined' && typeof amount === 'undefined') {
+      column.fillEmptyCels (this.name, 1, this.$.scene.length);
+      return; // in case of simple call of this function, we fallback on the fastest way to call the vanilla instruction
+    }
+
+    if (typeof exposures === 'undefined') var exposures = this.keyframes;
 
     //this.$.debug("extendingExposures "+exposures.map(function(x){return x.frameNumber})+" by "+amount, this.$.DEBUG_LEVEL.DEBUG)
 

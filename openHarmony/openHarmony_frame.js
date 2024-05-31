@@ -587,7 +587,7 @@ Object.defineProperty($.oFrame.prototype, 'tween', {
 /**
  * Extends the frames value to the specified duration, replaces in the event that replace is specified.
  * @param   {int}        duration              The duration to extend it to; if no duration specified, extends to the next available keyframe.
- * @param   {bool}       replace               Setting this to false will insert frames as opposed to overwrite existing ones.
+ * @param   {bool}       replace               Setting this to false will insert frames as opposed to overwrite existing ones. (not currently implemented)
  */
 $.oFrame.prototype.extend = function( duration, replace ){
     if (typeof replace === 'undefined') var replace = true;
@@ -597,29 +597,23 @@ $.oFrame.prototype.extend = function( duration, replace ){
       return;
     }
 
-    var _frames = this.column.frames;
+    var _startFrame = this.startFrame;
 
     if (typeof duration === 'undefined'){
-        // extend to next non blank keyframe if not set
-        var duration = 0;
-        var curFrameEnd = this.startFrame + this.duration;
+        var _frames = this.column.frames;
+      // extend to next non blank keyframe if not set
+        // var duration = this.keyframeRight.frameNumber - this.startFrame;
+        var duration = this.duration;
         var sceneLength = this.$.scene.length;
 
         // find next non blank keyframe
-        while ((curFrameEnd + duration) <= sceneLength && _frames[curFrameEnd + duration].isBlank){
-            duration ++;
+        while ((_startFrame + duration) <= sceneLength && _frames[_startFrame + duration].isBlank){
+          duration ++;
         }
     }
 
-    var _value = this.value;
-    var startExtending = this.startFrame+this.duration;
 
-    for (var i = 0; i<duration; i++){
-        if (!replace){
-            // TODO : push all other frames back
-        }
-        _frames[startExtending+i].value = _value;
-    }
+    column.fillEmptyCels (this.column.name, _startFrame, duration + 1 );
 }
 
 $.oFrame.toString = function(){
