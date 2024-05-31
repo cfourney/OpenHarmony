@@ -323,13 +323,7 @@ Object.defineProperty($.oNode.prototype, 'exists', {
  */
 Object.defineProperty($.oNode.prototype, 'selected', {
     get : function(){
-      for( var n=0;n<selection.numberOfNodesSelected;n++ ){
-          if( selection.selectedNode(n) == this.path ){
-            return true;
-          }
-      }
-
-      return false;
+      return selection.selectedNodes().indexOf(this.path) != -1;
     },
 
     //Add it to the selection.
