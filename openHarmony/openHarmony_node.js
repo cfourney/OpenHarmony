@@ -1978,9 +1978,7 @@ $.oDrawingNode.prototype.constructor = $.oDrawingNode;
  */
 Object.defineProperty($.oDrawingNode.prototype, "element", {
   get : function(){
-    var _column = this.attributes.drawing.element.column;
-    var _synchedLayer = this.attributes.drawing.element.layer;
-    return ( new this.$.oElement( node.getElementId(this.path), _synchedLayer.getValue(), _column ) );
+    return this.timingColumn.element;
   },
 
   set : function( oElementObject ){
@@ -1997,8 +1995,7 @@ Object.defineProperty($.oDrawingNode.prototype, "element", {
  */
 Object.defineProperty($.oDrawingNode.prototype, "timingColumn", {
   get : function(){
-    var _column = this.attributes.drawing.element.column;
-    return _column;
+    return this.attributes.drawing.element.column;
   },
 
   set : function (oColumnObject){

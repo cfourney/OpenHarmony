@@ -527,7 +527,10 @@ Object.defineProperty($.oScene.prototype, 'columns', {
     get : function(){
         var _columns = [];
         for (var i=0; i<column.numberOf(); i++){
-            _columns.push( this.$column(column.getName(i)) );
+          // no attribute can be passed to the constructor
+          // since a column can be linked to several attributes.
+          // access it from the node to get the missing information.
+          _columns.push( this.$getColumnByName(column.getName(i)) );
         }
         return _columns;
     }
@@ -562,28 +565,51 @@ Object.defineProperty($.oScene.prototype, 'palettes', {
 Object.defineProperty($.oScene.prototype, 'elements', {
   get : function(){
     var _elements = [];
-    var _columns = this.columns;
-    var _ids = [];
-    for (var i in _columns){
-      if (_columns.type != "DRAWING") continue;
-      var _element = _columns[i].element
-      _elements.push(_element);
-      if (_ids.indexOf(_element.id) == -1) _ids.push (_element.id);
+    var _ids = {};
+
+    // fetching the elements from the nodes to get the synched drawing attribute value
+    var _nodes = $.scene.getNodesByType("READ");
+    for (var n in _nodes) {
+      var _element = _nodes[n].element;
+      var _layer = _element._synchedLayer;
+      var _foundDuplicate = false;
+      // store ids and layer info (synced drawings) to avoid duplicates
+
+      function isInKeys(value, object){
+        // for some reason we can't use Object.keys(_ids).indexOf(_element.id), so we fake it
+        var _keys = Object.keys(object);
+        var _exists = false;
+        for (var i in _keys)
+          if (_keys[i] == value) _exists = true;
+        return _exists;
+      }
+
+      if (!isInKeys(_element.id, _ids)){
+        _ids[_element.id] = [];
+      }
+      if (_ids[_element.id].indexOf(_layer) == -1){
+        _ids[_element.id].push(_layer);
+      }else{
+        _foundDuplicate = true;
+      }
+
+      if(!_foundDuplicate){
+        _elements.push(_nodes[n].element);
+      }
     }
 
     // adding the elements not linked to columns
     var _elementNum = element.numberOf();
     for (var i = 0; i<_elementNum; i++){
       var _id = element.id(i);
-      if (_ids.indexOf(_id) == -1) {
-        _elements.push(new this.$.oElement(_id));
-        _ids.push (_id)
+      if (!isInKeys(_id, _ids)) {
+        _elements.push(new this.$.oElement(_id)); // these elements have no column and no attribute
+        _ids[_id] = [];
       }
     }
     return _elements;
   }
 });
-
 
 
 /**
@@ -820,8 +846,8 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
 }
 
 /**
- * Returns the nodes of a certain type in the entire scene.
- * @param   {string}      typeName       The name of the node.
+ * Returns the nodes of a certain type in the entire scene (includes group contents).
+ * @param   {string}        typeName       The type of node.
  *
  * @return  {$.oNode[]}     The nodes found.
  */

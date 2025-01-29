@@ -54,13 +54,14 @@
  * @constructor
  * @classdesc  $.oElement Class
  * @param   {int}                   id                          The element ID.
+ * @param   {str}                   synchedLayer                The value of the Drawing Node drawing.element.layer attribute for synched layers
  * @param   {$.oColumn}             oColumnObject               The column object associated to the element.
  *
  * @property {int}                  id                          The element ID.
  * @property {$.oColumn}            oColumnObject               The column object associated to the element.
  */
 $.oElement = function( id, synchedLayer, oColumnObject){
-  if (typeof synchedLayer === 'undefined') synchedLayer = null;
+  if (typeof synchedLayer === 'undefined' || !synchedLayer) synchedLayer = null;
   this._type = "element";
 
   this._synchedLayer = synchedLayer;
@@ -143,6 +144,20 @@ Object.defineProperty($.oElement.prototype, 'palettes', {
     }
 
     return _palettes;
+  }
+})
+
+
+/**
+ * A list of the other elements synched with this one.
+ * @name $.oElement#synchedElements
+ * @readonly
+ * @type {$.oDrawing[]}
+ */
+Object.defineProperty($.oElement.prototype, 'synchedElements', {
+  get : function(){
+    var _id = this.id;
+    return $.scene.elements.filter(function(e){return e.id == _id});
   }
 })
 
