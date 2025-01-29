@@ -213,7 +213,7 @@ Object.defineProperty($.oColumn.prototype, 'subColumns', {
 
 /**
  * The type of easing used by the column
- * @name $.oColumn#subColumns
+ * @name $.oColumn#easeType
  * @readonly
  * @type {object}
  */
@@ -498,8 +498,6 @@ $.oColumn.prototype.interpolateValueAtFrame = function(percentage, frameNumber){
   if (typeof frameNumber === 'undefined') var frameNumber = this.$.scn.currentFrame;
   if (typeof percentage === 'undefined') var percentage = 50;
 
-  $.log(frameNumber)
-  $.log(this.frames[frameNumber])
   var _frame = this.frames[frameNumber];
   var _leftKey = _frame.keyframeLeft;
   var _rightKey = _frame.keyframeRight;
@@ -578,7 +576,12 @@ $.oDrawingColumn.prototype.constructor = $.oColumn;
  */
 Object.defineProperty($.oDrawingColumn.prototype, 'element', {
     get : function(){
-        return new this.$.oElement(column.getElementIdOfDrawing( this.uniqueName), this);
+      // get info about synched layer if the column is fetched from the attribute (which is the case most of the time)
+      var _synchedLayer = null;
+      if (this.attributeObject){
+        _synchedLayer = this.attributeObject.layer.getValue();
+      }
+      return new this.$.oElement(column.getElementIdOfDrawing( this.uniqueName), _synchedLayer, this);
     },
 
     set : function(oElementObject){

@@ -74,7 +74,7 @@ $.oDrawing = function (name, synchedLayer, oElementObject) {
     this._key = Drawing.Key({
       elementId: oElementObject.id,
       exposure: name
-    });  
+    });
   }
 
   this._overlay = new this.$.oArtLayer(3, this);
@@ -430,6 +430,26 @@ Object.defineProperty($.oDrawing.prototype, 'drawingData', {
 })
 
 
+/**
+ * The drawings of the same name in other elements synched with this one.
+ * @name $.oDrawing#synchedDrawing
+ * @type {$.oDrawing[]}
+ * @readonly
+ * @private
+ */
+Object.defineProperty($.oDrawing.prototype, 'synchedDrawings', {
+  get: function () {
+    var _syncedElements = this.element.synchedElements;
+    var _syncedDrawings = []
+    for (e in _syncedElements){
+      // skip this element
+      if (_syncedElements[e]._synchedLayer == this.element._synchedLayer) continue;
+      _syncedDrawings.push(_syncedElements[e].getDrawingByName(this.name));
+    }
+    return _syncedDrawings;
+  }
+})
+
 
 
 // $.oDrawing Class methods
@@ -575,11 +595,24 @@ $.oDrawing.prototype.setAsActiveDrawing = function (artLayer) {
  * @param {string}   [newName]   A new name for the drawing. By default, the name will be the number of the frame.
  * @returns {$.oDrawing}   the newly created drawing
  */
-$.oDrawing.prototype.duplicate = function(frame, newName){
+$.oDrawing.prototype.duplicate = function(frame, newName, duplicateSynchedDrawings){
   var _element = this.element
+  if (typeof duplicateSynchedDrawings === 'undefined') duplicateSynchedDrawings = true; // hidden parameter used to avoid recursion bomb
   if (typeof frame ==='undefined') var frame = this.$.scn.currentFrame;
   if (typeof newName === 'undefined') var newName = frame;
-  var newDrawing = _element.addDrawing(frame, newName, this.path)
+  var newDrawing = _element.addDrawing(frame, newName, this.path);
+
+  // also duplicate synched drawings
+  if (duplicateSynchedDrawings){
+    var _syncedDrawings = newDrawing.synchedDrawings;
+    for (var i in _syncedDrawings){
+      var _originalDrawing = _syncedDrawings[i].element.getDrawingByName(this.name);
+      var _file = new this.$.oFile(_originalDrawing.path);
+      var _path = new this.$.oFile(_syncedDrawings[i].path);
+      return _file.copy(_path.folder, _path.name, true);
+    }
+  }
+
   return newDrawing;
 }
 
