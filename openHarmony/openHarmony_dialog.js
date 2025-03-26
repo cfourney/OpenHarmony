@@ -825,16 +825,15 @@ $.oPieMenu.prototype.buildWidget = function(){
 
   if (this.$.app.version + this.$.app.minorVersion > 21){
     // above Harmony 21.1
-    var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.NoDropShadowWindowHint);
+    var flags = new Qt.WindowFlags(Qt.Window|Qt.FramelessWindowHint|Qt.NoDropShadowWindowHint);
     this.setWindowFlags(flags);
-    this.setAttribute(Qt.WA_TransparentForMouseEvents);
   } else {
     var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.WA_TransparentForMouseEvents);
     this.setWindowFlags(flags);
   }
-
+  this.setAttribute(Qt.WA_MouseTracking, true);
   this.setAttribute(Qt.WA_TranslucentBackground, true);
-  this.setAttribute(Qt.WA_DeleteOnClose);
+  this.setAttribute(Qt.WA_DeleteOnClose, true);
 
   // draw background pie slice
   this.slice = this.drawSlice();
@@ -877,10 +876,10 @@ $.oPieMenu.prototype.drawSlice = function(){
   var sliceWidget = new QWidget(this);
   sliceWidget.objectName = "slice";
   // make widget background invisible
-  sliceWidget.setStyleSheet("background-color: rgba(0, 0, 0, 0.5%);");
+  sliceWidget.setStyleSheet("background-color: rgba(0, 0, 0, 1%);");
   if (this.$.app.version + this.$.app.minorVersion > 21){
-    var flags = new Qt.WindowFlags(Qt.FramelessWindowHint|Qt.NoDropShadowWindowHint);
     sliceWidget.setAttribute(Qt.WA_TranslucentBackground);
+    sliceWidget.mouseTracking = true
   }else{
     var flags = new Qt.WindowFlags(Qt.FramelessWindowHint);
   }
@@ -923,7 +922,24 @@ $.oPieMenu.prototype.drawSlice = function(){
   sliceWidget.mouseTracking = true;
 
   var pieMenu = this;
-  var currentDistance = false;
+  var indexWidget = null;
+  sliceWidget.leaveEvent = function(event){
+    var localPos = sliceWidget.mapFromGlobal(QCursor.pos())
+    var position = new pieMenu.$.oPoint(localPos.x(), localPos.y());
+    var distance = position.distance(center);
+    if (distance < pieMenu.minRadius) {
+      // leave from the bottom
+      if (pieMenu.deactivate){
+        pieMenu.deactivate();
+      } else if (indexWidget.deactivate) 
+        indexWidget.deactivate();
+
+    } else if (distance > pieMenu.maxRadius){
+      // leave from the top
+      if (indexWidget.activate) indexWidget.activate();
+    }
+  }
+
   sliceWidget.mouseMoveEvent = function(mousePos){
     // work out the index based on relative position to the center
     var position = new pieMenu.$.oPoint(mousePos.x(), mousePos.y());
@@ -935,32 +951,17 @@ $.oPieMenu.prototype.drawSlice = function(){
     // on distance value change, if the distance is greater than the maxRadius, activate the widget
     var indexChanged = (index != currentIndex)
     var indexWithinRange = (currentIndex >= 0 && currentIndex < pieMenu.widgets.length)
-    var distanceWithinRange = (distance > pieMenu.minRadius && distance < pieMenu.maxRadius)
-    var distanceChanged = (distanceWithinRange != currentDistance)
 
     // react to distance/angle change when the mouse moves on the pieMenu
     if (indexWithinRange){
-      var indexWidget = pieMenu.widgets[currentIndex];
+      indexWidget = pieMenu.widgets[currentIndex];
 
-      if (indexChanged && distance < pieMenu.maxRadius){
+      if (indexChanged && distance){
         index = currentIndex;
         sliceWidget.update();
         indexWidget.setFocus(true);
       }
 
-      if (distanceChanged){
-        currentDistance = distanceWithinRange;
-        if (distance > pieMenu.maxRadius){
-          // activate the button
-          if (indexWidget.activate) indexWidget.activate();
-        }else if (distance < pieMenu.minRadius){
-          // cursor reentered the widget: close the subMenu
-          if (indexWidget.deactivate) indexWidget.deactivate();
-        }
-        if (distance < pieMenu.minRadius){
-          if (pieMenu.deactivate) pieMenu.deactivate();
-        }
-      }
     }
   }
 
@@ -1123,7 +1124,7 @@ $.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
  * function called when main button is clicked
  */
 $.oPieSubMenu.prototype.deactivate = function(){
-  this.toggleMenu()
+  this.showMenu(false);
 }
 
 /**
@@ -1217,6 +1218,7 @@ $.oPieSubMenu.prototype.setParent = function(parent){
 $.oPieSubMenu.prototype.buildButton = function(){
   // add main button in constructor because it needs to exist before show()
   var button = new this.$.oPieButton(this.menuIcon, this.name, this);
+  button.activate = function(){}; // prevent the button from closing the entire pie menu 
   button.objectName = this.name+"_button";
 
   return button;
@@ -1228,12 +1230,13 @@ $.oPieSubMenu.prototype.buildButton = function(){
  * @param {*} visibility
  */
 $.oPieSubMenu.prototype.showMenu = function(visibility){
-  this.slice.visible = visibility;
   for (var i in this.widgets){
     this.widgets[i].visible = visibility;
   }
+  this.slice.visible = visibility;
   var icon = visibility?this.closeIcon:this.menuIcon;
   UiLoader.setSvgIcon(this.button, icon);
+  this.slice.mouseTracking = visibility;
 }
 
 
@@ -1300,6 +1303,8 @@ $.oPieSubMenu.prototype.buildWidget = function(){
   if (typeof iconFile === 'undefined') var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
 
   QPushButton.call(this, text, parent);
+  this.name = "PieButton " + text
+  this.setParent(parent)
 
   this.minimumHeight = 24;
   this.minimumWidth = 24;
@@ -1307,8 +1312,12 @@ $.oPieSubMenu.prototype.buildWidget = function(){
   // set during addition to the pie Menu
   this.pieIndex = undefined;
 
-  UiLoader.setSvgIcon(this, iconFile)
-  this.setIconSize(new QSize(this.minimumWidth, this.minimumHeight));
+  try{
+    UiLoader.setSvgIcon(this, iconFile)
+    this.setIconSize(new QSize(this.minimumWidth, this.minimumHeight));
+  }catch(e){
+    $.log("failed to load icon "+iconFile)
+  }
   this.cursor = new QCursor(Qt.PointingHandCursor);
 
   var styleSheet = "QPushButton{ background-color: rgba(0, 0, 0, 1%); }" +
@@ -1384,7 +1393,12 @@ $.oPieButton.prototype.setParent = function(parent){
   if (typeof iconFile === "undefined"){
     // find an icon for the function in the script-icons folder
     var scriptIconsFolder = new this.$.oFolder(specialFolders.resource+"/icons/drawingtool");
-    var iconFiles = scriptIconsFolder.getFiles(toolName.replace(" ", "").toLowerCase() + ".*");
+    try{
+      var iconFiles = scriptIconsFolder.getFiles(toolName.replace(" ", "").toLowerCase() + ".*");
+    }catch(e){
+      $.log("error was caught " + e);
+      var iconFiles = [];
+    }
 
     if (iconFiles.length > 0){
       var iconFile = iconFiles[0].path;
@@ -1546,7 +1560,13 @@ $.oScriptButton = function(scriptFile, scriptFunction, parent) {
   // find an icon for the function in the script-icons folder
   var scriptFile = new this.$.oFile(scriptFile)
   var scriptIconsFolder = new this.$.oFolder(scriptFile.folder.path+"/script-icons");
-  var iconFiles = scriptIconsFolder.getFiles(scriptFunction+".*");
+  try{
+    var iconFiles = scriptIconsFolder.getFiles(scriptFunction+".*");
+  } catch(e){
+    $.log("error was caught " + e);
+    var iconFiles = [];
+  }
+
   if (iconFiles.length > 0){
     var iconFile = iconFiles[0].path;
   }else{
