@@ -349,6 +349,7 @@ $.oColumn.prototype.duplicate = function(newAttribute) {
   for (var i in _keyframes){
     var _duplicateFrame = _duplicatedFrames[_keyframes[i].frameNumber];
     _duplicateFrame.value = _keyframes[i].value;
+    _duplicateFrame.isKeyframe = true;
   }
 
   for (var i in _keyframes){
@@ -383,7 +384,8 @@ $.oColumn.prototype.getKeyframes = function(){
 
     for (var i = 0; i<_points; i++) {
       var _frameNumber = func.pointX( _columnName, i )
-      _keyFrames.push( _frames[_frameNumber] );
+      if (_frameNumber<this.$.scene.length)
+        _keyFrames.push( _frames[_frameNumber] ); // don't add keyframes outside scene length range because values can't be read
     }
 
     return _keyFrames;
