@@ -62,7 +62,7 @@
  * metadata.create( "mySceneMetadataName", {"ref":"thisReferenceValue"} );
  * metadata["mySceneMetadataName"]; //Provides: {"ref":"thisReferenceValue"}
  */
-$.oMetadata = function( source ){
+exports.oMetadata = function( source ){
   this._type             = "metadata";
   if( !source ){ source = 'scene'; }
   this.source = source;
@@ -79,7 +79,7 @@ $.oMetadata = function( source ){
  * @name $.oMetadata#refresh
  * @function
  */
-$.oMetadata.prototype.refresh = function(){
+exports.oMetadata.prototype.refresh = function(){
   
   //----------------------------
   //GETTER/SETTERS
@@ -203,7 +203,7 @@ $.oMetadata.prototype.refresh = function(){
  * @param   {string}                 name            The name of the new metadata to create.
  * @param   {object}                 val             The value of the new metadata created.
  */
-$.oMetadata.prototype.create = function( name, val ){
+exports.oMetadata.prototype.create = function( name, val ){
   var name = name.toLowerCase();
 
   if( this[ name ] ){
@@ -262,7 +262,7 @@ $.oMetadata.prototype.create = function( name, val ){
  * @name $.oMetadata#remove
  * @param   {string}                 name            The name of the metadata to remove.
  */
-$.oMetadata.prototype.remove = function( name ){
+exports.oMetadata.prototype.remove = function( name ){
   var name = name.toLowerCase();
   if( !this.hasOwnProperty( name ) ){ return true; }
   

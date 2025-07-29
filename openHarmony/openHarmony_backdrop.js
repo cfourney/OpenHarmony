@@ -82,7 +82,7 @@
  *  }
  * }
  */
-$.oBackdrop = function( groupPath, backdropObject ){
+exports.oBackdrop = function( groupPath, backdropObject ){
   this.group = ( groupPath instanceof this.$.oGroupNode )? groupPath.path: groupPath;
 	this.backdropObject = backdropObject;
 }
@@ -93,7 +93,7 @@ $.oBackdrop = function( groupPath, backdropObject ){
  * @name $.oBackdrop#index
  * @type {int}
  */
-Object.defineProperty($.oBackdrop.prototype, 'index', {
+Object.defineProperty(exports.oBackdrop.prototype, 'index', {
     get : function(){
       var _groupBackdrops = Backdrop.backdrops(this.group).map(function(x){return x.title.text})
 		  return _groupBackdrops.indexOf(this.title)
@@ -106,7 +106,7 @@ Object.defineProperty($.oBackdrop.prototype, 'index', {
  * @name $.oBackdrop#title
  * @type {string}
  */
-Object.defineProperty($.oBackdrop.prototype, 'title', {
+Object.defineProperty(exports.oBackdrop.prototype, 'title', {
   get : function(){
     var _title = this.backdropObject.title.text;
     return _title;
@@ -141,7 +141,7 @@ Object.defineProperty($.oBackdrop.prototype, 'title', {
  * @name $.oBackdrop#body
  * @type {string}
  */
-Object.defineProperty($.oBackdrop.prototype, 'body', {
+Object.defineProperty(exports.oBackdrop.prototype, 'body', {
     get : function(){
          var _title = this.backdropObject.description.text;
          return _title;
@@ -164,7 +164,7 @@ Object.defineProperty($.oBackdrop.prototype, 'body', {
  * @name $.oBackdrop#titleFont
  * @type {object}
  */
-Object.defineProperty($.oBackdrop.prototype, 'titleFont', {
+Object.defineProperty(exports.oBackdrop.prototype, 'titleFont', {
     get : function(){
          var _font = {family : this.backdropObject.title.font,
                       size : this.backdropObject.title.size,
@@ -191,7 +191,7 @@ Object.defineProperty($.oBackdrop.prototype, 'titleFont', {
  * @name $.oBackdrop#bodyFont
  * @type {object}
  */
-Object.defineProperty($.oBackdrop.prototype, 'bodyFont', {
+Object.defineProperty(exports.oBackdrop.prototype, 'bodyFont', {
     get : function(){
          var _font = {family : this.backdropObject.description.font,
                       size : this.backdropObject.description.size,
@@ -219,7 +219,7 @@ Object.defineProperty($.oBackdrop.prototype, 'bodyFont', {
  * @type {$.oNode[]}
  * @readonly
  */
- Object.defineProperty($.oBackdrop.prototype, 'parent', {
+ Object.defineProperty(exports.oBackdrop.prototype, 'parent', {
   get : function(){
     if (!this.hasOwnProperty("_parent")){
       this._parent = this.$.scn.getNodeByPath(this.group);
@@ -235,7 +235,7 @@ Object.defineProperty($.oBackdrop.prototype, 'bodyFont', {
  * @type {$.oNode[]}
  * @readonly
  */
-Object.defineProperty($.oBackdrop.prototype, 'nodes', {
+Object.defineProperty(exports.oBackdrop.prototype, 'nodes', {
   get : function(){
     var _nodes = this.parent.nodes;
     var _bounds = this.bounds;
@@ -252,7 +252,7 @@ Object.defineProperty($.oBackdrop.prototype, 'nodes', {
  * @name $.oBackdrop#x
  * @type {float}
  */
-Object.defineProperty($.oBackdrop.prototype, 'x', {
+Object.defineProperty(exports.oBackdrop.prototype, 'x', {
   get : function(){
     var _x = this.backdropObject.position.x;
     return _x;
@@ -275,7 +275,7 @@ Object.defineProperty($.oBackdrop.prototype, 'x', {
  * @name $.oBackdrop#y
  * @type {float}
  */
-Object.defineProperty($.oBackdrop.prototype, 'y', {
+Object.defineProperty(exports.oBackdrop.prototype, 'y', {
   get : function(){
     var _y = this.backdropObject.position.y;
     return _y;
@@ -298,7 +298,7 @@ Object.defineProperty($.oBackdrop.prototype, 'y', {
  * @name $.oBackdrop#width
  * @type {float}
  */
-Object.defineProperty($.oBackdrop.prototype, 'width', {
+Object.defineProperty(exports.oBackdrop.prototype, 'width', {
   get : function(){
     var _width = this.backdropObject.position.w;
     return _width;
@@ -322,7 +322,7 @@ Object.defineProperty($.oBackdrop.prototype, 'width', {
  * @memberof $.oBackdrop#
  * @type {float}
  */
-Object.defineProperty($.oBackdrop.prototype, 'height', {
+Object.defineProperty(exports.oBackdrop.prototype, 'height', {
   get : function(){
     var _height = this.backdropObject.position.h;
     return _height;
@@ -345,7 +345,7 @@ Object.defineProperty($.oBackdrop.prototype, 'height', {
  * @name $.oBackdrop#position
  * @type {oPoint}
  */
-Object.defineProperty($.oBackdrop.prototype, 'position', {
+Object.defineProperty(exports.oBackdrop.prototype, 'position', {
   get : function(){
     var _position = new oPoint(this.x, this.y, this.index)
     return _position;
@@ -369,7 +369,7 @@ Object.defineProperty($.oBackdrop.prototype, 'position', {
  * @name $.oBackdrop#bounds
  * @type {oBox}
  */
-Object.defineProperty($.oBackdrop.prototype, 'bounds', {
+Object.defineProperty(exports.oBackdrop.prototype, 'bounds', {
   get : function(){
     var _box = new oBox(this.x, this.y, this.width+this.x, this.height+this.y)
     return _box;
@@ -395,7 +395,7 @@ Object.defineProperty($.oBackdrop.prototype, 'bounds', {
  * @name $.oBackdrop#color
  * @type {oColorValue}
  */
-Object.defineProperty($.oBackdrop.prototype, 'color', {
+Object.defineProperty(exports.oBackdrop.prototype, 'color', {
   get : function(){
     var _color = this.backdropObject.color;
     // TODO: get the rgba values from the int

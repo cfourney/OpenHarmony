@@ -81,7 +81,7 @@
  * myNode.position.x = 5;
  *
  */
-$.oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
+exports.oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
   this._type = "attribute";
 
   this.node = oNodeObject;
@@ -107,7 +107,7 @@ $.oAttribute = function( oNodeObject, attributeObject, parentAttribute ){
  * @private
  * @return  {void}   Nothing returned.
  */
-$.oAttribute.prototype.createSubAttributes = function (attributeObject){
+exports.oAttribute.prototype.createSubAttributes = function (attributeObject){
   var _subAttributes = [];
 
   // if harmony version supports getSubAttributes
@@ -142,7 +142,7 @@ $.oAttribute.prototype.createSubAttributes = function (attributeObject){
  * @deprecated
  * @return  {void}   Nothing returned.
  */
-$.oAttribute.prototype.getSubAttributes_oldVersion = function (){
+exports.oAttribute.prototype.getSubAttributes_oldVersion = function (){
   var sub_attrs = [];
 
   switch( this.type ){
@@ -182,7 +182,7 @@ $.oAttribute.prototype.getSubAttributes_oldVersion = function (){
  * @name $.oAttribute#name
  * @type {string}
  */
-Object.defineProperty($.oAttribute.prototype, 'name', {
+Object.defineProperty(exports.oAttribute.prototype, 'name', {
   get: function(){
     return this.attributeObject.name();
   }
@@ -193,7 +193,7 @@ Object.defineProperty($.oAttribute.prototype, 'name', {
  * @name $.oAttribute#keyword
  * @type {string}
  */
-Object.defineProperty($.oAttribute.prototype, 'keyword', {
+Object.defineProperty(exports.oAttribute.prototype, 'keyword', {
     get : function(){
         // formatting the keyword for our purposes
         // hard coding a fix for 3DPath attribute name which starts with a number
@@ -209,7 +209,7 @@ Object.defineProperty($.oAttribute.prototype, 'keyword', {
  * @name $.oAttribute#shortKeyword
  * @type {string}
  */
-Object.defineProperty($.oAttribute.prototype, 'shortKeyword', {
+Object.defineProperty(exports.oAttribute.prototype, 'shortKeyword', {
     get : function(){
         // formatting the keyword for our purposes
         // hard coding a fix for 3DPath attribute name which starts with a number
@@ -225,7 +225,7 @@ Object.defineProperty($.oAttribute.prototype, 'shortKeyword', {
  * @name $.oAttribute#type
  * @type {string}
  */
-Object.defineProperty($.oAttribute.prototype, 'type', {
+Object.defineProperty(exports.oAttribute.prototype, 'type', {
     get : function(){
         return this.attributeObject.typeName();
     }
@@ -246,7 +246,7 @@ myNode.attributes.position.x.addColumn(); // if the column exist already, it wil
 // to unlink a column, just set it to null/undefined:
 myNode.attributes.position.x.column = null; // values are no longer animated.
  */
-Object.defineProperty($.oAttribute.prototype, 'column', {
+Object.defineProperty(exports.oAttribute.prototype, 'column', {
   get : function(){
     var _column = node.linkedColumn ( this.node.path, this._keyword );
     if( _column && _column.length ){
@@ -274,7 +274,7 @@ Object.defineProperty($.oAttribute.prototype, 'column', {
  * @name $.oAttribute#frames
  * @type {$.oFrame[]}
  */
-Object.defineProperty($.oAttribute.prototype, 'frames', {
+Object.defineProperty(exports.oAttribute.prototype, 'frames', {
     get : function(){
          var _column = this.column
          if (_column != null){
@@ -297,7 +297,7 @@ Object.defineProperty($.oAttribute.prototype, 'frames', {
  * @type {$.oFrame[]}
  */
 // MCNote: I would prefer if this could remain getKeyFrames()
-Object.defineProperty($.oAttribute.prototype, 'keyframes', {
+Object.defineProperty(exports.oAttribute.prototype, 'keyframes', {
     get : function(){
       var col     = this.column;
       var frames  = this.frames;
@@ -321,7 +321,7 @@ Object.defineProperty($.oAttribute.prototype, 'keyframes', {
  * @private
  */
 //CF Note: Not sure if this should be a general attribute, or a subattribute.
-Object.defineProperty($.oAttribute.prototype, "useSeparate", {
+Object.defineProperty(exports.oAttribute.prototype, "useSeparate", {
     get : function(){
         // TODO
         throw new Error("not yet implemented");
@@ -346,7 +346,7 @@ Object.defineProperty($.oAttribute.prototype, "useSeparate", {
  *
  * myAttribute.setValue(myAttribute.defaultValue);
  */
-Object.defineProperty($.oAttribute.prototype, "defaultValue", {
+Object.defineProperty(exports.oAttribute.prototype, "defaultValue", {
     get : function(){
         // TODO: we could use this to reset bones/deformers to their rest states
         var _keyword = this._keyword;
@@ -409,7 +409,7 @@ Object.defineProperty($.oAttribute.prototype, "defaultValue", {
  * Provides the keyframes of the attribute.
  * @return {$.oFrame[]}   The filtered keyframes.
  */
-$.oAttribute.prototype.getKeyframes = function(){
+exports.oAttribute.prototype.getKeyframes = function(){
     var _frames = this.frames;
     _frames = _frames.filter(function(x){return x.isKeyframe});
     return _frames;
@@ -421,7 +421,7 @@ $.oAttribute.prototype.getKeyframes = function(){
  * @return {$.oFrame[]}   The filtered keyframes.
  * @deprecated For case consistency, keyframe will never have a capital F
  */
-$.oAttribute.prototype.getKeyFrames = function(){
+exports.oAttribute.prototype.getKeyFrames = function(){
     this.$.debug("oAttribute.getKeyFrames is deprecated. Use oAttribute.getKeyframes instead.", this.$.DEBUG_LEVEL.ERROR);
     var _frames = this.frames;
     _frames = _frames.filter(function(x){return x.isKeyframe});
@@ -433,7 +433,7 @@ $.oAttribute.prototype.getKeyFrames = function(){
  * Recursively get all the columns linked to the attribute and its subattributes
  * @return {$.oColumn[]}    the list of columns linked to the subattributes
  */
-$.oAttribute.prototype.getLinkedColumns = function(){
+exports.oAttribute.prototype.getLinkedColumns = function(){
   var _columns = [];
   var _subAttributes = this.subAttributes;
   var _ownColumn = this.column;
@@ -452,7 +452,7 @@ $.oAttribute.prototype.getLinkedColumns = function(){
  * @param {bool}    [duplicateColumns=false]      In the case that the attribute has a column, wether to duplicate the column before linking
  * @private
  */
-$.oAttribute.prototype.setToAttributeValue = function(attributeToCopy, duplicateColumns){
+exports.oAttribute.prototype.setToAttributeValue = function(attributeToCopy, duplicateColumns){
   if (typeof duplicateColumns === 'undefined') var duplicateColumns = false;
 
   if (this.keyword !== attributeToCopy.keyword) return;
@@ -481,7 +481,7 @@ $.oAttribute.prototype.setToAttributeValue = function(attributeToCopy, duplicate
  *
  * @return {object}      The value of the attribute in the native format of that attribute (contextual to the attribute).
  */
-$.oAttribute.prototype.getValue = function (frame) {
+exports.oAttribute.prototype.getValue = function (frame) {
     if (typeof frame === 'undefined') var frame = 1;
     this.$.debug('getting value of frame :'+frame+' of attribute: '+this._keyword+' of node '+this.node+' - type '+this.type, this.$.DEBUG_LEVEL.LOG)
 
@@ -587,7 +587,7 @@ $.oAttribute.prototype.getValue = function (frame) {
  * @param   {string}     value        The value to set on the attribute.
  * @param   {int}        [frame=1]    The frame at which to set the value, if not set, assumes 1
  */
-$.oAttribute.prototype.setValue = function (value, frame) {
+exports.oAttribute.prototype.setValue = function (value, frame) {
     var _attr = this.attributeObject;
     var _column = this.column;
     var _type = this.type;
@@ -671,7 +671,7 @@ $.oAttribute.prototype.setValue = function (value, frame) {
  * If a column already exists, it returns it.
  * @returns {$.oColumn} the created column
  */
-$.oAttribute.prototype.addColumn = function(){
+exports.oAttribute.prototype.addColumn = function(){
   var _column = this.column;
   if (_column) return _column;
 
@@ -725,7 +725,7 @@ $.oAttribute.prototype.addColumn = function(){
  * @deprecated use oAttribute.getValue(frame) instead (see: function names as verbs)
  * @return {object}      The value of the attribute in the native format of that attribute (contextual to the attribute).
  */
-$.oAttribute.prototype.value = function(frame){
+exports.oAttribute.prototype.value = function(frame){
   return this.getValue( frame );
 }
 
@@ -735,6 +735,6 @@ $.oAttribute.prototype.value = function(frame){
  * @private
  * @returns {string}
  */
-$.oAttribute.prototype.toString = function(){
+exports.oAttribute.prototype.toString = function(){
   return "[object $.oAttribute '"+this.keyword+(this.subAttributes.length?"' subAttributes: "+this.subAttributes.map(function(x){return x.shortKeyword}):"")+"]";
 }

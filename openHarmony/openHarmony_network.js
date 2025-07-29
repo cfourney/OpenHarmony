@@ -56,7 +56,7 @@
  * @param   {dom}                  $         The connection back to the DOM.
  *
  */
-$.oNetwork = function( ){
+exports.oNetwork = function( ){
     //Expect a path for CURL.
     var avail_paths = [ 
                         "c:\\Windows\\System32\\curl.exe"
@@ -89,7 +89,7 @@ $.oNetwork = function( ){
  *  
  * @return: {string/object}       The resulting object/string from the query -- otherwise a bool as false when an error occured..
  */
-$.oNetwork.prototype.webQuery = function ( address, callback_func, use_json ){
+exports.oNetwork.prototype.webQuery = function ( address, callback_func, use_json ){
   if (typeof callback_func === 'undefined') var callback_func = false;
   if (typeof use_json === 'undefined') var use_json = false;
   
@@ -274,7 +274,7 @@ $.oNetwork.prototype.webQuery = function ( address, callback_func, use_json ){
  *  
  * @return: {string/object}       The resulting object/string from the query -- otherwise a bool as false when an error occured..
  */
-$.oNetwork.prototype.downloadSingle = function ( address, path, replace ){
+exports.oNetwork.prototype.downloadSingle = function ( address, path, replace ){
   if (typeof replace === 'undefined') var replace = false;
   
   try{
@@ -316,7 +316,7 @@ $.oNetwork.prototype.downloadSingle = function ( address, path, replace ){
  *  
  * @return: {bool[]}       The results of the download, for each file in the instruction bool[]
  */
-$.oNetwork.prototype.downloadMulti = function ( address_path, replace ){
+exports.oNetwork.prototype.downloadMulti = function ( address_path, replace ){
   if (typeof replace === 'undefined') var replace = false;
   
   var progress = new QProgressDialog();

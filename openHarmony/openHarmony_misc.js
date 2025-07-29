@@ -57,7 +57,7 @@
  * The $.oUtils helper class -- providing generic utilities. Doesn't need instanciation.
  * @classdesc  $.oUtils utility Class
  */
-$.oUtils = function(){
+exports.oUtils = function(){
     this._type = "utils";
 }
 
@@ -67,7 +67,7 @@ $.oUtils = function(){
  * @param   {string}   str2
  * @returns {string} the found string
  */
-$.oUtils.longestCommonSubstring = function( str1, str2 ){
+exports.oUtils.longestCommonSubstring = function( str1, str2 ){
 	if (!str1 || !str2)
 		return {
 			length: 0,

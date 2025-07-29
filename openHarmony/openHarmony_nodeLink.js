@@ -91,7 +91,7 @@
  *  var peg5     = $.scene.getNodeByPath( "Top/Group/Peg5" );
  *  var newLink  = peg1.addOutLink( peg5 );
  */
-$.oNodeLink = function( outNode, outPort, inNode, inPort, outlink ){
+exports.oNodeLink = function( outNode, outPort, inNode, inPort, outlink ){
 
     //Public properties.
     this.autoDisconnect = true;
@@ -146,7 +146,7 @@ $.oNodeLink = function( outNode, outPort, inNode, inPort, outlink ){
  *                              0 );      //In Port
  *  link.exists == false;   //FALSE, This link doesnt exist in this context, because the node doesnt exist.
  */
-Object.defineProperty($.oNodeLink.prototype, 'exists', {
+Object.defineProperty(exports.oNodeLink.prototype, 'exists', {
     get : function(){
       if( !this._validated ){
         this.validate();
@@ -161,7 +161,7 @@ Object.defineProperty($.oNodeLink.prototype, 'exists', {
  * @name $.oNodeLink#outNode
  * @type {$.oNode}
  */
-Object.defineProperty($.oNodeLink.prototype, 'outNode', {
+Object.defineProperty(exports.oNodeLink.prototype, 'outNode', {
     get : function(){
       return this._outNode;
 
@@ -184,7 +184,7 @@ Object.defineProperty($.oNodeLink.prototype, 'outNode', {
  * @name $.oNodeLink#inNode
  * @type {$.oNode}
  */
-Object.defineProperty($.oNodeLink.prototype, 'inNode', {
+Object.defineProperty(exports.oNodeLink.prototype, 'inNode', {
     get : function(){
       return this._inNode;
     },
@@ -208,7 +208,7 @@ Object.defineProperty($.oNodeLink.prototype, 'inNode', {
  * @name $.oNodeLink#outPort
  * @type {int}
  */
-Object.defineProperty($.oNodeLink.prototype, 'outPort', {
+Object.defineProperty(exports.oNodeLink.prototype, 'outPort', {
     get : function(){
       return this._outPort;
 
@@ -232,7 +232,7 @@ Object.defineProperty($.oNodeLink.prototype, 'outPort', {
  * @name $.oNodeLink#outLink
  * @type {int}
  */
-Object.defineProperty($.oNodeLink.prototype, 'outLink', {
+Object.defineProperty(exports.oNodeLink.prototype, 'outLink', {
     get : function(){
       return this._outLink;
     }
@@ -244,7 +244,7 @@ Object.defineProperty($.oNodeLink.prototype, 'outLink', {
  * @name $.oNodeLink#inPort
  * @type {oNode[]}
  */
-Object.defineProperty($.oNodeLink.prototype, 'inPort', {
+Object.defineProperty(exports.oNodeLink.prototype, 'inPort', {
     get : function(){
       return this._inPort;
     },
@@ -267,7 +267,7 @@ Object.defineProperty($.oNodeLink.prototype, 'inPort', {
  * @private
  * @type {bool}
  */
-Object.defineProperty($.oNodeLink.prototype, 'stopUpdates', {
+Object.defineProperty(exports.oNodeLink.prototype, 'stopUpdates', {
     get : function(){
       return this._stopUpdates;
     },
@@ -290,7 +290,7 @@ Object.defineProperty($.oNodeLink.prototype, 'stopUpdates', {
  * @private
  * @return {object}                   Object in form { "node":oNode, "port":int, "link": int }
  */
-$.oNodeLink.prototype.findInputPath = function( onode, port, path ) {
+exports.oNodeLink.prototype.findInputPath = function( onode, port, path ) {
   var srcNodeInfo = node.srcNodeInfo( onode.path, port );
   if( !srcNodeInfo ){
     return path;
@@ -341,7 +341,7 @@ $.oNodeLink.prototype.findInputPath = function( onode, port, path ) {
  *  var outLinks  = peg1.outLinks;
  *  outLinks[0].linkIn( peg2, 0 ); //Links the input of peg2, port 0 -- to this link, connecting its outNode [peg1] and outPort [0] and outLink [arbitrary].
  */
-$.oNodeLink.prototype.linkIn = function( onode, port ) {
+exports.oNodeLink.prototype.linkIn = function( onode, port ) {
   this._validated = false;
   var stopUpdates_val = this.stopUpdates;
   this.stopUpdates = true;
@@ -365,7 +365,7 @@ $.oNodeLink.prototype.linkIn = function( onode, port ) {
  *  var inLinks  = peg1.inLinks;
  *  inLinks[0].linkOut( peg2, 0 ); //Links the output of peg2, port 0 -- to this link, connecting its inNode [peg1] and inPort [0].
  */
-$.oNodeLink.prototype.linkOut = function( onode, port ) {
+exports.oNodeLink.prototype.linkOut = function( onode, port ) {
   this._validated = false;
 
   var stopUpdates_val = this.stopUpdates;
@@ -398,7 +398,7 @@ $.oNodeLink.prototype.linkOut = function( onode, port ) {
  *  var peg4     = $.scene.getNodeByPath( "Top/Peg4" );
  *  link.insertNode(  peg4, 0, 0 ); //Peg to insert, in port, out port.
  */
-$.oNodeLink.prototype.insertNode = function( nodeToInsert, inPort, outPort ) {
+exports.oNodeLink.prototype.insertNode = function( nodeToInsert, inPort, outPort ) {
   this.stopUpdates = true;
 
   var inNode = this.inNode;
@@ -430,7 +430,7 @@ $.oNodeLink.prototype.insertNode = function( nodeToInsert, inPort, outPort ) {
  *  //The node link doesn't exist yet, but lets apply it.
  *  link.apply();
  */
-$.oNodeLink.prototype.apply = function( force ) {
+exports.oNodeLink.prototype.apply = function( force ) {
   this._stopUpdates = false;
   this._validated = false; // ? Shouldn't we use this to bypass application if it's already been validated?
 
@@ -684,7 +684,7 @@ $.oNodeLink.prototype.apply = function( force ) {
  *                                                       "createPort" : bool
  *                                                      }
  */
-$.oNodeLink.prototype.findInwardPath = function( createPort ){
+exports.oNodeLink.prototype.findInwardPath = function( createPort ){
   var from_node = this._outNode;
   var from_port = this._outPort;
   var targ_node = this._inNode;
@@ -792,7 +792,7 @@ $.oNodeLink.prototype.findInwardPath = function( createPort ){
  *                                                       "createPort" : bool
  *                                                      }
  */
-$.oNodeLink.prototype.findOutwardPath = function(){
+exports.oNodeLink.prototype.findOutwardPath = function(){
   var from_node = this._outNode;
   var port = this._outPort;
   var targ = this._inNode;
@@ -844,7 +844,7 @@ $.oNodeLink.prototype.findOutwardPath = function(){
  * @private
  * @return {bool}      Whether the connection is a valid connection that exists currently in the node system.
  */
-$.oNodeLink.prototype.validate = function ( ) {
+exports.oNodeLink.prototype.validate = function ( ) {
     //Initialize the connection and get the information.
     //First check to see if the path is valid.
     this._exists    = false;
@@ -982,7 +982,7 @@ $.oNodeLink.prototype.validate = function ( ) {
  * @param   {bool}                  outportProvided          Was an outport provided.
  * @return {bool}      Whether the connection is a valid connection that exists currently in the node system.
  */
-$.oNodeLink.prototype.validateUpwards = function( inport, outportProvided ) {
+exports.oNodeLink.prototype.validateUpwards = function( inport, outportProvided ) {
   //IN THE EVENT OUTNODE WASNT PROVIDED.
   this.path = this.findInputPath( this._inNode, inport, [] );
   if( !this.path || this.path.length == 0 ){
@@ -1023,7 +1023,7 @@ $.oNodeLink.prototype.validateUpwards = function( inport, outportProvided ) {
 /**
  * Converts the node link to a string.
  */
-$.oNodeLink.prototype.toString = function( ) {
+exports.oNodeLink.prototype.toString = function( ) {
   return '{"inNode":"'+this.inNode+'", "inPort":"'+this.inPort+'", "outNode":"'+this.outNode+'", "outPort":"'+this.outPort+'", "outLink":"'+this.outLink+'" }';
 }
 
@@ -1081,7 +1081,7 @@ $.oNodeLink.prototype.toString = function( ) {
  *
  * myLink.connect()     // this will connect the nodes once more, with different ports. A new connection is created.
  */
-$.oLink = function(outNode, inNode, outPortNum, inPortNum, outLinkNum, isValid){
+exports.oLink = function(outNode, inNode, outPortNum, inPortNum, outLinkNum, isValid){
   this._outNode = outNode;
   this._inNode = inNode;
   this._outPort = (typeof outPortNum !== 'undefined')? outPortNum:undefined;
@@ -1095,7 +1095,8 @@ $.oLink = function(outNode, inNode, outPortNum, inPortNum, outLinkNum, isValid){
  * The node that the link is coming out of. Changing this value doesn't reconnect the link, just changes the connection described by the link object.
  * @name $.oLink#outNode
  * @type {$.oNode}
- */Object.defineProperty($.oLink.prototype, 'outNode', {
+ */
+Object.defineProperty(exports.oLink.prototype, 'outNode', {
   get : function(){
     return this._outNode;
   },
@@ -1112,7 +1113,7 @@ $.oLink = function(outNode, inNode, outPortNum, inPortNum, outLinkNum, isValid){
  * @name $.oLink#inNode
  * @type {$.oNode}
  */
-Object.defineProperty($.oLink.prototype, 'inNode', {
+Object.defineProperty(exports.oLink.prototype, 'inNode', {
   get : function(){
     return this._inNode;
   },
@@ -1130,7 +1131,7 @@ Object.defineProperty($.oLink.prototype, 'inNode', {
  * @name $.oLink#inPort
  * @type {int}
  */
-Object.defineProperty($.oLink.prototype, 'inPort', {
+Object.defineProperty(exports.oLink.prototype, 'inPort', {
   get : function(){
     if (this.linked) return this._inPort;  // cached value was correct
 
@@ -1154,7 +1155,7 @@ Object.defineProperty($.oLink.prototype, 'inPort', {
  * @name $.oLink#outPort
  * @type {int}
  */
-Object.defineProperty($.oLink.prototype, 'outPort', {
+Object.defineProperty(exports.oLink.prototype, 'outPort', {
   get : function(){
     if (this.linked) return this._outPort;  // cached value was correct
 
@@ -1179,7 +1180,7 @@ Object.defineProperty($.oLink.prototype, 'outPort', {
  * @readonly
  * @type {int}
  */
-Object.defineProperty($.oLink.prototype, 'outLink', {
+Object.defineProperty(exports.oLink.prototype, 'outLink', {
   get : function(){
     if (this.linked) return this._outLink;
 
@@ -1197,7 +1198,7 @@ Object.defineProperty($.oLink.prototype, 'outLink', {
  * @name $.oLink#linked
  * @type {bool}
  */
-Object.defineProperty($.oLink.prototype, 'linked', {
+Object.defineProperty(exports.oLink.prototype, 'linked', {
   get : function(){
     if (this._linked) return this._linked;
 
@@ -1246,7 +1247,7 @@ Object.defineProperty($.oLink.prototype, 'linked', {
  * @readonly
  * @type {bool}
  */
-Object.defineProperty($.oLink.prototype, 'isMultiLevel', {
+Object.defineProperty(exports.oLink.prototype, 'isMultiLevel', {
   get : function(){
     //this.$.debug("isMultiLevel? "+this.outNode +" "+this.inNode, this.$.DEBUG_LEVEL.LOG);
     if (!this.outNode || !this.outNode.group || !this.inNode || !this.inNode.group) return false;
@@ -1261,7 +1262,7 @@ Object.defineProperty($.oLink.prototype, 'isMultiLevel', {
  * @readonly
  * @type {bool}
  */
-Object.defineProperty($.oLink.prototype, 'waypoints', {
+Object.defineProperty(exports.oLink.prototype, 'waypoints', {
   get : function(){
     if (!this.linked) return []
     var _waypoints = waypoint.getAllWaypointsAbove (this.inNode, this.inPort)
@@ -1274,7 +1275,7 @@ Object.defineProperty($.oLink.prototype, 'waypoints', {
  * Get a link that can be connected by working out ports that can be used. If a link already exists, it will be returned.
  * @return {$.oLink} A separate $.oLink object that can be connected. Null if none could be constructed.
  */
-$.oLink.prototype.getValidLink = function(createOutPorts, createInPorts){
+exports.oLink.prototype.getValidLink = function(createOutPorts, createInPorts){
   if (typeof createOutPorts === 'undefined') var createOutPorts = false;
   if (typeof createInPorts === 'undefined') var createInPorts = true;
   var start = this.outNode;
@@ -1326,7 +1327,7 @@ $.oLink.prototype.getValidLink = function(createOutPorts, createInPorts){
  * Attemps to connect a link. Will guess the ports if not provided.
  * @return {bool}
  */
-$.oLink.prototype.connect = function(){
+exports.oLink.prototype.connect = function(){
   if (this._linked){
     return true;
   }
@@ -1369,7 +1370,7 @@ $.oLink.prototype.connect = function(){
  * Disconnects a link.
  * @return {bool} Whether disconnecting was successful;
  */
-$.oLink.prototype.disconnect = function(){
+exports.oLink.prototype.disconnect = function(){
   if (!this._linked) return true;
 
   if (!this.findPorts()) return false;
@@ -1386,7 +1387,7 @@ $.oLink.prototype.disconnect = function(){
  * @private
  * @return {bool} Whether finding ports was successful.
  */
-$.oLink.prototype.findPorts = function(){
+exports.oLink.prototype.findPorts = function(){
   // Unless some ports are specified, this will always find the first link and stop there. Provide more info in case of multiple links
 
   if (!this.outNode|| !this.inNode) {
@@ -1466,7 +1467,7 @@ $.oLink.prototype.findPorts = function(){
  * var link = new $.oLink(node1, node2)
  * link.insertNode(node3) // insert the Transparency node between the Drawing and Composite
  */
-$.oLink.prototype.insertNode = function(oNode, nodeInPort, nodeOutPort, nodeOutLink){
+exports.oLink.prototype.insertNode = function(oNode, nodeInPort, nodeOutPort, nodeOutLink){
   if (!this.linked) return    // can't insert a node if the link isn't connected
 
   this.$.beginUndo("oh_insertNode")
@@ -1499,7 +1500,7 @@ $.oLink.prototype.insertNode = function(oNode, nodeInPort, nodeOutPort, nodeOutL
  * Converts the node link to a string.
  * @private
  */
-$.oLink.prototype.toString = function( ) {
+exports.oLink.prototype.toString = function( ) {
   return ('link: {"'+this._outNode+'" ['+this._outPort+', '+this._outLink+'] -> "'+this._inNode+'" ['+this._inPort+']} linked:'+this._linked);
   // return '{outNode:'+this.outNode+' inNode:'+this.inNode+' }';
 }
@@ -1531,7 +1532,7 @@ $.oLink.prototype.toString = function( ) {
  * @param   {oScene}         [outLinkNum]                    The link index coming out of the out-port of the startNode.
  * @see NodeType
  */
-$.oLinkPath = function( startNode, endNode, outPort, inPort, outLink){
+exports.oLinkPath = function( startNode, endNode, outPort, inPort, outLink){
   this.startNode = startNode;
   this.endNode = endNode;
   this.outPort = (typeof outPort !== 'undefined')? outPort:undefined;
@@ -1546,7 +1547,7 @@ $.oLinkPath = function( startNode, endNode, outPort, inPort, outLink){
  * @readonly
  * @type {bool}
  */
-Object.defineProperty($.oLinkPath.prototype, 'isMultiLevel', {
+Object.defineProperty(exports.oLinkPath.prototype, 'isMultiLevel', {
   get : function(){
     //this.$.log(this.startNode+" "+this.endNode)
     return this.startNode.group.path != this.endNode.group.path;
@@ -1560,7 +1561,7 @@ Object.defineProperty($.oLinkPath.prototype, 'isMultiLevel', {
  * @readonly
  * @type {$.oGroupNode}
  */
-Object.defineProperty($.oLinkPath.prototype, 'lowestCommonGroup', {
+Object.defineProperty(exports.oLinkPath.prototype, 'lowestCommonGroup', {
   get : function(){
     var startPath = this.startNode.group.path.split("/");
     var endPath = this.endNode.group.path.split("/");
@@ -1581,7 +1582,7 @@ Object.defineProperty($.oLinkPath.prototype, 'lowestCommonGroup', {
  *
  * @return {$.oLink[]} The list of successive $.oLink objects describing the path. Returns null if no such path could be found.
  */
-$.oLinkPath.prototype.findExistingPath = function(){
+exports.oLinkPath.prototype.findExistingPath = function(){
   // looking for the startNode from the endNode going up since the hierarchy is usually simpler this direction
   // if inPort is provided, we assume it's correct or a search filter, otherwise look up all inLinks
   var _searchPorts = (this.inPort !== undefined)?[this.inPort]:Array.apply(null, new Array(this.endNode.inPorts)).map(function (x, i) {return i;});
@@ -1631,7 +1632,7 @@ $.oLinkPath.prototype.findExistingPath = function(){
  *
  * @return {$.oLink} the valid $.oLink object.  Returns null if no such link could be created (for example if the node's in-port is already linked)
  */
-$.oLinkPath.prototype.getValidLink = function(start, end, outPort, inPort){
+exports.oLinkPath.prototype.getValidLink = function(start, end, outPort, inPort){
   var _link = new $.oLink(start, end, outPort, inPort)
   return _link.getValidLink();
 }
@@ -1642,7 +1643,7 @@ $.oLinkPath.prototype.getValidLink = function(start, end, outPort, inPort){
  *
  * @return {$.oLink[]}     The list of links needed for the path. Some can already be connected.
  */
-$.oLinkPath.prototype.findNewPath = function(){
+exports.oLinkPath.prototype.findNewPath = function(){
   // look for the lowest common group we will have to reach first
   subLinks = [];
   var commonGroup = this.lowestCommonGroup;
@@ -1702,7 +1703,7 @@ $.oLinkPath.prototype.findNewPath = function(){
  * @return {$.oLink[]} return the list of links present in the created path
  */
 
-$.oLinkPath.prototype.connectPath = function(){
+exports.oLinkPath.prototype.connectPath = function(){
   var newPath = this.findNewPath();
 
   for (var i in newPath){

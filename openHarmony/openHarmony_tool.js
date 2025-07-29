@@ -79,7 +79,7 @@
  *
  * brushTool.activate()           // by using the activate function of the oTool class
  */
-$.oTool = function(id, name){
+exports.oTool = function(id, name){
   this.id = id;
   this.name = name;
 }
@@ -90,7 +90,7 @@ $.oTool = function(id, name){
  * @name $.oTool#stencils
  * @type {$.oStencil[]}
  */
-Object.defineProperty($.oTool, "stencils", {
+Object.defineProperty(exports.oTool, "stencils", {
   get: function(){
     // an object describing what tool can use what stencils
     var _stencilTypes = {
@@ -121,11 +121,11 @@ Object.defineProperty($.oTool, "stencils", {
 /**
  * Activates the tool.
  */
-$.oTool.prototype.activate = function(){
+exports.oTool.prototype.activate = function(){
   Tools.setToolSettings({currentTool:{id:this.id}});
 }
 
 
-$.oTool.prototype.toString = function(){
+exports.oTool.prototype.toString = function(){
   return "< oTool '"+ this.name + "'>"
 }

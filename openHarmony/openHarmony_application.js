@@ -38,7 +38,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
-
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -55,7 +54,7 @@
  * The $.oApp class provides access to the Harmony application and its widgets.
  * @constructor
  */
-$.oApp = function(){
+exports.oApp = function(){
 }
 
 
@@ -65,7 +64,7 @@ $.oApp = function(){
  * @type {string}
  * @readonly
  */
- Object.defineProperty($.oApp.prototype, 'versionString', {
+ Object.defineProperty(exports.oApp.prototype, 'versionString', {
   get : function(){
     return about.getVersionInfoStr().split("version").pop().split("build")[0].replace(/\s/g, "");
   }
@@ -78,7 +77,7 @@ $.oApp = function(){
  * @type {int}
  * @readonly
  */
-Object.defineProperty($.oApp.prototype, 'version', {
+Object.defineProperty(exports.oApp.prototype, 'version', {
   get : function(){
     return parseInt(this.versionString.split(".")[0], 10);
   }
@@ -91,7 +90,7 @@ Object.defineProperty($.oApp.prototype, 'version', {
  * @type {int}
  * @readonly
  */
-Object.defineProperty($.oApp.prototype, 'minorVersion', {
+Object.defineProperty(exports.oApp.prototype, 'minorVersion', {
   get : function(){
     return parseInt(this.versionString.split(".")[1], 10);
   }
@@ -103,7 +102,7 @@ Object.defineProperty($.oApp.prototype, 'minorVersion', {
  * @type {int}
  * @readonly
  */
- Object.defineProperty($.oApp.prototype, 'patch', {
+ Object.defineProperty(exports.oApp.prototype, 'patch', {
   get : function(){
     return parseInt(this.versionString.split(".")[2], 10);
   }
@@ -117,7 +116,7 @@ Object.defineProperty($.oApp.prototype, 'minorVersion', {
  * @type {string}
  * @readonly
  */
-Object.defineProperty($.oApp.prototype, 'flavour', {
+Object.defineProperty(exports.oApp.prototype, 'flavour', {
   get : function(){
     return about.getFlavorString();
   }
@@ -130,7 +129,7 @@ Object.defineProperty($.oApp.prototype, 'flavour', {
  * @type {QWidget}
  * @readonly
  */
-Object.defineProperty($.oApp.prototype, 'mainWindow', {
+Object.defineProperty(exports.oApp.prototype, 'mainWindow', {
   get : function(){
     var windows = QApplication.topLevelWidgets();
     for ( var i in windows) {
@@ -147,7 +146,7 @@ Object.defineProperty($.oApp.prototype, 'mainWindow', {
  * @type {QToolbar}
  * @readonly
  */
-Object.defineProperty($.oApp.prototype, 'toolbars', {
+Object.defineProperty(exports.oApp.prototype, 'toolbars', {
   get : function(){
     var widgets = QApplication.allWidgets();
     var _toolbars = widgets.filter(function(x){return x instanceof QToolBar})
@@ -157,16 +156,15 @@ Object.defineProperty($.oApp.prototype, 'toolbars', {
 });
 
 
-
 /**
  * The Position of the mouse cursor in the toonboom window coordinates.
  * @name $.oApp#mousePosition
  * @type {$.oPoint}
  * @readonly
  */
-Object.defineProperty($.oApp.prototype, 'mousePosition', {
+Object.defineProperty(exports.oApp.prototype, 'mousePosition', {
   get : function(){
-    var _position = this.$.app.mainWindow.mapFromGlobal(QCursor.pos());
+    var _position = this.mainWindow.mapFromGlobal(QCursor.pos());
     return new this.$.oPoint(_position.x(), _position.y(), 0);
   }
 });
@@ -178,7 +176,7 @@ Object.defineProperty($.oApp.prototype, 'mousePosition', {
  * @type {$.oPoint}
  * @readonly
  */
-Object.defineProperty($.oApp.prototype, 'globalMousePosition', {
+Object.defineProperty(exports.oApp.prototype, 'globalMousePosition', {
   get : function(){
     var _position = QCursor.pos();
     return new this.$.oPoint(_position.x(), _position.y(), 0);
@@ -211,7 +209,7 @@ Object.defineProperty($.oApp.prototype, 'globalMousePosition', {
  *
  * brushTool.activate()           // by using the activate function of the oTool class
  */
-Object.defineProperty($.oApp.prototype, 'tools', {
+Object.defineProperty(exports.oApp.prototype, 'tools', {
   get: function(){
     if (typeof this._toolsObject === 'undefined'){
       this._toolsObject = [];
@@ -236,13 +234,13 @@ Object.defineProperty($.oApp.prototype, 'tools', {
  * @name $.oApp#currentTool
  * @type {$.oTool}
  */
-Object.defineProperty($.oApp.prototype, 'currentTool', {
+Object.defineProperty(exports.oApp.prototype, 'currentTool', {
   get : function(){
     var _tool = Tools.getToolSettings().currentTool.id;
     return _tool;
   },
   set : function(tool){
-    if (tool instanceof this.$.oTool) {
+    if (tool instanceof oTool) {
       tool.activate();
       return
     }
@@ -251,7 +249,7 @@ Object.defineProperty($.oApp.prototype, 'currentTool', {
         this.getToolByName(tool).activate();
         return
       }catch(err){
-        this.$.debug("'"+ tool + "' is not a valid tool name. Valid: "+this.tools.map(function(x){return x.name}).join(", "))
+        log.debug("'"+ tool + "' is not a valid tool name. Valid: "+this.tools.map(function(x){return x.name}).join(", "))
       }
     }
     if (typeof tool == "number"){
@@ -268,7 +266,7 @@ Object.defineProperty($.oApp.prototype, 'currentTool', {
  * @param   {string}   [parentName]      The name of the parent widget to look into, in case of duplicates.
  * @return  {QWidget}   The widget if found, or null if it doesn't exist.
  */
-$.oApp.prototype.getWidgetByName = function(name, parentName){
+exports.oApp.prototype.getWidgetByName = function(name, parentName){
   var widgets = QApplication.allWidgets();
   for( var i in widgets){
     if (widgets[i].objectName == name){
@@ -307,7 +305,7 @@ $.oApp.prototype.getWidgetByName = function(name, parentName){
  * // the preference object also holds a categories array with the list of all categories
  * log (prefs.categories)
  */
-Object.defineProperty($.oApp.prototype, 'preferences', {
+Object.defineProperty(exports.oApp.prototype, 'preferences', {
   get: function(){
     if (typeof this._prefsObject === 'undefined'){
       var _prefsObject = {};
@@ -324,11 +322,11 @@ Object.defineProperty($.oApp.prototype, 'preferences', {
         value:_details
       })
 
-      var prefFile = (new oFile(specialFolders.resource+"/prefs.xml")).parseAsXml().children[0].children;
+      var prefFile = (new this.$.oFile(specialFolders.resource+"/prefs.xml")).parseAsXml().children[0].children;
 
-      var userPrefFile = new oFile(specialFolders.userConfig + "/Harmony Premium-pref.xml")
+      var userPrefFile = new this.$.oFile(specialFolders.userConfig + "/Harmony Premium-pref.xml")
       // Harmony Pref file is called differently on the database userConfig
-      if (!userPrefFile.exists) userPrefFile = new oFile(specialFolders.userConfig + "/Harmony-pref.xml")
+      if (!userPrefFile.exists) userPrefFile = new this.$.oFile(specialFolders.userConfig + "/Harmony-pref.xml")
 
       if (userPrefFile.exists){
         var userPref = {objectName: "category", id: "user", children:userPrefFile.parseAsXml().children[0].children};
@@ -394,11 +392,11 @@ Object.defineProperty($.oApp.prototype, 'preferences', {
  *   }
  * }
  */
-Object.defineProperty($.oApp.prototype, 'stencils', {
+Object.defineProperty(exports.oApp.prototype, 'stencils', {
   get: function(){
     if (typeof this._stencilsObject === 'undefined'){
       // parse stencil xml file penstyles.xml to get stencils info
-      var stencilsFile = (new oFile(specialFolders.userConfig+"/penstyles.xml")).read();
+      var stencilsFile = (new this.$.oFile(specialFolders.userConfig+"/penstyles.xml")).read();
       var penRegex = /<pen>([\S\s]*?)<\/pen>/igm
       var stencils = [];
       var stencilXml;
@@ -419,13 +417,13 @@ Object.defineProperty($.oApp.prototype, 'stencils', {
  * @name $.oApp#currentStencil
  * @type {$.oStencil}
  */
-Object.defineProperty($.oApp.prototype, 'currentStencil', {
+Object.defineProperty(exports.oApp.prototype, 'currentStencil', {
   get: function(){
     return this.stencils[PaletteManager.getCurrentPenstyleIndex()];
   },
   set: function(stencil){
     if (stencil instanceof this.$.oStencil) var stencil = stencil.name
-    this.$.debug("Setting current pen: "+ stencil)
+    log.debug("Setting current pen: "+ stencil)
     PenstyleManager.setCurrentPenstyleByName(stencil);
   }
 })
@@ -438,7 +436,7 @@ Object.defineProperty($.oApp.prototype, 'currentStencil', {
  * get a tool by its name
  * @return {$.oTool}   a oTool object representing the tool, or null if not found.
  */
-$.oApp.prototype.getToolByName = function(toolName){
+exports.oApp.prototype.getToolByName = function(toolName){
   var _tools  = this.tools;
   for (var i in _tools){
     if (_tools[i].name.toLowerCase() == toolName.toLowerCase()) return _tools[i];
@@ -452,7 +450,7 @@ $.oApp.prototype.getToolByName = function(toolName){
  * @param {$.oTool}     tool      the tool object we want valid stencils for
  * @return {$.oStencil[]}    the list of stencils compatible with the specified tool
  */
-$.oApp.prototype.getValidStencils = function (tool){
+exports.oApp.prototype.getValidStencils = function (tool){
   if (typeof tool === 'undefined') var tool = this.currentTool;
   return tool.stencils;
 }
@@ -463,7 +461,7 @@ $.oApp.prototype.getValidStencils = function (tool){
  * @param {string} menuName         The name of the menu containing the action (must be a top level menu such as File, Edit etc)
  * @param {string} menuString       The menu entry to trigger.
  */
-$.oApp.prototype.runMenuCommand = function(menuName, menuString){
+exports.oApp.prototype.runMenuCommand = function(menuName, menuString){
   var menubar = this.mainWindow.menuBar();
   var menus = menubar.children();
 
@@ -507,7 +505,7 @@ $.oApp.prototype.runMenuCommand = function(menuName, menuString){
  * @param       {QWidget}   [parent]           The parent widget to add the toolbar to.
  * @param       {bool}      [show]             Whether to show the toolbar instantly after creation.
  */
-$.oToolbar = function( name, widgets, parent, show ){
+exports.oToolbar = function( name, widgets, parent, show ){
   if (typeof parent === 'undefined') var parent = $.app.mainWindow;
   if (typeof widgets === 'undefined') var widgets = [];
   if (typeof show === 'undefined') var show = true;
@@ -524,9 +522,9 @@ $.oToolbar = function( name, widgets, parent, show ){
  * Shows the oToolbar.
  * @name    $.oToolbar#show
  */
-$.oToolbar.prototype.show = function(){
+exports.oToolbar.prototype.show = function(){
   if (this.$.batchMode) {
-    this.$.debug("$.oToolbar not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
+    log.debug("$.oToolbar not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
     return;
   }
 

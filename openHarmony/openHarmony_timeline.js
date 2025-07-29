@@ -61,7 +61,7 @@
  * @property {oTimeline}               timeline              The timeline associated to this layer.
  * @property {oNode}                   node                  The node associated to the layer.
  */
-$.oLayer = function( oTimelineObject, layerIndex){
+exports.oLayer = function( oTimelineObject, layerIndex){
   this.timeline = oTimelineObject;
   this.index = layerIndex;
 }
@@ -72,7 +72,7 @@ $.oLayer = function( oTimelineObject, layerIndex){
  * @name $.oLayer#node
  * @type {$.oNode}
  */
-Object.defineProperty($.oLayer.prototype, "node", {
+Object.defineProperty(exports.oLayer.prototype, "node", {
   get: function(){
     if (this.$.batchMode){
       _node = this.timeline.nodes[this.index];
@@ -89,7 +89,7 @@ Object.defineProperty($.oLayer.prototype, "node", {
  * @name $.oLayer#parent
  * @type {$.oLayer}
  */
-Object.defineProperty($.oLayer.prototype, "parent", {
+Object.defineProperty(exports.oLayer.prototype, "parent", {
   get: function(){
     var _parentIndex = Timeline.parentNodeIndex(this.index);
     if (_parentIndex == -1) return $.scn.root;
@@ -106,7 +106,7 @@ Object.defineProperty($.oLayer.prototype, "parent", {
  * @type {bool}
  * @readonly
  */
- Object.defineProperty($.oLayer.prototype, "selected", {
+ Object.defineProperty(exports.oLayer.prototype, "selected", {
   get: function(){
     var selectionLength = Timeline.numLayerSel
     for (var i=0; i<selectionLength; i++){
@@ -126,7 +126,7 @@ Object.defineProperty($.oLayer.prototype, "parent", {
  * @type {string}
  * @readonly
  */
- Object.defineProperty($.oLayer.prototype, "name", {
+ Object.defineProperty(exports.oLayer.prototype, "name", {
   get: function(){
     return "unnamed layer";
   }
@@ -136,7 +136,7 @@ Object.defineProperty($.oLayer.prototype, "parent", {
 /**
  * @private
  */
-$.oLayer.prototype.toString = function(){
+exports.oLayer.prototype.toString = function(){
   return "<$.oLayer '"+this.name+"'>";
 }
 
@@ -164,10 +164,10 @@ $.oLayer.prototype.toString = function(){
  * @property {oTimeline}               timeline              The timeline associated to this layer.
  * @property {oNode}                   node                  The node associated to the layer.
  */
-$.oNodeLayer = function( oTimelineObject, layerIndex){
+exports.oNodeLayer = function( oTimelineObject, layerIndex){
   this.$.oLayer.apply(this, [oTimelineObject, layerIndex]);
 }
-$.oNodeLayer.prototype = Object.create($.oLayer.prototype);
+exports.oNodeLayer.prototype = Object.create(exports.oLayer.prototype);
 
 
 /**
@@ -175,7 +175,7 @@ $.oNodeLayer.prototype = Object.create($.oLayer.prototype);
  * @name $.oNodeLayer#name
  * @type {string}
  */
-Object.defineProperty($.oNodeLayer.prototype, "name", {
+Object.defineProperty(exports.oNodeLayer.prototype, "name", {
   get: function(){
     return this.node.name;
   },
@@ -190,7 +190,7 @@ Object.defineProperty($.oNodeLayer.prototype, "name", {
  * @name $.oNodeLayer#layerIndex
  * @type {int}
 */
-Object.defineProperty($.oNodeLayer.prototype, "layerIndex", {
+Object.defineProperty(exports.oNodeLayer.prototype, "layerIndex", {
   get: function(){
     var _layers = this.timeline.layers.map(function(x){return x.node.path});
     return _layers.indexOf(this.node.path);
@@ -203,7 +203,7 @@ Object.defineProperty($.oNodeLayer.prototype, "layerIndex", {
  * @name $.oNodeLayer#selected
  * @type {bool}
  */
-Object.defineProperty($.oNodeLayer.prototype, "selected", {
+Object.defineProperty(exports.oNodeLayer.prototype, "selected", {
   get: function(){
     if ($.batchMode) return this.node.selected;
 
@@ -224,7 +224,7 @@ Object.defineProperty($.oNodeLayer.prototype, "selected", {
  * @name $.oNodeLayer#subLayers
  * @type {$.oColumnLayer[]}
 */
-Object.defineProperty($.oNodeLayer.prototype, "subLayers", {
+Object.defineProperty(exports.oNodeLayer.prototype, "subLayers", {
   get: function(){
     var _node = this.node;
     var _nodeLayerType = this.$.oNodeLayer;
@@ -237,7 +237,7 @@ Object.defineProperty($.oNodeLayer.prototype, "subLayers", {
 /**
  * @private
  */
-$.oNodeLayer.prototype.toString = function(){
+exports.oNodeLayer.prototype.toString = function(){
   return "<$.oNodeLayer '"+this.name+"'>";
 }
 
@@ -265,10 +265,10 @@ $.oNodeLayer.prototype.toString = function(){
  * @property {oTimeline}               timeline              The timeline associated to this layer.
  * @property {oNode}                   node                  The node associated to the layer.
  */
-$.oDrawingLayer = function( oTimelineObject, layerIndex){
+exports.oDrawingLayer = function( oTimelineObject, layerIndex){
   this.$.oNodeLayer.apply(this, [oTimelineObject, layerIndex]);
 }
-$.oDrawingLayer.prototype = Object.create($.oNodeLayer.prototype);
+exports.oDrawingLayer.prototype = Object.create(exports.oNodeLayer.prototype);
 
 
 /**
@@ -276,7 +276,7 @@ $.oDrawingLayer.prototype = Object.create($.oNodeLayer.prototype);
  * @name oDrawingLayer#drawingColumn
  * @type {oFrame[]}
  */
- Object.defineProperty($.oDrawingLayer.prototype, "drawingColumn", {
+ Object.defineProperty(exports.oDrawingLayer.prototype, "drawingColumn", {
   get: function(){
     return this.node.attributes.drawing.elements.column;
   }
@@ -288,7 +288,7 @@ $.oDrawingLayer.prototype = Object.create($.oNodeLayer.prototype);
  * @name oDrawingLayer#exposures
  * @type {oFrame[]}
  */
-Object.defineProperty($.oDrawingLayer.prototype, "exposures", {
+Object.defineProperty(exports.oDrawingLayer.prototype, "exposures", {
   get: function(){
     return this.drawingColumn.frames;
   }
@@ -298,7 +298,7 @@ Object.defineProperty($.oDrawingLayer.prototype, "exposures", {
 /**
  * @private
  */
- $.oDrawingLayer.prototype.toString = function(){
+ exports.oDrawingLayer.prototype.toString = function(){
   return "<$.oDrawingLayer '"+this.name+"'>";
 }
 
@@ -325,10 +325,10 @@ Object.defineProperty($.oDrawingLayer.prototype, "exposures", {
  * @property {oTimeline}               timeline              The timeline associated to this layer.
  * @property {oNode}                   node                  The node associated to the layer.
  */
-$.oColumnLayer = function( oTimelineObject, layerIndex){
+exports.oColumnLayer = function( oTimelineObject, layerIndex){
   this.$.oLayer.apply(this, [oTimelineObject, layerIndex]);
 }
-$.oColumnLayer.prototype = Object.create($.oLayer.prototype);
+exports.oColumnLayer.prototype = Object.create(exports.oLayer.prototype);
 
 
 /**
@@ -337,7 +337,7 @@ $.oColumnLayer.prototype = Object.create($.oLayer.prototype);
  * @name $.oColumnLayer#name
  * @type {string}
  */
-Object.defineProperty($.oColumnLayer.prototype, "name", {
+Object.defineProperty(exports.oColumnLayer.prototype, "name", {
   get: function(){
     return this.column.name;
   }
@@ -350,7 +350,7 @@ Object.defineProperty($.oColumnLayer.prototype, "name", {
  * @name $.oColumnLayer#attribute
  * @type {$.oColumn}
  */
-Object.defineProperty($.oColumnLayer.prototype, "attribute", {
+Object.defineProperty(exports.oColumnLayer.prototype, "attribute", {
   get: function(){
     if (!this._attribute){
       this._attribute = this.column.attributeObject;
@@ -366,7 +366,7 @@ Object.defineProperty($.oColumnLayer.prototype, "attribute", {
  * @name $.oColumnLayer#column
  * @type {$.oColumn}
  */
-Object.defineProperty($.oColumnLayer.prototype, "column", {
+Object.defineProperty(exports.oColumnLayer.prototype, "column", {
   get: function(){
     if (!this._column){
       var _name = Timeline.layerToColumn(this.index);
@@ -381,7 +381,7 @@ Object.defineProperty($.oColumnLayer.prototype, "column", {
 /**
  * The layer representing the node to which this column is linked
  */
-Object.defineProperty($.oColumnLayer.prototype, "nodeLayer", {
+Object.defineProperty(exports.oColumnLayer.prototype, "nodeLayer", {
   get: function(){
     var _node = this.node;
     var _nodeLayerType = this.$.oNodeLayer;
@@ -394,7 +394,7 @@ Object.defineProperty($.oColumnLayer.prototype, "nodeLayer", {
 /**
  * @private
  */
- $.oColumnLayer.prototype.toString = function(){
+ exports.oColumnLayer.prototype.toString = function(){
   return "<$.oColumnLayer '"+this.name+"'>";
 }
 
@@ -419,7 +419,7 @@ Object.defineProperty($.oColumnLayer.prototype, "nodeLayer", {
  *
  * @property {string}     display    The display node's path.
  */
-$.oTimeline = function(display){
+exports.oTimeline = function(display){
   if (typeof display === 'undefined') var display = this.$.scn.defaultDisplay;
   if (display instanceof this.$.oNode) display = display.path;
 
@@ -432,7 +432,7 @@ $.oTimeline = function(display){
  * @name $.oTimeline#layers
  * @type {$.oLayer[]}
  */
-Object.defineProperty($.oTimeline.prototype, 'layers', {
+Object.defineProperty(exports.oTimeline.prototype, 'layers', {
   get : function(){
     var nodeLayer = this.$.oNodeLayer;
     return this.allLayers.filter(function (x){return x instanceof nodeLayer})
@@ -445,7 +445,7 @@ Object.defineProperty($.oTimeline.prototype, 'layers', {
  * @name $.oTimeline#allLayers
  * @type {$.oLayer[]}
  */
-Object.defineProperty($.oTimeline.prototype, 'allLayers', {
+Object.defineProperty(exports.oTimeline.prototype, 'allLayers', {
   get : function(){
     if (!this._layers){
       var _layers = [];
@@ -482,7 +482,7 @@ Object.defineProperty($.oTimeline.prototype, 'allLayers', {
  * @name $.oTimeline#selectedLayers
  * @type {oTimelineLayer[]}
  */
-Object.defineProperty($.oTimeline.prototype, 'selectedLayers', {
+Object.defineProperty(exports.oTimeline.prototype, 'selectedLayers', {
   get : function(){
     return this.allLayers.filter(function(x){return x.selected});
   }
@@ -497,7 +497,7 @@ Object.defineProperty($.oTimeline.prototype, 'selectedLayers', {
  * @type {oNode[]}
  * @deprecated use oTimeline.nodes instead if you want the nodes
  */
-Object.defineProperty($.oTimeline.prototype, 'compositionLayers', {
+Object.defineProperty(exports.oTimeline.prototype, 'compositionLayers', {
   get : function(){
     return this.nodes;
   }
@@ -509,7 +509,7 @@ Object.defineProperty($.oTimeline.prototype, 'compositionLayers', {
  * @name $.oTimeline#nodes
  * @type {oNode[]}
  */
-Object.defineProperty($.oTimeline.prototype, 'nodes', {
+Object.defineProperty(exports.oTimeline.prototype, 'nodes', {
   get : function(){
     var _timeline = this.compositionLayersList;
     var _scene = this.$.scene;
@@ -527,7 +527,7 @@ Object.defineProperty($.oTimeline.prototype, 'nodes', {
  * @type {string[]}
  * @deprecated only returns node path strings, use oTimeline.layers insteads
  */
-Object.defineProperty($.oTimeline.prototype, 'nodesList', {
+Object.defineProperty(exports.oTimeline.prototype, 'nodesList', {
   get : function(){
     return this.compositionLayersList;
   }
@@ -540,7 +540,7 @@ Object.defineProperty($.oTimeline.prototype, 'nodesList', {
  * @type {string[]}
  * @deprecated only returns node path strings
  */
-Object.defineProperty($.oTimeline.prototype, 'compositionLayersList', {
+Object.defineProperty(exports.oTimeline.prototype, 'compositionLayersList', {
   get : function(){
     var _composition = this.composition;
     var _timeline = _composition.map(function(x){return x.node})
@@ -554,7 +554,7 @@ Object.defineProperty($.oTimeline.prototype, 'compositionLayersList', {
  * gets the composition for this timeline (array of native toonboom api 'compositionItems' objects)
  * @deprecated exposes native harmony api objects
  */
-Object.defineProperty($.oTimeline.prototype, "composition", {
+Object.defineProperty(exports.oTimeline.prototype, "composition", {
   get: function(){
     return compositionOrder.buildCompositionOrderForDisplay(this.display);
   }
@@ -566,7 +566,7 @@ Object.defineProperty($.oTimeline.prototype, "composition", {
  * Refreshes the oTimeline's cached listing- in the event it changes in the runtime of the script.
  * @deprecated oTimeline.composition is now always refreshed when accessed.
  */
-$.oTimeline.prototype.refresh = function( ){
+exports.oTimeline.prototype.refresh = function( ){
   if (!node.type(this.display)) {
       this.composition = compositionOrder.buildDefaultCompositionOrder();
   }else{
@@ -579,7 +579,7 @@ $.oTimeline.prototype.refresh = function( ){
  * Build column to oNode/Attribute lookup cache. Makes the layer generation faster if using oTimeline.layers, oTimeline.selectedLayers
  * @deprecated
  */
-$.oTimeline.prototype.buildLayerCache = function( forced ){
+exports.oTimeline.prototype.buildLayerCache = function( forced ){
   if (typeof forced === 'undefined') forced = false;
 
   var cdate   = (new Date).getTime();

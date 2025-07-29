@@ -69,7 +69,7 @@
  * var myBackdrop.color = myColor                             // can be used to set the color of a backdrop
  *
  */
-$.oColorValue = function( colorValue ){
+exports.oColorValue = function( colorValue ){
     if (typeof colorValue === 'undefined') var colorValue = "#000000ff";
 
     this.r = 0;
@@ -109,7 +109,7 @@ $.oColorValue = function( colorValue ){
  * Creates an int from the color value, as used for backdrop colors.
  * @return: {string}       ALPHA<<24  RED<<16  GREEN<<8  BLUE
  */
-$.oColorValue.prototype.toInt = function (){
+exports.oColorValue.prototype.toInt = function (){
      return ((this.a & 0xff) << 24) | ((this.r & 0xff) << 16) | ((this.g & 0xff) << 8) | (this.b & 0xff);
 }
 
@@ -118,7 +118,7 @@ $.oColorValue.prototype.toInt = function (){
  * The colour value represented as a string.
  * @return: {string}       RGBA components in a string in format #RRGGBBAA
  */
-$.oColorValue.prototype.toString = function (){
+exports.oColorValue.prototype.toString = function (){
     var _hex = "#";
 
     var r = ("00"+this.r.toString(16)).slice(-2);
@@ -135,7 +135,7 @@ $.oColorValue.prototype.toString = function (){
  * The colour value represented as a string.
  * @return: {string}       RGBA components in a string in format #RRGGBBAA
  */
-$.oColorValue.prototype.toHex = function (){
+exports.oColorValue.prototype.toHex = function (){
   return this.toString();
 }
 
@@ -143,12 +143,12 @@ $.oColorValue.prototype.toHex = function (){
  * Ingest a hex string in form #RRGGBBAA to define the colour.
  * @param   {string}    hexString                The colour in form #RRGGBBAA
  */
-$.oColorValue.prototype.fromColorString = function (hexString){
+exports.oColorValue.prototype.fromColorString = function (hexString){
     hexString = hexString.replace("#","");
     if (hexString.length == 6) hexString += "ff";
     if (hexString.length != 8) throw new Error("incorrect color string format");
 
-    this.$.debug( "HEX : " + hexString, this.$.DEBUG_LEVEL.LOG);
+    // this.$.debug( "HEX : " + hexString, this.$.DEBUG_LEVEL.LOG);
 
     this.r = parseInt(hexString.slice(0,2), 16);
     this.g = parseInt(hexString.slice(2,4), 16);
@@ -161,7 +161,7 @@ $.oColorValue.prototype.fromColorString = function (hexString){
  * Uses a color integer (used in backdrops) and parses the INT; applies the RGBA components of the INT to thos oColorValue
  * @param   { int }    colorInt                      24 bit-shifted integer containing RGBA values
  */
-$.oColorValue.prototype.parseColorFromInt = function(colorInt){
+exports.oColorValue.prototype.parseColorFromInt = function(colorInt){
 	this.r = colorInt >> 16 & 0xFF;
 	this.g = colorInt >> 8 & 0xFF;
 	this.b = colorInt & 0xFF;
@@ -174,7 +174,7 @@ $.oColorValue.prototype.parseColorFromInt = function(colorInt){
  * @name $.oColorValue#h
  * @type {float}
  */
-Object.defineProperty($.oColorValue.prototype, 'h', {
+Object.defineProperty(exports.oColorValue.prototype, 'h', {
     get : function(){
         var r = this.r;
         var g = this.g;
@@ -256,7 +256,7 @@ Object.defineProperty($.oColorValue.prototype, 'h', {
  * @name $.oColorValue#s
  * @type {float}
  */
-Object.defineProperty($.oColorValue.prototype, 's', {
+Object.defineProperty(exports.oColorValue.prototype, 's', {
     get : function(){
         var r = this.r;
         var g = this.g;
@@ -315,7 +315,7 @@ Object.defineProperty($.oColorValue.prototype, 's', {
  * @name $.oColorValue#l
  * @type {float}
  */
-Object.defineProperty($.oColorValue.prototype, 'l', {
+Object.defineProperty(exports.oColorValue.prototype, 'l', {
     get : function(){
         var r = this.r;
         var g = this.g;
@@ -391,7 +391,7 @@ Object.defineProperty($.oColorValue.prototype, 'l', {
  *
  * @property {$.oPalette}            palette                    The palette to which the color belongs.
  */
-$.oColor = function( oPaletteObject, index ){
+exports.oColor = function( oPaletteObject, index ){
   // We don't use id in the constructor as multiple colors with the same id can exist in the same palette.
   this._type = "color";
 
@@ -406,7 +406,7 @@ $.oColor = function( oPaletteObject, index ){
  * @name $.oColor#colorObject
  * @type {BaseColor}
  */
-Object.defineProperty($.oColor.prototype, 'colorObject', {
+Object.defineProperty(exports.oColor.prototype, 'colorObject', {
     get : function(){
         return this.palette.paletteObject.getColorByIndex(this._index);
     }
@@ -419,7 +419,7 @@ Object.defineProperty($.oColor.prototype, 'colorObject', {
  * @name $.oColor#name
  * @type {string}
  */
-Object.defineProperty($.oColor.prototype, 'name', {
+Object.defineProperty(exports.oColor.prototype, 'name', {
     get : function(){
         var _color = this.colorObject;
         return _color.name;
@@ -437,7 +437,7 @@ Object.defineProperty($.oColor.prototype, 'name', {
  * @name $.oColor#id
  * @type {string}
  */
-Object.defineProperty($.oColor.prototype, 'id', {
+Object.defineProperty(exports.oColor.prototype, 'id', {
     get : function(){
         var _color = this.colorObject;
         return _color.id
@@ -455,7 +455,7 @@ Object.defineProperty($.oColor.prototype, 'id', {
  * @name $.oColor#index
  * @type {int}
  */
-Object.defineProperty($.oColor.prototype, 'index', {
+Object.defineProperty(exports.oColor.prototype, 'index', {
     get : function(){
         return this._index;
     },
@@ -472,7 +472,7 @@ Object.defineProperty($.oColor.prototype, 'index', {
  * @name $.oColor#type
  * @type {int}
  */
-Object.defineProperty($.oColor.prototype, 'type', {
+Object.defineProperty(exports.oColor.prototype, 'type', {
     set : function(){
       throw new Error("setting oColor.type Not yet implemented.");
     },
@@ -499,7 +499,7 @@ Object.defineProperty($.oColor.prototype, 'type', {
  * @name $.oColor#selected
  * @type {bool}
  */
-Object.defineProperty($.oColor.prototype, 'selected', {
+Object.defineProperty(exports.oColor.prototype, 'selected', {
     get : function(){
         var _currentId = PaletteManager.getCurrentColorId()
         var _colors = this.palette.colors;
@@ -522,7 +522,7 @@ Object.defineProperty($.oColor.prototype, 'selected', {
  * @name $.oColor#value
  * @type {$.oColorValue}
  */
-Object.defineProperty($.oColor.prototype, 'value', {
+Object.defineProperty(exports.oColor.prototype, 'value', {
   get : function(){
     var _color = this.colorObject;
 
@@ -549,7 +549,7 @@ Object.defineProperty($.oColor.prototype, 'value', {
 
     switch(this.type){
       case "solid":
-        _value = new $.oColorValue(newValue);
+        _value = new this.$.oColorValue(newValue);
         _color.setColorData(_value);
         break;
       case "texture":
@@ -582,7 +582,7 @@ Object.defineProperty($.oColor.prototype, 'value', {
  *
  * @return: {$.oColor}           The new resulting $.oColor object.
  */
-$.oColor.prototype.moveToPalette = function (oPaletteObject, index){
+exports.oColor.prototype.moveToPalette = function (oPaletteObject, index){
     if (typeof index === 'undefined') var index = oPaletteObject.paletteObject.nColors;
     var _duplicate = this.copyToPalette(oPaletteObject, index)
     this.remove()
@@ -598,7 +598,7 @@ $.oColor.prototype.moveToPalette = function (oPaletteObject, index){
  *
  * @return: {$.oColor}           The new resulting $.oColor object.
  */
-$.oColor.prototype.copyToPalette = function (oPaletteObject, index){
+exports.oColor.prototype.copyToPalette = function (oPaletteObject, index){
     var _color = this.colorObject;
 
     oPaletteObject.paletteObject.cloneColor(_color);
@@ -614,7 +614,7 @@ $.oColor.prototype.copyToPalette = function (oPaletteObject, index){
 /**
  * Removes the color from the palette it belongs to.
  */
-$.oColor.prototype.remove = function (){
+exports.oColor.prototype.remove = function (){
     // TODO: find a way to work with index as more than one color can have the same id
     this.palette.paletteObject.removeColor(this.id);
 }
@@ -627,7 +627,7 @@ $.oColor.prototype.remove = function (){
  * @static
  * @return: { string }    Hex color string in format #FFFFFFFF.
  */
-$.oColor.prototype.rgbaToHex = function (rgbaObject){
+exports.oColor.prototype.rgbaToHex = function (rgbaObject){
     var _hex = "#";
     _hex += rvbObject.r.toString(16)
     _hex += rvbObject.g.toString(16)
@@ -645,7 +645,7 @@ $.oColor.prototype.rgbaToHex = function (rgbaObject){
  * @static
  * @return: { obj }    The hex object returned { r:int, g:int, b:int, a:int }
  */
-$.oColor.prototype.hexToRgba = function (hexString){
+exports.oColor.prototype.hexToRgba = function (hexString){
     var _rgba = {};
     //Needs a better fail state.
 

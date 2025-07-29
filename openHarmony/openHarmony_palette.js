@@ -62,7 +62,7 @@
  * @property   {palette}                 paletteObject          The Harmony palette object.
  * @property   {oSceneObject}            scene                  The DOM Scene object.
  */
-$.oPalette = function (paletteObject, paletteListObject) {
+exports.oPalette = function (paletteObject, paletteListObject) {
   this._type = "palette";
 
   this.paletteObject = paletteObject;
@@ -72,7 +72,7 @@ $.oPalette = function (paletteObject, paletteListObject) {
 
 
 // Class properties
-$.oPalette.location = {
+exports.oPalette.location = {
   "environment": PaletteObjectManager.Constants.Location.ENVIRONMENT,
   "job": PaletteObjectManager.Constants.Location.JOB,
   "scene": PaletteObjectManager.Constants.Location.SCENE,
@@ -87,7 +87,7 @@ $.oPalette.location = {
  * @name $.oPalette#id
  * @type {string}
  */
-Object.defineProperty($.oPalette.prototype, 'id', {
+Object.defineProperty(exports.oPalette.prototype, 'id', {
   get: function () {
     return this.paletteObject.id;
   }
@@ -99,7 +99,7 @@ Object.defineProperty($.oPalette.prototype, 'id', {
  * @name $.oPalette#name
  * @type {string}
  */
-Object.defineProperty($.oPalette.prototype, 'name', {
+Object.defineProperty(exports.oPalette.prototype, 'name', {
   get: function () {
     return this.paletteObject.getName();
   },
@@ -130,7 +130,7 @@ Object.defineProperty($.oPalette.prototype, 'name', {
  * @name $.oPalette#index
  * @type {int}
  */
-Object.defineProperty($.oPalette.prototype, 'index', {
+Object.defineProperty(exports.oPalette.prototype, 'index', {
   get: function () {
     var _list = this._paletteList;
     var _n = _list.numPalettes;
@@ -155,7 +155,7 @@ Object.defineProperty($.oPalette.prototype, 'index', {
  * @type {$.oElement}
  * @readonly
  */
-Object.defineProperty($.oPalette.prototype, 'element', {
+Object.defineProperty(exports.oPalette.prototype, 'element', {
   get: function () {
     var _storage = this.paletteStorage;
     var _paletteObject = this._paletteObject;
@@ -171,7 +171,7 @@ Object.defineProperty($.oPalette.prototype, 'element', {
  * @type {$.oFile}
  * @readonly
  */
-Object.defineProperty($.oPalette.prototype, 'path', {
+Object.defineProperty(exports.oPalette.prototype, 'path', {
   get: function () {
     var _path = this.paletteObject.getPath();
     return new this.$.oFile(_path + "/" + this.name + ".plt");
@@ -184,7 +184,7 @@ Object.defineProperty($.oPalette.prototype, 'path', {
  * @name $.oPalette#paletteStorage
  * @type {$.oFile}
  */
-Object.defineProperty($.oPalette.prototype, 'paletteStorage', {
+Object.defineProperty(exports.oPalette.prototype, 'paletteStorage', {
   get: function () {
     var _location = this.$.oPalette.location;
     var _storage = {
@@ -213,7 +213,7 @@ Object.defineProperty($.oPalette.prototype, 'paletteStorage', {
  * @name $.oPalette#selected
  * @type {bool}
  */
-Object.defineProperty($.oPalette.prototype, 'selected', {
+Object.defineProperty(exports.oPalette.prototype, 'selected', {
   get: function () {
     var _currentId = PaletteManager.getCurrentPaletteId()
     return this.id == _currentId;
@@ -234,7 +234,7 @@ Object.defineProperty($.oPalette.prototype, 'selected', {
  * @name $.oPalette#colors
  * @type {oColor[]}
  */
-Object.defineProperty($.oPalette.prototype, 'colors', {
+Object.defineProperty(exports.oPalette.prototype, 'colors', {
   get: function () {
     var _palette = this.paletteObject
     var _colors = []
@@ -251,7 +251,7 @@ Object.defineProperty($.oPalette.prototype, 'colors', {
  * @name $.oPalette#currentColor
  * @type {oColor}
  */
-Object.defineProperty($.oPalette.prototype, 'currentColor', {
+Object.defineProperty(exports.oPalette.prototype, 'currentColor', {
   get: function () {
     var id = PaletteManager.getCurrentColorId()
     return this.getColorById(id)
@@ -271,7 +271,7 @@ Object.defineProperty($.oPalette.prototype, 'currentColor', {
  * @param {string}        name        the display name for the newly created color
  * @param {$.oColorValue} colorValue  a $.oColorValue object describing the color
  */
-$.oPalette.prototype.addColor = function (name, colorValue) {
+exports.oPalette.prototype.addColor = function (name, colorValue) {
   var colorData = {r : colorValue.r, g: colorValue.g, b: colorValue.b, a : colorValue.a };
   this.paletteObject.createNewSolidColor(name, colorData);
 
@@ -284,7 +284,7 @@ $.oPalette.prototype.addColor = function (name, colorValue) {
  * @param {string} texturePath
  * @param {bool} tiled  Wether the texture will be tiled or not
  */
-$.oPalette.prototype.addTexture = function (name, texturePath, tiled) {
+exports.oPalette.prototype.addTexture = function (name, texturePath, tiled) {
   if (typeof texturePath === this.$.oFile) texturePath = texturePath.path;
   this.paletteObject.createNewTexture(name, texturePath, tiled);
 
@@ -298,7 +298,7 @@ $.oPalette.prototype.addTexture = function (name, texturePath, tiled) {
  * @param {object} colorValues an object with keys between 0 and 1 containing a colorValue for each "tack". ex: {0: new $.oColorValue("000000ff"), 1:new $.oColorValue("ffffffff")}
  * @param {bool} radial
  */
-$.oPalette.prototype.addGradient = function (name, colorValues, radial) {
+exports.oPalette.prototype.addGradient = function (name, colorValues, radial) {
   if (typeof radial === 'undefined') var radial = false;
 
   var types = PaletteObjectManager.Constants.ColorType;
@@ -321,7 +321,7 @@ $.oPalette.prototype.addGradient = function (name, colorValues, radial) {
  *
  * @return: {oColor}     the found oColor object.
  */
-$.oPalette.prototype.getColorById = function (id) {
+exports.oPalette.prototype.getColorById = function (id) {
   var _colors = this.colors;
   for (var i in _colors){
     if (_colors[i].id == id) return _colors[i];
@@ -336,7 +336,7 @@ $.oPalette.prototype.getColorById = function (id) {
  *
  * @return: {oColor}     the found oColor object.
  */
- $.oPalette.prototype.getColorByName = function (name) {
+ exports.oPalette.prototype.getColorByName = function (name) {
   var _colors = this.colors;
   var _names = _colors.map(function (x) { return x.name })
   var _colorIndex = _names.indexOf(name)
@@ -351,7 +351,7 @@ $.oPalette.prototype.getColorById = function (id) {
  *
  * @return: {bool}       The success-result of the removal.
  */
-$.oPalette.prototype.remove = function (removeFile) {
+exports.oPalette.prototype.remove = function (removeFile) {
   if (typeof removeFile === 'undefined') var removeFile = false;
 
   var success = false;
@@ -376,6 +376,6 @@ $.oPalette.prototype.remove = function (removeFile) {
 }
 
 
-$.oPalette.prototype.toString = function(){
+exports.oPalette.prototype.toString = function(){
   return this.path.path || this.name;
 }

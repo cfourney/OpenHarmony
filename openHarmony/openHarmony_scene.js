@@ -70,7 +70,7 @@
  *
  *
  */
-$.oScene = function( ){
+exports.oScene = function( ){
     // $.oScene.nodes property is a class property shared by all instances, so it can be passed by reference and always contain all nodes in the scene
 
     //var _topNode = new this.$.oNode("Top");
@@ -92,7 +92,7 @@ $.oScene = function( ){
  * @type {$.oFolder}
  * @readonly
  */
-Object.defineProperty($.oScene.prototype, 'path', {
+Object.defineProperty(exports.oScene.prototype, 'path', {
   get : function(){
     return new this.$.oFolder( scene.currentProjectPathRemapped() );
   }
@@ -104,7 +104,7 @@ Object.defineProperty($.oScene.prototype, 'path', {
  * @type {$.oFile}
  * @readonly
  */
-Object.defineProperty($.oScene.prototype, 'stage', {
+Object.defineProperty(exports.oScene.prototype, 'stage', {
   get : function(){
     if (this.online) return this.path + "/stage/" + this.name + ".stage";
     return this.path + "/" + this.version + ".xstage";
@@ -117,7 +117,7 @@ Object.defineProperty($.oScene.prototype, 'stage', {
  * @type {$.oFolder}
  * @readonly
  */
-Object.defineProperty($.oScene.prototype, 'paletteFolder', {
+Object.defineProperty(exports.oScene.prototype, 'paletteFolder', {
   get : function(){
     return new this.$.oFolder( this.path+"/palette-library" );
   }
@@ -131,7 +131,7 @@ Object.defineProperty($.oScene.prototype, 'paletteFolder', {
  * @type {$.oFolder}
  * @readonly
  */
-Object.defineProperty($.oScene.prototype, 'tempFolder', {
+Object.defineProperty(exports.oScene.prototype, 'tempFolder', {
   get : function(){
     if (!this.hasOwnProperty("_tempFolder")){
       this._tempFolder = new this.$.oFolder(scene.tempProjectPathRemapped());
@@ -147,7 +147,7 @@ Object.defineProperty($.oScene.prototype, 'tempFolder', {
  * @readonly
  * @type {string}
  */
-Object.defineProperty($.oScene.prototype, 'name', {
+Object.defineProperty(exports.oScene.prototype, 'name', {
   get : function(){
     return scene.currentScene();
   }
@@ -160,7 +160,7 @@ Object.defineProperty($.oScene.prototype, 'name', {
  * @readonly
  * @type {bool}
  */
-Object.defineProperty($.oScene.prototype, 'online', {
+Object.defineProperty(exports.oScene.prototype, 'online', {
   get : function(){
     return about.isDatabaseMode()
   }
@@ -172,7 +172,7 @@ Object.defineProperty($.oScene.prototype, 'online', {
  * @readonly
  * @type {string}
  */
-Object.defineProperty($.oScene.prototype, 'environnement', {
+Object.defineProperty(exports.oScene.prototype, 'environnement', {
   get : function(){
     if (!this.online) return null;
     return scene.currentEnvironment();
@@ -186,7 +186,7 @@ Object.defineProperty($.oScene.prototype, 'environnement', {
  * @readonly
  * @type {string}
  */
-Object.defineProperty($.oScene.prototype, 'job', {
+Object.defineProperty(exports.oScene.prototype, 'job', {
   get : function(){
     if (!this.online) return null;
     return scene.currentJob();
@@ -200,7 +200,7 @@ Object.defineProperty($.oScene.prototype, 'job', {
  * @readonly
  * @type {string}
  */
-Object.defineProperty($.oScene.prototype, 'version', {
+Object.defineProperty(exports.oScene.prototype, 'version', {
   get : function(){
     return scene.currentVersionName();
   }
@@ -214,7 +214,7 @@ Object.defineProperty($.oScene.prototype, 'version', {
  * @name $.oScene#sceneName
  * @type {string}
  */
-Object.defineProperty($.oScene.prototype, 'sceneName', {
+Object.defineProperty(exports.oScene.prototype, 'sceneName', {
   get : function(){
     return this.name;
   }
@@ -227,7 +227,7 @@ Object.defineProperty($.oScene.prototype, 'sceneName', {
  * @name $.oScene#startPreview
  * @type {int}
  */
-Object.defineProperty($.oScene.prototype, 'startPreview', {
+Object.defineProperty(exports.oScene.prototype, 'startPreview', {
   get : function(){
     return scene.getStartFrame();
   },
@@ -241,7 +241,7 @@ Object.defineProperty($.oScene.prototype, 'startPreview', {
  * @name $.oScene#stopPreview
  * @type {int}
  */
-Object.defineProperty($.oScene.prototype, 'stopPreview', {
+Object.defineProperty(exports.oScene.prototype, 'stopPreview', {
   get : function(){
     return scene.getStopFrame()+1;
   },
@@ -255,7 +255,7 @@ Object.defineProperty($.oScene.prototype, 'stopPreview', {
  * @name $.oScene#framerate
  * @type {float}
  */
-Object.defineProperty($.oScene.prototype, 'framerate', {
+Object.defineProperty(exports.oScene.prototype, 'framerate', {
   get : function(){
     return scene.getFrameRate();
   },
@@ -270,7 +270,7 @@ Object.defineProperty($.oScene.prototype, 'framerate', {
  * @name $.oScene#unitsAspectRatio
  * @type {double}
  */
- Object.defineProperty($.oScene.prototype, 'unitsAspectRatio', {
+ Object.defineProperty(exports.oScene.prototype, 'unitsAspectRatio', {
   get : function(){
     return this.aspectRatioX/this.aspectRatioY;
   }
@@ -282,7 +282,7 @@ Object.defineProperty($.oScene.prototype, 'framerate', {
  * @name $.oScene#aspectRatioX
  * @type {double}
  */
-Object.defineProperty($.oScene.prototype, 'aspectRatioX', {
+Object.defineProperty(exports.oScene.prototype, 'aspectRatioX', {
   get : function(){
     return scene.unitsAspectRatioX();
   },
@@ -296,7 +296,7 @@ Object.defineProperty($.oScene.prototype, 'aspectRatioX', {
  * @name $.oScene#aspectRatioY
  * @type {double}
  */
-Object.defineProperty($.oScene.prototype, 'aspectRatioY', {
+Object.defineProperty(exports.oScene.prototype, 'aspectRatioY', {
     get : function(){
         return scene.unitsAspectRatioY();
     },
@@ -310,7 +310,7 @@ Object.defineProperty($.oScene.prototype, 'aspectRatioY', {
  * @name $.oScene#unitsX
  * @type {double}
  */
-Object.defineProperty($.oScene.prototype, 'unitsX', {
+Object.defineProperty(exports.oScene.prototype, 'unitsX', {
     get : function(){
         return scene.numberOfUnitsX();
     },
@@ -324,7 +324,7 @@ Object.defineProperty($.oScene.prototype, 'unitsX', {
  * @name $.oScene#unitsY
  * @type {double}
  */
-Object.defineProperty($.oScene.prototype, 'unitsY', {
+Object.defineProperty(exports.oScene.prototype, 'unitsY', {
     get : function(){
         return scene.numberOfUnitsY();
     },
@@ -338,7 +338,7 @@ Object.defineProperty($.oScene.prototype, 'unitsY', {
  * @name $.oScene#unitsZ
  * @type {double}
  */
-Object.defineProperty($.oScene.prototype, 'unitsZ', {
+Object.defineProperty(exports.oScene.prototype, 'unitsZ', {
     get : function(){
         return scene.numberOfUnitsZ();
     },
@@ -353,7 +353,7 @@ Object.defineProperty($.oScene.prototype, 'unitsZ', {
  * @name $.oScene#center
  * @type {$.oPoint}
  */
-Object.defineProperty($.oScene.prototype, 'center', {
+Object.defineProperty(exports.oScene.prototype, 'center', {
     get : function(){
         return new this.$.oPoint( scene.coordAtCenterX(), scene.coordAtCenterY(), 0.0 );
     },
@@ -369,7 +369,7 @@ Object.defineProperty($.oScene.prototype, 'center', {
  * @type {double}
  * @readonly
  */
-Object.defineProperty($.oScene.prototype, 'fieldVectorResolutionX', {
+Object.defineProperty(exports.oScene.prototype, 'fieldVectorResolutionX', {
   get : function(){
     var yUnit = this.fieldVectorResolutionY;
     var unit = yUnit * this.unitsAspectRatio;
@@ -384,7 +384,7 @@ Object.defineProperty($.oScene.prototype, 'fieldVectorResolutionX', {
  * @type {double}
  * @readonly
  */
-Object.defineProperty($.oScene.prototype, 'fieldVectorResolutionY', {
+Object.defineProperty(exports.oScene.prototype, 'fieldVectorResolutionY', {
   get : function(){
     var verticalResolution = 1875 // the amount of drawing units for the max vertical field value
     var unit = verticalResolution/12; // the vertical number of units on drawings is always 12 regardless of $.scn.unitsY
@@ -399,7 +399,7 @@ Object.defineProperty($.oScene.prototype, 'fieldVectorResolutionY', {
  * @readonly
  * @type {int}
  */
-Object.defineProperty($.oScene.prototype, 'resolutionX', {
+Object.defineProperty(exports.oScene.prototype, 'resolutionX', {
     get : function(){
         return scene.currentResolutionX();
     }
@@ -410,7 +410,7 @@ Object.defineProperty($.oScene.prototype, 'resolutionX', {
  * @name $.oScene#resolutionY
  * @type {int}
  */
-Object.defineProperty($.oScene.prototype, 'resolutionY', {
+Object.defineProperty(exports.oScene.prototype, 'resolutionY', {
     get : function(){
         return scene.currentResolutionY();
     }
@@ -421,7 +421,7 @@ Object.defineProperty($.oScene.prototype, 'resolutionY', {
  * @name $.oScene#defaultResolutionX
  * @type {int}
  */
-Object.defineProperty($.oScene.prototype, 'defaultResolutionX', {
+Object.defineProperty(exports.oScene.prototype, 'defaultResolutionX', {
     get : function(){
         return scene.defaultResolutionX();
     },
@@ -435,7 +435,7 @@ Object.defineProperty($.oScene.prototype, 'defaultResolutionX', {
  * @name $.oScene#defaultResolutionY
  * @type {int}
  */
-Object.defineProperty($.oScene.prototype, 'defaultResolutionY', {
+Object.defineProperty(exports.oScene.prototype, 'defaultResolutionY', {
     get : function(){
         return scene.defaultResolutionY();
     },
@@ -449,7 +449,7 @@ Object.defineProperty($.oScene.prototype, 'defaultResolutionY', {
  * @name $.oScene#fov
  * @type {double}
  */
-Object.defineProperty($.oScene.prototype, 'fov', {
+Object.defineProperty(exports.oScene.prototype, 'fov', {
     get : function(){
         return scene.defaultResolutionFOV();
     },
@@ -464,7 +464,7 @@ Object.defineProperty($.oScene.prototype, 'fov', {
  * @name $.oScene#defaultDisplay
  * @type {oNode}
  */
-Object.defineProperty($.oScene.prototype, 'defaultDisplay', {
+Object.defineProperty(exports.oScene.prototype, 'defaultDisplay', {
   get : function(){
     return this.getNodeByPath(scene.getDefaultDisplay());
   },
@@ -481,7 +481,7 @@ Object.defineProperty($.oScene.prototype, 'defaultDisplay', {
  * @readonly
  * @type {bool}
  */
-Object.defineProperty($.oScene.prototype, 'unsaved', {
+Object.defineProperty(exports.oScene.prototype, 'unsaved', {
     get : function(){
         return scene.isDirty();
     }
@@ -494,7 +494,7 @@ Object.defineProperty($.oScene.prototype, 'unsaved', {
  * @type {$.oGroupNode}
  * @readonly
  */
-Object.defineProperty($.oScene.prototype, 'root', {
+Object.defineProperty(exports.oScene.prototype, 'root', {
     get : function(){
         var _topNode = this.getNodeByPath( "Top" );
         return _topNode
@@ -508,7 +508,7 @@ Object.defineProperty($.oScene.prototype, 'root', {
  * @readonly
  * @type {$.oNode[]}
  */
-Object.defineProperty($.oScene.prototype, 'nodes', {
+Object.defineProperty(exports.oScene.prototype, 'nodes', {
     get : function(){
         var _topNode = this.root;
         return _topNode.subNodes( true );
@@ -523,7 +523,7 @@ Object.defineProperty($.oScene.prototype, 'nodes', {
  * @type {$.oColumn[]}
  * @todo add attribute finding to get complete column objects
  */
-Object.defineProperty($.oScene.prototype, 'columns', {
+Object.defineProperty(exports.oScene.prototype, 'columns', {
     get : function(){
         var _columns = [];
         for (var i=0; i<column.numberOf(); i++){
@@ -543,7 +543,7 @@ Object.defineProperty($.oScene.prototype, 'columns', {
  * @readonly
  * @type {$.oPalette[]}
  */
-Object.defineProperty($.oScene.prototype, 'palettes', {
+Object.defineProperty(exports.oScene.prototype, 'palettes', {
   get : function(){
     var _paletteList = PaletteObjectManager.getScenePaletteList();
 
@@ -562,7 +562,7 @@ Object.defineProperty($.oScene.prototype, 'palettes', {
  * @readonly
  * @type {$.oElement[]}
  */
-Object.defineProperty($.oScene.prototype, 'elements', {
+Object.defineProperty(exports.oScene.prototype, 'elements', {
   get : function(){
     var _elements = [];
     var _ids = {};
@@ -617,7 +617,7 @@ Object.defineProperty($.oScene.prototype, 'elements', {
  * @name $.oScene#length
  * @type {int}
  */
-Object.defineProperty($.oScene.prototype, 'length', {
+Object.defineProperty(exports.oScene.prototype, 'length', {
     get : function(){
         return frame.numberOf()
     },
@@ -639,7 +639,7 @@ Object.defineProperty($.oScene.prototype, 'length', {
  * @name $.oScene#currentFrame
  * @type {int}
  */
-Object.defineProperty($.oScene.prototype, 'currentFrame', {
+Object.defineProperty(exports.oScene.prototype, 'currentFrame', {
     get : function(){
         return frame.current();
     },
@@ -655,7 +655,7 @@ Object.defineProperty($.oScene.prototype, 'currentFrame', {
  * @name $.oScene#selectedNodes
  * @type {$.oNode[]}
  */
-Object.defineProperty($.oScene.prototype, 'selectedNodes', {
+Object.defineProperty(exports.oScene.prototype, 'selectedNodes', {
   get : function(){
     return this.getSelectedNodes();
   },
@@ -674,7 +674,7 @@ Object.defineProperty($.oScene.prototype, 'selectedNodes', {
  * @name $.oScene#selectedFrames
  * @type {int[]}
  */
-Object.defineProperty($.oScene.prototype, 'selectedFrames', {
+Object.defineProperty(exports.oScene.prototype, 'selectedFrames', {
   get : function(){
     if (selection.isSelectionRange()){
       var _selectedFrames = [selection.startFrame(), selection.startFrame()+selection.numberOfFrames()];
@@ -696,7 +696,7 @@ Object.defineProperty($.oScene.prototype, 'selectedFrames', {
  * @name $.oScene#selectedPalette
  * @type {$.oPalette}
  */
-Object.defineProperty($.oScene.prototype, "selectedPalette", {
+Object.defineProperty(exports.oScene.prototype, "selectedPalette", {
   get: function(){
     var _paletteList = PaletteObjectManager.getScenePaletteList()
     var _id = PaletteManager.getCurrentPaletteId()
@@ -717,7 +717,7 @@ Object.defineProperty($.oScene.prototype, "selectedPalette", {
  * @name $.oScene#selectedShapes
  * @type {$.oStroke[]}
  */
-Object.defineProperty($.oScene.prototype, "selectedShapes", {
+Object.defineProperty(exports.oScene.prototype, "selectedShapes", {
   get : function(){
     var _currentDrawing = this.activeDrawing;
     var _shapes = _currentDrawing.selectedShapes;
@@ -732,7 +732,7 @@ Object.defineProperty($.oScene.prototype, "selectedShapes", {
  * @name $.oScene#selectedStrokes
  * @type {$.oStroke[]}
  */
-Object.defineProperty($.oScene.prototype, "selectedStrokes", {
+Object.defineProperty(exports.oScene.prototype, "selectedStrokes", {
   get : function(){
     var _currentDrawing = this.activeDrawing;
     var _strokes = _currentDrawing.selectedStrokes;
@@ -747,7 +747,7 @@ Object.defineProperty($.oScene.prototype, "selectedStrokes", {
  * @name $.oScene#selectedContours
  * @type {$.oContour[]}
  */
-Object.defineProperty($.oScene.prototype, "selectedContours", {
+Object.defineProperty(exports.oScene.prototype, "selectedContours", {
   get : function(){
     var _currentDrawing = this.activeDrawing;
     var _strokes = _currentDrawing.selectedContours;
@@ -762,7 +762,7 @@ Object.defineProperty($.oScene.prototype, "selectedContours", {
  * @name $.oScene#activeDrawing
  * @type {$.oDrawing}
  */
-Object.defineProperty($.oScene.prototype, 'activeDrawing', {
+Object.defineProperty(exports.oScene.prototype, 'activeDrawing', {
   get : function(){
     var _settings = Tools.getToolSettings();
     var _drawingNodes = this.getSelectedNodesOfType("READ", false);;
@@ -793,7 +793,7 @@ Object.defineProperty($.oScene.prototype, 'activeDrawing', {
  * @type {$.oTimeline}
  * @readonly
  */
-Object.defineProperty($.oScene.prototype, 'currentTimeline', {
+Object.defineProperty(exports.oScene.prototype, 'currentTimeline', {
   get : function(){
     if (!this.hasOwnProperty("_timeline")){
       this._timeline = this.getTimeline();
@@ -817,7 +817,7 @@ Object.defineProperty($.oScene.prototype, 'currentTimeline', {
  *
  * @return {$.oNode}                    The node found given the query.
  */
-$.oScene.prototype.getNodeByPath = function(fullPath){
+exports.oScene.prototype.getNodeByPath = function(fullPath){
     var _type = node.type(fullPath);
     if (_type == "") return null;
 
@@ -851,7 +851,7 @@ $.oScene.prototype.getNodeByPath = function(fullPath){
  *
  * @return  {$.oNode[]}     The nodes found.
  */
-$.oScene.prototype.getNodesByType = function(typeName){
+exports.oScene.prototype.getNodesByType = function(typeName){
   return this.root.getNodesByType(typeName, true);
 }
 
@@ -862,7 +862,7 @@ $.oScene.prototype.getNodesByType = function(typeName){
  *
  * @return  {$.oNode[]}     The nodes found.
  */
- $.oScene.prototype.getSelectedNodesOfType = function(types, recurse){
+ exports.oScene.prototype.getSelectedNodesOfType = function(types, recurse){
   if (!(types instanceof Array)) types = [types];
   if (typeof recurse === "undefined") var recurse = false;
   return this.getSelectedNodes(recurse).filter(function(x){return types.indexOf(x.type) != -1});
@@ -877,7 +877,7 @@ $.oScene.prototype.getNodesByType = function(typeName){
  *
  * @return {$.oColumn}                    The column found given the query.
  */
-$.oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
+exports.oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
     var _type = column.type(uniqueName);
 
     switch (_type) {
@@ -898,7 +898,7 @@ $.oScene.prototype.getColumnByName = function( uniqueName, oAttributeObject ){
  *
  * @return {$.oElement}                               The element found given the query. In case of an element linked to several column, only the first one will be returned, unless the column is specified
  */
-$.oScene.prototype.getElementById = function( id, oColumnObject ){
+exports.oScene.prototype.getElementById = function( id, oColumnObject ){
   if (element.getNameById(id) == "") return null;
 
   var _sceneElements = this.elements.filter(function(x){return x.id == id});
@@ -915,7 +915,7 @@ $.oScene.prototype.getElementById = function( id, oColumnObject ){
  *
  * @return {$.oNode[]}                 The selected nodes.
  */
-$.oScene.prototype.getSelectedNodes = function( recurse, sortResult ){
+exports.oScene.prototype.getSelectedNodes = function( recurse, sortResult ){
     if (typeof recurse === 'undefined') var recurse = false;
     if (typeof sort_result === 'undefined') var sortResult = false;     //Avoid sorting, save time, if unnecessary and used internally.
 
@@ -948,7 +948,7 @@ $.oScene.prototype.getSelectedNodes = function( recurse, sortResult ){
  *
  * @return {$.oNode[]}                 The node[s] found given the query.
  */
-$.oScene.prototype.nodeSearch = function( query, sort_result ){
+exports.oScene.prototype.nodeSearch = function( query, sort_result ){
   if (typeof sort_result    === 'undefined') var sort_result = true;     //Avoid sorting, save time, if unnecessary and used internally.
 
   //-----------------------------------
@@ -1241,7 +1241,7 @@ $.oScene.prototype.nodeSearch = function( query, sort_result ){
  *
  * @return {$.oNode}   The created node
  */
-$.oScene.prototype.addNode = function( type, name, group, nodePosition ){
+exports.oScene.prototype.addNode = function( type, name, group, nodePosition ){
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
 
   if (_group != null && _group instanceof this.$.oGroupNode){
@@ -1264,7 +1264,7 @@ $.oScene.prototype.addNode = function( type, name, group, nodePosition ){
  * @return {$.oColumn}  The created column
  */
 
-$.oScene.prototype.addColumn = function( type, name, oElementObject ){
+exports.oScene.prototype.addColumn = function( type, name, oElementObject ){
     // Defaults for optional parameters
     if (!type) throw new Error ("Must provide a type when creating a new column.");
 
@@ -1311,7 +1311,7 @@ $.oScene.prototype.addColumn = function( type, name, oElementObject ){
  *
  * @return {$.oElement}  The created element
  */
-$.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
+exports.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType){
     // Defaults for optional parameters
     if (typeof scanType === 'undefined') var scanType = "COLOR";
     if (typeof fieldGuide === 'undefined') var fieldGuide = 12;
@@ -1344,7 +1344,7 @@ $.oScene.prototype.addElement = function(name, imageFormat, fieldGuide, scanType
 
  * @return {$.oDrawingNode}     The created node.
  */
-$.oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElementObject, drawingColumn, options ){
+exports.oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElementObject, drawingColumn, options ){
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
 
   if (_group != null && _group instanceof this.$.oGroupNode){
@@ -1369,7 +1369,7 @@ $.oScene.prototype.addDrawingNode = function( name, group, nodePosition, oElemen
 
  * @return {$.oGroupNode}   The created node.
  */
-$.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, group, nodePosition ){
+exports.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg, group, nodePosition ){
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
 
   if (_group != null && _group instanceof this.$.oGroupNode){
@@ -1388,7 +1388,7 @@ $.oScene.prototype.addGroup = function( name, includeNodes, addComposite, addPeg
  * @param   {string}        [display]                The display node to build the timeline for.
  * @return {$.oTimeline}    The timelne object given the display.
  */
-$.oScene.prototype.getTimeline = function(display){
+exports.oScene.prototype.getTimeline = function(display){
     return new this.$.oTimeline( display, this );
 }
 
@@ -1399,7 +1399,7 @@ $.oScene.prototype.getTimeline = function(display){
  *
  * @return  {$.oPalette}                 The oPalette found given the query.
  */
-$.oScene.prototype.getPaletteByName = function(name){
+exports.oScene.prototype.getPaletteByName = function(name){
   var _palettes = this.palettes;
   for (var i in _palettes){
     if (_palettes[i].name == name) return _palettes[i];
@@ -1412,7 +1412,7 @@ $.oScene.prototype.getPaletteByName = function(name){
  * @param   {string}   path              The palette path to find.
  * @return  {$.oPalette}                 The oPalette or null if not found.
  */
-$.oScene.prototype.getPaletteByPath = function(path){
+exports.oScene.prototype.getPaletteByPath = function(path){
   var _palettes = this.palettes;
   for (var i in _palettes){
     if (_palettes[i].path.path == path) return _palettes[i];
@@ -1426,7 +1426,7 @@ $.oScene.prototype.getPaletteByPath = function(path){
  * @return {$.oPalette}   oPalette with provided name.
  * @deprecated
  */
-$.oScene.prototype.getSelectedPalette = function(){
+exports.oScene.prototype.getSelectedPalette = function(){
     var _paletteList = PaletteManager.getScenePaletteList();
     var _id = PaletteManager.getCurrentPaletteId()
     var _palette = new this.$.oPalette(_paletteList.getPaletteById(_id), _paletteList);
@@ -1443,7 +1443,7 @@ $.oScene.prototype.getSelectedPalette = function(){
  *
  * @return {$.oPalette}   newly created oPalette with provided name.
  */
-$.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, storeInElement){
+exports.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, storeInElement){
   if (typeof paletteStorage === 'undefined') var paletteStorage = "scene";
   if (typeof insertAtIndex === 'undefined') var insertAtIndex = 0;
 
@@ -1480,7 +1480,7 @@ $.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, st
  *
  * @return {$.oPalette}   oPalette with provided name.
  */
-$.oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement){
+exports.oScene.prototype.importPalette = function(filename, name, index, paletteStorage, storeInElement){
   var _paletteFile = new this.$.oFile(filename);
   if (!_paletteFile.exists){
     throw new Error ("Cannot import palette from file "+filename+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
@@ -1547,7 +1547,7 @@ $.oScene.prototype.importPalette = function(filename, name, index, paletteStorag
  *
  * @return       {$.oLink[]}      An array of unique links existing between the nodes.
  */
-$.oScene.prototype.createPaletteFromNodes = function(nodes, paletteName, colorName){
+exports.oScene.prototype.createPaletteFromNodes = function(nodes, paletteName, colorName){
   if (typeof paletteName === 'undefined') var paletteName = this.name;
   if (typeof colorName ==='undefined') var colorName = false;
 
@@ -1580,7 +1580,7 @@ $.oScene.prototype.createPaletteFromNodes = function(nodes, paletteName, colorNa
  *
  * @return  {$.oLink[]}      An array of unique links existing between the nodes.
  */
-$.oScene.prototype.getNodesLinks = function (nodes){
+exports.oScene.prototype.getNodesLinks = function (nodes){
   var _links = [];
   var _linkStrings = [];
   // var _nodePaths = nodes.map(function(x){return x.path});
@@ -1631,7 +1631,7 @@ $.oScene.prototype.getNodesLinks = function (nodes){
  *
  * @return {$.oNode}        The resulting drawing node from the merge.
  */
-$.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
+exports.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
     this.$.beginUndo("oh_mergeNodes");
     // TODO: is there a way to do this without Action.perform?
     // pass a oNode object as argument for destination node instead of name/group?
@@ -1776,7 +1776,7 @@ $.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
  *
  * $.endUndo();
  */
-$.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMode, renameUsedColors, copyOptions){
+exports.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMode, renameUsedColors, copyOptions){
   if (typeof exportPalettesMode === 'undefined') var exportPalettesMode = "usedOnly";
   if (typeof copyOptions === 'undefined') var copyOptions = copyPaste.getCurrentCreateOptions();
   if (typeof renameUsedColors === 'undefined') var renameUsedColors = false;
@@ -1893,7 +1893,7 @@ $.oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMo
  *
  * @return {$.oNode[]}         The resulting pasted nodes.
  */
-$.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, extendScene, nodePosition, pasteOptions ){
+exports.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, extendScene, nodePosition, pasteOptions ){
   if (typeof group === 'undefined') var group = this.root;
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
 
@@ -1916,7 +1916,7 @@ $.oScene.prototype.importTemplate = function( tplPath, group, destinationNodes, 
  * @param {bool}     [exportBackground=false]    Whether to add a white background.
  * @param {float}    [frameScale=1]              A factor by which to scale the frame. ex: 1.05 will add a 10% margin (5% on both sides)
  */
-$.oScene.prototype.exportLayoutImage = function (path, includedNodes, exportFrame, exportCameraFrame, exportBackground, frameScale, format){
+exports.oScene.prototype.exportLayoutImage = function (path, includedNodes, exportFrame, exportCameraFrame, exportBackground, frameScale, format){
   if (typeof includedNodes === 'undefined') var includedNodes = [];
   if (typeof exportCameraFrame === 'undefined') var exportCameraFrame = false;
   if (typeof exportBackground === 'undefined') var exportBackground = false;
@@ -1971,7 +1971,7 @@ $.oScene.prototype.exportLayoutImage = function (path, includedNodes, exportFram
  * @param {float}    margin                    a factor by which to increase the rendering area. for example, 1.05 creates a 10% margin. (5% on each side)
  * @param {Object[]} layersDescription          must be an array of objects {layer: $.oNode, frame: int} which describe all the images to export. By default, will include all visible layers of the timeline.
  */
-$.oScene.prototype.exportPSD = function (path, margin, layersDescription){
+exports.oScene.prototype.exportPSD = function (path, margin, layersDescription){
   if (typeof margin === 'undefined') var margin = 1;
   if (typeof layersDescription === 'undefined') {
     // export the current frame for each drawing layer present in the default timeline.
@@ -2036,7 +2036,7 @@ $.oScene.prototype.exportPSD = function (path, margin, layersDescription){
  *
  * @return {$.oNode[]}     The nodes being created as part of the PSD import.
  */
-$.oScene.prototype.importPSD = function( path, group, nodePosition, separateLayers, addPeg, addComposite, alignment ){
+exports.oScene.prototype.importPSD = function( path, group, nodePosition, separateLayers, addPeg, addComposite, alignment ){
   if (typeof group === 'undefined') var group = this.root;
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
 
@@ -2058,7 +2058,7 @@ $.oScene.prototype.importPSD = function( path, group, nodePosition, separateLaye
  *
  * @returns {$.oNode[]}    The nodes affected by the update
  */
-$.oScene.prototype.updatePSD = function( path, group, separateLayers ){
+exports.oScene.prototype.updatePSD = function( path, group, separateLayers ){
   if (typeof group === 'undefined') var group = this.root;
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
 
@@ -2079,7 +2079,7 @@ $.oScene.prototype.updatePSD = function( path, group, separateLayers ){
  *
  * @return {$.oNode}        The imported sound column.
  */
- $.oScene.prototype.importSound = function(path, layerName){
+ exports.oScene.prototype.importSound = function(path, layerName){
    var _audioFile = new this.$.oFile(path);
    if (typeof layerName === 'undefined') var layerName = _audioFile.name;
 
@@ -2102,7 +2102,7 @@ $.oScene.prototype.updatePSD = function( path, group, separateLayers ){
 *
 * @return {bool}        The success of the export
 */
-$.oScene.prototype.exportQT = function (path, display, scale, exportSound, exportPreviewArea, createThumbnail){
+exports.oScene.prototype.exportQT = function (path, display, scale, exportSound, exportPreviewArea, createThumbnail){
   if (typeof display === 'undefined') var display = node.getName(node.getNodes(["DISPLAY"])[0]);
   if (typeof exportSound === 'undefined') var exportSound = true;
   if (typeof exportPreviewArea === 'undefined') var exportPreviewArea = false;
@@ -2132,7 +2132,7 @@ $.oScene.prototype.exportQT = function (path, display, scale, exportSound, expor
  *
  * @return {$.oNode}        The imported Quicktime Node.
  */
-$.oScene.prototype.importQT = function( path, group, importSound, nodePosition, extendScene, alignment, convertToTvg ){
+exports.oScene.prototype.importQT = function( path, group, importSound, nodePosition, extendScene, alignment, convertToTvg ){
   if (typeof group === 'undefined') var group = this.root;
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
 
@@ -2160,7 +2160,7 @@ $.oScene.prototype.importQT = function( path, group, importSound, nodePosition, 
  *
  * @return {$.oBackdrop}       The created backdrop.
  */
-$.oScene.prototype.addBackdrop = function( groupPath, title, body, color, x, y, width, height ){
+exports.oScene.prototype.addBackdrop = function( groupPath, title, body, color, x, y, width, height ){
   if (typeof group === 'undefined') var group = this.root;
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
 
@@ -2189,7 +2189,7 @@ $.oScene.prototype.addBackdrop = function( groupPath, title, body, color, x, y, 
  *
  * @return {$.oBackdrop}       The created backdrop.
  */
-$.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body, color, x, y, width, height ){
+exports.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body, color, x, y, width, height ){
   if (typeof group === 'undefined') var group = this.root;
   var _group = (group instanceof this.$.oGroupNode)?group:this.$node(group);
 
@@ -2206,7 +2206,7 @@ $.oScene.prototype.addBackdropToNodes = function( groupPath, nodes, title, body,
 /**
  * Saves the scene.
  */
-$.oScene.prototype.save = function( ){
+exports.oScene.prototype.save = function( ){
   scene.saveAll();
 }
 
@@ -2215,7 +2215,7 @@ $.oScene.prototype.save = function( ){
  * Saves the scene in a different location (only available on offline scenes).
  * @param {string} newPath    the new location for the scene (must be a folder path and not a .xstage)
  */
-$.oScene.prototype.saveAs = function(newPath){
+exports.oScene.prototype.saveAs = function(newPath){
   if (this.online) {
     this.$.debug("Can't use saveAs() in database mode.", this.$.DEBUG_LEVEL.ERROR);
     return;
@@ -2231,7 +2231,7 @@ $.oScene.prototype.saveAs = function(newPath){
  * @param {string}      newVersionName      The name for the new version
  * @param {bool}        markAsDefault       Wether to make this new version the default version that will be opened from the database.
  */
-$.oScene.prototype.saveNewVersion = function(newVersionName, markAsDefault){
+exports.oScene.prototype.saveNewVersion = function(newVersionName, markAsDefault){
   if (typeof markAsDefault === 'undefined') var markAsDefault = true;
 
   return scene.saveAsNewVersion (newVersionName, markAsDefault);
@@ -2249,7 +2249,7 @@ $.oScene.prototype.saveNewVersion = function(newVersionName, markAsDefault){
  * @param {string} [postRenderScript]           The path to the script to execute on the scene after the render is finished
  * @return {$.oProcess} In case of using renderInBackground, will return the oProcess object doing the render
  */
-$.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, endFrame, resX, resY, preRenderScript, postRenderScript){
+exports.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, endFrame, resX, resY, preRenderScript, postRenderScript){
   if (typeof renderInBackground === 'undefined') var renderInBackground = true;
   if (typeof startFrame === 'undefined') var startFrame = 1;
   if (typeof endFrame === 'undefined') var endFrame = this.length+1;
@@ -2339,7 +2339,7 @@ $.oScene.prototype.renderWriteNodes = function(renderInBackground, startFrame, e
  * Closes the scene.
  * @param   {bool}            [exit]                                       Whether it should exit after closing.
  */
-$.oScene.prototype.close = function( exit ){
+exports.oScene.prototype.close = function( exit ){
   if (typeof nodePosition === 'undefined') exit = false;
 
   if( exit ){
@@ -2354,7 +2354,7 @@ $.oScene.prototype.close = function( exit ){
  *
  * @return {Matrix4x4}          The matrix of the camera.
  */
-$.oScene.prototype.getCameraMatrix = function( ){
+exports.oScene.prototype.getCameraMatrix = function( ){
     return scene.getCameraMatrix();
 }
 
@@ -2363,7 +2363,7 @@ $.oScene.prototype.getCameraMatrix = function( ){
  *
  * @return {Matrix4x4}          The projection matrix of the camera/scene.
  */
-$.oScene.prototype.getProjectionMatrix = function( ){
+exports.oScene.prototype.getProjectionMatrix = function( ){
   var fov = this.fov;
   var f   = scene.toOGL( new Point3d( 0.0, 0.0, this.unitsZ ) ).z;
   var n   = 0.00001;
@@ -2392,7 +2392,7 @@ $.oScene.prototype.getProjectionMatrix = function( ){
  * @see $.oMetadata
  * @return {$.oMetadata}          The metadata of the scene.
  */
-$.oScene.prototype.getMetadata = function( ){
+exports.oScene.prototype.getMetadata = function( ){
   return new this.$.oMetadata( );
 }
 
@@ -2405,7 +2405,7 @@ $.oScene.prototype.getMetadata = function( ){
  *
  * @return  {$.oNode}                     The node found given the query.
  */
-$.oScene.prototype.$node = function( fullPath ){
+exports.oScene.prototype.$node = function( fullPath ){
     return this.getNodeByPath( fullPath );
 }
 
@@ -2416,7 +2416,7 @@ $.oScene.prototype.$node = function( fullPath ){
  *
  * @return {$.oColumn}          The node found given the query.
  */
-$.oScene.prototype.$column = function( uniqueName, oAttributeObject ){
+exports.oScene.prototype.$column = function( uniqueName, oAttributeObject ){
     return this.getColumnByName( uniqueName, oAttributeObject );
 }
 
@@ -2427,6 +2427,6 @@ $.oScene.prototype.$column = function( uniqueName, oAttributeObject ){
  *
  * @return  {$.oPalette}               The node found given the query.
  */
-$.oScene.prototype.$palette = function( name ){
+exports.oScene.prototype.$palette = function( name ){
     return this.getPaletteByName( name );
 }
