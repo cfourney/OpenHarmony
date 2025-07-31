@@ -1249,6 +1249,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="$.oColumn#easeType"><a href="$.oColumn.html#easeType">easeType</a></li>
+            
                 <li data-name="$.oColumn#frames"><a href="$.oColumn.html#frames">frames</a></li>
             
                 <li data-name="$.oColumn#keyframes"><a href="$.oColumn.html#keyframes">keyframes</a></li>
@@ -1258,8 +1260,6 @@
                 <li data-name="$.oColumn#selected"><a href="$.oColumn.html#selected">selected</a></li>
             
                 <li data-name="$.oColumn#stepSection"><a href="$.oColumn.html#stepSection">stepSection</a></li>
-            
-                <li data-name="$.oColumn#subColumns"><a href="$.oColumn.html#subColumns">subColumns</a></li>
             
                 <li data-name="$.oColumn#subColumns"><a href="$.oColumn.html#subColumns">subColumns</a></li>
             
@@ -1562,6 +1562,8 @@
             <ul class="members itemMembers">
             
             <span class="subtitle">Members</span>
+            
+                <li data-name="$.oDrawingColumn#easeType"><a href="$.oDrawingColumn.html#easeType">easeType</a></li>
             
                 <li data-name="$.oDrawingColumn#element"><a href="$.oDrawingColumn.html#element">element</a></li>
             
@@ -1890,6 +1892,8 @@
                 <li data-name="$.oElement#palettes"><a href="$.oElement.html#palettes">palettes</a></li>
             
                 <li data-name="$.oElement#path"><a href="$.oElement.html#path">path</a></li>
+            
+                <li data-name="$.oElement#synchedElements"><a href="$.oElement.html#synchedElements">synchedElements</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -4433,12 +4437,12 @@
     <div class="nameContainer">
         <h4 class="name" id="oElement">
             
-            new $.oElement<span class="signature">(id, oColumnObject)</span>
+            new $.oElement<span class="signature">(id, synchedLayer, oColumnObject)</span>
         </h4>
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_element.js, line 62
+            openHarmony/openHarmony_element.js, line 63
         </div>
         
     </div>
@@ -4497,6 +4501,29 @@
             <td class="description last">
                 
                 The element ID.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>synchedLayer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">str</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The value of the Drawing Node drawing.element.layer attribute for synched layers</td>
         </tr>
 	
 	
@@ -4881,6 +4908,51 @@
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="synchedElements"><span class="type-signature ">readonly</span>synchedElements<span class="type-signature type array.<$.odrawing>">Array.&lt;<a href="$.oDrawing.html">$.oDrawing</a>></span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        A list of the other elements synched with this one.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
         </dl>
     
     
@@ -4898,7 +4970,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_element.js, line 159
+            openHarmony/openHarmony_element.js, line 176
         </div>
         
     </div>
@@ -5162,7 +5234,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_element.js, line 278
+            openHarmony/openHarmony_element.js, line 295
         </div>
         
     </div>
@@ -5314,7 +5386,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_element.js, line 223
+            openHarmony/openHarmony_element.js, line 240
         </div>
         
     </div>
@@ -5459,7 +5531,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_element.js, line 208
+            openHarmony/openHarmony_element.js, line 225
         </div>
         
     </div>
@@ -5604,7 +5676,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_element.js, line 237
+            openHarmony/openHarmony_element.js, line 254
         </div>
         
     </div>
@@ -5784,7 +5856,7 @@
     
         
         <div class="tag-source">
-            openHarmony/openHarmony_element.js, line 253
+            openHarmony/openHarmony_element.js, line 270
         </div>
         
     </div>
@@ -5937,7 +6009,7 @@
         
 
         <footer>
-            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon May 12 2025 03:40:55 GMT+0000 (Coordinated Universal Time)
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Thu Jul 31 2025 02:48:13 GMT+0000 (Coordinated Universal Time)
         </footer>
     </div>
 </div>
