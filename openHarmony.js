@@ -157,7 +157,7 @@ for (var i in _files){
 
   for (var _key in _exported) {
     if (_exported.hasOwnProperty(_key)) {           
-        MessageLog.trace("$." + _key + " = " + _files[i] + ":" + _key);
+        // MessageLog.trace("$." + _key + " = " + _files[i] + ":" + _key);
 
         $[_key] = _exported[_key];
         
