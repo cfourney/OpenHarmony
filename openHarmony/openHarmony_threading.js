@@ -68,7 +68,7 @@
  * @property {bool}                    started               The start state of all threads.
  * @property {int}                     timeout               MS timeout for blocking processes.
  */
-$.oThread = function( kernel, list, threadCount, start, timeout, reserveThread ){
+exports.oThread = function( kernel, list, threadCount, start, timeout, reserveThread ){
   if (typeof threadCount === 'undefined') var threadCount = "2";
   if (typeof start === 'undefined') var start = false;
   if (typeof reserveThread === 'undefined') reserveThread = true;
@@ -132,7 +132,7 @@ $.oThread = function( kernel, list, threadCount, start, timeout, reserveThread )
  * @name $.oThread#complete
  * @type {bool}
  */
-Object.defineProperty($.oThread.prototype, 'complete', {
+Object.defineProperty(exports.oThread.prototype, 'complete', {
     get : function(){
         if( !this.started ){
           System.println( "Not yet started" );
@@ -154,7 +154,7 @@ Object.defineProperty($.oThread.prototype, 'complete', {
  * @name $.oThread#completedIndices
  * @type {int[]}
  */
-Object.defineProperty($.oThread.prototype, 'completedIndices', {
+Object.defineProperty(exports.oThread.prototype, 'completedIndices', {
     get : function(){
         var indices = [];
         for( var n=0;n<this.complete_thread.length;n++ ){
@@ -172,7 +172,7 @@ Object.defineProperty($.oThread.prototype, 'completedIndices', {
  * @name $.oThread#errorsWithIndex
  * @type {object[]}
  */
-Object.defineProperty($.oThread.prototype, 'errorsWithIndex', {
+Object.defineProperty(exports.oThread.prototype, 'errorsWithIndex', {
     get : function(){
         var errors = [];
         for( var n=0;n<this.error_thread.length;n++ ){
@@ -190,7 +190,7 @@ Object.defineProperty($.oThread.prototype, 'errorsWithIndex', {
  * @name $.oThread#resultsWithIndex
  * @type {object[]}
  */
-Object.defineProperty($.oThread.prototype, 'resultsWithIndex', {
+Object.defineProperty(exports.oThread.prototype, 'resultsWithIndex', {
     get : function(){
         var results = [];
         for( var n=0;n<this.results_thread.length;n++ ){
@@ -208,7 +208,7 @@ Object.defineProperty($.oThread.prototype, 'resultsWithIndex', {
  * @name $.oThread#errors
  * @type {string[]}
  */
-Object.defineProperty($.oThread.prototype, 'errors', {
+Object.defineProperty(exports.oThread.prototype, 'errors', {
     get : function(){
       return this.error_thread;
     }
@@ -219,7 +219,7 @@ Object.defineProperty($.oThread.prototype, 'errors', {
  * @name $.oThread#results
  * @type {object[]}
  */
-Object.defineProperty($.oThread.prototype, 'results', {
+Object.defineProperty(exports.oThread.prototype, 'results', {
     get : function(){
       return this.results_thread;
     }
@@ -230,7 +230,7 @@ Object.defineProperty($.oThread.prototype, 'results', {
  * Start the thread and block if necessary.
  * @param   {bool}         block                    Whether the process should block and wait for completion.
  */
-$.oThread.prototype.start = function( block ){
+exports.oThread.prototype.start = function( block ){
   if (typeof block === 'undefined') block = true;
 
   if( !this.threads_available ){
@@ -263,7 +263,7 @@ $.oThread.prototype.start = function( block ){
  * If threads are not yet prepared, this will prepare them.
  * @param   {bool}         [block]                    Whether the process should block and wait for completion.
  */
-$.oThread.prototype.prepareThreads = function( start ){
+exports.oThread.prototype.prepareThreads = function( start ){
   if (start) this.startAtInstantiation = start;
 
   if( this.threads_available ){
@@ -306,7 +306,7 @@ $.oThread.prototype.prepareThreads = function( start ){
  * If started, will block until completion or timeout.
  * @param   {int}         block_time                    The MS time to block.
  */
-$.oThread.prototype.wait = function( block_time ){
+exports.oThread.prototype.wait = function( block_time ){
     if ( block_time ) this.timeout = block_time;
 
     if( this.reserveThread && this.reservedThread ){
@@ -334,7 +334,7 @@ $.oThread.prototype.wait = function( block_time ){
 /**
  * If started, will block until completion or timeout.
  */
-$.oThread.prototype.runSingleThreaded = function( ){
+exports.oThread.prototype.runSingleThreaded = function( ){
   this.started = true;
   for( var n=0;n<this.list.length;n++ ){
     this.kernel( 0, n, n+1 );
@@ -369,7 +369,7 @@ $.oThread.prototype.runSingleThreaded = function( ){
  * @property {string[]}  queryArgs    A string array of the different arguments given to the command.
  * @property {string}    log          The full log of all the messages outputted over the course of the process lifetime.
  */
-$.oProcess = function(bin, queryArgs){
+exports.oProcess = function(bin, queryArgs){
   this.readyRead = new this.$.oSignal()
   this.finished = new this.$.oSignal()
   this.bin = bin;
@@ -385,7 +385,7 @@ $.oProcess = function(bin, queryArgs){
  * @name $.oProcess#readChannel
  * @type {string}
  */
-Object.defineProperty($.oProcess.prototype, 'readChannel', {
+Object.defineProperty(exports.oProcess.prototype, 'readChannel', {
   get : function(){
     var merged = (this.process.processChannelMode() == QProcess.MergedChannels);
     if (merged) return "All";
@@ -411,7 +411,7 @@ Object.defineProperty($.oProcess.prototype, 'readChannel', {
 /**
  * kills the process instantly (useful for hanging processes, etc).
  */
-$.oProcess.prototype.kill = function(){
+exports.oProcess.prototype.kill = function(){
   if (!this.process) return;
   this.process.kill()
 }
@@ -419,7 +419,7 @@ $.oProcess.prototype.kill = function(){
 /**
  * Attempts to terminate the process execution by asking it to close itself.
  */
-$.oProcess.prototype.terminate = function(){
+exports.oProcess.prototype.terminate = function(){
   if (!this.process) return;
   this.process.terminate()
 }
@@ -507,7 +507,7 @@ $.oProcess.prototype.terminate = function(){
  * return readout
  *
  */
-$.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
+exports.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
   if (typeof timeOut === 'undefined') var timeOut = -1;
 
   var p = this.process;
@@ -547,7 +547,7 @@ $.oProcess.prototype.launchAndRead = function(readCallback, finishedCallback){
  * read the output of a process.
  * @return {string}   The lines as returned by the process since the last "read" instruction
  */
-$.oProcess.prototype.read = function (){
+exports.oProcess.prototype.read = function (){
   var p = this.process;
   if (p.readChannel == QProcess.StandardOutput){
     var readOut = p.readAllStandardOutput();
@@ -570,7 +570,7 @@ $.oProcess.prototype.read = function (){
  * Execute a process and waits for the end of the execution.
  * @return {string}   The lines as returned by the process.
  */
-$.oProcess.prototype.execute = function(){
+exports.oProcess.prototype.execute = function(){
   this.$.debug("Executing Process with arguments : "+this.bin+" "+this.queryArgs.join(" "), this.$.DEBUG_LEVEL.LOG);
 
   var p = this.process;
@@ -584,7 +584,7 @@ $.oProcess.prototype.execute = function(){
 /**
  * Execute a process as a separate application, which doesn't block the script execution and stops the script from interacting with it further.
  */
-$.oProcess.prototype.launchAndDetach = function(){
+exports.oProcess.prototype.launchAndDetach = function(){
   QProcess.startDetached(this.bin, this.queryArgs);
 }
 
@@ -610,7 +610,7 @@ $.oProcess.prototype.launchAndDetach = function(){
  * directly when the signal is emited, and the rest of the code will execute after.
  * @constructor
  */
-$.oSignal = function(type){
+exports.oSignal = function(type){
   // this.emitType = type;
   this.connexions = [];
   this.blocked = false;
@@ -622,7 +622,7 @@ $.oSignal = function(type){
  * @param {object} context
  * @param {function} slot
  */
-$.oSignal.prototype.connect = function (context, slot){
+exports.oSignal.prototype.connect = function (context, slot){
   // support slot.connect(callback) synthax
   if (typeof slot === 'undefined'){
     var slot = context;
@@ -636,7 +636,7 @@ $.oSignal.prototype.connect = function (context, slot){
  * Remove a connection registered with this Signal.
  * @param {function} [slot] the function to disconnect from the signal. If not specified, all connexions will be removed.
  */
-$.oSignal.prototype.disconnect = function(slot){
+exports.oSignal.prototype.disconnect = function(slot){
   if (typeof slot === "undefined"){
     this.connexions = [];
     return
@@ -653,7 +653,7 @@ $.oSignal.prototype.disconnect = function(slot){
 /**
  * Call the slot function using the provided context and and any arguments.
  */
-$.oSignal.prototype.emit = function () {
+exports.oSignal.prototype.emit = function () {
   if (this.blocked) return;
 
   // if (!(value instanceof this.type)){ // can't make it work for primitives, might try to fix later?
@@ -681,7 +681,7 @@ $.oSignal.prototype.emit = function () {
 }
 
 
-$.oSignal.prototype.toString = function(){
+exports.oSignal.prototype.toString = function(){
   return "Signal";
 }
 

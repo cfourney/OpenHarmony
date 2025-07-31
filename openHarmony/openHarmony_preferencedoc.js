@@ -88,14 +88,14 @@
  * 
  * //the details objects of the preferences object allows access to more information about each preference
  * var details = prefs.details
- * log(details.USE_OVERLAY_UNDERLAY_ART.category+" "+details.USE_OVERLAY_UNDERLAY_ART.id+" "+details.USE_OVERLAY_UNDERLAY_ART.type);
+ * $.log(details.USE_OVERLAY_UNDERLAY_ART.category+" "+details.USE_OVERLAY_UNDERLAY_ART.id+" "+details.USE_OVERLAY_UNDERLAY_ART.type);
  * 
  * for (var i in details){
- *   log(i+" "+JSON.stringify(details[i]))       // each object inside detail is a complete oPreference instance
+ *   $.log(i+" "+JSON.stringify(details[i]))       // each object inside detail is a complete oPreference instance
  * }
  * 
  * // the preference object also holds a categories array with the list of all categories
- * log (prefs.categories)
+ * $.log (prefs.categories)
  */
 
 /**

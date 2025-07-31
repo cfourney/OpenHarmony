@@ -60,7 +60,7 @@
  * @property {int}                  id                          The element ID.
  * @property {$.oColumn}            oColumnObject               The column object associated to the element.
  */
-$.oElement = function( id, synchedLayer, oColumnObject){
+exports.oElement = function( id, synchedLayer, oColumnObject){
   if (typeof synchedLayer === 'undefined' || !synchedLayer) synchedLayer = null;
   this._type = "element";
 
@@ -76,7 +76,7 @@ $.oElement = function( id, synchedLayer, oColumnObject){
  * @name $.oElement#name
  * @type {string}
  */
-Object.defineProperty($.oElement.prototype, 'name', {
+Object.defineProperty(exports.oElement.prototype, 'name', {
     get : function(){
          return element.getNameById(this.id)
     },
@@ -92,7 +92,7 @@ Object.defineProperty($.oElement.prototype, 'name', {
  * @name $.oElement#path
  * @type {string}
  */
-Object.defineProperty($.oElement.prototype, 'path', {
+Object.defineProperty(exports.oElement.prototype, 'path', {
     get : function(){
          return fileMapper.toNativePath(element.completeFolder(this.id))
     }
@@ -104,7 +104,7 @@ Object.defineProperty($.oElement.prototype, 'path', {
  * @name $.oElement#drawings
  * @type {$.oDrawing[]}
  */
-Object.defineProperty($.oElement.prototype, 'drawings', {
+Object.defineProperty(exports.oElement.prototype, 'drawings', {
   get : function(){
     var _drawingsNumber = Drawing.numberOf(this.id);
     var _drawings = [];
@@ -121,7 +121,7 @@ Object.defineProperty($.oElement.prototype, 'drawings', {
  * @name $.oElement#format
  * @type {string}
  */
-Object.defineProperty($.oElement.prototype, 'format', {
+Object.defineProperty(exports.oElement.prototype, 'format', {
   get : function(){
     var _type = element.pixmapFormat(this.id);
     if (element.vectorType(this.id)) _type = "TVG";
@@ -135,7 +135,7 @@ Object.defineProperty($.oElement.prototype, 'format', {
  * @name $.oElement#palettes
  * @type {$.oPalette[]}
  */
-Object.defineProperty($.oElement.prototype, 'palettes', {
+Object.defineProperty(exports.oElement.prototype, 'palettes', {
   get: function(){
     var _paletteList = PaletteObjectManager.getPaletteListByElementId(this.id);
     var _palettes = [];
@@ -154,10 +154,10 @@ Object.defineProperty($.oElement.prototype, 'palettes', {
  * @readonly
  * @type {$.oDrawing[]}
  */
-Object.defineProperty($.oElement.prototype, 'synchedElements', {
+Object.defineProperty(exports.oElement.prototype, 'synchedElements', {
   get : function(){
     var _id = this.id;
-    return $.scene.elements.filter(function(e){return e.id == _id});
+    return this.$.scene.elements.filter(function(e){return e.id == _id});
   }
 })
 
@@ -173,7 +173,7 @@ Object.defineProperty($.oElement.prototype, 'synchedElements', {
  *
  * @return {$.oDrawing}      The added drawing
  */
-$.oElement.prototype.addDrawing = function( atFrame, name, filename, convertToTvg ){
+exports.oElement.prototype.addDrawing = function( atFrame, name, filename, convertToTvg ){
   if (typeof atFrame === 'undefined') var atFrame = 1;
   if (typeof filename === 'undefined') var filename = null;
   var nameByFrame = this.$.app.preferences.XSHEET_NAME_BY_FRAME;
@@ -222,7 +222,7 @@ $.oElement.prototype.addDrawing = function( atFrame, name, filename, convertToTv
  *
  * @return  {$.oDrawing}      The drawing found by the search
  */
-$.oElement.prototype.getDrawingByName = function ( name ){
+exports.oElement.prototype.getDrawingByName = function ( name ){
   var _drawings = this.drawings;
   for (var i in _drawings){
     if (_drawings[i].name == name) return _drawings[i];
@@ -237,7 +237,7 @@ $.oElement.prototype.getDrawingByName = function ( name ){
  *
  * @return  {$.oDrawing}      The drawing found by the search
  */
- $.oElement.prototype.getDrawingById = function ( id ){
+ exports.oElement.prototype.getDrawingById = function ( id ){
   var _drawings = this.drawings;
   for (var i in _drawings){
     if (_drawings[i].id == id) return _drawings[i];
@@ -251,7 +251,7 @@ $.oElement.prototype.getDrawingByName = function ( name ){
  * @param   {int}           [listIndex]              The index in the element palette list at which to add the newly linked palette
  * @return  {$.oPalette}    The linked element palette.
  */
-$.oElement.prototype.linkPalette = function ( oPaletteObject , listIndex){
+exports.oElement.prototype.linkPalette = function ( oPaletteObject , listIndex){
   var _paletteList = PaletteObjectManager.getPaletteListByElementId(this.id);
   if (typeof listIndex === 'undefined') var listIndex = _paletteList.numPalettes;
 
@@ -267,7 +267,7 @@ $.oElement.prototype.linkPalette = function ( oPaletteObject , listIndex){
  * @param {$.oPalette} oPaletteObject
  * @return {bool} the success of the unlinking process.
  */
-$.oElement.prototype.unlinkPalette = function (oPaletteObject) {
+exports.oElement.prototype.unlinkPalette = function (oPaletteObject) {
   var _palettes = this.palettes;
   var _ids = _palettes.map(function(x){return x.id});
   var _paletteId = oPaletteObject.id;
@@ -292,7 +292,7 @@ $.oElement.prototype.unlinkPalette = function (oPaletteObject) {
  * @param   {string}     [name]              The new name for the duplicated element.
  * @return  {$.oElement}      The duplicate element
  */
-$.oElement.prototype.duplicate = function(name){
+exports.oElement.prototype.duplicate = function(name){
   if (typeof name === 'undefined') var name = this.name;
 
   var _fieldGuide = element.fieldChart(this.id);
@@ -309,7 +309,7 @@ $.oElement.prototype.duplicate = function(name){
       var duplicateDrawing = _duplicateElement.addDrawing(0, _drawings[i].name, _drawingFile);
       _drawingFile.copy(_elementFolder, duplicateDrawing.name, true);
     }catch(err){
-      this.debug("could not copy drawing file "+_drawingFile.name+" into element "+_duplicateElement.name, this.$.DEBUG_LEVEL.ERROR);
+      this.$.debug("could not copy drawing file "+_drawingFile.name+" into element "+_duplicateElement.name, this.$.DEBUG_LEVEL.ERROR);
     }
   }
   return _duplicateElement;

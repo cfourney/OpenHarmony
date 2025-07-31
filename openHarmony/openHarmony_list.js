@@ -53,7 +53,7 @@
  * @param   {function}                 [setFunction=null]    The function run when setting an entry in the list.<br>In form <i>function( listItem, index, value ){ return resolvedValue; }</i> -- must return a resolved value. 
  * @param   {function}                 [sizeFunction=null]   The function run when resizing the list.<br>In form <i>function( listItem, length ){ }</i>
  */
-$.oList = function( initArray, startIndex, length, getFunction, setFunction, sizeFunction ){
+exports.oList = function( initArray, startIndex, length, getFunction, setFunction, sizeFunction ){
   if(typeof initArray == 'undefined') var initArray = [];
   if(typeof startIndex == 'undefined') var startIndex = 0;
   if(typeof getFunction == 'undefined') var getFunction = false;
@@ -118,7 +118,7 @@ $.oList = function( initArray, startIndex, length, getFunction, setFunction, siz
 }
 
 
-Object.defineProperty( $.oList.prototype, '_type', {
+Object.defineProperty( exports.oList.prototype, '_type', {
   enumerable : false, writable : false, configurable: false,
   value: 'dynList'
 });
@@ -129,7 +129,7 @@ Object.defineProperty( $.oList.prototype, '_type', {
  * @name $.oList#createGettersSetters
  * @private
  */
-Object.defineProperty($.oList.prototype, 'createGettersSetters', {
+Object.defineProperty(exports.oList.prototype, 'createGettersSetters', {
   enumerable : false,
   value: function(){
     { 
@@ -212,7 +212,7 @@ Object.defineProperty($.oList.prototype, 'createGettersSetters', {
  * @name $.oList#startIndex
  * @type {int}
  */
-Object.defineProperty( $.oList.prototype, 'startIndex', {
+Object.defineProperty( exports.oList.prototype, 'startIndex', {
   enumerable : false,
   get: function(){
     return this._startIndex;
@@ -233,7 +233,7 @@ Object.defineProperty( $.oList.prototype, 'startIndex', {
  * @function
  * @return {int}   The length of the list, considering the startIndex.
  */
-Object.defineProperty($.oList.prototype, 'length', {
+Object.defineProperty(exports.oList.prototype, 'length', {
   enumerable : false,
   get: function(){
     return this._length;
@@ -259,7 +259,7 @@ Object.defineProperty($.oList.prototype, 'length', {
  * @function
  * @return {object}   The first item in the list.
  */
-Object.defineProperty($.oList.prototype, 'first', {
+Object.defineProperty(exports.oList.prototype, 'first', {
   enumerable : false,
   value: function(){
     this.currentIndex = this.startIndex;
@@ -282,7 +282,7 @@ Object.defineProperty($.oList.prototype, 'first', {
  *   item = myList.next();   
  * }
  */
-Object.defineProperty($.oList.prototype, 'next', {
+Object.defineProperty(exports.oList.prototype, 'next', {
   enumerable : false,
   value: function(){
     this.currentIndex++;
@@ -302,7 +302,7 @@ Object.defineProperty($.oList.prototype, 'next', {
  * @name $.oList#lastIndex
  * @type {int}
  */
-Object.defineProperty($.oList.prototype, 'lastIndex', {
+Object.defineProperty(exports.oList.prototype, 'lastIndex', {
   enumerable : false,
   get: function(){
     return this.length - 1;
@@ -318,7 +318,7 @@ Object.defineProperty($.oList.prototype, 'lastIndex', {
  *
  * @return  {int}   Returns the new length of the oList.
  */
-Object.defineProperty($.oList.prototype, 'push', {
+Object.defineProperty(exports.oList.prototype, 'push', {
   enumerable : false,
   value : function( newElement ){
     var origLength = this.length;
@@ -335,7 +335,7 @@ Object.defineProperty($.oList.prototype, 'push', {
  * @function
  * @return  {int}   The item popped from the back of the array.
  */
-Object.defineProperty($.oList.prototype, 'pop', {
+Object.defineProperty(exports.oList.prototype, 'pop', {
   enumerable : false,
   value : function( ){
 
@@ -361,7 +361,7 @@ Object.defineProperty($.oList.prototype, 'pop', {
  *
  * @return  {$.oList}   The list represented as an array, filtered given the function.
  */
-Object.defineProperty($.oList.prototype, 'filterByFunction', {
+Object.defineProperty(exports.oList.prototype, 'filterByFunction', {
   enumerable : false,
   value : function( func ){
     var _results = [];
@@ -395,7 +395,7 @@ Object.defineProperty($.oList.prototype, 'filterByFunction', {
  * $.log(readNodes.extractProperty("name"))  // prints the names of the result
  *
  */
-Object.defineProperty($.oList.prototype, 'filterByProperty', {
+Object.defineProperty(exports.oList.prototype, 'filterByProperty', {
   enumerable : false,
   value : function(property, search){
     var _results = []
@@ -418,7 +418,7 @@ Object.defineProperty($.oList.prototype, 'filterByProperty', {
  *
  * @return  {$.oList}   The newly created oList object containing the property values.
  */
-Object.defineProperty($.oList.prototype, 'extractProperty', {
+Object.defineProperty(exports.oList.prototype, 'extractProperty', {
   enumerable : false,
   value : function(property){
     var _results = []
@@ -440,7 +440,7 @@ Object.defineProperty($.oList.prototype, 'extractProperty', {
  *
  * @return  {$.oList}   The sorted $oList.
  */
-Object.defineProperty($.oList.prototype, 'sortByProperty', {
+Object.defineProperty(exports.oList.prototype, 'sortByProperty', {
   enumerable : false,
   value : function( property, ascending ){
     if (typeof ascending === 'undefined') var ascending = true;
@@ -466,7 +466,7 @@ Object.defineProperty($.oList.prototype, 'sortByProperty', {
  *
  * @return  {$.oList}   The sorted $oList.
  */
-Object.defineProperty($.oList.prototype, 'sortByFunction', {
+Object.defineProperty(exports.oList.prototype, 'sortByFunction', {
   enumerable : false,
   value : function( func ){
     var _array = this.toArray();
@@ -485,7 +485,7 @@ Object.defineProperty($.oList.prototype, 'sortByFunction', {
  * @function
  * @return  {object[]}   The list represented as an array.
  */
-Object.defineProperty($.oList.prototype, 'toArray', {
+Object.defineProperty(exports.oList.prototype, 'toArray', {
   enumerable : false,
   value : function(){
     var _array = [];
@@ -506,7 +506,7 @@ Object.defineProperty($.oList.prototype, 'toArray', {
  * @function 
  * @type {string}
  */
-Object.defineProperty($.oList.prototype, 'toString', {
+Object.defineProperty(exports.oList.prototype, 'toString', {
   enumerable : false,
   value: function(){
     return this.toArray().join(",");

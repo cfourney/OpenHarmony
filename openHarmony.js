@@ -72,7 +72,7 @@
  * @example
  * // To access the functions, first call the $ object. It is made available after loading openHarmony like so:
  *
- * include ("openHarmony.js");
+ * const $ = require ("openHarmony.js");
  *
  * var doc = $.scn;                    // grabbing the scene document
  * $.log("hello");                     // prints out a message to the MessageLog.
@@ -86,18 +86,19 @@
  *
  */
 $ = {
-  debug_level : 0,
-
- /**
- * Enum to set the debug level of debug statements.
- * @name    $#DEBUG_LEVEL
- * @enum
- */
-  DEBUG_LEVEL : {
-                 'ERROR'   : 0,
-                 'WARNING' : 1,
-                 'LOG'     : 2
-                },
+  debug_level: 0,
+  /**
+   * Enum to set the debug level of debug statements.
+   * @name    $#DEBUG_LEVEL
+   * @enum
+   */
+  DEBUG_LEVEL: {
+    "ERROR": 0,
+    "WARNING": 1,
+    "LOG": 2,
+    "INFO": 2,
+    "DEBUG": 3
+  },
   file      : __file__,
   directory : false,
   pi        : 3.14159265359
@@ -111,8 +112,7 @@ $ = {
  */
 Object.defineProperty( $, "directory", {
   get : function(){
-    var currentFile = __file__
-    return currentFile.split("\\").join("/").split( "/" ).slice(0, -1).join('/');
+    return $.file.split("\\").join("/").split( "/" ).slice(0, -1).join('/');
   }
 });
 
@@ -148,10 +148,28 @@ _dir.setFilter( QDir.Files);
 var _files = _dir.entryList();
 
 for (var i in _files){
-  include( _ohDirectory + "/" + _files[i]);
+  const _path = "openHarmony/" + _files[i];
+  try {
+    const _exported = require(_path);
+  } catch (e) {
+    MessageLog.trace("Error requiring " + _path + ": " + e);
+  }
+
+  for (var _key in _exported) {
+    if (_exported.hasOwnProperty(_key)) {           
+        // MessageLog.trace("$." + _key + " = " + _files[i] + ":" + _key);
+
+        $[_key] = _exported[_key];
+        
+        /* Tried this instead of $[_key] = _exported[_key] to transfer properties
+        with setters and getters defined on a script's exports object, but they
+        are skipped? It's ok because oH doesn't use anything like this 
+        Object.defineProperty(
+          $, _key, Object.getOwnPropertyDescriptor(_exported, _key));
+        */
+    }
+  }
 }
-
-
 
 
 /**
@@ -525,9 +543,17 @@ for( var classItem in $ ){
 
     //Also extend it to the global object.
     this[classItem] = $[classItem];
+
+    /*
+      This didn't do what I expected, but after require()ing oH in, all the functions
+      are properties of the top-level this.
+    */
+    // this.__proto__[classItem] = $[classItem];
   }
 }
 
 
 // Add global access to $ object
 this.__proto__.$ = $
+
+exports = $

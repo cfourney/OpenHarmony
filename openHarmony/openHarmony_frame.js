@@ -78,15 +78,15 @@
  *
  * frames[1].value = 5;   // frame array values and frameNumbers are matched, so this sets the value of frame 1
  */
-$.oFrame = function( frameNumber, oColumnObject, subColumns ){
+exports.oFrame = function( frameNumber, oColumnObject, subColumns ){
   this._type = "frame";
 
   this.frameNumber = frameNumber;
 
-  if( oColumnObject instanceof $.oAttribute ){  //Direct access to an attribute, when not keyable. We still provide a frame access for consistency.  > MCNote ?????
+  if( oColumnObject instanceof this.$.oAttribute ){  //Direct access to an attribute, when not keyable. We still provide a frame access for consistency.  > MCNote ?????
     this.column = false;
     this.attributeObject = oColumnObject;
-  }else if( oColumnObject instanceof $.oColumn ){
+  }else if( oColumnObject instanceof this.$.oColumn ){
     this.column = oColumnObject;
 
     if (this.column && typeof subColumns === 'undefined'){
@@ -109,7 +109,7 @@ $.oFrame = function( frameNumber, oColumnObject, subColumns ){
  * @type {object}
  * @todo Include setting values on column that don't have attributes linked?
  */
-Object.defineProperty($.oFrame.prototype, 'value', {
+Object.defineProperty(exports.oFrame.prototype, 'value', {
   get : function(){
     if (this.attributeObject){
       this.$.debug("getting value of frame "+this.frameNumber+" through attribute object : "+this.attributeObject.keyword, this.$.DEBUG_LEVEL.LOG);
@@ -158,7 +158,7 @@ Object.defineProperty($.oFrame.prototype, 'value', {
  * @name $.oFrame#isKeyframe
  * @type {bool}
  */
-Object.defineProperty($.oFrame.prototype, 'isKeyframe', {
+Object.defineProperty(exports.oFrame.prototype, 'isKeyframe', {
     get : function(){
       if( !this.column ) return true;
       if( this.frameNumber == 0 ) return false;  // frames array start at 0 but first index is not a real frame
@@ -221,7 +221,7 @@ Object.defineProperty($.oFrame.prototype, 'isKeyframe', {
  * @deprecated For case consistency, keyframe will never have a capital F
  * @type {bool}
  */
-Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
+Object.defineProperty(exports.oFrame.prototype, 'isKeyFrame', {
     get : function(){
       return this.isKeyframe;
     },
@@ -238,7 +238,7 @@ Object.defineProperty($.oFrame.prototype, 'isKeyFrame', {
  * @name $.oFrame#isKey
  * @type {bool}
  */
-Object.defineProperty($.oFrame.prototype, 'isKey', {
+Object.defineProperty(exports.oFrame.prototype, 'isKey', {
     get : function(){
       return this.isKeyframe;
     },
@@ -254,7 +254,7 @@ Object.defineProperty($.oFrame.prototype, 'isKey', {
  * @name $.oFrame#duration
  * @type {int}
  */
-Object.defineProperty($.oFrame.prototype, 'duration', {
+Object.defineProperty(exports.oFrame.prototype, 'duration', {
     get : function(){
         var _startFrame = this.startFrame;
         var _sceneLength = frame.numberOf()
@@ -282,7 +282,7 @@ Object.defineProperty($.oFrame.prototype, 'duration', {
  * @name $.oFrame#isBlank
  * @type {int}
  */
-Object.defineProperty($.oFrame.prototype, 'isBlank', {
+Object.defineProperty(exports.oFrame.prototype, 'isBlank', {
     get : function(){
       var col = this.column;
       if( !col ){
@@ -310,7 +310,7 @@ Object.defineProperty($.oFrame.prototype, 'isBlank', {
  * @type {int}
  * @readonly
  */
-Object.defineProperty($.oFrame.prototype, 'startFrame', {
+Object.defineProperty(exports.oFrame.prototype, 'startFrame', {
     get : function(){
       if( !this.column ){
         return 1;
@@ -333,7 +333,7 @@ Object.defineProperty($.oFrame.prototype, 'startFrame', {
  * @name $.oFrame#marker
  * @type {string}
  */
-Object.defineProperty($.oFrame.prototype, 'marker', {
+Object.defineProperty(exports.oFrame.prototype, 'marker', {
     get : function(){
         if( !this.column ){
           return "";
@@ -361,7 +361,7 @@ Object.defineProperty($.oFrame.prototype, 'marker', {
  * @name $.oFrame#keyframeIndex
  * @type {int}
  */
-Object.defineProperty($.oFrame.prototype, 'keyframeIndex', {
+Object.defineProperty(exports.oFrame.prototype, 'keyframeIndex', {
     get : function(){
         var _kf = this.column.getKeyframes().map(function(x){return x.frameNumber});
         var _kfIndex = _kf.indexOf(this.frameNumber);
@@ -375,7 +375,7 @@ Object.defineProperty($.oFrame.prototype, 'keyframeIndex', {
  * @name $.oFrame#keyframeLeft
  * @type {oFrame}
  */
-Object.defineProperty($.oFrame.prototype, 'keyframeLeft', {
+Object.defineProperty(exports.oFrame.prototype, 'keyframeLeft', {
     get : function(){
       return (new this.$.oFrame(this.startFrame, this.column));
     }
@@ -387,7 +387,7 @@ Object.defineProperty($.oFrame.prototype, 'keyframeLeft', {
  * @name $.oFrame#keyframeRight
  * @type {oFrame}
  */
-Object.defineProperty($.oFrame.prototype, 'keyframeRight', {
+Object.defineProperty(exports.oFrame.prototype, 'keyframeRight', {
     get : function(){
       return (new this.$.oFrame(this.startFrame+this.duration, this.column));
     }
@@ -399,7 +399,7 @@ Object.defineProperty($.oFrame.prototype, 'keyframeRight', {
  * @name $.oFrame#velocity
  * @type {oFrame}
  */
-Object.defineProperty($.oFrame.prototype, 'velocity', {
+Object.defineProperty(exports.oFrame.prototype, 'velocity', {
   get : function(){
     if (!this.column) return null;
     if (this.column.type != "3DPATH") return null;
@@ -430,7 +430,7 @@ Object.defineProperty($.oFrame.prototype, 'velocity', {
  * @name $.oFrame#ease
  * @type {oPoint/object}
  */
-Object.defineProperty($.oFrame.prototype, 'ease', {
+Object.defineProperty(exports.oFrame.prototype, 'ease', {
   get : function(){
     var _column = this.column;
     if (!_column) return null;
@@ -486,7 +486,7 @@ Object.defineProperty($.oFrame.prototype, 'ease', {
  * @name $.oFrame#easeIn
  * @type {oPoint/object}
  */
-Object.defineProperty($.oFrame.prototype, 'easeIn', {
+Object.defineProperty(exports.oFrame.prototype, 'easeIn', {
   get : function(){
     return this.ease.easeIn;
   },
@@ -505,7 +505,7 @@ Object.defineProperty($.oFrame.prototype, 'easeIn', {
  * @name $.oFrame#easeOut
  * @type {oPoint/object}
  */
-Object.defineProperty($.oFrame.prototype, 'easeOut', {
+Object.defineProperty(exports.oFrame.prototype, 'easeOut', {
   get : function(){
     return this.ease.easeOut;
   },
@@ -524,7 +524,7 @@ Object.defineProperty($.oFrame.prototype, 'easeOut', {
  * @name $.oFrame#continuity
  * @type {string}
  */
-Object.defineProperty($.oFrame.prototype, 'continuity', {
+Object.defineProperty(exports.oFrame.prototype, 'continuity', {
   get : function(){
     var _frame = this.keyframeLeft;    //Works on the left keyframe, in the event that this is not a keyframe itself.
 
@@ -546,7 +546,7 @@ Object.defineProperty($.oFrame.prototype, 'continuity', {
  * @name $.oFrame#constant
  * @type {string}
  */
-Object.defineProperty($.oFrame.prototype, 'constant', {
+Object.defineProperty(exports.oFrame.prototype, 'constant', {
   get : function(){
     var _frame = this.keyframeLeft;    //Works on the left keyframe, in the event that this is not a keyframe itself.
 
@@ -570,7 +570,7 @@ Object.defineProperty($.oFrame.prototype, 'constant', {
  * @name $.oFrame#tween
  * @type {string}
  */
-Object.defineProperty($.oFrame.prototype, 'tween', {
+Object.defineProperty(exports.oFrame.prototype, 'tween', {
   get : function(){
     return !this.constant;
   },
@@ -589,7 +589,7 @@ Object.defineProperty($.oFrame.prototype, 'tween', {
  * @param   {int}        duration              The duration to extend it to; if no duration specified, extends to the next available keyframe.
  * @param   {bool}       replace               Setting this to false will insert frames as opposed to overwrite existing ones. (not currently implemented)
  */
-$.oFrame.prototype.extend = function( duration, replace ){
+exports.oFrame.prototype.extend = function( duration, replace ){
     if (typeof replace === 'undefined') var replace = true;
     // setting this to false will insert frames as opposed to overwrite existing ones
 
@@ -616,6 +616,6 @@ $.oFrame.prototype.extend = function( duration, replace ){
     column.fillEmptyCels (this.column.name, _startFrame, duration + 1 );
 }
 
-$.oFrame.toString = function(){
+exports.oFrame.toString = function(){
   return '<oFrame object COLUMN:'+this.column.name+' frameNumber:'+this.frameNumber + ' value:'+this.value;
 }

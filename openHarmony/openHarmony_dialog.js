@@ -56,7 +56,7 @@
  * $.oDialog Base Class -- helper class for showing GUI content.
  * @constructor
  */
-$.oDialog = function( ){
+exports.oDialog = function( ){
 }
 
 
@@ -72,7 +72,7 @@ $.oDialog = function( ){
  * @return  {bool}       Result of the confirmation dialog.
  */
 
-$.oDialog.prototype.confirm = function( labelText, title, okButtonText, cancelButtonText ){
+exports.oDialog.prototype.confirm = function( labelText, title, okButtonText, cancelButtonText ){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.confirm not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
@@ -110,7 +110,7 @@ $.oDialog.prototype.confirm = function( labelText, title, okButtonText, cancelBu
  * @param   {string}           [okButtonText]                 The text on the OK button of the dialog.
  *
  */
-$.oDialog.prototype.alert = function( labelText, title, okButtonText ){
+exports.oDialog.prototype.alert = function( labelText, title, okButtonText ){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.alert not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
@@ -144,7 +144,7 @@ $.oDialog.prototype.alert = function( labelText, title, okButtonText ){
  * @param   {string}           [okButtonText="OK"]            The text on the OK button of the dialog.
  * @param   {bool}             [htmlSupport=false]
  */
-$.oDialog.prototype.alertBox = function( labelText, title, okButtonText, htmlSupport){
+exports.oDialog.prototype.alertBox = function( labelText, title, okButtonText, htmlSupport){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.alert not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
@@ -186,21 +186,21 @@ $.oDialog.prototype.alertBox = function( labelText, title, okButtonText, htmlSup
  * @param   {float}          [duration=2000]    The duration of the display (in milliseconds).
  * @param   {$.oColorValue}  [color="#000000"]  The color of the background (a 50% alpha value will be applied).
  */
-$.oDialog.prototype.toast = function(labelText, position, duration, color){
+exports.oDialog.prototype.toast = function(labelText, position, duration, color){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.alert not supported in batch mode", this.$.DEBUG_LEVEL.WARNING);
     return;
   }
 
   if (typeof duration === 'undefined') var duration = 2000;
-  if (typeof color === 'undefined') var color = new $.oColorValue(0,0,0);
+  if (typeof color === 'undefined') var color = new this.$.oColorValue(0,0,0);
   
   var toast = new QWidget()
   if (this.$.app.version + this.$.app.minorVersion > 21){
     // above Harmony 21.1
     if (typeof position === 'undefined'){
       var center = QApplication.desktop().availableGeometry.center();
-      var position = new $.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
+      var position = new this.$.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
     }
     var flags = new Qt.WindowFlags(Qt.Tool|Qt.FramelessWindowHint); // https://qtcentre.org/threads/71912-Qt-WA_TransparentForMouseEvents
     toast.setWindowFlags(flags);
@@ -208,7 +208,7 @@ $.oDialog.prototype.toast = function(labelText, position, duration, color){
   } else {
     if (typeof position === 'undefined'){
       var center = QApplication.desktop().screen().rect.center();
-      var position = new $.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
+      var position = new this.$.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
     }
     var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.WA_TransparentForMouseEvents);
     toast.setWindowFlags(flags);
@@ -250,7 +250,7 @@ $.oDialog.prototype.toast = function(labelText, position, duration, color){
  * @param   {string}           [prefilledText]                The text to display in the input area.
  *
  */
-$.oDialog.prototype.prompt = function( labelText, title, prefilledText){
+exports.oDialog.prototype.prompt = function( labelText, title, prefilledText){
   if (typeof labelText === 'undefined') var labelText = "enter value :";
   if (typeof title === 'undefined') var title = "Prompt";
   if (typeof prefilledText === 'undefined') var prefilledText = "";
@@ -268,7 +268,7 @@ $.oDialog.prototype.prompt = function( labelText, title, prefilledText){
  *
  * @return  {string[]}         The list of selected Files, 'undefined' if the dialog is cancelled
  */
-$.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptMultiple, startDirectory){
+exports.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptMultiple, startDirectory){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.browseForFile not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
@@ -306,7 +306,7 @@ $.oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptM
  *
  * @return  {string}           The path of the selected folder, 'undefined' if the dialog is cancelled
  */
-$.oDialog.prototype.browseForFolder = function(text, startDirectory){
+exports.oDialog.prototype.browseForFolder = function(text, startDirectory){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.browseForFolder not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
@@ -331,7 +331,7 @@ $.oDialog.prototype.browseForFolder = function(text, startDirectory){
  *
  * @return  {oFile[]}           An oFile array, or 'undefined' if the dialog is cancelled
  */
-$.oDialog.prototype.chooseFile = function( text, filter, getExisting, acceptMultiple, startDirectory){
+exports.oDialog.prototype.chooseFile = function( text, filter, getExisting, acceptMultiple, startDirectory){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.chooseFile not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
@@ -358,10 +358,10 @@ $.oDialog.prototype.chooseFile = function( text, filter, getExisting, acceptMult
   if (!_chosen.length) return undefined;
 
   try {
-    _chosen = _chosen.map(function(thisFile){return new $.oFile(thisFile);});
+    _chosen = _chosen.map(function(thisFile){return new this.$.oFile(thisFile);});
   } catch (err) {
     // No "map" method means not an array
-    _chosen = [new $.oFile(_chosen)];
+    _chosen = [new this.$.oFile(_chosen)];
   }
 
   this.$.debug(_chosen);
@@ -376,7 +376,7 @@ $.oDialog.prototype.chooseFile = function( text, filter, getExisting, acceptMult
  *
  * @return  {oFolder}           An oFolder for the selected folder, or undefined if dialog was cancelled
  */
-$.oDialog.prototype.chooseFolder = function(text, startDirectory){
+exports.oDialog.prototype.chooseFolder = function(text, startDirectory){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.chooseFolder not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
     return;
@@ -388,7 +388,7 @@ $.oDialog.prototype.chooseFolder = function(text, startDirectory){
 
   if (!_folder) return undefined; // User cancelled
 
-  return new $.oFolder(_folder);
+  return new this.$.oFolder(_folder);
 }
 
 //////////////////////////////////////
@@ -417,7 +417,7 @@ $.oDialog.prototype.chooseFolder = function(text, startDirectory){
  * @property    {bool}                wasCanceled                Whether the progress bar was cancelled.
  * @property    {$.oSignal}           canceled                   A Signal emited when the dialog is canceled. Can be connected to a callback.
  */
-$.oProgressDialog = function( labelText, range, title, show ){
+exports.oProgressDialog = function( labelText, range, title, show ){
   if (typeof title === 'undefined') var title = "Progress";
   if (typeof range === 'undefined') var range = 100;
   if (typeof labelText === 'undefined') var labelText = "";
@@ -445,7 +445,7 @@ $.oProgressDialog = function( labelText, range, title, show ){
 
 
 // legacy compatibility
-$.oDialog.Progress = $.oProgressDialog;
+exports.oDialog.Progress = exports.oProgressDialog;
 
 
 /**
@@ -453,7 +453,7 @@ $.oDialog.Progress = $.oProgressDialog;
  * @name $.oProgressDialog#label
  * @type {string}
  */
-Object.defineProperty( $.oProgressDialog.prototype, 'label', {
+Object.defineProperty( exports.oProgressDialog.prototype, 'label', {
   get: function(){
     return this._labelText;
   },
@@ -469,7 +469,7 @@ Object.defineProperty( $.oProgressDialog.prototype, 'label', {
  * @name $.oProgressDialog#range
  * @type {int}
  */
-Object.defineProperty( $.oProgressDialog.prototype, 'range', {
+Object.defineProperty( exports.oProgressDialog.prototype, 'range', {
     get: function(){
       return this._range;
     },
@@ -485,7 +485,7 @@ Object.defineProperty( $.oProgressDialog.prototype, 'range', {
  * @name $.oProgressDialog#value
  * @type {int}
  */
-Object.defineProperty( $.oProgressDialog.prototype, 'value', {
+Object.defineProperty( exports.oProgressDialog.prototype, 'value', {
     get: function(){
       return this._value;
     },
@@ -509,7 +509,7 @@ Object.defineProperty( $.oProgressDialog.prototype, 'value', {
  * @name $.oProgressDialog#cancelled
  * @deprecated use $.oProgressDialog.wasCanceled to get the cancel status, or connect a function to the "canceled" signal.
  */
-Object.defineProperty( $.oProgressDialog.prototype, 'cancelled', {
+Object.defineProperty( exports.oProgressDialog.prototype, 'cancelled', {
   get: function(){
     return this.wasCanceled;
   }
@@ -521,7 +521,7 @@ Object.defineProperty( $.oProgressDialog.prototype, 'cancelled', {
 /**
  * Shows the dialog.
  */
-$.oProgressDialog.prototype.show = function(){
+exports.oProgressDialog.prototype.show = function(){
   if (this.$.batchMode) {
     this.$.debug("$.oProgressDialog not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
     return;
@@ -533,7 +533,7 @@ $.oProgressDialog.prototype.show = function(){
 /**
  * Closes the dialog.
  */
-$.oProgressDialog.prototype.close = function(){
+exports.oProgressDialog.prototype.close = function(){
   this.value = this.range;
   this.$.log("Progress : "+this.value+"/"+this._range)
 
@@ -658,7 +658,7 @@ function openMenu(){
   // we show it!
   menu.show();
 }*/
-$.oPieMenu = function( name, widgets, show, minAngle, maxAngle, radius, position, parent){
+exports.oPieMenu = function( name, widgets, show, minAngle, maxAngle, radius, position, parent){
   this.name = name;
   this.widgets = widgets;
 
@@ -717,13 +717,13 @@ $.oPieMenu = function( name, widgets, show, minAngle, maxAngle, radius, position
 
   if (show) this.show();
 }
-$.oPieMenu.prototype = Object.create(QWidget.prototype);
+exports.oPieMenu.prototype = Object.create(QWidget.prototype);
 
 
 /**
  * function run when the menu button is clicked
  */
-$.oPieMenu.prototype.deactivate = function(){
+exports.oPieMenu.prototype.deactivate = function(){
   this.closeMenu()
 }
 
@@ -731,7 +731,7 @@ $.oPieMenu.prototype.deactivate = function(){
  * Closes the menu and all its subWidgets
  * @private
  */
-$.oPieMenu.prototype.closeMenu = function(){
+exports.oPieMenu.prototype.closeMenu = function(){
   for (var i in this.widgets){
     this.widgets[i].close()
   }
@@ -743,7 +743,7 @@ $.oPieMenu.prototype.closeMenu = function(){
  * @name $.oPieMenu#anchor
  * @type {$.oPoint}
  */
-Object.defineProperty($.oPieMenu.prototype, "anchor", {
+Object.defineProperty(exports.oPieMenu.prototype, "anchor", {
   get: function(){
     var point = this.globalCenter.add(-this.center.x, -this.center.y);
     return point;
@@ -756,7 +756,7 @@ Object.defineProperty($.oPieMenu.prototype, "anchor", {
  * @name $.oPieMenu#center
  * @type {$.oPoint}
  */
-Object.defineProperty($.oPieMenu.prototype, "center", {
+Object.defineProperty(exports.oPieMenu.prototype, "center", {
   get: function(){
     return new this.$.oPoint(this.widgetSize/2, this.widgetSize/2)
   }
@@ -768,7 +768,7 @@ Object.defineProperty($.oPieMenu.prototype, "center", {
  * @name $.oPieMenu#minRadius
  * @type {int}
  */
-Object.defineProperty($.oPieMenu.prototype, "minRadius", {
+Object.defineProperty(exports.oPieMenu.prototype, "minRadius", {
   get: function(){
     return this._circleMargin;
   }
@@ -780,7 +780,7 @@ Object.defineProperty($.oPieMenu.prototype, "minRadius", {
  * @name $.oPieMenu#maxRadius
  * @type {int}
  */
-Object.defineProperty($.oPieMenu.prototype, "maxRadius", {
+Object.defineProperty(exports.oPieMenu.prototype, "maxRadius", {
   get: function(){
     return this.radius + this._circleMargin;
   }
@@ -791,7 +791,7 @@ Object.defineProperty($.oPieMenu.prototype, "maxRadius", {
  * @name $.oPieMenu#widgetSize
  * @type {int}
  */
- Object.defineProperty($.oPieMenu.prototype, "widgetSize", {
+ Object.defineProperty(exports.oPieMenu.prototype, "widgetSize", {
   get: function(){
     return this.maxRadius*4;
   }
@@ -802,7 +802,7 @@ Object.defineProperty($.oPieMenu.prototype, "maxRadius", {
  * Builds the menu's main button.
  * @returns {$.oPieButton}
  */
-$.oPieMenu.prototype.buildButton = function(){
+exports.oPieMenu.prototype.buildButton = function(){
   // add main button in constructor because it needs to exist before show()
   var icon = specialFolders.resource + "/icons/brushpreset/defaultpresetellipse/ellipse03.svg"
   button = new this.$.oPieButton(icon, "", this);
@@ -816,7 +816,7 @@ $.oPieMenu.prototype.buildButton = function(){
  * Build and show the pie menu and its widgets.
  * @private
  */
-$.oPieMenu.prototype.buildWidget = function(){
+exports.oPieMenu.prototype.buildWidget = function(){
   // match the widget geometry with the main window/parent
   var anchor = this.anchor
   this.move(anchor.x, anchor.y);
@@ -863,7 +863,7 @@ $.oPieMenu.prototype.buildWidget = function(){
  * @param {int}   [minRadius]      specify a minimum radius for the slice
  * @private
  */
-$.oPieMenu.prototype.drawSlice = function(){
+exports.oPieMenu.prototype.drawSlice = function(){
   var index = 0;
 
   // get the slice and background geometry
@@ -978,7 +978,7 @@ $.oPieMenu.prototype.drawSlice = function(){
  * @param {float}       maxRadius   the largest circle radius
  * @private
  */
-$.oPieMenu.prototype.getSlicePath = function(center, minAngle, maxAngle, minRadius, maxRadius){
+exports.oPieMenu.prototype.getSlicePath = function(center, minAngle, maxAngle, minRadius, maxRadius){
   // work out the geometry
   var smallArcBoundingBox = new QRectF(center.x-minRadius, center.y-minRadius, minRadius*2, minRadius*2);
   var smallArcStart = new this.$.oPoint();
@@ -1007,7 +1007,7 @@ $.oPieMenu.prototype.getSlicePath = function(center, minAngle, maxAngle, minRadi
  * @param {int}     index         the index of the widget
  * @return {float[]}
  */
-$.oPieMenu.prototype.getItemAngleRange = function(index){
+exports.oPieMenu.prototype.getItemAngleRange = function(index){
   var length = this.widgets.length;
   var angleStart = this.minAngle+(index/length)*(this.maxAngle-this.minAngle);
   var angleEnd = this.minAngle+((index+1)/length)*(this.maxAngle-this.minAngle);
@@ -1021,7 +1021,7 @@ $.oPieMenu.prototype.getItemAngleRange = function(index){
  * @param {int}     index         the index of the widget
  * @return {float}
  */
-$.oPieMenu.prototype.getItemAngle = function(index){
+exports.oPieMenu.prototype.getItemAngle = function(index){
   var angleRange = this.getItemAngleRange(index, this.minAngle, this.maxAngle);
   var angle = (angleRange[1] - angleRange[0])/2+angleRange[0]
 
@@ -1035,7 +1035,7 @@ $.oPieMenu.prototype.getItemAngle = function(index){
  * @param {float}     angle         the index of the widget
  * @return {float}
  */
-$.oPieMenu.prototype.getIndexAtAngle = function(angle){
+exports.oPieMenu.prototype.getIndexAtAngle = function(angle){
   var angleRange = (this.maxAngle-this.minAngle)/this.widgets.length
   return Math.floor((angle-this.minAngle)/angleRange);
 }
@@ -1047,7 +1047,7 @@ $.oPieMenu.prototype.getIndexAtAngle = function(angle){
  * @param {int}     index         the index of the widget
  * @return {$.oPoint}
  */
-$.oPieMenu.prototype.getItemPosition = function(index){
+exports.oPieMenu.prototype.getItemPosition = function(index){
   // we add pi to the angle because of the inverted Y axis of widgets coordinates
   var pi = Math.PI;
   var angle = this.getItemAngle(index, this.minAngle, this.maxAngle)*(-pi);
@@ -1063,7 +1063,7 @@ $.oPieMenu.prototype.getItemPosition = function(index){
  * @private
  * @return {float}
  */
-$.oPieMenu.prototype.getMenuRadius = function(){
+exports.oPieMenu.prototype.getMenuRadius = function(){
   var itemsNumber = this.widgets.length
   var _maxRadius = UiLoader.dpiScale(200);
   var _minRadius = UiLoader.dpiScale(30);
@@ -1103,7 +1103,7 @@ $.oPieMenu.prototype.getMenuRadius = function(){
  * @property    {string}              extraRadius              using a set radius between each submenu levels
  * @property    {$.oPieMenu}          parentMenu               the parent menu for this subMenu. Set during initialisation of the menu.
  */
-$.oPieSubMenu = function(name, widgets) {
+exports.oPieSubMenu = function(name, widgets) {
   this.menuIcon = specialFolders.resource + "/icons/toolbar/menu.svg";
   this.closeIcon = specialFolders.resource + "/icons/toolbar/collapseopen.png";
 
@@ -1117,13 +1117,13 @@ $.oPieSubMenu = function(name, widgets) {
 
   this.focusOutEvent = function(){} // delete focusOutEvent response from submenu
 }
-$.oPieSubMenu.prototype = Object.create($.oPieMenu.prototype)
+exports.oPieSubMenu.prototype = Object.create(exports.oPieMenu.prototype)
 
 
 /**
  * function called when main button is clicked
  */
-$.oPieSubMenu.prototype.deactivate = function(){
+exports.oPieSubMenu.prototype.deactivate = function(){
   this.showMenu(false);
 }
 
@@ -1132,7 +1132,7 @@ $.oPieSubMenu.prototype.deactivate = function(){
  * @name $.oPieSubMenu#anchor
  * @type {$.oPoint}
  */
-Object.defineProperty($.oPieSubMenu.prototype, "anchor", {
+Object.defineProperty(exports.oPieSubMenu.prototype, "anchor", {
   get: function(){
     var center = this.parentMenu.globalCenter;
     return center.add(-this.widgetSize/2, -this.widgetSize/2);
@@ -1145,7 +1145,7 @@ Object.defineProperty($.oPieSubMenu.prototype, "anchor", {
  * @name $.oPieSubMenu#minRadius
  * @type {int}
  */
-Object.defineProperty($.oPieSubMenu.prototype, "minRadius", {
+Object.defineProperty(exports.oPieSubMenu.prototype, "minRadius", {
   get: function(){
     return this.parentMenu.maxRadius;
   }
@@ -1157,7 +1157,7 @@ Object.defineProperty($.oPieSubMenu.prototype, "minRadius", {
  * @name $.oPieSubMenu#maxRadius
  * @type {int}
  */
-Object.defineProperty($.oPieSubMenu.prototype, "maxRadius", {
+Object.defineProperty(exports.oPieSubMenu.prototype, "maxRadius", {
   get: function(){
     return this.minRadius + this.extraRadius;
   }
@@ -1168,7 +1168,7 @@ Object.defineProperty($.oPieSubMenu.prototype, "maxRadius", {
  * activate the menu button when activate() is called on the menu
  * @private
  */
-$.oPieSubMenu.prototype.activate = function(){
+exports.oPieSubMenu.prototype.activate = function(){
   this.showMenu(true);
   this.setFocus(true)
 }
@@ -1182,7 +1182,7 @@ $.oPieSubMenu.prototype.activate = function(){
  * @param  {int}      y     The x coordinate for the button relative to the piewidget
  * @private
  */
-$.oPieSubMenu.prototype.move = function(x, y){
+exports.oPieSubMenu.prototype.move = function(x, y){
   // move the actual widget to its anchor, but move the button instead
   QWidget.prototype.move.call(this, this.anchor.x, this.anchor.y);
 
@@ -1204,8 +1204,8 @@ $.oPieSubMenu.prototype.move = function(x, y){
  * where calling parent() returns a QWidget and not a $.oPieButton
  * @private
  */
-$.oPieSubMenu.prototype.setParent = function(parent){
-  $.oPieMenu.prototype.setParent.call(this, parent);
+exports.oPieSubMenu.prototype.setParent = function(parent){
+  exports.oPieMenu.prototype.setParent.call(this, parent);
   this.parentMenu = parent;
 }
 
@@ -1215,7 +1215,7 @@ $.oPieSubMenu.prototype.setParent = function(parent){
  * @private
  * @returns {$.oPieButton}
  */
-$.oPieSubMenu.prototype.buildButton = function(){
+exports.oPieSubMenu.prototype.buildButton = function(){
   // add main button in constructor because it needs to exist before show()
   var button = new this.$.oPieButton(this.menuIcon, this.name, this);
   button.activate = function(){}; // prevent the button from closing the entire pie menu 
@@ -1229,7 +1229,7 @@ $.oPieSubMenu.prototype.buildButton = function(){
  * Shows or hides the menu itself (not the button)
  * @param {*} visibility
  */
-$.oPieSubMenu.prototype.showMenu = function(visibility){
+exports.oPieSubMenu.prototype.showMenu = function(visibility){
   for (var i in this.widgets){
     this.widgets[i].visible = visibility;
   }
@@ -1243,7 +1243,7 @@ $.oPieSubMenu.prototype.showMenu = function(visibility){
 /**
  * toggles the display of the menu
  */
-$.oPieSubMenu.prototype.toggleMenu = function(){
+exports.oPieSubMenu.prototype.toggleMenu = function(){
   this.showMenu(!this.slice.visible);
 }
 
@@ -1251,7 +1251,7 @@ $.oPieSubMenu.prototype.toggleMenu = function(){
  * Function to initialise the widgets for the submenu
  * @private
  */
-$.oPieSubMenu.prototype.buildWidget = function(){
+exports.oPieSubMenu.prototype.buildWidget = function(){
   if (!this.parentMenu){
     throw new Error("must set parent first before calling $.oPieMenu.buildWidget()")
   }
@@ -1267,7 +1267,7 @@ $.oPieSubMenu.prototype.buildWidget = function(){
   this.minAngle = angle-widgetNum*this.itemAngle;
   this.maxAngle = angle+widgetNum*this.itemAngle;
 
-  $.oPieMenu.prototype.buildWidget.call(this);
+  exports.oPieMenu.prototype.buildWidget.call(this);
 
   this.showMenu(false)
 }
@@ -1296,7 +1296,7 @@ $.oPieSubMenu.prototype.buildWidget = function(){
  * @param {QWidget}  parent                 The parent QWidget for the button. Automatically set during initialisation of the menu.
  *
  */
- $.oPieButton = function(iconFile, text, parent) {
+ exports.oPieButton = function(iconFile, text, parent) {
   // if icon isnt provided
   if (typeof parent === 'undefined') var parent = $.app.mainWindow
   if (typeof text === 'undefined') var text = ""
@@ -1316,7 +1316,7 @@ $.oPieSubMenu.prototype.buildWidget = function(){
     UiLoader.setSvgIcon(this, iconFile)
     this.setIconSize(new QSize(this.minimumWidth, this.minimumHeight));
   }catch(e){
-    $.log("failed to load icon "+iconFile)
+    this.$.log("failed to load icon "+iconFile)
   }
   this.cursor = new QCursor(Qt.PointingHandCursor);
 
@@ -1328,13 +1328,13 @@ $.oPieSubMenu.prototype.buildWidget = function(){
   var button = this;
   this.clicked.connect(function(){button.activate()})
 }
-$.oPieButton.prototype = Object.create(QPushButton.prototype);
+exports.oPieButton.prototype = Object.create(QPushButton.prototype);
 
 
 /**
  * Closes the parent menu of the button and all its subWidgets.
  */
-$.oPieButton.prototype.closeMenu = function(){
+exports.oPieButton.prototype.closeMenu = function(){
   var menu = this.parentMenu;
   while (menu && menu.parentMenu){
     menu = menu.parentMenu;
@@ -1345,7 +1345,7 @@ $.oPieButton.prototype.closeMenu = function(){
 /**
  * Reimplement this function in order to activate the button and also close the menu.
  */
-$.oPieButton.prototype.activate = function(){
+exports.oPieButton.prototype.activate = function(){
   // reimplement to change the behavior when the button is activated.
   // by default, will just close the menu.
   this.closeMenu();
@@ -1358,7 +1358,7 @@ $.oPieButton.prototype.activate = function(){
  * where calling parent() returns a QWidget and not a $.oPieButton
  * @private
  */
-$.oPieButton.prototype.setParent = function(parent){
+exports.oPieButton.prototype.setParent = function(parent){
   QPushButton.prototype.setParent.call(this, parent);
   this.parentMenu = parent;
 }
@@ -1386,7 +1386,7 @@ $.oPieButton.prototype.setParent = function(parent){
  * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  *
  */
- $.oToolButton = function(toolName, showName, iconFile, parent) {
+ exports.oToolButton = function(toolName, showName, iconFile, parent) {
   this.toolName = toolName;
   if (typeof showName === "undefined") var showName = false;
 
@@ -1396,7 +1396,7 @@ $.oPieButton.prototype.setParent = function(parent){
     try{
       var iconFiles = scriptIconsFolder.getFiles(toolName.replace(" ", "").toLowerCase() + ".*");
     }catch(e){
-      $.log("error was caught " + e);
+      this.$.log("error was caught " + e);
       var iconFiles = [];
     }
 
@@ -1412,10 +1412,10 @@ $.oPieButton.prototype.setParent = function(parent){
 
   this.toolTip = this.toolName;
 }
-$.oToolButton.prototype = Object.create($.oPieButton.prototype);
+exports.oToolButton.prototype = Object.create(exports.oPieButton.prototype);
 
 
-$.oToolButton.prototype.activate = function(){
+exports.oToolButton.prototype.activate = function(){
   this.$.app.currentTool = this.toolName;
   this.closeMenu()
 }
@@ -1443,7 +1443,7 @@ $.oToolButton.prototype.activate = function(){
  * @param {string}   iconFile                 An icon path for the button.
  * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  */
- $.oActionButton = function(actionName, responder, text, iconFile, parent) {
+exports.oActionButton = function(actionName, responder, text, iconFile, parent) {
   this.action = actionName;
   this.responder = responder;
 
@@ -1454,12 +1454,12 @@ $.oToolButton.prototype.activate = function(){
   this.$.oPieButton.call(this, iconFile, text, parent);
   this.toolTip = this.toolName;
 }
-$.oActionButton.prototype = Object.create($.oPieButton.prototype);
+exports.oActionButton.prototype = Object.create(exports.oPieButton.prototype);
 
 
-$.oActionButton.prototype.activate = function(){
+exports.oActionButton.prototype.activate = function(){
   if (this.responder){
-    // log("Validating : "+ this.actionName + " ? "+ Action.validate(this.actionName, this.responder).enabled)
+    // this.$.log("Validating : "+ this.actionName + " ? "+ Action.validate(this.actionName, this.responder).enabled)
     if (Action.validate(this.action, this.responder).enabled){
       Action.perform(this.action, this.responder);
     }
@@ -1496,7 +1496,7 @@ $.oActionButton.prototype.activate = function(){
  * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  *
  */
- $.oColorButton = function(paletteName, colorName, showName, parent) {
+ exports.oColorButton = function(paletteName, colorName, showName, parent) {
   this.paletteName = paletteName;
   this.colorName = colorName;
 
@@ -1516,10 +1516,10 @@ $.oActionButton.prototype.activate = function(){
 
   this.toolTip = this.paletteName + ": " + this.colorName;
 }
-$.oColorButton.prototype = Object.create($.oPieButton.prototype);
+exports.oColorButton.prototype = Object.create(exports.oPieButton.prototype);
 
 
-$.oColorButton.prototype.activate = function(){
+exports.oColorButton.prototype.activate = function(){
   var palette = this.$.scn.getPaletteByName(this.paletteName);
   var color = palette.getColorByName(this.colorName);
 
@@ -1553,7 +1553,7 @@ $.oColorButton.prototype.activate = function(){
  * @param {string}   scriptFunction           The function name to launch from the script
  * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  */
-$.oScriptButton = function(scriptFile, scriptFunction, parent) {
+exports.oScriptButton = function(scriptFile, scriptFunction, parent) {
   this.scriptFile = scriptFile;
   this.scriptFunction = scriptFunction;
 
@@ -1563,7 +1563,7 @@ $.oScriptButton = function(scriptFile, scriptFunction, parent) {
   try{
     var iconFiles = scriptIconsFolder.getFiles(scriptFunction+".*");
   } catch(e){
-    $.log("error was caught " + e);
+    this.$.log("error was caught " + e);
     var iconFiles = [];
   }
 
@@ -1579,9 +1579,9 @@ $.oScriptButton = function(scriptFile, scriptFunction, parent) {
 
   this.toolTip = this.scriptFunction;
 }
-$.oScriptButton.prototype = Object.create($.oPieButton.prototype);
+exports.oScriptButton.prototype = Object.create(exports.oPieButton.prototype);
 
-$.oScriptButton.prototype.activate = function(){
+exports.oScriptButton.prototype.activate = function(){
   include(this.scriptFile);
   eval(this.scriptFunction)();
   this.closeMenu()
@@ -1609,7 +1609,7 @@ $.oScriptButton.prototype.activate = function(){
  * @param {string}   iconFile                 An icon path for the button.
  * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  */
-$.oPrefButton = function(preferenceString, text, iconFile, parent) {
+exports.oPrefButton = function(preferenceString, text, iconFile, parent) {
   this.preferenceString = preferenceString;
 
   if (typeof iconFile === 'undefined') var iconFile = specialFolders.resource+"/icons/toolproperties/settings.svg";
@@ -1620,10 +1620,10 @@ $.oPrefButton = function(preferenceString, text, iconFile, parent) {
 
   this.toolTip = this.preferenceString;
 }
-$.oPrefButton.prototype = Object.create($.oPieButton.prototype);
+exports.oPrefButton.prototype = Object.create(exports.oPieButton.prototype);
 
 
-$.oPrefButton.prototype.activate = function(){
+exports.oPrefButton.prototype.activate = function(){
   var value = preferences.getBool(this.preferenceString, true);
   this.checked != value;
   preferences.setBool(this.preferenceString, value);
@@ -1642,7 +1642,7 @@ $.oPrefButton.prototype.activate = function(){
 
 
 // not currently working
-$.oStencilButton = function(stencilName, parent) {
+exports.oStencilButton = function(stencilName, parent) {
   this.stencilName = stencilName;
 
   var iconFile = specialFolders.resource+"/icons/brushpreset/default.svg";
@@ -1651,9 +1651,9 @@ $.oStencilButton = function(stencilName, parent) {
 
   this.toolTip = stencilName;
 }
-$.oStencilButton.prototype = Object.create($.oPieButton.prototype);
+exports.oStencilButton.prototype = Object.create(exports.oPieButton.prototype);
 
-$.oStencilButton.prototype.activate = function(){
+exports.oStencilButton.prototype.activate = function(){
   this.$.app.currentStencil = this.stencilName;
 
   this.closeMenu()

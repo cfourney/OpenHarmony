@@ -83,7 +83,7 @@
  *
  * doc.nodes[0].attributes.position.y.column = myColumn;  // now position.x and position.y will share the same animation on the node.
  */
-$.oColumn = function( uniqueName, oAttributeObject ){
+exports.oColumn = function( uniqueName, oAttributeObject ){
   var instance = this.$.getInstanceFromCache.call(this, uniqueName);
   if (instance) return instance;
 
@@ -109,7 +109,7 @@ $.oColumn = function( uniqueName, oAttributeObject ){
  * @name $.oColumn#name
  * @type {string}
  */
-Object.defineProperty( $.oColumn.prototype, 'name', {
+Object.defineProperty( exports.oColumn.prototype, 'name', {
     get : function(){
          return column.getDisplayName(this.uniqueName);
     },
@@ -131,7 +131,7 @@ Object.defineProperty( $.oColumn.prototype, 'name', {
  * @readonly
  * @type {string}
  */
-Object.defineProperty( $.oColumn.prototype, 'type', {
+Object.defineProperty( exports.oColumn.prototype, 'type', {
     get : function(){
         return column.type(this.uniqueName)
     }
@@ -143,7 +143,7 @@ Object.defineProperty( $.oColumn.prototype, 'type', {
  * @name $.oColumn#selected
  * @type {bool}
  */
-Object.defineProperty($.oColumn.prototype, 'selected', {
+Object.defineProperty(exports.oColumn.prototype, 'selected', {
     get : function(){
         var sel_num = selection.numberOfColumnsSelected();
         for( var n=0;n<sel_num;n++ ){
@@ -167,7 +167,7 @@ Object.defineProperty($.oColumn.prototype, 'selected', {
  * @type {$.oFrame[]}
  * @readonly
  */
-Object.defineProperty($.oColumn.prototype, 'frames', {
+Object.defineProperty(exports.oColumn.prototype, 'frames', {
     get : function(){
         while( this._cacheFrames.length < frame.numberOf()+1 ){
           this._cacheFrames.push( new this.$.oFrame( this._cacheFrames.length, this ) );
@@ -184,7 +184,7 @@ Object.defineProperty($.oColumn.prototype, 'frames', {
  * @readonly
  * @type {$.oFrame[]}
  */
-Object.defineProperty($.oColumn.prototype, 'keyframes', {
+Object.defineProperty(exports.oColumn.prototype, 'keyframes', {
     get : function(){
       return this.getKeyframes();
     }
@@ -197,7 +197,7 @@ Object.defineProperty($.oColumn.prototype, 'keyframes', {
  * @readonly
  * @type {object}
  */
-Object.defineProperty($.oColumn.prototype, 'subColumns', {
+Object.defineProperty(exports.oColumn.prototype, 'subColumns', {
     get : function(){
       //CF Note: Not sure of this use.
       //MC > allows to loop through subcolumns if they exist
@@ -217,7 +217,7 @@ Object.defineProperty($.oColumn.prototype, 'subColumns', {
  * @readonly
  * @type {object}
  */
-Object.defineProperty($.oColumn.prototype, 'easeType', {
+Object.defineProperty(exports.oColumn.prototype, 'easeType', {
     get : function(){
         switch(this.type){
             case "BEZIER":
@@ -237,7 +237,7 @@ Object.defineProperty($.oColumn.prototype, 'easeType', {
  * @name $.oColumn#stepSection
  * @type {object}
  */
-Object.defineProperty($.oColumn.prototype, 'stepSection', {
+Object.defineProperty(exports.oColumn.prototype, 'stepSection', {
   get : function(){
     var _columnName = this.uniqueName;
     var _section = {
@@ -262,7 +262,7 @@ Object.defineProperty($.oColumn.prototype, 'stepSection', {
 /**
  * Deletes the column from the scene. The column must be unlinked from any attribute first.
  */
-$.oColumn.prototype.remove = function(){
+exports.oColumn.prototype.remove = function(){
   column.removeUnlinkedFunctionColumn(this.name);
   if (this.type) throw new Error("Couldn't remove column "+this.name+", unlink it from any attribute first.")
 }
@@ -275,7 +275,7 @@ $.oColumn.prototype.remove = function(){
  * @param   {int}         amount               The amount to extend.
  * @param   {bool}        replace              Setting this to false will insert frames as opposed to overwrite existing ones.
  */
-$.oColumn.prototype.extendExposures = function( exposures, amount, replace){
+exports.oColumn.prototype.extendExposures = function( exposures, amount, replace){
     if (this.type != "DRAWING") return false;
     // if amount is undefined, extend function below will automatically fill empty frames
 
@@ -291,7 +291,7 @@ $.oColumn.prototype.extendExposures = function( exposures, amount, replace){
 /**
  * Removes concurrent/duplicate keys from drawing layers.
  */
-$.oColumn.prototype.removeDuplicateKeys = function(){
+exports.oColumn.prototype.removeDuplicateKeys = function(){
     var _keys = this.getKeyframes();
 
     var _pointsToRemove = [];
@@ -333,7 +333,7 @@ $.oColumn.prototype.removeDuplicateKeys = function(){
  *
  * @return {$.oColumn}                The column generated.
  */
-$.oColumn.prototype.duplicate = function(newAttribute) {
+exports.oColumn.prototype.duplicate = function(newAttribute) {
   var _duplicateColumn = this.$.scene.addColumn(this.type, this.name);
 
   // linking to an attribute if one is provided
@@ -373,7 +373,7 @@ $.oColumn.prototype.duplicate = function(newAttribute) {
  *
  * @return {$.oFrame[]}    Provides the array of frames from the column.
  */
-$.oColumn.prototype.getKeyframes = function(){
+exports.oColumn.prototype.getKeyframes = function(){
   var _frames = this.frames;
 
   var _ease = this.easeType;
@@ -401,7 +401,7 @@ $.oColumn.prototype.getKeyframes = function(){
  * @deprecated For case consistency, keyframe will never have a capital F
  * @return {$.oFrame[]}    Provides the array of frames from the column.
  */
-$.oColumn.prototype.getKeyFrames = function(){
+exports.oColumn.prototype.getKeyFrames = function(){
   this.$.debug("oColumn.getKeyFrames is deprecated. Use oColumn.getKeyframes instead.", this.$.DEBUG_LEVEL.ERROR);
   return this.keyframes;
 }
@@ -412,7 +412,7 @@ $.oColumn.prototype.getKeyFrames = function(){
  * @param {int}  [frame=1]       The frame at which to get the value
  * @return  {various}            The value of the column, can be different types depending on column type.
  */
-$.oColumn.prototype.getValue = function(frame){
+exports.oColumn.prototype.getValue = function(frame){
   if (typeof frame === 'undefined') var frame = 1;
 
   // this.$.log("Getting value of frame "+this.frameNumber+" of column "+this.column.name)
@@ -437,7 +437,7 @@ $.oColumn.prototype.getValue = function(frame){
  * @param {various}   newValue        The new value to set the column to
  * @param {int}       [frame=1]       The frame at which to get the value
  */
-$.oColumn.prototype.setValue = function(newValue, frame){
+exports.oColumn.prototype.setValue = function(newValue, frame){
   if (typeof frame === 'undefined') var frame = 1;
 
   if (this.attributeObject){
@@ -465,7 +465,7 @@ $.oColumn.prototype.setValue = function(newValue, frame){
  *
  * @return  {int}    The index within that timeline.
  */
-$.oColumn.prototype.getTimelineLayer = function(timeline){
+exports.oColumn.prototype.getTimelineLayer = function(timeline){
   if (typeof timeline === 'undefined') var timeline = this.$.scene.getTimeline();
 
   var _columnNames = timeline.allLayers.map(function(x){return x.column?x.column.uniqueName:null});
@@ -493,7 +493,7 @@ $.oColumn.prototype.getTimelineLayer = function(timeline){
  *   }
  * }
  */
-$.oColumn.prototype.interpolateValueAtFrame = function(percentage, frameNumber){
+exports.oColumn.prototype.interpolateValueAtFrame = function(percentage, frameNumber){
   if (this.keyframes.length < 2) throw new Error("Can't interpolate, column "+this.name+" has less than two keys.");
   if (typeof frameNumber === 'undefined') var frameNumber = this.$.scn.currentFrame;
   if (typeof percentage === 'undefined') var percentage = 50;
@@ -528,7 +528,7 @@ $.oColumn.prototype.interpolateValueAtFrame = function(percentage, frameNumber){
 /**
  * @private
  */
- $.oColumn.prototype.toString = function(){
+ exports.oColumn.prototype.toString = function(){
   return "[object $.oColumn '"+this.name+"']"
 }
 
@@ -555,7 +555,7 @@ $.oColumn.prototype.interpolateValueAtFrame = function(percentage, frameNumber){
  * @property {string}                  uniqueName                  The unique name of the column.
  * @property {$.oAttribute}            attributeObject             The attribute object that the column is attached to.
  */
-$.oDrawingColumn = function( uniqueName, oAttributeObject ) {
+exports.oDrawingColumn = function( uniqueName, oAttributeObject ) {
   // $.oDrawingColumn can only represent a column of type 'DRAWING'
     if (column.type(uniqueName) != 'DRAWING') throw new Error("'uniqueName' parameter must point to a 'DRAWING' type node");
     //MessageBox.information("getting an instance of $.oDrawingColumn for column : "+uniqueName)
@@ -565,8 +565,8 @@ $.oDrawingColumn = function( uniqueName, oAttributeObject ) {
 
 
 // extends $.oColumn and can use its methods
-$.oDrawingColumn.prototype = Object.create($.oColumn.prototype);
-$.oDrawingColumn.prototype.constructor = $.oColumn;
+exports.oDrawingColumn.prototype = Object.create(exports.oColumn.prototype);
+exports.oDrawingColumn.prototype.constructor = exports.oColumn;
 
 
 /**
@@ -574,7 +574,7 @@ $.oDrawingColumn.prototype.constructor = $.oColumn;
  * @name $.oDrawingColumn#element
  * @type {$.oElement}
  */
-Object.defineProperty($.oDrawingColumn.prototype, 'element', {
+Object.defineProperty(exports.oDrawingColumn.prototype, 'element', {
     get : function(){
       // get info about synched layer if the column is fetched from the attribute (which is the case most of the time)
       var _synchedLayer = null;
@@ -597,7 +597,7 @@ Object.defineProperty($.oDrawingColumn.prototype, 'element', {
  * @param   {int}         [amount]               The number of frames to add to each exposure. If not specified, will extend frame up to the next one.
  * @param   {bool}        [replace=false]        Setting this to false will insert frames as opposed to overwrite existing ones.(currently unsupported))
  */
-$.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace){
+exports.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace){
     // if amount is undefined, extend function below will automatically fill empty frames
 
     if (typeof exposures === 'undefined' && typeof amount === 'undefined') {
@@ -625,7 +625,7 @@ $.oDrawingColumn.prototype.extendExposures = function( exposures, amount, replac
  *
  * @return {$.oColumn}    The created column.
  */
-$.oDrawingColumn.prototype.duplicate = function(newAttribute, duplicateElement) {
+exports.oDrawingColumn.prototype.duplicate = function(newAttribute, duplicateElement) {
   // duplicate element?
   if (typeof duplicateElement === 'undefined') var duplicateElement = true;
   var _duplicateElement = duplicateElement?this.element.duplicate():this.element;
@@ -654,7 +654,7 @@ $.oDrawingColumn.prototype.duplicate = function(newAttribute, duplicateElement) 
  * @param   {string}  [prefix]            a prefix to add to all names.
  * @param   {string}  [suffix]            a suffix to add to all names.
  */
-$.oDrawingColumn.prototype.renameAllByFrame = function(prefix, suffix){
+exports.oDrawingColumn.prototype.renameAllByFrame = function(prefix, suffix){
   if (typeof prefix === 'undefined') var prefix = "";
   if (typeof suffix === 'undefined') var suffix = "";
 
@@ -689,7 +689,7 @@ $.oDrawingColumn.prototype.renameAllByFrame = function(prefix, suffix){
  * Removes unused drawings from the column.
  * @param   {$.oFrame[]}  exposures            The exposures to extend. If UNDEFINED, extends all keyframes.
  */
-$.oDrawingColumn.prototype.removeUnexposedDrawings = function(){
+exports.oDrawingColumn.prototype.removeUnexposedDrawings = function(){
   var _element = this.element;
   var _displayedDrawings = this.getExposedDrawings().map(function(x){return x.value.name;});
   var _element = this.element;
@@ -701,7 +701,7 @@ $.oDrawingColumn.prototype.removeUnexposedDrawings = function(){
   }
 }
 
-$.oDrawingColumn.prototype.getExposedDrawings = function (){
+exports.oDrawingColumn.prototype.getExposedDrawings = function (){
   return this.keyframes.filter(function(x){return x.value != null});
 }
 
@@ -709,6 +709,6 @@ $.oDrawingColumn.prototype.getExposedDrawings = function (){
 /**
  * @private
  */
- $.oDrawingColumn.prototype.toString = function(){
+ exports.oDrawingColumn.prototype.toString = function(){
   return "<$.oDrawingColumn '"+this.name+"'>";
 }

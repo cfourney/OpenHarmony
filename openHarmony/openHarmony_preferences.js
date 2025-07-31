@@ -61,7 +61,7 @@
  * pref["MyNewPreferenceName"];     // Provides: MyPreferenceValue
  * pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue
  */
-$.oPreferences = function( ){
+exports.oPreferences = function( ){
   this._type             = "preferences";
   this._addedPreferences = []
 
@@ -75,7 +75,7 @@ $.oPreferences = function( ){
  * @name $.oPreferences#refresh
  * @function
  */
-$.oPreferences.prototype.refresh = function(){
+exports.oPreferences.prototype.refresh = function(){
   var fl = specialFolders.userConfig + "/Harmony Premium-pref.xml";
   var nfl = new this.$.oFile( fl );
   if( !nfl.exists ){
@@ -188,7 +188,7 @@ $.oPreferences.prototype.refresh = function(){
       switch( type ){
       case 'color':
         var tempVal = preferences.getColor( id, new ColorRGBA () );
-        value = new $.oColorValue( tempVal.r, tempVal.g, tempVal.b, tempVal.a );
+        value = new this.$.oColorValue( tempVal.r, tempVal.g, tempVal.b, tempVal.a );
         break;
       case 'int':
         value = preferences.getInt( id, 0 );
@@ -262,7 +262,7 @@ $.oPreferences.prototype.refresh = function(){
  * @param   {string}                 name            The name of the new preference to create.
  * @param   {object}                 val             The value of the new preference created.
  */
-$.oPreferences.prototype.create = function( name, val ){
+exports.oPreferences.prototype.create = function( name, val ){
   if( this[ name ] ){
     throw ReferenceError( "Preference already exists by name: " + name );
   }
@@ -323,7 +323,7 @@ $.oPreferences.prototype.create = function( name, val ){
  * pref["MyNewPreferenceName"];     // Provides: undefined -- its not in the Harmony preference file.
  * pref.get("MyNewPreferenceName"); // Provides: MyPreferenceValue, its still available
  */
-$.oPreferences.prototype.get = function( name ){
+exports.oPreferences.prototype.get = function( name ){
   if( this[name] ){
     return this[name];
   }
@@ -401,16 +401,16 @@ $.oPreferences.prototype.get = function( name ){
  *
  * //the details objects of the preferences object allows access to more information about each preference
  * var details = prefs.details
- * log(details.USE_OVERLAY_UNDERLAY_ART.category+" "+details.USE_OVERLAY_UNDERLAY_ART.id+" "+details.USE_OVERLAY_UNDERLAY_ART.type);
+ * $.log(details.USE_OVERLAY_UNDERLAY_ART.category+" "+details.USE_OVERLAY_UNDERLAY_ART.id+" "+details.USE_OVERLAY_UNDERLAY_ART.type);
  *
  * for (var i in details){
- *   log(i+" "+JSON.stringify(details[i]))       // each object inside detail is a complete oPreference instance
+ *   $.log(i+" "+JSON.stringify(details[i]))       // each object inside detail is a complete oPreference instance
  * }
  *
  * // the preference object also holds a categories array with the list of all categories
- * log (prefs.categories)
+ * $.log (prefs.categories)
  */
-$.oPreference = function(category, keyword, type, value, description, descriptionText){
+exports.oPreference = function(category, keyword, type, value, description, descriptionText){
   this.category = category;
   this.keyword = keyword;
   this.type = type;
@@ -424,7 +424,7 @@ $.oPreference = function(category, keyword, type, value, description, descriptio
  * get and set a preference value
  * @name $.oPreference#value
  */
-Object.defineProperty ($.oPreference.prototype, 'value', {
+Object.defineProperty (exports.oPreference.prototype, 'value', {
   get: function(){
     try{
       switch(this.type){
@@ -463,7 +463,7 @@ Object.defineProperty ($.oPreference.prototype, 'value', {
         preferences.setDouble(this.keyword, newValue);
         break;
       case "color":
-        if (typeof newValue == String) newValue = (new oColorValue()).fromColorString(newValue);
+        if (typeof newValue == String) newValue = (new this.$.oColorValue()).fromColorString(newValue);
         preferences.setColor(this.keyword, new ColorRGBA(newValue.r, newValue.g, newValue.b, newValue.a));
         break;
       default:
@@ -484,9 +484,9 @@ Object.defineProperty ($.oPreference.prototype, 'value', {
  * @param {string} descriptionText      The complete tooltip text for the preference
  * @param {Object} prefObject           The preference object that will receive the getter setter property (usually $.oApp._prefObject)
  */
-$.oPreference.createPreference = function(category, keyword, type, value, description, descriptionText, prefObject){
+exports.oPreference.createPreference = function(category, keyword, type, value, description, descriptionText, prefObject){
   if (!prefObject.details.hasOwnProperty(keyword)){
-    var pref = new $.oPreference(category, keyword, type, value, description, descriptionText);
+    var pref = new exports.oPreference(category, keyword, type, value, description, descriptionText);
     Object.defineProperty(prefObject, keyword,{
       enumerable: true,
       get : function(){
