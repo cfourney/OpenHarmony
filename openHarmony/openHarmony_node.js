@@ -192,7 +192,7 @@ exports.oNode.prototype.setAttrGetterSetter = function (attr, context, oNodeObje
                 var _value = newValue;
                 // dealing with value being an object with frameNumber for animated values
                 if (attr.column != null) {
-                    if (!(newValue instanceof oFrame)) {
+                    if (!(newValue instanceof this.$.oFrame)) {
                         // fallback to set frame 1
                         newValue = {value:newValue, frameNumber:1};
                     }
@@ -1272,7 +1272,7 @@ exports.oNode.prototype.insertInNode = function( inPort, oNodeObject, inPortTarg
  */
 exports.oNode.prototype.moveToGroup = function(group){
   var _name = this.name;
-  if (group instanceof oGroupNode) group = group.path;
+  if (group instanceof this.$.oGroupNode) group = group.path;
 
   if (this.group != group){
     this.$.beginUndo("oH_moveNodeToGroup_"+_name)

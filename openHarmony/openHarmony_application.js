@@ -240,7 +240,7 @@ Object.defineProperty(exports.oApp.prototype, 'currentTool', {
     return _tool;
   },
   set : function(tool){
-    if (tool instanceof oTool) {
+    if (tool instanceof this.$.oTool) {
       tool.activate();
       return
     }

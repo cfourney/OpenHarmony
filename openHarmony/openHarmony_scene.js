@@ -2109,7 +2109,7 @@ exports.oScene.prototype.exportQT = function (path, display, scale, exportSound,
   if (typeof scale === 'undefined') var scale = 1;
   if (typeof createThumbnail === 'undefined') var createThumbnail = true;
 
-  if (display instanceof oNode) display = display.name;
+  if (display instanceof this.$.oNode) display = display.name;
 
   var _startFrame = exportPreviewArea?scene.getStartFrame():1;
   var _stopFrame = exportPreviewArea?scene.getStopFrame():this.length;
