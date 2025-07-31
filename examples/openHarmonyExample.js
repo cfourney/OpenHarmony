@@ -1,5 +1,5 @@
 // add this line at the top of your scripts to load the library before the execution.
-include("openHarmony.js")
+const $ = require("openHarmony.js");
 
 
 /**
