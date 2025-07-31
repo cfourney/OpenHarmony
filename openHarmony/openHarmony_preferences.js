@@ -486,7 +486,7 @@ Object.defineProperty (exports.oPreference.prototype, 'value', {
  */
 exports.oPreference.createPreference = function(category, keyword, type, value, description, descriptionText, prefObject){
   if (!prefObject.details.hasOwnProperty(keyword)){
-    var pref = new this.$.oPreference(category, keyword, type, value, description, descriptionText);
+    var pref = new exports.oPreference(category, keyword, type, value, description, descriptionText);
     Object.defineProperty(prefObject, keyword,{
       enumerable: true,
       get : function(){
