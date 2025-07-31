@@ -112,8 +112,7 @@ $ = {
  */
 Object.defineProperty( $, "directory", {
   get : function(){
-    var currentFile = __file__
-    return currentFile.split("\\").join("/").split( "/" ).slice(0, -1).join('/');
+    return $.file.split("\\").join("/").split( "/" ).slice(0, -1).join('/');
   }
 });
 
