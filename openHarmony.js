@@ -543,6 +543,12 @@ for( var classItem in $ ){
 
     //Also extend it to the global object.
     this[classItem] = $[classItem];
+
+    /*
+      This didn't do what I expected, but after require()ing oH in, all the functions
+      are properties of the top-level this.
+    */
+    // this.__proto__[classItem] = $[classItem];
   }
 }
 
