@@ -65,7 +65,7 @@ exports.oDatabase = function(){
  */
 exports.oDatabase.prototype.query = function(args){
 	var dbbin = specialFolders.bin+"/dbu";
-	var p = new $.oProcess(dbbin, args);
+	var p = new this.$.oProcess(dbbin, args);
 	var result = p.execute();
 
 	result = result.split("Name:").join("").split("\r\n");

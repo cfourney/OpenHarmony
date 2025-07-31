@@ -65,7 +65,7 @@
  *
  * // output the list of tools names and ids
  * for (var i in tools){
- *   log(i+" "+tools[i].name)
+ *   $.log(i+" "+tools[i].name)
  * }
  *
  * // To get a tool by name, use the $.app.getToolByName() function

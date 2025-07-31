@@ -188,7 +188,7 @@ exports.oPreferences.prototype.refresh = function(){
       switch( type ){
       case 'color':
         var tempVal = preferences.getColor( id, new ColorRGBA () );
-        value = new $.oColorValue( tempVal.r, tempVal.g, tempVal.b, tempVal.a );
+        value = new this.$.oColorValue( tempVal.r, tempVal.g, tempVal.b, tempVal.a );
         break;
       case 'int':
         value = preferences.getInt( id, 0 );
@@ -401,14 +401,14 @@ exports.oPreferences.prototype.get = function( name ){
  *
  * //the details objects of the preferences object allows access to more information about each preference
  * var details = prefs.details
- * log(details.USE_OVERLAY_UNDERLAY_ART.category+" "+details.USE_OVERLAY_UNDERLAY_ART.id+" "+details.USE_OVERLAY_UNDERLAY_ART.type);
+ * $.log(details.USE_OVERLAY_UNDERLAY_ART.category+" "+details.USE_OVERLAY_UNDERLAY_ART.id+" "+details.USE_OVERLAY_UNDERLAY_ART.type);
  *
  * for (var i in details){
- *   log(i+" "+JSON.stringify(details[i]))       // each object inside detail is a complete oPreference instance
+ *   $.log(i+" "+JSON.stringify(details[i]))       // each object inside detail is a complete oPreference instance
  * }
  *
  * // the preference object also holds a categories array with the list of all categories
- * log (prefs.categories)
+ * $.log (prefs.categories)
  */
 exports.oPreference = function(category, keyword, type, value, description, descriptionText){
   this.category = category;
@@ -463,7 +463,7 @@ Object.defineProperty (exports.oPreference.prototype, 'value', {
         preferences.setDouble(this.keyword, newValue);
         break;
       case "color":
-        if (typeof newValue == String) newValue = (new oColorValue()).fromColorString(newValue);
+        if (typeof newValue == String) newValue = (new this.$.oColorValue()).fromColorString(newValue);
         preferences.setColor(this.keyword, new ColorRGBA(newValue.r, newValue.g, newValue.b, newValue.a));
         break;
       default:
@@ -486,7 +486,7 @@ Object.defineProperty (exports.oPreference.prototype, 'value', {
  */
 exports.oPreference.createPreference = function(category, keyword, type, value, description, descriptionText, prefObject){
   if (!prefObject.details.hasOwnProperty(keyword)){
-    var pref = new $.oPreference(category, keyword, type, value, description, descriptionText);
+    var pref = new this.$.oPreference(category, keyword, type, value, description, descriptionText);
     Object.defineProperty(prefObject, keyword,{
       enumerable: true,
       get : function(){

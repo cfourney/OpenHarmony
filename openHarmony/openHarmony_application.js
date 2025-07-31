@@ -249,7 +249,7 @@ Object.defineProperty(exports.oApp.prototype, 'currentTool', {
         this.getToolByName(tool).activate();
         return
       }catch(err){
-        log.debug("'"+ tool + "' is not a valid tool name. Valid: "+this.tools.map(function(x){return x.name}).join(", "))
+        this.$.debug("'"+ tool + "' is not a valid tool name. Valid: "+this.tools.map(function(x){return x.name}).join(", "))
       }
     }
     if (typeof tool == "number"){
@@ -423,7 +423,7 @@ Object.defineProperty(exports.oApp.prototype, 'currentStencil', {
   },
   set: function(stencil){
     if (stencil instanceof this.$.oStencil) var stencil = stencil.name
-    log.debug("Setting current pen: "+ stencil)
+    this.$.debug("Setting current pen: "+ stencil)
     PenstyleManager.setCurrentPenstyleByName(stencil);
   }
 })
@@ -524,7 +524,7 @@ exports.oToolbar = function( name, widgets, parent, show ){
  */
 exports.oToolbar.prototype.show = function(){
   if (this.$.batchMode) {
-    log.debug("$.oToolbar not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
+    this.$.debug("$.oToolbar not supported in batch mode", this.$.DEBUG_LEVEL.ERROR)
     return;
   }
 

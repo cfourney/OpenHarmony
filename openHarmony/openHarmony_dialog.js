@@ -193,14 +193,14 @@ exports.oDialog.prototype.toast = function(labelText, position, duration, color)
   }
 
   if (typeof duration === 'undefined') var duration = 2000;
-  if (typeof color === 'undefined') var color = new $.oColorValue(0,0,0);
+  if (typeof color === 'undefined') var color = new this.$.oColorValue(0,0,0);
   
   var toast = new QWidget()
   if (this.$.app.version + this.$.app.minorVersion > 21){
     // above Harmony 21.1
     if (typeof position === 'undefined'){
       var center = QApplication.desktop().availableGeometry.center();
-      var position = new $.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
+      var position = new this.$.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
     }
     var flags = new Qt.WindowFlags(Qt.Tool|Qt.FramelessWindowHint); // https://qtcentre.org/threads/71912-Qt-WA_TransparentForMouseEvents
     toast.setWindowFlags(flags);
@@ -208,7 +208,7 @@ exports.oDialog.prototype.toast = function(labelText, position, duration, color)
   } else {
     if (typeof position === 'undefined'){
       var center = QApplication.desktop().screen().rect.center();
-      var position = new $.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
+      var position = new this.$.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
     }
     var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.WA_TransparentForMouseEvents);
     toast.setWindowFlags(flags);
@@ -358,10 +358,10 @@ exports.oDialog.prototype.chooseFile = function( text, filter, getExisting, acce
   if (!_chosen.length) return undefined;
 
   try {
-    _chosen = _chosen.map(function(thisFile){return new $.oFile(thisFile);});
+    _chosen = _chosen.map(function(thisFile){return new this.$.oFile(thisFile);});
   } catch (err) {
     // No "map" method means not an array
-    _chosen = [new $.oFile(_chosen)];
+    _chosen = [new this.$.oFile(_chosen)];
   }
 
   this.$.debug(_chosen);
@@ -388,7 +388,7 @@ exports.oDialog.prototype.chooseFolder = function(text, startDirectory){
 
   if (!_folder) return undefined; // User cancelled
 
-  return new $.oFolder(_folder);
+  return new this.$.oFolder(_folder);
 }
 
 //////////////////////////////////////
@@ -1316,7 +1316,7 @@ $.oPieSubMenu.prototype.buildWidget = function(){
     UiLoader.setSvgIcon(this, iconFile)
     this.setIconSize(new QSize(this.minimumWidth, this.minimumHeight));
   }catch(e){
-    $.log("failed to load icon "+iconFile)
+    this.$.log("failed to load icon "+iconFile)
   }
   this.cursor = new QCursor(Qt.PointingHandCursor);
 
@@ -1396,7 +1396,7 @@ exports.oPieButton.prototype.setParent = function(parent){
     try{
       var iconFiles = scriptIconsFolder.getFiles(toolName.replace(" ", "").toLowerCase() + ".*");
     }catch(e){
-      $.log("error was caught " + e);
+      this.$.log("error was caught " + e);
       var iconFiles = [];
     }
 
@@ -1459,7 +1459,7 @@ exports.oActionButton.prototype = Object.create(exports.oPieButton.prototype);
 
 exports.oActionButton.prototype.activate = function(){
   if (this.responder){
-    // log("Validating : "+ this.actionName + " ? "+ Action.validate(this.actionName, this.responder).enabled)
+    // this.$.log("Validating : "+ this.actionName + " ? "+ Action.validate(this.actionName, this.responder).enabled)
     if (Action.validate(this.action, this.responder).enabled){
       Action.perform(this.action, this.responder);
     }
@@ -1563,7 +1563,7 @@ exports.oScriptButton = function(scriptFile, scriptFunction, parent) {
   try{
     var iconFiles = scriptIconsFolder.getFiles(scriptFunction+".*");
   } catch(e){
-    $.log("error was caught " + e);
+    this.$.log("error was caught " + e);
     var iconFiles = [];
   }
 

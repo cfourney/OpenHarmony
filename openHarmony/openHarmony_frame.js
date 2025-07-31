@@ -83,10 +83,10 @@ exports.oFrame = function( frameNumber, oColumnObject, subColumns ){
 
   this.frameNumber = frameNumber;
 
-  if( oColumnObject instanceof $.oAttribute ){  //Direct access to an attribute, when not keyable. We still provide a frame access for consistency.  > MCNote ?????
+  if( oColumnObject instanceof this.$.oAttribute ){  //Direct access to an attribute, when not keyable. We still provide a frame access for consistency.  > MCNote ?????
     this.column = false;
     this.attributeObject = oColumnObject;
-  }else if( oColumnObject instanceof $.oColumn ){
+  }else if( oColumnObject instanceof this.$.oColumn ){
     this.column = oColumnObject;
 
     if (this.column && typeof subColumns === 'undefined'){

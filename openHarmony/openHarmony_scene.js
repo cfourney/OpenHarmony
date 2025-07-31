@@ -1464,7 +1464,7 @@ exports.oScene.prototype.addPalette = function(name, insertAtIndex, paletteStora
 
   // can fail if database lock wasn't released
   var _palette = new this.$.oPalette(_list.createPaletteAtLocation(_destination, storeInElement, name, insertAtIndex), _list);
-  log("created palette : "+_palette.path)
+  this.$.log("created palette : "+_palette.path)
   return _palette;
 }
 
@@ -1662,7 +1662,7 @@ exports.oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged)
     for (var i in _allNodes){
       // disable all nodes in the scene before merging unless given as argument
       if (selectedPaths.indexOf(_allNodes[i].path) != -1) {
-        $.log(_allNodes[i].path+" " +selectedPaths.indexOf(_allNodes[i].path));
+        this.$.log(_allNodes[i].path+" " +selectedPaths.indexOf(_allNodes[i].path));
         continue;
       }
       if (_allNodes[i].enabled){
@@ -1923,7 +1923,7 @@ exports.oScene.prototype.exportLayoutImage = function (path, includedNodes, expo
   if (typeof frameScale === 'undefined') var frameScale = 1;
   if (typeof frame === 'undefined') var frame = 1;
   if (typeof format === 'undefined') var format = "PNG4";
-  if (typeof path != this.$.oFile) path = new $.oFile(path);
+  if (typeof path != this.$.oFile) path = new this.$.oFile(path);
 
   var exporter = new LayoutExport();
   var params = new LayoutExportParams();
@@ -1981,8 +1981,8 @@ exports.oScene.prototype.exportPSD = function (path, margin, layersDescription){
     var _scene = this;
     var layersDescription = _allNodes.map(function(x){return ({layer: x, frame: _scene.currentFrame})})
   }
-  if (typeof path != this.$.oFile) path = new $.oFile(path)
-  var tempPath = new $.oFile(path.folder+"/"+path.name+"~")
+  if (typeof path != this.$.oFile) path = new this.$.oFile(path)
+  var tempPath = new this.$.oFile(path.folder+"/"+path.name+"~")
 
   var errors = [];
 
@@ -2018,7 +2018,7 @@ exports.oScene.prototype.exportPSD = function (path, margin, layersDescription){
   exporter.flush();
 
   if (path.exists) path.remove();
-  log(tempPath.exist+" "+tempPath);
+  this.$.log(tempPath.exist+" "+tempPath);
   tempPath.rename(path.name+".psd");
 }
 

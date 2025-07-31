@@ -1284,7 +1284,7 @@ exports.oLink.prototype.getValidLink = function(createOutPorts, createInPorts){
   var inPort = this._inPort;
 
   if (!start || !end) {
-    $.debug("A valid link can't be found: node missing in link "+this.toString(), this.$.DEBUG_LEVEL.ERROR)
+    this.$.debug("A valid link can't be found: node missing in link "+this.toString(), this.$.DEBUG_LEVEL.ERROR)
     return null;
   }
 
@@ -1633,7 +1633,7 @@ exports.oLinkPath.prototype.findExistingPath = function(){
  * @return {$.oLink} the valid $.oLink object.  Returns null if no such link could be created (for example if the node's in-port is already linked)
  */
 exports.oLinkPath.prototype.getValidLink = function(start, end, outPort, inPort){
-  var _link = new $.oLink(start, end, outPort, inPort)
+  var _link = new this.$.oLink(start, end, outPort, inPort)
   return _link.getValidLink();
 }
 

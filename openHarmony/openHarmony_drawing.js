@@ -477,7 +477,7 @@ exports.oDrawing.prototype.importBitmap = function (file, convertToTvg) {
 
     var _convertedFilePath = tempFolder.path + "/" + file.name + ".tvg";
     var _convertProcess = new this.$.oProcess(_bin, ["-outformat", "TVG", "-debug", "-resolution", res_x, res_y, "-outfile", _convertedFilePath, file.path]);
-    log(_convertProcess.execute())
+    this.$.log(_convertProcess.execute())
 
     var convertedFile = new this.$.oFile(_convertedFilePath);
     if (!convertedFile.exists) throw new Error ("Converting " + file.path + " to TVG has failed.");
@@ -732,7 +732,7 @@ exports.oDrawing.prototype.toString = function () {
 exports.oArtLayer = function (index, oDrawingObject) {
   this._layerIndex = index;
   this._drawing = oDrawingObject;
-  //log(this._drawing._key)
+  //this.$.log(this._drawing._key)
   this._key = { "drawing": this._drawing._key, "art": index }
 }
 
@@ -818,7 +818,7 @@ Object.defineProperty(exports.oArtLayer.prototype, 'boundingBox', {
     var _box = Drawing.query.getBox(this._key);
     if (_box.empty) return null;
 
-    var _boundingBox = new $.oBox(_box.x0, _box.y0, _box.x1, _box.y1);
+    var _boundingBox = new this.$.oBox(_box.x0, _box.y0, _box.x1, _box.y1);
     return _boundingBox;
   }
 })
@@ -1099,7 +1099,7 @@ exports.oLineStyle = function (colorId, stencil) {
     if (!maxThickness && !minThickness) maxThickness = 1;
   }
   if (typeof stencil === 'undefined') {
-    var stencil = new $.oStencil("", "pencil", {maxThickness:maxThickness, minThickness:minThickness, keys:[]});
+    var stencil = new this.$.oStencil("", "pencil", {maxThickness:maxThickness, minThickness:minThickness, keys:[]});
   }
 
   if (typeof colorId === 'undefined'){
@@ -1638,8 +1638,8 @@ Object.defineProperty(exports.oStroke.prototype, "style", {
 Object.defineProperty(exports.oStroke.prototype, "closed", {
   get: function () {
     var _path = this.path;
-    $.log(_path)
-    $.log(_path[_path.length-1].strokePosition)
+    this.$.log(_path)
+    this.$.log(_path[_path.length-1].strokePosition)
     return _path[_path.length-1].strokePosition == 0;
   }
 })
@@ -1681,11 +1681,11 @@ for (var i in sel){
 	var intersections = sel[i].getIntersections();
 
   for (var j in intersections){
-    log("intersection : " + j);
-    log("point : " + intersections[j].point);                    // the point coordinates
-    log("strokes index : " + intersections[j].stroke.index);     // the index of the intersecting strokes in their own shape
-    log("own point : " + intersections[j].ownPoint);             // how far the intersection is on the stroke itself
-    log("stroke point : " + intersections[j].strokePoint);       // how far the intersection is on the intersecting stroke
+    $.log("intersection : " + j);
+    $.log("point : " + intersections[j].point);                    // the point coordinates
+    $.log("strokes index : " + intersections[j].stroke.index);     // the index of the intersecting strokes in their own shape
+    $.log("own point : " + intersections[j].ownPoint);             // how far the intersection is on the stroke itself
+    $.log("stroke point : " + intersections[j].strokePoint);       // how far the intersection is on the intersecting stroke
   }
 }
  */
@@ -1830,7 +1830,7 @@ exports.oStroke.prototype.getPointCoordinates = function(position){
   };
   var point = Drawing.geometry.evaluate(arg)[0];
 
-  return new $.oPoint(point.x, point.y); // should this be this.$.oPoint?
+  return new this.$.oPoint(point.x, point.y);
 }
 
 
@@ -1850,7 +1850,7 @@ exports.oStroke.prototype.getClosestPoint = function (point){
   // the original query and a "closestPoint" key that contains the information.
   var _result = Drawing.geometry.getClosestPoint(arg)[0];
 
-  return new $.oPoint(_result.closestPoint.x, _result.closestPoint.y); // should this be this.$.oPoint?
+  return new this.$.oPoint(_result.closestPoint.x, _result.closestPoint.y); // should this be this.$.oPoint?
 }
 
 
@@ -2118,7 +2118,7 @@ exports.oStencil = function (name, type, thicknessPathObject) {
   this.name = name;
   this.type = type;
   this.thicknessPathObject = thicknessPathObject;
-  // log("thicknessPath: " + JSON.stringify(this.thicknessPathObject))
+  // this.$.log("thicknessPath: " + JSON.stringify(this.thicknessPathObject))
 }
 
 

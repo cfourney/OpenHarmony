@@ -309,7 +309,7 @@ exports.oElement.prototype.duplicate = function(name){
       var duplicateDrawing = _duplicateElement.addDrawing(0, _drawings[i].name, _drawingFile);
       _drawingFile.copy(_elementFolder, duplicateDrawing.name, true);
     }catch(err){
-      this.debug("could not copy drawing file "+_drawingFile.name+" into element "+_duplicateElement.name, this.$.DEBUG_LEVEL.ERROR);
+      this.$.debug("could not copy drawing file "+_drawingFile.name+" into element "+_duplicateElement.name, this.$.DEBUG_LEVEL.ERROR);
     }
   }
   return _duplicateElement;

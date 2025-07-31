@@ -372,7 +372,7 @@ Object.defineProperty(exports.oNode.prototype, 'name', {
 Object.defineProperty(exports.oNode.prototype, 'nodeColor', {
   get : function(){
     var _color = node.getColor(this.path);
-    return new $.oColorValue({r:_color.r, g:_color.g, b:_color.b, a:_color.a});
+    return new this.$.oColorValue({r:_color.r, g:_color.g, b:_color.b, a:_color.a});
   },
   set : function(color){
     var _rgbacolor = new ColorRGBA(color.r, color.g, color.b, color.a);
@@ -1150,7 +1150,7 @@ exports.oNode.prototype.findFirstOutNodeOfType = function(type, lookInsideGroups
  */
 exports.oNode.prototype.findFirstInLinkOfType = function(type){
   var _inNode = this.findFirstInNodeMatching(function(x){return x.type == type})
-  if (_inNode) return new $.oLinkPath(_inNode, this);
+  if (_inNode) return new this.$.oLinkPath(_inNode, this);
   return null;
 }
 
@@ -1163,7 +1163,7 @@ exports.oNode.prototype.findFirstInLinkOfType = function(type){
  */
 exports.oNode.prototype.findFirstOutLinkOfType = function(type){
   var _outNode = this.findFirstOutNodeMatching(function(x){return x.type == type})
-  if (_outNode) return new $.oLinkPath(this, _outNode);
+  if (_outNode) return new this.$.oLinkPath(this, _outNode);
   return null;
 }
 
@@ -1470,7 +1470,7 @@ exports.oNode.prototype.orderAboveNodes = function(verticalSpacing, horizontalSp
   if (typeof verticalSpacing === 'undefined') var verticalSpacing = 120;
   if (typeof horizontalSpacing === 'undefined') var horizontalSpacing = 40;
 
-  $.beginUndo()
+  this.$.beginUndo()
 
   var startNode = this;
   var nodeHeights = {}
@@ -1595,7 +1595,7 @@ exports.oNode.prototype.orderAboveNodes = function(verticalSpacing, horizontalSp
   }
 
 
-  $.endUndo()
+  this.$.endUndo()
 }
 
  /**
@@ -2154,7 +2154,7 @@ exports.oDrawingNode.prototype.exposeAllDrawings = function(framesPerDrawing){
   var _drawings = this.element.drawings;
   var frameNumber = 1;
   for (var i=0; i < _drawings.length; i++){
-    //log("showing drawing "+_drawings[i].name+" at frame "+i)
+    //this.$.log("showing drawing "+_drawings[i].name+" at frame "+i)
     this.showDrawingAtFrame(_drawings[i], frameNumber);
     frameNumber+=framesPerDrawing;
   }
@@ -3073,7 +3073,7 @@ exports.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, in
  * @return {$.oNode[]}         The resulting pasted nodes.
  */
 exports.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, extendScene, nodePosition, pasteOptions ){
-  if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
+  if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
   if (typeof destinationNodes === 'undefined' || destinationNodes.length == 0) var destinationNodes = false;
   if (typeof extendScene === 'undefined') var extendScene = true;
 
