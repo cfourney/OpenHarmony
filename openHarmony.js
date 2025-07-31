@@ -547,8 +547,7 @@ for( var classItem in $ ){
 }
 
 
-// Doesn't work
-// // Add global access to $ object
-// this.__proto__.$ = $
+// Add global access to $ object
+this.__proto__.$ = $
 
 exports = $
