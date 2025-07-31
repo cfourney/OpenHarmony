@@ -1103,7 +1103,7 @@ exports.oPieMenu.prototype.getMenuRadius = function(){
  * @property    {string}              extraRadius              using a set radius between each submenu levels
  * @property    {$.oPieMenu}          parentMenu               the parent menu for this subMenu. Set during initialisation of the menu.
  */
-$.oPieSubMenu = function(name, widgets) {
+exports.oPieSubMenu = function(name, widgets) {
   this.menuIcon = specialFolders.resource + "/icons/toolbar/menu.svg";
   this.closeIcon = specialFolders.resource + "/icons/toolbar/collapseopen.png";
 
@@ -1117,13 +1117,13 @@ $.oPieSubMenu = function(name, widgets) {
 
   this.focusOutEvent = function(){} // delete focusOutEvent response from submenu
 }
-$.oPieSubMenu.prototype = Object.create(exports.oPieMenu.prototype)
+exports.oPieSubMenu.prototype = Object.create(exports.oPieMenu.prototype)
 
 
 /**
  * function called when main button is clicked
  */
-$.oPieSubMenu.prototype.deactivate = function(){
+exports.oPieSubMenu.prototype.deactivate = function(){
   this.showMenu(false);
 }
 
@@ -1132,7 +1132,7 @@ $.oPieSubMenu.prototype.deactivate = function(){
  * @name $.oPieSubMenu#anchor
  * @type {$.oPoint}
  */
-Object.defineProperty($.oPieSubMenu.prototype, "anchor", {
+Object.defineProperty(exports.oPieSubMenu.prototype, "anchor", {
   get: function(){
     var center = this.parentMenu.globalCenter;
     return center.add(-this.widgetSize/2, -this.widgetSize/2);
@@ -1145,7 +1145,7 @@ Object.defineProperty($.oPieSubMenu.prototype, "anchor", {
  * @name $.oPieSubMenu#minRadius
  * @type {int}
  */
-Object.defineProperty($.oPieSubMenu.prototype, "minRadius", {
+Object.defineProperty(exports.oPieSubMenu.prototype, "minRadius", {
   get: function(){
     return this.parentMenu.maxRadius;
   }
@@ -1157,7 +1157,7 @@ Object.defineProperty($.oPieSubMenu.prototype, "minRadius", {
  * @name $.oPieSubMenu#maxRadius
  * @type {int}
  */
-Object.defineProperty($.oPieSubMenu.prototype, "maxRadius", {
+Object.defineProperty(exports.oPieSubMenu.prototype, "maxRadius", {
   get: function(){
     return this.minRadius + this.extraRadius;
   }
@@ -1168,7 +1168,7 @@ Object.defineProperty($.oPieSubMenu.prototype, "maxRadius", {
  * activate the menu button when activate() is called on the menu
  * @private
  */
-$.oPieSubMenu.prototype.activate = function(){
+exports.oPieSubMenu.prototype.activate = function(){
   this.showMenu(true);
   this.setFocus(true)
 }
@@ -1182,7 +1182,7 @@ $.oPieSubMenu.prototype.activate = function(){
  * @param  {int}      y     The x coordinate for the button relative to the piewidget
  * @private
  */
-$.oPieSubMenu.prototype.move = function(x, y){
+exports.oPieSubMenu.prototype.move = function(x, y){
   // move the actual widget to its anchor, but move the button instead
   QWidget.prototype.move.call(this, this.anchor.x, this.anchor.y);
 
@@ -1204,7 +1204,7 @@ $.oPieSubMenu.prototype.move = function(x, y){
  * where calling parent() returns a QWidget and not a $.oPieButton
  * @private
  */
-$.oPieSubMenu.prototype.setParent = function(parent){
+exports.oPieSubMenu.prototype.setParent = function(parent){
   exports.oPieMenu.prototype.setParent.call(this, parent);
   this.parentMenu = parent;
 }
@@ -1215,7 +1215,7 @@ $.oPieSubMenu.prototype.setParent = function(parent){
  * @private
  * @returns {$.oPieButton}
  */
-$.oPieSubMenu.prototype.buildButton = function(){
+exports.oPieSubMenu.prototype.buildButton = function(){
   // add main button in constructor because it needs to exist before show()
   var button = new this.$.oPieButton(this.menuIcon, this.name, this);
   button.activate = function(){}; // prevent the button from closing the entire pie menu 
@@ -1229,7 +1229,7 @@ $.oPieSubMenu.prototype.buildButton = function(){
  * Shows or hides the menu itself (not the button)
  * @param {*} visibility
  */
-$.oPieSubMenu.prototype.showMenu = function(visibility){
+exports.oPieSubMenu.prototype.showMenu = function(visibility){
   for (var i in this.widgets){
     this.widgets[i].visible = visibility;
   }
@@ -1243,7 +1243,7 @@ $.oPieSubMenu.prototype.showMenu = function(visibility){
 /**
  * toggles the display of the menu
  */
-$.oPieSubMenu.prototype.toggleMenu = function(){
+exports.oPieSubMenu.prototype.toggleMenu = function(){
   this.showMenu(!this.slice.visible);
 }
 
@@ -1251,7 +1251,7 @@ $.oPieSubMenu.prototype.toggleMenu = function(){
  * Function to initialise the widgets for the submenu
  * @private
  */
-$.oPieSubMenu.prototype.buildWidget = function(){
+exports.oPieSubMenu.prototype.buildWidget = function(){
   if (!this.parentMenu){
     throw new Error("must set parent first before calling $.oPieMenu.buildWidget()")
   }
