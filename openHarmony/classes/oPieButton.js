@@ -23,7 +23,7 @@
  */
  oPieButton = function(iconFile, text, parent) {
   // if icon isnt provided
-  if (typeof parent === 'undefined') var parent = $.app.mainWindow
+  if (typeof parent === 'undefined') var parent = this.$.app.mainWindow
   if (typeof text === 'undefined') var text = ""
   if (typeof iconFile === 'undefined') var iconFile = specialFolders.resource+"/icons/script/qtgeneric.svg"
 
@@ -41,7 +41,7 @@
     UiLoader.setSvgIcon(this, iconFile)
     this.setIconSize(new QSize(this.minimumWidth, this.minimumHeight));
   }catch(e){
-    $.log("failed to load icon "+iconFile)
+    this.$.log("failed to load icon "+iconFile)
   }
   this.cursor = new QCursor(Qt.PointingHandCursor);
 
@@ -179,7 +179,7 @@ oPrefButton = function(preferenceString, text, iconFile, parent) {
   this.checkable = true;
   this.checked = preferences.getBool(preferenceString, true);
 
-  $.oPieButton.call(this, iconFile, text, parent);
+  this.$.oPieButton.call(this, iconFile, text, parent);
 
   this.toolTip = this.preferenceString;
 }
@@ -231,7 +231,7 @@ function oScriptButton(scriptFile, scriptFunction, parent) {
   try{
     var iconFiles = scriptIconsFolder.getFiles(scriptFunction+".*");
   } catch(e){
-    this.$.log("error was caught " + e);
+    this.$.debug("error was caught " + e, this.$.DEBUG_LEVEL.ERROR);
     var iconFiles = [];
   }
 
@@ -258,6 +258,60 @@ oScriptButton.prototype.activate = function(){
 exports.oScriptButton = oScriptButton;
 
 
+
+//////////////////////////////////////
+//////////////////////////////////////
+//                                  //
+//                                  //
+//      $.oActionButton class       //
+//                                  //
+//                                  //
+//////////////////////////////////////
+//////////////////////////////////////
+
+
+/**
+ * The constructor for $.oActionButton
+ * @name          $.oActionButton
+ * @constructor
+ * @classdescription This subclass of QPushButton provides an easy way to create a button for a tool.
+ * This class is a subclass of QPushButton and all the methods from that class are available to modify this button.
+ * @param {string}   actionName               The action string that will be executed with Action.perform
+ * @param {string}   responder                The responder for the action
+ * @param {string}   text                     A text for the button display.
+ * @param {string}   iconFile                 An icon path for the button.
+ * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
+ */
+function oActionButton (actionName, responder, text, iconFile, parent) {
+  this.action = actionName;
+  this.responder = responder;
+
+  if (typeof text === 'undefined') var text = "action";
+
+  if (typeof iconFile === 'undefined') var iconFile = specialFolders.resource+"/icons/old/exec.png";
+
+  this.$.oPieButton.call(this, iconFile, text, parent);
+  this.toolTip = this.toolName;
+}
+oActionButton.prototype = Object.create(oPieButton.prototype);
+
+
+oActionButton.prototype.activate = function(){
+  if (this.responder){
+    // log("Validating : "+ this.actionName + " ? "+ Action.validate(this.actionName, this.responder).enabled)
+    if (Action.validate(this.action, this.responder).enabled){
+      Action.perform(this.action, this.responder);
+    }
+  }else{
+    if (Action.Validate(this.action).enabled){
+      Action.perform(this.action);
+    }
+  }
+  view.refreshViews();
+  this.closeMenu()
+}
+
+exports.oActionButton = oActionButton;
 
 
 //////////////////////////////////////
@@ -292,7 +346,7 @@ exports.oScriptButton = oScriptButton;
     try{
       var iconFiles = scriptIconsFolder.getFiles(toolName.replace(" ", "").toLowerCase() + ".*");
     }catch(e){
-      this.$.log("error was caught " + e);
+      this.$.debug("error was caught " + e, this.$.DEBUG_LEVEL.ERROR);
       var iconFiles = [];
     }
 
