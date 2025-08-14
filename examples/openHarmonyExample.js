@@ -93,9 +93,7 @@ function makeCar(){
   wheelNode.linkOutNode(sceneComposite);
 
   var wheelDrawing = wheelNode.element.addDrawing(1, "WHE_1");
-  $.log("add node")
   wheelNode.timingColumn.extendExposures();
-  $.log("extend")
 
   // draw a wheel onto the drawing, with the line on line art and color on color art
   scene.activeDrawing = wheelDrawing;

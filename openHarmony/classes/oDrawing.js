@@ -549,8 +549,6 @@ oDrawing.prototype.setAsActiveDrawing = function (artLayer) {
 
   if (artLayer) DrawingTools.setCurrentArt(artLayer);
 
-  this.$.log("done")
-
   return true;
 }
 
