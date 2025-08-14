@@ -56,4 +56,4 @@ oToolbar.prototype.show = function(){
   return this.toolbar;
 }
 
-exports = oToolbar;
+exports.oToolbar = oToolbar;

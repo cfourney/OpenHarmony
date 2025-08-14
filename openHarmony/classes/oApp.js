@@ -449,4 +449,4 @@ oApp.prototype.runMenuCommand = function(menuName, menuString){
   }
 }
 
-exports = oApp;
+exports.oApp = oApp;

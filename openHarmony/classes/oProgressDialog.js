@@ -155,4 +155,4 @@ oProgressDialog.prototype.close = function(){
 }
 
 
-exports = oProgressDialog;
+exports.oProgressDialog = oProgressDialog;

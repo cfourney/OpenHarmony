@@ -86,7 +86,7 @@ function oFrame (frameNumber, oColumnObject, subColumns){
   if( oColumnObject instanceof this.$.oAttribute ){  //Direct access to an attribute, when not keyable. We still provide a frame access for consistency.
     this.column = false;
     this.attributeObject = oColumnObject;
-  }else if( oColumnObject instanceof this.$.oColumn ){
+  }else if( oColumnObject instanceof this.$.oColumn){
     this.column = oColumnObject;
 
     if (this.column && typeof subColumns === 'undefined'){
@@ -111,7 +111,7 @@ function oFrame (frameNumber, oColumnObject, subColumns){
  */
 Object.defineProperty(oFrame.prototype, 'value', {
   get : function(){
-    this.$.log("getting value of frame "+this.frameNumber + " - " + this.attributeObject + " - " + this.column);
+    // this.$.log("getting value of frame "+this.frameNumber + " - " + this.attributeObject + " - " + this.column);
     if (this.attributeObject){
       // this.$.debug("getting value of frame "+this.frameNumber+" through attribute object : "+this.attributeObject.keyword, this.$.DEBUG_LEVEL.LOG);
       return this.attributeObject.getValue(this.frameNumber);
@@ -178,7 +178,7 @@ Object.defineProperty(oFrame.prototype, 'isKeyframe', {
     },
 
     set : function(keyframe){
-      this.$.log("setting keyframe for frame "+this.frameNumber);
+      // this.$.log("setting keyframe for frame "+this.frameNumber);
       var col = this.column;
       if( !col ) return;
 
@@ -622,4 +622,4 @@ oFrame.toString = function(){
 }
 
 
-exports = oFrame;
+exports.oFrame = oFrame;

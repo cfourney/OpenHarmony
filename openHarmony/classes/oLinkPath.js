@@ -205,4 +205,4 @@ oLinkPath.prototype.connectPath = function(){
 }
 
 
-exports = oLinkPath;
+exports.oLinkPath = oLinkPath;

@@ -45,4 +45,4 @@ function oXml (xmlString, objectName){
   }
 }
 
-exports = oXml;
+exports.oXml = oXml;

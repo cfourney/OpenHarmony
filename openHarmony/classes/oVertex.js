@@ -138,4 +138,4 @@ oVertex.prototype.toString = function(){
  return "oVertex : { index:"+this.index+", x: "+this.x+", y: "+this.y+", onCurve: "+this.onCurve+", strokePosition: "+this.strokePosition+" }"
 }
 
-exports = oVertex;
+exports.oVertex = oVertex;

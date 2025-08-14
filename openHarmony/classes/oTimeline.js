@@ -204,4 +204,4 @@ oTimeline.prototype.buildLayerCache = function( forced ){
   }
 }
 
-exports = oTimeline;
+exports.oTimeline = oTimeline;

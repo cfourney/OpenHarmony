@@ -143,4 +143,4 @@ oBox.prototype.toString = function(){
   return "{top:"+this.top+", right:"+this.right+", bottom:"+this.bottom+", left:"+this.left+"}"
 }
 
-exports = oBox;
+exports.oBox = oBox;

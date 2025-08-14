@@ -731,7 +731,7 @@ Object.defineProperty(oScene.prototype, 'activeDrawing', {
     }else{
       var _curDrawing = _settings.currentDrawing.drawingId;
       if (!_curDrawing) return null;
-      return _node.element.getDrawingByName(_curDrawing);
+      return _node.element.getDrawingById(_curDrawing);
     }
   },
 
@@ -2386,4 +2386,4 @@ oScene.prototype.$palette = function( name ){
 }
 
 
-exports = oScene;
+exports.oScene = oScene;

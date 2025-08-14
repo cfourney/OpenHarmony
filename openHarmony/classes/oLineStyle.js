@@ -79,4 +79,4 @@ Object.defineProperty(oLineStyle.prototype, "maxThickness", {
   }
 })
 
-exports = oLineStyle;
+exports.oLineStyle = oLineStyle;

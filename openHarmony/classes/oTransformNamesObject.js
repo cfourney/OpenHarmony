@@ -98,4 +98,4 @@ Object.defineProperty(oTransformNamesObject.prototype, "refresh", {
   }
 })
 
-exports = oTransformNamesObject;
+exports.oTransformNamesObject = oTransformNamesObject;

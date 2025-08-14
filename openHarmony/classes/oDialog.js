@@ -391,4 +391,4 @@ oDialog.prototype.chooseFolder = function(text, startDirectory){
 }
 
 
-exports = oDialog;
+exports.oDialog = oDialog;

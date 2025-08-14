@@ -71,27 +71,31 @@ _dir.setFilter( QDir.Files);
 var _files = _dir.entryList();
 
 for (var i in _files){
-  var _classname = _files[i].replace(".js", "");
-  var _class = require($.directory + "/classes/" + _files[i]);
-  
-  // Add $ object access to prototype of each class
-  Object.defineProperty( _class.prototype, '$', {
-    configurable: false,
-    enumerable: false,
-    value: $
-  });
+  var _classes = require($.directory + "/classes/" + _files[i]);
+  // MessageLog.trace(_files[i]+" " +Object.keys(_classes))
+  for (var c in _classes){
+    var _class = _classes[c];
+    // MessageLog.trace(_files[i] + c+" " +_class)
 
-  // avoid printing the code when logging the classes
-  _class.toString = function(){ 
-    return "<"+_classname+" constructor>"
+    // Add $ object access to prototype of each class
+    Object.defineProperty( _class.prototype, '$', {
+      configurable: false,
+      enumerable: false,
+      value: $
+    });
+
+    // avoid printing the code when logging the classes
+    _class.toString = function(){ 
+      return "<"+c+" constructor>"
+    }
+
+    // assign the class as an unconfigurable member of $
+    Object.defineProperty( $, c, {
+      configurable: false,
+      enumerable: true,
+      value: _class
+    });
   }
-
-  // assign the class as an unconfigurable member of $
-  Object.defineProperty( $, _classname, {
-    configurable: false,
-    enumerable: true,
-    value: _class
-  });
 }
 
 //---- App  --------------
@@ -279,6 +283,7 @@ $.chooseFile = function(){ return $.dialog.chooseFile.apply( $.dialog, arguments
  * @param   {string}   [parentName]      The name of the parent widget to look into, in case of duplicates.
  */
 $.getHarmonyUIWidget = function(){ return $.app.getWidgetByName.apply( $.app, arguments ) }
+
 
 
 //---- Cache Helpers ------

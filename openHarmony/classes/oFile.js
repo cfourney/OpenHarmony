@@ -1,4 +1,3 @@
-
 //////////////////////////////////////
 //////////////////////////////////////
 //                                  //
@@ -342,4 +341,4 @@ oFile.prototype.toString = function(){
     return this.path;
 }
 
-exports = oFile;
+exports.oFile = oFile;

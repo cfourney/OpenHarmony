@@ -51,4 +51,4 @@ oFillStyle.prototype.toString = function(){
   return "<oFillStyle colorId:"+this.colorId+", matrix:"+JSON.stringify(this.fillMatrix)+">";
 }
 
-exports = oFillStyle;
+exports.oFillStyle = oFillStyle;

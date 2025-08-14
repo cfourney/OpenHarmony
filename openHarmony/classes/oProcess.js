@@ -246,4 +246,4 @@ oProcess.prototype.launchAndDetach = function(){
 }
 
 
-exports = oProcess;
+exports.oProcess = oProcess;

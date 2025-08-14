@@ -94,4 +94,4 @@ oSignal.prototype.toString = function(){
 }
 
 
-exports = oSignal;
+exports.oSignal = oSignal;

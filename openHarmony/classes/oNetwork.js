@@ -423,4 +423,4 @@ oNetwork.prototype.downloadMulti = function ( address_path, replace ){
 }
 
 
-exports = oNetwork;
+exports.oNetwork = oNetwork;

@@ -341,4 +341,4 @@ oThread.prototype.runSingleThreaded = function( ){
   }
 }
 
-exports = oThread;
+exports.oThread = oThread;

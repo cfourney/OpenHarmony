@@ -329,4 +329,4 @@ oColorValue.prototype.parseColorFromInt = function(colorInt){
   this.a = colorInt >> 24 & 0xFF;
 }
 
-exports = oColorValue;
+exports.oColorValue = oColorValue;

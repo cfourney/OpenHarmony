@@ -699,4 +699,4 @@ oAttribute.prototype.toString = function(){
 }
 
 
-exports = oAttribute;
+exports.oAttribute = oAttribute;

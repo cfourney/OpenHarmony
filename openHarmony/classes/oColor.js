@@ -284,4 +284,4 @@ oColor.prototype.hexToRgba = function (hexString){
     return _rgba;
 }
 
-exports = oColor;
+exports.oColor = oColor;

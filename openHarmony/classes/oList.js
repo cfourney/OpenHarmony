@@ -513,7 +513,7 @@ Object.defineProperty(oList.prototype, 'toString', {
 });
 
 
-exports = oList;
+exports.oList = oList;
 
 
 //Needs all filtering, limiting. mapping, pop,  concat, join, ect

@@ -300,4 +300,4 @@ oPathPoint.prototype.toString = function(){
     return "{x:"+this.x+", y:"+this.y+", z:"+this.z+"}"
 }
 
-exports = oPathPoint;
+exports.oPathPoint = oPathPoint;

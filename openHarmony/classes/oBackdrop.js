@@ -373,4 +373,4 @@ Object.defineProperty(oBackdrop.prototype, 'color', {
   }
 })
 
-exports = oBackdrop;
+exports.oBackdrop = oBackdrop;

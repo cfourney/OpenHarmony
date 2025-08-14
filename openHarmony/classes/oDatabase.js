@@ -95,4 +95,4 @@ oDatabase.prototype.getScenes = function(job){
 }
 
 
-exports = oDatabase;
+exports.oDatabase = oDatabase;

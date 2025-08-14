@@ -135,4 +135,4 @@ oPreference.createPreference = function(category, keyword, type, value, descript
   return pref;
 }
 
-exports = oPreference;
+exports.oPreference = oPreference;

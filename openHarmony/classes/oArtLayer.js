@@ -357,4 +357,4 @@ oArtLayer.prototype.toString = function(){
   return "Object $.oArtLayer ["+this.name+"]";
 }
 
-exports = oArtLayer;
+exports.oArtLayer = oArtLayer;

@@ -282,4 +282,4 @@ oMetadata.prototype.remove = function( name ){
 }
 
 
-exports = oMetadata;
+exports.oMetadata = oMetadata;

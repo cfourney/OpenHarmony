@@ -380,4 +380,4 @@ oPalette.prototype.toString = function(){
   return this.path.path || this.name;
 }
 
-exports = oPalette;
+exports.oPalette = oPalette;

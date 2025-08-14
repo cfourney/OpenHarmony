@@ -64,4 +64,4 @@ oMatrix.prototype.toString = function(){
 }
 
 
-exports = oMatrix;
+exports.oMatrix = oMatrix;

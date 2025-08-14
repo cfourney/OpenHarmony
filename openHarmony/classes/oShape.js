@@ -302,4 +302,4 @@ oShape.prototype.toString = function (){
   return "<oShape index:"+this.index+", layer:"+this.artLayer.name+", drawing:'"+this.artLayer._drawing.name+"'>"
 }
 
-exports = oShape;
+exports.oShape = oShape;

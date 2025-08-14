@@ -130,4 +130,4 @@ oTool.prototype.toString = function(){
   return "< oTool '"+ this.name + "'>"
 }
 
-exports = oTool;
+exports.oTool = oTool;

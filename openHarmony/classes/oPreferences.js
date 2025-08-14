@@ -365,4 +365,4 @@ oPreferences.prototype.get = function( name ){
   return preferences.getBool( name, false );
 }
 
-exports = oPreferences;
+exports.oPreferences = oPreferences;

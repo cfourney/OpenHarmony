@@ -134,4 +134,4 @@ oStencil.prototype.toString = function (){
   return "$.oStencil: '" + this.name + "'"
 }
 
-exports = oStencil;
+exports.oStencil = oStencil;

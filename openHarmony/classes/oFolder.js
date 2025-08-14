@@ -474,4 +474,4 @@ oFolder.prototype.toString = function(){
     return this.path;
 }
 
-exports = oFolder;
+exports.oFolder = oFolder;

@@ -1020,4 +1020,4 @@ oNodeLink.prototype.toString = function( ) {
   return '{"inNode":"'+this.inNode+'", "inPort":"'+this.inPort+'", "outNode":"'+this.outNode+'", "outPort":"'+this.outPort+'", "outLink":"'+this.outLink+'" }';
 }
 
-exports = oNodeLink;
+exports.oNodeLink = oNodeLink;

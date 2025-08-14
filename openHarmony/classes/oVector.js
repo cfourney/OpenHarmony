@@ -198,4 +198,4 @@ oVector.prototype.toString = function(){
 }
 
 
-exports = oVector;
+exports.oVector = oVector;

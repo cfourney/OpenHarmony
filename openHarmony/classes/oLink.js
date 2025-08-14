@@ -473,4 +473,4 @@ oLink.prototype.toString = function( ) {
   // return '{outNode:'+this.outNode+' inNode:'+this.inNode+' }';
 }
 
-exports = oLink;
+exports.oLink = oLink;
