@@ -130,7 +130,7 @@ Object.defineProperty(oColumn.prototype, 'frames', {
     get : function(){
         if (this._cacheFrames.length != frame.numberOf()) {
           for (var i = 0; i < frame.numberOf(); i++) {
-            this._cacheFrames[i] = new this.$.oFrame( i + 1, this);
+            this._cacheFrames[i + 1] = new this.$.oFrame( i + 1, this);
           }
         }
 
@@ -560,7 +560,7 @@ oDrawingColumn.prototype.extendExposures = function( exposures, amount, replace)
     // if amount is undefined, extend function below will automatically fill empty frames
 
     if (typeof exposures === 'undefined' && typeof amount === 'undefined') {
-      column.fillEmptyCels (this.name, 1, this.$.scene.length);
+      column.fillEmptyCels (this.name, 1, this.$.scene.length + 1);
       return; // in case of simple call of this function, we fallback on the fastest way to call the vanilla instruction
     }
 

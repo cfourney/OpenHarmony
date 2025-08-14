@@ -617,7 +617,7 @@ oAttribute.prototype.setValue = function (value, frame) {
             try{
               _animate ? _attr.setValueAt( value, frame ) : _attr.setValue( value );
             }catch(err){
-              this.$.debug("error setting attr "+this._keyword+" value "+value+": "+err, this.$.DEBUG_LEVEL.DEBUG);
+              this.$.debug("error setting attr '"+_type +"' "+this._keyword+" value "+value+": "+err, this.$.DEBUG_LEVEL.DEBUG);
               this.$.debug("setting text attr "+this._keyword+" value "+value+" as textAttr ", this.$.DEBUG_LEVEL.ERROR);
               node.setTextAttr( this.node.path, this._keyword, frame, value );
             }

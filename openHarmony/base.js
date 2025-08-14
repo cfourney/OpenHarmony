@@ -46,23 +46,11 @@
  *
  */
 const $ = {
-    debug_level : 0,
-
- /**
- * Enum to set the debug level of debug statements.
- * @name    $#DEBUG_LEVEL
- * @enum
- */
-  DEBUG_LEVEL : {
-                 'ERROR'   : 0,
-                 'WARNING' : 1,
-                 'LOG'     : 2
-                },
   file      : __file__,
   directory : __file__.split("/").slice(0, -1).join("/"),
-  pi        : 3.14159265359
+  pi        : 3.14159265359,
+  debug_level : 0
 };
-
 
 // loading class files into $ object
 var _dir = new QDir($.directory + "/classes");
@@ -72,10 +60,8 @@ var _files = _dir.entryList();
 
 for (var i in _files){
   var _classes = require($.directory + "/classes/" + _files[i]);
-  // MessageLog.trace(_files[i]+" " +Object.keys(_classes))
-  for (var c in _classes){
-    var _class = _classes[c];
-    // MessageLog.trace(_files[i] + c+" " +_class)
+  for (var _classname in _classes){
+    var _class = _classes[_classname];
 
     // Add $ object access to prototype of each class
     Object.defineProperty( _class.prototype, '$', {
@@ -86,11 +72,11 @@ for (var i in _files){
 
     // avoid printing the code when logging the classes
     _class.toString = function(){ 
-      return "<"+c+" constructor>"
+      return "<" + _classname + " constructor>"
     }
 
     // assign the class as an unconfigurable member of $
-    Object.defineProperty( $, c, {
+    Object.defineProperty( $, _classname, {
       configurable: false,
       enumerable: true,
       value: _class
@@ -109,6 +95,17 @@ $.scn   = $.s;
 $.scene = $.s;
 $.getScene = $.s;
 
+
+/**
+ * Enum to set the debug level of debug statements.
+ * @name    $#DEBUG_LEVEL
+ * @enum
+ */
+$.DEBUG_LEVEL = {
+  'ERROR'   : 0,
+  'WARNING' : 1,
+  'LOG'     : 2
+}
 
 /**
  * Log the string to the MessageLog.
