@@ -104,7 +104,8 @@ $.getScene = $.s;
 $.DEBUG_LEVEL = {
   'ERROR'   : 0,
   'WARNING' : 1,
-  'LOG'     : 2
+  'LOG'     : 2,
+  'DEBUG'   : 3
 }
 
 /**
