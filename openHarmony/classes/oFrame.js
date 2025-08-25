@@ -218,7 +218,7 @@ Object.defineProperty(oFrame.prototype, 'isKey', {
 Object.defineProperty(oFrame.prototype, 'duration', {
     get : function(){
         var _startFrame = this.startFrame;
-        var _sceneLength = frame.numberOf()
+        var _sceneLength = frame.numberOf() + 1;
 
         if( !this.column ){
           return _sceneLength;
@@ -573,8 +573,7 @@ oFrame.prototype.extend = function( duration, replace ){
         }
     }
 
-
-    column.fillEmptyCels (this.column.name, _startFrame, duration + 1 );
+    column.fillEmptyCels (this.column.name, _startFrame, duration + _startFrame );
 }
 
 oFrame.toString = function(){

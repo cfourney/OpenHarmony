@@ -21,7 +21,7 @@
  * @param {QWidget}  parent                 The parent QWidget for the button. Automatically set during initialisation of the menu.
  *
  */
- oPieButton = function(iconFile, text, parent) {
+ function oPieButton (iconFile, text, parent) {
   // if icon isnt provided
   if (typeof parent === 'undefined') var parent = this.$.app.mainWindow
   if (typeof text === 'undefined') var text = ""
@@ -114,7 +114,7 @@ exports.oPieButton = oPieButton;
  * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  *
  */
- oColorButton = function(paletteName, colorName, showName, parent) {
+ function oColorButton (paletteName, colorName, showName, parent) {
   this.paletteName = paletteName;
   this.colorName = colorName;
 
@@ -172,7 +172,7 @@ exports.oColorButton = oColorButton;
  * @param {string}   iconFile                 An icon path for the button.
  * @param {QWidget}  parent                   The parent QWidget for the button. Automatically set during initialisation of the menu.
  */
-oPrefButton = function(preferenceString, text, iconFile, parent) {
+function oPrefButton (preferenceString, text, iconFile, parent) {
   this.preferenceString = preferenceString;
 
   if (typeof iconFile === 'undefined') var iconFile = specialFolders.resource+"/icons/toolproperties/settings.svg";

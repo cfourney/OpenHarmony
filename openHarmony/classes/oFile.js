@@ -17,7 +17,7 @@
  *
  * @property    {string}             path                     The path to the file.
  */
-oFile = function(path){
+function oFile (path){
   this._type = "file";
   this._path = fileMapper.toNativePath(path).split('\\').join('/');
 

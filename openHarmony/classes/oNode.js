@@ -3619,7 +3619,7 @@ exports.oGroupNode = oGroupNode;
  * @param   {string}         path                          Path to the node in the network.
  * @param   {oScene}         oSceneObject                  Access to the oScene object of the DOM.
  */
-oPegNode = function( path, oSceneObject ) {
+function oPegNode ( path, oSceneObject ) {
     if (node.type(path) != 'PEG') throw "'path' parameter must point to a 'PEG' type node";
     var instance = this.$.oNode.call( this, path, oSceneObject );
     if (instance) return instance;

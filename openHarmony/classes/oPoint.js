@@ -64,7 +64,7 @@
  * @property     {float}           y                              Vertical coordinate
  * @property     {float}           z                              Depth Coordinate
  */
-oPoint = function(x, y, z){
+function oPoint (x, y, z){
     if (typeof z === 'undefined') var z = 0;
 
     this._type = "point";
