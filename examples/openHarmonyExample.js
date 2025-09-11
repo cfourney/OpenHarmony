@@ -184,7 +184,7 @@ function makeCar(){
   if (!exportLocation) return; // if the user cancelled the dialog, we don't export.
 
   exportLocation += "/" + carGroup.name + ".tpl"
-  scene.exportTemplate([carGroup], exportLocation, "usedOnly") // "usedOnly" tells the export we only want the palettes used by the template to be included."
+  myScene.exportTemplate([carGroup], exportLocation, "usedOnly") // "usedOnly" tells the export we only want the palettes used by the template to be included."
 
   $.alert("Export finished!")
 
