@@ -22,6 +22,7 @@ function oTimeline (display){
   if (display instanceof this.$.oNode) display = display.path;
 
   this.display = display;
+  this._layers = [];
 }
 
 
@@ -45,10 +46,11 @@ Object.defineProperty(oTimeline.prototype, 'layers', {
  */
 Object.defineProperty(oTimeline.prototype, 'allLayers', {
   get : function(){
-    if (!this._layers){
-      var _layers = [];
-
-      if (!$.batchMode){
+    if (!this.$.batchMode){
+      // Timeline is not accurate in batch mode
+      if (Timeline.numLayers != this._layers.length){
+        var _layers = [];
+        // rebuild layers cache
         for( var i=0; i < Timeline.numLayers; i++ ){
           if (Timeline.layerIsNode(i)){
             var _layer = new this.$.oNodeLayer(this, i);
@@ -60,16 +62,21 @@ Object.defineProperty(oTimeline.prototype, 'allLayers', {
           }
           _layers.push(_layer);
         }
-      } else {
+        this._layers = _layers;
+      }
+    } else {
+      // Timeline is not accurate in batch mode so we just create layers based on nodes to avoid breaking export scripts
+      if (this.nodes.length != this._layers.length){
+        // rebuild layers cache
         var _tl = this;
         var _layers = this.nodes.map(function(x, index){
           if (x.type == "READ") return new _tl.$.oDrawingLayer(_tl, index);
           return new _tl.$.oNodeLayer(_tl, index)
         })
       }
-
       this._layers = _layers;
     }
+
     return this._layers;
   }
 });
@@ -85,8 +92,6 @@ Object.defineProperty(oTimeline.prototype, 'selectedLayers', {
     return this.allLayers.filter(function(x){return x.selected});
   }
 });
-
-
 
 
 /**
@@ -109,12 +114,7 @@ Object.defineProperty(oTimeline.prototype, 'compositionLayers', {
  */
 Object.defineProperty(oTimeline.prototype, 'nodes', {
   get : function(){
-    var _timeline = this.compositionLayersList;
-    var _scene = this.$.scene;
-
-    _timeline = _timeline.map( function(x){return _scene.getNodeByPath(x)} );
-
-    return _timeline;
+    return this.layers.map(function(x){return x.node})
   }
 });
 
@@ -154,7 +154,11 @@ Object.defineProperty(oTimeline.prototype, 'compositionLayersList', {
  */
 Object.defineProperty(oTimeline.prototype, "composition", {
   get: function(){
-    return compositionOrder.buildCompositionOrderForDisplay(this.display);
+    if (!node.type(this.display)) {
+      return compositionOrder.buildDefaultCompositionOrder();
+    }else{
+      return compositionOrder.buildCompositionOrderForDisplay(this.display);
+    }
   }
 })
 

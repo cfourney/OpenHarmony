@@ -19,7 +19,6 @@
  *
  * @property {int}                     index                 The index of the layer on the timeline.
  * @property {oTimeline}               timeline              The timeline associated to this layer.
- * @property {oNode}                   node                  The node associated to the layer.
  */
 function oLayer (oTimelineObject, layerIndex){
   this.timeline = oTimelineObject;
@@ -35,9 +34,9 @@ function oLayer (oTimelineObject, layerIndex){
 Object.defineProperty(oLayer.prototype, "node", {
   get: function(){
     if (this.$.batchMode){
-      _node = this.timeline.nodes[this.index];
+      var _node = this.timeline.nodes[this.index];
     } else {
-      _node = this.$.scn.getNodeByPath(Timeline.layerToNode(this.index));
+      var _node = this.$.scn.getNodeByPath(Timeline.layerToNode(this.index));
     }
     return _node
   }

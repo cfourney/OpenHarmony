@@ -1325,16 +1325,17 @@ oNode.prototype.getMatrixAtFrame = function (frameNumber){
  * Retrieves the node layer in the timeline provided.
  * @param   {oTimeline}   [timeline]     Optional: the timeline object to search the column Layer. (by default, grabs the current timeline)
  *
- * @return  {int}    The index within that timeline.
+ * @return  {oLayer}    The layer in that timeline.
  */
- oNode.prototype.getTimelineLayer = function(timeline){
+oNode.prototype.getTimelineLayer = function(timeline){
   if (typeof timeline === 'undefined') var timeline = this.$.scene.currentTimeline;
 
-  var _nodeLayers = timeline.layers.map(function(x){return x.node.path});
-  if (_nodeLayers.indexOf(this.path)<timeline.layers.length && _nodeLayers.indexOf(this.path)>0){
-    return timeline.layers[_nodeLayers.indexOf(this.path)];
-  }
-  return null
+  var _layers = timeline.layers;
+  var _paths = _layers.map(function(x){return x.node.path})
+  var _index = _paths.indexOf(this.path)
+
+  if (_index != -1)
+    return _layers[_index];
 }
 
 
