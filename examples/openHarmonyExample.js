@@ -10,19 +10,20 @@ function makeCar(){
   // we group the functions in an undo group to undo it all at once.
   $.beginUndo("makeCar");
 
-  var scene = $.scn;
+  // creating a shortcut for the scene "$.scn" object. Avoid using the "scene" name as it is already used by Harmony API
+  var myScene = $.scn;
 
   // get the main composite by getting all composites in the scene and keeping the first one.
   // a list of node types that exist in harmony is available here:
   // https://cfourney.github.io/OpenHarmony/NodeTypes.html
-  var sceneComposite = scene.getNodesByType("COMPOSITE")[0];
+  var sceneComposite = myScene.getNodesByType("COMPOSITE")[0];
 
   // --- creating the car's body ---
 
   // create a drawing node in the scene, with a single drawing spanning the scene
-  // scene.root is the root group of the scene (or "Top"), and is considered to be a oGroupNode.
+  // myScene.root is the root group of the scene (or "Top"), and is considered to be a oGroupNode.
   // each node will be added directly into it.
-  var carBodyNode = scene.root.addDrawingNode("car_body");
+  var carBodyNode = myScene.root.addDrawingNode("car_body");
 
   // set some basic attributes on the drawing node. List of attributes available here:
   // https://cfourney.github.io/OpenHarmony/NodeTypes.html#Drawing
@@ -38,7 +39,7 @@ function makeCar(){
   carBodyNode.timingColumn.extendExposures();
 
   // add a palette in the scene for our car.
-  var carPalette = scene.addPalette("car");
+  var carPalette = myScene.addPalette("car");
   carPalette.colors[0].remove(); // we remove the "Default" color created with the palette.
   var carColor = carPalette.addColor("Body", new $.oColorValue("ffff00"));
   var carFill = new $.oFillStyle(carColor.id);
@@ -53,7 +54,7 @@ function makeCar(){
   //
 
   // first we need to make sure the drawing we want to draw on is active
-  scene.activeDrawing = bodyDrawing;
+  myScene.activeDrawing = bodyDrawing;
 
   // note: Harmony coordinates system is not like most computer graphics, with y values starting at the top and going down.
   // positive y values go up, and the center of the coordinates is the middle of the drawing.
@@ -87,7 +88,7 @@ function makeCar(){
   var wheelLine = new $.oLineStyle(wheelLineColor.id, wheelStencil);
 
   // create the node, link it and create a drawing spanning the entire scene
-  var wheelNode = scene.root.addDrawingNode("car_wheel");
+  var wheelNode = myScene.root.addDrawingNode("car_wheel");
   wheelNode.use_drawing_pivot = "Apply Embeded Pivot On Parent Peg";
   wheelNode.can_animate = false;
   wheelNode.linkOutNode(sceneComposite);
@@ -96,7 +97,7 @@ function makeCar(){
   wheelNode.timingColumn.extendExposures();
 
   // draw a wheel onto the drawing, with the line on line art and color on color art
-  scene.activeDrawing = wheelDrawing;
+  myScene.activeDrawing = wheelDrawing;
   wheelDrawing.lineArt.drawCircle(new $.oPoint(0,0), 80, wheelLine);
   var innerCircle = wheelDrawing.lineArt.drawCircle(new $.oPoint(0,0), 45, wheelLine, null);
   var fullCircle = wheelDrawing.colorArt.drawCircle(new $.oPoint(0,0), 80, null, wheelFill);
@@ -122,7 +123,7 @@ function makeCar(){
   wheelDrawing.lineArt.drawStroke(wheelDetailPath, wheelLine);
 
   // create a peg to move the wheel at the back of the car
-  var wheelPeg = scene.root.addNode("PEG", "car_wheel-P");
+  var wheelPeg = myScene.root.addNode("PEG", "car_wheel-P");
   wheelPeg.linkOutNode(wheelNode);
   wheelPeg.centerAbove(wheelNode);
 
@@ -139,14 +140,14 @@ function makeCar(){
   frontWheelPeg.position.x = 1.2;
 
   // start rigging the car, by adding a master peg and linking the various elements:
-  var masterPeg = scene.root.addNode("PEG", "car-MASTER-P");
+  var masterPeg = myScene.root.addNode("PEG", "car-MASTER-P");
   masterPeg.linkOutNode(frontWheelPeg);
   masterPeg.linkOutNode(wheelPeg);
   masterPeg.linkOutNode(carBodyNode);
 
   // make a group with all our nodes, with a composite inside
   var carRigNodes = [masterPeg, carBodyNode, frontWheelPeg, frontWheelNode, wheelPeg, wheelNode];
-  var carGroup = scene.root.addGroup("car-MASTER", true, false, carRigNodes);
+  var carGroup = myScene.root.addGroup("car-MASTER", true, false, carRigNodes);
   carGroup.linkOutNode(sceneComposite);
 
   // we order the nodes inside the group to increase visibility
@@ -167,14 +168,14 @@ function makeCar(){
   // we create a little animation on the master peg, with rotation of the wheels
   var posxColumn = masterPeg.attributes.position.x.addColumn() // adding a column to the attribute allows to create keys when setting values;
   masterPeg.attributes.position.x.setValue(-10, 1);
-  masterPeg.attributes.position.x.setValue(10, scene.length);
+  masterPeg.attributes.position.x.setValue(10, myScene.length);
 
   posxColumn.keyframes[0].tween = true; // activate interpolation between the keys
 
   // animate the wheels turning. Since the wheels are cloned, their share the animation.
   // This time we'll set the values another way that is also supported:
   wheelPeg.rotation.anglez = {frameNumber:1, value:0};
-  wheelPeg.rotation.anglez = {frameNumber:scene.length, value:50000};
+  wheelPeg.rotation.anglez = {frameNumber:myScene.length, value:50000};
   wheelPeg.attributes.rotation.anglez.column.keyframes[0].tween = true;
 
   // now we have a rig that we like, we'll export it as a tpl.
