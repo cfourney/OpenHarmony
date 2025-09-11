@@ -60,6 +60,7 @@ Object.defineProperty(oTimeline.prototype, 'allLayers', {
           }else{
             var _layer = new this.$.oLayer(this, i);
           }
+
           _layers.push(_layer);
         }
         this._layers = _layers;
@@ -170,9 +171,9 @@ Object.defineProperty(oTimeline.prototype, "composition", {
  */
 oTimeline.prototype.refresh = function( ){
   if (!node.type(this.display)) {
-      this.composition = compositionOrder.buildDefaultCompositionOrder();
+      this._composition = compositionOrder.buildDefaultCompositionOrder();
   }else{
-      this.composition = compositionOrder.buildCompositionOrderForDisplay(this.display);
+      this._composition = compositionOrder.buildCompositionOrderForDisplay(this.display);
   }
 }
 

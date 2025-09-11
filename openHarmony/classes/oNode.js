@@ -1348,8 +1348,7 @@ oNode.prototype.getTimelineLayer = function(timeline){
 oNode.prototype.timelineIndex = function(timeline){
   if (typeof timeline === 'undefined') var timeline = this.$.scene.currentTimeline;
 
-  var _nodes = timeline.compositionLayersList;
-  return _nodes.indexOf(this.path);
+  return this.getTimelineLayer(timeline).layerIndex;
 }
 
 
