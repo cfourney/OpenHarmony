@@ -25,7 +25,6 @@
  * @property {$.oApp}      application               The Harmony Application Object.
  * @property {$.oApp}      app                       The Harmony Application Object.
  * @property {$.oNetwork}  network                   Access point for all the functions of the $.oNetwork class
- * @property {$.oUtils}    utils                     Access point for all the functions of the $.oUtils class
  * @property {$.oDialog}   dialog                    Access point for all the functions of the $.oDialog class
  * @property {Object}      global                    The global scope.
  *
@@ -279,6 +278,8 @@ $.chooseFile = function(){ return $.dialog.chooseFile.apply( $.dialog, arguments
  * @name    $#getHarmonyUIWidget
  * @param   {string}   name              The name of the widget to look for.
  * @param   {string}   [parentName]      The name of the parent widget to look into, in case of duplicates.
+ * 
+ * @returns {QWidget}                    The harmony UI widget that matches the name and parent specified
  */
 $.getHarmonyUIWidget = function(){ return $.app.getWidgetByName.apply( $.app, arguments ) }
 
@@ -362,6 +363,8 @@ $.redo = function( dist ){
  * 	Gets the preferences from the Harmony stage.
  * @name $#getPreferences
  * @function
+ * 
+ * @returns {$.oPreferences}                      the object that contains the preferences of the session
  */
 $.getPreferences = function( ){
   return new $.oPreferences();
@@ -369,7 +372,6 @@ $.getPreferences = function( ){
 
 //---- Attach Helpers ------
 $.network     = new $.oNetwork();
-$.utils       = $.oUtils;
 $.dialog      = new $.oDialog();
 $.global      = this;
 
@@ -377,7 +379,9 @@ $.global      = this;
 //---- Self caching -----
 
 /**
- * change this value to allow self caching across openHarmony when initialising objects.
+ * Change this value to allow self caching across openHarmony when initialising objects 
+ * Can help if scripts become too slow or if performance is critical. 
+ * Disabled by default.
  * @name $#useCache
  * @type {bool}
  */
@@ -388,6 +392,7 @@ $.useCache = false;
  * function to call in constructors of classes so that instances of this class
  * are cached and unique based on constructor arguments.
  * @returns a cached class instance or null if no cached instance exists.
+ * @private
  */
 $.getInstanceFromCache = function(){
   if (!this.__proto__.hasOwnProperty("__cache__")) {
@@ -421,6 +426,7 @@ $.getInstanceFromCache = function(){
 /**
  * invalidate all cache for classes that are self caching.
  * Will be run at each include('openHarmony.js') statement.
+ * @private
  */
 $.clearOpenHarmonyCache = function(){
   // clear cache at openHarmony loading.
