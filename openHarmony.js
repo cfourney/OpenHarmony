@@ -49,7 +49,7 @@ if (!this.__proto__.hasOwnProperty("$")){ // only run on the first include
   for (var i in this.__proto__){
     if (i == "$" || $.hasOwnProperty(i)) continue; // skip the objects created by openHarmony so we can reload them
 
-    Object.defineProperty( this.__proto__, i, {
+    Object.defineProperty( this, i, {
       configurable: false,
       enumerable: true,
       get: function(){
