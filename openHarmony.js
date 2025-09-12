@@ -43,29 +43,33 @@ MessageLog.trace("loading openHarmony.js");
 var $ = require("/openHarmony/base.js"); // to include the library itself under a different namespace/scope, use this file
 $.tests = require("/tests/runtests.js")
 
-// Add global access to $ object
-this.__proto__.$ = $
 
+// protect harmony namespace from overwrites by recreating all properties as non configurable
+if (!this.__proto__.hasOwnProperty("$")){ // only run on the first include
+  for (var i in this.__proto__){
+    if (i == "$" || $.hasOwnProperty(i)) continue; // skip the objects created by openHarmony so we can reload them
+
+    Object.defineProperty( this.__proto__, i, {
+      configurable: false,
+      enumerable: true,
+      get: function(){
+        var objectName = i;
+        return function(){return this.__proto__[objectName];};
+      }(),
+      set: function(){
+        var objectName = i;
+        return function(){throw new Error(objectName+" is a protected object from Harmony API. Cannot overwrite.");};
+      }(),
+    });
+  }
+}
 
 // Add the openHarmony classes to the global scope
 for( var classItem in $ ){
-  if((typeof $[classItem]) == "function") 
+  if((typeof $[classItem]) == "function"){
     this.__proto__[classItem] = $[classItem];
+  }
 }
 
-
-// protect harmony namespace from overwrites by recreating all properties as non configurable
-for (var i in this.__proto__){
-  Object.defineProperty( this, i, {
-    configurable: false,
-    enumerable: true,
-    get: function(){
-      var objectName = i;
-      return function(){return this.__proto__[objectName];};
-    }(),
-    set: function(){
-      var objectName = i;
-      return function(){throw new Error(objectName+" is a protected object from Harmony API. Cannot overwrite.");};
-    }(),
-  });
-}
+// Add global access to $ object
+this.__proto__.$ = $;
