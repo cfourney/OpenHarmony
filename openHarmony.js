@@ -42,11 +42,29 @@
 MessageLog.trace("loading openHarmony.js");
 var $ = require("/openHarmony/base.js"); // to include the library itself under a different namespace/scope, use this file
 
-// // Add global access to $ object
+// Add global access to $ object
 this.__proto__.$ = $
 
-//Add the openHarmony classes to the global scope
+
+// Add the openHarmony classes to the global scope
 for( var classItem in $ ){
   if((typeof $[classItem]) == "function") 
     this.__proto__[classItem] = $[classItem];
+}
+
+
+// protect harmony namespace from overwrites by recreating all properties as non configurable
+for (var i in this.__proto__){
+  Object.defineProperty( this, i, {
+    configurable: false,
+    enumerable: true,
+    get: function(){
+      var objectName = i;
+      return function(){return this.__proto__[objectName];};
+    }(),
+    set: function(){
+      var objectName = i;
+      return function(){throw new Error(objectName+" is a protected object from Harmony API. Cannot overwrite.");};
+    }(),
+  });
 }
