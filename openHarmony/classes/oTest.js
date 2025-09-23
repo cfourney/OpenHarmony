@@ -46,7 +46,7 @@ oTest.prototype.execute = function(){
  * @param   {any}      value         the expected value
  * @param   {string}   message       a message that will be printed in the error thrown if the variable value isn't correct
  */
-oTest.prototype.assert = require("../tests/assert.js")
+oTest.prototype.assert = require("../tests/helpers.js").assert
 
 
 /**
