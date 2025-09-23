@@ -2511,7 +2511,8 @@ Object.defineProperty(oGroupNode.prototype, "backdrops", {
   get : function() {
     var _path = this.path;
     var _backdropObjects = Backdrop.backdrops(this.path);
-    var _backdrops = _backdropObjects.map(function(x){return new this.$.oBackdrop(_path, x)});
+    var _this = this;
+    var _backdrops = _backdropObjects.map(function(x){return new _this.$.oBackdrop(_path, x)});
 
     return _backdrops;
   }
@@ -2880,7 +2881,7 @@ oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeNod
  * @return {$.oNode[]}         The resulting pasted nodes.
  */
 oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, extendScene, nodePosition, pasteOptions ){
-  if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
+  if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
   if (typeof destinationNodes === 'undefined' || destinationNodes.length == 0) var destinationNodes = false;
   if (typeof extendScene === 'undefined') var extendScene = true;
 
