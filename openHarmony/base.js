@@ -51,42 +51,69 @@ const $ = {
   debug_level : 0
 };
 
-// loading class files into $ object
-var _dir = new QDir($.directory + "/classes");
-_dir.setNameFilters(["*.js"]);
-_dir.setFilter( QDir.Files);
-var _files = _dir.entryList();
+// loading class files from modules included in path into destination object
+function loadModulesFromFolder(path, destinationObject){
+  var _dir = new QDir(path);
+  _dir.setNameFilters(["*.js"]);
+  _dir.setFilter( QDir.Files);
+  var _files = _dir.entryList();
 
-for (var i in _files){
-  var _classes = require($.directory + "/classes/" + _files[i]);
-  for (var _classname in _classes){
-    var _class = _classes[_classname];
+  for (var i in _files){
+    var _classes = require(path + "/" + _files[i]);
+    for (var _classname in _classes){
+      var _class = _classes[_classname];
 
+      // avoid printing the code when logging the classes
+      _class.toString = function(){ 
+        return "<" + _classname + " constructor>"
+      }
+
+      // assign the class as an unconfigurable member of $
+      Object.defineProperty( destinationObject, _classname, {
+        configurable: false,
+        enumerable: true,
+        value: _class
+      });
+    }
+  }
+}
+
+loadModulesFromFolder($.directory + "/classes", $);
+
+for (var i in $){
+  if (typeof $[i] === 'function') {
     // Add $ object access to prototype of each class
-    Object.defineProperty( _class.prototype, '$', {
+    Object.defineProperty( $[i].prototype, '$', {
       configurable: false,
       enumerable: false,
       value: $
     });
-
-    // avoid printing the code when logging the classes
-    _class.toString = function(){ 
-      return "<" + _classname + " constructor>"
-    }
-
-    // assign the class as an unconfigurable member of $
-    Object.defineProperty( $, _classname, {
-      configurable: false,
-      enumerable: true,
-      value: _class
-    });
   }
 }
+
+
+$.tests = {
+  tests: {},
+  run: function(){
+    for (var i in $.tests.tests){
+      if (i == 'disconnect' || i == 'connect') continue // bypass some QObject default properties
+      
+      $.log(i+' '+JSON.stringify($.tests.tests[i]))
+      var _test = new $.oTest($.tests.tests[i]); // delay creation of oTest object to avoid inheritance issues while using require
+      _test.execute();
+    }
+    $.oTest.reportErrors();
+  }
+}
+
+loadModulesFromFolder($.directory + "/tests", $.tests.tests);
+
 
 //---- App  --------------
 $.app = new $.oApp();
 $.application = $.app;
 $.getApplication = $.app;
+
 
 //---- Scene  --------------
 $.s     = new $.oScene();
