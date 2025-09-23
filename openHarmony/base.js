@@ -80,9 +80,9 @@ function loadModulesFromFolder(path, destinationObject){
 
 loadModulesFromFolder($.directory + "/classes", $);
 
+// Add $ object access to prototype of each class
 for (var i in $){
   if (typeof $[i] === 'function') {
-    // Add $ object access to prototype of each class
     Object.defineProperty( $[i].prototype, '$', {
       configurable: false,
       enumerable: false,
@@ -91,21 +91,19 @@ for (var i in $){
   }
 }
 
-
+// Load tests
 $.tests = {
   tests: {},
   run: function(){
     for (var i in $.tests.tests){
       if (i == 'disconnect' || i == 'connect') continue // bypass some QObject default properties
-      
-      $.log(i+' '+JSON.stringify($.tests.tests[i]))
+
       var _test = new $.oTest($.tests.tests[i]); // delay creation of oTest object to avoid inheritance issues while using require
       _test.execute();
     }
     $.oTest.reportErrors();
   }
 }
-
 loadModulesFromFolder($.directory + "/tests", $.tests.tests);
 
 
