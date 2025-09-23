@@ -9,7 +9,6 @@
 //////////////////////////////////////
 
 
-//TODO: Metadata, settings, aspect, camera peg, view.
 /**
  * The constructor for $.oScene.
  * @classdesc

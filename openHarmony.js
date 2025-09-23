@@ -41,7 +41,6 @@
 // including this file will give access to the openHarmony library through the $ object and global scope.
 MessageLog.trace("loading openHarmony.js");
 var $ = require("/openHarmony/base.js"); // to include the library itself under a different namespace/scope, use this file
-$.tests = require("/tests/runtests.js")
 
 
 // protect harmony namespace from overwrites by recreating all properties as non configurable
