@@ -26,6 +26,7 @@ oTest.errors = [];
 
 oTest.prototype.execute = function(){
   MessageLog.trace(" Test : "+this.params.message);
+  this.$.beginUndo(" Test : "+this.params.message);
   try{
     this.params.prepare();
     this.params.run();
@@ -35,6 +36,8 @@ oTest.prototype.execute = function(){
     MessageLog.trace(" Test : "+this.params.message + " failed : "+e)
     oTest.errors.push(" Test : "+this.params.message + " failed : "+e)
   }
+  this.$.endUndo();
+  this.$.undo(); // restore scene to state before the test
 }
 
 /**
