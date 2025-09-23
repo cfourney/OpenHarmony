@@ -96,7 +96,7 @@ $.tests = {
   tests: {},
   run: function(){
     for (var i in $.tests.tests){
-      if (i == 'disconnect' || i == 'connect') continue // bypass some QObject default properties
+      if (i == 'disconnect' || i == 'connect' || i == 'assert') continue // bypass some QObject default properties and test helpers
 
       var _test = new $.oTest($.tests.tests[i]); // delay creation of oTest object to avoid inheritance issues while using require
       _test.execute();

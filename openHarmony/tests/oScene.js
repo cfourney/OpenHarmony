@@ -1,4 +1,4 @@
-var assert = require("./assert.js")
+var assert = require("helpers.js").assert
 
 // ----------------------- oScene tests ----------------------//
 exports.testSceneLength = {
