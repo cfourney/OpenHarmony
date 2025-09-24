@@ -64,9 +64,12 @@ function loadModulesFromFolder(path, destinationObject){
       var _class = _classes[_classname];
 
       // avoid printing the code when logging the classes
-      _class.toString = function(){ 
-        return "<" + _classname + " constructor>"
-      }
+      _class.toString = function(){
+        var _name = _classname;
+        return function(){
+          return "<" + _name + " constructor>"
+        }
+      }()
 
       // assign the class as an unconfigurable member of $
       Object.defineProperty( destinationObject, _classname, {
