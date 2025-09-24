@@ -44,6 +44,7 @@ for (var i in this.__proto__){
 
   Object.defineProperty( this, i, {
     configurable: false,
+    configurable: true,
     enumerable: true,
     get: function(){
       var objectName = i;

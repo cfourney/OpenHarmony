@@ -1,6 +1,6 @@
 var assert = require("helpers.js").assert
 
-// ----------------------- oNode tests ----------------------//
+// ----------------------- General tests ----------------------//
 exports.testAPIprotecting = {
     message:"api protecting",
     prepare:function(){
