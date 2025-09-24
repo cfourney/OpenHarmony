@@ -6,16 +6,19 @@ exports.testAPIprotecting = {
     prepare:function(){
     },
     run:function(){
-        var export_backup = exports
-
+        // testing overwriting of the api in the global scope
         try{
             node = 'test'
-            exports = 'test2'
         }catch(e){
             assert(e, 'Error: node is a protected object from Harmony API. Cannot overwrite.', 'API is not protected')
         }
 
-        exports = export_backup
+        // testing overwriting some values that should be overwritable
+        var export_backup = exports;
+        exports = 'test2'; // this should not raise the same error
+        exports = export_backup;
+
+        // testing overwriting the same variable name in a more restricted scope (allowed)
         function test(){
             var node = "test";
         }
