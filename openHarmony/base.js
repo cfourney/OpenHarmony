@@ -345,7 +345,10 @@ $.beginUndo = function( undoName ){
  * @function
  */
 $.cancelUndo = function( ){
-  scene.cancelUndoRedoAccum( );
+  if (!$.hasOwnProperty("undoStackSize")) $.undoStackSize = 1;
+  
+  $.undoStackSize--;
+  if ($.undoStackSize == 0)   scene.cancelUndoRedoAccum();
 }
 
 /**
