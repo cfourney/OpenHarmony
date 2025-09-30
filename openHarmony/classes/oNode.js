@@ -1329,11 +1329,8 @@ oNode.prototype.getMatrixAtFrame = function (frameNumber){
  */
 oNode.prototype.getTimelineLayer = function(timeline){
   if (typeof timeline === 'undefined') var timeline = this.$.scene.currentTimeline;
-
-  var _layers = timeline.layers;
-  var _paths = _layers.map(function(x){return x.node.path})
-  var _index = _paths.indexOf(this.path)
-
+  var _index = this.timelineIndex(timeline);
+  
   if (_index != -1)
     return _layers[_index];
 }
@@ -1343,12 +1340,14 @@ oNode.prototype.getTimelineLayer = function(timeline){
  * Retrieves the node index in the timeline provided.
  * @param   {oTimeline}   [timeline]     Optional: the timeline object to search the column Layer. (by default, grabs the current timeline)
  *
- * @return  {int}    The index within that timeline.
+ * @return  {int}    The index within that timeline. -1 if the layer is not found on the given timeline
  */
 oNode.prototype.timelineIndex = function(timeline){
   if (typeof timeline === 'undefined') var timeline = this.$.scene.currentTimeline;
 
-  return this.getTimelineLayer(timeline).layerIndex;
+  var _layers = timeline.layers;
+  var _paths = _layers.map(function(x){return x.node.path})
+  return _paths.indexOf(this.path);
 }
 
 
