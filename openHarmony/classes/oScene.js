@@ -1410,14 +1410,11 @@ oScene.prototype.addPalette = function(name, insertAtIndex, paletteStorage, stor
 
   var _destination = this.$.oPalette.location[paletteStorage]
   if (paletteStorage == "element") var storeInElement = storeInElement.id;
-
-  this.$.log(paletteStorage+" "+_destination)
-
   if (paletteStorage == "external") var _palette = new this.$.oPalette(_list.createPalette(storeInElement+"/"+name, insertAtIndex), _list);
 
   // can fail if database lock wasn't released
   var _palette = new this.$.oPalette(_list.createPaletteAtLocation(_destination, storeInElement, name, insertAtIndex), _list);
-  this.$.log("created palette : "+_palette.path)
+  this.$.debug("created palette : "+_palette.path, this.$.DEBUG_LEVEL.LOG);
   return _palette;
 }
 

@@ -1,6 +1,6 @@
 var assert = require("helpers.js").assert
 
-// ----------------------- oScene tests ----------------------//
+// ----------------------- oArtLayer tests --------------------//
 exports.testArtLayerShapes = {
   message: "oArtLayer.shapes",
   disableUndo: true, //required because Undo crashes with this test for some reason

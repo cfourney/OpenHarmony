@@ -43,7 +43,7 @@ function oFillStyle (colorId, fillMatrix) {
   this.colorId = colorId;
   this.fillMatrix = fillMatrix;
 
-  this.$.log("new fill created: " + colorId + " " + JSON.stringify(this.fillMatrix))
+  this.$.debug("new fill created: " + colorId + " " + JSON.stringify(this.fillMatrix), this.$.DEBUG_LEVEL.LOG)
 }
 
 
