@@ -2028,7 +2028,7 @@ Object.defineProperty(oDrawingNode.prototype, "element", {
   },
 
   set : function( oElementObject ){
-    var _column = this.attributes.drawing.element.column;
+    var _column = this.timingColumn;
     column.setElementIdOfDrawing( _column.uniqueName, oElementObject.id );
   }
 });
@@ -2041,12 +2041,17 @@ Object.defineProperty(oDrawingNode.prototype, "element", {
  */
 Object.defineProperty(oDrawingNode.prototype, "timingColumn", {
   get : function(){
-    return this.attributes.drawing.element.column;
+    var _isTimingNode = this.drawing.element_mode;
+    var _attr = _isTimingNode ? this.attributes.drawing.element : this.attributes.drawing.custom_name.timing;
+    var _column = _attr.column;
+    return _column;
   },
 
   set : function (oColumnObject){
-    var _attribute = this.attributes.drawing.element;
-    _attribute.column = oColumnObject;
+    var _isTimingNode = this.drawing.element_mode;
+    var _attr = _isTimingNode?this.attributes.drawing.element:this.attributes.drawing.custom_name.timing;
+
+    _attr.column = oColumnObject;   
   }
 });
 
@@ -2134,7 +2139,7 @@ Object.defineProperty(oDrawingNode.prototype, "usedColors", {
  */
 Object.defineProperty(oDrawingNode.prototype, "timings", {
     get : function(){
-        return this.attributes.drawing.element.getKeyframes();
+      return this.timingColumn.getKeyframes();
     }
 })
 
@@ -2162,8 +2167,7 @@ Object.defineProperty(oDrawingNode.prototype, "palettes", {
 oDrawingNode.prototype.getDrawingAtFrame = function(frameNumber){
   if (typeof frame === "undefined") var frame = this.$.scene.currentFrame;
 
-  var _attribute = this.attributes.drawing.element
-  return _attribute.getValue(frameNumber);
+  return this.timingColumn.getValue(frameNumber);
 }
 
 
@@ -3540,7 +3544,7 @@ oGroupNode.prototype.importQT = function( path, importSound, extendScene, alignm
   var _elementName = _element.name;
 
   var _movieNode = this.addDrawingNode(_movieName, nodePosition, _element);
-  var _column = _movieNode.attributes.drawing.element.column;
+  var _column = _movieNode.timingColumn;
   _element.column = _column;
 
   // setup the node

@@ -525,6 +525,9 @@ Object.defineProperty(oScene.prototype, 'elements', {
     var _nodes = $.scene.getNodesByType("READ");
     for (var n in _nodes) {
       var _element = _nodes[n].element;
+      if (!_element)
+        continue
+      
       var _layer = _element._synchedLayer;
       var _foundDuplicate = false;
       // store ids and layer info (synced drawings) to avoid duplicates
@@ -728,9 +731,11 @@ Object.defineProperty(oScene.prototype, 'activeDrawing', {
       var _frame = this.currentFrame;
       return _node.getDrawingAtFrame(_frame);
     }else{
-      var _curDrawing = _settings.currentDrawing.drawingId;
+      var _curDrawing = _settings.currentDrawing;
       if (!_curDrawing) return null;
-      return _node.element.getDrawingById(_curDrawing);
+
+      var _element = this.getElementById(_curDrawing.elementId);
+      return _element.getDrawingById(_curDrawing.drawingId);
     }
   },
 
