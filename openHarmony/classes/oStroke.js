@@ -435,6 +435,32 @@ Object.defineProperty(oContour.prototype, "fill", {
   }
 })
 
+
+/**
+ * The list of oVertex paths describing each hole in the contour.
+ * @name $.oContour#holes
+ * @type {$.oVertex[][]}
+*/
+Object.defineProperty(oContour.prototype, 'holes', {
+  get: function () {
+    if (!this.hasOwnProperty("_holes")){
+      var _contour = this;
+      var _holes = [];
+
+      for (var i in this._data.holes){
+        _holes.push(this._data.holes[i].map(function(point, index){
+          return new _contour.$.oVertex(_contour, point.x, point.y, point.onCurve, index);
+        }))
+      }
+
+      this._holes = _holes;
+    }
+    return this._holes;
+  }
+})
+
+
+
 /**
  * @private
  */

@@ -215,12 +215,14 @@ oArtLayer.prototype.drawCircle = function(center, radius, lineStyle, fillStyle){
  * @param {$.oFillStyle}   [fillStyle]  the fill information for the path. (By default, will use the current palette selection)
  * @param {bool}   [polygon]            Wether bezier handles should be created for the points in the path (ignores "onCurve" properties of oVertex from path)
  * @param {bool}   [createUnderneath]   Wether the new shape will appear on top or underneath the contents of the layer. (not working yet)
+ * @param {$.oVertex[][]}    masks      an array of $.oVertex arrays that describes a path for each mask (or hole) to draw in the shape.
  */
-oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, createUnderneath){
+oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, createUnderneath, masks){
   if (typeof fillStyle === 'undefined') var fillStyle = new this.$.oFillStyle();
   if (typeof lineStyle === 'undefined') var lineStyle = new this.$.oLineStyle();
   if (typeof polygon === 'undefined') var polygon = false;
   if (typeof createUnderneath === 'undefined') var createUnderneath = false;
+  if (typeof masks === 'undefined') var masks = [];
 
   var index = this.shapes.length;
 
@@ -256,6 +258,11 @@ oArtLayer.prototype.drawShape = function(path, lineStyle, fillStyle, polygon, cr
     layers: [shapeDescription]
   };
 
+  if (masks.length){
+    config.masks = masks.map(function(vertexList){
+      return { path:vertexList };
+    })
+  }
 
   var layers = DrawingTools.createLayers(config);
 
@@ -356,5 +363,7 @@ oArtLayer.prototype.getShapeByIndex = function (index) {
 oArtLayer.prototype.toString = function(){
   return "Object $.oArtLayer ["+this.name+"]";
 }
+
+
 
 exports.oArtLayer = oArtLayer;

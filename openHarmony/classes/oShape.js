@@ -275,6 +275,24 @@ oShape.prototype.remove = function(){
 
 
 /**
+ * Stub. Not yet implemented
+ * @private
+ */
+oShape.prototype.copy = function(destination, offsetx, offsety){
+  throw new Error('oShape.copy is not yet implemented')
+  if (typeof destination === undefined){
+    var destination = this.artLayer;
+  } else if (destination instanceof $.oDrawing){
+    // copy to the same artlayer as current if destination is a oDrawing (artLayer not specified)
+    destination = destination[this.artLayer.name];
+  }
+
+  //path, lineStyle, fillStyle, polygon, createUnderneath, masks
+  //var shape = destination.drawShape(this.path, this.lineStyle)
+}
+
+
+/**
  * Deletes the shape from its artlayer.
  * Warning : Because shapes are referenced by index, deleting a shape
  * that isn't at the end of the list of shapes from this layer
