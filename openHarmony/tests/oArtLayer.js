@@ -42,15 +42,33 @@ exports.testArtLayerShapes = {
       {x:200,y:-150, onCurve:true},
     ]
 
+    var holesPath = [
+      [
+        {x:10,y:-20, onCurve:true},
+        {x:20,y:-20, onCurve:true},
+        {x:20,y:-10, onCurve:true},
+        {x:10,y:-10, onCurve:true},
+        {x:10,y:-20, onCurve:true},
+      ],
+      [
+        {x:10,y:20, onCurve:true},
+        {x:20,y:20, onCurve:true},
+        {x:20,y:10, onCurve:true},
+        {x:10,y:10, onCurve:true},
+        {x:10,y:20, onCurve:true},
+      ]
+    ]
+
     $.scn.activeDrawing = drawing; // required for drawing
     drawing.lineArt.drawStroke(shapePath, lineStyle, null);
-    drawing.colorArt.drawShape(shapePath, null, fillStyle);
+    drawing.colorArt.drawShape(shapePath, null, fillStyle, false, false, holesPath);
     assert(drawing.lineArt.shapes.length, 1, 'shape was not created on lineArt');
     assert(drawing.lineArt.strokes.length, 1, 'stroke was not found on lineArt');
     assert(drawing.lineArt.contours.length, 0, 'fill was not found on lineArt');
     assert(drawing.colorArt.shapes.length, 1, 'shape was not created on lineArt');
     assert(drawing.colorArt.strokes.length, 0, 'stroke was not found on lineArt');
     assert(drawing.colorArt.contours.length, 1, 'fill was not found on lineArt');
+    assert(drawing.colorArt.contours[0].holes.length, 2, 'fill holes not created');
   },
   check: function () {
     // undo is handled manually to avoid Harmony crash
