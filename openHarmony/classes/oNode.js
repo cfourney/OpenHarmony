@@ -1330,7 +1330,7 @@ oNode.prototype.getMatrixAtFrame = function (frameNumber){
 oNode.prototype.getTimelineLayer = function(timeline){
   if (typeof timeline === 'undefined') var timeline = this.$.scene.currentTimeline;
   var _index = this.timelineIndex(timeline);
-  
+
   if (_index != -1)
     return _layers[_index];
 }
@@ -1610,6 +1610,13 @@ oNode.prototype.clone = function( newName, newPosition ){
 
   for (var i in _attributes){
     var _clonedAttribute = _clonedNode.getAttributeByName(_attributes[i].keyword);
+
+    // handle custom attributes
+    if (_clonedAttribute == undefined || _clonedAttribute == null){
+      _clonedNode.createAttribute(_attributes[i].keyword, _attributes[i].type, _attributes[i].name, !!_attributes[i].column)
+      _clonedAttribute = _clonedNode.getAttributeByName(_attributes[i].keyword);
+    }
+
     _clonedAttribute.setToAttributeValue(_attributes[i]);
   }
 
@@ -1640,6 +1647,13 @@ oNode.prototype.duplicate = function(newName, newPosition){
 
   for (var i in _attributes){
     var _duplicateAttribute = _duplicateNode.getAttributeByName(_attributes[i].keyword);
+
+    // handle custom attributes
+    if (_duplicateAttribute  == undefined || _duplicateAttribute  == null){
+      _duplicateNode.createAttribute(_attributes[i].keyword, _attributes[i].type, _attributes[i].name, !!_attributes[i].column)
+      _duplicateAttribute  = _duplicateNode.getAttributeByName(_attributes[i].keyword);
+    }
+
     _duplicateAttribute.setToAttributeValue(_attributes[i], true);
   }
 
