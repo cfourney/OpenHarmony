@@ -2051,7 +2051,7 @@ Object.defineProperty(oDrawingNode.prototype, "timingColumn", {
     var _isTimingNode = this.drawing.element_mode;
     var _attr = _isTimingNode?this.attributes.drawing.element:this.attributes.drawing.custom_name.timing;
 
-    _attr.column = oColumnObject;   
+    _attr.column = oColumnObject;
   }
 });
 
@@ -3560,6 +3560,8 @@ oGroupNode.prototype.importQT = function( path, importSound, extendScene, alignm
 
   // progressDialog will display an infinite loading bar as we don't have precise feedback
   var progressDialog = new this.$.oProgressDialog("Importing video...", 0, "Import Movie", true);
+  progressDialog.range = 100;
+  progressDialog.value = 1;
 
   // setup import
   MovieImport.setMovieFilename(_QTFile.path);
@@ -3570,17 +3572,18 @@ oGroupNode.prototype.importQT = function( path, importSound, extendScene, alignm
   MovieImport.doImport();
   this.$.log("conversion finished");
 
-  progressDialog.range = 100;
-  progressDialog.value = 80;
+  progressDialog.value = convertToTvg?50:80;
 
   var _movielength = MovieImport.numberOfImages();
 
   if (extendScene && this.scene.length < _movielength) this.scene.length = _movielength;
 
   // create a drawing for each frame
+  var step = (95 - progressDialog.value) / _movielength;
   for (var i=1; i<=_movielength; i++) {
     _drawingPath = _tempFolder + "/" + _movieName + "-" + i + ".png";
     _element.addDrawing(i, i, _drawingPath, convertToTvg);
+    progressDialog.value += step;
   }
 
   progressDialog.value = 95;

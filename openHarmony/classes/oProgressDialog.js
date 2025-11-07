@@ -38,11 +38,11 @@ function oProgressDialog ( labelText, range, title, show ){
   this.wasCanceled = false;
 
   if (!this.$.batchMode) {
-    this.progress = new QProgressDialog();
+    this.progress = new QProgressDialog(this.$.app.mainWindow);
     this.progress.title = this._title;
     this.progress.setLabelText( this._labelText );
     this.progress.setRange( 0, this._range );
-    this.progress.setWindowFlags(Qt.Popup|Qt.WindowStaysOnTopHint)
+    //this.progress.setWindowFlags(Qt.Popup|Qt.WindowStaysOnTopHint)
 
     this.progress["canceled()"].connect( this, function(){this.wasCanceled = true; this.canceled.emit()} );
 
