@@ -3606,7 +3606,7 @@ oGroupNode.prototype.importQT = function( path, importSound, extendScene, alignm
   if (importSound && MovieImport.isAudioFileCreated() ){
     var _soundName = _elementName + "_sound";
     var _soundColumn = this.scene.addColumn("SOUND", _soundName);
-    column.importSound( _soundColumn.name, 1, _audioPath);
+    column.importSound( _soundColumn.name, 4, _audioPath); // countering an MovieExport bug that cuts off the start of the sound
   }
 
   progressDialog.value = 100;
