@@ -3411,17 +3411,6 @@ oGroupNode.prototype.importImage = function( path, alignment, nodePosition, conv
   _imageNode.apply_matte_to_color = "Straight";
   _imageNode.alignment_rule = alignment;
 
-  if (convertToTvg) {
-    var _scale = 1
-    if (resized_axis == "Y") {
-      _scale = this.scene.defaultResolutionY/CELIO.getInformation(_imageFile.path).height;
-    } else if (resized_axis == "X") {
-      _scale = this.scene.defaultResolutionX/CELIO.getInformation(_imageFile.path).width;
-    }
-    _imageNode.scale.x = _scale;
-    _imageNode.scale.y = _scale;
-  }
-
   _imageNode.attributes.drawing.element.setValue(_drawing.name, 1);
   _imageNode.attributes.drawing.element.column.extendExposures();
 
