@@ -82,17 +82,24 @@ oDialog.prototype.confirm = function( labelText, title, okButtonText, cancelButt
   if (typeof okButtonText === 'undefined')     var okButtonText = "OK";
   if (typeof cancelButtonText === 'undefined') var cancelButtonText = "Cancel";
 
-  var d = new Dialog();
-      d.title            = title;
-      d.okButtonText     = okButtonText;
-      d.cancelButtonText = cancelButtonText;
+ if (typeof labelText === 'undefined') var labelText = "Alert!";
+  if (typeof title === 'undefined') var title = "Alert";
+  if (typeof okButtonText === 'undefined') var okButtonText = "OK";
+
+  this.$.debug(labelText, this.$.DEBUG_LEVEL.LOG)
+
+  var d = new QMessageBox( this.$.app.mainWindow );
+  d.setWindowTitle( title );
+  d.addButton(okButtonText, QMessageBox.AcceptRole);
+  d.addButton(cancelButtonText, QMessageBox.RejectRole);
+  d.setAttribute(Qt.WA_DeleteOnClose);
+
+  var position = this.$.app.center;
+  d.move(position.x, position.y);
 
   if( labelText ){
-    var label = new Label;
-    label.text = labelText;
+    d.text = labelText;
   }
-
-  d.add( label );
 
   if ( !d.exec() ){
     return false;
@@ -121,10 +128,13 @@ oDialog.prototype.alert = function( labelText, title, okButtonText ){
 
   this.$.debug(labelText, this.$.DEBUG_LEVEL.LOG)
 
-  var d = new QMessageBox( false, title, labelText, QMessageBox.Ok );
+  var d = new QMessageBox( this.$.app.mainWindow );
   d.setWindowTitle( title );
+  d.addButton(okButtonText, QMessageBox.AcceptRole);
+  d.setAttribute(Qt.WA_DeleteOnClose);
 
-  d.buttons()[0].text = okButtonText;
+  var position = this.$.app.center;
+  d.move(position.x, position.y);
 
   if( labelText ){
     d.text = labelText;
@@ -193,7 +203,7 @@ oDialog.prototype.toast = function(labelText, position, duration, color){
 
   if (typeof duration === 'undefined') var duration = 2000;
   if (typeof color === 'undefined') var color = new $.oColorValue(0,0,0);
-  
+
   var toast = new QWidget()
   if (this.$.app.version + this.$.app.minorVersion > 21){
     // above Harmony 21.1
