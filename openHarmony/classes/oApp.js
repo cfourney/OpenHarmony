@@ -149,6 +149,46 @@ Object.defineProperty(oApp.prototype, 'globalMousePosition', {
 
 
 /**
+ * The Position of the center of the app main window.
+ * @name $.oApp#center
+ * @type {$.oPoint}
+ * @readonly
+ */
+Object.defineProperty(oApp.prototype, 'center', {
+  get : function(){
+    if (this.$.app.version + this.$.app.minorVersion > 21){
+      var geometry = QApplication.activeWindow().geometry;
+      var center = new this.$.oPoint(geometry.x() + geometry.width()/2, geometry.y() + geometry.height()/2)
+    } else {
+      var center = QApplication.desktop().screen().rect.center();
+    }
+
+    return new this.$.oPoint(center);
+  }
+});
+
+
+/**
+ * The size of the app mainwidow in pixels.
+ * @name $.oApp#size
+ * @type {$.oPoint}
+ * @readonly
+ */
+Object.defineProperty(oApp.prototype, 'size', {
+  get : function(){
+    if (this.$.app.version + this.$.app.minorVersion > 21){
+      var center = QApplication.activeWindow().geometry;
+    } else {
+      var center = QApplication.desktop().screen().rect.size();
+    }
+
+    return new this.$.oPoint(center.width(), center.height());
+  }
+});
+
+
+
+/**
  * Access the tools available in the application
  * @name $.oApp#tools
  * @type {$.oTool[]}
