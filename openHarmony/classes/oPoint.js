@@ -66,12 +66,24 @@
  */
 function oPoint (x, y, z){
     if (typeof z === 'undefined') var z = 0;
-
     this._type = "point";
 
-    this.x = x;
-    this.y = y;
-    this.z = z;
+    if (typeof x === 'number'){
+      this.x = x;
+      this.y = y;
+      this.z = z;
+    } else if (x instanceof this.$.oPoint){
+      this.x = x.x;
+      this.y = x.y;
+      this.z = x.z;
+    } else if (x instanceof QPoint){
+      this.x = x.x();
+      this.y = x.y();
+      if (x.z)
+        this.z = x.z();
+      else
+        this.z = 0;
+    }
 }
 
 /**
