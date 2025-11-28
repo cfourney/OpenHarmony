@@ -195,21 +195,33 @@ oDialog.prototype.alertBox = function( labelText, title, okButtonText, htmlSuppo
  * @param   {float}          [duration=2000]    The duration of the display (in milliseconds).
  * @param   {$.oColorValue}  [color="#000000"]  The color of the background (a 50% alpha value will be applied).
  */
-oDialog.prototype.toast = function(labelText, position, duration, color){
+oDialog.prototype.toast = function(labelText, position, duration, color, windowName){
   if (this.$.batchMode) {
     this.$.debug("$.oDialog.alert not supported in batch mode", this.$.DEBUG_LEVEL.WARNING);
     return;
   }
 
   if (typeof duration === 'undefined') var duration = 2000;
-  if (typeof color === 'undefined') var color = new $.oColorValue(0,0,0);
+  if (typeof color === 'undefined') var color = new this.$.oColorValue(0,0,0);
+  if (typeof windowName === 'undefined') var windowName = 'Camera'
+
+  // specify a windowName to set the position as relative to that window
+  if (windowName){
+    var cameraView = $.app.getWidgetByName(windowName);
+    if (cameraView){
+      if (typeof position === 'undefined'){
+        var position = new this.$.oPoint(cameraView.geometry.width()/2, cameraView.geometry.height() - UiLoader.dpiScale(150));
+      }
+      position = (new this.$.oPoint($.app.mainWindow.geometry)).addPoint(new this.$.oPoint(cameraView.geometry)).addPoint(position)
+    }
+  }
 
   var toast = new QWidget()
   if (this.$.app.version + this.$.app.minorVersion > 21){
     // above Harmony 21.1
     if (typeof position === 'undefined'){
       var center = QApplication.desktop().availableGeometry.center();
-      var position = new $.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
+      var position = new this.$.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
     }
     var flags = new Qt.WindowFlags(Qt.Tool|Qt.FramelessWindowHint); // https://qtcentre.org/threads/71912-Qt-WA_TransparentForMouseEvents
     toast.setWindowFlags(flags);
@@ -217,7 +229,7 @@ oDialog.prototype.toast = function(labelText, position, duration, color){
   } else {
     if (typeof position === 'undefined'){
       var center = QApplication.desktop().screen().rect.center();
-      var position = new $.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
+      var position = new this.$.oPoint(center.x(), center.y()+UiLoader.dpiScale(150))
     }
     var flags = new Qt.WindowFlags(Qt.Popup|Qt.FramelessWindowHint|Qt.WA_TransparentForMouseEvents);
     toast.setWindowFlags(flags);

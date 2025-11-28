@@ -76,7 +76,7 @@ function oPoint (x, y, z){
       this.x = x.x;
       this.y = x.y;
       this.z = x.z;
-    } else if (x instanceof QPoint){
+    } else if (x instanceof QPoint || x instanceof QRect){
       this.x = x.x();
       this.y = x.y();
       if (x.z)

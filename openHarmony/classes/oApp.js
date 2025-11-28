@@ -103,6 +103,7 @@ Object.defineProperty(oApp.prototype, 'mainWindow', {
 });
 
 
+
 /**
  * The Harmony UI Toolbars.
  * @name $.oApp#toolbars
@@ -157,7 +158,7 @@ Object.defineProperty(oApp.prototype, 'globalMousePosition', {
 Object.defineProperty(oApp.prototype, 'center', {
   get : function(){
     if (this.$.app.version + this.$.app.minorVersion > 21){
-      var geometry = QApplication.activeWindow().geometry;
+      var geometry = $.app.mainWindow.geometry;
       var center = new this.$.oPoint(geometry.x() + geometry.width()/2, geometry.y() + geometry.height()/2)
     } else {
       var center = QApplication.desktop().screen().rect.center();
