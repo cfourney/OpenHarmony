@@ -3062,22 +3062,20 @@ $.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeN
 
 
 /**
- * Imports the specified template into the scene.
+ * Imports template with animation keyframe copying support.
  * @param   {string}           tplPath                                        The path of the TPL file to import.
- * @param   {$.oNode[]}        [destinationNodes=false]                       The nodes affected by the template.
+ * @param   {$.oNode[]}        [destinationNodes=false]                       Nodes to paste to. When specified, animation keys are pasted to these existing nodes.
  * @param   {bool}             [extendScene=true]                             Whether to extend the exposures of the content imported.
- * @param   {$.oPoint}         [nodePosition={0,0,0}]                         The position to offset imported new nodes.
- * @param   {object}           [pasteOptions]                                 An object containing paste options as per Harmony's standard paste options.
- *
- * @return {$.oNode[]}         The resulting pasted nodes.
+ * @param   {$.oPoint}         [nodePosition={0,0,0}]                         Position to offset imported new nodes (only when destinationNodes is not specified).
+ * @param   {object}           [pasteOptions]                                 Paste options. Note: actionTemplateMode will be set to false.
+ * @param   {int}              [startFrame]                                   Destination frame to paste at. Defaults to frame 1.
+ * @param   {int[]}            [frameRange]                                   Source frame range [startFrame, endFrame] from template. If [0, 0] or not specified, imports whole template.
+ * @return {$.oNode[]|false}   The resulting pasted nodes, or false if the import failed.
  */
-$.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, extendScene, nodePosition, pasteOptions ){
+$.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, extendScene, nodePosition, pasteOptions, startFrame, frameRange ){
   if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
   if (typeof destinationNodes === 'undefined' || destinationNodes.length == 0) var destinationNodes = false;
   if (typeof extendScene === 'undefined') var extendScene = true;
-
-  if (typeof pasteOptions === 'undefined') var pasteOptions = copyPaste.getCurrentPasteOptions();
-  pasteOptions.extendScene = extendScene;
 
   this.$.beginUndo("oH_importTemplate");
 
@@ -3087,12 +3085,45 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
 
   this.$.debug("importing template : "+tplPath, this.$.DEBUG_LEVEL.LOG);
 
+  // Configure paste special for keyframe copying
+  copyPaste.usePasteSpecial(true);
+  copyPaste.setPasteSpecialForcesKeyFrameAtBegAndEnd(true);
+  copyPaste.setPasteSpecialMatchNodeName(true);
+  var backupPasteLocalValue = copyPaste.getCurrentPasteOptions().fullTransfer;
+  copyPaste.setPasteSpecialFullTransfer(true);
+
+  if (typeof pasteOptions === 'undefined') var pasteOptions = copyPaste.getCurrentPasteOptions();
+  pasteOptions.extendScene = extendScene;
+  pasteOptions.actionTemplateMode = false;
+
   var _copyOptions = copyPaste.getCurrentCreateOptions();
-  var _tpl = copyPaste.copyFromTemplate(tplPath, 0, 999, _copyOptions); // any way to get the length of a template before importing it?
+  var _srcStartFrame = 0;
+  var _numFrames = 0;
+  if (typeof frameRange !== 'undefined' && Array.isArray(frameRange) && frameRange.length === 2) {
+    if (frameRange[0] > 0 && frameRange[1] >= frameRange[0]) {
+      _srcStartFrame = frameRange[0];
+      _numFrames = frameRange[1] - frameRange[0] + 1;
+    }
+  }
+  var _destStartFrame = (typeof startFrame !== 'undefined' && startFrame > 0) ? startFrame : 1;
+  
+  var _tpl = copyPaste.copyFromTemplate(tplPath, _srcStartFrame, _numFrames, _copyOptions);
+
+  if (_tpl == null) {
+    this.$.debug("Error: Unable to read/parse template: " + tplPath, this.$.DEBUG_LEVEL.ERROR);
+    copyPaste.setPasteSpecialFullTransfer(backupPasteLocalValue);
+    this.$.endUndo();
+    return false;
+  }
 
   if (destinationNodes){
-    // TODO: deal with import options to specify frames
-    copyPaste.paste(_tpl, destinationNodes.map(function(x){return x.path}), 0, 999, pasteOptions);
+    var match = copyPaste.paste(_tpl, destinationNodes.map(function(x){return x.path}), _destStartFrame, _numFrames, pasteOptions);
+    if (match == false) {
+      this.$.debug("Error: Structure of destination does not match the structure of the template.", this.$.DEBUG_LEVEL.ERROR);
+      copyPaste.setPasteSpecialFullTransfer(backupPasteLocalValue);
+      this.$.endUndo();
+      return false;
+    }
     var _nodes = destinationNodes;
   }else{
     var oldBackdrops = this.backdrops;
@@ -3134,6 +3165,7 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
 
   }
 
+  copyPaste.setPasteSpecialFullTransfer(backupPasteLocalValue);
   this.$.endUndo();
   return _nodes;
 }
