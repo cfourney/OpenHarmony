@@ -3062,20 +3062,37 @@ $.oGroupNode.prototype.addGroup = function( name, addComposite, addPeg, includeN
 
 
 /**
- * Imports template with animation keyframe copying support.
+ * Imports the specified template into the scene.
  * @param   {string}           tplPath                                        The path of the TPL file to import.
- * @param   {$.oNode[]}        [destinationNodes=false]                       Nodes to paste to. When specified, animation keys are pasted to these existing nodes.
+ * @param   {$.oNode[]}        [destinationNodes=false]                       The nodes affected by the template. When set, delegates to pasteFramesFromTemplate. Use pasteFramesFromTemplate directly for better animation keyframe support.
  * @param   {bool}             [extendScene=true]                             Whether to extend the exposures of the content imported.
- * @param   {$.oPoint}         [nodePosition={0,0,0}]                         Position to offset imported new nodes (only when destinationNodes is not specified).
- * @param   {object}           [pasteOptions]                                 Paste options. Note: actionTemplateMode will be set to false.
- * @param   {int}              [startFrame]                                   Destination frame to paste at. Defaults to frame 1.
- * @param   {int[]}            [frameRange]                                   Source frame range [startFrame, endFrame] from template. If [0, 0] or not specified, imports whole template.
+ * @param   {$.oPoint}         [nodePosition={0,0,0}]                         The position to offset imported new nodes.
+ * @param   {object}           [pasteOptions]                                 An object containing paste options as per Harmony's standard paste options.
+ *
  * @return {$.oNode[]|false}   The resulting pasted nodes, or false if the import failed.
  */
-$.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, extendScene, nodePosition, pasteOptions, startFrame, frameRange ){
+$.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, extendScene, nodePosition, pasteOptions ){
   if (typeof nodePosition === 'undefined') var nodePosition = new oPoint(0,0,0);
   if (typeof destinationNodes === 'undefined' || destinationNodes.length == 0) var destinationNodes = false;
   if (typeof extendScene === 'undefined') var extendScene = true;
+
+  // When destinationNodes is set, delegate to pasteFramesFromTemplate
+  if (destinationNodes){
+    this.$.log("oGroupNode.importTemplate with destinationNodes is deprecated. Use oGroupNode.pasteFramesFromTemplate instead for better animation keyframe support.");
+    
+    // Use pasteFramesFromTemplate with default parameters (whole template, frame 1, match by name)
+    var success = this.pasteFramesFromTemplate(tplPath, destinationNodes, 1, undefined, true);
+    
+    if (success) {
+      return destinationNodes;
+    } else {
+      return false;
+    }
+  }
+
+  // Original logic for creating new nodes
+  if (typeof pasteOptions === 'undefined') var pasteOptions = copyPaste.getCurrentPasteOptions();
+  pasteOptions.extendScene = extendScene;
 
   this.$.beginUndo("oH_importTemplate");
 
@@ -3085,24 +3102,97 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
 
   this.$.debug("importing template : "+tplPath, this.$.DEBUG_LEVEL.LOG);
 
-  // Configure paste special for keyframe copying
-  copyPaste.usePasteSpecial(true);
-  copyPaste.setPasteSpecialForcesKeyFrameAtBegAndEnd(true);
-  copyPaste.setPasteSpecialMatchNodeName(true);
-  var backupPasteLocalValue = copyPaste.getCurrentPasteOptions().fullTransfer;
-  copyPaste.setPasteSpecialFullTransfer(true);
+  var _copyOptions = copyPaste.getCurrentCreateOptions();
+  var _tpl = copyPaste.copyFromTemplate(tplPath, 0, 0, _copyOptions);
 
-  if (typeof pasteOptions === 'undefined') var pasteOptions = copyPaste.getCurrentPasteOptions();
-  pasteOptions.extendScene = extendScene;
-  pasteOptions.actionTemplateMode = false;
+  if (_tpl == null) {
+    this.$.debug("Error: Unable to read/parse template: " + tplPath, this.$.DEBUG_LEVEL.ERROR);
+    this.$.endUndo();
+    return false;
+  }
+
+  var oldBackdrops = this.backdrops;
+  copyPaste.pasteNewNodes(_tpl, _group, pasteOptions);
+  var _scene = this.scene;
+  var _nodes = selection.selectedNodes().map(function(x){return _scene.$node(x)});
+  for (var i in _nodes){
+    // only move the root nodes
+    if (_nodes[i].parent.path != this.path) continue
+
+    _nodes[i].x += nodePosition.x;
+    _nodes[i].y += nodePosition.y;
+  }
+
+  // move backdrops present in the template
+  var allBackdrops = this.backdrops;
+  var newBackdrops = allBackdrops.slice(0,allBackdrops.length - oldBackdrops.length);
+  for (var i in newBackdrops){
+    newBackdrops[i].x += nodePosition.x;
+    newBackdrops[i].y += nodePosition.y;
+  }
+
+  // move waypoints in the top level of the template
+  for (var i in _nodes) {
+    var nodePorts = _nodes[i].outPorts;
+    for (var p = 0; p < nodePorts; p++) {
+      var theseWP = waypoint.childWaypoints(_nodes[i], p);
+      if (theseWP.length > 0) {
+        for (var w in theseWP) {
+          var x = waypoint.coordX(theseWP[w]);
+          var y = waypoint.coordY(theseWP[w]);
+          x += nodePosition.x;
+          y += nodePosition.y;
+          waypoint.setCoord(theseWP[w],x,y);
+        }
+      }
+    }
+  }
+
+  this.$.endUndo();
+  return _nodes;
+}
+
+
+/**
+ * Pastes frames from template to destination nodes with animation keyframe copying support.
+ * @param   {string}           tplPath                                        The path of the TPL file to import.
+ * @param   {$.oNode[]}        destinationNodes                                Nodes to paste to.
+ * @param   {int}              [startFrame=1]                                  Destination frame to paste at.
+ * @param   {int[]}            [srcFrameRange]                                 Source frame range [startFrame, endFrame] from template. If not specified, imports whole template.
+ * @param   {bool}             [matchNodesByName=true]                         Whether to match nodes by name during paste.
+ * @return {bool}              True if paste succeeded, false otherwise.
+ */
+$.oGroupNode.prototype.pasteFramesFromTemplate = function( tplPath, destinationNodes, startFrame, srcFrameRange, matchNodesByName ){
+  if (typeof destinationNodes === 'undefined' || destinationNodes.length == 0) {
+    this.$.debug("Error: destinationNodes must be specified.", this.$.DEBUG_LEVEL.ERROR);
+    return false;
+  }
+
+  this.$.beginUndo("oH_pasteFramesFromTemplate");
+
+  if(tplPath instanceof this.$.oFolder) tplPath = tplPath.path;
+
+  this.$.debug("pasting frames from template : "+tplPath, this.$.DEBUG_LEVEL.LOG);
+
+  // Configure paste special for keyframe copying
+  // copyPaste.usePasteSpecial(true);
+  // copyPaste.setPasteSpecialForcesKeyFrameAtBegAndEnd(true);
+  if (typeof matchNodesByName === 'undefined' || matchNodesByName) {
+    copyPaste.setPasteSpecialMatchNodeName(true);
+  }
+  // var backupPasteLocalValue = copyPaste.getCurrentPasteOptions().fullTransfer;
+  // copyPaste.setPasteSpecialFullTransfer(true);
+
+  var pasteOptions = copyPaste.getCurrentPasteOptions();
+  pasteOptions.actionTemplateMode = false; // Critical: false enables proper animation key copying
 
   var _copyOptions = copyPaste.getCurrentCreateOptions();
   var _srcStartFrame = 0;
   var _numFrames = 0;
-  if (typeof frameRange !== 'undefined' && Array.isArray(frameRange) && frameRange.length === 2) {
-    if (frameRange[0] > 0 && frameRange[1] >= frameRange[0]) {
-      _srcStartFrame = frameRange[0];
-      _numFrames = frameRange[1] - frameRange[0] + 1;
+  if (typeof srcFrameRange !== 'undefined' && Array.isArray(srcFrameRange) && srcFrameRange.length === 2) {
+    if (srcFrameRange[0] > 0 && srcFrameRange[1] >= srcFrameRange[0]) {
+      _srcStartFrame = srcFrameRange[0];
+      _numFrames = srcFrameRange[1] - srcFrameRange[0] + 1;
     }
   }
   var _destStartFrame = (typeof startFrame !== 'undefined' && startFrame > 0) ? startFrame : 1;
@@ -3111,63 +3201,22 @@ $.oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, ext
 
   if (_tpl == null) {
     this.$.debug("Error: Unable to read/parse template: " + tplPath, this.$.DEBUG_LEVEL.ERROR);
-    copyPaste.setPasteSpecialFullTransfer(backupPasteLocalValue);
+    // copyPaste.setPasteSpecialFullTransfer(backupPasteLocalValue);
     this.$.endUndo();
     return false;
   }
 
-  if (destinationNodes){
-    var match = copyPaste.paste(_tpl, destinationNodes.map(function(x){return x.path}), _destStartFrame, _numFrames, pasteOptions);
-    if (match == false) {
-      this.$.debug("Error: Structure of destination does not match the structure of the template.", this.$.DEBUG_LEVEL.ERROR);
-      copyPaste.setPasteSpecialFullTransfer(backupPasteLocalValue);
-      this.$.endUndo();
-      return false;
-    }
-    var _nodes = destinationNodes;
-  }else{
-    var oldBackdrops = this.backdrops;
-    copyPaste.pasteNewNodes(_tpl, _group, pasteOptions);
-    var _scene = this.scene;
-    var _nodes = selection.selectedNodes().map(function(x){return _scene.$node(x)});
-    for (var i in _nodes){
-      // only move the root nodes
-      if (_nodes[i].parent.path != this.path) continue
-
-      _nodes[i].x += nodePosition.x;
-      _nodes[i].y += nodePosition.y;
-    }
-
-    // move backdrops present in the template
-    var allBackdrops = this.backdrops;
-    var newBackdrops = allBackdrops.slice(0,allBackdrops.length - oldBackdrops.length);
-    for (var i in newBackdrops){
-      newBackdrops[i].x += nodePosition.x;
-      newBackdrops[i].y += nodePosition.y;
-    }
-
-    // move waypoints in the top level of the template
-    for (var i in _nodes) {
-      var nodePorts = _nodes[i].outPorts;
-      for (var p = 0; p < nodePorts; p++) {
-        var theseWP = waypoint.childWaypoints(_nodes[i], p);
-        if (theseWP.length > 0) {
-          for (var w in theseWP) {
-            var x = waypoint.coordX(theseWP[w]);
-            var y = waypoint.coordY(theseWP[w]);
-            x += nodePosition.x;
-            y += nodePosition.y;
-            waypoint.setCoord(theseWP[w],x,y);
-          }
-        }
-      }
-    }
-
+  var match = copyPaste.paste(_tpl, destinationNodes.map(function(x){return x.path}), _destStartFrame, _numFrames, pasteOptions);
+  if (match == false) {
+    this.$.debug("Error: Structure of destination does not match the structure of the template.", this.$.DEBUG_LEVEL.ERROR);
+    // copyPaste.setPasteSpecialFullTransfer(backupPasteLocalValue);
+    this.$.endUndo();
+    return false;
   }
 
-  copyPaste.setPasteSpecialFullTransfer(backupPasteLocalValue);
+  //copyPaste.setPasteSpecialFullTransfer(backupPasteLocalValue);
   this.$.endUndo();
-  return _nodes;
+  return true;
 }
 
 
