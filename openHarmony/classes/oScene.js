@@ -1702,6 +1702,7 @@ oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
  * @param   {string}      [exportPalettesMode='usedOnly']   can have the values : "usedOnly", "all", "createPalette"
  * @param   {string}      [renameUsedColors=]               if creating a palette, optionally set here the name for the colors (they will have a number added to each)
  * @param   {copyOptions} [copyOptions]                     An object containing paste options as per Harmony's standard paste options.
+ * @param   {number[]}    [frameRange]                      An array of two numbers [startFrame, endFrame] specifying the frame range to export. If not provided, uses the scene's preview range.
  *
  * @return {bool}         The success of the export.
  * @todo turn exportPalettesMode into an enum?
@@ -1725,7 +1726,7 @@ oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
  *
  * $.endUndo();
  */
-oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMode, renameUsedColors, copyOptions){
+oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMode, renameUsedColors, copyOptions, frameRange){
   if (typeof exportPalettesMode === 'undefined') var exportPalettesMode = "usedOnly";
   if (typeof copyOptions === 'undefined') var copyOptions = copyPaste.getCurrentCreateOptions();
   if (typeof renameUsedColors === 'undefined') var renameUsedColors = false;
@@ -1771,7 +1772,9 @@ oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMode
 
 
   this.selectedNodes = _allNodes;
-  this.selectedFrames = [this.startPreview, this.stopPreview];
+  this.selectedFrames = (frameRange && Array.isArray(frameRange) && frameRange.length === 2) 
+    ? frameRange
+    : [this.startPreview, this.stopPreview];
 
   this.$.debug("exporting selection :"+this.selectedFrames+"\n\n"+this.selectedNodes.join("\n")+"\n\n to folder : "+_folder+"/"+_name, this.$.DEBUG_LEVEL.LOG)
 
