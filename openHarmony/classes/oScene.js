@@ -527,7 +527,7 @@ Object.defineProperty(oScene.prototype, 'elements', {
       var _element = _nodes[n].element;
       if (!_element)
         continue
-      
+
       var _layer = _element._synchedLayer;
       var _foundDuplicate = false;
       // store ids and layer info (synced drawings) to avoid duplicates
@@ -1587,117 +1587,111 @@ oScene.prototype.getNodesLinks = function (nodes){
  * @return {$.oNode}        The resulting drawing node from the merge.
  */
 oScene.prototype.mergeNodes = function (nodes, resultName, deleteMerged){
-    this.$.beginUndo("oh_mergeNodes");
-    // TODO: is there a way to do this without Action.perform?
-    // pass a oNode object as argument for destination node instead of name/group?
-    if (typeof deleteMerged === 'undefined') var deleteMerged = true;
+  this.$.beginUndo("oh_mergeNodes");
+  // TODO: is there a way to do this without Action.perform?
+  // pass a oNode object as argument for destination node instead of name/group?
+  if (typeof deleteMerged === 'undefined') var deleteMerged = true;
 
-    // only merge READ nodes so we filter out other nodes from parameters
-    var drawingNodes = nodes.filter(function(x){return x.type == "READ"});
+  // only merge READ nodes so we filter out other nodes from parameters
+  var drawingNodes = nodes.filter(function(x){return x.type == "READ"});
 
-    if (typeof resultName === 'undefined') var resultName = drawingNodes[0].name+"_merged";
+  if (typeof resultName === 'undefined') var resultName = drawingNodes[0].name+"_merged";
 
-    if (!drawingNodes.length) return;
+  if (!drawingNodes.length) return;
 
-    var _timeline = this.getTimeline();
-    drawingNodes = drawingNodes.sort(function(a, b){return a.timelineIndex(_timeline) - b.timelineIndex(_timeline)});
+  var _timeline = this.getTimeline();
+  drawingNodes = drawingNodes.sort(function(a, b){return a.timelineIndex(_timeline) - b.timelineIndex(_timeline)});
 
-    // create a new destination node for the merged result
-    var _group = drawingNodes[0].group;
+  // create a new destination node for the merged result
+  var _group = drawingNodes[0].group;
 
-    // connect the node to the scene base composite, TODO: handle better placement
-    // also TODO: check that the composite is connected to the display currently active
-    // also TODO: disable pegs that affect the nodes but that we don't want to merge
-    //var inNodes = nodes.map(function(x){return x.linkedInNodes});
+  // connect the node to the scene base composite, TODO: handle better placement
+  // also TODO: check that the composite is connected to the display currently active
+  var selectedPaths = nodes.map(function(x){return x.path});
 
-    var selectedPaths = nodes.map(function(x){return x.path});
+  var nodesEnabled = [];
+  var _allNodes = this.nodes;
+  for (var i in _allNodes){
+    // disable all unselected nodes in the scene (except ones that would make them invisible such as composites and groups)
+    // and keep track of their visibility to restore
+    if (["GROUP", "COMPOSITE", "MULTIPORT_OUT"].indexOf(_allNodes[i].type) == -1 &&
+      selectedPaths.indexOf(_allNodes[i].path) == -1 &&
+      _allNodes[i].enabled) {
+      _allNodes[i].enabled = false;
+      nodesEnabled.push(_allNodes[i]);
+    }
+  }
 
-    var _allNodes = this.nodes.filter(function(x){return ["GROUP", "COMPOSITE", "MULTIPORT_OUT"].indexOf(x.type) == -1});
-    var nodesEnabled = [];
-    for (var i in _allNodes){
-      // disable all nodes in the scene before merging unless given as argument
-      if (selectedPaths.indexOf(_allNodes[i].path) != -1) {
-        this.$.log(_allNodes[i].path+" " +selectedPaths.indexOf(_allNodes[i].path));
-        continue;
+  // creating destination node
+  var _mergedNode = _group.addDrawingNode(resultName);
+
+  var outNodes = [];
+  for (var i in drawingNodes){
+    outNodes = outNodes.concat(drawingNodes[i].linkedOutNodes);
+  }
+
+  var _composite = outNodes.filter(function(x){return x.type == "COMPOSITE"})[0];
+  if (!_composite) _composite = outNodes.filter(function(x){return x.type == "MULTIPORT_OUT"})[0];
+
+  _mergedNode.linkOutNode(_composite);
+
+  // get  the individual keys of all nodes
+  var _keys = [];
+  for (var i in drawingNodes){
+    var _timings = drawingNodes[i].timings;
+    var _frameNumbers = _keys.map(function (x){return x.frameNumber});
+    for (var j in _timings){
+      if (_frameNumbers.indexOf(_timings[j].frameNumber) == -1) _keys.push(_timings[j]);
+    }
+  }
+
+  // sort frame objects by frameNumber
+  _keys = _keys.sort(function(a, b){return a.frameNumber - b.frameNumber});
+
+  // create an empty drawing for each exposure of the nodes to be merged and copy the contents into it
+  Action.perform("onActionChooseSelectTool()", "cameraView");
+  ToolProperties.setApplyAllArts(true);
+
+  for (var i in _keys){
+    var _frame = _keys[i].frameNumber;
+    _mergedNode.element.addDrawing(_frame);
+
+    // copy paste the content of each of the nodes onto the mergedNode
+    // code inspired by Bake_Parent_to_Drawings v1.2 from Yu Ueda (raindropmoment.com)
+    this.currentFrame = _frame;
+
+    for (var j=drawingNodes.length-1; j>=0; j--){
+      DrawingTools.setCurrentDrawingFromNodeName( drawingNodes[j].path, _frame );
+      Action.perform("selectAll()", "cameraView");
+
+      // select all and check. If empty, operation ends for the current frame
+      if (Action.validate("copy()", "cameraView").enabled){
+        Action.perform("copy()", "cameraView");
+        DrawingTools.setCurrentDrawingFromNodeName( _mergedNode.path, _frame );
+        Action.perform("paste()", "cameraView");
       }
-      if (_allNodes[i].enabled){
-        nodesEnabled.push(_allNodes[i]);
-        _allNodes[i].enabled = false;
-      }
     }
+  }
 
-    // creating destination node
-    var _mergedNode = _group.addDrawingNode(resultName);
+  _mergedNode.attributes.drawing.element.column.extendExposures();
+  _mergedNode.placeAtCenter(drawingNodes);
 
-    var outNodes = [];
-    for (var i in drawingNodes){
-      outNodes = outNodes.concat(drawingNodes[i].linkedOutNodes);
+  // connect to the same composite as the first node, at the same place
+  // delete nodes that were merged if parameter is specified
+  if (deleteMerged){
+    for (var i in nodes){
+      nodes[i].remove();
     }
+  }
 
-    var _composite = outNodes.filter(function(x){return x.type == "COMPOSITE"})[0];
-    if (!_composite) _composite = outNodes.filter(function(x){return x.type == "MULTIPORT_OUT"})[0];
+  // restore node enabled status
+  for (var i in nodesEnabled){
+    nodesEnabled[i].enabled = true;
+  }
 
-    _mergedNode.linkOutNode(_composite);
+  this.$.endUndo();
 
-    // get  the individual keys of all nodes
-    var _keys = []
-    for (var i in drawingNodes){
-        var _timings = drawingNodes[i].timings;
-        var _frameNumbers = _keys.map(function (x){return x.frameNumber})
-        for (var j in _timings){
-            if (_frameNumbers.indexOf(_timings[j].frameNumber) == -1) _keys.push(_timings[j])
-        }
-    }
-
-    // sort frame objects by frameNumber
-    _keys = _keys.sort(function(a, b){return a.frameNumber - b.frameNumber})
-
-    // create an empty drawing for each exposure of the nodes to be merged and copy the contents into it
-    Action.perform("onActionChooseSelectTool()", "cameraView");
-    ToolProperties.setApplyAllArts(true);
-
-    for (var i in _keys){
-        var _frame = _keys[i].frameNumber;
-        _mergedNode.element.addDrawing(_frame);
-
-        // copy paste the content of each of the nodes onto the mergedNode
-        // code inspired by Bake_Parent_to_Drawings v1.2 from Yu Ueda (raindropmoment.com)
-        frame.setCurrent( _frame );
-
-        for (var j=drawingNodes.length-1; j>=0; j--){
-            //if (nodes[j].attributes.drawing.element.frames[_frame].isBlank) continue;
-
-            DrawingTools.setCurrentDrawingFromNodeName( drawingNodes[j].path, _frame );
-            Action.perform("selectAll()", "cameraView");
-
-            // select all and check. If empty, operation ends for the current frame
-            if (Action.validate("copy()", "cameraView").enabled){
-                Action.perform("copy()", "cameraView");
-                DrawingTools.setCurrentDrawingFromNodeName( _mergedNode.path, _frame );
-                Action.perform("paste()", "cameraView");
-            }
-        }
-    }
-
-    _mergedNode.attributes.drawing.element.column.extendExposures();
-    _mergedNode.placeAtCenter(drawingNodes)
-
-    // connect to the same composite as the first node, at the same place
-    // delete nodes that were merged if parameter is specified
-    if (deleteMerged){
-        for (var i in nodes){
-            nodes[i].remove();
-        }
-    }
-
-    // restore node enabled status
-    for (var i in nodesEnabled){
-      nodesEnabled[i].enabled = true;
-    }
-
-    this.$.endUndo();
-
-    return _mergedNode;
+  return _mergedNode;
 }
 
 

@@ -240,7 +240,7 @@ oElement.prototype.unlinkPalette = function (oPaletteObject) {
     _palette.remove(false);
     return true;
   }catch(err){
-    this.$.debug("Failed to unlink palette "+_palette.name+" from element "+this.name);
+    this.$.debug("Failed to unlink palette " + _palette.name + " from element " + this.name + ": " + err);
     return false;
   }
 }
@@ -269,7 +269,7 @@ oElement.prototype.duplicate = function(name){
       var duplicateDrawing = _duplicateElement.addDrawing(0, _drawings[i].name, _drawingFile);
       _drawingFile.copy(_elementFolder, duplicateDrawing.name, true);
     }catch(err){
-      this.debug("could not copy drawing file "+_drawingFile.name+" into element "+_duplicateElement.name, this.$.DEBUG_LEVEL.ERROR);
+      this.$.debug("could not copy drawing file "+_drawingFile.name+" into element "+_duplicateElement.name+": " + err, this.$.DEBUG_LEVEL.ERROR);
     }
   }
   return _duplicateElement;
