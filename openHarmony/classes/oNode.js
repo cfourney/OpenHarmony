@@ -108,7 +108,10 @@ function oNode ( path, oSceneObject ){
 
   this._type = 'node';
 
-  this.refreshAttributes();
+  // Lazy loading: attributes will be loaded on first access
+  // This dramatically improves performance when creating many node wrappers
+  this._attributes_cached = null;
+  this._attributeGettersCreated = false;
 }
 
 /**
@@ -777,6 +780,17 @@ Object.defineProperty(oNode.prototype, 'outs', {
 */
 Object.defineProperty(oNode.prototype, 'attributes', {
   get : function(){
+      // Lazy loading: build attribute cache on first access
+      if (this._attributes_cached === null) {
+        this.attributesBuildCache();
+      }
+      // Create getter/setters on first access (deferred from constructor)
+      if (!this._attributeGettersCreated) {
+        this._attributeGettersCreated = true;
+        for (var i in this._attributes_cached) {
+          this.setAttrGetterSetter(this._attributes_cached[i], this, this);
+        }
+      }
       return this._attributes_cached;
   }
 });
@@ -1879,20 +1893,15 @@ oNode.prototype.removeAttribute = function( attrName ){
 
 /**
  * Refreshes/rebuilds the attributes and getter/setters.
- * @param   {$.oNode}   oNodeObject            The node to link this one's inport to.
- * @return  {bool}    The result of the unlink.
+ * Forces a rebuild of the attribute cache and getter/setters.
  */
-oNode.prototype.refreshAttributes = function( ){
-    // generate properties from node attributes to allow for dot notation access
-    this.attributesBuildCache();
-
-    // for each attribute, create a getter setter as a property of the node object
-    // that handles the animated/not animated duality
-    var _attributes = this.attributes
-    for (var i in _attributes){
-      var _attr = _attributes[i];
-      this.setAttrGetterSetter(_attr, this, this);
-    }
+oNode.prototype.refreshAttributes = function() {
+    // Force rebuild by clearing the cache
+    this._attributes_cached = null;
+    this._attributeGettersCreated = false;
+    
+    // Access attributes to trigger lazy loading
+    var _attributes = this.attributes;
 }
 
 exports.oNode = oNode;
