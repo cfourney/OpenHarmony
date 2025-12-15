@@ -2553,13 +2553,35 @@ oGroupNode.prototype.getNodeByName = function(name){
  * Returns all the nodes of a certain type in the group.
  * Pass a value to recurse to look into the groups as well.
  * @param   {string}        typeName      The type of the nodes.
- * @param   {bool}          recurse       Wether to look inside the groups.
+ * @param   {bool}          recurse       Whether to look inside the groups.
  *
  * @return  {$.oNode[]}     The nodes found.
  */
 oGroupNode.prototype.getNodesByType = function(typeName, recurse){
   if (typeof recurse === 'undefined') var recurse = false;
-  return this.subNodes(recurse).filter(function(x){return x.type == typeName});
+
+  var allNodePaths = node.getNodes([typeName]);
+  var groupPath = this.path;
+  var groupPathPrefix = groupPath + "/";
+  var result = [];
+  var _scene = this.scene;
+  
+  for (var i = 0; i < allNodePaths.length; i++) {
+    var nodePath = allNodePaths[i];
+    
+    // Check if node is inside this group
+    if (nodePath.indexOf(groupPathPrefix) !== 0) continue;
+    
+    // If not recursing, check it's a direct child (no more "/" after group path)
+    if (!recurse) {
+      var remainder = nodePath.substring(groupPathPrefix.length);
+      if (remainder.indexOf("/") !== -1) continue;  // Skip nested nodes
+    }
+    
+    result.push(_scene.getNodeByPath(nodePath));
+  }
+  
+  return result;
 }
 
 
