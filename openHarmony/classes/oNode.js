@@ -114,6 +114,94 @@ function oNode ( path, oSceneObject ){
   this._attributeGettersCreated = false;
 }
 
+
+// Flag to track if attribute placeholders have been initialized
+oNode._placeholdersInitialized = false;
+
+/**
+ * Initialize placeholder getters for all attribute names across all node types.
+ * This runs ONCE at first node creation, scanning all node types to discover
+ * all possible attribute names, then defines placeholder getters on the prototype.
+ * This allows shorthand access (node.position.x) to work immediately while
+ * still deferring the expensive attribute loading until first use.
+ * @private
+ */
+oNode._initAttributePlaceholders = function() {
+  if (oNode._placeholdersInitialized) return;
+  oNode._placeholdersInitialized = true;
+
+  var allKeywords = {};
+
+  // Guard the scan so temp nodes are always cleaned up
+  var tempGroupPath = null;
+  try {
+    // Get all node types dynamically from Harmony
+    var nodeTypeList = node.getNodeTypeList();
+    var nodeTypes = [];
+    for (var i = 0; i < nodeTypeList.length; i++) {
+      nodeTypes.push(nodeTypeList[i].keyword);
+    }
+
+    // Create temporary group for scanning
+    tempGroupPath = node.add('Top', '_OH_ATTR_SCAN_TEMP_', 'GROUP', 0, 0, 0);
+
+    for (var i = 0; i < nodeTypes.length; i++) {
+      try {
+        var tempNodePath = node.add(tempGroupPath, 'temp', nodeTypes[i], 0, 0, 0);
+        var attrList = node.getAttrList(tempNodePath, 1);
+
+        for (var j in attrList) {
+          var kw = attrList[j].keyword().toLowerCase();
+          if (kw === '3dpath') kw = 'path3d';
+          allKeywords[kw] = true;
+        }
+        node.deleteNode(tempNodePath);
+      } catch(e) {
+        // Some node types may fail to create, skip them
+      }
+    }
+  } catch(e) {
+    // If anything fails during scanning, fall back to common attributes only
+    oNode._initCommonPlaceholders();
+    return;
+  } finally {
+    // Ensure temp group is removed to avoid dirtying the scene
+    if (tempGroupPath) {
+      try { node.deleteNode(tempGroupPath); } catch(e) {}
+    }
+  }
+
+  // Define placeholder getters for ALL discovered attributes
+  for (var keyword in allKeywords) {
+    // Skip if property already exists on prototype (avoid overwriting built-in properties)
+    if (oNode.prototype.hasOwnProperty(keyword)) continue;
+
+    (function(kw) {
+      Object.defineProperty(oNode.prototype, kw, {
+        configurable: true,
+        enumerable: false,
+        get: function() {
+          // Trigger lazy loading which creates the real getter on the instance
+          var attrs = this.attributes;
+          // Check if the attribute exists on this node type
+          if (this._attributes_cached && this._attributes_cached[kw]) {
+            return this[kw];
+          }
+          return undefined;
+        },
+        set: function(value) {
+          // Trigger lazy loading first
+          var attrs = this.attributes;
+          // Set if the attribute exists
+          if (this._attributes_cached && this._attributes_cached[kw]) {
+            this[kw] = value;
+          }
+        }
+      });
+    })(keyword);
+  }
+};
+
 /**
  * Initialize the attribute cache.
  * @private
@@ -3708,6 +3796,13 @@ oTransformSwitchNode.prototype.refreshNames = function(){
   this.refreshAttributes();
   this.names.refresh();
 }
+
+
+// Initialize attribute placeholders at library load time
+// This scans all node types once when openHarmony loads, so that
+// shorthand attribute access (node.position.x) works immediately
+// without delaying the first node creation or publish window
+oNode._initAttributePlaceholders();
 
 
 exports.oTransformSwitchNode = oTransformSwitchNode;
