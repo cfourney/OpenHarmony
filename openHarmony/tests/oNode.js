@@ -14,61 +14,61 @@ exports.testoNodeName = {
     },
 }
 
-// ----------------------- Shorthand Attribute Getter/Setter Tests ----------------------//
-// These tests verify shorthand attribute access like node.position.x = 5.
-// Dynamic placeholder getters are created for all attributes at first node creation,
-// so shorthand access works immediately for any attribute.
+// ----------------------- Per-type subclass & shorthand tests ----------------------//
 
 /**
- * Test shorthand attribute getter returns a value
- * Verifies: node.position works immediately on PEG nodes
+ * Shorthand works immediately (prototype getter triggers lazy load) on PEG
  */
-exports.testoNodeShorthandGetterWorks = {
-    message: "oNode shorthand getter returns a value",
-    prepare: function(){
+exports.testoNodeShorthandImmediatePeg = {
+    message:"oNode shorthand works immediately (PEG)",
+    prepare:function(){
     },
-    run: function(){
-        var testNode = $.scn.root.addNode('PEG');
-        
-        var position = testNode.position;
-        
-        // Verify we got a valid value
-        assert(position !== undefined, true,
-            'shorthand getter should return a value');
+    run:function(){
+        var peg = $.scn.root.addNode('PEG');
+
+        // Before access, cache should be null
+        assert(peg._attributes_cached === null, true, 'cache should start null');
+
+        // Access shorthand without touching .attributes
+        peg.position.x = 12;
+
+        // Lazy load should have occurred
+        assert(peg._attributes_cached !== null, true, 'cache should be populated after shorthand');
+        assert(peg.position.x === 12, true, 'shorthand setter should persist');
     },
-    check: function(){
+    check:function(){
     },
 }
 
 /**
- * Test shorthand attribute setter works immediately
- * Verifies: node.position.x = 5 works without accessing .attributes first
+ * Shorthand matches explicit access on READ
  */
-exports.testoNodeShorthandSetterImmediate = {
-    message: "oNode shorthand setter works immediately",
-    prepare: function(){
+exports.testoNodeShorthandMatchesExplicitRead = {
+    message:"oNode shorthand matches explicit (READ)",
+    prepare:function(){
     },
-    run: function(){
-        var testNode = $.scn.root.addNode('PEG');
-        
-        // Set value using shorthand immediately - no .attributes access first!
-        testNode.position.x = 100;
-        
-        // Verify the value was set
-        var newX = testNode.position.x;
-        assert(newX === 100, true,
-            'shorthand setter should change the value');
+    run:function(){
+        var read = $.scn.root.addNode('READ');
+
+        // READ nodes use 'offset' not 'position'
+        // Set via shorthand
+        read.offset.x = 7;
+        var explicit = read.attributes.offset.x.getValue();
+        assert(explicit === 7, true, 'explicit matches shorthand set');
+
+        // Set via explicit
+        read.attributes.offset.x.setValue(21);
+        assert(read.offset.x === 21, true, 'shorthand reads explicit set');
     },
-    check: function(){
+    check:function(){
     },
 }
 
 /**
- * Test shorthand matches explicit attribute access
- * Verifies: node.position.x === node.attributes.position.x.getValue()
+ * Shorthand matches explicit access on PEG
  */
-exports.testoNodeShorthandMatchesExplicit = {
-    message: "oNode shorthand matches explicit attribute access",
+exports.testoNodeShorthandMatchesExplicitPeg = {
+    message: "oNode shorthand matches explicit attribute access (PEG)",
     prepare: function(){
     },
     run: function(){
@@ -91,6 +91,22 @@ exports.testoNodeShorthandMatchesExplicit = {
             'shorthand should read value set by explicit method');
     },
     check: function(){
+    },
+}
+
+/**
+ * instanceof remains correct for per-type subclasses
+ */
+exports.testoNodeInstanceofPeg = {
+    message:"oNode instanceof works (PEG)",
+    prepare:function(){
+    },
+    run:function(){
+        var peg = $.scn.root.addNode('PEG');
+        assert(peg instanceof $.oNode, true, 'peg is instance of oNode');
+        assert(peg instanceof $.oPegNode, true, 'peg is instance of oPegNode');
+    },
+    check:function(){
     },
 }
 
@@ -206,5 +222,30 @@ exports.testoNodeShorthandDifferentTypes = {
     },
 }
 
+/**
+ * Temp scan group is cleaned up after subclass creation
+ */
+exports.testoNodeScanTempCleanup = {
+    message:"oNode type scan temp group cleanup",
+    prepare:function(){
+    },
+    run:function(){
+        // Trigger a new type scan by creating a generic node type
+        // (not one of the named subclasses like READ, PEG, GROUP, etc.)
+        // COMPOSITE goes through the default case in getNodeByPath
+        var comp = $.scn.root.addNode('COMPOSITE');
 
-// ---------
+        // No temp scan group should remain under Top (name includes timestamp)
+        var tops = node.subNodes('Top');
+        var hasScanGroup = false;
+        for (var i = 0; i < tops.length; i++) {
+            if (tops[i].indexOf('_OH_TYPE_SCAN_') !== -1) {
+                hasScanGroup = true;
+                break;
+            }
+        }
+        assert(hasScanGroup === false, true, 'temp scan group should be removed');
+    },
+    check:function(){
+    },
+}

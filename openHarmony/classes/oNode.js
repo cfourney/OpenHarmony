@@ -99,6 +99,19 @@
  * var attributes = myNode.attributes;
  */
 function oNode ( path, oSceneObject ){
+  // When called directly, delegate to per-type subclass so shorthand getters live on the prototype
+  if (this.constructor === oNode) {
+    var _type = node.type(path);
+    var TypeClass = oNodeTypes.getClassForType(_type);
+    if (TypeClass !== oNode) {
+      return new TypeClass(path, oSceneObject);
+    }
+  }
+  return oNode._init.call(this, path, oSceneObject);
+}
+
+// Base initializer (shared by per-type subclasses)
+oNode._init = function(path, oSceneObject){
   var instance = this.$.getInstanceFromCache.call(this, path);
   if (instance) return instance;
 
@@ -108,8 +121,200 @@ function oNode ( path, oSceneObject ){
 
   this._type = 'node';
 
-  this.refreshAttributes();
-}
+  // Lazy loading: attributes will be loaded on first access
+  this._attributes_cached = null;
+  this._attributeGettersCreated = false;
+  
+  // Ensure prototype shorthand getters exist for this node's type
+  // This handles named subclasses (oDrawingNode etc.) that inherit from oNode.prototype
+  oNodeTypes._ensurePrototypeGetters(this.constructor, this.type);
+};
+
+/**
+ * Repository/factory for per-node-type subclasses.
+ * Each type is scanned once (first use) to define shorthand getters
+ * on a shared prototype. Subsequent instances of that type reuse the subclass.
+ */
+var oNodeTypes = {
+  _classes: {},
+  _prototypeGettersAdded: {}, // Track which prototypes have had getters added for which types
+  
+  getKnownTypes: function(){
+    var types = [];
+    for (var t in this._classes){ types.push(t); }
+    return types;
+  },
+  
+  /**
+   * Ensure prototype shorthand getters exist for a given constructor and type.
+   * This is called from oNode._init to handle named subclasses that inherit from oNode.prototype.
+   * @private
+   */
+  _ensurePrototypeGetters: function(ctor, type){
+    if (!type || !ctor || !ctor.prototype) return;
+    
+    // Create a unique key for this constructor+type combination
+    var ctorName = ctor.name || ctor.toString().substring(0, 50);
+    var key = ctorName + ':' + type;
+    
+    // Already set up for this combination
+    if (this._prototypeGettersAdded[key]) return;
+    this._prototypeGettersAdded[key] = true;
+    
+    // If constructor is oNode itself (for generic nodes), the getClassForType already handles it
+    if (ctor === oNode) return;
+    
+    // Get or create the per-type class (this does the scan if needed)
+    var TypeClass = this.getClassForType(type);
+    if (TypeClass === oNode) return; // Scan failed or not possible
+    
+    // Copy shorthand getters from the per-type class prototype to this constructor's prototype
+    // Use getOwnPropertyNames to include non-enumerable properties (shorthand getters are non-enumerable)
+    var typeProto = TypeClass.prototype;
+    var ctorProto = ctor.prototype;
+    
+    var props = Object.getOwnPropertyNames(typeProto);
+    for (var i = 0; i < props.length; i++) {
+      var prop = props[i];
+      if (ctorProto.hasOwnProperty(prop)) continue; // Don't overwrite existing
+      
+      var desc = Object.getOwnPropertyDescriptor(typeProto, prop);
+      if (desc && (desc.get || desc.set)) {
+        // It's a getter/setter, copy it
+        Object.defineProperty(ctorProto, prop, desc);
+      }
+    }
+  },
+  
+  getClassForType: function(type){
+    if (!type) return oNode;
+    if (this._classes[type]) return this._classes[type];
+
+    var tempGroupPath = null;
+    var tempNodePath = null;
+    try{
+      // Create temp group/node to discover attributes for this type
+      // Use unique name with timestamp to avoid collisions
+      var scanGroupName = '_OH_TYPE_SCAN_' + (new Date()).getTime();
+      tempGroupPath = node.add('Top', scanGroupName, 'GROUP', 0, 0, 0);
+      if (!tempGroupPath) {
+        // Failed to create temp group, fall back to base class
+        return oNode;
+      }
+      tempNodePath = node.add(tempGroupPath, 'temp', type, 0, 0, 0);
+      if (!tempNodePath) {
+        // Failed to create temp node, clean up and fall back
+        try { node.deleteNode(tempGroupPath); } catch(e) {}
+        return oNode;
+      }
+
+      var attrList = node.getAttrList(tempNodePath, 1);
+      // If attrList is null/undefined/empty, we'll use fallback keywords below
+      var baseKeywords = {};
+      var attrLength = (attrList && attrList.length) ? attrList.length : 0;
+      for (var j = 0; j < attrLength; j++) {
+        try{
+          var attr = attrList[j];
+          if (!attr || typeof attr.keyword !== 'function') continue;
+          var kw = attr.keyword().toLowerCase();
+          // Only keep top-level part (before dot) to define shorthand entry point
+          var base = kw.split('.')[0];
+          if (base === '3dpath') base = 'path3d';
+          if (base) baseKeywords[base] = true;
+        }catch(e){
+          // Skip attributes that fail
+        }
+      }
+      
+      // If no keywords found from scan, add common ones as fallback
+      var keywordCount = 0;
+      for (var k in baseKeywords) { keywordCount++; }
+      if (keywordCount === 0) {
+        // Common node attributes that most node types have
+        var commonKeywords = ['position', 'scale', 'rotation', 'offset', 'skew', 'pivot'];
+        for (var c = 0; c < commonKeywords.length; c++) {
+          baseKeywords[commonKeywords[c]] = true;
+        }
+      }
+
+      // Build per-type subclass
+      var TypeCtor = function(path, oSceneObject){
+        return oNode._init.call(this, path, oSceneObject);
+      };
+      TypeCtor.prototype = Object.create(oNode.prototype);
+      TypeCtor.prototype.constructor = TypeCtor;
+
+      // Define prototype shorthand getters that trigger lazy load
+      for (var kw in baseKeywords) {
+        if (TypeCtor.prototype.hasOwnProperty(kw)) continue;
+        (function(kw){
+          Object.defineProperty(TypeCtor.prototype, kw, {
+            configurable: true,
+            enumerable: false,
+            get: function(){
+              // Trigger lazy loading; attributes getter will install instance getters
+              var attrs = this.attributes;
+              if (!attrs) return undefined;
+              
+              // After lazy loading, instance getter should exist (created by setAttrGetterSetter)
+              // Check and call it directly to get proper value with sub-attribute handling
+              var desc = Object.getOwnPropertyDescriptor(this, kw);
+              if (desc && desc.get) {
+                return desc.get.call(this);
+              }
+              
+              // Fallback: if attribute exists in cache, return it directly
+              // This handles edge cases where setAttrGetterSetter didn't create a matching getter
+              if (attrs[kw]) return attrs[kw];
+              
+              // Attribute doesn't exist on this node type
+              return undefined;
+            },
+            set: function(value){
+              // Trigger lazy loading; instance setter will be installed
+              var attrs = this.attributes;
+              if (!attrs) return;
+              
+              // After lazy loading, instance setter should exist (created by setAttrGetterSetter)
+              var desc = Object.getOwnPropertyDescriptor(this, kw);
+              if (desc && desc.set) {
+                desc.set.call(this, value);
+                return;
+              }
+              
+              // Fallback: try setting via attribute object directly
+              if (attrs[kw] && typeof attrs[kw].setValue === 'function') {
+                attrs[kw].setValue(value);
+              }
+            }
+          });
+        })(kw);
+      }
+
+      this._classes[type] = TypeCtor;
+      return TypeCtor;
+    }catch(e){
+      // If scanning fails, fall back to base class
+      return oNode;
+    }finally{
+      // Clean up temp node first, then group (order matters)
+      if (tempNodePath) {
+        try { 
+          node.deleteNode(tempNodePath); 
+        } catch(e) {
+          // Ignore errors during cleanup
+        }
+      }
+      if (tempGroupPath) {
+        try { 
+          node.deleteNode(tempGroupPath); 
+        } catch(e) {
+          // Ignore errors during cleanup
+        }
+      }
+    }
+  }
+};
 
 /**
  * Initialize the attribute cache.
@@ -777,6 +982,17 @@ Object.defineProperty(oNode.prototype, 'outs', {
 */
 Object.defineProperty(oNode.prototype, 'attributes', {
   get : function(){
+      // Lazy loading: build attribute cache on first access
+      if (this._attributes_cached === null) {
+        this.attributesBuildCache();
+      }
+      // Create getter/setters on first access (deferred from constructor)
+      if (!this._attributeGettersCreated) {
+        this._attributeGettersCreated = true;
+        for (var i in this._attributes_cached) {
+          this.setAttrGetterSetter(this._attributes_cached[i], this, this);
+        }
+      }
       return this._attributes_cached;
   }
 });
@@ -1883,12 +2099,17 @@ oNode.prototype.removeAttribute = function( attrName ){
  * @return  {bool}    The result of the unlink.
  */
 oNode.prototype.refreshAttributes = function( ){
+    // Clear cache and getter flag to force rebuild
+    this._attributes_cached = null;
+    this._attributeGettersCreated = false;
+    
     // generate properties from node attributes to allow for dot notation access
     this.attributesBuildCache();
 
     // for each attribute, create a getter setter as a property of the node object
     // that handles the animated/not animated duality
     var _attributes = this.attributes
+    this._attributeGettersCreated = true;
     for (var i in _attributes){
       var _attr = _attributes[i];
       this.setAttrGetterSetter(_attr, this, this);
@@ -2029,6 +2250,7 @@ function oDrawingNode(path, oSceneObject) {
     this._type = 'drawingNode';
 }
 oDrawingNode.prototype = Object.create(oNode.prototype);
+oDrawingNode.prototype.constructor = oDrawingNode;
 
 
 /**
@@ -2456,6 +2678,7 @@ function oGroupNode (path, oSceneObject) {
     this._type = 'groupNode';
 }
 oGroupNode.prototype = Object.create(oNode.prototype);
+oGroupNode.prototype.constructor = oGroupNode;
 
 
 /**
@@ -3739,7 +3962,7 @@ function oPegNode ( path, oSceneObject ) {
 
     this._type = 'pegNode';
 }
-oPegNode.prototype = Object.create( oNode.prototype );
+oPegNode.prototype = Object.create(oNode.prototype);
 oPegNode.prototype.constructor = oPegNode;
 
 exports.oPegNode = oPegNode;
@@ -3791,7 +4014,7 @@ function oTransformSwitchNode ( path, oSceneObject ) {
   this._type = 'transformSwitchNode';
   this.names = new this.$.oTransformNamesObject(this);
 }
-oTransformSwitchNode.prototype = Object.create( oNode.prototype );
+oTransformSwitchNode.prototype = Object.create(oNode.prototype);
 oTransformSwitchNode.prototype.constructor = oTransformSwitchNode;
 
 
