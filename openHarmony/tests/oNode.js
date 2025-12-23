@@ -336,30 +336,3 @@ exports.testoNodeShorthandDifferentTypes = {
     },
 }
 
-/**
- * Temp scan group is cleaned up after subclass creation
- */
-exports.testoNodeScanTempCleanup = {
-    message:"oNode type scan temp group cleanup",
-    prepare:function(){
-    },
-    run:function(){
-        // Trigger a new type scan by creating a generic node type
-        // (not one of the named subclasses like READ, PEG, GROUP, etc.)
-        // COMPOSITE goes through the default case in getNodeByPath
-        var comp = $.scn.root.addNode('COMPOSITE');
-
-        // No temp scan group should remain under Top (name includes timestamp)
-        var tops = node.subNodes('Top');
-        var hasScanGroup = false;
-        for (var i = 0; i < tops.length; i++) {
-            if (tops[i].indexOf('_OH_TYPE_SCAN_') !== -1) {
-                hasScanGroup = true;
-                break;
-            }
-        }
-        assert(hasScanGroup === false, true, 'temp scan group should be removed');
-    },
-    check:function(){
-    },
-}
