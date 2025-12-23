@@ -225,17 +225,17 @@ ONodeTypes.prototype.getClassForType = function(type, nodePath){
     }
 
     // Build per-type subclass
-    var TypeCtor = function(path, oSceneObject){
+    var TypeConstructor = function(path, oSceneObject){
       return oNode.prototype._init.call(this, path, oSceneObject);
     };
-    TypeCtor.prototype = Object.create(oNode.prototype);
-    TypeCtor.prototype.constructor = TypeCtor;
+    TypeConstructor.prototype = Object.create(oNode.prototype);
+    TypeConstructor.prototype.constructor = TypeConstructor;
 
     // Define prototype shorthand getters that trigger lazy load
     for (var kw in baseKeywords) {
-      if (TypeCtor.prototype.hasOwnProperty(kw)) continue;
+      if (TypeConstructor.prototype.hasOwnProperty(kw)) continue;
       (function(kw){
-        Object.defineProperty(TypeCtor.prototype, kw, {
+        Object.defineProperty(TypeConstructor.prototype, kw, {
           configurable: true,
           enumerable: false,
           get: function(){
@@ -284,8 +284,8 @@ ONodeTypes.prototype.getClassForType = function(type, nodePath){
       })(kw);
     }
 
-    this._classes[type] = TypeCtor;
-    return TypeCtor;
+    this._classes[type] = TypeConstructor;
+    return TypeConstructor;
   }catch(e){
     // If scanning fails, fall back to base class
     return oNode;
