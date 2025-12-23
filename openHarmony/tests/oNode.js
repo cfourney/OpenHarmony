@@ -111,6 +111,120 @@ exports.testoNodeInstanceofPeg = {
 }
 
 /**
+ * instanceof works for all named subclasses (READ -> oDrawingNode)
+ */
+exports.testoNodeInstanceofDrawingNode = {
+    message:"oNode instanceof works (READ -> oDrawingNode)",
+    prepare:function(){
+    },
+    run:function(){
+        var read = $.scn.root.addNode('READ');
+        assert(read instanceof $.oNode, true, 'read is instance of oNode');
+        assert(read instanceof $.oDrawingNode, true, 'read is instance of oDrawingNode');
+        assert(read instanceof $.oPegNode, false, 'read is not instance of oPegNode');
+    },
+    check:function(){
+    },
+}
+
+/**
+ * instanceof works for GROUP nodes (oGroupNode)
+ */
+exports.testoNodeInstanceofGroupNode = {
+    message:"oNode instanceof works (GROUP -> oGroupNode)",
+    prepare:function(){
+    },
+    run:function(){
+        var group = $.scn.root.addGroup('TestGroup');
+        assert(group instanceof $.oNode, true, 'group is instance of oNode');
+        assert(group instanceof $.oGroupNode, true, 'group is instance of oGroupNode');
+        assert(group instanceof $.oPegNode, false, 'group is not instance of oPegNode');
+    },
+    check:function(){
+    },
+}
+
+/**
+ * instanceof works for COLOR_OVERRIDE_TVG nodes (oColorOverrideNode)
+ */
+exports.testoNodeInstanceofColorOverrideNode = {
+    message:"oNode instanceof works (COLOR_OVERRIDE_TVG -> oColorOverrideNode)",
+    prepare:function(){
+    },
+    run:function(){
+        var colorNode = $.scn.root.addNode('COLOR_OVERRIDE_TVG');
+        assert(colorNode instanceof $.oNode, true, 'colorNode is instance of oNode');
+        assert(colorNode instanceof $.oColorOverrideNode, true, 'colorNode is instance of oColorOverrideNode');
+        assert(colorNode instanceof $.oPegNode, false, 'colorNode is not instance of oPegNode');
+    },
+    check:function(){
+    },
+}
+
+/**
+ * instanceof works for TransformationSwitch nodes (oTransformSwitchNode)
+ */
+exports.testoNodeInstanceofTransformSwitchNode = {
+    message:"oNode instanceof works (TransformationSwitch -> oTransformSwitchNode)",
+    prepare:function(){
+    },
+    run:function(){
+        var tsNode = $.scn.root.addNode('TransformationSwitch');
+        assert(tsNode instanceof $.oNode, true, 'tsNode is instance of oNode');
+        assert(tsNode instanceof $.oTransformSwitchNode, true, 'tsNode is instance of oTransformSwitchNode');
+        assert(tsNode instanceof $.oPegNode, false, 'tsNode is not instance of oPegNode');
+    },
+    check:function(){
+    },
+}
+
+/**
+ * instanceof works for generic node types (default case -> oNode)
+ */
+exports.testoNodeInstanceofGenericNode = {
+    message:"oNode instanceof works (generic types -> oNode)",
+    prepare:function(){
+    },
+    run:function(){
+        var comp = $.scn.root.addNode('COMPOSITE');
+        assert(comp instanceof $.oNode, true, 'comp is instance of oNode');
+        assert(comp instanceof $.oPegNode, false, 'comp is not instance of oPegNode');
+        assert(comp instanceof $.oDrawingNode, false, 'comp is not instance of oDrawingNode');
+        assert(comp instanceof $.oGroupNode, false, 'comp is not instance of oGroupNode');
+    },
+    check:function(){
+    },
+}
+
+/**
+ * instanceof inheritance chain is correct - all nodes inherit from oNode
+ */
+exports.testoNodeInstanceofInheritanceChain = {
+    message:"oNode instanceof inheritance chain is correct",
+    prepare:function(){
+    },
+    run:function(){
+        // Test that all node types are instanceof oNode
+        var peg = $.scn.root.addNode('PEG');
+        var read = $.scn.root.addNode('READ');
+        var group = $.scn.root.addGroup('TestGroup2');
+        var comp = $.scn.root.addNode('COMPOSITE');
+        
+        assert(peg instanceof $.oNode, true, 'PEG is instance of oNode');
+        assert(read instanceof $.oNode, true, 'READ is instance of oNode');
+        assert(group instanceof $.oNode, true, 'GROUP is instance of oNode');
+        assert(comp instanceof $.oNode, true, 'COMPOSITE is instance of oNode');
+        
+        // Test that specific subclasses are not cross-compatible
+        assert(peg instanceof $.oDrawingNode, false, 'PEG is not instance of oDrawingNode');
+        assert(read instanceof $.oPegNode, false, 'READ is not instance of oPegNode');
+        assert(group instanceof $.oPegNode, false, 'GROUP is not instance of oPegNode');
+    },
+    check:function(){
+    },
+}
+
+/**
  * Test shorthand works for nested attributes (e.g., node.position.x, node.position.y)
  */
 exports.testoNodeShorthandNestedAttributes = {
