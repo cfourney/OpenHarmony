@@ -217,15 +217,11 @@ ONodeTypes.prototype.getClassForType = function(type, nodePath){
       if (base) baseKeywords[base] = true;
     }
     
-    // If no keywords found from scan, add common ones as fallback
+    // If no keywords were found, the scan failed; surface an error instead
     var keywordCount = 0;
     for (var k in baseKeywords) { keywordCount++; }
     if (keywordCount === 0) {
-      // Common node attributes that most node types have
-      var commonKeywords = ['position', 'scale', 'rotation', 'offset', 'skew', 'pivot'];
-      for (var c = 0; c < commonKeywords.length; c++) {
-        baseKeywords[commonKeywords[c]] = true;
-      }
+      throw new Error('Attribute scan returned no keywords for node type "' + type + '" at path "' + nodePath + '"');
     }
 
     // Build per-type subclass
