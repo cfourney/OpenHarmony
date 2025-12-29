@@ -401,6 +401,12 @@ $.getPreferences = function( ){
   return new $.oPreferences();
 }
 
+
+/**
+ * Setup the node types repository
+ */
+$.nodeTypes = new $.oNodeTypes();
+
 //---- Attach Helpers ------
 $.network     = new $.oNetwork();
 $.dialog      = new $.oDialog();

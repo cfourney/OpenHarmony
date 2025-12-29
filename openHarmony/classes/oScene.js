@@ -771,36 +771,11 @@ Object.defineProperty(oScene.prototype, 'currentTimeline', {
 
 /**
  * Gets a node by the path.
- * @param   {string}   fullPath         The path of the node in question.
- *
+ * @param   {string}   path         The path of the node in question.
  * @return {$.oNode}                    The node found given the query.
  */
-oScene.prototype.getNodeByPath = function(fullPath){
-    var _type = node.type(fullPath);
-    if (_type == "") return null;
-
-    var _node;
-    switch(_type){
-      case "READ" :
-        _node = new this.$.oDrawingNode( fullPath, this );
-        break;
-      case "PEG" :
-        _node = new this.$.oPegNode( fullPath, this );
-        break;
-      case "COLOR_OVERRIDE_TVG" :
-        _node = new this.$.oColorOverrideNode( fullPath, this );
-        break;
-      case "TransformationSwitch" :
-        _node = new this.$.oTransformSwitchNode( fullPath, this );
-        break;
-      case "GROUP" :
-        _node = new this.$.oGroupNode( fullPath, this );
-        break;
-      default:
-        _node = new this.$.oNode( fullPath, this );
-    }
-
-    return _node;
+oScene.prototype.getNodeByPath = function(path){
+  return this.$.nodeTypes.getInstance(path);
 }
 
 /**

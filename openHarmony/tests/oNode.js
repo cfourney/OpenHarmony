@@ -14,6 +14,32 @@ exports.testoNodeName = {
     },
 }
 
+
+exports.testoNodeSubtyping = {
+    message:"oNode subtypes",
+    prepare:function(){},
+    run:function(){
+        var test = $.scn.root;
+        
+        assert(test, 'Top', 'oNode initialization and toString() prints the path')
+        assert(test.name, 'Top', 'root scene node name is Top, can access object name property')
+        assert(test instanceof $.oNode, true, 'object is an oNode')
+        assert(test instanceof $.oGroupNode, true, 'object has deep inheritance that include oGroupNode prototype')
+
+        var readNode = test.addNode('READ') // checking we can access methods of oGroupNode
+
+        assert(!!readNode, true, 'read node was successfully created')
+        assert(readNode instanceof $.oNode, true, 'created read Node inherited from oNode')
+        assert(readNode instanceof $.oGroupNode, false, "created read Node prototype chain doesn't overlap with oGroupNode")
+        assert(readNode instanceof $.oDrawingNode, true, "created read Node is a Drawing Node")
+    },
+    check:function(){
+    },
+}
+
+
+
+
 // ----------------------- Shorthand Attribute Getter/Setter Tests ----------------------//
 // These tests verify shorthand attribute access like node.position.x = 5.
 // Dynamic placeholder getters are created for all attributes at first node creation,
