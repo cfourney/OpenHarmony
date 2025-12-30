@@ -44,7 +44,7 @@ function oAttribute( oNodeObject, attributeObject, parentAttribute ){
   this._type = "attribute";
 
   this.node = oNodeObject;
-  this.attributeObject = attributeObject;
+  this._attributeObject = attributeObject;
 
   this._shortKeyword = attributeObject.keyword();
 
@@ -59,6 +59,18 @@ function oAttribute( oNodeObject, attributeObject, parentAttribute ){
   // recursively add all subattributes as properties on the object
   this.createSubAttributes(attributeObject);
 }
+
+
+/**
+ * The display name of the attribute
+ * @name $.oAttribute#attributeObject
+ * @private
+ */
+Object.defineProperty(oAttribute.prototype, 'attributeObject', {
+  get: function(){
+    return this._attributeObject;
+  }
+})
 
 
 /**

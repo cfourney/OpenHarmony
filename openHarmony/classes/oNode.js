@@ -693,7 +693,7 @@ Object.defineProperty(oNode.prototype, 'attributes', {
           var _keyword = _attribute.keyword;
           _attributes[_keyword] = _attribute;
       }
-      return _attributes;
+      this._attributesCache = _attributes;
     }
     return this._attributesCache
   }
@@ -1801,16 +1801,7 @@ oNode.prototype.removeAttribute = function( attrName ){
  * @return  {bool}    The result of the unlink.
  */
 oNode.prototype.refreshAttributes = function( ){
-    // generate properties from node attributes to allow for dot notation access
-    this.attributesBuildCache();
-
-    // for each attribute, create a getter setter as a property of the node object
-    // that handles the animated/not animated duality
-    var _attributes = this.attributes
-    for (var i in _attributes){
-      var _attr = _attributes[i];
-      this.setAttrGetterSetter(_attr, this, this);
-    }
+  this._attributesCache = undefined; // clear attributes cache so it gets regenerated on next access
 }
 
 exports.oNode = oNode;
@@ -2484,9 +2475,8 @@ oGroupNode.prototype.getNodesByType = function(typeName, recurse){
   var groupPath = this.path;
   var groupPathPrefix = groupPath + "/";
   var result = [];
-  var _scene = this.scene;
   
-  for (var i = 0; i < allNodePaths.length; i++) {
+  for (var i in allNodePaths) {
     var nodePath = allNodePaths[i];
     
     // Check if node is inside this group
@@ -2498,7 +2488,7 @@ oGroupNode.prototype.getNodesByType = function(typeName, recurse){
       if (remainder.indexOf("/") !== -1) continue;  // Skip nested nodes
     }
     
-    result.push(_scene.getNodeByPath(nodePath));
+    result.push(this.scene.getNodeByPath(nodePath));
   }
   
   return result;
@@ -3787,18 +3777,23 @@ oNodeTypes.prototype.getPrototype = function(path) {
         _type = this.$.oNode;
     }
 
-    this.$.log('oNodeTypes: creating new subclass for new type ' + typeName);
-    typeProto = Object.create(_type.prototype);
-    typeProto.constructor = _type;
+    // creating a new custom class for this type to receive getter/setters, inheriting from the correct oNode subclass
+    var Class = function(){
+      var _class = function(path){
+        _type.call(this, path);
+      };
+      _class.prototype = Object.create(_type.prototype);
+      _class.toString = _type.toString;
+      return _class;
+    }();
 
     var _attributesList = node.getAttrList( path, 1);
-    $.log(typeProto)
-    $.log(_attributesList)
     for (var i in _attributesList){
-      this.setAttrGetterSetter(_attributesList[i], typeProto);
+      var attr = new this.$.oAttribute(null, _attributesList[i]);
+      this.setAttrGetterSetter(attr, Class.prototype);
     }
 
-    this._types[typeName] = typeProto;
+    this._types[typeName] = Class;
   }
 
   return this._types[typeName];
@@ -3807,7 +3802,7 @@ oNodeTypes.prototype.getPrototype = function(path) {
 
 oNodeTypes.prototype.getInstance = function(path) {
   var typeProto = this.getPrototype(path);
-  return new typeProto.constructor(path);
+  return new typeProto(path);
 }
 
 
@@ -3816,30 +3811,32 @@ oNodeTypes.prototype.getInstance = function(path) {
  * @private
  */
 oNodeTypes.prototype.setAttrGetterSetter = function (attr, context){
-  // if (typeof context === 'undefined') context = this; // this is the object onto which this getter setter will be created
-  this.$.log("Creating getter setters for attribute: "+attr.keyword()+" on object: "+context, this.$.DEBUG_LEVEL.DEBUG)
-
+  // this.$.debug("Creating getter setters for attribute: "+attr.keyword+" on object: "+context, this.$.DEBUG_LEVEL.DEBUG)
   var _keyword = attr.shortKeyword;
+  var that = this; // make an accessor to oNodeTypes from the getter closure
 
   Object.defineProperty( context, _keyword, {
     enumerable : true,
     configurable : true,
     get : function(){
-      // MessageLog.trace("getting attribute "+attr.keyword+". animated: "+(attr.column != null))
+      if (context instanceof this.$.oNode)
+        attr = this.attributes[_keyword]; // if accessing a root attribute (on the oNode), accessing the attributes property will build the cache
+
+      var _value;
+      if (attr.column){
+        _value = new this.$.oList(attr.frames, 1);     // if attribute has animation, return the frames
+      } else {
+        _value = attr.getValue(); // otherwise return the value
+      }
+
       var _subAttrs = attr.subAttributes;
-      if (_subAttrs.length == 0){
-        // if attribute has animation, return the frames
-        if (attr.column != null) return attr.frames;
-        // otherwise return the value
-        var _value =  attr.getValue();
-      }else{
+      if (_subAttrs.length){
         // if there are subattributes, create getter setters for each on the returned object
         // this means every result of attr.getValue must be an object.
         // For attributes that have a string return value, attr.getValue() actually returns a fake string object
         // which is an object with a value property and a toString() method returning the value.
-        var _value = (attr.column != null)?new this.$.oList(attr.frames, 1):attr.getValue();
         for (var i in _subAttrs){
-          this.setAttrGetterSetter( _subAttrs[i], _value);
+          that.setAttrGetterSetter( _subAttrs[i], _value); // here this points to the node/value object
         }
       }
       return _value;
@@ -3866,7 +3863,7 @@ oNodeTypes.prototype.setAttrGetterSetter = function (attr, context){
         var _value = newValue;
         // dealing with value being an object with frameNumber for animated values
         if (attr.column != null) {
-          if (!(newValue instanceof oFrame)) {
+          if (!(newValue instanceof this.$.oFrame)) {
             // fallback to set frame 1
             newValue = {value:newValue, frameNumber:1};
           }
