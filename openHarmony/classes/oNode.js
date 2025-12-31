@@ -3819,12 +3819,12 @@ oNodeTypes.prototype.setAttrGetterSetter = function (attr, context){
     enumerable : true,
     configurable : true,
     get : function(){
-      if (context instanceof this.$.oNode)
+      if (context instanceof that.$.oNode)
         attr = this.attributes[_keyword]; // if accessing a root attribute (on the oNode), accessing the attributes property will build the cache
 
       var _value;
       if (attr.column){
-        _value = new this.$.oList(attr.frames, 1);     // if attribute has animation, return the frames
+        _value = new that.$.oList(attr.frames, 1);     // if attribute has animation, return the frames
       } else {
         _value = attr.getValue(); // otherwise return the value
       }
@@ -3843,13 +3843,16 @@ oNodeTypes.prototype.setAttrGetterSetter = function (attr, context){
     },
 
     set : function(newValue){
-      // this.$.debug("setting attribute through getter setter "+attr.keyword+" to value: "+newValue, this.$.DEBUG_LEVEL.DEBUG)
-      // if attribute has animation, passed value must be a frame object
+      // $.log(attr.shortKeyword+' '+ this + ' '+attr)
+      if (context instanceof that.$.oNode)
+        attr = this.attributes[attr.shortKeyword]; // if accessing a root attribute (on the oNode), accessing the attributes property will build the cache
+
       var _subAttrs = attr.subAttributes;
 
       // setting the attribute directly if no subattributes are present, or if value is a color (exception)
       if (_subAttrs.length == 0 || attr.type == "COLOR"){
         if (attr.column != null) {
+          // if attribute has animation, passed value must be a frame object
           if (!newValue.hasOwnProperty("frameNumber")) {
             // fallback to set frame 1
             newValue = {value:newValue, frameNumber:1};
@@ -3863,7 +3866,7 @@ oNodeTypes.prototype.setAttrGetterSetter = function (attr, context){
         var _value = newValue;
         // dealing with value being an object with frameNumber for animated values
         if (attr.column != null) {
-          if (!(newValue instanceof this.$.oFrame)) {
+          if (!(newValue.hasOwnProperty("frameNumber"))) {
             // fallback to set frame 1
             newValue = {value:newValue, frameNumber:1};
           }

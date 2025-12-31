@@ -285,24 +285,6 @@ Object.defineProperty(oAttribute.prototype, 'keyframes', {
     }
 });
 
-/**
- * WIP.
- * @name $.oAttribute#useSeparate
- * @type {bool}
- * @private
- */
-//CF Note: Not sure if this should be a general attribute, or a subattribute.
-Object.defineProperty(oAttribute.prototype, "useSeparate", {
-    get : function(){
-        // TODO
-        throw new Error("not yet implemented");
-    },
-
-    set : function( _value ){
-        // TODO: when swapping from one to the other, copy key values and link new columns if missing
-        throw new Error("not yet implemented");
-    }
-});
 
 
 /**
