@@ -149,6 +149,75 @@ oAttribute.prototype.getSubAttributes_oldVersion = function (){
 
 
 /**
+ * Private function to create attributes setters and getters as properties of the node
+ * @private
+ */
+oAttribute.prototype.createGetterSetter = function (context){
+  // this.$.debug("Creating getter setters for attribute: "+attr.keyword+" on object: "+context, this.$.DEBUG_LEVEL.DEBUG)
+  var _keyword = this.shortKeyword;
+  var that = this; // make an accessor to oNodeTypes from the getter closure
+
+  Object.defineProperty( context, _keyword, {
+    enumerable : true,
+    configurable : true,
+    get : function(){
+      var attr = that;
+      if (context instanceof that.$.oNode)
+        attr = this.attributes[that.shortKeyword]; // if accessing a root attribute (on the oNode), accessing the attributes property will build the cache
+
+      var _value;
+      if (attr.column){
+        _value = new that.$.oList(attr.frames, 1); // if attribute has animation, return the frames, values will be fetched dynamically upon access
+      } else {
+        _value = attr.getValue(); // otherwise return the value
+      }
+
+      var _subAttrs = attr.subAttributes;
+      if (_subAttrs.length){
+        // if there are subattributes, create getter setters for each on the returned object
+        // this means every result of attr.getValue must be an object.
+        // For attributes that have a string return value, attr.getValue() actually returns a fake string object
+        // which is an object with a value property and a toString() method returning the value.
+        for (var i in _subAttrs){
+          _subAttrs[i].createGetterSetter(_value);
+        }
+      }
+      return _value;
+    },
+
+    set : function(newValue){
+      // this.$.debug("setting attribute through getter setter "+attr.keyword+" to value: "+newValue, this.$.DEBUG_LEVEL.DEBUG)
+      var attr = that;
+      if (context instanceof that.$.oNode)
+        attr = this.attributes[that.shortKeyword]; // if accessing a root attribute (on the oNode), accessing the attributes property will build the cache
+
+      var _subAttrs = attr.subAttributes;
+
+      // setting the attribute directly if no subattributes are present, or if value is a color (exception)
+      var _value = newValue;
+      var _frame = 1;
+      // dealing with value being an object with frameNumber for animated values
+      if (newValue.hasOwnProperty("frameNumber")) {
+        _value = newValue.value;
+        _frame = newValue.frameNumber;
+      }
+
+      if (_subAttrs.length == 0 || attr.type == "COLOR"){
+        attr.setValue(_value, _frame);
+      }else{
+        for (var i in _subAttrs){
+          // set each subAttr individually based on corresponding values in the provided object
+          var _keyword = _subAttrs[i].shortKeyword;
+          if (_value.hasOwnProperty(_keyword)) _subAttrs[i].setValue(_value[_keyword], _frame);
+        }
+      }
+    }
+  });
+};
+
+
+
+/**
  * The display name of the attribute
  * @name $.oAttribute#name
  * @type {string}
@@ -546,7 +615,7 @@ oAttribute.prototype.setValue = function (value, frame) {
     var _type = this.type;
     var _animate = false;
 
-    if (!frame){
+    if (!frame || frame == 1){
       // we don't animate
       var frame = 1;
     }else if (!_column){
