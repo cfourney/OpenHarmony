@@ -265,7 +265,7 @@ Object.defineProperty(oNode.prototype, 'name', {
     node.rename(this.path, testName);
     this._path = _parent+'/'+testName;
 
-    this.refreshAttributes();
+    this.refreshAttributes(); // if the path changes, attributes need to update
   }
 });
 
@@ -2485,22 +2485,22 @@ oGroupNode.prototype.getNodesByType = function(typeName, recurse){
   var groupPath = this.path;
   var groupPathPrefix = groupPath + "/";
   var result = [];
-  
+
   for (var i in allNodePaths) {
     var nodePath = allNodePaths[i];
-    
+
     // Check if node is inside this group
     if (nodePath.indexOf(groupPathPrefix) !== 0) continue;
-    
+
     // If not recursing, check it's a direct child (no more "/" after group path)
     if (!recurse) {
       var remainder = nodePath.substring(groupPathPrefix.length);
       if (remainder.indexOf("/") !== -1) continue;  // Skip nested nodes
     }
-    
+
     result.push(this.scene.getNodeByPath(nodePath));
   }
-  
+
   return result;
 }
 
@@ -2847,10 +2847,10 @@ oGroupNode.prototype.importTemplate = function( tplPath, destinationNodes, exten
   // When destinationNodes is set, delegate to pasteFramesFromTemplate
   if (destinationNodes){
     this.$.log("oGroupNode.importTemplate with destinationNodes is deprecated. Use oGroupNode.pasteFramesFromTemplate instead for better animation keyframe support.");
-    
+
     // Use pasteFramesFromTemplate with default parameters (whole template, frame 1, match by name)
     var success = this.pasteFramesFromTemplate(tplPath, destinationNodes, 1, undefined, true);
-    
+
     if (success) {
       return destinationNodes;
     } else {
