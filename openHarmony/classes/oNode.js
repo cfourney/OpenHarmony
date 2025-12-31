@@ -1530,9 +1530,13 @@ oNode.prototype.clone = function( newName, newPosition ){
     var _clonedAttribute = _clonedNode.getAttributeByName(_attributes[i].keyword);
 
     // handle custom attributes
-    if (_clonedAttribute == undefined || _clonedAttribute == null){
-      _clonedNode.createAttribute(_attributes[i].keyword, _attributes[i].type, _attributes[i].name, !!_attributes[i].column)
-      _clonedAttribute = _clonedNode.getAttributeByName(_attributes[i].keyword);
+    if (!_clonedAttribute){
+      _clonedAttribute = _clonedNode.createAttribute(
+        _attributes[i].keyword,
+        _attributes[i].type,
+        _attributes[i].name,
+        !!_attributes[i].column
+      )
     }
 
     _clonedAttribute.setToAttributeValue(_attributes[i]);
@@ -1567,9 +1571,13 @@ oNode.prototype.duplicate = function(newName, newPosition){
     var _duplicateAttribute = _duplicateNode.getAttributeByName(_attributes[i].keyword);
 
     // handle custom attributes
-    if (_duplicateAttribute  == undefined || _duplicateAttribute  == null){
-      _duplicateNode.createAttribute(_attributes[i].keyword, _attributes[i].type, _attributes[i].name, !!_attributes[i].column)
-      _duplicateAttribute  = _duplicateNode.getAttributeByName(_attributes[i].keyword);
+    if (!_duplicateAttribute){
+      _duplicateAttribute = _duplicateNode.createAttribute(
+        _attributes[i].keyword,
+        _attributes[i].type,
+        _attributes[i].name,
+        !!_attributes[i].column
+      )
     }
 
     _duplicateAttribute.setToAttributeValue(_attributes[i], true);
@@ -1626,7 +1634,7 @@ oNode.prototype.getAttributeByName = function( keyword ){
   keyword = keyword.split(".");
 
   // we go through the keywords, trying to access an attribute corresponding to the name
-  var _attribute = this.attributes;
+  var _attribute = this.attributes; // start recursive search at the root
   for (var i in keyword){
     var _keyword = keyword[i];
 
@@ -1756,49 +1764,43 @@ oNode.prototype.createAttribute = function( attrName, type, displayName, linkabl
   if (typeof displayName === 'undefined') displayName = attrName;
   if (typeof linkable === 'undefined') linkable = false;
 
-  var res = node.createDynamicAttr( this.path, type.toUpperCase(), attrName, displayName, linkable );
-  if( !res ){
-    return false;
-  }
+  var result = node.createDynamicAttr( this.path, type.toUpperCase(), attrName, displayName, linkable );
+  if (!result)
+    throw new Error ("Couldn't create attribute "+attrName+" of type "+type+" on node "+this.path);
 
   this.refreshAttributes();
 
-  var res_split = attrName.split(".");
-  if( res_split.length>0 ){
-    //Its a sub attribute created.
-    try{
-      var sub_attr = this.attributes[ res_split[0] ];
-      for( x = 1; x<res_split.length;x++ ){
-        sub_attr = sub_attr[ res_split[x] ];
-      }
-      return sub_attr;
+  var attribute = this.getAttributeByName(attrName);
+  attribute.createGetterSetter(this);
 
-    }catch( err ){
-      return false;
-    }
-  }
-
-  var res = this.attributes[ attrName ];
-  return this.attributes[ attrName ];
+  return attribute;
 }
 
 
 /**
  * Removes an existing dynamic attribute in the node.
  * @param   {string}   attrName                   The attribute name to remove.
- *
  * @return  {bool}     The result of the removal.
  */
 oNode.prototype.removeAttribute = function( attrName ){
   attrName = attrName.toLowerCase();
-  return node.removeDynamicAttr( this.path, attrName );
+
+  if (!this.getAttributeByName(attrName)) throw new Error("Couldn't remove attribute " + attrName + " on Node " + this.path + ", attribute not found.")
+
+  var result = node.removeDynamicAttr( this.path, attrName );
+  if (!result)
+    throw new Error("Couldn't remove attribute " + attrName + " on Node " + this.path)
+
+  this.refreshAttributes();
+  if (this.hasOwnProperty(attrName))
+    delete this[attrName] // removing getter setter
+
+  return true;
 }
 
 
 /**
- * Refreshes/rebuilds the attributes and getter/setters.
- * @param   {$.oNode}   oNodeObject            The node to link this one's inport to.
- * @return  {bool}    The result of the unlink.
+ * Clears the attributes cache so it gets rebuilt on next access.
  */
 oNode.prototype.refreshAttributes = function( ){
   this._attributesCache = undefined; // clear attributes cache so it gets regenerated on next access
@@ -2206,11 +2208,19 @@ oDrawingNode.prototype.duplicate = function(newName, newPosition, duplicateEleme
 
   for (var i in _attributes){
     var _duplicateAttribute = _duplicateNode.getAttributeByName(_attributes[i].keyword);
+
+    // handle custom attributes
+    if (!_duplicateAttribute){
+      _duplicateAttribute = _duplicateNode.createAttribute(
+        _attributes[i].keyword,
+        _attributes[i].type,
+        _attributes[i].name,
+        !!_attributes[i].column
+      )
+    }
+
     _duplicateAttribute.setToAttributeValue(_attributes[i], true);
   }
-
-  var _duplicateAttribute = _duplicateNode.getAttributeByName(_attributes[i].keyword);
-  _duplicateAttribute.setToAttributeValue(_attributes[i], true);
 
   return _duplicateNode;
 };
