@@ -155,19 +155,18 @@ oAttribute.prototype.getSubAttributes_oldVersion = function (){
 oAttribute.prototype.createGetterSetter = function (context){
   // this.$.debug("Creating getter setters for attribute: "+attr.keyword+" on object: "+context, this.$.DEBUG_LEVEL.DEBUG)
   var _keyword = this.shortKeyword;
-  var that = this; // make an accessor to oNodeTypes from the getter closure
+  var attr = this; // make an accessor to the attribute itself from the getter setters
 
   Object.defineProperty( context, _keyword, {
     enumerable : true,
     configurable : true,
     get : function(){
-      var attr = that;
-      if (context instanceof that.$.oNode)
-        attr = this.attributes[that.shortKeyword]; // if accessing a root attribute (on the oNode), accessing the attributes property will build the cache
+      if (context instanceof attr.$.oNode)
+        attr = this.attributes[attr.shortKeyword]; // if accessing a root attribute (on the oNode), accessing the attributes property will build the cache
 
       var _value;
       if (attr.column){
-        _value = new that.$.oList(attr.frames, 1); // if attribute has animation, return the frames, values will be fetched dynamically upon access
+        _value = new attr.$.oList(attr.frames, 1); // if attribute has animation, return the frames, values will be fetched dynamically upon access
       } else {
         _value = attr.getValue(); // otherwise return the value
       }
@@ -187,9 +186,8 @@ oAttribute.prototype.createGetterSetter = function (context){
 
     set : function(newValue){
       // this.$.debug("setting attribute through getter setter "+attr.keyword+" to value: "+newValue, this.$.DEBUG_LEVEL.DEBUG)
-      var attr = that;
-      if (context instanceof that.$.oNode)
-        attr = this.attributes[that.shortKeyword]; // if accessing a root attribute (on the oNode), accessing the attributes property will build the cache
+      if (context instanceof attr.$.oNode)
+        attr = this.attributes[attr.shortKeyword]; // if accessing a root attribute (on the oNode), accessing the attributes property will build the cache
 
       var _subAttrs = attr.subAttributes;
 

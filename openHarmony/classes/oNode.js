@@ -196,11 +196,6 @@ Object.defineProperty(oNode.prototype, 'children', {
       }
 
       return _children;
-    },
-
-    set : function( arr_children ){
-      //Consider a way to have this group adopt the children, move content here?
-      //this may be a bit tough to extend.
     }
 });
 
@@ -1269,27 +1264,6 @@ oNode.prototype.timelineIndex = function(timeline){
 }
 
 
-/**
- * obtains the nodes contained in the group, allows recursive search. This method is deprecated and was moved to oGroupNode
- * @DEPRECATED
- * @param   {bool}   recurse           Whether to recurse internally for nodes within children groups.
- *
- * @return  {$.oNode[]}    The subbnodes contained in the group.
- */
-oNode.prototype.subNodes = function(recurse){
-    if (typeof recurse === 'undefined') recurse = false;
-    var _nodes = node.subNodes(this.path);
-    var _subNodes = [];
-    for (var _node in _nodes){
-        var _oNodeObject = new this.$.oNode( _nodes[_node] );
-        _subNodes.push(_oNodeObject);
-        if (recurse && node.isGroup(_nodes[_node])) _subNodes = _subNodes.concat(_$.oNodeObject.subNodes(recurse));
-    }
-
-    return _subNodes;
-};
-
-
  /**
  * Place a node above one or more nodes with an offset.
  * @param   {$.oNode[]}     oNodeArray                The array of nodes to center this above.
@@ -1941,6 +1915,7 @@ function oDrawingNode(path, oSceneObject) {
     this._type = 'drawingNode';
 }
 oDrawingNode.prototype = Object.create(oNode.prototype);
+oDrawingNode.prototype.constructor = oDrawingNode;
 
 
 /**
@@ -2377,6 +2352,7 @@ function oGroupNode (path, oSceneObject) {
     this._type = 'groupNode';
 }
 oGroupNode.prototype = Object.create(oNode.prototype);
+oGroupNode.prototype.constructor = oGroupNode;
 
 
 /**
@@ -2678,7 +2654,7 @@ oGroupNode.prototype.addNode = function( type, name, nodePosition ){
   if (type == "DISPLAY"){
     var num = 1;
     var displayName = name;
-    while (this.$node(displayName)){
+    while (this.getNodeByName(displayName)){
       displayName = name + "_" + num;
       num++;
     }

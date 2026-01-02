@@ -33,6 +33,8 @@ function oNodeTypes (){
  */
 oNodeTypes.prototype.getPrototype = function(nodePath) {
   var typeName = node.type(nodePath);
+  if (!typeName) throw new Error("Path "+nodePath+" doesn't point to an existing node");
+
   var typeProto = this.types[typeName];
 
   if (!typeProto) {

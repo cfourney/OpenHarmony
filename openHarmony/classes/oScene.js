@@ -772,10 +772,15 @@ Object.defineProperty(oScene.prototype, 'currentTimeline', {
 /**
  * Gets a node by the path.
  * @param   {string}   path         The path of the node in question.
- * @return {$.oNode}                    The node found given the query.
+ * @return {$.oNode}                The node found given the query.
  */
 oScene.prototype.getNodeByPath = function(path){
-  return this.$.nodeTypes.getInstance(path);
+  try{
+    return this.$.nodeTypes.getInstance(path);
+  }catch(e){
+    // this function can technically fail safely, because we can use it to check if a node exists in the scene
+    return null;
+  }
 }
 
 /**
@@ -1747,7 +1752,7 @@ oScene.prototype.exportTemplate = function(nodes, exportPath, exportPalettesMode
 
 
   this.selectedNodes = _allNodes;
-  this.selectedFrames = (frameRange && Array.isArray(frameRange) && frameRange.length === 2) 
+  this.selectedFrames = (frameRange && Array.isArray(frameRange) && frameRange.length === 2)
     ? frameRange
     : [this.startPreview, this.stopPreview];
 
