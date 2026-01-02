@@ -295,7 +295,7 @@ oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptMul
     return;
   }
 
-  if (typeof title === 'undefined') var title = "Select a file:";
+  if (typeof text === 'undefined') var text = "Select a file:";
   if (typeof filter === 'undefined') var filter = "*"
   if (typeof getExisting === 'undefined') var getExisting = true;
   if (typeof acceptMultiple === 'undefined') var acceptMultiple = false;
@@ -310,6 +310,10 @@ oDialog.prototype.browseForFile = function( text, filter, getExisting, acceptMul
   }else{
     var _files = QFileDialog.getSaveFileName(0, text, startDirectory, filter);
   }
+
+  // If acceptMultiple is true, we get an empty array on cancel, otherwise we get an empty string
+  // length is 0 for both cases, but an empty array is truthy in my testing
+  if (!_files || !_files.length) return undefined;
 
   for (var i in _files){
     _files[i] = _files[i].replace(/\\/g, "/");
@@ -333,7 +337,7 @@ oDialog.prototype.browseForFolder = function(text, startDirectory){
     return;
   }
 
-  if (typeof title === 'undefined') var title = "Select a folder:";
+  if (typeof text === 'undefined') var text = "Select a folder:";
 
   var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory);
   _folder = _folder.split("\\").join("/");
@@ -353,33 +357,12 @@ oDialog.prototype.browseForFolder = function(text, startDirectory){
  * @return  {oFile[]}           An oFile array, or 'undefined' if the dialog is cancelled
  */
 oDialog.prototype.chooseFile = function( text, filter, getExisting, acceptMultiple, startDirectory){
-  if (this.$.batchMode) {
-    this.$.debug("$.oDialog.chooseFile not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
-    return;
-  }
 
-  if (typeof text === 'undefined') var text = "Select a file:";
-  if (typeof filter === 'undefined') var filter = "*"
-  if (typeof getExisting === 'undefined') var getExisting = true;
-  if (typeof acceptMultiple === 'undefined') var acceptMultiple = false;
-
-
-  if (getExisting){
-    if (acceptMultiple){
-      var _chosen = QFileDialog.getOpenFileNames(0, text, startDirectory, filter);
-    }else{
-      var _chosen = QFileDialog.getOpenFileName(0, text, startDirectory, filter);
-    }
-  }else{
-    var _chosen = QFileDialog.getSaveFileName(0, text, startDirectory, filter);
-  }
-
-  // If acceptMultiple is true, we get an empty array on cancel, otherwise we get an empty string
-  // length is 0 for both cases, but an empty array is truthy in my testing
-  if (!_chosen.length) return undefined;
+  var _chosen = this.browseForFile(text, filter, getExisting, acceptMultiple, startDirectory);
+  if (!_chosen) return undefined;
 
   try {
-    _chosen = _chosen.map(function(thisFile){return new $.oFile(thisFile);});
+    _chosen = _chosen.map(function(path){return new $.oFile(path);});
   } catch (err) {
     // No "map" method means not an array
     _chosen = [new this.$.oFile(_chosen)];
@@ -398,15 +381,7 @@ oDialog.prototype.chooseFile = function( text, filter, getExisting, acceptMultip
  * @return  {oFolder}           An oFolder for the selected folder, or undefined if dialog was cancelled
  */
 oDialog.prototype.chooseFolder = function(text, startDirectory){
-  if (this.$.batchMode) {
-    this.$.debug("$.oDialog.chooseFolder not supported in batch mode", this.$.DEBUG_LEVEL.WARNING)
-    return;
-  }
-
-  if (typeof text === 'undefined') var text = "Select a folder:";
-
-  var _folder = QFileDialog.getExistingDirectory(0, text, startDirectory);
-
+  var _folder = this.browseForFolder(text, startDirectory);
   if (!_folder) return undefined; // User cancelled
 
   return new this.$.oFolder(_folder);
