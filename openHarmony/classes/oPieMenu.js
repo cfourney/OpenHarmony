@@ -139,6 +139,8 @@ function oPieMenu (name, widgets, show, minAngle, maxAngle, radius, position, pa
   this.maxAngle = maxAngle;
   this.globalCenter = position;
 
+  this.parentMenu = null;
+  this.sliceIndexChanged = new this.$.oSignal()
   // how wide outisde the icons is the slice drawn
   this._circleMargin = 30;
 
@@ -295,7 +297,7 @@ oPieMenu.prototype.buildWidget = function(){
   for (var i=0; i < this.widgets.length; i++){
     var widget = this.widgets[i];
     widget.pieIndex = i;
-    widget.setParent(this);
+    widget.setParent(this.slice, this);
 
     var itemPosition = this.getItemPosition(i);
     var widgetPosition = new this.$.oPoint(center.x + itemPosition.x, center.y + itemPosition.y);
@@ -382,7 +384,7 @@ oPieMenu.prototype.drawSlice = function(){
       // leave from the bottom
       if (pieMenu.deactivate){
         pieMenu.deactivate();
-      } else if (indexWidget.deactivate) 
+      } else if (indexWidget.deactivate)
         indexWidget.deactivate();
 
     } else if (distance > pieMenu.maxRadius){
@@ -411,6 +413,7 @@ oPieMenu.prototype.drawSlice = function(){
         index = currentIndex;
         sliceWidget.update();
         indexWidget.setFocus(true);
+        pieMenu.sliceIndexChanged.emit(index);
       }
 
     }
@@ -624,7 +627,7 @@ Object.defineProperty(oPieSubMenu.prototype, "maxRadius", {
  */
 oPieSubMenu.prototype.activate = function(){
   this.showMenu(true);
-  this.setFocus(true)
+  this.setFocus(true);
 }
 
 
@@ -658,9 +661,11 @@ oPieSubMenu.prototype.move = function(x, y){
  * where calling parent() returns a QWidget and not a $.oPieButton
  * @private
  */
-oPieSubMenu.prototype.setParent = function(parent){
+oPieSubMenu.prototype.setParent = function(parent, parentMenu){
   this.$.oPieMenu.prototype.setParent.call(this, parent);
-  this.parentMenu = parent;
+  this.parentMenu = parentMenu;
+  if (this.parentMenu)
+    this.parentMenu.sliceIndexChanged.connect(this, function(){this.showMenu(false)});
 }
 
 
@@ -672,7 +677,20 @@ oPieSubMenu.prototype.setParent = function(parent){
 oPieSubMenu.prototype.buildButton = function(){
   // add main button in constructor because it needs to exist before show()
   var button = new this.$.oPieButton(this.menuIcon, this.name, this);
-  button.activate = function(){}; // prevent the button from closing the entire pie menu 
+
+  var menu = this;
+  button.activate = function(){
+    return function(){
+      menu.showMenu(true)
+    }
+  }(); // prevent the button from closing the entire pie menu
+
+  button.enterEvent = function(){
+    return function(){
+      menu.activate()
+    }
+  }();
+
   button.objectName = this.name+"_button";
 
   return button;
@@ -690,7 +708,6 @@ oPieSubMenu.prototype.showMenu = function(visibility){
   this.slice.visible = visibility;
   var icon = visibility?this.closeIcon:this.menuIcon;
   UiLoader.setSvgIcon(this.button, icon);
-  this.slice.mouseTracking = visibility;
 }
 
 

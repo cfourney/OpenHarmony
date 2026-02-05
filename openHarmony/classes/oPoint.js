@@ -154,9 +154,9 @@ oPoint.prototype.translate = function( x, y, z){
  * @returns {float}
  */
 oPoint.prototype.distance = function ( point ){
-  var distanceX = point.x-this.x;
-  var distanceY = point.y-this.y;
-  var distanceZ = point.z-this.z;
+  var distanceX = Math.abs(point.x-this.x);
+  var distanceY = Math.abs(point.y-this.y);
+  var distanceZ = Math.abs(point.z-this.z);
 
   return Math.sqrt(distanceX*distanceX + distanceY*distanceY + distanceZ*distanceZ)
 }

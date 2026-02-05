@@ -29,6 +29,7 @@
 
   QPushButton.call(this, text, parent);
   this.name = "PieButton " + text
+  this.parentMenu = null;
   this.setParent(parent)
 
   this.minimumHeight = 24;
@@ -83,9 +84,9 @@ oPieButton.prototype.activate = function(){
  * where calling parent() returns a QWidget and not a $.oPieButton
  * @private
  */
-oPieButton.prototype.setParent = function(parent){
+oPieButton.prototype.setParent = function(parent, parentMenu){
   QPushButton.prototype.setParent.call(this, parent);
-  this.parentMenu = parent;
+  this.parentMenu = parentMenu;
 }
 
 exports.oPieButton = oPieButton;
