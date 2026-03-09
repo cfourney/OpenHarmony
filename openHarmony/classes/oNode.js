@@ -3232,11 +3232,6 @@ oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addComp
   if (typeof nodePosition === 'undefined') var nodePosition = new this.$.oPoint(0,0,0);
   if (typeof importBlendModes === 'undefined') var importBlendModes = true;
 
-  if (this.$.batchMode){
-    this.$.debug("Error: can't import PSD file "+_psdFile.path+" in batch mode.", this.$.DEBUG_LEVEL.ERROR);
-    return null
-  }
-
   var _psdFile = (path instanceof this.$.oFile)?path:new this.$.oFile( path );
   if (!_psdFile.exists){
     this.$.debug("Error: can't import PSD file "+_psdFile.path+" because it doesn't exist", this.$.DEBUG_LEVEL.ERROR);
@@ -3244,7 +3239,9 @@ oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addComp
   }
 
   if (typeof CELIO === "undefined"){
-    throw new Error("CELIO plugin is required for PSD import but is not available. Install the CELIO plugin to import PSD files.");
+    throw new Error("CELIO plugin doesn't work in batch mode.");
+  } else if (CELIO.getLayerGroupInformation === undefined) {
+    throw new Error("CELIO plugin functions are not available.");
   }
 
   this.$.beginUndo("oH_importPSD_"+_psdFile.name);
@@ -3280,14 +3277,15 @@ oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addComp
 
     // Build group path -> blendingMode map from CELIO for group-level blend modes and pass-through
     var _groupBlendModes = {};
-    if (importBlendModes && typeof CELIO !== "undefined" && CELIO.getLayerGroupInformation) {
+    if (importBlendModes) {
       var _layerGroupInfo = CELIO.getLayerGroupInformation(_psdFile.path);
       if (_layerGroupInfo) {
         function _buildGroupBlendMap(obj, pathPrefix) {
-          if (obj.groups) for (var _groupKey in obj.groups) {
-            var _group = obj.groups[_groupKey];
+          if (!obj.groups) return;
+          for (var k in obj.groups) {
+            var _group = obj.groups[k];
             var _groupPath = pathPrefix ? pathPrefix + "/" + _group.name : _group.name;
-            _groupBlendModes[_groupPath] = _group.blendingMode;
+            _groupBlendModes[_groupPath] = _group.blendingMode || 1;
             _buildGroupBlendMap(_group, _groupPath);
           }
         }
@@ -3295,36 +3293,39 @@ oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addComp
       }
     }
 
-    for (var _groupComponent in _layers){
-      // generate nodes and set them to show the element for each layer
-      var _layer = _layers[_groupComponent];
+    for (var i in _layers){
+      var _layer = _layers[i];
       var _layerName = _layer.layerName.split(" ").join("_");
       var _nodePosition = new this.$.oPoint(_x+=_xSpacing, _y +=_ySpacing, 0);
+      var _layerNeedsBlend = importBlendModes && _layer.blendingMode !== undefined && _layer.blendingMode > 1;
 
-      // get/build the group
+      // Walk or create group path for this layer (each component = one level in the PSD group hierarchy)
       var _group = this;
       var _groupPathComponents = _layer.layerPathComponents;
       var _destinationPath = this.path;
       var _groupPeg = _peg;
       var _groupComposite = _comp;
+      var _psdGroupPath = "";
 
-      // recursively creating groups if they are missing
-      for (var _groupComponent in _groupPathComponents){
-        var _insertedGroupBlend = false;
-        var _destinationPath = _destinationPath + "/" + _groupPathComponents[_groupComponent];
+      for (var k in _groupPathComponents){
+        var _component = _groupPathComponents[k];
+        _psdGroupPath = _psdGroupPath ? _psdGroupPath + "/" + _component : _component;
+        _destinationPath = _destinationPath + "/" + _component;
         var _nextGroup = this.$.scene.getNodeByPath(_destinationPath);
+        var _insertedGroupBlend = false;
 
         if (!_nextGroup){
-          _nextGroup = _group.addGroup(_groupPathComponents[_groupComponent], true, true, [], _nodePosition);
+          _nextGroup = _group.addGroup(_component, true, true, [], _nodePosition);
           if (_groupPeg) _nextGroup.linkInNode(_groupPeg);
           if (_groupComposite) _nextGroup.linkOutNode(_groupComposite, 0, 0);
-          // Group-level blend mode: insert BLEND_MODE_MODULE or leave pass-through (composite already "Pass Through" by default)
+          // Ensure group composite is pass-through
+          var _groupCompositeNode = _nextGroup.multiportOut.linkedInNodes[0];
+          if (_groupCompositeNode && _groupCompositeNode.type === "COMPOSITE") _groupCompositeNode.composite_mode = "Pass Through";
           if (importBlendModes) {
-            var _psdGroupPath = _groupPathComponents.slice(0, parseInt(_groupComponent, 10) + 1).join("/");
             var _groupBlendMode = _groupBlendModes[_psdGroupPath];
             if (_groupBlendMode !== undefined && _groupBlendMode > 1) {
               _nextGroup.unlinkOutNode(_groupComposite);
-              var _groupBlendNode = _group.addNode("BLEND_MODE_MODULE", _groupPathComponents[_groupComponent] + "_Blending", _nodePosition);
+              var _groupBlendNode = _group.addNode("BLEND_MODE_MODULE", _component + "_Blending", _nodePosition);
               _groupBlendNode.blend_mode = _PSD_BLEND_MODES[_groupBlendMode] || "eNORMAL_BLEND";
               _nextGroup.linkOutNode(_groupBlendNode);
               _groupBlendNode.linkOutNode(_groupComposite);
@@ -3332,7 +3333,7 @@ oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addComp
             }
           }
         }
-        // store the peg/comp for next iteration or layer node (keep _groupComp as parent composite when blend node was inserted)
+
         _group = _nextGroup;
         _groupPeg = _group.multiportIn.linkedOutNodes[0];
         if (!_insertedGroupBlend) _groupComposite = _group.multiportOut.linkedInNodes[0];
@@ -3341,7 +3342,7 @@ oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addComp
       var _column = this.scene.addColumn("DRAWING", _layerName, _element);
       var _node = _group.addDrawingNode(_layerName, _nodePosition, _element, _column);
 
-      _node.enabled = _layers[_groupComponent].visible;
+      _node.enabled = _layer.visible;
       _node.can_animate = false; // use general pref?
       _node.apply_matte_to_color = "Straight";
       _node.alignment_rule = alignment;
@@ -3352,7 +3353,7 @@ oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addComp
       _column.extendExposures();
 
       if (_groupPeg) _node.linkInNode(_groupPeg);
-      if (importBlendModes && _layer.blendingMode !== undefined && _layer.blendingMode > 1) {
+      if (_layerNeedsBlend) {
         var _blendNode = _group.addNode("BLEND_MODE_MODULE", _layerName + "_Blending", _nodePosition);
         _blendNode.blend_mode = _PSD_BLEND_MODES[_layer.blendingMode] || "eNORMAL_BLEND";
         _node.linkOutNode(_blendNode);
@@ -3459,12 +3460,10 @@ oGroupNode.prototype.updatePSD = function( path, separateLayers ){
               if (_existingBlendNode) {
                 _existingBlendNode.blend_mode = _blendModeName;
               } else {
-                var _downstream = _outNodes[0];
                 var _blendNode = _nodes[j].group.addNode("BLEND_MODE_MODULE", _layerName + "_Blending");
                 _blendNode.blend_mode = _blendModeName;
-                _nodes[j].unlinkOutNode(_downstream);
-                _nodes[j].linkOutNode(_blendNode);
-                _blendNode.linkOutNode(_downstream);
+                var _link = _nodes[j].getOutLink(0);
+                if (_link) _link.insertNode(_blendNode, 0, 0);
               }
             } else if (_existingBlendNode) {
               var _downstream = _existingBlendNode.outNodes[0];
