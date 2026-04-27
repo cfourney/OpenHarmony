@@ -3358,6 +3358,7 @@ oGroupNode.prototype.importPSD = function( path, separateLayers, addPeg, addComp
         _blendNode.blend_mode = _PSD_BLEND_MODES[_layer.blendingMode] || "eNORMAL_BLEND";
         _node.linkOutNode(_blendNode);
         if (_groupComposite) _blendNode.linkOutNode(_groupComposite, 0, 0);
+        _nodes.push(_node);
         _nodes.push(_blendNode);
       } else {
         if (_groupComposite) _node.linkOutNode(_groupComposite, 0, 0);
