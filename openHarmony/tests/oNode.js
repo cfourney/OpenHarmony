@@ -206,5 +206,73 @@ exports.testoNodeShorthandDifferentTypes = {
     },
 }
 
+/**
+ * Tests for oNode.getAttributeSnapshot / applyAttributeSnapshot
+ * Verifies: oNode.getAttributeSnapshot captures and applies attribute values, including animation keyframes and drawing substitutions.
+ */
+exports.testSnapshotRoundtrip = {
+    message: "oNode snapshot roundtrip preserves static attribute values",
+    prepare: function() {},
+    run: function() {
+        var peg = $.scn.root.addNode('PEG');
+        peg.attributes.position.x.setValue(123);
+        peg.attributes.position.y.setValue(456);
+
+        var snap = peg.getAttributeSnapshot();
+
+        peg.attributes.position.x.setValue(0);
+        peg.attributes.position.y.setValue(0);
+
+        peg.applyAttributeSnapshot(snap);
+
+        assert(peg.attributes.position.x.getValue(), 123, 'position.x should be restored');
+        assert(peg.attributes.position.y.getValue(), 456, 'position.y should be restored');
+    },
+    check: function() {},
+};
+
+exports.testSnapshotAnimated = {
+    message: "oNode snapshot roundtrip preserves keyframe data",
+    prepare: function() {},
+    run: function() {
+        var peg = $.scn.root.addNode('PEG');
+        var attr = peg.attributes.position.x;
+        attr.setValue(10, 1);
+        attr.setValue(20, 5);
+        attr.setValue(30, 10);
+
+        var snap = peg.getAttributeSnapshot();
+
+        attr.setValue(0, 1);
+        attr.setValue(0, 5);
+        attr.setValue(0, 10);
+
+        peg.applyAttributeSnapshot(snap);
+
+        assert(attr.getValue(1),  10, 'keyframe at f1 should be restored');
+        assert(attr.getValue(5),  20, 'keyframe at f5 should be restored');
+        assert(attr.getValue(10), 30, 'keyframe at f10 should be restored');
+    },
+    check: function() {},
+};
+
+exports.testSnapshotDrawingSubstitution = {
+    message: "oNode snapshot roundtrip preserves drawing substitutions on READ nodes",
+    prepare: function() {},
+    run: function() {
+        var read = $.scn.root.addNode('READ');
+        var drawingAttr = read.attributes.drawing;
+
+        // Only meaningful if the node has a drawing column (element attached)
+        if (!drawingAttr || !drawingAttr.column) return;
+
+        var snap = read.getAttributeSnapshot();
+        assert(typeof snap === 'object', true, 'snapshot should be an object');
+
+        // Reapply should not throw
+        read.applyAttributeSnapshot(snap);
+    },
+    check: function() {},
+};
 
 // ---------

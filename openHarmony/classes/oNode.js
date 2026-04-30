@@ -1631,6 +1631,103 @@ oNode.prototype.clone = function( newName, newPosition ){
 };
 
 
+/**
+ * Capture a snapshot of this node's attribute values, including animation
+ * keyframes and drawing substitutions. Pair with applyAttributeSnapshot().
+ * @return {object}  Plain object mapping attribute keywords to captured values.
+ */
+oNode.prototype.getAttributeSnapshot = function() {
+  var snapshot = {};
+
+  function captureAttr(attr) {
+    // Capture drawing substitutions.
+    if (attr.type === "ELEMENT") {
+      var elementCol = attr.column;
+      if (elementCol) {
+        var elementKeys = elementCol.keyframes;
+        var elementData = [];
+        for (var eki = 0; eki < elementKeys.length; eki++) {
+          elementData.push({ f: elementKeys[eki].frameNumber, v: elementKeys[eki].value });
+        }
+        if (elementData.length > 0) snapshot[attr.keyword] = { __anim: true, keys: elementData, colType: elementCol.type };
+      }
+      return;
+    }
+
+    var subs = attr.subAttributes;
+    if (subs && subs.length > 0) {
+      for (var i = 0; i < subs.length; i++) captureAttr(subs[i]);
+      return;
+    }
+
+    var col = attr.column;
+    if (col) {
+      // Expression columns are driven by the template; don't capture them.
+      if (col.type === "EXPR") return;
+      var keys = col.keyframes;
+      if (keys && keys.length > 0) {
+        var keyData = [];
+        for (var ki = 0; ki < keys.length; ki++) {
+          var v = keys[ki].value;
+          if (v !== null && typeof v === 'object' && typeof v.x === 'number') {
+            v = { x: v.x, y: v.y, z: (typeof v.z === 'number') ? v.z : 0 };
+          }
+          keyData.push({ f: keys[ki].frameNumber, v: v });
+        }
+        if (keyData.length > 0) {
+          snapshot[attr.keyword] = { __anim: true, keys: keyData, colType: col.type };
+          return;
+        }
+      }
+    }
+
+    var val = attr.getValue();
+    if (typeof val === 'string' && val.charAt(0) === '<') return;
+    snapshot[attr.keyword] = val;
+  }
+
+  var attrs = this.attributes;
+  for (var key in attrs) {
+    try { captureAttr(attrs[key]); } catch (e) {}
+  }
+
+  return snapshot;
+};
+
+
+/**
+ * Apply a snapshot produced by getAttributeSnapshot() to this node's attributes.
+ * @param  {object}  snapshot  Object from getAttributeSnapshot().
+ * @return {oNode}   this, for chaining.
+ */
+oNode.prototype.applyAttributeSnapshot = function(snapshot) {
+  for (var keyword in snapshot) {
+    var attr = this.getAttributeByName(keyword);
+    if (!attr) continue;
+
+    var snapVal = snapshot[keyword];
+    var col = attr.column;
+
+    if (attr.type === "ELEMENT") {
+      if (!col) continue;  // no drawing column on the new node, skip
+    } else {
+      if (col && col.type === "EXPR") continue;  // expression-driven, skip
+    }
+
+    if (snapVal && typeof snapVal === 'object' && snapVal.__anim === true) {
+      var keys = snapVal.keys;
+      for (var ki = 0; ki < keys.length; ki++) {
+        attr.setValue(keys[ki].v, keys[ki].f);
+      }
+    } else {
+      attr.setValue(snapVal);
+    }
+  }
+
+  return this;
+};
+
+
  /**
  * Duplicates a node by creating an independent copy.
  * @param   {string}    [newName]              The new name for the duplicated node.
