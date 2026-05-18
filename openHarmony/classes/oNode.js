@@ -1697,30 +1697,38 @@ oNode.prototype.getAttributeSnapshot = function() {
 
 /**
  * Apply a snapshot produced by getAttributeSnapshot() to this node's attributes.
+ * Each attribute is applied independently; failures log a message.
  * @param  {object}  snapshot  Object from getAttributeSnapshot().
  * @return {oNode}   this, for chaining.
  */
 oNode.prototype.applyAttributeSnapshot = function(snapshot) {
   for (var keyword in snapshot) {
-    var attr = this.getAttributeByName(keyword);
-    if (!attr) continue;
+    try {
+      var attr = this.getAttributeByName(keyword);
+      if (!attr) continue;
 
-    var snapVal = snapshot[keyword];
-    var col = attr.column;
+      var snapVal = snapshot[keyword];
+      var col = attr.column;
 
-    if (attr.type === "ELEMENT") {
-      if (!col) continue;  // no drawing column on the new node, skip
-    } else {
-      if (col && col.type === "EXPR") continue;  // expression-driven, skip
-    }
-
-    if (snapVal && typeof snapVal === 'object' && snapVal.__anim === true) {
-      var keys = snapVal.keys;
-      for (var ki = 0; ki < keys.length; ki++) {
-        attr.setValue(keys[ki].v, keys[ki].f);
+      if (attr.type === "ELEMENT") {
+        if (!col) continue;  // no drawing column on the new node, skip
+      } else {
+        if (col && col.type === "EXPR") continue;  // expression-driven, skip
       }
-    } else {
-      attr.setValue(snapVal);
+
+      if (snapVal && typeof snapVal === 'object' && snapVal.__anim === true) {
+        var keys = snapVal.keys;
+        for (var ki = 0; ki < keys.length; ki++) {
+          attr.setValue(keys[ki].v, keys[ki].f);
+        }
+      } else {
+        attr.setValue(snapVal);
+      }
+    } catch (err) {
+      this.$.log(
+        'oNode.applyAttributeSnapshot: skipped attribute "' + keyword +
+        '" on ' + this.path + " — " + String(err)
+      );
     }
   }
 
