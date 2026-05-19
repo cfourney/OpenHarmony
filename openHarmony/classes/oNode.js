@@ -1640,26 +1640,38 @@ oNode.prototype.getAttributeSnapshot = function() {
   var snapshot = {};
 
   function captureAttr(attr) {
-    // Capture drawing substitutions.
+    // --- Drawing substitution column: record each distinct drawing name change ---
     if (attr.type === "ELEMENT") {
       var elementCol = attr.column;
       if (elementCol) {
-        var elementKeys = elementCol.keyframes;
+        var colName = elementCol.uniqueName;
+        var sceneLen = $.scene.length;
         var elementData = [];
-        for (var eki = 0; eki < elementKeys.length; eki++) {
-          elementData.push({ f: elementKeys[eki].frameNumber, v: elementKeys[eki].value });
+        var prev = null;
+        // Walk every frame; store only frames where the drawing name changes.
+        for (var frame = 1; frame <= sceneLen; frame++) {
+          var drawingName = column.getEntry(colName, 1, frame);
+          if (!drawingName) continue;
+          if (drawingName !== prev) {
+            elementData.push({ f: frame, v: drawingName });
+            prev = drawingName;
+          }
         }
-        if (elementData.length > 0) snapshot[attr.keyword] = { __anim: true, keys: elementData, colType: elementCol.type };
+        if (elementData.length > 0) {
+          snapshot[attr.keyword] = { __anim: true, keys: elementData, colType: "DRAWING" };
+        }
       }
       return;
     }
 
+    // --- Compound attribute: recurse into sub-attributes ---
     var subs = attr.subAttributes;
     if (subs && subs.length > 0) {
       for (var i = 0; i < subs.length; i++) captureAttr(subs[i]);
       return;
     }
 
+    // --- Animated column: store each keyframe value ---
     var col = attr.column;
     if (col) {
       // Expression columns are driven by the template; don't capture them.
@@ -1667,12 +1679,13 @@ oNode.prototype.getAttributeSnapshot = function() {
       var keys = col.keyframes;
       if (keys && keys.length > 0) {
         var keyData = [];
-        for (var ki = 0; ki < keys.length; ki++) {
-          var v = keys[ki].value;
-          if (v !== null && typeof v === 'object' && typeof v.x === 'number') {
-            v = { x: v.x, y: v.y, z: (typeof v.z === 'number') ? v.z : 0 };
+        for (var keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+          var keyValue = keys[keyIndex].value;
+          // Normalise vector values to a plain {x,y,z} object.
+          if (keyValue !== null && typeof keyValue === 'object' && typeof keyValue.x === 'number') {
+            keyValue = { x: keyValue.x, y: keyValue.y, z: (typeof keyValue.z === 'number') ? keyValue.z : 0 };
           }
-          keyData.push({ f: keys[ki].frameNumber, v: v });
+          keyData.push({ f: keys[keyIndex].frameNumber, v: keyValue });
         }
         if (keyData.length > 0) {
           snapshot[attr.keyword] = { __anim: true, keys: keyData, colType: col.type };
@@ -1681,11 +1694,13 @@ oNode.prototype.getAttributeSnapshot = function() {
       }
     }
 
+    // --- Static value: store as-is, skip XML-blob strings ---
     var val = attr.getValue();
     if (typeof val === 'string' && val.charAt(0) === '<') return;
     snapshot[attr.keyword] = val;
   }
 
+  // Capture every attribute on this node.
   var attrs = this.attributes;
   for (var key in attrs) {
     try { captureAttr(attrs[key]); } catch (e) {}
@@ -1718,8 +1733,48 @@ oNode.prototype.applyAttributeSnapshot = function(snapshot) {
 
       if (snapVal && typeof snapVal === 'object' && snapVal.__anim === true) {
         var keys = snapVal.keys;
-        for (var ki = 0; ki < keys.length; ki++) {
-          attr.setValue(keys[ki].v, keys[ki].f);
+        if (attr.type === "ELEMENT") {
+          // Drawing exposure: explicitly fill every frame across the whole scene.
+          var colName = col.uniqueName;
+          var sceneLen = $.scene.length;
+          var snapshotKeyIndex = 0;
+          var setEntryFailed = false;
+
+          // If the pasted frame-1 value differs from the snapshot, process frames
+          // 2+ first so frame-1 is not overwritten while later frames are still
+          // "held" from it.
+          var frame1KeyIndex = 0;
+          while (frame1KeyIndex + 1 < keys.length && keys[frame1KeyIndex + 1].f <= 1) frame1KeyIndex++;
+          var frame1Desired = keys[frame1KeyIndex].v;
+          var deferFrame1 = column.getEntry(colName, 1, 1) !== frame1Desired;
+          var frameFillOrder = [];
+          for (var fillFrame = (deferFrame1 ? 2 : 1); fillFrame <= sceneLen; fillFrame++) frameFillOrder.push(fillFrame);
+          if (deferFrame1) frameFillOrder.push(1); // frame 1 processed last
+
+          for (var fillIndex = 0; fillIndex < frameFillOrder.length; fillIndex++) {
+            var targetFrame = frameFillOrder[fillIndex];
+            // Advance key pointer to the last snapshot key whose frame <= targetFrame.
+            while (snapshotKeyIndex + 1 < keys.length && keys[snapshotKeyIndex + 1].f <= targetFrame) snapshotKeyIndex++;
+            // When retrying frame 1 (processed last), reset to attempt column.setEntry
+            // again — the column is no longer freshly-pasted at this point.
+            if (deferFrame1 && targetFrame === 1) setEntryFailed = false;
+            var desiredDrawing = keys[snapshotKeyIndex].v;
+            if (column.getEntry(colName, 1, targetFrame) === desiredDrawing) continue;
+            if (!setEntryFailed) {
+              try {
+                column.setEntry(colName, 1, targetFrame, desiredDrawing);
+                continue;
+              } catch (_fe) {
+                setEntryFailed = true;
+              }
+            }
+            node.setTextAttr(this.path, "drawing.element", targetFrame, desiredDrawing);
+          }
+        } else {
+          // --- Animated non-drawing column: restore each captured keyframe ---
+          for (var keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+            attr.setValue(keys[keyIndex].v, keys[keyIndex].f);
+          }
         }
       } else {
         attr.setValue(snapVal);
