@@ -1771,7 +1771,21 @@ oNode.prototype.applyAttributeSnapshot = function(snapshot) {
             node.setTextAttr(this.path, "drawing.element", targetFrame, desiredDrawing);
           }
         } else {
-          // --- Animated non-drawing column: restore each captured keyframe ---
+          // --- Animated non-drawing column.
+          // Step 1: Delete every template keyframe that's not in our snapshot, so the
+          // column ends up with exactly the keyframes from the original container.
+          // Step 2: Apply our snapshot keys, restoring exactly what was on the old node.
+          var templateKeys = col ? col.keyframes : [];
+          var colName = col ? col.uniqueName : null;
+          var snapFrameSet = {};
+          for (var sk = 0; sk < keys.length; sk++) snapFrameSet[keys[sk].f] = true;
+          if (colName) {
+            for (var tk = 0; tk < templateKeys.length; tk++) {
+              var tf = templateKeys[tk].frameNumber;
+              if (snapFrameSet[tf]) continue;
+              try { column.clearKeyFrame(colName, tf); } catch (_ce) {}
+            }
+          }
           for (var keyIndex = 0; keyIndex < keys.length; keyIndex++) {
             attr.setValue(keys[keyIndex].v, keys[keyIndex].f);
           }
