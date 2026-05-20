@@ -1761,6 +1761,11 @@ oNode.prototype.getAttributeSnapshot = function() {
  * @return {oNode}   this, for chaining.
  */
 oNode.prototype.applyAttributeSnapshot = function(snapshot) {
+  // Early-out for nodes that captured no attributes (Multi-Port-In/Out, etc.).
+  var hasAnyKey = false;
+  for (var probeKey in snapshot) { hasAnyKey = true; break; }
+  if (!hasAnyKey) return this;
+
   function applyEaseAt(columnName, easeType, easeData) {
     if (!columnName || !easeData) return;
     try {
@@ -1812,89 +1817,96 @@ oNode.prototype.applyAttributeSnapshot = function(snapshot) {
       if (!attr) continue;
 
       var snapVal = snapshot[keyword];
-      var col = attr.column;
+      var isAnimatedSnapshot = (
+        snapVal && typeof snapVal === 'object' && snapVal.__anim === true
+      );
 
-      if (attr.type === "ELEMENT") {
-        if (!col) continue;  // no drawing column on the new node, skip
-      } else {
-        if (col && col.type === "EXPR") continue;  // expression-driven, skip
+      // Static value fast-path: no native `attr.column` lookup needed.
+      if (!isAnimatedSnapshot) {
+        attr.setValue(snapVal);
+        continue;
       }
 
-      if (snapVal && typeof snapVal === 'object' && snapVal.__anim === true) {
-        var keys = snapVal.keys;
-        if (attr.type === "ELEMENT") {
-          // Drawing exposure: explicitly fill every frame across the whole scene.
-          var elementColName = col.uniqueName;
-          var sceneLen = $.scene.length;
-          var elementKeyIndex = 0;
-          var setEntryFailed = false;
+      var col = attr.column;
+      if (attr.type === "ELEMENT") {
+        if (!col) continue;  // no drawing column on the new node
+      } else if (col && col.type === "EXPR") {
+        continue;  // expression-driven, leave the template's expression alone
+      }
 
-          // If the pasted frame-1 value differs from the snapshot, process frames
-          // 2+ first so frame-1 is not overwritten while later frames are still
-          // "held" from it.
-          var frame1KeyIndex = 0;
-          while (frame1KeyIndex + 1 < keys.length && keys[frame1KeyIndex + 1].f <= 1) frame1KeyIndex++;
-          var frame1Desired = keys[frame1KeyIndex].v;
-          var deferFrame1 = column.getEntry(elementColName, 1, 1) !== frame1Desired;
-          var frameFillOrder = [];
-          for (var fillFrame = (deferFrame1 ? 2 : 1); fillFrame <= sceneLen; fillFrame++) frameFillOrder.push(fillFrame);
-          if (deferFrame1) frameFillOrder.push(1); // frame 1 processed last
+      var keys = snapVal.keys;
+      if (attr.type === "ELEMENT") {
+        // Drawing exposure: explicitly fill every frame across the whole scene.
+        var elementColName = col.uniqueName;
+        var sceneLen = $.scene.length;
+        var elementKeyIndex = 0;
+        var setEntryFailed = false;
 
-          for (var fillIndex = 0; fillIndex < frameFillOrder.length; fillIndex++) {
-            var targetFrame = frameFillOrder[fillIndex];
-            while (elementKeyIndex + 1 < keys.length && keys[elementKeyIndex + 1].f <= targetFrame) elementKeyIndex++;
-            // When retrying frame 1 (processed last), reset to attempt column.setEntry
-            // again — the column is no longer freshly-pasted at this point.
-            if (deferFrame1 && targetFrame === 1) setEntryFailed = false;
-            var desiredDrawing = keys[elementKeyIndex].v;
-            if (column.getEntry(elementColName, 1, targetFrame) === desiredDrawing) continue;
-            if (!setEntryFailed) {
-              try {
-                column.setEntry(elementColName, 1, targetFrame, desiredDrawing);
-                continue;
-              } catch (_setEntryError) {
-                setEntryFailed = true;
-              }
-            }
-            node.setTextAttr(this.path, "drawing.element", targetFrame, desiredDrawing);
-          }
-        } else {
-          // --- Animated non-drawing column.
-          // Step 1: Delete every template keyframe that's not in our snapshot, so the
-          // column ends up with exactly the keyframes from the original container.
-          // Step 2: Apply our snapshot values.
-          // Step 3: Restore per-keyframe interpolation (handles, ease, continuity).
-          var templateKeys = col ? col.keyframes : [];
-          var columnName = col ? col.uniqueName : null;
-          var columnEaseType = col ? col.easeType : null;
-          var snapshotFrameSet = {};
-          for (var snapshotKeyIdx = 0; snapshotKeyIdx < keys.length; snapshotKeyIdx++) {
-            snapshotFrameSet[keys[snapshotKeyIdx].f] = true;
-          }
-          if (columnName) {
-            for (var templateKeyIdx = 0; templateKeyIdx < templateKeys.length; templateKeyIdx++) {
-              var templateFrameNumber = templateKeys[templateKeyIdx].frameNumber;
-              if (snapshotFrameSet[templateFrameNumber]) continue;
-              try { column.clearKeyFrame(columnName, templateFrameNumber); } catch (_clearError) {}
+        // If the pasted frame-1 value differs from the snapshot, process frames
+        // 2+ first so frame-1 is not overwritten while later frames are still
+        // "held" from it.
+        var frame1KeyIndex = 0;
+        while (frame1KeyIndex + 1 < keys.length && keys[frame1KeyIndex + 1].f <= 1) frame1KeyIndex++;
+        var frame1Desired = keys[frame1KeyIndex].v;
+        var deferFrame1 = column.getEntry(elementColName, 1, 1) !== frame1Desired;
+        var frameFillOrder = [];
+        for (var fillFrame = (deferFrame1 ? 2 : 1); fillFrame <= sceneLen; fillFrame++) frameFillOrder.push(fillFrame);
+        if (deferFrame1) frameFillOrder.push(1); // frame 1 processed last
+
+        for (var fillIndex = 0; fillIndex < frameFillOrder.length; fillIndex++) {
+          var targetFrame = frameFillOrder[fillIndex];
+          while (elementKeyIndex + 1 < keys.length && keys[elementKeyIndex + 1].f <= targetFrame) elementKeyIndex++;
+          // When retrying frame 1 (processed last), reset to attempt column.setEntry
+          // again — the column is no longer freshly-pasted at this point.
+          if (deferFrame1 && targetFrame === 1) setEntryFailed = false;
+          var desiredDrawing = keys[elementKeyIndex].v;
+          if (column.getEntry(elementColName, 1, targetFrame) === desiredDrawing) continue;
+          if (!setEntryFailed) {
+            try {
+              column.setEntry(elementColName, 1, targetFrame, desiredDrawing);
+              continue;
+            } catch (_setEntryError) {
+              setEntryFailed = true;
             }
           }
-          for (var applyKeyIdx = 0; applyKeyIdx < keys.length; applyKeyIdx++) {
-            var snapshotKey = keys[applyKeyIdx];
-            attr.setValue(snapshotKey.v, snapshotKey.f);
-          }
-          // Second pass for ease: Harmony recomputes handles when neighbouring
-          // keyframes change values, so handles must be applied after all values
-          // are written. Mirrors oColumn.duplicate which sets ease twice for the
-          // same reason.
-          for (var easePassIdx = 0; easePassIdx < keys.length; easePassIdx++) {
-            applyEaseAt(columnName, columnEaseType, keys[easePassIdx].ease);
-          }
-          for (var easeRepeatIdx = 0; easeRepeatIdx < keys.length; easeRepeatIdx++) {
-            applyEaseAt(columnName, columnEaseType, keys[easeRepeatIdx].ease);
-          }
+          node.setTextAttr(this.path, "drawing.element", targetFrame, desiredDrawing);
         }
-      } else {
-        attr.setValue(snapVal);
+        continue;
+      }
+
+      // --- Animated non-drawing column.
+      // Step 1: Delete every template keyframe that's not in our snapshot.
+      // Step 2: Apply our snapshot values.
+      // Step 3: Restore per-keyframe interpolation (handles, ease, continuity).
+      var columnName = col ? col.uniqueName : null;
+      var columnEaseType = col ? col.easeType : null;
+      var snapshotFrameSet = {};
+      for (var snapshotKeyIdx = 0; snapshotKeyIdx < keys.length; snapshotKeyIdx++) {
+        snapshotFrameSet[keys[snapshotKeyIdx].f] = true;
+      }
+      // Enumerate template keyframes by raw point index — avoids allocating an
+      // oFrame for every frame of the scene via `col.keyframes` / `col.frames`.
+      if (columnName) {
+        var numTemplatePoints = 0;
+        try { numTemplatePoints = func.numberOfPoints(columnName); } catch (_npe) {}
+        for (var templatePointIdx = 0; templatePointIdx < numTemplatePoints; templatePointIdx++) {
+          var templateFrameNumber = func.pointX(columnName, templatePointIdx);
+          if (snapshotFrameSet[templateFrameNumber]) continue;
+          try { column.clearKeyFrame(columnName, templateFrameNumber); } catch (_clearError) {}
+        }
+      }
+      for (var applyKeyIdx = 0; applyKeyIdx < keys.length; applyKeyIdx++) {
+        var snapshotKey = keys[applyKeyIdx];
+        attr.setValue(snapshotKey.v, snapshotKey.f);
+      }
+      // Two ease passes: Harmony adjusts neighbour handles when a keyframe is
+      // written, so the first pass can corrupt earlier writes; pass two locks
+      // them in. Same pattern as oColumn.duplicate.
+      for (var easePassIdx = 0; easePassIdx < keys.length; easePassIdx++) {
+        applyEaseAt(columnName, columnEaseType, keys[easePassIdx].ease);
+      }
+      for (var easeRepeatIdx = 0; easeRepeatIdx < keys.length; easeRepeatIdx++) {
+        applyEaseAt(columnName, columnEaseType, keys[easeRepeatIdx].ease);
       }
     } catch (err) {
       this.$.log(
