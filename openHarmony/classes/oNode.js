@@ -1639,18 +1639,50 @@ oNode.prototype.clone = function( newName, newPosition ){
 oNode.prototype.getAttributeSnapshot = function() {
   var snapshot = {};
 
+  // Capture per-keyframe interpolation metadata (tangent handles, ease, continuity).
+  // Only BEZIER/EASE columns expose handles; 3DPATH/QUATERNION_PATH delegate to their
+  // velocity curve which itself is BEZIER or EASE.
+  function captureKeyframeEase(frameObject, easeType) {
+    if (easeType !== "BEZIER" && easeType !== "EASE") return null;
+    try {
+      var rawEase = frameObject.ease;
+      if (!rawEase) return null;
+      var capturedEase = {
+        x: rawEase.x,
+        y: rawEase.y,
+        constant: rawEase.constant,
+        continuity: rawEase.continuity
+      };
+      if (easeType === "BEZIER" && rawEase.easeIn && rawEase.easeOut) {
+        capturedEase.easeIn = { x: rawEase.easeIn.x, y: rawEase.easeIn.y };
+        capturedEase.easeOut = { x: rawEase.easeOut.x, y: rawEase.easeOut.y };
+      } else if (easeType === "EASE" && rawEase.easeIn && rawEase.easeOut) {
+        capturedEase.easeIn = {
+          point: rawEase.easeIn.point,
+          angle: rawEase.easeIn.angle
+        };
+        capturedEase.easeOut = {
+          point: rawEase.easeOut.point,
+          angle: rawEase.easeOut.angle
+        };
+      }
+      return capturedEase;
+    } catch (_easeError) {
+      return null;
+    }
+  }
+
   function captureAttr(attr) {
     // --- Drawing substitution column: record each distinct drawing name change ---
     if (attr.type === "ELEMENT") {
       var elementCol = attr.column;
       if (elementCol) {
-        var colName = elementCol.uniqueName;
+        var elementColName = elementCol.uniqueName;
         var sceneLen = $.scene.length;
         var elementData = [];
         var prev = null;
-        // Walk every frame; store only frames where the drawing name changes.
         for (var frame = 1; frame <= sceneLen; frame++) {
-          var drawingName = column.getEntry(colName, 1, frame);
+          var drawingName = column.getEntry(elementColName, 1, frame);
           if (!drawingName) continue;
           if (drawingName !== prev) {
             elementData.push({ f: frame, v: drawingName });
@@ -1667,43 +1699,55 @@ oNode.prototype.getAttributeSnapshot = function() {
     // --- Compound attribute: recurse into sub-attributes ---
     var subs = attr.subAttributes;
     if (subs && subs.length > 0) {
-      for (var i = 0; i < subs.length; i++) captureAttr(subs[i]);
+      for (var subIndex = 0; subIndex < subs.length; subIndex++) captureAttr(subs[subIndex]);
       return;
     }
 
-    // --- Animated column: store each keyframe value ---
+    // --- Animated column: store each keyframe value + ease metadata ---
     var col = attr.column;
     if (col) {
-      // Expression columns are driven by the template; don't capture them.
       if (col.type === "EXPR") return;
-      var keys = col.keyframes;
-      if (keys && keys.length > 0) {
+      var keyframes = col.keyframes;
+      if (keyframes && keyframes.length > 0) {
+        var columnEaseType = col.easeType;
         var keyData = [];
-        for (var keyIndex = 0; keyIndex < keys.length; keyIndex++) {
-          var keyValue = keys[keyIndex].value;
+        for (var keyIndex = 0; keyIndex < keyframes.length; keyIndex++) {
+          var keyframe = keyframes[keyIndex];
+          var keyValue = keyframe.value;
           // Normalise vector values to a plain {x,y,z} object.
           if (keyValue !== null && typeof keyValue === 'object' && typeof keyValue.x === 'number') {
-            keyValue = { x: keyValue.x, y: keyValue.y, z: (typeof keyValue.z === 'number') ? keyValue.z : 0 };
+            keyValue = {
+              x: keyValue.x,
+              y: keyValue.y,
+              z: (typeof keyValue.z === 'number') ? keyValue.z : 0
+            };
           }
-          keyData.push({ f: keys[keyIndex].frameNumber, v: keyValue });
+          var capturedKey = { f: keyframe.frameNumber, v: keyValue };
+          var capturedEase = captureKeyframeEase(keyframe, columnEaseType);
+          if (capturedEase) capturedKey.ease = capturedEase;
+          keyData.push(capturedKey);
         }
         if (keyData.length > 0) {
-          snapshot[attr.keyword] = { __anim: true, keys: keyData, colType: col.type };
+          snapshot[attr.keyword] = {
+            __anim: true,
+            keys: keyData,
+            colType: col.type,
+            easeType: columnEaseType
+          };
           return;
         }
       }
     }
 
     // --- Static value: store as-is, skip XML-blob strings ---
-    var val = attr.getValue();
-    if (typeof val === 'string' && val.charAt(0) === '<') return;
-    snapshot[attr.keyword] = val;
+    var staticValue = attr.getValue();
+    if (typeof staticValue === 'string' && staticValue.charAt(0) === '<') return;
+    snapshot[attr.keyword] = staticValue;
   }
 
-  // Capture every attribute on this node.
   var attrs = this.attributes;
-  for (var key in attrs) {
-    try { captureAttr(attrs[key]); } catch (e) {}
+  for (var attrKey in attrs) {
+    try { captureAttr(attrs[attrKey]); } catch (_attrError) {}
   }
 
   return snapshot;
@@ -1717,6 +1761,51 @@ oNode.prototype.getAttributeSnapshot = function() {
  * @return {oNode}   this, for chaining.
  */
 oNode.prototype.applyAttributeSnapshot = function(snapshot) {
+  function applyEaseAt(columnName, easeType, easeData) {
+    if (!columnName || !easeData) return;
+    try {
+      var continuity = easeData.continuity || "SMOOTH";
+      var isConstant = !!easeData.constant;
+      if (easeType === "BEZIER") {
+        var bezierEaseIn = (easeData.easeIn && typeof easeData.easeIn.x === 'number')
+          ? easeData.easeIn
+          : { x: easeData.x, y: easeData.y };
+        var bezierEaseOut = (easeData.easeOut && typeof easeData.easeOut.x === 'number')
+          ? easeData.easeOut
+          : { x: easeData.x, y: easeData.y };
+        func.setBezierPoint(
+          columnName,
+          easeData.x,
+          easeData.y,
+          bezierEaseIn.x,
+          bezierEaseIn.y,
+          bezierEaseOut.x,
+          bezierEaseOut.y,
+          isConstant,
+          continuity
+        );
+      } else if (easeType === "EASE") {
+        var velocityEaseIn = (easeData.easeIn && typeof easeData.easeIn.point === 'number')
+          ? easeData.easeIn
+          : { point: 0, angle: 0 };
+        var velocityEaseOut = (easeData.easeOut && typeof easeData.easeOut.point === 'number')
+          ? easeData.easeOut
+          : { point: 0, angle: 0 };
+        func.setEasePoint(
+          columnName,
+          easeData.x,
+          easeData.y,
+          velocityEaseIn.point,
+          velocityEaseIn.angle,
+          velocityEaseOut.point,
+          velocityEaseOut.angle,
+          isConstant,
+          continuity
+        );
+      }
+    } catch (_applyEaseError) {}
+  }
+
   for (var keyword in snapshot) {
     try {
       var attr = this.getAttributeByName(keyword);
@@ -1735,9 +1824,9 @@ oNode.prototype.applyAttributeSnapshot = function(snapshot) {
         var keys = snapVal.keys;
         if (attr.type === "ELEMENT") {
           // Drawing exposure: explicitly fill every frame across the whole scene.
-          var colName = col.uniqueName;
+          var elementColName = col.uniqueName;
           var sceneLen = $.scene.length;
-          var snapshotKeyIndex = 0;
+          var elementKeyIndex = 0;
           var setEntryFailed = false;
 
           // If the pasted frame-1 value differs from the snapshot, process frames
@@ -1746,25 +1835,24 @@ oNode.prototype.applyAttributeSnapshot = function(snapshot) {
           var frame1KeyIndex = 0;
           while (frame1KeyIndex + 1 < keys.length && keys[frame1KeyIndex + 1].f <= 1) frame1KeyIndex++;
           var frame1Desired = keys[frame1KeyIndex].v;
-          var deferFrame1 = column.getEntry(colName, 1, 1) !== frame1Desired;
+          var deferFrame1 = column.getEntry(elementColName, 1, 1) !== frame1Desired;
           var frameFillOrder = [];
           for (var fillFrame = (deferFrame1 ? 2 : 1); fillFrame <= sceneLen; fillFrame++) frameFillOrder.push(fillFrame);
           if (deferFrame1) frameFillOrder.push(1); // frame 1 processed last
 
           for (var fillIndex = 0; fillIndex < frameFillOrder.length; fillIndex++) {
             var targetFrame = frameFillOrder[fillIndex];
-            // Advance key pointer to the last snapshot key whose frame <= targetFrame.
-            while (snapshotKeyIndex + 1 < keys.length && keys[snapshotKeyIndex + 1].f <= targetFrame) snapshotKeyIndex++;
+            while (elementKeyIndex + 1 < keys.length && keys[elementKeyIndex + 1].f <= targetFrame) elementKeyIndex++;
             // When retrying frame 1 (processed last), reset to attempt column.setEntry
             // again — the column is no longer freshly-pasted at this point.
             if (deferFrame1 && targetFrame === 1) setEntryFailed = false;
-            var desiredDrawing = keys[snapshotKeyIndex].v;
-            if (column.getEntry(colName, 1, targetFrame) === desiredDrawing) continue;
+            var desiredDrawing = keys[elementKeyIndex].v;
+            if (column.getEntry(elementColName, 1, targetFrame) === desiredDrawing) continue;
             if (!setEntryFailed) {
               try {
-                column.setEntry(colName, 1, targetFrame, desiredDrawing);
+                column.setEntry(elementColName, 1, targetFrame, desiredDrawing);
                 continue;
-              } catch (_fe) {
+              } catch (_setEntryError) {
                 setEntryFailed = true;
               }
             }
@@ -1774,20 +1862,35 @@ oNode.prototype.applyAttributeSnapshot = function(snapshot) {
           // --- Animated non-drawing column.
           // Step 1: Delete every template keyframe that's not in our snapshot, so the
           // column ends up with exactly the keyframes from the original container.
-          // Step 2: Apply our snapshot keys, restoring exactly what was on the old node.
+          // Step 2: Apply our snapshot values.
+          // Step 3: Restore per-keyframe interpolation (handles, ease, continuity).
           var templateKeys = col ? col.keyframes : [];
-          var colName = col ? col.uniqueName : null;
-          var snapFrameSet = {};
-          for (var sk = 0; sk < keys.length; sk++) snapFrameSet[keys[sk].f] = true;
-          if (colName) {
-            for (var tk = 0; tk < templateKeys.length; tk++) {
-              var tf = templateKeys[tk].frameNumber;
-              if (snapFrameSet[tf]) continue;
-              try { column.clearKeyFrame(colName, tf); } catch (_ce) {}
+          var columnName = col ? col.uniqueName : null;
+          var columnEaseType = col ? col.easeType : null;
+          var snapshotFrameSet = {};
+          for (var snapshotKeyIdx = 0; snapshotKeyIdx < keys.length; snapshotKeyIdx++) {
+            snapshotFrameSet[keys[snapshotKeyIdx].f] = true;
+          }
+          if (columnName) {
+            for (var templateKeyIdx = 0; templateKeyIdx < templateKeys.length; templateKeyIdx++) {
+              var templateFrameNumber = templateKeys[templateKeyIdx].frameNumber;
+              if (snapshotFrameSet[templateFrameNumber]) continue;
+              try { column.clearKeyFrame(columnName, templateFrameNumber); } catch (_clearError) {}
             }
           }
-          for (var keyIndex = 0; keyIndex < keys.length; keyIndex++) {
-            attr.setValue(keys[keyIndex].v, keys[keyIndex].f);
+          for (var applyKeyIdx = 0; applyKeyIdx < keys.length; applyKeyIdx++) {
+            var snapshotKey = keys[applyKeyIdx];
+            attr.setValue(snapshotKey.v, snapshotKey.f);
+          }
+          // Second pass for ease: Harmony recomputes handles when neighbouring
+          // keyframes change values, so handles must be applied after all values
+          // are written. Mirrors oColumn.duplicate which sets ease twice for the
+          // same reason.
+          for (var easePassIdx = 0; easePassIdx < keys.length; easePassIdx++) {
+            applyEaseAt(columnName, columnEaseType, keys[easePassIdx].ease);
+          }
+          for (var easeRepeatIdx = 0; easeRepeatIdx < keys.length; easeRepeatIdx++) {
+            applyEaseAt(columnName, columnEaseType, keys[easeRepeatIdx].ease);
           }
         }
       } else {
