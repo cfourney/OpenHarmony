@@ -1683,14 +1683,23 @@ oNode.prototype.getAttributeSnapshot = function() {
         var prev = null;
         for (var frame = 1; frame <= sceneLen; frame++) {
           var drawingName = column.getEntry(elementColName, 1, frame);
-          if (!drawingName) continue;
-          if (drawingName !== prev) {
+          // Blanks ("") are intentional exposure gaps
+          if (drawingName === null || drawingName === undefined) drawingName = "";
+          if (prev === null || drawingName !== prev) {
             elementData.push({ f: frame, v: drawingName });
             prev = drawingName;
           }
         }
+        // Record the column's display name.
+        var capturedColumnDisplay = null;
+        try { capturedColumnDisplay = column.getDisplayName(elementColName); } catch (_dn) {}
         if (elementData.length > 0) {
-          snapshot[attr.keyword] = { __anim: true, keys: elementData, colType: "DRAWING" };
+          snapshot[attr.keyword] = {
+            __anim: true,
+            keys: elementData,
+            colType: "DRAWING",
+            columnDisplay: capturedColumnDisplay
+          };
         }
       }
       return;
@@ -1838,6 +1847,16 @@ oNode.prototype.applyAttributeSnapshot = function(snapshot) {
       if (attr.type === "ELEMENT") {
         // Drawing exposure: explicitly fill every frame across the whole scene.
         var elementColName = col.uniqueName;
+
+        // Drawing columns are often shared across several nodes.
+        if (snapVal.columnDisplay !== undefined && snapVal.columnDisplay !== null) {
+          var newColumnDisplay = null;
+          try { newColumnDisplay = column.getDisplayName(elementColName); } catch (_dn) {}
+          if (newColumnDisplay !== snapVal.columnDisplay) {
+            continue;
+          }
+        }
+
         var sceneLen = $.scene.length;
         var elementKeyIndex = 0;
         var setEntryFailed = false;
