@@ -1918,6 +1918,15 @@ oNode.prototype.applyAttributeSnapshot = function(snapshot) {
         var snapshotKey = keys[applyKeyIdx];
         attr.setValue(snapshotKey.v, snapshotKey.f);
       }
+
+      if (!col) {
+        col = attr.column;
+        if (col) {
+          columnName = col.uniqueName;
+          columnEaseType = col.easeType;
+        }
+      }
+
       // Two ease passes: Harmony adjusts neighbour handles when a keyframe is
       // written, so the first pass can corrupt earlier writes; pass two locks
       // them in. Same pattern as oColumn.duplicate.
