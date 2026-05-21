@@ -1631,6 +1631,323 @@ oNode.prototype.clone = function( newName, newPosition ){
 };
 
 
+/**
+ * Capture a snapshot of this node's attribute values, including animation
+ * keyframes and drawing substitutions. Pair with applyAttributeSnapshot().
+ * @return {object}  Plain object mapping attribute keywords to captured values.
+ */
+oNode.prototype.getAttributeSnapshot = function() {
+  var snapshot = {};
+
+  // Capture per-keyframe interpolation metadata (tangent handles, ease, continuity).
+  // Only BEZIER/EASE columns expose handles; 3DPATH/QUATERNION_PATH delegate to their
+  // velocity curve which itself is BEZIER or EASE.
+  function captureKeyframeEase(frameObject, easeType) {
+    if (easeType !== "BEZIER" && easeType !== "EASE") return null;
+    try {
+      var rawEase = frameObject.ease;
+      if (!rawEase) return null;
+      var capturedEase = {
+        x: rawEase.x,
+        y: rawEase.y,
+        constant: rawEase.constant,
+        continuity: rawEase.continuity
+      };
+      if (easeType === "BEZIER" && rawEase.easeIn && rawEase.easeOut) {
+        capturedEase.easeIn = { x: rawEase.easeIn.x, y: rawEase.easeIn.y };
+        capturedEase.easeOut = { x: rawEase.easeOut.x, y: rawEase.easeOut.y };
+      } else if (easeType === "EASE" && rawEase.easeIn && rawEase.easeOut) {
+        capturedEase.easeIn = {
+          point: rawEase.easeIn.point,
+          angle: rawEase.easeIn.angle
+        };
+        capturedEase.easeOut = {
+          point: rawEase.easeOut.point,
+          angle: rawEase.easeOut.angle
+        };
+      }
+      return capturedEase;
+    } catch (_easeError) {
+      return null;
+    }
+  }
+
+  function captureAttr(attr) {
+    // --- Drawing substitution column: record each distinct drawing name change ---
+    if (attr.type === "ELEMENT") {
+      var elementCol = attr.column;
+      if (elementCol) {
+        var elementColName = elementCol.uniqueName;
+        var sceneLen = $.scene.length;
+        var elementData = [];
+        var prev = null;
+        for (var frame = 1; frame <= sceneLen; frame++) {
+          var drawingName = column.getEntry(elementColName, 1, frame);
+          // Blanks ("") are intentional exposure gaps
+          if (drawingName === null || drawingName === undefined) drawingName = "";
+          if (prev === null || drawingName !== prev) {
+            elementData.push({ f: frame, v: drawingName });
+            prev = drawingName;
+          }
+        }
+        // Record the column's display name.
+        var capturedColumnDisplay = null;
+        try { capturedColumnDisplay = column.getDisplayName(elementColName); } catch (_dn) {}
+        if (elementData.length > 0) {
+          snapshot[attr.keyword] = {
+            __anim: true,
+            keys: elementData,
+            colType: "DRAWING",
+            columnDisplay: capturedColumnDisplay
+          };
+        }
+      }
+      return;
+    }
+
+    // --- Compound attribute: recurse into sub-attributes ---
+    var subs = attr.subAttributes;
+    if (subs && subs.length > 0) {
+      for (var subIndex = 0; subIndex < subs.length; subIndex++) captureAttr(subs[subIndex]);
+      return;
+    }
+
+    // --- Animated column: store each keyframe value + ease metadata ---
+    var col = attr.column;
+    if (col) {
+      if (col.type === "EXPR") return;
+      var keyframes = col.keyframes;
+      if (keyframes && keyframes.length > 0) {
+        var columnEaseType = col.easeType;
+        var keyData = [];
+        for (var keyIndex = 0; keyIndex < keyframes.length; keyIndex++) {
+          var keyframe = keyframes[keyIndex];
+          var keyValue = keyframe.value;
+          // Normalise vector values to a plain {x,y,z} object.
+          if (keyValue !== null && typeof keyValue === 'object' && typeof keyValue.x === 'number') {
+            keyValue = {
+              x: keyValue.x,
+              y: keyValue.y,
+              z: (typeof keyValue.z === 'number') ? keyValue.z : 0
+            };
+          }
+          var capturedKey = { f: keyframe.frameNumber, v: keyValue };
+          var capturedEase = captureKeyframeEase(keyframe, columnEaseType);
+          if (capturedEase) capturedKey.ease = capturedEase;
+          keyData.push(capturedKey);
+        }
+        if (keyData.length > 0) {
+          snapshot[attr.keyword] = {
+            __anim: true,
+            keys: keyData,
+            colType: col.type,
+            easeType: columnEaseType
+          };
+          return;
+        }
+      }
+    }
+
+    // --- Static value: store as-is, skip XML-blob strings ---
+    var staticValue = attr.getValue();
+    if (typeof staticValue === 'string' && staticValue.charAt(0) === '<') return;
+    snapshot[attr.keyword] = staticValue;
+  }
+
+  var attrs = this.attributes;
+  for (var attrKey in attrs) {
+    try { captureAttr(attrs[attrKey]); } catch (_attrError) {}
+  }
+
+  return snapshot;
+};
+
+
+/**
+ * Apply a snapshot produced by getAttributeSnapshot() to this node's attributes.
+ * Each attribute is applied independently; failures log a message.
+ * @param  {object}  snapshot  Object from getAttributeSnapshot().
+ * @return {oNode}   this, for chaining.
+ */
+oNode.prototype.applyAttributeSnapshot = function(snapshot) {
+  // Early-out for nodes that captured no attributes (Multi-Port-In/Out, etc.).
+  var hasAnyKey = false;
+  for (var probeKey in snapshot) { hasAnyKey = true; break; }
+  if (!hasAnyKey) return this;
+
+  function applyEaseAt(columnName, easeType, easeData) {
+    if (!columnName || !easeData) return;
+    try {
+      var continuity = easeData.continuity || "SMOOTH";
+      var isConstant = !!easeData.constant;
+      if (easeType === "BEZIER") {
+        var bezierEaseIn = (easeData.easeIn && typeof easeData.easeIn.x === 'number')
+          ? easeData.easeIn
+          : { x: easeData.x, y: easeData.y };
+        var bezierEaseOut = (easeData.easeOut && typeof easeData.easeOut.x === 'number')
+          ? easeData.easeOut
+          : { x: easeData.x, y: easeData.y };
+        func.setBezierPoint(
+          columnName,
+          easeData.x,
+          easeData.y,
+          bezierEaseIn.x,
+          bezierEaseIn.y,
+          bezierEaseOut.x,
+          bezierEaseOut.y,
+          isConstant,
+          continuity
+        );
+      } else if (easeType === "EASE") {
+        var velocityEaseIn = (easeData.easeIn && typeof easeData.easeIn.point === 'number')
+          ? easeData.easeIn
+          : { point: 0, angle: 0 };
+        var velocityEaseOut = (easeData.easeOut && typeof easeData.easeOut.point === 'number')
+          ? easeData.easeOut
+          : { point: 0, angle: 0 };
+        func.setEasePoint(
+          columnName,
+          easeData.x,
+          easeData.y,
+          velocityEaseIn.point,
+          velocityEaseIn.angle,
+          velocityEaseOut.point,
+          velocityEaseOut.angle,
+          isConstant,
+          continuity
+        );
+      }
+    } catch (_applyEaseError) {}
+  }
+
+  for (var keyword in snapshot) {
+    try {
+      var attr = this.getAttributeByName(keyword);
+      if (!attr) continue;
+
+      var snapVal = snapshot[keyword];
+      var isAnimatedSnapshot = (
+        snapVal && typeof snapVal === 'object' && snapVal.__anim === true
+      );
+
+      // Static value fast-path: no native `attr.column` lookup needed.
+      if (!isAnimatedSnapshot) {
+        attr.setValue(snapVal);
+        continue;
+      }
+
+      var col = attr.column;
+      if (attr.type === "ELEMENT") {
+        if (!col) continue;  // no drawing column on the new node
+      } else if (col && col.type === "EXPR") {
+        continue;  // expression-driven, leave the template's expression alone
+      }
+
+      var keys = snapVal.keys;
+      if (attr.type === "ELEMENT") {
+        // Drawing exposure: explicitly fill every frame across the whole scene.
+        var elementColName = col.uniqueName;
+
+        // Drawing columns are often shared across several nodes.
+        if (snapVal.columnDisplay !== undefined && snapVal.columnDisplay !== null) {
+          var newColumnDisplay = null;
+          try { newColumnDisplay = column.getDisplayName(elementColName); } catch (_dn) {}
+          if (newColumnDisplay !== snapVal.columnDisplay) {
+            continue;
+          }
+        }
+
+        var sceneLen = $.scene.length;
+        var elementKeyIndex = 0;
+        var setEntryFailed = false;
+
+        // If the pasted frame-1 value differs from the snapshot, process frames
+        // 2+ first so frame-1 is not overwritten while later frames are still
+        // "held" from it.
+        var frame1KeyIndex = 0;
+        while (frame1KeyIndex + 1 < keys.length && keys[frame1KeyIndex + 1].f <= 1) frame1KeyIndex++;
+        var frame1Desired = keys[frame1KeyIndex].v;
+        var deferFrame1 = column.getEntry(elementColName, 1, 1) !== frame1Desired;
+        var frameFillOrder = [];
+        for (var fillFrame = (deferFrame1 ? 2 : 1); fillFrame <= sceneLen; fillFrame++) frameFillOrder.push(fillFrame);
+        if (deferFrame1) frameFillOrder.push(1); // frame 1 processed last
+
+        for (var fillIndex = 0; fillIndex < frameFillOrder.length; fillIndex++) {
+          var targetFrame = frameFillOrder[fillIndex];
+          while (elementKeyIndex + 1 < keys.length && keys[elementKeyIndex + 1].f <= targetFrame) elementKeyIndex++;
+          // When retrying frame 1 (processed last), reset to attempt column.setEntry
+          // again — the column is no longer freshly-pasted at this point.
+          if (deferFrame1 && targetFrame === 1) setEntryFailed = false;
+          var desiredDrawing = keys[elementKeyIndex].v;
+          if (column.getEntry(elementColName, 1, targetFrame) === desiredDrawing) continue;
+          if (!setEntryFailed) {
+            try {
+              column.setEntry(elementColName, 1, targetFrame, desiredDrawing);
+              continue;
+            } catch (_setEntryError) {
+              setEntryFailed = true;
+            }
+          }
+          node.setTextAttr(this.path, "drawing.element", targetFrame, desiredDrawing);
+        }
+        continue;
+      }
+
+      // --- Animated non-drawing column.
+      // Step 1: Delete every template keyframe that's not in our snapshot.
+      // Step 2: Apply our snapshot values.
+      // Step 3: Restore per-keyframe interpolation (handles, ease, continuity).
+      var columnName = col ? col.uniqueName : null;
+      var columnEaseType = col ? col.easeType : null;
+      var snapshotFrameSet = {};
+      for (var snapshotKeyIdx = 0; snapshotKeyIdx < keys.length; snapshotKeyIdx++) {
+        snapshotFrameSet[keys[snapshotKeyIdx].f] = true;
+      }
+      // Enumerate template keyframes by raw point index — avoids allocating an
+      // oFrame for every frame of the scene via `col.keyframes` / `col.frames`.
+      if (columnName) {
+        var numTemplatePoints = 0;
+        try { numTemplatePoints = func.numberOfPoints(columnName); } catch (_npe) {}
+        for (var templatePointIdx = 0; templatePointIdx < numTemplatePoints; templatePointIdx++) {
+          var templateFrameNumber = func.pointX(columnName, templatePointIdx);
+          if (snapshotFrameSet[templateFrameNumber]) continue;
+          try { column.clearKeyFrame(columnName, templateFrameNumber); } catch (_clearError) {}
+        }
+      }
+      for (var applyKeyIdx = 0; applyKeyIdx < keys.length; applyKeyIdx++) {
+        var snapshotKey = keys[applyKeyIdx];
+        attr.setValue(snapshotKey.v, snapshotKey.f);
+      }
+
+      if (!col) {
+        col = attr.column;
+        if (col) {
+          columnName = col.uniqueName;
+          columnEaseType = col.easeType;
+        }
+      }
+
+      // Two ease passes: Harmony adjusts neighbour handles when a keyframe is
+      // written, so the first pass can corrupt earlier writes; pass two locks
+      // them in. Same pattern as oColumn.duplicate.
+      for (var easePassIdx = 0; easePassIdx < keys.length; easePassIdx++) {
+        applyEaseAt(columnName, columnEaseType, keys[easePassIdx].ease);
+      }
+      for (var easeRepeatIdx = 0; easeRepeatIdx < keys.length; easeRepeatIdx++) {
+        applyEaseAt(columnName, columnEaseType, keys[easeRepeatIdx].ease);
+      }
+    } catch (err) {
+      this.$.log(
+        'oNode.applyAttributeSnapshot: skipped attribute "' + keyword +
+        '" on ' + this.path + " — " + String(err)
+      );
+    }
+  }
+
+  return this;
+};
+
+
  /**
  * Duplicates a node by creating an independent copy.
  * @param   {string}    [newName]              The new name for the duplicated node.
