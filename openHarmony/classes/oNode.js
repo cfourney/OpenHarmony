@@ -1579,7 +1579,7 @@ oNode.prototype.orderAboveNodes = function(verticalSpacing, horizontalSpacing){
 
   // sort orphaned nodes by placing them on an inbetween level
   for (var i in failedUpSort){
-    var sortNode = failedUpSort[i];s
+    var sortNode = failedUpSort[i];
     sortNode.centerBelow(sortNode.linkedInNodes, 0, verticalSpacing/2);
   }
 
